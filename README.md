@@ -111,6 +111,7 @@ This work package is about hardware/software codesign and integration. The firmw
 
 ## Take4
 **VPN Tunnel: Session initialization, maintenance, and secure closure**
+
 This is about managing the bring-up, maintenance and tear-down of VPN tunnels between two devices.
 - [ ] Session Initialization: Starting the handshake process to establish secure communication with another device
 - [ ] Maintenance: Keeping the session active through the regular exchange of control messages, which allows detection and recovery from problems such as connection interruptions
