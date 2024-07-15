@@ -23,9 +23,9 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 ## References
 
 **[Ref1]** Wireguard implementations in software:
->- https://github.com/netbirdio/netbird
->- https://tailscale.com/blog/more-throughput
->- Linux Kernel
+>- [Netbird](https://github.com/netbirdio/netbird)
+>- [Tailscale](https://tailscale.com/blog/more-throughput)
+>- [Linux Kernel](https://thenewstack.io/wireguard-vpn-protocol-coming-to-a-linux-kernel-near-you)
   
 **[Ref2]** 100Gbps _Blackwire_ Wireguard https://github.com/brightai-nl/BrightAI-Blackwire
   
@@ -164,7 +164,21 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 
 ## Hardware Architecture
 ### HW Block Diagram
+- PHY and MAC IP blocks
+- Parsing and Extraction of Ethernet Packet Header
+- Ethernet inbound Denial of Service (DoS) filter (with _blake2_)
+- WireGuard offload engines for cryptography and key authentication, see next section for more
+- UDP packet disassembler and assembler
+
+### HW Cryptography
+> - [blake2](https://www.blake2.net) hashing for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
+> - [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption, authenticated with [Poly1305](http://cr.yp.to/mac.html), using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction
+> - [Curve25519](http://cr.yp.to/ecdh.html) for ECDH key updates (for now just hooks for future)
+> - [SipHash24](https://en.wikipedia.org/wiki/SipHash) for hashtable keys
+> - [HKDF](https://eprint.iacr.org/2010/264) for key derivation
+
 ### HW Theory of Operation
+
 
 ## Software Architecture
 ### SW Block Diagram
@@ -177,6 +191,12 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 ### SW Flow Chart, Messages and HW Intercepts
 
 ## HW/SW Working Together as a Coherent System
+
+## Development and Test Framework
+### Shared Linux Server with Tools
+### Simulation Test Bench
+### Lab Test and Validation Setup
+
 ## Final Notes
 
 ### Acknowledgements

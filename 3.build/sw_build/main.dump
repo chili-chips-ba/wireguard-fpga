@@ -1,0 +1,914 @@
+
+/mnt/d/Projects/GitHub-repo/eduSOC/3.build/sw_build/main.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_boot_crt>:
+
+#--COMMON: Copy 'Initialized Data' section from Flash.
+#  Note that '_text_end' as source address to copy from is just
+#  an example, and assumes that the Initialized Data starts right
+#  after Code. This may not be correct source address in your case
+la   a0, _idata_start  
+   0:	00000517          	auipc	a0,0x0
+   4:	78050513          	addi	a0,a0,1920 # 780 <_idata_start>
+la   a1, _data_start
+   8:	10000597          	auipc	a1,0x10000
+   c:	ff858593          	addi	a1,a1,-8 # 10000000 <crx>
+la   a2, _data_end
+  10:	10000617          	auipc	a2,0x10000
+  14:	ff060613          	addi	a2,a2,-16 # 10000000 <crx>
+bge  a1, a2, end_copy_idata
+  18:	00c5dc63          	bge	a1,a2,30 <end_copy_idata>
+
+0000001c <loop_copy_idata>:
+    
+loop_copy_idata:
+lw   a3, 0(a0)
+  1c:	00052683          	lw	a3,0(a0)
+sw   a3, 0(a1)
+  20:	00d5a023          	sw	a3,0(a1)
+addi a0, a0, 4
+  24:	00450513          	addi	a0,a0,4
+addi a1, a1, 4
+  28:	00458593          	addi	a1,a1,4
+blt  a1, a2, loop_copy_idata
+  2c:	fec5c8e3          	blt	a1,a2,1c <loop_copy_idata>
+
+00000030 <end_copy_idata>:
+ 
+end_copy_idata:
+	
+    
+#--COMMON: Initialize 'BSS' section with all zeros
+la   a0, _bss_start
+  30:	10000517          	auipc	a0,0x10000
+  34:	fd050513          	addi	a0,a0,-48 # 10000000 <crx>
+la   a1, _bss_end
+  38:	84818593          	addi	a1,gp,-1976 # 10000048 <_bss_end>
+bge  a0, a1, end_clear_bss
+  3c:	00b55863          	bge	a0,a1,4c <end_clear_bss>
+
+00000040 <loop_clear_bss>:
+ 
+loop_clear_bss:
+sw   zero, 0(a0)
+  40:	00052023          	sw	zero,0(a0)
+addi a0, a0, 4
+  44:	00450513          	addi	a0,a0,4
+blt  a0, a1, loop_clear_bss
+  48:	feb54ce3          	blt	a0,a1,40 <loop_clear_bss>
+
+0000004c <end_clear_bss>:
+#--COMMON: Initialize SP and registers needed for 'C'. Then
+#          enter 'main' function and loop forever when done
+.option  push
+.option  norelax
+	
+la   sp, _stack_start	     
+  4c:	10008117          	auipc	sp,0x10008
+  50:	fb410113          	addi	sp,sp,-76 # 10008000 <_stack_start>
+la   gp, __global_pointer$
+  54:	10000197          	auipc	gp,0x10000
+  58:	7ac18193          	addi	gp,gp,1964 # 10000800 <__global_pointer$>
+     
+xor  a0, a0, a0 /* argc = 0 */
+  5c:	00a54533          	xor	a0,a0,a0
+xor  a1, a1, a1 /* argv = 0 */
+  60:	00b5c5b3          	xor	a1,a1,a1
+xor  a2, a2, a2 /* envp = 0 */
+  64:	00c64633          	xor	a2,a2,a2
+.option pop    
+	
+#ifdef TESTCODE
+   call start_test
+#else
+   call main
+  68:	6ac000ef          	jal	ra,714 <main>
+
+0000006c <loop_forever>:
+#endif
+loop_forever: j loop_forever
+  6c:	0000006f          	j	6c <loop_forever>
+
+00000070 <memcpy>:
+/**********************************************************************
+ * Relevant parts of STDLIB which, due to bare-metal nature of this
+ *  project, have to be provided separately
+ **********************************************************************/
+void *memcpy (void *dest, void *src, uint32_t n) {
+   for (uint32_t i = 0; i < n; i++) {
+  70:	00000793          	li	a5,0
+  74:	00c79463          	bne	a5,a2,7c <memcpy+0xc>
+      ((char*)dest)[i] = ((char*)src)[i];
+   }
+}
+  78:	00008067          	ret
+      ((char*)dest)[i] = ((char*)src)[i];
+  7c:	00f58733          	add	a4,a1,a5
+  80:	00074683          	lbu	a3,0(a4)
+  84:	00f50733          	add	a4,a0,a5
+   for (uint32_t i = 0; i < n; i++) {
+  88:	00178793          	addi	a5,a5,1
+      ((char*)dest)[i] = ((char*)src)[i];
+  8c:	00d70023          	sb	a3,0(a4)
+   for (uint32_t i = 0; i < n; i++) {
+  90:	fe5ff06f          	j	74 <memcpy+0x4>
+
+00000094 <strcmp>:
+
+/**********************************************************************
+ * Description: Compares two strings. Returns 0 if strings are equal
+ **********************************************************************/
+int strcmp(const char *s1, const char *s2) {
+   while ((*s1 == *s2) && *s1) { ++s1; ++s2; }
+  94:	00054783          	lbu	a5,0(a0)
+  98:	0005c703          	lbu	a4,0(a1)
+  9c:	00e79463          	bne	a5,a4,a4 <strcmp+0x10>
+  a0:	00079663          	bnez	a5,ac <strcmp+0x18>
+   return ((int)(unsigned char) *s1) - ((int)(unsigned char) *s2);
+}
+  a4:	40e78533          	sub	a0,a5,a4
+  a8:	00008067          	ret
+   while ((*s1 == *s2) && *s1) { ++s1; ++s2; }
+  ac:	00150513          	addi	a0,a0,1
+  b0:	00158593          	addi	a1,a1,1
+  b4:	fe1ff06f          	j	94 <strcmp>
+
+000000b8 <mul3>:
+/**********************************************************************
+ * Description: Multiplies input by 3
+ **********************************************************************/
+uint32_t mul3 (uint32_t i) {
+   uint32_t m;
+   m = i << 2; //x4
+  b8:	00251793          	slli	a5,a0,0x2
+   m = m - i;  //-1 = x3
+   return m;
+}
+  bc:	40a78533          	sub	a0,a5,a0
+  c0:	00008067          	ret
+
+000000c4 <uart_send_char>:
+ *
+ * Returns:     None
+ **********************************************************************/
+void uart_send_char (char c) {
+   // wait for HW "not busy", then send the byte/character
+   while (CSR -> uart_tx.fld.busy); 
+  c4:	200007b7          	lui	a5,0x20000
+  c8:	0007a703          	lw	a4,0(a5) # 20000000 <_stack_start+0xfff8000>
+  cc:	fe074ee3          	bltz	a4,c8 <uart_send_char+0x4>
+   CSR -> uart_tx.fld.data = c;
+  d0:	00a78023          	sb	a0,0(a5)
+}
+  d4:	00008067          	ret
+
+000000d8 <uart_send_hex>:
+ * Description: Converts decimal to a string of ASCII HEX characters
+ *              and sends them to UART
+ *
+ * Returns:     None
+ **********************************************************************/
+void uart_send_hex (unsigned int val, int digits) {
+  d8:	ff010113          	addi	sp,sp,-16
+  dc:	00812423          	sw	s0,8(sp)
+  e0:	01212023          	sw	s2,0(sp)
+   for (int i = (4*digits) - 4; i >= 0; i -= 4)
+  e4:	fff58413          	addi	s0,a1,-1
+void uart_send_hex (unsigned int val, int digits) {
+  e8:	00912223          	sw	s1,4(sp)
+  ec:	00112623          	sw	ra,12(sp)
+  f0:	00050493          	mv	s1,a0
+   for (int i = (4*digits) - 4; i >= 0; i -= 4)
+  f4:	00241413          	slli	s0,s0,0x2
+      uart_send_char("0123456789ABCDEF"[(val >> i) % 16]);
+  f8:	73c00913          	li	s2,1852
+   for (int i = (4*digits) - 4; i >= 0; i -= 4)
+  fc:	00045e63          	bgez	s0,118 <uart_send_hex+0x40>
+}
+ 100:	00c12083          	lw	ra,12(sp)
+ 104:	00812403          	lw	s0,8(sp)
+ 108:	00412483          	lw	s1,4(sp)
+ 10c:	00012903          	lw	s2,0(sp)
+ 110:	01010113          	addi	sp,sp,16
+ 114:	00008067          	ret
+      uart_send_char("0123456789ABCDEF"[(val >> i) % 16]);
+ 118:	0084d7b3          	srl	a5,s1,s0
+ 11c:	00f7f793          	andi	a5,a5,15
+ 120:	00f907b3          	add	a5,s2,a5
+ 124:	0007c503          	lbu	a0,0(a5)
+   for (int i = (4*digits) - 4; i >= 0; i -= 4)
+ 128:	ffc40413          	addi	s0,s0,-4
+      uart_send_char("0123456789ABCDEF"[(val >> i) % 16]);
+ 12c:	f99ff0ef          	jal	ra,c4 <uart_send_char>
+   for (int i = (4*digits) - 4; i >= 0; i -= 4)
+ 130:	fcdff06f          	j	fc <uart_send_hex+0x24>
+
+00000134 <uart_send>:
+ *
+ * Description: Sends a string of characters to UART
+ *
+ * Returns:     None
+ **********************************************************************/
+void uart_send (const char *s) {
+ 134:	ff010113          	addi	sp,sp,-16
+ 138:	00812423          	sw	s0,8(sp)
+ 13c:	00112623          	sw	ra,12(sp)
+ 140:	00050413          	mv	s0,a0
+   while (*s) uart_send_char(*(s++));
+ 144:	00044503          	lbu	a0,0(s0)
+ 148:	00051a63          	bnez	a0,15c <uart_send+0x28>
+}
+ 14c:	00c12083          	lw	ra,12(sp)
+ 150:	00812403          	lw	s0,8(sp)
+ 154:	01010113          	addi	sp,sp,16
+ 158:	00008067          	ret
+   while (*s) uart_send_char(*(s++));
+ 15c:	00140413          	addi	s0,s0,1
+ 160:	f65ff0ef          	jal	ra,c4 <uart_send_char>
+ 164:	fe1ff06f          	j	144 <uart_send+0x10>
+
+00000168 <cmd_recv>:
+void cmd_recv() {
+
+   // poll UART_RX:
+   //  Due to Clear-on-Read nature of VALID and OFLOW flags, this MUST
+   //  BE ONE SHOT READ. Otherwise, the value of flags could be lost
+   uart_rx.all = CSR->uart_rx.all;
+ 168:	20000637          	lui	a2,0x20000
+ 16c:	00462783          	lw	a5,4(a2) # 20000004 <_stack_start+0xfff8004>
+ 170:	00078f13          	mv	t5,a5
+
+   // exit right away if UART_RX data is not ready
+   if (!uart_rx.fld.valid) return;
+ 174:	1a07d663          	bgez	a5,320 <_STACK_SIZE+0x120>
+
+   // exit out and ABORT command for UART_RX overflow
+   if (uart_rx.fld.oflow) {
+ 178:	400006b7          	lui	a3,0x40000
+ 17c:	00d7f6b3          	and	a3,a5,a3
+ 180:	00068a63          	beqz	a3,194 <cmd_recv+0x2c>
+      crx_flag.active = 0x00;
+ 184:	82018a23          	sb	zero,-1996(gp) # 10000034 <crx_flag>
+
+      CSR->misc.fld.error = 0x1; // UART_RX_OVERFLOW
+ 188:	00100793          	li	a5,1
+   // being assembled will interrupt it. Instead, it will
+   // start another Command. In such situation, it does not
+   // make sense to try to complete the earlier Command.
+   if (uart_rx.fld.data == '$') {
+      if (crx_flag.rdy == 0xFF) {
+         CSR->misc.fld.error = 0x2; // ANOTHER_CMD_PENDING (drop new Cmd)
+ 18c:	02f60423          	sb	a5,40(a2)
+ 190:	00008067          	ret
+   if (uart_rx.fld.data == '$') {
+ 194:	0ff7f793          	andi	a5,a5,255
+ 198:	02400593          	li	a1,36
+ 19c:	04b79e63          	bne	a5,a1,1f8 <cmd_recv+0x90>
+      if (crx_flag.rdy == 0xFF) {
+ 1a0:	83418793          	addi	a5,gp,-1996 # 10000034 <crx_flag>
+ 1a4:	0017c683          	lbu	a3,1(a5)
+ 1a8:	0ff00793          	li	a5,255
+ 1ac:	00f69663          	bne	a3,a5,1b8 <cmd_recv+0x50>
+         CSR->misc.fld.error = 0x2; // ANOTHER_CMD_PENDING (drop new Cmd)
+ 1b0:	00200793          	li	a5,2
+ 1b4:	fd9ff06f          	j	18c <cmd_recv+0x24>
+      }
+      else {
+         if (crx_flag.active == 0xFF) {
+ 1b8:	8341c683          	lbu	a3,-1996(gp) # 10000034 <crx_flag>
+ 1bc:	00f69663          	bne	a3,a5,1c8 <cmd_recv+0x60>
+            CSR->misc.fld.error = 0x3; // ANOTHER_CMD_IN_RX (interrupt it and start new Cmd)
+ 1c0:	00300793          	li	a5,3
+ 1c4:	02f60423          	sb	a5,40(a2)
+         }
+
+         crx_flag.active = 0xFF;
+ 1c8:	fff00793          	li	a5,-1
+ 1cc:	82f18a23          	sb	a5,-1996(gp) # 10000034 <crx_flag>
+
+         crx_asc_idx = 0;
+ 1d0:	82018e23          	sb	zero,-1988(gp) # 1000003c <crx_asc_idx>
+         crx.anum    = 0;
+         crx.id      = 0;
+ 1d4:	100007b7          	lui	a5,0x10000
+ 1d8:	00078793          	mv	a5,a5
+ 1dc:	00079023          	sh	zero,0(a5) # 10000000 <crx>
+         crx.arg1    = 0;
+ 1e0:	0007a223          	sw	zero,4(a5)
+         crx.arg2    = 0;
+ 1e4:	0007a423          	sw	zero,8(a5)
+         crx.arg3    = 0;
+ 1e8:	0007a623          	sw	zero,12(a5)
+          
+         CSR->misc.fld.error = 0x0;
+ 1ec:	200007b7          	lui	a5,0x20000
+ 1f0:	02078423          	sb	zero,40(a5) # 20000028 <_stack_start+0xfff8028>
+ 1f4:	00008067          	ret
+      return;
+   }
+    
+   // discard all characters that arrive prior to '$',
+   // or after '$' that failed to start a new Command
+   if (crx_flag.active == 0x00) {
+ 1f8:	8341c583          	lbu	a1,-1996(gp) # 10000034 <crx_flag>
+ 1fc:	00059663          	bnez	a1,208 <_STACK_SIZE+0x8>
+      CSR->misc.fld.error = 0x4; // UNEXPECTED_CHAR
+ 200:	00400793          	li	a5,4
+ 204:	f89ff06f          	j	18c <cmd_recv+0x24>
+   //  - ',' and <CR> are element delimiters, and removed
+   //  - <LF> is Command-End, also removed, terminating session
+   //  - numerical characters are converted from ASCII to binary
+   //  - reception of any other character ABORTs command.
+   //      That is, spaces and letters are not allowed
+   switch (uart_rx.fld.data) {
+ 208:	00d00613          	li	a2,13
+ 20c:	02c78063          	beq	a5,a2,22c <_STACK_SIZE+0x2c>
+ 210:	02c00613          	li	a2,44
+ 214:	00c78c63          	beq	a5,a2,22c <_STACK_SIZE+0x2c>
+ 218:	00a00693          	li	a3,10
+ 21c:	0cd79063          	bne	a5,a3,2dc <_STACK_SIZE+0xdc>
+        break;    
+    
+      //------
+      // Command-End. Discard it, updating flags
+      case '\n':
+        crx_flag.active = 0x00;
+ 220:	f0000793          	li	a5,-256
+ 224:	82f19a23          	sh	a5,-1996(gp) # 10000034 <crx_flag>
+        crx_flag.rdy    = 0xFF; // command is now ready for execution
+        break;
+ 228:	00008067          	ret
+        if (crx.anum < 4) {
+ 22c:	100007b7          	lui	a5,0x10000
+ 230:	00078713          	mv	a4,a5
+ 234:	00174703          	lbu	a4,1(a4)
+ 238:	00300613          	li	a2,3
+ 23c:	00078793          	mv	a5,a5
+ 240:	0ee66063          	bltu	a2,a4,320 <_STACK_SIZE+0x120>
+           for (uint8_t i=0; i < crx_asc_idx; i++) {
+ 244:	83c1ce03          	lbu	t3,-1988(gp) # 1000003c <crx_asc_idx>
+           crx_bin = 0;
+ 248:	8201ac23          	sw	zero,-1992(gp) # 10000038 <crx_bin>
+           for (uint8_t i=0; i < crx_asc_idx; i++) {
+ 24c:	00000813          	li	a6,0
+ 250:	00000313          	li	t1,0
+ 254:	00060513          	mv	a0,a2
+              crx_bin = 10*crx_bin + (crx_asc[i] - '0');
+ 258:	84018893          	addi	a7,gp,-1984 # 10000040 <crx_asc>
+           for (uint8_t i=0; i < crx_asc_idx; i++) {
+ 25c:	0ff87613          	andi	a2,a6,255
+ 260:	03c66e63          	bltu	a2,t3,29c <_STACK_SIZE+0x9c>
+ 264:	00030463          	beqz	t1,26c <_STACK_SIZE+0x6c>
+ 268:	82d1ac23          	sw	a3,-1992(gp) # 10000038 <crx_bin>
+           switch (crx.anum) {
+ 26c:	00200613          	li	a2,2
+              case 3: crx.arg3 =          crx_bin;
+ 270:	8381a683          	lw	a3,-1992(gp) # 10000038 <crx_bin>
+ 274:	04c70c63          	beq	a4,a2,2cc <_STACK_SIZE+0xcc>
+ 278:	00300613          	li	a2,3
+ 27c:	04c70c63          	beq	a4,a2,2d4 <_STACK_SIZE+0xd4>
+ 280:	00100613          	li	a2,1
+ 284:	04c70063          	beq	a4,a2,2c4 <_STACK_SIZE+0xc4>
+              case 0: crx.id   = (uint8_t)crx_bin; break;
+ 288:	00d78023          	sb	a3,0(a5) # 10000000 <crx>
+           crx.anum++;
+ 28c:	00170713          	addi	a4,a4,1
+           crx_asc_idx = 0;
+ 290:	82018e23          	sb	zero,-1988(gp) # 1000003c <crx_asc_idx>
+           crx.anum++;
+ 294:	00e780a3          	sb	a4,1(a5)
+ 298:	00008067          	ret
+              crx_bin = 10*crx_bin + (crx_asc[i] - '0');
+ 29c:	01180633          	add	a2,a6,a7
+ 2a0:	00064303          	lbu	t1,0(a2)
+ 2a4:	00269613          	slli	a2,a3,0x2
+ 2a8:	00d606b3          	add	a3,a2,a3
+ 2ac:	00169693          	slli	a3,a3,0x1
+ 2b0:	fd068693          	addi	a3,a3,-48 # 3fffffd0 <_stack_start+0x2fff7fd0>
+ 2b4:	00d306b3          	add	a3,t1,a3
+           for (uint8_t i=0; i < crx_asc_idx; i++) {
+ 2b8:	00180813          	addi	a6,a6,1
+              crx_bin = 10*crx_bin + (crx_asc[i] - '0');
+ 2bc:	00100313          	li	t1,1
+ 2c0:	f9dff06f          	j	25c <_STACK_SIZE+0x5c>
+              case 1: crx.arg1 =          crx_bin; break;
+ 2c4:	00d7a223          	sw	a3,4(a5)
+ 2c8:	fc5ff06f          	j	28c <_STACK_SIZE+0x8c>
+              case 2: crx.arg2 =          crx_bin; break;
+ 2cc:	00d7a423          	sw	a3,8(a5)
+ 2d0:	fbdff06f          	j	28c <_STACK_SIZE+0x8c>
+              case 3: crx.arg3 =          crx_bin;
+ 2d4:	00d7a623          	sw	a3,12(a5)
+ 2d8:	fb5ff06f          	j	28c <_STACK_SIZE+0x8c>
+      // store ASCII values from '0' to '9'. Reception of
+      // any other character, or more characters than allowed,
+      // will ABORT command, i.e. force waiting for new '$'
+      default:
+        if (   (uart_rx.fld.data < '0')
+            || (uart_rx.fld.data > '9')
+ 2dc:	fd078693          	addi	a3,a5,-48
+        if (   (uart_rx.fld.data < '0')
+ 2e0:	0ff6f693          	andi	a3,a3,255
+ 2e4:	00900613          	li	a2,9
+ 2e8:	00d66863          	bltu	a2,a3,2f8 <_STACK_SIZE+0xf8>
+            || (crx_asc_idx > CRX_ASC_SIZE-1) )
+ 2ec:	83c1c683          	lbu	a3,-1988(gp) # 1000003c <crx_asc_idx>
+ 2f0:	00700593          	li	a1,7
+ 2f4:	00d5fc63          	bgeu	a1,a3,30c <_STACK_SIZE+0x10c>
+        {
+           crx_flag.active = 0x00;
+ 2f8:	82018a23          	sb	zero,-1996(gp) # 10000034 <crx_flag>
+           CSR->misc.fld.error = 0x5; // ILLEGAL_CMD_CHAR
+ 2fc:	200007b7          	lui	a5,0x20000
+ 300:	00500713          	li	a4,5
+ 304:	02e78423          	sb	a4,40(a5) # 20000028 <_stack_start+0xfff8028>
+ 308:	00008067          	ret
+        }   
+        // save new data, then increment index
+        else {
+           crx_asc[crx_asc_idx++] = uart_rx.fld.data;
+ 30c:	00168713          	addi	a4,a3,1
+ 310:	82e18e23          	sb	a4,-1988(gp) # 1000003c <crx_asc_idx>
+ 314:	84018713          	addi	a4,gp,-1984 # 10000040 <crx_asc>
+ 318:	00d70733          	add	a4,a4,a3
+ 31c:	00f70023          	sb	a5,0(a4)
+        }
+   }
+}
+ 320:	00008067          	ret
+
+00000324 <cmd_dispatch>:
+//static inline void cmd_dispatch() __attribute__((always_inline));
+//static inline void cmd_dispatch() {
+void cmd_dispatch() {
+
+   // exit out right away if new command is not ready
+   if (crx_flag.rdy == 0x00) return;
+ 324:	83418793          	addi	a5,gp,-1996 # 10000034 <crx_flag>
+ 328:	0017c703          	lbu	a4,1(a5)
+ 32c:	0c070463          	beqz	a4,3f4 <cmd_dispatch+0xd0>
+
+   // in this initial version, we consider new command processed
+   // right away, even if it ends up being discarded. The following
+   // line is what's causing loss of command if it ends up not
+   // started in the code that follows
+   crx_flag.rdy = 0x00;      
+ 330:	000780a3          	sb	zero,1(a5)
+
+   if (crx.anum != 3) {
+ 334:	100007b7          	lui	a5,0x10000
+ 338:	00078793          	mv	a5,a5
+ 33c:	0017c683          	lbu	a3,1(a5) # 10000001 <crx+0x1>
+ 340:	00300713          	li	a4,3
+ 344:	00e68a63          	beq	a3,a4,358 <cmd_dispatch+0x34>
+      CSR->misc.fld.error = 0x6; // INVALID_ANUM
+ 348:	200007b7          	lui	a5,0x20000
+ 34c:	00600713          	li	a4,6
+      //while (CSR -> adc1_rx.fld.busy);
+      //--\ wait for ADC1 "not busy", to then start it
+      //--/  (*) given 'adc1_started' flag, this waiting is not needed
+      case 1:
+        if (task.fld.adc1_started == 0xFF) {
+           CSR->misc.fld.error = 0x7; // ADC1_CMD_DROPPED
+ 350:	02e78423          	sb	a4,40(a5) # 20000028 <_stack_start+0xfff8028>
+ 354:	00008067          	ret
+   switch (crx.id) {
+ 358:	0007c703          	lbu	a4,0(a5)
+ 35c:	0ed70863          	beq	a4,a3,44c <_HEAP_SIZE+0x4c>
+ 360:	02e6e463          	bltu	a3,a4,388 <cmd_dispatch+0x64>
+ 364:	00100613          	li	a2,1
+ 368:	02c70e63          	beq	a4,a2,3a4 <cmd_dispatch+0x80>
+ 36c:	00200693          	li	a3,2
+ 370:	08d70463          	beq	a4,a3,3f8 <cmd_dispatch+0xd4>
+        break;
+    
+      //------
+      // unsupported command: Turn off all LEDs
+      default: 
+         CSR->misc.fld.error  = 0xB; // INVALID_CMD_ID
+ 374:	00b00713          	li	a4,11
+ 378:	200007b7          	lui	a5,0x20000
+ 37c:	02e78423          	sb	a4,40(a5) # 20000028 <_stack_start+0xfff8028>
+         CSR->gpo.fld.led_off = 0x3;
+ 380:	00300713          	li	a4,3
+ 384:	06c0006f          	j	3f0 <cmd_dispatch+0xcc>
+   switch (crx.id) {
+ 388:	00400693          	li	a3,4
+ 38c:	fed714e3          	bne	a4,a3,374 <cmd_dispatch+0x50>
+        if (CSR->dac2_tx.fld.busy) {
+ 390:	200006b7          	lui	a3,0x20000
+ 394:	0246a703          	lw	a4,36(a3) # 20000024 <_stack_start+0xfff8024>
+ 398:	10075663          	bgez	a4,4a4 <_HEAP_SIZE+0xa4>
+           CSR->misc.fld.error = 0xA; // DAC2_CMD_DROPPED
+ 39c:	00a00793          	li	a5,10
+ 3a0:	0bc0006f          	j	45c <_HEAP_SIZE+0x5c>
+        if (task.fld.adc1_started == 0xFF) {
+ 3a4:	8281c603          	lbu	a2,-2008(gp) # 10000028 <task>
+ 3a8:	0ff00713          	li	a4,255
+ 3ac:	00e61863          	bne	a2,a4,3bc <cmd_dispatch+0x98>
+           CSR->misc.fld.error = 0x7; // ADC1_CMD_DROPPED
+ 3b0:	200007b7          	lui	a5,0x20000
+ 3b4:	00700713          	li	a4,7
+ 3b8:	f99ff06f          	j	350 <cmd_dispatch+0x2c>
+           adc_tx.fld.time_us    = crx.arg1;
+ 3bc:	0087a703          	lw	a4,8(a5) # 20000008 <_stack_start+0xfff8008>
+ 3c0:	0047a783          	lw	a5,4(a5)
+ 3c4:	00f71713          	slli	a4,a4,0xf
+ 3c8:	01179793          	slli	a5,a5,0x11
+ 3cc:	0117d793          	srli	a5,a5,0x11
+ 3d0:	00f767b3          	or	a5,a4,a5
+ 3d4:	82f19823          	sh	a5,-2000(gp) # 10000030 <adc_tx>
+           CSR->adc1_tx.all      = adc_tx.all; // this write starts ADC1
+ 3d8:	8301a703          	lw	a4,-2000(gp) # 10000030 <adc_tx>
+ 3dc:	200007b7          	lui	a5,0x20000
+ 3e0:	00e7a423          	sw	a4,8(a5) # 20000008 <_stack_start+0xfff8008>
+           task.fld.adc1_started = 0xFF;
+ 3e4:	fff00713          	li	a4,-1
+ 3e8:	82e18423          	sb	a4,-2008(gp) # 10000028 <task>
+           CSR->gpo.fld.led_off  = 0x2; // VISUAL DEBUG: turn on 1st LED
+ 3ec:	00200713          	li	a4,2
+         CSR->gpo.fld.led_off = 0x3;
+ 3f0:	00e78c23          	sb	a4,24(a5)
+   }
+}
+ 3f4:	00008067          	ret
+        if (task.fld.adc2_started == 0xFF) {
+ 3f8:	82818693          	addi	a3,gp,-2008 # 10000028 <task>
+ 3fc:	0016c583          	lbu	a1,1(a3)
+ 400:	0ff00713          	li	a4,255
+ 404:	00e59863          	bne	a1,a4,414 <_HEAP_SIZE+0x14>
+           CSR->misc.fld.error = 0x8; // ADC2_CMD_DROPPED
+ 408:	200007b7          	lui	a5,0x20000
+ 40c:	00800713          	li	a4,8
+ 410:	f41ff06f          	j	350 <cmd_dispatch+0x2c>
+           adc_tx.fld.time_us    = crx.arg1;
+ 414:	0087a703          	lw	a4,8(a5) # 20000008 <_stack_start+0xfff8008>
+ 418:	0047a783          	lw	a5,4(a5)
+ 41c:	00f71713          	slli	a4,a4,0xf
+ 420:	01179793          	slli	a5,a5,0x11
+ 424:	0117d793          	srli	a5,a5,0x11
+ 428:	00f767b3          	or	a5,a4,a5
+ 42c:	82f19823          	sh	a5,-2000(gp) # 10000030 <adc_tx>
+           CSR->adc2_tx.all      = adc_tx.all; // this write starts ADC2
+ 430:	8301a703          	lw	a4,-2000(gp) # 10000030 <adc_tx>
+ 434:	200007b7          	lui	a5,0x20000
+ 438:	00e7a823          	sw	a4,16(a5) # 20000010 <_stack_start+0xfff8010>
+           task.fld.adc2_started = 0xFF;
+ 43c:	fff00713          	li	a4,-1
+ 440:	00e680a3          	sb	a4,1(a3)
+           CSR->gpo.fld.led_off  = 0x1; // VISUAL DEBUG: turn on 2nd LED
+ 444:	00c78c23          	sb	a2,24(a5)
+ 448:	00008067          	ret
+        if (CSR->dac1_tx.fld.busy) {
+ 44c:	200006b7          	lui	a3,0x20000
+ 450:	0206a703          	lw	a4,32(a3) # 20000020 <_stack_start+0xfff8020>
+ 454:	00075863          	bgez	a4,464 <_HEAP_SIZE+0x64>
+           CSR->misc.fld.error = 0x9; // DAC1_CMD_DROPPED
+ 458:	00900793          	li	a5,9
+           CSR->misc.fld.error = 0xA; // DAC2_CMD_DROPPED
+ 45c:	02f68423          	sb	a5,40(a3)
+ 460:	00008067          	ret
+           dac_tx.fld.sin_tune  = crx.arg2;
+ 464:	0047a703          	lw	a4,4(a5)
+ 468:	0087a783          	lw	a5,8(a5)
+ 46c:	03ff05b7          	lui	a1,0x3ff0
+ 470:	01071713          	slli	a4,a4,0x10
+ 474:	00b77733          	and	a4,a4,a1
+ 478:	01179793          	slli	a5,a5,0x11
+ 47c:	82c1a583          	lw	a1,-2004(gp) # 1000002c <dac_tx>
+ 480:	0117d793          	srli	a5,a5,0x11
+ 484:	00f767b3          	or	a5,a4,a5
+ 488:	fc008737          	lui	a4,0xfc008
+ 48c:	00b77733          	and	a4,a4,a1
+ 490:	00e7e7b3          	or	a5,a5,a4
+ 494:	82f1a623          	sw	a5,-2004(gp) # 1000002c <dac_tx>
+           CSR->dac1_tx.all     = dac_tx.all; // this write starts DAC1
+ 498:	02f6a023          	sw	a5,32(a3)
+           CSR->gpo.fld.led_off = 0x0; // VISUAL DEBUG: turn on both LEDs
+ 49c:	00068c23          	sb	zero,24(a3)
+ 4a0:	00008067          	ret
+           dac_tx.fld.sin_tune  = crx.arg2;
+ 4a4:	0047a703          	lw	a4,4(a5)
+ 4a8:	0087a783          	lw	a5,8(a5)
+ 4ac:	03ff05b7          	lui	a1,0x3ff0
+ 4b0:	01071713          	slli	a4,a4,0x10
+ 4b4:	00b77733          	and	a4,a4,a1
+ 4b8:	01179793          	slli	a5,a5,0x11
+ 4bc:	82c1a583          	lw	a1,-2004(gp) # 1000002c <dac_tx>
+ 4c0:	0117d793          	srli	a5,a5,0x11
+ 4c4:	00f767b3          	or	a5,a4,a5
+ 4c8:	fc008737          	lui	a4,0xfc008
+ 4cc:	00b77733          	and	a4,a4,a1
+ 4d0:	00e7e7b3          	or	a5,a5,a4
+ 4d4:	82f1a623          	sw	a5,-2004(gp) # 1000002c <dac_tx>
+           CSR->dac2_tx.all     = dac_tx.all; // this write starts DAC2
+ 4d8:	02f6a223          	sw	a5,36(a3)
+ 4dc:	fc1ff06f          	j	49c <_HEAP_SIZE+0x9c>
+
+000004e0 <rsp_dispatch>:
+//static inline void rsp_dispatch() {
+void rsp_dispatch() {
+
+   //___when UART_TX is busy, there is no point in doing anything else
+   //  here, hence wait for it to free up 
+   if (task.hal.adc_uarting != 0x0000) return;
+ 4e0:	82818693          	addi	a3,gp,-2008 # 10000028 <task>
+ 4e4:	0026d603          	lhu	a2,2(a3)
+ 4e8:	82818713          	addi	a4,gp,-2008 # 10000028 <task>
+ 4ec:	08061063          	bnez	a2,56c <rsp_dispatch+0x8c>
+
+   //___when ADC1 is started, first wait for it to finish the measurement
+   if ((task.fld.adc1_started == 0xFF) && !CSR->adc1_tx.fld.busy) {
+ 4f0:	8281c603          	lbu	a2,-2008(gp) # 10000028 <task>
+ 4f4:	0ff00793          	li	a5,255
+ 4f8:	02f61c63          	bne	a2,a5,530 <rsp_dispatch+0x50>
+ 4fc:	200007b7          	lui	a5,0x20000
+ 500:	0087a603          	lw	a2,8(a5) # 20000008 <_stack_start+0xfff8008>
+ 504:	02064663          	bltz	a2,530 <rsp_dispatch+0x50>
+
+      // retrieve 'sample_cnt' and prep for uploading ADC1 data. We
+      // don't check for sample_cnt=0, as even time_us=0 yields 1 sample
+      adc_rx.all           = CSR->adc1_rx.all; 
+ 508:	00c7a703          	lw	a4,12(a5)
+ 50c:	82e1a223          	sw	a4,-2012(gp) # 10000024 <adc_rx>
+      adc_num_bytes.fld.b0 = 1; // temporarily used for ADC_ID
+ 510:	00100713          	li	a4,1
+ 514:	82e18023          	sb	a4,-2016(gp) # 10000020 <adc_num_bytes>
+      adc_sdram_addr       = SDRAM_ADC1_ADDRESS;
+ 518:	40000737          	lui	a4,0x40000
+ 51c:	80e1ac23          	sw	a4,-2024(gp) # 10000018 <adc_sdram_addr>
+
+      adc_byte_cnt          = 0;
+ 520:	80018e23          	sb	zero,-2020(gp) # 1000001c <adc_byte_cnt>
+      task.fld.adc1_uarting = 0xFF;
+ 524:	fff00793          	li	a5,-1
+ 528:	00f68123          	sb	a5,2(a3)
+ 52c:	00008067          	ret
+   }
+
+   //___when ADC2 is started, first wait for it to finish the measurement
+   else if ((task.fld.adc2_started == 0xFF) && !CSR->adc2_tx.fld.busy) {
+ 530:	00174683          	lbu	a3,1(a4) # 40000001 <_stack_start+0x2fff8001>
+ 534:	0ff00793          	li	a5,255
+ 538:	02f69a63          	bne	a3,a5,56c <rsp_dispatch+0x8c>
+ 53c:	200007b7          	lui	a5,0x20000
+ 540:	0107a683          	lw	a3,16(a5) # 20000010 <_stack_start+0xfff8010>
+ 544:	0206c463          	bltz	a3,56c <rsp_dispatch+0x8c>
+
+      // retrieve 'sample_cnt' and prep for uploading ADC1 data. We
+      // don't check for sample_cnt=0, as even time_us=0 yields 1 sample
+      adc_rx.all           = CSR->adc2_rx.all;
+ 548:	0147a683          	lw	a3,20(a5)
+ 54c:	82d1a223          	sw	a3,-2012(gp) # 10000024 <adc_rx>
+      adc_num_bytes.fld.b0 = 2; // temporarily used for ADC_ID
+ 550:	00200693          	li	a3,2
+ 554:	82d18023          	sb	a3,-2016(gp) # 10000020 <adc_num_bytes>
+      adc_sdram_addr       = SDRAM_ADC2_ADDRESS;
+ 558:	404006b7          	lui	a3,0x40400
+ 55c:	80d1ac23          	sw	a3,-2024(gp) # 10000018 <adc_sdram_addr>
+
+      adc_byte_cnt          = 0;
+ 560:	80018e23          	sb	zero,-2020(gp) # 1000001c <adc_byte_cnt>
+      task.fld.adc2_uarting = 0xFF;
+ 564:	fff00793          	li	a5,-1
+ 568:	00f701a3          	sb	a5,3(a4)
+   }
+}
+ 56c:	00008067          	ret
+
+00000570 <rsp_sdram2uart>:
+//static inline void rsp_sdram2uart() {
+void rsp_sdram2uart() {
+
+   // with this line being always checked in the main loop,
+   //  its conditions have to be short and efficient
+  if (CSR->uart_tx.fld.busy || (task.hal.adc_uarting == 0x0000)) return;
+ 570:	200007b7          	lui	a5,0x20000
+ 574:	0007a783          	lw	a5,0(a5) # 20000000 <_stack_start+0xfff8000>
+ 578:	1807cc63          	bltz	a5,710 <rsp_sdram2uart+0x1a0>
+ 57c:	82818793          	addi	a5,gp,-2008 # 10000028 <task>
+ 580:	0027d703          	lhu	a4,2(a5)
+ 584:	18070663          	beqz	a4,710 <rsp_sdram2uart+0x1a0>
+void rsp_sdram2uart() {
+ 588:	ff010113          	addi	sp,sp,-16
+ 58c:	00812423          	sw	s0,8(sp)
+
+   // UART_TX has a 16-deep FIFO: 
+   //  Keep the FIFO full to maximize utilization of serial line
+   // do {
+     switch (adc_byte_cnt) {
+ 590:	81c1c703          	lbu	a4,-2020(gp) # 1000001c <adc_byte_cnt>
+void rsp_sdram2uart() {
+ 594:	00112623          	sw	ra,12(sp)
+ 598:	00b00613          	li	a2,11
+ 59c:	02e66e63          	bltu	a2,a4,5d8 <rsp_sdram2uart+0x68>
+ 5a0:	00271713          	slli	a4,a4,0x2
+ 5a4:	75000613          	li	a2,1872
+ 5a8:	00c70733          	add	a4,a4,a2
+ 5ac:	00072703          	lw	a4,0(a4)
+ 5b0:	00070067          	jr	a4
+       
+     //===header===
+      case 0: // RSP_START
+         CSR -> uart_tx.fld.data = '$'; // send '$' to UART_TX
+ 5b4:	200007b7          	lui	a5,0x20000
+ 5b8:	02400713          	li	a4,36
+      case 1: // RSP_ID
+         CSR -> uart_tx.fld.data = adc_num_bytes.fld.b0 + 48;
+         break;
+
+      case 2: // separator
+         CSR -> uart_tx.fld.data = ',';
+ 5bc:	00e78023          	sb	a4,0(a5) # 20000000 <_stack_start+0xfff8000>
+         break;
+ 5c0:	0180006f          	j	5d8 <rsp_sdram2uart+0x68>
+         CSR -> uart_tx.fld.data = adc_num_bytes.fld.b0 + 48;
+ 5c4:	8201c783          	lbu	a5,-2016(gp) # 10000020 <adc_num_bytes>
+ 5c8:	20000737          	lui	a4,0x20000
+ 5cc:	03078793          	addi	a5,a5,48
+ 5d0:	0ff7f793          	andi	a5,a5,255
+ 5d4:	00f70023          	sb	a5,0(a4) # 20000000 <_stack_start+0xfff8000>
+         if (task.fld.adc1_uarting == 0xFF) task.fld.adc1_uarting = 0x00;
+         if (task.fld.adc2_uarting == 0xFF) task.fld.adc2_uarting = 0x00;
+   }
+
+   // prep the next byte
+   adc_byte_cnt++;
+ 5d8:	81c1c783          	lbu	a5,-2020(gp) # 1000001c <adc_byte_cnt>
+
+   //} while (   (task.fld.tx_uarting == 0xFF)
+   //         && !CSR->uart_tx.fld.busy);
+}
+ 5dc:	00c12083          	lw	ra,12(sp)
+   adc_byte_cnt++;
+ 5e0:	00178793          	addi	a5,a5,1
+ 5e4:	80f18e23          	sb	a5,-2020(gp) # 1000001c <adc_byte_cnt>
+}
+ 5e8:	00812403          	lw	s0,8(sp)
+ 5ec:	01010113          	addi	sp,sp,16
+ 5f0:	00008067          	ret
+         CSR -> uart_tx.fld.data = ',';
+ 5f4:	200007b7          	lui	a5,0x20000
+ 5f8:	02c00713          	li	a4,44
+ 5fc:	fc1ff06f          	j	5bc <rsp_sdram2uart+0x4c>
+         adc_num_bytes.all = mul3(adc_rx.fld.sample_cnt);
+ 600:	8241a503          	lw	a0,-2012(gp) # 10000024 <adc_rx>
+ 604:	00f51513          	slli	a0,a0,0xf
+ 608:	00f55513          	srli	a0,a0,0xf
+ 60c:	aadff0ef          	jal	ra,b8 <mul3>
+ 610:	82a1a023          	sw	a0,-2016(gp) # 10000020 <adc_num_bytes>
+         uart_send_hex (adc_sample.fld.b2, 2);
+ 614:	01055513          	srli	a0,a0,0x10
+ 618:	00200593          	li	a1,2
+ 61c:	0ff57513          	andi	a0,a0,255
+ 620:	00c0006f          	j	62c <rsp_sdram2uart+0xbc>
+         uart_send_hex (adc_num_bytes.fld.b1, 2);
+ 624:	8211c503          	lbu	a0,-2015(gp) # 10000021 <adc_num_bytes+0x1>
+ 628:	00200593          	li	a1,2
+ 62c:	aadff0ef          	jal	ra,d8 <uart_send_hex>
+         break;
+ 630:	fa9ff06f          	j	5d8 <rsp_sdram2uart+0x68>
+         uart_send_hex (adc_num_bytes.fld.b0, 2);
+ 634:	8201c503          	lbu	a0,-2016(gp) # 10000020 <adc_num_bytes>
+ 638:	00200593          	li	a1,2
+ 63c:	ff1ff06f          	j	62c <rsp_sdram2uart+0xbc>
+         CSR -> uart_tx.fld.data = ',';
+ 640:	200007b7          	lui	a5,0x20000
+ 644:	02c00713          	li	a4,44
+ 648:	00e78023          	sb	a4,0(a5) # 20000000 <_stack_start+0xfff8000>
+         adc_sample_cnt = 0;
+ 64c:	8001a823          	sw	zero,-2032(gp) # 10000010 <adc_sample_cnt>
+         break;
+ 650:	f89ff06f          	j	5d8 <rsp_sdram2uart+0x68>
+         adc_sample.all = *adc_sdram_addr; 
+ 654:	8181a783          	lw	a5,-2024(gp) # 10000018 <adc_sdram_addr>
+ 658:	0007a503          	lw	a0,0(a5)
+ 65c:	80a1aa23          	sw	a0,-2028(gp) # 10000014 <adc_sample>
+ 660:	fb5ff06f          	j	614 <rsp_sdram2uart+0xa4>
+         uart_send_hex (adc_sample.fld.b1, 2);
+ 664:	8151c503          	lbu	a0,-2027(gp) # 10000015 <adc_sample+0x1>
+ 668:	00200593          	li	a1,2
+ 66c:	fc1ff06f          	j	62c <rsp_sdram2uart+0xbc>
+         uart_send_hex (adc_sample.fld.b0, 2);
+ 670:	8141c503          	lbu	a0,-2028(gp) # 10000014 <adc_sample>
+ 674:	00200593          	li	a1,2
+ 678:	a61ff0ef          	jal	ra,d8 <uart_send_hex>
+         adc_sample_cnt++;
+ 67c:	8101a703          	lw	a4,-2032(gp) # 10000010 <adc_sample_cnt>
+ 680:	00170713          	addi	a4,a4,1
+ 684:	80e1a823          	sw	a4,-2032(gp) # 10000010 <adc_sample_cnt>
+         adc_sdram_addr++;
+ 688:	8181a783          	lw	a5,-2024(gp) # 10000018 <adc_sdram_addr>
+ 68c:	00478793          	addi	a5,a5,4
+ 690:	80f1ac23          	sw	a5,-2024(gp) # 10000018 <adc_sdram_addr>
+         if (adc_sample_cnt != adc_rx.fld.sample_cnt) {
+ 694:	8241a783          	lw	a5,-2012(gp) # 10000024 <adc_rx>
+ 698:	00f79793          	slli	a5,a5,0xf
+ 69c:	00f7d793          	srli	a5,a5,0xf
+ 6a0:	f2f70ce3          	beq	a4,a5,5d8 <rsp_sdram2uart+0x68>
+            adc_byte_cnt = 6;
+ 6a4:	00600793          	li	a5,6
+ 6a8:	80f18e23          	sb	a5,-2020(gp) # 1000001c <adc_byte_cnt>
+ 6ac:	f2dff06f          	j	5d8 <rsp_sdram2uart+0x68>
+         CSR -> uart_tx.fld.data = '\r';
+ 6b0:	20000737          	lui	a4,0x20000
+ 6b4:	00d00613          	li	a2,13
+ 6b8:	00c70023          	sb	a2,0(a4) # 20000000 <_stack_start+0xfff8000>
+         if (task.fld.adc1_uarting == 0xFF) task.fld.adc1_started = 0x00;
+ 6bc:	0027c603          	lbu	a2,2(a5)
+ 6c0:	0ff00713          	li	a4,255
+ 6c4:	00e61463          	bne	a2,a4,6cc <rsp_sdram2uart+0x15c>
+ 6c8:	82018423          	sb	zero,-2008(gp) # 10000028 <task>
+         if (task.fld.adc2_uarting == 0xFF) task.fld.adc2_started = 0x00;
+ 6cc:	0037c683          	lbu	a3,3(a5)
+ 6d0:	0ff00713          	li	a4,255
+ 6d4:	f0e692e3          	bne	a3,a4,5d8 <rsp_sdram2uart+0x68>
+ 6d8:	000780a3          	sb	zero,1(a5)
+ 6dc:	efdff06f          	j	5d8 <rsp_sdram2uart+0x68>
+         CSR -> uart_tx.fld.data = '\n';
+ 6e0:	20000737          	lui	a4,0x20000
+ 6e4:	00a00693          	li	a3,10
+ 6e8:	00d70023          	sb	a3,0(a4) # 20000000 <_stack_start+0xfff8000>
+         if (task.fld.adc1_uarting == 0xFF) task.fld.adc1_uarting = 0x00;
+ 6ec:	0027c683          	lbu	a3,2(a5)
+ 6f0:	0ff00713          	li	a4,255
+ 6f4:	00e69463          	bne	a3,a4,6fc <rsp_sdram2uart+0x18c>
+ 6f8:	00078123          	sb	zero,2(a5)
+         if (task.fld.adc2_uarting == 0xFF) task.fld.adc2_uarting = 0x00;
+ 6fc:	0037c683          	lbu	a3,3(a5)
+ 700:	0ff00713          	li	a4,255
+ 704:	ece69ae3          	bne	a3,a4,5d8 <rsp_sdram2uart+0x68>
+ 708:	000781a3          	sb	zero,3(a5)
+ 70c:	ecdff06f          	j	5d8 <rsp_sdram2uart+0x68>
+ 710:	00008067          	ret
+
+00000714 <main>:
+ *  -or devise and implement another mechanism
+ *
+ * For speed, we strive to streamline function calls in the main loop, \
+ * and maximize the use of inlined code.
+ **********************************************************************/
+void main() {
+ 714:	ff010113          	addi	sp,sp,-16
+ 718:	00112623          	sw	ra,12(sp)
+// the hardware part of system and illustrate HW/SW handshake. They
+// are all blocking / not designed to extract maximum performance
+//=======================
+
+// start with both LEDs turned off
+CSR->gpo.fld.led_off = 0x3;
+ 71c:	200007b7          	lui	a5,0x20000
+ 720:	00300713          	li	a4,3
+ 724:	00e78c23          	sb	a4,24(a5) # 20000018 <_stack_start+0xfff8018>
+   
+//=======================
+// Master loop. This is the "production", non-blocking code
+//=======================
+   while (1) {
+     cmd_recv();       // service UART_RX and parse Command
+ 728:	a41ff0ef          	jal	ra,168 <cmd_recv>
+     cmd_dispatch();   // send Command to its target resource
+ 72c:	bf9ff0ef          	jal	ra,324 <cmd_dispatch>
+
+     rsp_dispatch();   // decide which of two ADC samples to upload
+ 730:	db1ff0ef          	jal	ra,4e0 <rsp_dispatch>
+     rsp_sdram2uart(); // upload those samples to PC, via UART
+ 734:	e3dff0ef          	jal	ra,570 <rsp_sdram2uart>
+   while (1) {
+ 738:	ff1ff06f          	j	728 <main+0x14>
+ 73c:	3130                	fld	fa2,96(a0)
+ 73e:	3332                	fld	ft6,296(sp)
+ 740:	3534                	fld	fa3,104(a0)
+ 742:	3736                	fld	fa4,360(sp)
+ 744:	3938                	fld	fa4,112(a0)
+ 746:	4241                	li	tp,16
+ 748:	46454443          	fmadd.q	fs0,fa0,ft4,fs0,rmm
+ 74c:	0000                	unimp
+ 74e:	0000                	unimp
+ 750:	05b4                	addi	a3,sp,712
+ 752:	0000                	unimp
+ 754:	05c4                	addi	s1,sp,708
+ 756:	0000                	unimp
+ 758:	05f4                	addi	a3,sp,716
+ 75a:	0000                	unimp
+ 75c:	0600                	addi	s0,sp,768
+ 75e:	0000                	unimp
+ 760:	0624                	addi	s1,sp,776
+ 762:	0000                	unimp
+ 764:	0634                	addi	a3,sp,776
+ 766:	0000                	unimp
+ 768:	0640                	addi	s0,sp,772
+ 76a:	0000                	unimp
+ 76c:	0654                	addi	a3,sp,772
+ 76e:	0000                	unimp
+ 770:	0664                	addi	s1,sp,780
+ 772:	0000                	unimp
+ 774:	0670                	addi	a2,sp,780
+ 776:	0000                	unimp
+ 778:	06b0                	addi	a2,sp,840
+ 77a:	0000                	unimp
+ 77c:	06e0                	addi	s0,sp,844
+	...
