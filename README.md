@@ -10,7 +10,7 @@ The intent of this project is to bridge these gaps with an FPGA open-source impl
 ## A Glimpse into History 
 We have contributed to **Blackwire** project, which is a 100Gbps hardware implementation of Wireguard switch based on AMD/Xilinx-proprietary AlveoU50 PC-accelerator card (SmartNIC form-factor), and implementable only with proprietary Vivado toolchain. 
 
-While working on the _Blackwire_, we have touched multiple sections, and focused on the novel algorithm for _Balanced Binary Tree Search_ of IP tables. However, the _Blackwire_ hardware platform is expensive and priced out of reach of most educational institutions. Its gateware is written in SpinalHDL, which is a niche HDL, hardly popular in either academia or industry. While _Blackwire_ is now released to open-source, that decision came from financial hardship -- It was originaly meant for sale. Moreover, the company behind it has potential lawsuit issues that bring into question the legality of ownership over the codebase they donated to the open source community. 
+While working on the _Blackwire_, we have touched multiple sections, and focused on the novel algorithm for [_Balanced Binary Tree Search_](0.doc/Wireguard/Scalable-Balanced-Pipelined-IPv6-Lookup.pdf) of IP tables. However, the _Blackwire_ hardware platform is expensive and priced out of reach of most educational institutions. Its gateware is written in SpinalHDL, which is a niche HDL, hardly popular in either academia or industry. While _Blackwire_ is now released to open-source, that decision came from financial hardship -- It was originaly meant for sale. Moreover, the company behind it has potential lawsuit issues that bring into question the legality of ownership over the codebase they donated to the open source community. 
 
 ## Back to the Future
 To make the hardware Wireguard truly accessible in the genuine spirit of open-source movement, this project implements it:
@@ -20,6 +20,8 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 -	which is supported by open-source tools  
 -	and with all gateware written in the ubiquitous Verilog / System Verilog
 
+![ALINX Card](0.doc/Alinx/AX7201.jpg)
+
 ## References
 
 **[Ref1]** Wireguard implementations in software:
@@ -27,19 +29,19 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 >- [Tailscale](https://tailscale.com/blog/more-throughput)
 >- [Linux Kernel](https://thenewstack.io/wireguard-vpn-protocol-coming-to-a-linux-kernel-near-you)
   
-**[Ref2]** 100Gbps _Blackwire_ Wireguard https://github.com/brightai-nl/BrightAI-Blackwire
+**[Ref2]** 100Gbps [_Blackwire_](https://github.com/brightai-nl/BrightAI-Blackwire) Wireguard 
   
-**[Ref3]** Open-source FPGA-NIC platform https://github.com/corundum/corundum
+**[Ref3]** [Corundum](https://github.com/corundum/corundum), open-source FPGA-NIC platform 
   
-**[Ref4]** Encryption RTL IP https://github.com/mrdcvlsc/ChaCha20-Poly1305
+**[Ref4]** [ChaCha20-Poly1305](https://github.com/mrdcvlsc/ChaCha20-Poly1305) open-source Crypto RTL 
   
-**[Ref5]** Cookie Cutter SOC https://github.com/chili-chips-ba/openXC7-TetriSaraj
+**[Ref5]** Cookie Cutter [SOC](https://github.com/chili-chips-ba/openXC7-TetriSaraj)
 
-**[Ref6]** RISC-V ISS https://github.com/wyvernSemi/riscV/tree/main/iss
+**[Ref6]** [RISC-V ISS](https://github.com/wyvernSemi/riscV/tree/main/iss)
 
-**[Ref7]** 10Gbps Ethernet Switch https://github.com/ZipCPU/eth10g
+**[Ref7]** [10Gbps Ethernet Switch](https://github.com/ZipCPU/eth10g)
   
-**[Ref8]** Open-source tools for Xilinx Series7 https://github.com/openXC7
+**[Ref8]** [OpenXC7](https://github.com/openXC7) open-source tools for Xilinx Series7
 
 # Project Outline
 
@@ -53,10 +55,10 @@ The Phase2 continuation project is therefore also in the plans, to maximize effi
 > - While, contrary to _Blackwire_, we don’t rely on an external PC connected via PCIE, we will still have an on-chip RISC-V CPU with intricate hardware interface and significant Embedded Software component that controls the backbone of wire-speed datapath
 
 2) HW/SW co-development, integration and debugging
-> - Standard simulation is impractical for the project of this size and complexity. We therefore intend to put to test and good use the very promissing new [VProc ISS](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7217116220754411520-08xZ?utm_source=share&utm_medium=member_desktop)[Ref6]
+> - Standard simulation is impractical for the project of this size and complexity. We therefore intend to put to test and good use the very promissing new [VProc ISS](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7217116220754411520-08xZ?utm_source=share&utm_medium=member_desktop) [Ref6]
 > - It’s also impractical and expensive to provide full test systems with real traffic generators and checkers to all developers. We therefore plan to rent some space for a central lab that will host two test systems, then provide remote access to all developers
 3)	Real-life, at-speed testing
-4)	Extent of open-source tools support for all needed FPGA primitives and IP functions
+4)	Extent of open-source tools support for SystemVerilog and all needed FPGA primitives and IP functions
 5)	QOR of the (still maturing) open-source tools
 > - _Blackwire_ used commercial, AMD/Xilinx-proprietary Vivado toolchain, as well as high-end Alveo U50 FPGA silicon. Even then, they ran into multiple timing closure, utilization and routing congestion challenges.
 6) Financial resources
@@ -121,7 +123,7 @@ This work package is about hardware/software codesign and integration. The firmw
 - SW is responsible for configuration and management of hardware blocks
 - SW must not participate in the bulk datapath transfers
 - SW may however intercept the low-frequency management packets
-- For quick bring up, the IP Address Search (our novel balanced binary tree algorithm) may initially be hosted in software, then ported to hardware
+- For quick bring up, the IP Address Search (using novel balanced binary tree algorithm) may initially be hosted in software, then ported to hardware at a later point
 - SW will also cover KMM function -- Key Management Module
 
 - [ ] HW/SW Integration
@@ -161,6 +163,7 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 - [ ] Develop software components for management of data flow within VPN tunnels
 
 # Design Blueprint (TODO)
+![PrincipleView](0.doc/Wireguard/datapath-in-principle.png)
 
 ## Hardware Architecture
 ### HW Block Diagram
@@ -171,33 +174,40 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 - UDP packet disassembler and assembler
 
 ### HW Cryptography
-> - [blake2](https://www.blake2.net) hashing for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
-> - [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption, authenticated with [Poly1305](http://cr.yp.to/mac.html), using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction
-> - [Curve25519](http://cr.yp.to/ecdh.html) for ECDH key updates (for now just hooks for future)
-> - [SipHash24](https://en.wikipedia.org/wiki/SipHash) for hashtable keys
-> - [HKDF](https://eprint.iacr.org/2010/264) for key derivation
+- [blake2](https://www.blake2.net) hashing for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
+- [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption, authenticated with [Poly1305](http://cr.yp.to/mac.html), using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction
+- [Curve25519](http://cr.yp.to/ecdh.html) for ECDH key updates (for now just hooks for future)
+- [SipHash24](https://en.wikipedia.org/wiki/SipHash) for hashtable keys
+- [HKDF](https://eprint.iacr.org/2010/264) for key derivation
 
 ### HW Theory of Operation
-
+TODO
 
 ## Software Architecture
 ### SW Block Diagram
+TODO
 ### SW Theory of Operation
+TODO
 
 ## Hardware Data Flow
 ### HW Flow Chart, Throughputs and Pushbacks
+TODO
 
 ## Software Control Flow
 ### SW Flow Chart, Messages and HW Intercepts
+TODO
 
 ## HW/SW Working Together as a Coherent System
+TODO
 
 ## Development and Test Framework
 ### Shared Linux Server with Tools
 ### Simulation Test Bench
 ### Lab Test and Validation Setup
+TODO
 
-## Final Notes
+## Closing Notes
+TODO
 
 ### Acknowledgements
 We are grateful to NLnet Foundation for their sponsorship of this development activity.
