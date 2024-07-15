@@ -1,0 +1,52 @@
+#==========================================================================
+# List of file to make 'top.sv' design module
+#   DeviceName= "GW2AR-18C"
+#   PN        = "GW2AR-LV18QN88C8/I7"
+#==========================================================================
+
+#---Target-specific components
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_iobuf.sv
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_ilvds.sv
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_iddr.sv
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_iser8.sv
+
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_obuf.sv
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_olvds.sv
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_oddr.sv
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_oser10.sv
+
+${HW_SRC}/fpgatech_lib/GOWIN/fpga_pll.sv
+#${HW_SRC}/fpgatech_lib/GOWIN/fpga_srl.sv
+
+#---Common infrastructure components
+${HW_SRC}/ip.infra/soc_pkg.sv
+${HW_SRC}/ip.infra/soc_if.sv
+${HW_SRC}/ip.infra/soc_ram.sv
+${HW_SRC}/ip.infra/soc_fabric.sv
+
+${HW_SRC}/ip.infra/clk_rst_gen.sv
+${HW_SRC}/ip.infra/uart.WITH-FIFO.sv
+${HW_SRC}/ip.infra/debounce.sv
+${HW_SRC}/ip.infra/sync_fifo_ram.sv
+#${HW_SRC}/ip.infra/sync_fifo_srl.sv
+
+#---CPU
++incdir+${BLD_DIR}
+${HW_SRC}/ip.cpu/imem.sv
+
+# PicoRV32
+${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv
+${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.ORIG.sv
+${HW_SRC}/ip.cpu/soc_cpu.PICORV32.sv
+
+#---CSR
+${HW_SRC}/ip.csr/csr_pkg.sv
+${HW_SRC}/ip.csr/csr_if.sv
+${HW_SRC}/ip.csr/soc_csr.sv
+
+#---TOP
+${HW_SRC}/top.sv
+
+#==========================================================================
+# End-of-File
+#==========================================================================

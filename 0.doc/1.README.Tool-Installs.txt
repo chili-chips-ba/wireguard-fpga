@@ -1,0 +1,338 @@
+#####################
+# Install Python for Windows with UART Terminal support
+#####################
+
+1) Install Python
+     https://phoenixnap.com/kb/how-to-install-python-3-windows
+
+2) You should now have PIP also installed, and both Python and PIP in the path
+     WIN_CMD> pip --version
+     pip 24.0 from C:\Program Files\Python312\Lib\site-packages\pip (python 3.12)
+
+3) Install 'pyserial' package
+     WIN_CMD> pip install pyserial
+     
+4) Add path to the just-installed Python scripts to your PATH env var.
+   You can then directly invoke terminal app:
+
+     WIN_CMD> pyserial-miniterm  --parity N - 115200
+
+   You can also use this command to query UART ports
+     WIN_CMD> pyserial-ports
+
+   Or our Python scripts in '5.test\serialPy' for testing UART and Command Parser
+     WIN_CMD> python serial_exchange.py
+     WIN_CMD> python serial_data_sender.py
+     WIN_CMD> python serial_data_receiver.py
+
+
+
+####################
+# WSL2 and Ubuntu Install
+#####################
+
+Install Windows Terminal:
+ ms-windows-store://pdp?rtc=1&hl=en-us&gl=us&productid=9N0DX20HK701&mode=mini&pos=101%2C4%2C1172%2C1101&referrer=storeforweb&source=https%3A%2F%2Flearn.microsoft.com%2F
+
+---------------- 
+Open Windows Power Shell in administrator mode
+WINDOWS> wsl --install --distribution Ubuntu-22.04
+WINDOWS> wsl --set-version Ubuntu-22.04 2
+WINDOWS> wsl --update
+WINDOWS> wsl -l -v
+  NAME            STATE           VERSION
+* Ubuntu-22.04    Stopped         2
+
+---------------- 
+UBUNTU-PROMPT>
+
+sudo apt update && sudo apt upgrade
+
+
+#####################
+# Linux shell and Text Editor
+#####################
+# This is your choice. We prefer 'tcsh'
+# sudo install tcsh
+##=> then create your '~/.cshrc'
+
+# Emacs (or Gvim) are standard options for code editors:
+# sudo apt install emacs 
+## sudo apt install gvim
+
+# You can also use Windows editors by adding path
+# to them to your Linux $PATH, such as (for 'tcsh'):
+   setenv WIN_ROOT  '/mnt/c/Program Files:/mnt/c/Program Files (x86)'
+   setenv PATH      "${WIN_ROOT}:${PATH}"
+
+# VSCode is also a very popular cross-platform editor, esp. as it comes with useful plugins.
+# The editor itself can be downloaded from here.
+   https://code.visualstudio.com
+
+Once installed, you can open it up and go to the Extensions tab to install plugins.
+We warmly recommend the following 2 plugins:
+ 1) Verilog-HDL/SystemVerilog - provides syntax highlighting support for Verilog
+   https://marketplace.visualstudio.com/items?itemName=mshr-h.VerilogHDL
+
+ 2) search for "Lushay Code", or get it directly from the following link.
+   https://marketplace.visualstudio.com/items?itemName=lushay-labs.lushay-code&ssr=false
+
+   This extension also includes basic serial support, the "Lushay Code" extension
+   comes with a basic built-in serial console
+
+An option to GTKwave, and only for VCD (hence not suitable for larger designs)
+ 3) VCD WaveTrace - provides built in waveform viewing which can be used for debugging
+   https://marketplace.visualstudio.com/items?itemName=wavetrace.wavetrace
+
+
+#####################
+# FPGA Build Tools: Vivado
+#####################
+Download 'Vivado' from https://www.xilinx.com/support/download.html 
+   and follow their installation and licensing instructions
+
+#####################
+# FPGA Build Tools: openXC7
+#####################
+See '3.build\openXC7\README.md'
+
+#####################
+# FPGA Build Tools: Yosys/Surelog/Synlig Install (build from sources)
+#    Surelog version v1.82
+#    UHDM version v1.82 (python3.10, Java 11.0.21)
+#    antlr4
+#    Yosys 0.34+55
+#####################
+
+#---Prerequisites
+- everything from Verilator compilation
+
+#---Prep
+git  clone https://github.com/chipsalliance/synlig
+cd   synlig
+git  submodule sync
+git  submodule update --init --recursive third_party/{surelog,yosys}
+make install
+
+#---Since Yosys and Surelog are in submodule, add them to the path
+export PATH=`pwd`/out/current/bin:$PATH
+
+#---Check Yosys version, then load the plugin
+yosys --version
+ -> Yosys 0.34+55 (git sha1 672375ed0, c++ 11.4.0-1ubuntu1~22.04 -fPIC -Os)
+yosys-config --help
+yosys
+
+YOSYS> plugin -i systemverilog
+YOSYS> help read_systemverilog
+YOSYS> help read_uhdm
+YOSYS> read_systemverilog -defer tests/separate_compilation/separate_compilation.v
+YOSYS> read_systemverilog -defer tests/separate_compilation/separate_compilation_buf.sv
+YOSYS> read_systemverilog -defer tests/separate_compilation/separate_compilation_pkg.sv
+YOSYS> read_systemverilog -link
+YOSYS> exit
+
+yosys -p "plugin -i systemverilog" -p "read_systemverilog tests/simple_tests/onenet/top.sv"
+
+# Alternative 
+surelog -parse tests/simple_tests/onenet/top.sv
+yosys -p "plugin -i systemverilog" -p "read_uhdm slpp_all/surelog.uhdm"
+
+yosys -p "plugin -i systemverilog" -p "read_systemverilog /mnt/d/Projects/GitHub-repo/TetriSaraj_Gowin/1.hw/project_v1/src/ip.hdmi/hdmi_pkg.sv"
+
+
+#####################
+# Verilator install (for RTL simulaton)
+#   https://verilator.org/guide/latest/install.html
+#####################
+
+# Prerequisites:
+sudo apt install -y gcc-11 g++-11 build-essential cmake tclsh ant default-jre swig google-perftools libgoogle-perftools-dev python3 python3-dev python3-pip uuid uuid-dev tcl-dev flex libfl-dev git pkg-config libreadline-dev bison libffi-dev wget python3-orderedmultidict
+
+sudo apt install help2man ccache mold numactl perl-doc autoconf
+
+mkdir 0.git-repo
+cd    0.git-repo
+git   init
+
+# Verilator itself
+git   clone https://github.com/verilator/verilator   # Only first time
+cd    verilator
+git   pull        # Make sure we're up-to-date
+git   tag         # See what versions exist. v5.022 was the latest on 2024/2/27
+
+#git checkout master      # Use development branch (e.g. recent bug fix)
+git checkout stable      # Use most recent release
+#git checkout v{version}  # Switch to specified release version
+
+autoconf        # Create ./configure script
+
+#export VERILATOR_ROOT=`pwd`   # if your shell is bash
+setenv VERILATOR_ROOT `pwd`   # if your shell is csh
+./configure
+# Running will use files from $VERILATOR_ROOT, so no install needed
+
+make -j `nproc`  # Build Verilator itself (if error, try just 'make')
+make test  # Check the compilation by running self-tests:
+
+verilator --version
+Verilator 5.024 2024-04-05 rev v5.024-42-gc561fe8ba
+
+put this in your .cshrc:
+setenv VERILATOR_ROOT  ${HOME}/0.git-repo/verilator
+setenv PATH            "${VERILATOR_ROOT}/bin:${PATH}"
+
+
+#####################
+# Install Icarus simulator
+#   https://steveicarus.github.io/iverilog/usage/installation.html
+#     Icarus Verilog version 13.0 (devel)
+#####################
+
+
+#####################
+# Install GTKWave (version 3.1.118), for waveform viewing
+#   https://sourceforge.net/projects/gtkwave/files/gtkwave-3.3.118
+#####################
+
+0)__Download tarball, copy it to your home, then untar it there
+cd ~
+cp /mnt/c/Downloads/gtkwave-3.3.118.tar.gz .
+tar -xvf gtkwave-3.3.118.tar.gz
+
+
+1)__Prerequisites
+sudo apt-get install libgtk-3-dev
+sudo apt-get install libgtk2.0-dev
+sudo apt-get install libbz2-dev
+sudo apt-get install tk-dev
+sudo apt-get install gperf
+
+cd  gtkwave-3.3.118
+./configure --with-tcl=/usr/lib/tcl8.6  --with-tk=/usr/lib/tk8.6 
+
+2) make
+3) sudo make install 
+4) unless /usr/local/bin is already in your $PATH (as it should be), add it
+
+5) gtkwave --version
+   GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
+
+6) cp examples/gtkwaverc ~/.gtkwaverc
+      copy the .gtkwaverc file to your home directory or to your
+      VCD project directory. It contains prefrences for a good
+      configuration, which most people find ergonomic. This is
+      however not strictly necessary.
+
+7) cd ..; rm -rf gtkwave-3.3.118
+
+
+#####################
+# Install and run cocoTB
+#####################
+pip3 install cocotb
+
+pip3 install https://github.com/alexforencich/cocotbext-i2c/archive/master.zip
+  --- Not available in PyPI, must install from git. For more, see:
+  --- https://github.com/alexforencich/cocotbext-i2c/blob/master/README.md
+
+
+cd 2.sim/cocotb/top
+make WAVES=1
+   or 'make SIM=icarus WAVES=1'
+   or 'make SIM=verilator WAVES=1'
+   or another combination. See Makefile for details
+
+
+#####################
+# Perform full computer reboot before starting to use these tools
+#####################
+
+
+
+#===========================================================================
+#===========================================================================
+# The remaining tools are optional, and needed only if you want to expand
+#  on your FPGA expertise
+#===========================================================================
+#===========================================================================
+#####################
+# NICE-TO-HAVE:
+#  Prevent WSL GUI apps from "disappearing" upon
+#    wake up from sleep or hybernation
+#####################
+
+https://github.com/nbdd0121/wsld
+
+#####################
+# NOT-NEEDED: Waveform Surfer
+#   https://app.surfer-project.org -- WebApp, no install needed
+#   https://gitlab.com/surfer-project/surfer
+#   https://blog.yosyshq.com/p/community-spotlight-surfer/
+#####################
+
+# Recommended Method:
+#   Compile Surfer in your local repo without installing it anywhere
+#   and keep recompiling it often to catch source code updates, 
+#   as this project is under heavy development
+
+cd    0.git-repo
+git   clone https://gitlab.com/surfer-project/surfer ;# only first time
+cd    surfer
+git   submodule update --init --recursive            ;# before every recompile 
+cargo build
+ 
+# Surfer executable can now found in ./target/debug/.
+# You can run it from there, or you can use 'cargo run'.
+# You can also install it with: cargo install --path .
+# We recommend to add that directory to your $PATH
+
+
+#--|------------------------------------------------------------
+#--| Method#1:
+#--|
+#--| 1) Install prebuild Windows library from here:
+#--|      https://gitlab.com/api/v4/projects/42073614/jobs/artifacts/main/raw/surfer_win.zip?job=windows_build
+#--|  
+#--| 2) Copy it to your C:/Program Files
+#--|  
+#--| 3) Add '/mnt/c/Program Files' to your Linux PATH
+#--|  
+#--|    For Tcsh, put the following two lines in your .cshrc 
+#--|       setenv WIN_ROOT  '/mnt/c/Program Files:/mnt/c/Program Files (x86)'
+#--|       setenv PATH      "${WIN_ROOT}:${PATH}"
+#--|  
+#--| 4) You can now invoke it from Windows with 'surfer.exe' command
+#--|
+#--|------------------------------------------------------------
+#--| Method#2: (it did not work for me)
+#--|
+#--| sudo apt install openssl
+#--| sudo apt install libssl-dev
+#--|  
+#--| #install Rust
+#--| curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#--|  
+#--| prepend this to your $PATH:
+#--|   ${HOME}/.cargo/bin
+#--|  
+#--| cargo install --git https://gitlab.com/surfer-project/surfer surfer
+#--|  
+#--| It's now installed in ${HOME}/.cargo/bin/surfer
+#--|------------------------------------------------------------
+
+
+#===========================================================================
+# Post-install Linux cleanup
+#===========================================================================
+sudo apt autoremove
+
+
+#===========================================================================
+# Misc
+#===========================================================================
+https://hardwarebee.com/fpga-programming-tutorial
+https://www.nandland.com/articles/fpga-101-fpgas-for-beginners.html
+
+
+#---End-of-File

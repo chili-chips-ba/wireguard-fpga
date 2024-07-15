@@ -1,0 +1,195 @@
+[*]
+[*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
+[*] Wed Mar  6 06:36:14 2024
+[*]
+[dumpfile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/output/wave.fst"
+[dumpfile_mtime] "Wed Mar  6 06:29:34 2024"
+[dumpfile_size] 1423934
+[savefile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/wave.FULL.gtkw"
+[timestart] 61578960
+[size] 1786 927
+[pos] -1 -1
+*-11.584717 61578966 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.tb.
+[treeopen] TOP.tb.bfm_sdram.
+[treeopen] TOP.tb.dut.
+[treeopen] TOP.tb.dut.u_cpu.
+[treeopen] TOP.tb.dut.u_sdram.u_sdram_ctrl.
+[treeopen] TOP.tb.dut.u_uart.
+[treeopen] TOP.tb.dut.u_uart.csr.
+[sst_width] 293
+[signals_width] 235
+[sst_expanded] 1
+[sst_vpaned_height] 537
+@200
+-CPU
+@100000028
+[color] 3
+TOP.tb.dut.u_cpu.u_cpu.cpu_state[2:0]
+@28
+TOP.tb.dut.u_cpu.cpu_valid
+TOP.tb.dut.u_cpu.cpu_ready
+@22
+[color] 3
+TOP.tb.dut.u_cpu.cpu_addr[31:0]
+TOP.tb.dut.u_cpu.cpu_wdata[31:0]
+TOP.tb.dut.u_cpu.cpu_wstrb[3:0]
+TOP.tb.dut.u_cpu.cpu_rdata[31:0]
+@28
+[color] 6
+TOP.tb.dut.u_sdram.u_sdram_ctrl.clk
+@200
+-SDRAM
+@100000028
+[color] 3
+TOP.tb.dut.u_sdram.u_sdram_ctrl.state[2:0]
+[color] 3
+TOP.tb.dut.u_sdram.u_sdram_ctrl.sdram_cmd[2:0]
+@28
+TOP.tb.dut.u_sdram.u_sdram_ctrl.refr_15us
+TOP.tb.bfm_sdram.Data_in_enable
+@22
+TOP.tb.bfm_sdram.Data_out_enable2[3:0]
+@28
+TOP.tb.dut.u_cpu.bus.arst_n
+TOP.tb.dut.u_cpu.bus.clk
+@200
+-CPU
+@100000028
+[color] 6
+TOP.tb.dut.u_cpu.u_cpu.cpu_state[2:0]
+@28
+TOP.tb.dut.u_cpu.cpu_instr
+TOP.tb.dut.u_cpu.cpu_valid
+TOP.tb.dut.u_cpu.cpu_ready
+@22
+TOP.tb.dut.u_cpu.cpu_wstrb[3:0]
+@28
+TOP.tb.dut.u_cpu.u_cpu.mem_state[1:0]
+TOP.tb.dut.u_cpu.u_cpu.mem_do_wdata
+TOP.tb.dut.u_cpu.u_cpu.mem_la_write
+@22
+[color] 4
+TOP.tb.dut.u_cpu.u_cpu.mem_la_addr[31:0]
+[color] 7
+TOP.tb.dut.u_cpu.cpu_addr[31:0]
+TOP.tb.dut.u_cpu.cpu_wdata[31:0]
+TOP.tb.dut.u_cpu.cpu_rdata[31:0]
+@200
+-DECODE
+@28
+[color] 7
+TOP.tb.dut.u_cpu.imem_vld
+[color] 7
++{dmem_vld} TOP.tb.dut.bus_dmem.vld
+[color] 7
++{csr_vld} TOP.tb.dut.bus_csr.vld
+[color] 7
++{sdram_vld} TOP.tb.dut.bus_sdram.vld
+@200
+-BUS
+@28
+TOP.tb.dut.u_cpu.bus.vld
+TOP.tb.dut.u_cpu.bus.rdy
+TOP.tb.dut.u_cpu.bus.we[3:0]
+@22
+TOP.tb.dut.u_cpu.bus.addr[31:2]
+TOP.tb.dut.u_cpu.bus.rdat[31:0]
+TOP.tb.dut.u_cpu.bus.wdat[31:0]
+@200
+-CSR
+@22
+TOP.tb.dut.led_n[5:0]
+@200
+-UART_TX
+@28
+TOP.tb.dut.u_uart.tick_1us
+@22
+TOP.tb.dut.u_uart.tx_cnt1us[3:0]
+TOP.tb.dut.u_uart.tx_data[7:0]
+@100000028
+TOP.tb.dut.u_uart.tx_state[3:0]
+@28
+TOP.tb.dut.u_uart.uart_tx
+@200
+-UART_RX
+@28
+TOP.tb.dut.u_uart.uart_rx
+@22
+TOP.tb.dut.u_uart.rx_cnt1us[3:0]
+@28
+TOP.tb.dut.u_uart.rx_cnt1us_is0
+@100000028
+TOP.tb.dut.u_uart.rx_state[3:0]
+@22
+TOP.tb.dut.u_uart.rx_shift[7:0]
+@200
+-SDRAM_CTRL
+@28
+TOP.tb.dut.u_sdram.bus.clk
+TOP.tb.dut.u_sdram.u_sdram_ctrl.vld
+[color] 3
+TOP.tb.dut.u_sdram.u_sdram_ctrl.rdy
+@22
+TOP.tb.dut.u_sdram.u_sdram_ctrl.wdat[31:0]
+@28
+TOP.tb.dut.u_sdram.u_sdram_ctrl.we[3:0]
+@100000028
+[color] 3
+TOP.tb.dut.u_sdram.u_sdram_ctrl.state[2:0]
+[color] 3
+TOP.tb.dut.u_sdram.u_sdram_ctrl.sdram_cmd[2:0]
+@28
+TOP.tb.dut.u_sdram.u_sdram_ctrl.tick_1us
+TOP.tb.dut.u_sdram.tick_cca15us
+@22
+TOP.tb.dut.u_sdram.u_sdram_ctrl.cnt_15us[3:0]
+@28
+TOP.tb.dut.u_sdram.u_sdram_ctrl.refr_15us
+@22
+TOP.tb.dut.u_sdram.u_sdram_ctrl.wait_cnt[3:0]
+@28
+TOP.tb.dut.u_sdram.u_sdram_ctrl.wait_is_15
+TOP.tb.dut.u_sdram.u_sdram_ctrl.dq_hiz
+@22
+TOP.tb.dut.u_sdram.u_sdram_ctrl.dq_out[31:0]
+[color] 3
+TOP.tb.dut.u_sdram.u_sdram_ctrl.rdat[31:0]
+TOP.tb.dut.u_sdram.IO_sdram_dq[31:0]
+@200
+-SDRAM
+@28
+TOP.tb.dut.O_sdram_cke
+TOP.tb.dut.O_sdram_clk
+TOP.tb.dut.O_sdram_cs_n
+TOP.tb.dut.O_sdram_ras_n
+TOP.tb.dut.O_sdram_cas_n
+TOP.tb.dut.O_sdram_wen_n
+TOP.tb.dut.O_sdram_ba[1:0]
+@22
+TOP.tb.dut.O_sdram_addr[10:0]
+TOP.tb.dut.O_sdram_dqm[3:0]
+@28
+TOP.tb.bfm_sdram.Write_enable
+TOP.tb.bfm_sdram.Sys_clk
+TOP.tb.bfm_sdram.Bank[1:0]
+@22
+TOP.tb.bfm_sdram.Row[10:0]
+TOP.tb.bfm_sdram.Col[7:0]
+TOP.tb.bfm_sdram.Dqm_pipe1[3:0]
+TOP.tb.bfm_sdram.Dqm_pipe2[3:0]
+TOP.tb.bfm_sdram.mem_data[31:0]
+@28
+TOP.tb.bfm_sdram.Data_in_enable
+@22
+TOP.tb.bfm_sdram.Dq_in[31:0]
+TOP.tb.bfm_sdram.Dq_in_data[31:0]
+TOP.tb.bfm_sdram.Dq_out_data[31:0]
+@28
+TOP.tb.bfm_sdram.Data_out_enable
+@22
+TOP.tb.bfm_sdram.Data_out_enable2[3:0]
+TOP.tb.bfm_sdram.Dq_out[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

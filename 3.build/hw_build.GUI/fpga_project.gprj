@@ -1,0 +1,55 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW2AR-18C" pn="GW2AR-LV18QN88C8/I7">gw2ar18c-000</Device>
+    <FileList>
+        <File path="D:/projects/eduSOC/1.hw/custom/adc/adc.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/adc/adc_core.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/dac/dac.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/dac/hann_gen.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/dac/hann_lut.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/dac/mixer.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/dac/ping_gen.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/dac/sin_gen.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/custom/dac/sin_lut.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_alu54_minus.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_alu54_plus.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_iddr.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_ilvds.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_iobuf.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_iser8.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_obuf.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_oddr.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_olvds.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_oser10.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/fpgatech_lib/GOWIN/fpga_pll.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/cpu.EDUBOS5/edubos5.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/cpu.EDUBOS5/edubos5_alu.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/cpu.EDUBOS5/edubos5_pkg.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/cpu.EDUBOS5/edubos5_rf.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv" type="file.verilog" enable="0"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/imem.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/soc_cpu.EDUBOS5.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.cpu/soc_cpu.PICORV32.sv" type="file.verilog" enable="0"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.csr/csr_if.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.csr/csr_pkg.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.csr/soc_csr.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/clk_rst_gen.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/debounce.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/soc_fabric.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/soc_if.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/soc_pkg.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/soc_ram.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/sync_fifo_ram.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.infra/uart.WITH-FIFO.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.sdram/sdram_ctrl.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.sdram/sdram_if.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.sdram/sdram_pkg.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/ip.sdram/soc_sdram.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/top.sv" type="file.verilog" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/constraints/top.pinout.cst" type="file.cst" enable="1"/>
+        <File path="D:/projects/eduSOC/1.hw/constraints/top.timing.sdc" type="file.sdc" enable="1"/>
+    </FileList>
+</Project>
