@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Fri Mar 31 09:26:33 2023
+# Process ID: 21976
+# Current directory: D:/ax/AX7103_2019_1/check_demo/check_demo.runs/synth_1
+# Command line: vivado.exe -log check_demo.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source check_demo.tcl
+# Log file: D:/ax/AX7103_2019_1/check_demo/check_demo.runs/synth_1/check_demo.vds
+# Journal file: D:/ax/AX7103_2019_1/check_demo/check_demo.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source check_demo.tcl -notrace

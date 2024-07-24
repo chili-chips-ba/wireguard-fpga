@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Sat Oct 12 17:50:38 2019
+# Process ID: 13980
+# Current directory: I:/ax7103_2019.1/demo/25_video_ethernet/video_ethernet/eth_test.runs/camera_fifo_synth_1
+# Command line: vivado.exe -log camera_fifo.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source camera_fifo.tcl
+# Log file: I:/ax7103_2019.1/demo/25_video_ethernet/video_ethernet/eth_test.runs/camera_fifo_synth_1/camera_fifo.vds
+# Journal file: I:/ax7103_2019.1/demo/25_video_ethernet/video_ethernet/eth_test.runs/camera_fifo_synth_1\vivado.jou
+#-----------------------------------------------------------
+source camera_fifo.tcl -notrace

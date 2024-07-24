@@ -1,0 +1,199 @@
+$date
+        2018-Apr-24 16:59:04
+$end
+$version
+        Vivado v2017.4 (64-bit)
+$end
+$timescale
+        1ps
+$end
+$scope module dut $end
+$var reg 1 " util_gmii_to_rgmii_m0/rgmii_tx_ctl_r $end
+$var reg 1 # util_gmii_to_rgmii_m0/gmii_tx_en $end
+$var reg 1 $ util_gmii_to_rgmii_m0/gmii_rx_dv $end
+$var reg 1 % util_gmii_to_rgmii_m0/<const0>_1 $end
+$var reg 1 & util_gmii_to_rgmii_m0/<const0>_2 $end
+$var reg 1 ' util_gmii_to_rgmii_m0/<const0>_3 $end
+$var reg 1 ( util_gmii_to_rgmii_m0/<const0>_4 $end
+$var reg 1 ) util_gmii_to_rgmii_m0/<const0> $end
+$var reg 4 * util_gmii_to_rgmii_m0/gmii_txd_low [3:0] $end
+$var reg 8 . util_gmii_to_rgmii_m0/gmii_txd [7:0] $end
+$var reg 8 6 util_gmii_to_rgmii_m0/gmii_rxd [7:0] $end
+$var reg 1 > util_gmii_to_rgmii_m0/rgmii_rx_ctl $end
+$var reg 1 ? util_gmii_to_rgmii_m0/gmii_col $end
+$var reg 1 @ util_gmii_to_rgmii_m0/gigabit $end
+$var reg 4 A util_gmii_to_rgmii_m0/gmii_txd_r_d1 [3:0] $end
+$var reg 1 E _TRIGGER $end
+$var reg 1 F _WINDOW $end
+$var reg 1 G _GAP $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0"
+0#
+0$
+0%
+0&
+0'
+0(
+0)
+b0 *
+b0 .
+b11011101 6
+0>
+0?
+1@
+b0 A
+0E
+1F
+0G
+$end
+#2046
+1>
+#2048
+1$
+b1010101 6
+1E
+#2059
+b11010101 6
+#2061
+b110011 6
+#2064
+b0 6
+#2066
+b1 6
+#2067
+b0 6
+#2069
+b11 6
+#2070
+b100000 6
+#2071
+b110000 6
+#2072
+b10011100 6
+#2074
+b100011 6
+#2075
+b1010 6
+#2077
+b11001010 6
+#2078
+b101110 6
+#2079
+b100110 6
+#2080
+b10000110 6
+#2082
+b11011101 6
+#2083
+b1100000 6
+#2085
+b0 6
+#2091
+b100000 6
+#2093
+b10001 6
+#2094
+b1 6
+#2096
+b11111110 6
+#2098
+b10000000 6
+#2099
+b0 6
+#2109
+b1010101 6
+#2110
+b10000111 6
+#2112
+b11100101 6
+#2114
+b1000011 6
+#2115
+b100000 6
+#2117
+b11010 6
+#2118
+b10011010 6
+#2119
+b10110010 6
+#2120
+b10001111 6
+#2122
+b11111111 6
+#2123
+b10 6
+#2125
+b0 6
+#2142
+b1 6
+#2144
+b0 6
+#2146
+b11 6
+#2147
+b11110010 6
+#2149
+b1010010 6
+#2150
+b1010000 6
+#2151
+b10100 6
+#2152
+b11101011 6
+#2154
+b0 6
+#2155
+b100000 6
+#2157
+b1010100 6
+#2158
+b11110110 6
+#2160
+b111010 6
+#2162
+b1001110 6
+#2163
+b0 6
+#2168
+b1 6
+#2170
+b0 6
+#2179
+b110 6
+#2181
+b1101001 6
+#2182
+b1111011 6
+#2183
+b1110011 6
+#2184
+b1100001 6
+#2186
+b1110100 6
+#2187
+b1100001 6
+#2189
+b1110000 6
+#2190
+b0 6
+#2194
+b1 6
+#2195
+b0 6
+#2197
+b1 6
+#2198
+b1111101 6
+#2200
+b1110 6
+#2202
+b11100101 6
+#2203
+b10010000 6
+0>
+#2205
+0$
+b11011101 6
