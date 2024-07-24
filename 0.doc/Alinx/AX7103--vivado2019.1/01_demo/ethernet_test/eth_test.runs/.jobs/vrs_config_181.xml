@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Runs Version="1" Minor="0">
+	<Run Id="rxd_clk_synth_1" LaunchDir="D:/demo_AX7050/demo_ax7050/19_ethernet_1g_100M/rgmii_ethernet/eth_test.runs/rxd_clk_synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="synth_1" LaunchDir="D:/demo_AX7050/demo_ax7050/19_ethernet_1g_100M/rgmii_ethernet/eth_test.runs/synth_1" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado">
+		<Parent Id="rxd_clk_synth_1"/>
+	</Run>
+</Runs>
+

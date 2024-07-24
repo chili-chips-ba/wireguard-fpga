@@ -1,0 +1,217 @@
+2019.1:
+ * Version 13.2 (Rev. 4)
+ * Bug Fix: Destination Clock not connected properly for some XPM_CDC instances when in common clock mode. Conditions added to connect the correct clock
+ * Other: IP Waivers added in constraint files. No functional changes
+ * Revision change in one or more subcores
+
+2018.3.1:
+ * Version 13.2 (Rev. 3)
+ * No changes
+
+2018.3:
+ * Version 13.2 (Rev. 3)
+ * Feature Enhancement: None
+ * Other: Reduced simulation warnings in Behavioral model. No functional changes
+ * Revision change in one or more subcores
+
+2018.2:
+ * Version 13.2 (Rev. 2)
+ * No changes
+
+2018.1:
+ * Version 13.2 (Rev. 2)
+ * Bug Fix: Enable Safety Circuit option was unintentionally made available for user selection when Enable Reset Synchronization is not selected. This unintentional enablement is corrected and Enable Safety Circuit is available for user selection only if Enable Reset Synchronization option is selected
+ * Bug Fix: REQP-1839 DRC warning removed from example test bench
+ * Bug Fix: Read Data Count in behavioral model is updated to start with a valid value when Enable Reset Synchronization option is not selected
+ * Other: As FIFO Generator core uses XPM_CDC module, user must ensure that the wr_rst and rd_rst overlap for at least C_SYNCHRONIZER_STAGE+1 slowest clock cycles if Enable Reset Synchronization option is disabled
+
+2017.4:
+ * Version 13.2 (Rev. 1)
+ * Revision change in one or more subcores
+
+2017.3:
+ * Version 13.2
+ * Feature Enhancement: Enable Safety Circuit option is made default for BRAM based FIFOs when Asynchronous Reset is selected
+ * Feature Enhancement: All outputs are made synchronous to respective clock domain when Enable Safety Circuit option is selected
+ * Feature Enhancement: All outputs are invalid for reset duration + 60 slowest clock cycles when Enable Safety Circuit option is selected
+ * Feature Enhancement: All outputs are invalid for reset duration + 30 slowest clock cycles when Enable Safety Circuit option is not selected
+ * Feature Enhancement: The outputs of FIFO Generator may be Xs for initial few clock cycles if the core is configured without reset. It is recommended to wait for 15 slowest clock cycles at the beginning of behavioral simulation (from time 0) before accessing the FIFO
+
+2017.2:
+ * Version 13.1 (Rev. 4)
+ * No changes
+
+2017.1:
+ * Version 13.1 (Rev. 4)
+ * Bug Fix: FIFO Generator core was constructing the buit-in FIFO sub-optimally for 2K-deep and 36-bit wide configuration. This is corrected to use the optimal FIFO structure
+ * Bug Fix: In order to enable the tool to perform the recovery check on the reset, set_false_path for reset is kept only from the input port to the first flop where it connects to
+ * Feature Enhancement: Updated the FIFO Generator's constraints to improve tool performance processing its XDC
+ * Other: Internal device family change, no functional changes
+ * Revision change in one or more subcores
+
+2016.4:
+ * Version 13.1 (Rev. 3)
+ * Port Change: None
+ * Bug Fix: Supported features table in the first page of GUI updated to reflect the asymmetry support for common clock BRAM FIFO
+ * Feature Enhancement: None
+ * Revision change in one or more subcores
+
+2016.3:
+ * Version 13.1 (Rev. 2)
+ * Port Change: wr_rst_busy and rd_rst_busy ports made available if safety circuit is enabled
+ * Bug Fix: Fixed issue which was causing the m_axis_tvalid to go high after the reset is released and no valid data written to the FIFO
+ * Feature Enhancement: Safety circuit is made independent of Output Register and Enable Reset Synchronization options
+ * Other: Added support for future devices
+ * Other: Source HDL files are concatenated into a single file to speed up synthesis and simulation. No changes required by the user
+ * Revision change in one or more subcores
+
+2016.2:
+ * Version 13.1 (Rev. 1)
+ * Revision change in one or more subcores
+
+2016.1:
+ * Version 13.1
+ * Delivering only Verilog behavioral model.
+ * Constraint(s) for Independent Clocks Distributed RAM FIFO is changed, which may issue a CDC-1 warning that can be safely ignored.
+ * Output Register option is updated to offer either Embedded Register or Fabric Register or Both Embedded and Fabric Registers.
+ * Updated the FIFO Generator GUI to provide Embedded Register option for Built-in FIFO when ECC mode in selected.
+ * Programmable Full and Programmable Empty Threshold range has been reduced for UltraScale and UltraScale+ Built-in FIFO configurations. For more information on the exact threshold range change, refer the PG(057)
+ * Programmable Full and Programmable Empty Threshold values were reset to its default values when the previous version of the core is upgraded to the latest version. This has been corrected
+ * Revision change in one or more subcores
+
+2015.4.2:
+ * Version 13.0 (Rev. 1)
+ * No changes
+
+2015.4.1:
+ * Version 13.0 (Rev. 1)
+ * No changes
+
+2015.4:
+ * Version 13.0 (Rev. 1)
+ * Fixed safety circuit related warnings in Behavioral model
+ * Revision change in one or more subcores
+
+2015.3:
+ * Version 13.0
+ * Additional safety circuit option provided for asynchronous reset configurations.
+ * Delivering only VHDL behavioral model.
+ * Added asymmetric port width support for 7-series Common Clock Block RAM FIFO
+ * IP revision number added to HDL module, library, and include file names, to support designs with both locked and upgraded IP instances
+
+2015.2.1:
+ * Version 12.0 (Rev. 4)
+ * No changes
+
+2015.2:
+ * Version 12.0 (Rev. 4)
+ * No changes
+
+2015.1:
+ * Version 12.0 (Rev. 4)
+ * Delivering  non encrypted behavioral models.
+ * Enabled out-of-context clock frequency setting by adding FREQ_HZ parameter to clock ports
+ * Enabling behavioral simulation for Built-in FIFO configurations changes the simulation file names and delivery structure.
+ * Supported devices and production status are now determined automatically, to simplify support for future devices
+
+2014.4.1:
+ * Version 12.0 (Rev. 3)
+ * No changes
+
+2014.4:
+ * Version 12.0 (Rev. 3)
+ * Reduced DRC warnings.
+ * Internal device family change, no functional changes
+ * Encrypted source files are concatenated together to reduce the number of files and to reduce simulator compile time
+
+2014.3:
+ * Version 12.0 (Rev. 2)
+ * Added support for Asynchronous AXI Stream Packet FIFO for UltraScale devices.
+ * Added support for write data count and read data count for Asynchronous AXI Stream Packet FIFO for UltraScale devices.
+ * Added support for write data count and read data count for Common Clock Block RAM FIFO when Asymmetric Port Width option is enabled for UltraScale devices.
+ * Added support for Low Latency Built-in FIFO for UltraScale devices.
+
+2014.2:
+ * Version 12.0 (Rev. 1)
+ * Repackaged to improve internal automation, no functional changes.
+
+2014.1:
+ * Version 12.0
+ * Asynchronous reset port (rst) for Built-in FIFO configurations is removed for UltraScale Built-in FIFO configurations. When upgrading from previously released core, 'rst' port will be replaced by 'srst' port.
+ * Synchronous reset (srst) mechanism is changed now for UltraScale devices. FIFO Generator will now provide wr_rst_busy and rd_rst_busy output ports. When wr_rst_busy is active low, the core is ready for write operation and when rd_rst_busy is active low, the core is ready for read operation.
+ * Added asymmetric port width support for Common Clock Block RAM FIFO, Common Clock Built-in FIFO and Independent Clocks Built-in FIFO configurations for UltraScale Devices
+ * Added 'sleep' input port for Common Clock Built-in FIFO and Independent Clocks Built-in FIFO configurations only for UltraScale Devices
+ * Internal device family name change, no functional changes
+
+2013.4:
+ * Version 11.0 (Rev. 1)
+ * Added support for Ultrascale devices
+ * Common Clock Builtin FIFO is set as default implementation type only for UltraScale devices
+ * Embedded Register option is always ON for Block RAM and Builtin FIFOs only for UltraScale devices
+ * Reset is sampled with respect to wr_clk/clk and then synchronized before the use in FIFO Generator only for UltraScale devices
+
+2013.3:
+ * Version 11.0
+ * AXI ID Tags (s_axi_wid and m_axi_wid) are now determined by AXI protocol type (AXI4, AXI3). When upgrading from previously released core, these signals will be removed when AXI_Type = AXI4_Full.
+ * AXI Lock signals (s_axi_awlock, m_axi_awlock, s_axi_arlock and m_axi_arlock) are now determined by AXI Protocol type (AXI4, AXI3). When upgrading from previously released core, these signals width will reduce from 2-bits to 1-bit when AXI_Type=AXI4_Full
+ * Removed restriction on packet size in AXI4 Stream FIFO mode. Now, the packet size can be up to FIFO depth
+ * Enhanced support for IP Integrator
+ * Reduced warnings in synthesis and simulation
+ * Added support for Cadence IES and Synopsys VCS simulators
+ * Improved GUI speed and responsiveness, no functional changes
+ * Increased the maximum number of synchronization stages from 4 to 8. The minimum FIFO depth is limited to 32 when number of synchronization stages is > 4
+
+2013.2:
+ * Version 10.0 (Rev. 1)
+ * Constraints processing order changed
+
+2013.1:
+ * Version 10.0
+ * Native Vivado Release
+ * There have been no functional or interface changes to this IP.  The version number has changed to support unique versioning in Vivado starting with 2013.1.
+
+(c) Copyright 2002 - 2019 Xilinx, Inc. All rights reserved.
+
+This file contains confidential and proprietary information
+of Xilinx, Inc. and is protected under U.S. and
+international copyright and other intellectual property
+laws.
+
+DISCLAIMER
+This disclaimer is not a license and does not grant any
+rights to the materials distributed herewith. Except as
+otherwise provided in a valid license issued to you by
+Xilinx, and to the maximum extent permitted by applicable
+law: (1) THESE MATERIALS ARE MADE AVAILABLE "AS IS" AND
+WITH ALL FAULTS, AND XILINX HEREBY DISCLAIMS ALL WARRANTIES
+AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING
+BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-
+INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE; and
+(2) Xilinx shall not be liable (whether in contract or tort,
+including negligence, or under any other theory of
+liability) for any loss or damage of any kind or nature
+related to, arising under or in connection with these
+materials, including for any direct, or any indirect,
+special, incidental, or consequential loss or damage
+(including loss of data, profits, goodwill, or any type of
+loss or damage suffered as a result of any action brought
+by a third party) even if such damage or loss was
+reasonably foreseeable or Xilinx had been advised of the
+possibility of the same.
+
+CRITICAL APPLICATIONS
+Xilinx products are not designed or intended to be fail-
+safe, or for use in any application requiring fail-safe
+performance, such as life-support or safety devices or
+systems, Class III medical devices, nuclear facilities,
+applications related to the deployment of airbags, or any
+other applications that could lead to death, personal
+injury, or severe property or environmental damage
+(individually and collectively, "Critical
+Applications"). Customer assumes the sole risk and
+liability of any use of Xilinx products in Critical
+Applications, subject only to applicable laws and
+regulations governing limitations on product liability.
+
+THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS
+PART OF THIS FILE AT ALL TIMES.

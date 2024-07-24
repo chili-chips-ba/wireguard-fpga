@@ -1,0 +1,2346 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:49:42 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Mon Apr 10 16:01:50 2023
+# Process ID: 17280
+# Current directory: G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1
+# Command line: vivado.exe -log ethernet_2port.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ethernet_2port.tcl
+# Log file: G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/ethernet_2port.vds
+# Journal file: G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source ethernet_2port.tcl -notrace
+Command: synth_design -top ethernet_2port -part xc7a100tfgg484-2
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: [Device 21-403] Loading part xc7a100tfgg484-2
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 17940 
+WARNING: [Synth 8-2292] literal value truncated to fit in 11 bits [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/icmp_reply.v:64]
+WARNING: [Synth 8-976] rgmii_rx_ctl_delay has already been declared [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:74]
+WARNING: [Synth 8-2654] second declaration of rgmii_rx_ctl_delay ignored [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:74]
+INFO: [Synth 8-994] rgmii_rx_ctl_delay is declared here [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:50]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 796.945 ; gain = 185.852
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'ethernet_2port' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/new/ethernet_2port.v:5]
+INFO: [Synth 8-6157] synthesizing module 'clk_ref' [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/clk_ref_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'clk_ref' (1#1) [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/clk_ref_stub.v:5]
+WARNING: [Synth 8-4446] all outputs are unconnected for this instance and logic may be removed [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/new/ethernet_2port.v:50]
+INFO: [Synth 8-6157] synthesizing module 'IDELAYCTRL' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34933]
+	Parameter SIM_DEVICE bound to: 7SERIES - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'IDELAYCTRL' (2#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34933]
+INFO: [Synth 8-6157] synthesizing module 'ethernet_test' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:5]
+	Parameter IDELAY_VALUE bound to: 0 - type: integer 
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:26]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:27]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:32]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:33]
+INFO: [Synth 8-6157] synthesizing module 'smi_config' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:2]
+	Parameter REF_CLK bound to: 50000 - type: integer 
+	Parameter MDC_CLK bound to: 500 - type: integer 
+	Parameter IDLE bound to: 17'b00000000000000001 
+	Parameter W_PAGE_0A43 bound to: 17'b00000000000000010 
+	Parameter R_CHECK bound to: 17'b00000000000000100 
+	Parameter ETH_UNLINK bound to: 17'b00000000000001000 
+	Parameter ETH_1000M bound to: 17'b00000000000010000 
+	Parameter ETH_100M bound to: 17'b00000000000100000 
+	Parameter ETH_10M bound to: 17'b00000000001000000 
+	Parameter R_WAIT bound to: 17'b00000000010000000 
+	Parameter W_PAGE_171 bound to: 17'b00000000100000000 
+	Parameter R_REG_16 bound to: 17'b00000001000000000 
+	Parameter W_REG_16 bound to: 17'b00000010000000000 
+	Parameter R_REG_17 bound to: 17'b00000100000000000 
+	Parameter W_REG_17 bound to: 17'b00001000000000000 
+	Parameter RW_END bound to: 17'b00010000000000000 
+	Parameter R_REG_1A bound to: 17'b00100000000000000 
+	Parameter READ_ID bound to: 17'b01000000000000000 
+	Parameter CHECK_ID bound to: 17'b10000000000000000 
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:14]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:15]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:20]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:21]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:22]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:23]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:26]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:27]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:28]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:29]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:66]
+INFO: [Synth 8-6157] synthesizing module 'smi_read_write' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:2]
+	Parameter REF_CLK bound to: 50000 - type: integer 
+	Parameter MDC_CLK bound to: 500 - type: integer 
+	Parameter HALF_CYCLE bound to: 50 - type: integer 
+	Parameter CYCLE bound to: 100 - type: integer 
+	Parameter ST bound to: 2'b01 
+	Parameter W_OP bound to: 2'b01 
+	Parameter R_OP bound to: 2'b10 
+	Parameter W_TA bound to: 2'b10 
+	Parameter IDLE bound to: 10'b0000000001 
+	Parameter WAIT_REQ bound to: 10'b0000000010 
+	Parameter W_MDIO bound to: 10'b0000000100 
+	Parameter R_MDIO bound to: 10'b0000001000 
+	Parameter R_TA_Z bound to: 10'b0000010000 
+	Parameter R_DATA bound to: 10'b0000100000 
+	Parameter W_END bound to: 10'b0001000000 
+	Parameter R_END bound to: 10'b0010000000 
+	Parameter R_TA_0 bound to: 10'b0100000000 
+	Parameter END_WAIT bound to: 10'b1000000000 
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:34]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:35]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:39]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:40]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:41]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:42]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:43]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:96]
+INFO: [Synth 8-6157] synthesizing module 'IOBUF' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:36115]
+	Parameter DRIVE bound to: 12 - type: integer 
+	Parameter IBUF_LOW_PWR bound to: TRUE - type: string 
+	Parameter IOSTANDARD bound to: DEFAULT - type: string 
+	Parameter SLEW bound to: SLOW - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'IOBUF' (3#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:36115]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'IOBUF_inst'. This will prevent further optimization [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:58]
+INFO: [Synth 8-6155] done synthesizing module 'smi_read_write' (4#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_read_write.v:2]
+WARNING: [Synth 8-7023] instance 'smi_inst' of module 'smi_read_write' has 14 connections declared, but only 12 given [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:321]
+INFO: [Synth 8-6155] done synthesizing module 'smi_config' (5#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:2]
+INFO: [Synth 8-6157] synthesizing module 'util_gmii_to_rgmii' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:2]
+	Parameter IDELAY_VALUE bound to: 0 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ODDR' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:49468]
+	Parameter DDR_CLK_EDGE bound to: SAME_EDGE - type: string 
+	Parameter INIT bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D1_INVERTED bound to: 1'b0 
+	Parameter IS_D2_INVERTED bound to: 1'b0 
+	Parameter SRTYPE bound to: SYNC - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'ODDR' (6#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:49468]
+INFO: [Synth 8-6157] synthesizing module 'IDELAYE2' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34946]
+	Parameter CINVCTRL_SEL bound to: FALSE - type: string 
+	Parameter DELAY_SRC bound to: IDATAIN - type: string 
+	Parameter HIGH_PERFORMANCE_MODE bound to: FALSE - type: string 
+	Parameter IDELAY_TYPE bound to: FIXED - type: string 
+	Parameter IDELAY_VALUE bound to: 0 - type: integer 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_DATAIN_INVERTED bound to: 1'b0 
+	Parameter IS_IDATAIN_INVERTED bound to: 1'b0 
+	Parameter PIPE_SEL bound to: FALSE - type: string 
+	Parameter REFCLK_FREQUENCY bound to: 200.000000 - type: float 
+	Parameter SIGNAL_PATTERN bound to: DATA - type: string 
+	Parameter SIM_DELAY_D bound to: 0 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'IDELAYE2' (7#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34946]
+INFO: [Synth 8-6157] synthesizing module 'IDDR' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34811]
+	Parameter DDR_CLK_EDGE bound to: SAME_EDGE_PIPELINED - type: string 
+	Parameter INIT_Q1 bound to: 1'b0 
+	Parameter INIT_Q2 bound to: 1'b0 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_D_INVERTED bound to: 1'b0 
+	Parameter SRTYPE bound to: SYNC - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'IDDR' (8#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34811]
+INFO: [Synth 8-6157] synthesizing module 'BUFG' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:1075]
+INFO: [Synth 8-6155] done synthesizing module 'BUFG' (9#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:1075]
+INFO: [Synth 8-6157] synthesizing module 'BUFIO' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:1336]
+INFO: [Synth 8-6155] done synthesizing module 'BUFIO' (10#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:1336]
+WARNING: [Synth 8-6014] Unused sequential element speed_selection_d0_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:80]
+WARNING: [Synth 8-6014] Unused sequential element speed_selection_d1_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:81]
+WARNING: [Synth 8-6014] Unused sequential element gmii_tx_er_r_d1_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:139]
+INFO: [Synth 8-6155] done synthesizing module 'util_gmii_to_rgmii' (11#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:2]
+INFO: [Synth 8-6157] synthesizing module 'gmii_arbi' [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:5]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:11]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:12]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:13]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:14]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:17]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:18]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:19]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:20]
+INFO: [Synth 8-6157] synthesizing module 'gmii_tx_buffer' [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_tx_buffer.v:5]
+	Parameter IDLE bound to: 4'b0000 
+	Parameter CHECK_FIFO bound to: 4'b0001 
+	Parameter LEN_LATCH bound to: 4'b0010 
+	Parameter SEND_WAIT bound to: 4'b0011 
+	Parameter SEND bound to: 4'b0100 
+	Parameter SEND_WAIT_1 bound to: 4'b0101 
+	Parameter SEND_END bound to: 4'b0110 
+INFO: [Synth 8-6157] synthesizing module 'eth_data_fifo' [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/eth_data_fifo_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'eth_data_fifo' (12#1) [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/eth_data_fifo_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'len_fifo' [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/len_fifo_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'len_fifo' (13#1) [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/len_fifo_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'gmii_tx_buffer' (14#1) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_tx_buffer.v:5]
+INFO: [Synth 8-6157] synthesizing module 'gmii_rx_buffer' [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_rx_buffer.v:5]
+	Parameter IDLE bound to: 4'b0000 
+	Parameter CHECK_FIFO bound to: 4'b0001 
+	Parameter LEN_LATCH bound to: 4'b0010 
+	Parameter REC_WAIT bound to: 4'b0011 
+	Parameter READ_FIFO bound to: 4'b0100 
+	Parameter REC_END bound to: 4'b0101 
+WARNING: [Synth 8-6014] Unused sequential element gmii_rx_dv_d2_reg was removed.  [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_rx_buffer.v:110]
+INFO: [Synth 8-6155] done synthesizing module 'gmii_rx_buffer' (15#1) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_rx_buffer.v:5]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'rx_buffer_inst'. This will prevent further optimization [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:163]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'tx_buffer_inst'. This will prevent further optimization [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:150]
+INFO: [Synth 8-6155] done synthesizing module 'gmii_arbi' (16#1) [G:/ax7103b/vivado/ethernet_test/src/arbi/gmii_arbi.v:5]
+INFO: [Synth 8-6157] synthesizing module 'mac_test' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/mac_test.v:9]
+	Parameter UDP_WIDTH bound to: 32 - type: integer 
+	Parameter UDP_DEPTH bound to: 5 - type: integer 
+	Parameter IDLE bound to: 9'b000000001 
+	Parameter ARP_REQ bound to: 9'b000000010 
+	Parameter ARP_SEND bound to: 9'b000000100 
+	Parameter ARP_WAIT bound to: 9'b000001000 
+	Parameter GEN_REQ bound to: 9'b000010000 
+	Parameter WRITE_RAM bound to: 9'b000100000 
+	Parameter SEND bound to: 9'b001000000 
+	Parameter WAIT bound to: 9'b010000000 
+	Parameter CHECK_ARP bound to: 9'b100000000 
+INFO: [Synth 8-6157] synthesizing module 'mac_top' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/mac_top.v:7]
+INFO: [Synth 8-6157] synthesizing module 'mac_tx_top' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/mac_tx_top.v:7]
+INFO: [Synth 8-6157] synthesizing module 'mac_tx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/mac_tx.v:8]
+	Parameter SEND_IDLE bound to: 6'b000001 
+	Parameter SEND_START bound to: 6'b000010 
+	Parameter SEND_PREAMBLE bound to: 6'b000100 
+	Parameter SEND_DATA bound to: 6'b001000 
+	Parameter SEND_CRC bound to: 6'b010000 
+	Parameter SEND_END bound to: 6'b100000 
+INFO: [Synth 8-6155] done synthesizing module 'mac_tx' (17#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/mac_tx.v:8]
+INFO: [Synth 8-6157] synthesizing module 'mac_tx_mode' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/mac_tx_mode.v:7]
+	Parameter IDLE bound to: 5'b00001 
+	Parameter ARP_WAIT bound to: 5'b00010 
+	Parameter ARP bound to: 5'b00100 
+	Parameter IP_WAIT bound to: 5'b01000 
+	Parameter IP bound to: 5'b10000 
+INFO: [Synth 8-6155] done synthesizing module 'mac_tx_mode' (18#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/mac_tx_mode.v:7]
+INFO: [Synth 8-6157] synthesizing module 'crc' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/crc.v:5]
+	Parameter Tp bound to: 1 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'crc' (19#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/crc.v:5]
+INFO: [Synth 8-6157] synthesizing module 'arp_tx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/arp_tx.v:7]
+	Parameter mac_type bound to: 16'b0000100000000110 
+	Parameter hardware_type bound to: 16'b0000000000000001 
+	Parameter protocol_type bound to: 16'b0000100000000000 
+	Parameter mac_length bound to: 8'b00000110 
+	Parameter ip_length bound to: 8'b00000100 
+	Parameter ARP_REQUEST_CODE bound to: 16'b0000000000000001 
+	Parameter ARP_REPLY_CODE bound to: 16'b0000000000000010 
+	Parameter IDLE bound to: 8'b00000001 
+	Parameter ARP_REQUEST_WAIT_0 bound to: 8'b00000010 
+	Parameter ARP_REQUEST_WAIT_1 bound to: 8'b00000100 
+	Parameter ARP_REQUEST bound to: 8'b00001000 
+	Parameter ARP_REPLY_WAIT_0 bound to: 8'b00010000 
+	Parameter ARP_REPLY_WAIT_1 bound to: 8'b00100000 
+	Parameter ARP_REPLY bound to: 8'b01000000 
+	Parameter ARP_END bound to: 8'b10000000 
+INFO: [Synth 8-6155] done synthesizing module 'arp_tx' (20#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/arp_tx.v:7]
+INFO: [Synth 8-6157] synthesizing module 'ip_tx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/ip_tx.v:9]
+	Parameter mac_type bound to: 16'b0000100000000000 
+	Parameter ip_version bound to: 4'b0100 
+	Parameter header_len bound to: 4'b0101 
+	Parameter IDLE bound to: 8'b00000001 
+	Parameter START bound to: 8'b00000010 
+	Parameter WAIT_DATA_LENGTH bound to: 8'b00000100 
+	Parameter GEN_CHECKSUM bound to: 8'b00001000 
+	Parameter SEND_WAIT bound to: 8'b00010000 
+	Parameter WAIT_MAC bound to: 8'b00100000 
+	Parameter IP_SEND bound to: 8'b01000000 
+	Parameter IP_END bound to: 8'b10000000 
+WARNING: [Synth 8-151] case item 8'b10000000 is unreachable [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/ip_tx.v:126]
+WARNING: [Synth 8-6014] Unused sequential element mac_send_end_d0_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/ip_tx.v:141]
+WARNING: [Synth 8-3848] Net ip_tx_busy in module/entity ip_tx does not have driver. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/ip_tx.v:31]
+INFO: [Synth 8-6155] done synthesizing module 'ip_tx' (21#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/ip_tx.v:9]
+WARNING: [Synth 8-7023] instance 'ip0' of module 'ip_tx' has 21 connections declared, but only 20 given [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/mac_tx_top.v:179]
+INFO: [Synth 8-6157] synthesizing module 'ip_tx_mode' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/ip_tx_mode.v:7]
+	Parameter ip_udp_type bound to: 8'b00010001 
+	Parameter ip_icmp_type bound to: 8'b00000001 
+	Parameter IDLE bound to: 5'b00001 
+	Parameter UDP_WAIT bound to: 5'b00010 
+	Parameter UDP bound to: 5'b00100 
+	Parameter ICMP_WAIT bound to: 5'b01000 
+	Parameter ICMP bound to: 5'b10000 
+INFO: [Synth 8-6155] done synthesizing module 'ip_tx_mode' (22#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/ip_tx_mode.v:7]
+INFO: [Synth 8-6157] synthesizing module 'udp_tx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/udp_tx.v:7]
+	Parameter IDLE bound to: 6'b000001 
+	Parameter START bound to: 6'b000010 
+	Parameter LEN_LATCH bound to: 6'b000100 
+	Parameter SEND_WAIT bound to: 6'b001000 
+	Parameter UDP_SEND bound to: 6'b010000 
+	Parameter UDP_END bound to: 6'b100000 
+	Parameter CK_IDLE bound to: 6'b000001 
+	Parameter HEADER_CHECKSUM bound to: 6'b000010 
+	Parameter GEN_CHECKSUM bound to: 6'b000100 
+	Parameter GEN_ODD_CHECKSUM bound to: 6'b001000 
+	Parameter GEN_CHECKSUM_END bound to: 6'b010000 
+	Parameter CHECKSUM_WAIT bound to: 6'b100000 
+INFO: [Synth 8-6157] synthesizing module 'udp_tx_data_fifo' [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/udp_tx_data_fifo_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'udp_tx_data_fifo' (23#1) [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/udp_tx_data_fifo_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'udp_checksum_fifo' [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/udp_checksum_fifo_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'udp_checksum_fifo' (24#1) [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/udp_checksum_fifo_stub.v:6]
+WARNING: [Synth 8-6014] Unused sequential element fifo_count_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/udp_tx.v:157]
+WARNING: [Synth 8-6014] Unused sequential element ram_rdata_d1_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/udp_tx.v:249]
+INFO: [Synth 8-6155] done synthesizing module 'udp_tx' (25#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/udp_tx.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'mac_tx_top' (26#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/mac_tx_top.v:7]
+INFO: [Synth 8-6157] synthesizing module 'mac_rx_top' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/mac_rx_top.v:7]
+INFO: [Synth 8-6157] synthesizing module 'mac_rx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/mac_rx.v:7]
+	Parameter IDLE bound to: 8'b00000001 
+	Parameter REC_PREAMBLE bound to: 8'b00000010 
+	Parameter REC_MAC_HEAD bound to: 8'b00000100 
+	Parameter REC_IDENTIFY bound to: 8'b00001000 
+	Parameter REC_DATA bound to: 8'b00010000 
+	Parameter REC_CRC bound to: 8'b00100000 
+	Parameter REC_ERROR bound to: 8'b01000000 
+	Parameter REC_END bound to: 8'b10000000 
+WARNING: [Synth 8-6014] Unused sequential element rx_dv_d1_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/mac_rx.v:191]
+WARNING: [Synth 8-6014] Unused sequential element mac_crc_cnt_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/mac_rx.v:229]
+INFO: [Synth 8-6155] done synthesizing module 'mac_rx' (27#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/mac_rx.v:7]
+INFO: [Synth 8-6157] synthesizing module 'ip_rx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/ip_rx.v:7]
+	Parameter IDLE bound to: 5'b00001 
+	Parameter REC_HEADER0 bound to: 5'b00010 
+	Parameter REC_HEADER1 bound to: 5'b00100 
+	Parameter REC_DATA bound to: 5'b01000 
+	Parameter REC_END bound to: 5'b10000 
+WARNING: [Synth 8-6014] Unused sequential element ip_rx_data_d1_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/ip_rx.v:168]
+INFO: [Synth 8-6155] done synthesizing module 'ip_rx' (28#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/ip_rx.v:7]
+INFO: [Synth 8-6157] synthesizing module 'udp_rx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/udp_rx.v:7]
+	Parameter IDLE bound to: 8'b00000001 
+	Parameter REC_HEAD bound to: 8'b00000010 
+	Parameter REC_DATA bound to: 8'b00000100 
+	Parameter REC_ODD_DATA bound to: 8'b00001000 
+	Parameter VERIFY_CHECKSUM bound to: 8'b00010000 
+	Parameter REC_ERROR bound to: 8'b00100000 
+	Parameter REC_END_WAIT bound to: 8'b01000000 
+	Parameter REC_END bound to: 8'b10000000 
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/udp_rx.v:33]
+INFO: [Synth 8-5534] Detected attribute (* MARK_DEBUG = "true" *) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/udp_rx.v:34]
+INFO: [Synth 8-6157] synthesizing module 'udp_rx_ram_8_2048' [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/udp_rx_ram_8_2048_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'udp_rx_ram_8_2048' (29#1) [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/udp_rx_ram_8_2048_stub.v:6]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'udp_receive_ram'. This will prevent further optimization [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/udp_rx.v:189]
+INFO: [Synth 8-6155] done synthesizing module 'udp_rx' (30#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/udp_rx.v:7]
+INFO: [Synth 8-6157] synthesizing module 'arp_rx' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/arp_rx.v:7]
+	Parameter ARP_REQUEST_CODE bound to: 16'b0000000000000001 
+	Parameter ARP_REPLY_CODE bound to: 16'b0000000000000010 
+	Parameter IDLE bound to: 4'b0001 
+	Parameter ARP_REC_DATA bound to: 4'b0010 
+	Parameter ARP_WAIT bound to: 4'b0100 
+	Parameter ARP_END bound to: 4'b1000 
+INFO: [Synth 8-6155] done synthesizing module 'arp_rx' (31#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/arp_rx.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'mac_rx_top' (32#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/rx/mac_rx_top.v:7]
+INFO: [Synth 8-6157] synthesizing module 'icmp_reply' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/icmp_reply.v:6]
+	Parameter ECHO_REQUEST bound to: 8'b00001000 
+	Parameter ECHO_REPLY bound to: 8'b00000000 
+	Parameter IDLE bound to: 11'b00000000001 
+	Parameter REC_DATA bound to: 11'b00000000010 
+	Parameter REC_ODD_DATA bound to: 11'b00000000100 
+	Parameter VERIFY_CHECKSUM bound to: 11'b00000001000 
+	Parameter REC_ERROR bound to: 11'b00000010000 
+	Parameter REC_END_WAIT bound to: 11'b00000100000 
+	Parameter GEN_CHECKSUM bound to: 11'b00001000000 
+	Parameter SEND_WAIT_0 bound to: 11'b00010000000 
+	Parameter SEND_WAIT_1 bound to: 11'b00100000000 
+	Parameter SEND bound to: 11'b01000000000 
+	Parameter REC_END bound to: 11'b10000000000 
+	Parameter SEND_END bound to: 11'b00000000000 
+INFO: [Synth 8-6157] synthesizing module 'icmp_rx_ram_8_256' [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/icmp_rx_ram_8_256_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'icmp_rx_ram_8_256' (33#1) [G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/.Xil/Vivado-17280-DESKTOP-AOVMD3L/realtime/icmp_rx_ram_8_256_stub.v:6]
+WARNING: [Synth 8-689] width (11) of port connection 'addra' does not match port width (8) of module 'icmp_rx_ram_8_256' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/icmp_reply.v:330]
+WARNING: [Synth 8-689] width (11) of port connection 'addrb' does not match port width (8) of module 'icmp_rx_ram_8_256' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/icmp_reply.v:333]
+WARNING: [Synth 8-3848] Net icmp_tx_end in module/entity icmp_reply does not have driver. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/icmp_reply.v:21]
+INFO: [Synth 8-6155] done synthesizing module 'icmp_reply' (34#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/icmp_reply.v:6]
+INFO: [Synth 8-6157] synthesizing module 'arp_cache' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/arp_cache.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'arp_cache' (35#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/arp_cache.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'mac_top' (36#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/mac_top.v:7]
+INFO: [Synth 8-6157] synthesizing module 'ax_debounce' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/debouce/ax_debounce.v:31]
+	Parameter N bound to: 32 - type: integer 
+	Parameter FREQ bound to: 50 - type: integer 
+	Parameter MAX_TIME bound to: 20 - type: integer 
+	Parameter TIMER_MAX_VAL bound to: 1000000 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'ax_debounce' (37#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/debouce/ax_debounce.v:31]
+INFO: [Synth 8-226] default block is never used [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/mac_test.v:388]
+INFO: [Synth 8-6155] done synthesizing module 'mac_test' (38#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/mac_test.v:9]
+INFO: [Synth 8-6157] synthesizing module 'reset' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/new/reset.v:2]
+INFO: [Synth 8-6155] done synthesizing module 'reset' (39#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/new/reset.v:2]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'mac_test0'. This will prevent further optimization [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:104]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'util_gmii_to_rgmii_m0'. This will prevent further optimization [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:65]
+WARNING: [Synth 8-3848] Net led in module/entity ethernet_test does not have driver. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'ethernet_test' (40#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:5]
+INFO: [Synth 8-6157] synthesizing module 'ethernet_test__parameterized0' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:5]
+	Parameter IDELAY_VALUE bound to: 3 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'util_gmii_to_rgmii__parameterized0' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:2]
+	Parameter IDELAY_VALUE bound to: 3 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'IDELAYE2__parameterized0' [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34946]
+	Parameter CINVCTRL_SEL bound to: FALSE - type: string 
+	Parameter DELAY_SRC bound to: IDATAIN - type: string 
+	Parameter HIGH_PERFORMANCE_MODE bound to: FALSE - type: string 
+	Parameter IDELAY_TYPE bound to: FIXED - type: string 
+	Parameter IDELAY_VALUE bound to: 3 - type: integer 
+	Parameter IS_C_INVERTED bound to: 1'b0 
+	Parameter IS_DATAIN_INVERTED bound to: 1'b0 
+	Parameter IS_IDATAIN_INVERTED bound to: 1'b0 
+	Parameter PIPE_SEL bound to: FALSE - type: string 
+	Parameter REFCLK_FREQUENCY bound to: 200.000000 - type: float 
+	Parameter SIGNAL_PATTERN bound to: DATA - type: string 
+	Parameter SIM_DELAY_D bound to: 0 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'IDELAYE2__parameterized0' (40#1) [G:/xilinx_2019_1/Vivado/2019.1/scripts/rt/data/unisim_comp.v:34946]
+WARNING: [Synth 8-6014] Unused sequential element speed_selection_d0_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:80]
+WARNING: [Synth 8-6014] Unused sequential element speed_selection_d1_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:81]
+WARNING: [Synth 8-6014] Unused sequential element gmii_tx_er_r_d1_reg was removed.  [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:139]
+INFO: [Synth 8-6155] done synthesizing module 'util_gmii_to_rgmii__parameterized0' (40#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:2]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'util_gmii_to_rgmii_m0'. This will prevent further optimization [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:65]
+WARNING: [Synth 8-3848] Net led in module/entity ethernet_test__parameterized0 does not have driver. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'ethernet_test__parameterized0' (40#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/ethernet_test.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'ethernet_2port' (41#1) [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/new/ethernet_2port.v:5]
+WARNING: [Synth 8-3331] design icmp_reply has unconnected port icmp_tx_end
+WARNING: [Synth 8-3331] design ip_tx has unconnected port ip_tx_busy
+WARNING: [Synth 8-3331] design ip_tx has unconnected port mac_send_end
+WARNING: [Synth 8-3331] design mac_tx_top has unconnected port icmp_tx_end
+WARNING: [Synth 8-3331] design gmii_rx_buffer has unconnected port gmii_rxd[7]
+WARNING: [Synth 8-3331] design gmii_rx_buffer has unconnected port gmii_rxd[6]
+WARNING: [Synth 8-3331] design gmii_rx_buffer has unconnected port gmii_rxd[5]
+WARNING: [Synth 8-3331] design gmii_rx_buffer has unconnected port gmii_rxd[4]
+WARNING: [Synth 8-3331] design util_gmii_to_rgmii__parameterized0 has unconnected port speed_selection[1]
+WARNING: [Synth 8-3331] design util_gmii_to_rgmii__parameterized0 has unconnected port speed_selection[0]
+WARNING: [Synth 8-3331] design ethernet_test__parameterized0 has unconnected port led[3]
+WARNING: [Synth 8-3331] design ethernet_test__parameterized0 has unconnected port led[2]
+WARNING: [Synth 8-3331] design ethernet_test__parameterized0 has unconnected port led[1]
+WARNING: [Synth 8-3331] design ethernet_test__parameterized0 has unconnected port led[0]
+WARNING: [Synth 8-3331] design util_gmii_to_rgmii has unconnected port speed_selection[1]
+WARNING: [Synth 8-3331] design util_gmii_to_rgmii has unconnected port speed_selection[0]
+WARNING: [Synth 8-3331] design ethernet_test has unconnected port led[3]
+WARNING: [Synth 8-3331] design ethernet_test has unconnected port led[2]
+WARNING: [Synth 8-3331] design ethernet_test has unconnected port led[1]
+WARNING: [Synth 8-3331] design ethernet_test has unconnected port led[0]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 870.996 ; gain = 259.902
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 876.543 ; gain = 265.449
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 876.543 ; gain = 265.449
+---------------------------------------------------------------------------------
+INFO: [Netlist 29-17] Analyzing 34 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_tx_data_fifo/udp_tx_data_fifo/udp_tx_data_fifo_in_context.xdc] for cell 'u1/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_tx_data_fifo/udp_tx_data_fifo/udp_tx_data_fifo_in_context.xdc] for cell 'u1/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_tx_data_fifo/udp_tx_data_fifo/udp_tx_data_fifo_in_context.xdc] for cell 'u2/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_tx_data_fifo/udp_tx_data_fifo/udp_tx_data_fifo_in_context.xdc] for cell 'u2/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u1/arbi_inst/tx_buffer_inst/tx_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u1/arbi_inst/tx_buffer_inst/tx_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u1/arbi_inst/rx_buffer_inst/rx_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u1/arbi_inst/rx_buffer_inst/rx_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u2/arbi_inst/tx_buffer_inst/tx_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u2/arbi_inst/tx_buffer_inst/tx_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u2/arbi_inst/rx_buffer_inst/rx_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/eth_data_fifo/eth_data_fifo/eth_data_fifo_in_context.xdc] for cell 'u2/arbi_inst/rx_buffer_inst/rx_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_rx_ram_8_2048/udp_rx_ram_8_2048/udp_rx_ram_8_2048_in_context.xdc] for cell 'u1/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_rx_ram_8_2048/udp_rx_ram_8_2048/udp_rx_ram_8_2048_in_context.xdc] for cell 'u1/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_rx_ram_8_2048/udp_rx_ram_8_2048/udp_rx_ram_8_2048_in_context.xdc] for cell 'u2/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_rx_ram_8_2048/udp_rx_ram_8_2048/udp_rx_ram_8_2048_in_context.xdc] for cell 'u2/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/icmp_rx_ram_8_256/icmp_rx_ram_8_256/icmp_rx_ram_8_256_in_context.xdc] for cell 'u1/mac_test0/mac_top0/icmp0/icmp_receive_ram'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/icmp_rx_ram_8_256/icmp_rx_ram_8_256/icmp_rx_ram_8_256_in_context.xdc] for cell 'u1/mac_test0/mac_top0/icmp0/icmp_receive_ram'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/icmp_rx_ram_8_256/icmp_rx_ram_8_256/icmp_rx_ram_8_256_in_context.xdc] for cell 'u2/mac_test0/mac_top0/icmp0/icmp_receive_ram'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/icmp_rx_ram_8_256/icmp_rx_ram_8_256/icmp_rx_ram_8_256_in_context.xdc] for cell 'u2/mac_test0/mac_top0/icmp0/icmp_receive_ram'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u1/arbi_inst/tx_buffer_inst/tx_len_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u1/arbi_inst/tx_buffer_inst/tx_len_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u1/arbi_inst/rx_buffer_inst/rx_len_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u1/arbi_inst/rx_buffer_inst/rx_len_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u2/arbi_inst/tx_buffer_inst/tx_len_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u2/arbi_inst/tx_buffer_inst/tx_len_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u2/arbi_inst/rx_buffer_inst/rx_len_fifo'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/len_fifo/len_fifo/len_fifo_in_context.xdc] for cell 'u2/arbi_inst/rx_buffer_inst/rx_len_fifo'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_checksum_fifo/udp_checksum_fifo/udp_checksum_fifo_in_context.xdc] for cell 'u1/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_checksum_fifo/udp_checksum_fifo/udp_checksum_fifo_in_context.xdc] for cell 'u1/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_checksum_fifo/udp_checksum_fifo/udp_checksum_fifo_in_context.xdc] for cell 'u2/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/udp_checksum_fifo/udp_checksum_fifo/udp_checksum_fifo_in_context.xdc] for cell 'u2/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum'
+Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/clk_ref/clk_ref/clk_ref_in_context.xdc] for cell 'refclk'
+Finished Parsing XDC File [g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/clk_ref/clk_ref/clk_ref_in_context.xdc] for cell 'refclk'
+Parsing XDC File [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/constrs_1/new/top.xdc]
+WARNING: [Constraints 18-619] A clock with name 'sys_clk_p' already exists, overwriting the previous clock with the same name. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/constrs_1/new/top.xdc:6]
+WARNING: [Designutils 20-1567] Use of 'set_false_path' with '-reset_path' is not supported by synthesis. The constraint will not be passed to synthesis. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/constrs_1/new/top.xdc:97]
+WARNING: [Designutils 20-1567] Use of 'set_false_path' with '-reset_path' is not supported by synthesis. The constraint will not be passed to synthesis. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/constrs_1/new/top.xdc:98]
+Finished Parsing XDC File [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/constrs_1/new/top.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/constrs_1/new/top.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/ethernet_2port_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/ethernet_2port_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1042.145 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 2 instances
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.073 . Memory (MB): peak = 1042.145 ; gain = 0.000
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u1/arbi_inst/rx_buffer_inst/rx_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u1/arbi_inst/rx_buffer_inst/rx_len_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u1/arbi_inst/tx_buffer_inst/tx_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u1/arbi_inst/tx_buffer_inst/tx_len_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '20.000' specified during out-of-context synthesis of instance 'u1/mac_test0/mac_top0/icmp0/icmp_receive_ram' at clock pin 'clka' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '20.000' specified during out-of-context synthesis of instance 'u1/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram' at clock pin 'clka' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u1/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u1/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u2/arbi_inst/rx_buffer_inst/rx_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u2/arbi_inst/rx_buffer_inst/rx_len_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u2/arbi_inst/tx_buffer_inst/tx_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u2/arbi_inst/tx_buffer_inst/tx_len_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '20.000' specified during out-of-context synthesis of instance 'u2/mac_test0/mac_top0/icmp0/icmp_receive_ram' at clock pin 'clka' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '20.000' specified during out-of-context synthesis of instance 'u2/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram' at clock pin 'clka' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u2/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u2/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum' at clock pin 'clk' is different from the actual clock period '8.000', this can lead to different synthesis results.
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 1045.297 ; gain = 434.203
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a100tfgg484-2
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 1045.297 ; gain = 434.203
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property IO_BUFFER_TYPE = NONE for sys_clk_n. (constraint file  g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/clk_ref/clk_ref/clk_ref_in_context.xdc, line 4).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for sys_clk_n. (constraint file  g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/clk_ref/clk_ref/clk_ref_in_context.xdc, line 5).
+Applied set_property IO_BUFFER_TYPE = NONE for sys_clk_p. (constraint file  g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/clk_ref/clk_ref/clk_ref_in_context.xdc, line 6).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for sys_clk_p. (constraint file  g:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/ip/clk_ref/clk_ref/clk_ref_in_context.xdc, line 7).
+Applied set_property DONT_TOUCH = true for u1/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/mac_test0/mac_top0/mac_tx0/udp0/tx_data_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u1/arbi_inst/rx_buffer_inst/rx_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/arbi_inst/rx_buffer_inst/rx_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u1/arbi_inst/tx_buffer_inst/tx_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/arbi_inst/tx_buffer_inst/tx_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u1/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/mac_test0/mac_top0/mac_rx0/udp0/udp_receive_ram. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u1/mac_test0/mac_top0/icmp0/icmp_receive_ram. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/mac_test0/mac_top0/icmp0/icmp_receive_ram. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u1/arbi_inst/rx_buffer_inst/rx_len_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/arbi_inst/rx_buffer_inst/rx_len_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u1/arbi_inst/tx_buffer_inst/tx_len_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/arbi_inst/tx_buffer_inst/tx_len_fifo. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u1/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for u2/mac_test0/mac_top0/mac_tx0/udp0/udp_tx_checksum. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for refclk. (constraint file  auto generated constraint, line ).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 1045.297 ; gain = 434.203
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                       0000000001 |                       0000000001
+                WAIT_REQ |                       0000000010 |                       0000000010
+                  W_MDIO |                       0000000100 |                       0000000100
+                   W_END |                       0001000000 |                       0001000000
+                  R_MDIO |                       0000001000 |                       0000001000
+                  R_TA_Z |                       0000010000 |                       0000010000
+                  R_TA_0 |                       0100000000 |                       0100000000
+                  R_DATA |                       0000100000 |                       0000100000
+                   R_END |                       0010000000 |                       0010000000
+                END_WAIT |                       1000000000 |                       1000000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'smi_read_write'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                00000000000000001 |                00000000000000001
+                 READ_ID |                01000000000000000 |                01000000000000000
+                CHECK_ID |                10000000000000000 |                10000000000000000
+             W_PAGE_0A43 |                00000000000000010 |                00000000000000010
+                R_REG_1A |                00100000000000000 |                00100000000000000
+                 R_CHECK |                00000000000000100 |                00000000000000100
+              ETH_UNLINK |                00000000000001000 |                00000000000001000
+                  R_WAIT |                00000000010000000 |                00000000010000000
+               ETH_1000M |                00000000000010000 |                00000000000010000
+                ETH_100M |                00000000000100000 |                00000000000100000
+                 ETH_10M |                00000000001000000 |                00000000001000000
+              W_PAGE_171 |                00000000100000000 |                00000000100000000
+                R_REG_16 |                00000001000000000 |                00000001000000000
+                W_REG_16 |                00000010000000000 |                00000010000000000
+                R_REG_17 |                00000100000000000 |                00000100000000000
+                W_REG_17 |                00001000000000000 |                00001000000000000
+                  RW_END |                00010000000000000 |                00010000000000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'smi_config'
+WARNING: [Synth 8-3936] Found unconnected internal register 'gmii_txd_r_d1_reg' and it is trimmed from '8' to '4' bits. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:137]
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'gmii_rx_buffer__xdcDup__1'
+INFO: [Synth 8-802] inferred FSM for state register 'send_state_reg' in module 'mac_tx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'mac_tx_mode'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'arp_tx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'ip_tx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'ip_tx_mode'
+INFO: [Synth 8-4471] merging register 'udp_tx_end_reg' into 'checksum_wr_reg' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/udp_tx.v:611]
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'udp_tx__xdcDup__1'
+INFO: [Synth 8-802] inferred FSM for state register 'ck_state_reg' in module 'udp_tx__xdcDup__1'
+INFO: [Synth 8-802] inferred FSM for state register 'rec_state_reg' in module 'mac_rx'
+INFO: [Synth 8-5546] ROM "crc_check" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "crc_rec" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "mac_rx_destination_mac_addr" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "mac_rx_source_mac_addr" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "frame_type" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'udp_rx__xdcDup__1'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'arp_rx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'icmp_reply__xdcDup__1'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'mac_test__xdcDup__1'
+WARNING: [Synth 8-3936] Found unconnected internal register 'gmii_txd_r_d1_reg' and it is trimmed from '8' to '4' bits. [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/imports/src/util_gmii_to_rgmii.v:137]
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'gmii_rx_buffer'
+INFO: [Synth 8-4471] merging register 'udp_tx_end_reg' into 'checksum_wr_reg' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mac/tx/udp_tx.v:611]
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'udp_tx'
+INFO: [Synth 8-802] inferred FSM for state register 'ck_state_reg' in module 'udp_tx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'udp_rx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'icmp_reply'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'mac_test'
+WARNING: [Synth 8-327] inferring latch for variable 'next_state_reg' [G:/ax7103b/vivado/ethernet_test/eth_test.srcs/sources_1/mdio/smi_config.v:85]
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    IDLE |                           000001 |                             0000
+              CHECK_FIFO |                           000010 |                             0001
+               LEN_LATCH |                           000100 |                             0010
+                REC_WAIT |                           001000 |                             0011
+               READ_FIFO |                           010000 |                             0100
+                 REC_END |                           100000 |                             0101
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'one-hot' in module 'gmii_rx_buffer__xdcDup__1'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+              SEND_START |                           000010 |                           000010
+           SEND_PREAMBLE |                           000100 |                           000100
+               SEND_DATA |                           001000 |                           001000
+                SEND_CRC |                           010000 |                           010000
+                SEND_END |                           100000 |                           100000
+               SEND_IDLE |                           000001 |                           000001
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'send_state_reg' in module 'mac_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                            00001 |                            00001
+                ARP_WAIT |                            00010 |                            00010
+                     ARP |                            00100 |                            00100
+                 IP_WAIT |                            01000 |                            01000
+                      IP |                            10000 |                            10000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'mac_tx_mode'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                         00000001 |                         00000001
+      ARP_REQUEST_WAIT_0 |                         00000010 |                         00000010
+      ARP_REQUEST_WAIT_1 |                         00000100 |                         00000100
+             ARP_REQUEST |                         00001000 |                         00001000
+        ARP_REPLY_WAIT_0 |                         00010000 |                         00010000
+        ARP_REPLY_WAIT_1 |                         00100000 |                         00100000
+               ARP_REPLY |                         01000000 |                         01000000
+                 ARP_END |                         10000000 |                         10000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'arp_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    IDLE |                         00000001 |                          0000001
+                   START |                         10000000 |                          0000010
+        WAIT_DATA_LENGTH |                         01000000 |                          0000100
+            GEN_CHECKSUM |                         00100000 |                          0001000
+               SEND_WAIT |                         00010000 |                          0010000
+                WAIT_MAC |                         00001000 |                          0100000
+                 IP_SEND |                         00000010 |                          1000000
+                  iSTATE |                         00000100 |                          0000000
+*
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'one-hot' in module 'ip_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                            00001 |                            00001
+                UDP_WAIT |                            00010 |                            00010
+                     UDP |                            00100 |                            00100
+               ICMP_WAIT |                            01000 |                            01000
+                    ICMP |                            10000 |                            10000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'ip_tx_mode'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                 CK_IDLE |                           000001 |                           000001
+         HEADER_CHECKSUM |                           000010 |                           000010
+            GEN_CHECKSUM |                           000100 |                           000100
+        GEN_ODD_CHECKSUM |                           001000 |                           001000
+        GEN_CHECKSUM_END |                           010000 |                           010000
+           CHECKSUM_WAIT |                           100000 |                           100000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'ck_state_reg' in module 'udp_tx__xdcDup__1'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                           000001 |                           000001
+                   START |                           000010 |                           000010
+               LEN_LATCH |                           000100 |                           000100
+               SEND_WAIT |                           001000 |                           001000
+                UDP_SEND |                           010000 |                           010000
+                 UDP_END |                           100000 |                           100000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'udp_tx__xdcDup__1'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                         00000001 |                         00000001
+            REC_PREAMBLE |                         00000010 |                         00000010
+            REC_MAC_HEAD |                         00000100 |                         00000100
+            REC_IDENTIFY |                         00001000 |                         00001000
+                REC_DATA |                         00010000 |                         00010000
+                 REC_CRC |                         00100000 |                         00100000
+                 REC_END |                         10000000 |                         10000000
+               REC_ERROR |                         01000000 |                         01000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'rec_state_reg' in module 'mac_rx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                         00000001 |                         00000001
+                REC_HEAD |                         00000010 |                         00000010
+                REC_DATA |                         00000100 |                         00000100
+            REC_ODD_DATA |                         00001000 |                         00001000
+         VERIFY_CHECKSUM |                         00010000 |                         00010000
+               REC_ERROR |                         00100000 |                         00100000
+            REC_END_WAIT |                         01000000 |                         01000000
+                 REC_END |                         10000000 |                         10000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'udp_rx__xdcDup__1'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                             0001 |                             0001
+            ARP_REC_DATA |                             0010 |                             0010
+                ARP_WAIT |                             0100 |                             0100
+                 ARP_END |                             1000 |                             1000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'arp_rx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    IDLE |                             0011 |                     000000000001
+                REC_DATA |                             1000 |                     000000000010
+            REC_ODD_DATA |                             0110 |                     000000000100
+         VERIFY_CHECKSUM |                             0000 |                     000000001000
+               REC_ERROR |                             0001 |                     000000010000
+            REC_END_WAIT |                             0010 |                     000000100000
+                 REC_END |                             1010 |                     010000000000
+             SEND_WAIT_0 |                             0111 |                     000010000000
+             SEND_WAIT_1 |                             0100 |                     000100000000
+                    SEND |                             0101 |                     001000000000
+                SEND_END |                             1001 |                     000000000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'icmp_reply__xdcDup__1'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                        000000001 |                        000000001
+                 ARP_REQ |                        000000010 |                        000000010
+                ARP_SEND |                        000000100 |                        000000100
+                ARP_WAIT |                        000001000 |                        000001000
+                    WAIT |                        010000000 |                        010000000
+               CHECK_ARP |                        100000000 |                        100000000
+                 GEN_REQ |                        000010000 |                        000010000
+               WRITE_RAM |                        000100000 |                        000100000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'mac_test__xdcDup__1'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    IDLE |                           000001 |                             0000
+              CHECK_FIFO |                           000010 |                             0001
+               LEN_LATCH |                           000100 |                             0010
+                REC_WAIT |                           001000 |                             0011
+               READ_FIFO |                           010000 |                             0100
+                 REC_END |                           100000 |                             0101
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'one-hot' in module 'gmii_rx_buffer'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                 CK_IDLE |                           000001 |                           000001
+         HEADER_CHECKSUM |                           000010 |                           000010
+            GEN_CHECKSUM |                           000100 |                           000100
+        GEN_ODD_CHECKSUM |                           001000 |                           001000
+        GEN_CHECKSUM_END |                           010000 |                           010000
+           CHECKSUM_WAIT |                           100000 |                           100000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'ck_state_reg' in module 'udp_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                           000001 |                           000001
+                   START |                           000010 |                           000010
+               LEN_LATCH |                           000100 |                           000100
+               SEND_WAIT |                           001000 |                           001000
+                UDP_SEND |                           010000 |                           010000
+                 UDP_END |                           100000 |                           100000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'udp_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                         00000001 |                         00000001
+                REC_HEAD |                         00000010 |                         00000010
+                REC_DATA |                         00000100 |                         00000100
+            REC_ODD_DATA |                         00001000 |                         00001000
+         VERIFY_CHECKSUM |                         00010000 |                         00010000
+               REC_ERROR |                         00100000 |                         00100000
+            REC_END_WAIT |                         01000000 |                         01000000
+                 REC_END |                         10000000 |                         10000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'udp_rx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                    IDLE |                             0011 |                     000000000001
+                REC_DATA |                             1000 |                     000000000010
+            REC_ODD_DATA |                             0110 |                     000000000100
+         VERIFY_CHECKSUM |                             0000 |                     000000001000
+               REC_ERROR |                             0001 |                     000000010000
+            REC_END_WAIT |                             0010 |                     000000100000
+                 REC_END |                             1010 |                     010000000000
+             SEND_WAIT_0 |                             0111 |                     000010000000
+             SEND_WAIT_1 |                             0100 |                     000100000000
+                    SEND |                             0101 |                     001000000000
+                SEND_END |                             1001 |                     000000000000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'icmp_reply'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                    IDLE |                        000000001 |                        000000001
+                 ARP_REQ |                        000000010 |                        000000010
+                ARP_SEND |                        000000100 |                        000000100
+                ARP_WAIT |                        000001000 |                        000001000
+                    WAIT |                        010000000 |                        010000000
+               CHECK_ARP |                        100000000 |                        100000000
+                 GEN_REQ |                        000010000 |                        000010000
+               WRITE_RAM |                        000100000 |                        000100000
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3898] No Re-encoding of one hot register 'state_reg' in module 'mac_test'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:18 ; elapsed = 00:00:19 . Memory (MB): peak = 1045.297 ; gain = 434.203
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++------+-----------------------------------+------------+----------+
+|      |RTL Partition                      |Replication |Instances |
++------+-----------------------------------+------------+----------+
+|1     |smi_read_write__GC0                |           1|      1037|
+|2     |smi_config__GC0                    |           1|      1783|
+|3     |ethernet_test__GC0                 |           1|     32073|
+|4     |ethernet_test__parameterized0__GC0 |           1|     32073|
+|5     |ethernet_2port__GC0                |           1|         8|
++------+-----------------------------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 56    
+	   2 Input     28 Bit       Adders := 4     
+	   2 Input     20 Bit       Adders := 4     
+	   2 Input     19 Bit       Adders := 6     
+	   2 Input     18 Bit       Adders := 12    
+	   2 Input     17 Bit       Adders := 44    
+	   2 Input     16 Bit       Adders := 24    
+	   3 Input     16 Bit       Adders := 2     
+	   2 Input     11 Bit       Adders := 8     
+	   2 Input      8 Bit       Adders := 4     
+	   2 Input      6 Bit       Adders := 2     
+	   2 Input      5 Bit       Adders := 6     
+	   2 Input      4 Bit       Adders := 8     
+	   2 Input      3 Bit       Adders := 6     
+	   2 Input      2 Bit       Adders := 6     
++---XORs : 
+	   2 Input      1 Bit         XORs := 38    
+	   3 Input      1 Bit         XORs := 24    
+	   6 Input      1 Bit         XORs := 28    
+	   8 Input      1 Bit         XORs := 4     
+	   5 Input      1 Bit         XORs := 16    
+	   7 Input      1 Bit         XORs := 28    
+	  10 Input      1 Bit         XORs := 8     
+	   9 Input      1 Bit         XORs := 12    
+	  12 Input      1 Bit         XORs := 4     
+	   4 Input      1 Bit         XORs := 4     
++---Registers : 
+	               80 Bit    Registers := 2     
+	               64 Bit    Registers := 2     
+	               48 Bit    Registers := 12    
+	               32 Bit    Registers := 76    
+	               28 Bit    Registers := 4     
+	               20 Bit    Registers := 8     
+	               19 Bit    Registers := 6     
+	               18 Bit    Registers := 10    
+	               17 Bit    Registers := 30    
+	               16 Bit    Registers := 68    
+	               11 Bit    Registers := 8     
+	               10 Bit    Registers := 2     
+	                8 Bit    Registers := 70    
+	                6 Bit    Registers := 2     
+	                5 Bit    Registers := 12    
+	                4 Bit    Registers := 26    
+	                3 Bit    Registers := 6     
+	                2 Bit    Registers := 14    
+	                1 Bit    Registers := 260   
++---Muxes : 
+	   2 Input     64 Bit        Muxes := 4     
+	   2 Input     48 Bit        Muxes := 30    
+	   7 Input     48 Bit        Muxes := 4     
+	   2 Input     32 Bit        Muxes := 78    
+	   4 Input     32 Bit        Muxes := 10    
+	   5 Input     32 Bit        Muxes := 2     
+	   3 Input     32 Bit        Muxes := 4     
+	   5 Input     31 Bit        Muxes := 2     
+	   3 Input     28 Bit        Muxes := 4     
+	   3 Input     27 Bit        Muxes := 2     
+	   2 Input     26 Bit        Muxes := 4     
+	   5 Input     23 Bit        Muxes := 2     
+	   2 Input     20 Bit        Muxes := 4     
+	   2 Input     19 Bit        Muxes := 6     
+	   2 Input     18 Bit        Muxes := 10    
+	   2 Input     17 Bit        Muxes := 36    
+	   2 Input     16 Bit        Muxes := 58    
+	   5 Input     16 Bit        Muxes := 2     
+	   2 Input     15 Bit        Muxes := 4     
+	   5 Input     15 Bit        Muxes := 2     
+	   2 Input     14 Bit        Muxes := 2     
+	   2 Input     13 Bit        Muxes := 2     
+	   2 Input     12 Bit        Muxes := 2     
+	   2 Input     11 Bit        Muxes := 10    
+	   2 Input     10 Bit        Muxes := 6     
+	   2 Input      9 Bit        Muxes := 12    
+	   3 Input      9 Bit        Muxes := 2     
+	  10 Input      9 Bit        Muxes := 4     
+	   2 Input      8 Bit        Muxes := 116   
+	   3 Input      8 Bit        Muxes := 4     
+	   9 Input      8 Bit        Muxes := 6     
+	  43 Input      8 Bit        Muxes := 2     
+	   8 Input      8 Bit        Muxes := 2     
+	   4 Input      8 Bit        Muxes := 2     
+	   2 Input      7 Bit        Muxes := 18    
+	   5 Input      7 Bit        Muxes := 4     
+	   2 Input      6 Bit        Muxes := 46    
+	   6 Input      6 Bit        Muxes := 2     
+	   7 Input      6 Bit        Muxes := 12    
+	   2 Input      5 Bit        Muxes := 58    
+	   3 Input      5 Bit        Muxes := 6     
+	   6 Input      5 Bit        Muxes := 4     
+	   2 Input      4 Bit        Muxes := 66    
+	   5 Input      4 Bit        Muxes := 2     
+	  29 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 34    
+	   2 Input      2 Bit        Muxes := 46    
+	   3 Input      2 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 186   
+	   3 Input      1 Bit        Muxes := 34    
+	   6 Input      1 Bit        Muxes := 2     
+	  16 Input      1 Bit        Muxes := 2     
+	   4 Input      1 Bit        Muxes := 4     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module smi_read_write 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   2 Input      6 Bit       Adders := 1     
+	   2 Input      5 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	               16 Bit    Registers := 1     
+	               10 Bit    Registers := 1     
+	                6 Bit    Registers := 1     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 2     
+	                1 Bit    Registers := 10    
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 1     
+	   2 Input     10 Bit        Muxes := 2     
+	   2 Input      9 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 2     
+	   2 Input      7 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 2     
+	   2 Input      4 Bit        Muxes := 5     
+	   2 Input      2 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 4     
+	   3 Input      1 Bit        Muxes := 2     
+Module smi_config 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	               17 Bit    Registers := 1     
+	               16 Bit    Registers := 4     
+	                5 Bit    Registers := 2     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 1     
+	   2 Input     17 Bit        Muxes := 1     
+	   5 Input     16 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 2     
+	   2 Input     15 Bit        Muxes := 2     
+	   2 Input     14 Bit        Muxes := 1     
+	   2 Input     13 Bit        Muxes := 1     
+	   2 Input     12 Bit        Muxes := 1     
+	   2 Input     11 Bit        Muxes := 1     
+	   2 Input     10 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 1     
+	   5 Input      7 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 4     
+	   3 Input      5 Bit        Muxes := 1     
+	   3 Input      2 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 2     
+	   6 Input      1 Bit        Muxes := 1     
+	  16 Input      1 Bit        Muxes := 1     
+Module util_gmii_to_rgmii 
+Detailed RTL Component Info : 
++---XORs : 
+	   2 Input      1 Bit         XORs := 2     
++---Registers : 
+	                8 Bit    Registers := 2     
+	                4 Bit    Registers := 2     
+	                1 Bit    Registers := 10    
+Module gmii_tx_buffer__xdcDup__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               17 Bit    Registers := 1     
+	                8 Bit    Registers := 2     
+	                4 Bit    Registers := 3     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   2 Input      8 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 2     
+	   2 Input      2 Bit        Muxes := 3     
+	   2 Input      1 Bit        Muxes := 4     
+Module gmii_rx_buffer__xdcDup__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   2 Input     16 Bit       Adders := 2     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               16 Bit    Registers := 3     
+	                8 Bit    Registers := 1     
+	                4 Bit    Registers := 2     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 7     
++---Muxes : 
+	   2 Input     16 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 1     
+	   6 Input      6 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 3     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 6     
+Module gmii_arbi__xdcDup__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      8 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	                8 Bit    Registers := 3     
+	                2 Bit    Registers := 3     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   3 Input     27 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 5     
+	   3 Input      1 Bit        Muxes := 5     
+	   2 Input      1 Bit        Muxes := 7     
+Module mac_tx__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 4     
+	                4 Bit    Registers := 1     
+	                1 Bit    Registers := 8     
++---Muxes : 
+	   2 Input     16 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 5     
+	   7 Input      6 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 3     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 2     
+Module mac_tx_mode__2 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   3 Input      8 Bit        Muxes := 1     
+	   6 Input      5 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 4     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 2     
+	   3 Input      1 Bit        Muxes := 2     
+Module crc__3 
+Detailed RTL Component Info : 
++---XORs : 
+	   2 Input      1 Bit         XORs := 8     
+	   3 Input      1 Bit         XORs := 6     
+	   6 Input      1 Bit         XORs := 7     
+	   8 Input      1 Bit         XORs := 1     
+	   5 Input      1 Bit         XORs := 4     
+	   7 Input      1 Bit         XORs := 7     
+	  10 Input      1 Bit         XORs := 2     
+	   9 Input      1 Bit         XORs := 3     
+	  12 Input      1 Bit         XORs := 1     
+	   4 Input      1 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+Module arp_tx__2 
+Detailed RTL Component Info : 
++---Registers : 
+	               48 Bit    Registers := 1     
+	               32 Bit    Registers := 1     
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     48 Bit        Muxes := 1     
+	   2 Input     32 Bit        Muxes := 1     
+	   9 Input      8 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 5     
+	  43 Input      8 Bit        Muxes := 1     
+	   2 Input      7 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 2     
+	   2 Input      5 Bit        Muxes := 2     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 2     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 3     
+Module ip_tx__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     20 Bit       Adders := 1     
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 2     
+	   2 Input     17 Bit       Adders := 8     
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 1     
++---Registers : 
+	               20 Bit    Registers := 3     
+	               19 Bit    Registers := 1     
+	               18 Bit    Registers := 2     
+	               17 Bit    Registers := 5     
+	               16 Bit    Registers := 3     
+	                8 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     20 Bit        Muxes := 1     
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input     18 Bit        Muxes := 2     
+	   2 Input     17 Bit        Muxes := 6     
+	   2 Input     16 Bit        Muxes := 4     
+	   2 Input      8 Bit        Muxes := 11    
+	   8 Input      8 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 1     
+Module ip_tx_mode__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     16 Bit       Adders := 1     
++---Registers : 
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 2     
+	                1 Bit    Registers := 4     
++---Muxes : 
+	   2 Input     16 Bit        Muxes := 1     
+	   3 Input      8 Bit        Muxes := 1     
+	   3 Input      5 Bit        Muxes := 1     
+	   6 Input      5 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 3     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 3     
+	   2 Input      1 Bit        Muxes := 2     
+	   3 Input      1 Bit        Muxes := 1     
+Module udp_tx__xdcDup__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 7     
+	   2 Input     20 Bit       Adders := 1     
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 2     
+	   2 Input     17 Bit       Adders := 5     
+	   2 Input     16 Bit       Adders := 4     
++---Registers : 
+	               32 Bit    Registers := 5     
+	               20 Bit    Registers := 1     
+	               19 Bit    Registers := 1     
+	               18 Bit    Registers := 2     
+	               17 Bit    Registers := 5     
+	               16 Bit    Registers := 7     
+	                8 Bit    Registers := 4     
+	                1 Bit    Registers := 8     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 5     
+	   2 Input     20 Bit        Muxes := 1     
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input     18 Bit        Muxes := 2     
+	   2 Input     17 Bit        Muxes := 5     
+	   2 Input     16 Bit        Muxes := 7     
+	   2 Input      8 Bit        Muxes := 4     
+	   2 Input      6 Bit        Muxes := 7     
+	   7 Input      6 Bit        Muxes := 5     
+	   2 Input      5 Bit        Muxes := 8     
+	   2 Input      4 Bit        Muxes := 11    
+	   2 Input      2 Bit        Muxes := 5     
+	   2 Input      1 Bit        Muxes := 11    
+	   4 Input      1 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 1     
+Module crc__2 
+Detailed RTL Component Info : 
++---XORs : 
+	   2 Input      1 Bit         XORs := 8     
+	   3 Input      1 Bit         XORs := 6     
+	   6 Input      1 Bit         XORs := 7     
+	   8 Input      1 Bit         XORs := 1     
+	   5 Input      1 Bit         XORs := 4     
+	   7 Input      1 Bit         XORs := 7     
+	  10 Input      1 Bit         XORs := 2     
+	   9 Input      1 Bit         XORs := 3     
+	  12 Input      1 Bit         XORs := 1     
+	   4 Input      1 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+Module mac_rx__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input      5 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 1     
++---Registers : 
+	               64 Bit    Registers := 1     
+	               48 Bit    Registers := 2     
+	               32 Bit    Registers := 4     
+	               16 Bit    Registers := 2     
+	                8 Bit    Registers := 4     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                1 Bit    Registers := 7     
++---Muxes : 
+	   2 Input     64 Bit        Muxes := 2     
+	   7 Input     48 Bit        Muxes := 2     
+	   2 Input     48 Bit        Muxes := 3     
+	   2 Input     32 Bit        Muxes := 5     
+	   4 Input     32 Bit        Muxes := 1     
+	   5 Input     32 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 4     
+	   2 Input      8 Bit        Muxes := 11    
+	   9 Input      8 Bit        Muxes := 1     
+	   2 Input      7 Bit        Muxes := 5     
+	   2 Input      5 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 3     
+Module ip_rx__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 4     
+	   2 Input     17 Bit       Adders := 1     
+	   3 Input     16 Bit       Adders := 1     
+	   2 Input      3 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 6     
+	               16 Bit    Registers := 3     
+	                8 Bit    Registers := 2     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 9     
+	   4 Input     32 Bit        Muxes := 4     
+	   2 Input     16 Bit        Muxes := 2     
+	   3 Input      5 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 3     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 3     
+	   3 Input      1 Bit        Muxes := 1     
+Module udp_rx__xdcDup__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 4     
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 1     
+	   2 Input     17 Bit       Adders := 4     
+	   2 Input     11 Bit       Adders := 1     
+	   2 Input      3 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 4     
+	               19 Bit    Registers := 1     
+	               18 Bit    Registers := 1     
+	               17 Bit    Registers := 3     
+	               16 Bit    Registers := 2     
+	               11 Bit    Registers := 1     
+	                8 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 4     
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input     18 Bit        Muxes := 1     
+	   2 Input     17 Bit        Muxes := 4     
+	   2 Input     11 Bit        Muxes := 1     
+	   9 Input      8 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 1     
+	   2 Input      7 Bit        Muxes := 2     
+	   2 Input      6 Bit        Muxes := 5     
+	   2 Input      5 Bit        Muxes := 4     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 12    
+	   4 Input      1 Bit        Muxes := 1     
+Module arp_rx__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      8 Bit       Adders := 1     
++---Registers : 
+	               48 Bit    Registers := 2     
+	               32 Bit    Registers := 2     
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   2 Input     48 Bit        Muxes := 10    
+	   2 Input     32 Bit        Muxes := 6     
+	   2 Input     16 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 1     
+	   5 Input      4 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 5     
+Module icmp_reply__xdcDup__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 6     
+	   2 Input     17 Bit       Adders := 4     
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input     11 Bit       Adders := 2     
+	   2 Input      3 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 8     
+	               16 Bit    Registers := 4     
+	               11 Bit    Registers := 2     
+	                8 Bit    Registers := 3     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 3     
+	   3 Input     32 Bit        Muxes := 2     
+	   2 Input     17 Bit        Muxes := 2     
+	   2 Input     16 Bit        Muxes := 3     
+	   2 Input     11 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 2     
+	  29 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 14    
+	   3 Input      1 Bit        Muxes := 2     
+Module arp_cache__2 
+Detailed RTL Component Info : 
++---Registers : 
+	               80 Bit    Registers := 1     
+	               48 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     48 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+Module ax_debounce__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
++---XORs : 
+	   2 Input      1 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	                1 Bit    Registers := 6     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 2     
+Module mac_test__xdcDup__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 2     
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input     11 Bit       Adders := 1     
+	   2 Input      5 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	               16 Bit    Registers := 1     
+	               11 Bit    Registers := 1     
+	                8 Bit    Registers := 3     
+	                5 Bit    Registers := 1     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 2     
+	   5 Input     31 Bit        Muxes := 1     
+	   5 Input     23 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 1     
+	   5 Input     15 Bit        Muxes := 1     
+	   2 Input     11 Bit        Muxes := 1     
+	   2 Input      9 Bit        Muxes := 4     
+	   3 Input      9 Bit        Muxes := 1     
+	  10 Input      9 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 8     
+	   4 Input      8 Bit        Muxes := 1     
+	   5 Input      7 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 2     
+	   2 Input      5 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 4     
+	   2 Input      2 Bit        Muxes := 4     
+	   2 Input      1 Bit        Muxes := 9     
+	   3 Input      1 Bit        Muxes := 1     
+Module reset__1 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     28 Bit       Adders := 1     
++---Registers : 
+	               28 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   3 Input     28 Bit        Muxes := 1     
+	   2 Input     26 Bit        Muxes := 1     
+Module reset__2 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     28 Bit       Adders := 1     
++---Registers : 
+	               28 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   3 Input     28 Bit        Muxes := 1     
+	   2 Input     26 Bit        Muxes := 1     
+Module util_gmii_to_rgmii__parameterized0 
+Detailed RTL Component Info : 
++---XORs : 
+	   2 Input      1 Bit         XORs := 2     
++---Registers : 
+	                8 Bit    Registers := 2     
+	                4 Bit    Registers := 2     
+	                1 Bit    Registers := 10    
+Module gmii_tx_buffer 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               17 Bit    Registers := 1     
+	                8 Bit    Registers := 2     
+	                4 Bit    Registers := 3     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   2 Input      8 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 2     
+	   2 Input      2 Bit        Muxes := 3     
+	   2 Input      1 Bit        Muxes := 4     
+Module gmii_rx_buffer 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   2 Input     16 Bit       Adders := 2     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               16 Bit    Registers := 3     
+	                8 Bit    Registers := 1     
+	                4 Bit    Registers := 2     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 7     
++---Muxes : 
+	   2 Input     16 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 1     
+	   6 Input      6 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 3     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 6     
+Module gmii_arbi 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      8 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	                8 Bit    Registers := 3     
+	                2 Bit    Registers := 3     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   3 Input     27 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 5     
+	   3 Input      1 Bit        Muxes := 5     
+	   2 Input      1 Bit        Muxes := 7     
+Module mac_tx 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 4     
+	                4 Bit    Registers := 1     
+	                1 Bit    Registers := 8     
++---Muxes : 
+	   2 Input     16 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 5     
+	   7 Input      6 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 3     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 2     
+Module mac_tx_mode 
+Detailed RTL Component Info : 
++---Registers : 
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   3 Input      8 Bit        Muxes := 1     
+	   6 Input      5 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 4     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 2     
+	   3 Input      1 Bit        Muxes := 2     
+Module crc 
+Detailed RTL Component Info : 
++---XORs : 
+	   2 Input      1 Bit         XORs := 8     
+	   3 Input      1 Bit         XORs := 6     
+	   6 Input      1 Bit         XORs := 7     
+	   8 Input      1 Bit         XORs := 1     
+	   5 Input      1 Bit         XORs := 4     
+	   7 Input      1 Bit         XORs := 7     
+	  10 Input      1 Bit         XORs := 2     
+	   9 Input      1 Bit         XORs := 3     
+	  12 Input      1 Bit         XORs := 1     
+	   4 Input      1 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+Module arp_tx 
+Detailed RTL Component Info : 
++---Registers : 
+	               48 Bit    Registers := 1     
+	               32 Bit    Registers := 1     
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     48 Bit        Muxes := 1     
+	   2 Input     32 Bit        Muxes := 1     
+	   9 Input      8 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 5     
+	  43 Input      8 Bit        Muxes := 1     
+	   2 Input      7 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 2     
+	   2 Input      5 Bit        Muxes := 2     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 2     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 3     
+Module ip_tx 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     20 Bit       Adders := 1     
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 2     
+	   2 Input     17 Bit       Adders := 8     
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 1     
++---Registers : 
+	               20 Bit    Registers := 3     
+	               19 Bit    Registers := 1     
+	               18 Bit    Registers := 2     
+	               17 Bit    Registers := 5     
+	               16 Bit    Registers := 3     
+	                8 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     20 Bit        Muxes := 1     
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input     18 Bit        Muxes := 2     
+	   2 Input     17 Bit        Muxes := 6     
+	   2 Input     16 Bit        Muxes := 4     
+	   2 Input      8 Bit        Muxes := 11    
+	   8 Input      8 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 1     
+Module ip_tx_mode 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     16 Bit       Adders := 1     
++---Registers : 
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 2     
+	                1 Bit    Registers := 4     
++---Muxes : 
+	   2 Input     16 Bit        Muxes := 1     
+	   3 Input      8 Bit        Muxes := 1     
+	   3 Input      5 Bit        Muxes := 1     
+	   6 Input      5 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 3     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 3     
+	   2 Input      1 Bit        Muxes := 2     
+	   3 Input      1 Bit        Muxes := 1     
+Module udp_tx 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 7     
+	   2 Input     20 Bit       Adders := 1     
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 2     
+	   2 Input     17 Bit       Adders := 5     
+	   2 Input     16 Bit       Adders := 4     
++---Registers : 
+	               32 Bit    Registers := 5     
+	               20 Bit    Registers := 1     
+	               19 Bit    Registers := 1     
+	               18 Bit    Registers := 2     
+	               17 Bit    Registers := 5     
+	               16 Bit    Registers := 7     
+	                8 Bit    Registers := 4     
+	                1 Bit    Registers := 8     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 5     
+	   2 Input     20 Bit        Muxes := 1     
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input     18 Bit        Muxes := 2     
+	   2 Input     17 Bit        Muxes := 5     
+	   2 Input     16 Bit        Muxes := 7     
+	   2 Input      8 Bit        Muxes := 4     
+	   2 Input      6 Bit        Muxes := 7     
+	   7 Input      6 Bit        Muxes := 5     
+	   2 Input      5 Bit        Muxes := 8     
+	   2 Input      4 Bit        Muxes := 11    
+	   2 Input      2 Bit        Muxes := 5     
+	   2 Input      1 Bit        Muxes := 11    
+	   4 Input      1 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 1     
+Module crc__4 
+Detailed RTL Component Info : 
++---XORs : 
+	   2 Input      1 Bit         XORs := 8     
+	   3 Input      1 Bit         XORs := 6     
+	   6 Input      1 Bit         XORs := 7     
+	   8 Input      1 Bit         XORs := 1     
+	   5 Input      1 Bit         XORs := 4     
+	   7 Input      1 Bit         XORs := 7     
+	  10 Input      1 Bit         XORs := 2     
+	   9 Input      1 Bit         XORs := 3     
+	  12 Input      1 Bit         XORs := 1     
+	   4 Input      1 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+Module mac_rx 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input      5 Bit       Adders := 1     
+	   2 Input      4 Bit       Adders := 1     
++---Registers : 
+	               64 Bit    Registers := 1     
+	               48 Bit    Registers := 2     
+	               32 Bit    Registers := 4     
+	               16 Bit    Registers := 2     
+	                8 Bit    Registers := 4     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                1 Bit    Registers := 7     
++---Muxes : 
+	   2 Input     64 Bit        Muxes := 2     
+	   7 Input     48 Bit        Muxes := 2     
+	   2 Input     48 Bit        Muxes := 3     
+	   2 Input     32 Bit        Muxes := 5     
+	   4 Input     32 Bit        Muxes := 1     
+	   5 Input     32 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 4     
+	   2 Input      8 Bit        Muxes := 11    
+	   9 Input      8 Bit        Muxes := 1     
+	   2 Input      7 Bit        Muxes := 5     
+	   2 Input      5 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 2     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 3     
+Module ip_rx 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 4     
+	   2 Input     17 Bit       Adders := 1     
+	   3 Input     16 Bit       Adders := 1     
+	   2 Input      3 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 6     
+	               16 Bit    Registers := 3     
+	                8 Bit    Registers := 2     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 9     
+	   4 Input     32 Bit        Muxes := 4     
+	   2 Input     16 Bit        Muxes := 2     
+	   3 Input      5 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 3     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 3     
+	   3 Input      1 Bit        Muxes := 1     
+Module udp_rx 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 4     
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     18 Bit       Adders := 1     
+	   2 Input     17 Bit       Adders := 4     
+	   2 Input     11 Bit       Adders := 1     
+	   2 Input      3 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 4     
+	               19 Bit    Registers := 1     
+	               18 Bit    Registers := 1     
+	               17 Bit    Registers := 3     
+	               16 Bit    Registers := 2     
+	               11 Bit    Registers := 1     
+	                8 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 4     
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input     18 Bit        Muxes := 1     
+	   2 Input     17 Bit        Muxes := 4     
+	   2 Input     11 Bit        Muxes := 1     
+	   9 Input      8 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 1     
+	   2 Input      7 Bit        Muxes := 2     
+	   2 Input      6 Bit        Muxes := 5     
+	   2 Input      5 Bit        Muxes := 4     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 12    
+	   4 Input      1 Bit        Muxes := 1     
+Module arp_rx 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      8 Bit       Adders := 1     
++---Registers : 
+	               48 Bit    Registers := 2     
+	               32 Bit    Registers := 2     
+	               16 Bit    Registers := 1     
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   2 Input     48 Bit        Muxes := 10    
+	   2 Input     32 Bit        Muxes := 6     
+	   2 Input     16 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 1     
+	   5 Input      4 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 5     
+Module icmp_reply 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 6     
+	   2 Input     17 Bit       Adders := 4     
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input     11 Bit       Adders := 2     
+	   2 Input      3 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 8     
+	               16 Bit    Registers := 4     
+	               11 Bit    Registers := 2     
+	                8 Bit    Registers := 3     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 3     
+	   3 Input     32 Bit        Muxes := 2     
+	   2 Input     17 Bit        Muxes := 2     
+	   2 Input     16 Bit        Muxes := 3     
+	   2 Input     11 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 2     
+	  29 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 14    
+	   3 Input      1 Bit        Muxes := 2     
+Module arp_cache 
+Detailed RTL Component Info : 
++---Registers : 
+	               80 Bit    Registers := 1     
+	               48 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     48 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 1     
+Module ax_debounce 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
++---XORs : 
+	   2 Input      1 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	                1 Bit    Registers := 6     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 2     
+Module mac_test 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 2     
+	   2 Input     16 Bit       Adders := 1     
+	   2 Input     11 Bit       Adders := 1     
+	   2 Input      5 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 1     
+	               16 Bit    Registers := 1     
+	               11 Bit    Registers := 1     
+	                8 Bit    Registers := 3     
+	                5 Bit    Registers := 1     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 9     
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 2     
+	   5 Input     31 Bit        Muxes := 1     
+	   5 Input     23 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 1     
+	   5 Input     15 Bit        Muxes := 1     
+	   2 Input     11 Bit        Muxes := 1     
+	   2 Input      9 Bit        Muxes := 4     
+	   3 Input      9 Bit        Muxes := 1     
+	  10 Input      9 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 8     
+	   4 Input      8 Bit        Muxes := 1     
+	   5 Input      7 Bit        Muxes := 1     
+	   2 Input      6 Bit        Muxes := 2     
+	   2 Input      5 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 4     
+	   2 Input      2 Bit        Muxes := 4     
+	   2 Input      1 Bit        Muxes := 9     
+	   3 Input      1 Bit        Muxes := 1     
+Module reset__3 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     28 Bit       Adders := 1     
++---Registers : 
+	               28 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   3 Input     28 Bit        Muxes := 1     
+	   2 Input     26 Bit        Muxes := 1     
+Module reset 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     28 Bit       Adders := 1     
++---Registers : 
+	               28 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   3 Input     28 Bit        Muxes := 1     
+	   2 Input     26 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+Warning: Parallel synthesis criteria is not met 
+INFO: [Synth 8-5546] ROM "mac_rx_source_mac_addr" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-5546] ROM "mac_rx_source_mac_addr" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_17_reg[0]' (FDC) to 'smi_config:/i_0/write_reg_16_reg[9]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[1]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[1]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[2]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[2]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[3]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[3]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[4]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[4]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[5]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[5]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[6]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[6]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[7]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[7]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[8]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[8]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[9]' (FDC) to 'smi_config:/i_0/write_reg_16_reg[11]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[10]' (FDC) to 'smi_config:/i_0/write_reg_16_reg[12]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[11]' (FDC) to 'smi_config:/i_0/write_reg_16_reg[14]'
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[12]' (FDC) to 'smi_config:/i_0/write_reg_16_reg[13]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (smi_config:/i_0/\write_reg_16_reg[14] )
+INFO: [Synth 8-3886] merging instance 'smi_config:/i_0/write_reg_16_reg[15]' (FDC) to 'smi_config:/i_0/write_reg_17_reg[15]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[0]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[1]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[2]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[3]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[4]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[5]' (FDPE) to 'u1i_1/arbi_inst/pack_total_len_reg[10]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[6]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[24]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[7]' (FDPE) to 'u1i_1/arbi_inst/pack_total_len_reg[10]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[8]' (FDPE) to 'u1i_1/arbi_inst/pack_total_len_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[9]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[11]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[24]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[12]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[24]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[13]' (FDPE) to 'u1i_1/arbi_inst/pack_total_len_reg[18]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[14]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[24]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[15]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[16]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[24]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[20]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[24]'
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (u1i_1/arbi_inst/\pack_total_len_reg[21] )
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[22]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[24]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[23]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[25]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[26]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[27]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[28]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[29]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/pack_total_len_reg[30]' (FDCE) to 'u1i_1/arbi_inst/pack_total_len_reg[31]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/arbi_inst/\pack_total_len_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/arbi_inst/tx_buffer_inst/\pack_len_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/arbi_inst/tx_buffer_inst/\state_reg[3] )
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[0]' (FDC) to 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[4]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[1]' (FDC) to 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[5]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[2]' (FDC) to 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[6]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[3]' (FDC) to 'u1i_1/arbi_inst/tx_buffer_inst/e10_100_txd_reg[7]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/arbi_inst/rx_buffer_inst/\pack_len_reg[15] )
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[16]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[16]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[16]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[1]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[15]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[1]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[3]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[2]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[2]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[3]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[15]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[3]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[5]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[4]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[4]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[5]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[15]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[5]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[7]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[6]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[6]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[7]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[15]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[7]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[14]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[8]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[8]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[9]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[9]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[10]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[10]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[11]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[11]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[12]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[12]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[13]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[13]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[14]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp0_reg[15]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[14]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp1_reg[15]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[1]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[2]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[3]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[4]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[5]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[13]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[6]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[7]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[8]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[13]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[9]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[13]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[10]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[13]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[11]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[13]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[12]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[13]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[14]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp3_reg[15]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/udp0/checksum_tmp4_reg[16]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/mac_test0/\mac_top0/mac_tx0 /\udp0/checksum_tmp4_reg[16] )
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp2_reg[16]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[16]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[1]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp4_reg[1]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[2]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[3]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp4_reg[1]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[4]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[5]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp4_reg[1]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[6]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[7]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp4_reg[1]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp2_reg[8]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[8]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp2_reg[9]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Synth 8-3886] merging instance 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/checksum_tmp3_reg[9]' (FDCE) to 'u1i_1/mac_test0/mac_top0/mac_tx0/ip0/check_out_reg[17]'
+INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/mac_test0/\mac_top0/icmp0 /\reply_check_out_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/mac_test0/\ram_wr_data_reg[7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/mac_test0/\mac_top0/mac_tx0 /\ip0/check_out_reg[19] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (u1i_1/mac_test0/\mac_top0/mac_tx0 /\ipmode/ip_send_type_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/mac_test0/\mac_top0/mac_tx0 /\ipmode/ip_send_type_reg[7] )
+WARNING: [Synth 8-3332] Sequential element (ip0/FSM_onehot_state_reg[2]) is unused and will be removed from module mac_tx_top__xdcDup__1.
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (u2i_2/arbi_inst/\pack_total_len_reg[21] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/arbi_inst/\pack_total_len_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/arbi_inst/tx_buffer_inst/\pack_len_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/arbi_inst/tx_buffer_inst/\state_reg[3] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/arbi_inst/rx_buffer_inst/\pack_len_reg[15] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/mac_test0/\mac_top0/mac_tx0 /\udp0/checksum_tmp4_reg[16] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/mac_test0/\mac_top0/icmp0 /\reply_check_out_reg[31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/mac_test0/\ram_wr_data_reg[7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/mac_test0/\mac_top0/mac_tx0 /\ip0/check_out_reg[19] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (u2i_2/mac_test0/\mac_top0/mac_tx0 /\ipmode/ip_send_type_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/mac_test0/\mac_top0/mac_tx0 /\ipmode/ip_send_type_reg[7] )
+WARNING: [Synth 8-3332] Sequential element (ip0/FSM_onehot_state_reg[2]) is unused and will be removed from module mac_tx_top.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/mac_test0/\mac_top0/mac_tx0 /\udp0/checksum_tmp3_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u2i_2/mac_test0/\mac_top0/mac_tx0 /\ip0/checksum_tmp3_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/mac_test0/\mac_top0/mac_tx0 /\udp0/checksum_tmp3_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (u1i_1/mac_test0/\mac_top0/mac_tx0 /\ip0/checksum_tmp3_reg[0] )
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:45 ; elapsed = 00:00:47 . Memory (MB): peak = 1045.297 ; gain = 434.203
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++------+-----------------------------------+------------+----------+
+|      |RTL Partition                      |Replication |Instances |
++------+-----------------------------------+------------+----------+
+|1     |smi_read_write__GC0                |           2|       446|
+|2     |smi_config__GC0                    |           2|       453|
+|3     |ethernet_test__GC0                 |           1|     11042|
+|4     |ethernet_test__parameterized0__GC0 |           1|     11042|
+|5     |ethernet_2port__GC0                |           1|         4|
++------+-----------------------------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5578] Moved timing constraint from pin 'refclk/clk_out1' to pin 'refclk/bbstub_clk_out1/O'
+INFO: [Synth 8-5578] Moved timing constraint from pin 'refclk/clk_out2' to pin 'refclk/bbstub_clk_out2/O'
+WARNING: [Synth 8-565] redefining clock 'sys_clk_p'
+INFO: [Synth 8-5819] Moved 2 constraints on hierarchical pins to their respective driving/loading pins
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:52 ; elapsed = 00:00:54 . Memory (MB): peak = 1045.297 ; gain = 434.203
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:53 ; elapsed = 00:00:56 . Memory (MB): peak = 1050.965 ; gain = 439.871
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++------+-----------------------------------+------------+----------+
+|      |RTL Partition                      |Replication |Instances |
++------+-----------------------------------+------------+----------+
+|1     |smi_read_write__GC0                |           2|       446|
+|2     |smi_config__GC0                    |           2|       453|
+|3     |ethernet_test__GC0                 |           1|     11042|
+|4     |ethernet_test__parameterized0__GC0 |           1|     11042|
+|5     |ethernet_2port__GC0                |           1|         4|
++------+-----------------------------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:59 ; elapsed = 00:01:02 . Memory (MB): peak = 1073.438 ; gain = 462.344
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[0] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[0]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[1] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[1]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[2] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[2]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[3] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[3]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[4] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[4]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[5] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[5]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[6] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[6]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[7] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[7]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[8] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[8]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[9] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[9]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[10] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[10]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[11] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[11]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[12] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[12]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[13] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[13]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[14] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[14]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[15] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[15]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[0] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[0]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[1] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[1]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[2] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[2]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[3] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[3]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[4] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[4]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[5] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[5]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[6] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[6]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[7] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[7]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[8] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[8]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[9] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[9]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[10] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[10]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[11] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[11]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[12] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[12]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[13] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[13]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[14] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[14]_inv.
+INFO: [Synth 8-5365] Flop mac_top0/mac_tx0/ip0/checkout_buf_reg[15] is being inverted and renamed to mac_top0/mac_tx0/ip0/checkout_buf_reg[15]_inv.
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 1077.266 ; gain = 466.172
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:02 ; elapsed = 00:01:04 . Memory (MB): peak = 1077.266 ; gain = 466.172
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:03 ; elapsed = 00:01:05 . Memory (MB): peak = 1077.266 ; gain = 466.172
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:03 ; elapsed = 00:01:05 . Memory (MB): peak = 1077.266 ; gain = 466.172
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:03 ; elapsed = 00:01:06 . Memory (MB): peak = 1077.266 ; gain = 466.172
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:03 ; elapsed = 00:01:06 . Memory (MB): peak = 1077.266 ; gain = 466.172
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+------------------+----------+
+|      |BlackBox name     |Instances |
++------+------------------+----------+
+|1     |clk_ref           |         1|
+|2     |eth_data_fifo     |         4|
+|3     |len_fifo          |         4|
+|4     |icmp_rx_ram_8_256 |         2|
+|5     |udp_rx_ram_8_2048 |         2|
+|6     |udp_tx_data_fifo  |         2|
+|7     |udp_checksum_fifo |         2|
++------+------------------+----------+
+
+Report Cell Usage: 
++------+---------------------+------+
+|      |Cell                 |Count |
++------+---------------------+------+
+|1     |clk_ref              |     1|
+|2     |eth_data_fifo        |     1|
+|3     |eth_data_fifo__4     |     1|
+|4     |eth_data_fifo__5     |     1|
+|5     |eth_data_fifo__6     |     1|
+|6     |icmp_rx_ram_8_256    |     1|
+|7     |icmp_rx_ram_8_256__2 |     1|
+|8     |len_fifo             |     1|
+|9     |len_fifo__4          |     1|
+|10    |len_fifo__5          |     1|
+|11    |len_fifo__6          |     1|
+|12    |udp_checksum_fifo    |     1|
+|13    |udp_checksum_fifo__2 |     1|
+|14    |udp_rx_ram_8_2048    |     1|
+|15    |udp_rx_ram_8_2048__2 |     1|
+|16    |udp_tx_data_fifo     |     1|
+|17    |udp_tx_data_fifo__2  |     1|
+|18    |BUFG                 |     2|
+|19    |BUFIO                |     2|
+|20    |CARRY4               |   956|
+|21    |IDDR                 |    10|
+|22    |IDELAYCTRL           |     1|
+|23    |IDELAYE2             |     5|
+|24    |IDELAYE2_1           |     5|
+|25    |LUT1                 |   515|
+|26    |LUT2                 |  2564|
+|27    |LUT3                 |   974|
+|28    |LUT4                 |  1058|
+|29    |LUT5                 |   820|
+|30    |LUT6                 |  1572|
+|31    |MUXF7                |     8|
+|32    |MUXF8                |     2|
+|33    |ODDR                 |    12|
+|34    |FDCE                 |  5610|
+|35    |FDPE                 |   472|
+|36    |FDRE                 |   184|
+|37    |IBUF                 |    13|
+|38    |IOBUF                |     2|
+|39    |OBUF                 |    20|
++------+---------------------+------+
+
+Report Instance Areas: 
++------+--------------------------+-----------------------------------+------+
+|      |Instance                  |Module                             |Cells |
++------+--------------------------+-----------------------------------+------+
+|1     |top                       |                                   | 15144|
+|2     |  u1                      |ethernet_test                      |  7553|
+|3     |    smi_config_inst       |smi_config__1                      |   493|
+|4     |      smi_inst            |smi_read_write__1                  |   243|
+|5     |    util_gmii_to_rgmii_m0 |util_gmii_to_rgmii                 |    57|
+|6     |    arbi_inst             |gmii_arbi__xdcDup__1               |   557|
+|7     |      tx_buffer_inst      |gmii_tx_buffer__xdcDup__1          |   225|
+|8     |      rx_buffer_inst      |gmii_rx_buffer__xdcDup__1          |   242|
+|9     |    mac_test0             |mac_test__xdcDup__1                |  6303|
+|10    |      mac_top0            |mac_top__xdcDup__1                 |  6074|
+|11    |        cache0            |arp_cache_4                        |   261|
+|12    |        icmp0             |icmp_reply__xdcDup__1              |   836|
+|13    |        mac_rx0           |mac_rx_top__xdcDup__1              |  2459|
+|14    |          c0              |crc_12                             |    61|
+|15    |          arp0            |arp_rx_11                          |   319|
+|16    |          ip0             |ip_rx_13                           |   605|
+|17    |          mac0            |mac_rx_14                          |   605|
+|18    |          udp0            |udp_rx__xdcDup__1                  |   868|
+|19    |        mac_tx0           |mac_tx_top__xdcDup__1              |  2518|
+|20    |          c0              |crc_6                              |    61|
+|21    |          arp_tx0         |arp_tx_5                           |   287|
+|22    |          ip0             |ip_tx_7                            |   590|
+|23    |          ipmode          |ip_tx_mode_8                       |   132|
+|24    |          mac0            |mac_tx_9                           |   193|
+|25    |          mode0           |mac_tx_mode_10                     |    87|
+|26    |          udp0            |udp_tx__xdcDup__1                  |  1168|
+|27    |    reset_m0              |reset_2                            |    72|
+|28    |    reset_mdio_inst       |reset_3                            |    71|
+|29    |  u2                      |ethernet_test__parameterized0      |  7554|
+|30    |    smi_config_inst       |smi_config                         |   493|
+|31    |      smi_inst            |smi_read_write                     |   243|
+|32    |    util_gmii_to_rgmii_m0 |util_gmii_to_rgmii__parameterized0 |    57|
+|33    |    arbi_inst             |gmii_arbi                          |   557|
+|34    |      tx_buffer_inst      |gmii_tx_buffer                     |   225|
+|35    |      rx_buffer_inst      |gmii_rx_buffer                     |   242|
+|36    |    mac_test0             |mac_test                           |  6303|
+|37    |      mac_top0            |mac_top                            |  6074|
+|38    |        cache0            |arp_cache                          |   261|
+|39    |        icmp0             |icmp_reply                         |   836|
+|40    |        mac_rx0           |mac_rx_top                         |  2459|
+|41    |          c0              |crc_1                              |    61|
+|42    |          arp0            |arp_rx                             |   319|
+|43    |          ip0             |ip_rx                              |   605|
+|44    |          mac0            |mac_rx                             |   605|
+|45    |          udp0            |udp_rx                             |   868|
+|46    |        mac_tx0           |mac_tx_top                         |  2518|
+|47    |          c0              |crc                                |    61|
+|48    |          arp_tx0         |arp_tx                             |   287|
+|49    |          ip0             |ip_tx                              |   590|
+|50    |          ipmode          |ip_tx_mode                         |   132|
+|51    |          mac0            |mac_tx                             |   193|
+|52    |          mode0           |mac_tx_mode                        |    87|
+|53    |          udp0            |udp_tx                             |  1168|
+|54    |    reset_m0              |reset                              |    73|
+|55    |    reset_mdio_inst       |reset_0                            |    71|
++------+--------------------------+-----------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:03 ; elapsed = 00:01:06 . Memory (MB): peak = 1077.266 ; gain = 466.172
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 6 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:52 ; elapsed = 00:01:01 . Memory (MB): peak = 1077.266 ; gain = 297.418
+Synthesis Optimization Complete : Time (s): cpu = 00:01:03 ; elapsed = 00:01:06 . Memory (MB): peak = 1077.266 ; gain = 466.172
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 1000 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1091.133 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 2 instances
+
+INFO: [Common 17-83] Releasing license: Synthesis
+356 Infos, 71 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:11 ; elapsed = 00:01:14 . Memory (MB): peak = 1091.133 ; gain = 742.887
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1091.133 ; gain = 0.000
+WARNING: [Constraints 18-5210] No constraints selected for write.
+Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
+INFO: [Common 17-1381] The checkpoint 'G:/ax7103b/vivado/ethernet_test/eth_test.runs/synth_1/ethernet_2port.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file ethernet_2port_utilization_synth.rpt -pb ethernet_2port_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Mon Apr 10 16:03:12 2023...

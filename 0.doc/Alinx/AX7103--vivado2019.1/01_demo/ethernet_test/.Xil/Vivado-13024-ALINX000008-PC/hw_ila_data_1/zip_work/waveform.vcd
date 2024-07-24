@@ -1,0 +1,43 @@
+$date
+        2018-Jan-15 14:33:07
+$end
+$version
+        Vivado v2017.4 (64-bit)
+$end
+$timescale
+        1ps
+$end
+$scope module dut $end
+$var reg 1 " gmii_rx_clk $end
+$var reg 1 # rgmii_rxctl_IBUF $end
+$var reg 1 $ gmii_rx_dv $end
+$var reg 1 % gmii_tx_clk $end
+$var reg 8 & gmii_rxd [7:0] $end
+$var reg 8 . gmii_txd [7:0] $end
+$var reg 1 6 gmii_tx_en $end
+$var reg 4 7 rgmii_rxd_IBUF [3:0] $end
+$var reg 4 ; rx_state [3:0] $end
+$var reg 4 ? i [3:0] $end
+$var reg 1 C _TRIGGER $end
+$var reg 1 D _WINDOW $end
+$var reg 1 E _GAP $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0"
+0#
+0$
+0%
+b0 &
+b0 .
+06
+b0 7
+b0 ;
+b0 ?
+0C
+1D
+0E
+$end
+#2048
+1C

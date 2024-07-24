@@ -1,0 +1,2 @@
+icmp_rx_ram_8_256.v,verilog,xil_defaultlib,../../../../src/eth/sources_1/ip/icmp_rx_ram_8_256/sim/icmp_rx_ram_8_256.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v
