@@ -1,0 +1,6 @@
+verilog xil_defaultlib  \
+"../../../../gtp_an5642_vga.srcs/sources_1/ip/afifo_64i_16o_128/sim/afifo_64i_16o_128.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+nosort

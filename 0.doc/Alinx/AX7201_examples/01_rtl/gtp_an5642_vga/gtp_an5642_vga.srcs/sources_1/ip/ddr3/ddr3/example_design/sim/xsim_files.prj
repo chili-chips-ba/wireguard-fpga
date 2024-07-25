@@ -1,0 +1,181 @@
+-------------------------------------------------------------------------------
+-- (c) Copyright 2012 Xilinx, Inc. All rights reserved.
+--
+-- This file contains confidential and proprietary information
+-- of Xilinx, Inc. and is protected under U.S. and
+-- international copyright and other intellectual property
+-- laws.
+--
+-- DISCLAIMER
+-- This disclaimer is not a license and does not grant any
+-- rights to the materials distributed herewith. Except as
+-- otherwise provided in a valid license issued to you by
+-- Xilinx, and to the maximum extent permitted by applicable
+-- law: (1) THESE MATERIALS ARE MADE AVAILABLE "AS IS" AND
+-- WITH ALL FAULTS, AND XILINX HEREBY DISCLAIMS ALL WARRANTIES
+-- AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING
+-- BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-
+-- INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE; and
+-- (2) Xilinx shall not be liable (whether in contract or tort,
+-- including negligence, or under any other theory of
+-- liability) for any loss or damage of any kind or nature
+-- related to, arising under or in connection with these
+-- materials, including for any direct, or any indirect,
+-- special, incidental, or consequential loss or damage
+-- (including loss of data, profits, goodwill, or any type of
+-- loss or damage suffered as a result of any action brought
+-- by a third party) even if such damage or loss was
+-- reasonably foreseeable or Xilinx had been advised of the
+-- possibility of the same.
+--
+-- CRITICAL APPLICATIONS
+-- Xilinx products are not designed or intended to be fail-
+-- safe, or for use in any application requiring fail-safe
+-- performance, such as life-support or safety devices or
+-- systems, Class III medical devices, nuclear facilities,
+-- applications related to the deployment of airbags, or any
+-- other applications that could lead to death, personal
+-- injury, or severe property or environmental damage
+-- (individually and collectively, "Critical
+-- Applications"). Customer assumes the sole risk and
+-- liability of any use of Xilinx products in Critical
+-- Applications, subject only to applicable laws and
+-- regulations governing limitations on product liability.
+--
+-- THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS
+-- PART OF THIS FILE AT ALL TIMES.
+--
+-------------------------------------------------------------------------------
+--   ____  ____
+--  /   /\/   /
+-- /___/  \  /    Vendor             : Xilinx
+-- \   \   \/     Version            : 4.2
+--  \   \         Application	     : MIG
+--  /   /         Filename           : xsim_files.prj
+-- /___/   /\     Date Last Modified : $Date: 2011/06/02 08:31:16 $
+-- \   \  /  \    Date Created       : Tue Jun 05 2012
+--  \___\/\___\
+--
+-- Device          : 7 Series
+-- Design Name     : DDR3 SDRAM
+-- Purpose         : Contains a list of all the files associated with a design
+-- Assumptions:
+--      - Simulation takes place in \sim folder of MIG output directory
+-- Reference       :
+-- Revision History:
+-------------------------------------------------------------------------------
+
+verilog  work  mig_7series_v4_2_data_gen_chk.v
+verilog  work  mig_7series_v4_2_axi4_tg.v
+verilog  work  mig_7series_v4_2_axi4_wrapper.v
+verilog  work  mig_7series_v4_2_tg.v
+verilog  work  mig_7series_v4_2_cmd_prbs_gen_axi.v
+verilog  work  example_top.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/clocking/mig_7series_v4_2_clk_ibuf.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/clocking/mig_7series_v4_2_iodelay_ctrl.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/clocking/mig_7series_v4_2_tempmon.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/clocking/mig_7series_v4_2_infrastructure.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ddr3.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ecc/mig_7series_v4_2_ecc_merge_enc.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ecc/mig_7series_v4_2_fi_xor.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ecc/mig_7series_v4_2_ecc_dec_fix.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ecc/mig_7series_v4_2_ecc_buf.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ecc/mig_7series_v4_2_ecc_gen.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_mc_phy.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ocd_mux.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_tempmon.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_prbs_gen.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_rdlvl.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_oclkdelay_cal.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_mc_phy_wrapper.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_calib_top.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ck_addr_cmd_delay.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ocd_po_cntlr.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_of_pre_fifo.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_skip_calib_tap.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_4lanes.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_dqs_found_cal.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_poc_edge_store.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_byte_lane.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_wrlvl_off_delay.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_poc_cc.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_prbs_rdlvl.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_byte_group_io.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_dqs_found_cal_hr.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ocd_cntlr.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ocd_samp.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_wrlvl.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_poc_tap_base.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_poc_pd.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_wrcal.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_init.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ocd_data.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_poc_meta.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_poc_top.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_top.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ocd_edge.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_if_post_fifo.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/phy/mig_7series_v4_2_ddr_phy_ocd_lim.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_aw_channel.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_w_upsizer.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_comparator_sel.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_r_upsizer.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_ar_channel.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_ctrl_top.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_ctrl_write.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_ctrl_addr_decode.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_ctrl_read.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_incr_cmd.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_fifo.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_a_upsizer.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_axic_register_slice.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_b_channel.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_simple_fifo.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_comparator_sel_static.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_cmd_arbiter.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_carry_latch_and.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_ctrl_reg_bank.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_wr_cmd_fsm.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_carry_latch_or.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_command_fifo.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_cmd_fsm.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_carry_or.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_r_channel.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_axi_upsizer.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_comparator.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_carry_and.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_ctrl_reg.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_w_channel.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_cmd_translator.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_ddr_axi_register_slice.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/axi/mig_7series_v4_2_axi_mc_wrap_cmd.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_round_robin_arb.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_mc.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_bank_state.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_rank_cntrl.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_arb_row_col.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_bank_queue.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_bank_compare.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_col_mach.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_bank_mach.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_bank_common.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_bank_cntrl.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_arb_mux.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_rank_mach.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_arb_select.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/controller/mig_7series_v4_2_rank_common.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ddr3_mig_sim.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ip_top/mig_7series_v4_2_mem_intfc.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ip_top/mig_7series_v4_2_memc_ui_top_axi.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ui/mig_7series_v4_2_ui_rd_data.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ui/mig_7series_v4_2_ui_cmd.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ui/mig_7series_v4_2_ui_wr_data.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ui/mig_7series_v4_2_ui_top.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ddr3.v
+verilog  work  ../ddr3_ex.srcs/sources_1/ip/ddr3/ddr3/user_design/rtl/ddr3_mig_sim.v
+verilog  work  $XILINX_VIVADO/data/verilog/src/glbl.v
+sv  work ddr3_model.sv -d x4Gb -d sg125 -d x16 
+verilog  work  wiredly.v
+verilog  work  sim_tb_top.v
+

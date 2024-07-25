@@ -1,0 +1,24 @@
+SET_FLAG MODE INTERACTIVE
+SET_FLAG STANDALONE_MODE TRUE
+SET_PREFERENCE ipi_mode no
+SET_PREFERENCE is_ip_locked false
+SET_PREFERENCE devicefamily artix7
+SET_PREFERENCE device xc7a200t
+SET_PREFERENCE speedgrade -2
+SET_PREFERENCE package fbg484
+SET_PREFERENCE verilogsim true
+SET_PREFERENCE vhdlsim false
+SET_PREFERENCE designentry Verilog
+SET_PREFERENCE outputdirectory /home/extern_disk/meisq/ax7202/ad7606_ethernet/.Xil/Vivado-13861-alinx/coregen/ddr3/_tmp/
+SET_PREFERENCE subworkingdirectory /home/extern_disk/meisq/ax7202/ad7606_ethernet/.Xil/Vivado-13861-alinx/coregen/ddr3/_tmp/
+SET_PREFERENCE flowvendor Other
+SET_PREFERENCE tool vivado
+SET_PREFERENCE compnamestatus 0
+SET_PARAMETER component_name ddr3
+SET_PARAMETER xml_input_file /home/extern_disk/meisq/ax7202/ad7606_ethernet/adc_ethernet.srcs/sources_1/ip/ddr3/mig_b.prj
+SET_PARAMETER data_dir_path /home/extern_disk/meisq/Xilinx/Vivado/2019.1/data/ip/xilinx/mig_7series_v4_2
+SET_CORE_NAME Memory Interface Generator (MIG 7 Series)
+SET_CORE_VERSION 4.2
+SET_CORE_VLNV xilinx.com:ip:mig_7series:4.2
+SET_CORE_PATH /home/extern_disk/meisq/Xilinx/Vivado/2019.1/data/ip/xilinx/mig_7series_v4_2
+SET_CORE_DATASHEET /home/extern_disk/meisq/Xilinx/Vivado/2019.1/data/ip/xilinx/mig_7series_v4_2/data/docs/ds176_7series_MIS.pdf

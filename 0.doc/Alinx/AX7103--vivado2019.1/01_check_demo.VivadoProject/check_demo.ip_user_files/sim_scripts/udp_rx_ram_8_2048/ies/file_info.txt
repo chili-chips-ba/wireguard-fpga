@@ -1,5 +1,0 @@
-xpm_memory.sv,systemverilog,xil_defaultlib,E:/Vivado/2019.1/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv,
-xpm_VCOMP.vhd,vhdl,xpm,E:/Vivado/2019.1/data/ip/xpm/xpm_VCOMP.vhd,
-blk_mem_gen_v8_4.v,verilog,blk_mem_gen_v8_4_3,../../../ipstatic/simulation/blk_mem_gen_v8_4.v,
-udp_rx_ram_8_2048.v,verilog,xil_defaultlib,../../../../src/eth/sources_1/ip/udp_rx_ram_8_2048/sim/udp_rx_ram_8_2048.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v

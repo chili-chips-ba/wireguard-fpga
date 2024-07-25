@@ -1,0 +1,84 @@
+
+
+Vivado Project Options:
+   Target Device                   : xc7a200t-fbg484
+   Speed Grade                     : -2
+   HDL                             : verilog
+   Synthesis Tool                  : VIVADO
+
+MIG Output Options:
+   Module Name                     : ddr3
+   No of Controllers               : 1
+   Selected Compatible Device(s)   : --
+
+FPGA Options:
+   System Clock Type               : No Buffer
+   Reference Clock Type            : Use System Clock
+   Debug Port                      : OFF
+   Internal Vref                   : disabled
+   IO Power Reduction              : ON
+   XADC instantiation in MIG       : Enabled
+
+Extended FPGA Options:
+   DCI for DQ,DQS/DQS#,DM          : enabled
+   Internal Termination (HR Banks) : 50 Ohms
+    
+/*******************************************************/
+/*                  Controller 0                       */
+/*******************************************************/
+Controller Options :
+   Memory                        : DDR3_SDRAM
+   Interface                     : AXI
+   Design Clock Frequency        : 2500 ps (  0.00 MHz)
+   Phy to Controller Clock Ratio : 4:1
+   Input Clock Period            : 5000 ps
+   CLKFBOUT_MULT (PLL)           : 4
+   DIVCLK_DIVIDE (PLL)           : 1
+   VCC_AUX IO                    : 1.8V
+   Memory Type                   : Components
+   Memory Part                   : MT41J256m16XX-125
+   Equivalent Part(s)            : MT41J256M16HA-125
+   Data Width                    : 32
+   ECC                           : Disabled
+   Data Mask                     : enabled
+   ORDERING                      : Normal
+
+AXI Parameters :
+   Data Width                    : 64
+   Arbitration Scheme            : RD_PRI_REG
+   Narrow Burst Support          : 0
+   ID Width                      : 4
+
+Memory Options:
+   Burst Length (MR0[1:0])          : 8 - Fixed
+   Read Burst Type (MR0[3])         : Sequential
+   CAS Latency (MR0[6:4])           : 6
+   Output Drive Strength (MR1[5,1]) : RZQ/7
+   Controller CS option             : Enable
+   Rtt_NOM - ODT (MR1[9,6,2])       : RZQ/4
+   Rtt_WR - Dynamic ODT (MR2[10:9]) : Dynamic ODT off
+   Memory Address Mapping           : BANK_ROW_COLUMN
+
+
+Bank Selections:
+	Bank: 34
+		Byte Group T0:	Address/Ctrl-1
+		Byte Group T1:	Address/Ctrl-0
+		Byte Group T2:	Address/Ctrl-2
+	Bank: 35
+		Byte Group T0:	DQ[0-7]
+		Byte Group T1:	DQ[8-15]
+		Byte Group T2:	DQ[16-23]
+		Byte Group T3:	DQ[24-31]
+
+System_Control: 
+	SignalName: sys_rst
+		PadLocation: No connect  Bank: Select Bank
+	SignalName: init_calib_complete
+		PadLocation: No connect  Bank: Select Bank
+	SignalName: tg_compare_error
+		PadLocation: No connect  Bank: Select Bank
+
+
+
+    

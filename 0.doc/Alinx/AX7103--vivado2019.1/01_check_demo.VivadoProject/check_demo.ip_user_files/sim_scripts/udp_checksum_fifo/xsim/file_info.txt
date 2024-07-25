@@ -1,2 +1,0 @@
-udp_checksum_fifo.v,verilog,xil_defaultlib,../../../../src/eth/sources_1/ip/udp_checksum_fifo/sim/udp_checksum_fifo.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v
