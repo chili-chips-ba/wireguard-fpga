@@ -1,0 +1,11 @@
+gtp_tx_startup_fsm.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp/example_design/gtp_tx_startup_fsm.v,
+gtp_rx_startup_fsm.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp/example_design/gtp_rx_startup_fsm.v,
+gtp_init.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp_init.v,
+gtp_gt.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp_gt.v,
+gtp_multi_gt.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp_multi_gt.v,
+gtp_gtrxreset_seq.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp/example_design/gtp_gtrxreset_seq.v,
+gtp_rxpmarst_seq.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp/example_design/gtp_rxpmarst_seq.v,
+gtp_rxrate_seq.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp/example_design/gtp_rxrate_seq.v,
+gtp_sync_block.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp/example_design/gtp_sync_block.v,
+gtp.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/gtp/gtp.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

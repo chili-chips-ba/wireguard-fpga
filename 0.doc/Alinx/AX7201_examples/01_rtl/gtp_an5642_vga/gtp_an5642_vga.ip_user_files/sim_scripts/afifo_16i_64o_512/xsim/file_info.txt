@@ -1,0 +1,2 @@
+afifo_16i_64o_512.v,verilog,xil_defaultlib,../../../../gtp_an5642_vga.srcs/sources_1/ip/afifo_16i_64o_512/sim/afifo_16i_64o_512.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

@@ -1,0 +1,4 @@
+SET_ERROR_CODE 0
+SET_XMDF_PATH ./ddr3_xmdf.tcl
+SET_PARAMETER component_name ddr3
+SET_PARAMETER xml_input_file  ./ddr3/mig.prj
