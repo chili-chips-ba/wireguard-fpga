@@ -20,7 +20,8 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 -	which is supported by open-source tools  
 -	and with all gateware written in the ubiquitous Verilog / System Verilog
 
-![ALINX Card](0.doc/Alinx/AX7201.jpg)
+![ALINX Duo](0.doc/Alinx/ALINX7201x2.jpg)
+>>>>>>>![ALINX Card](0.doc/Alinx/AX7201.jpg)
 
 ## References
 
@@ -214,5 +215,8 @@ We are grateful to NLnet Foundation for their sponsorship of this development ac
 
 ![logo_nlnet](https://github.com/chili-chips-ba/openeye/assets/67533663/18e7db5c-8c52-406b-a58e-8860caa327c2)
 <img width="115" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
+
+### Public posts:
+> [LinkedIn-2024-09-19](https://www.linkedin.com/posts/chili-chips_fpga-cpu-ethernet-activity-7242729037771522048-as-C?utm_source=share&utm_medium=member_desktop)
 
 #### End of Document
