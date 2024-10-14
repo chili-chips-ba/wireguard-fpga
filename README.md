@@ -1,11 +1,11 @@
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
-
+<p align="center">
+  <img width="200", src="https://github.com/user-attachments/assets/d12e18d1-13ba-4055-8ce7-3033846aad57">
+</p>
 With traditional solutions (such as OpenVPN / IPSec) starting to run out of steam, Wireguard is increasingly coming to the forefront as a modern, secure data tunneling and encryption method, one that's also easier to manage than the incumbents. Both software and hardware implementations of Wireguard already exist. However, the software performance is far below the speed of wire. Existing hardware approaches are both prohibitively expensive and based on proprietary, closed-source IP blocks and tools.
 
 The intent of this project is to bridge these gaps with an FPGA open-source implementation of Wireguard, written in SystemVerilog HDL.
-
-![wireguard-FPGA logo](https://github.com/user-attachments/assets/d12e18d1-13ba-4055-8ce7-3033846aad57)
 
 ## A Glimpse into History 
 We have contributed to **Blackwire** project, which is a 100Gbps hardware implementation of Wireguard switch based on AMD/Xilinx-proprietary AlveoU50 PC-accelerator card (SmartNIC form-factor), and implementable only with proprietary Vivado toolchain. 
@@ -20,8 +20,10 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 -	which is supported by open-source tools  
 -	and with all gateware written in the ubiquitous Verilog / System Verilog
 
-![ALINX Duo](0.doc/Alinx/ALINX7201x2.jpg)
->>>>>>>![ALINX Card](0.doc/Alinx/AX7201.jpg)
+<p align="center">
+  <img width="600" src="0.doc/Alinx/ALINX7201x2.jpg">
+  <img width="500" src="0.doc/Alinx/AX7201.jpg">
+</p>
 
 ## References
 
@@ -76,7 +78,7 @@ While the board we're using is low cost, it is also not particularly known in th
 
 Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not support High-Performance (HP) I/O. Consequently, we cannot push its I/O beyond 600MHz, nor its core logic beyond 100 MHz. 
 
-- [ ] Familiarization with HW platform
+- [x] Familiarization with HW platform
 - Create our first FPGA program that blinks LEDs
 - Verify pinouts and connectivity using simple test routines
 - Generate a few Ethernet test patterns 
@@ -85,7 +87,7 @@ Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not s
 - Initial bring up of embedded CPU within a _cookie-cutter_ SOC, such as [Ref5]
 - Design and test a simple SW interface to rudimentary HW Ethernet datapath
 
-- [ ] Detailed analysis and comparisons of:
+- [x] Detailed analysis and comparisons of:
 - Wireguard [White Papers](https://www.ndss-symposium.org/wp-content/uploads/2017/09/ndss2017_04A-3_Donenfeld_paper.pdf)
 - existing implementations in software [Ref1]
 - vs. _Blackwire_ hardware implementation [Ref2]
@@ -93,9 +95,9 @@ Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not s
   
 - [x] Identification and assimilation of prior art and building IP blocks, in particular **Corundum** [Ref3] and, to a lesser extent, _10GE Switch_ [Ref7] 
 
-- [ ] Architecture/uArch Design. HW/SW Partitioning. Verification Plan
+- [x] Architecture/uArch Design. HW/SW Partitioning. Verification Plan
 
-- [ ] Creation of sufficient initial documentation for project divide-and-conquer across a multi-disciplinary team of half a dozen developers
+- [x] Creation of sufficient initial documentation for project divide-and-conquer across a multi-disciplinary team of half a dozen developers
 
 ## Take2
 **Implementation of a basic, statically pre-configured Wireguard link**
@@ -163,7 +165,7 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 
 - [ ] Develop software components for management of data flow within VPN tunnels
 
-# Design Blueprint (TODO)
+# Design Blueprint (WIP)
 ![PrincipleView](0.doc/Wireguard/datapath-in-principle.png)
 
 ## Hardware Architecture
@@ -182,24 +184,24 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 - [HKDF](https://eprint.iacr.org/2010/264) for key derivation
 
 ### HW Theory of Operation
-TODO
+WIP
 
 ## Software Architecture
 ### SW Block Diagram
-TODO
+WIP
 ### SW Theory of Operation
-TODO
+WIP
 
 ## Hardware Data Flow
 ### HW Flow Chart, Throughputs and Pushbacks
-TODO
+WIP
 
 ## Software Control Flow
 ### SW Flow Chart, Messages and HW Intercepts
-TODO
+WIP
 
 ## HW/SW Working Together as a Coherent System
-TODO
+WIP
 
 ## Development and Test Framework
 ### Shared Linux Server with Tools
@@ -213,8 +215,10 @@ TODO
 ### Acknowledgements
 We are grateful to NLnet Foundation for their sponsorship of this development activity.
 
-![logo_nlnet](https://github.com/chili-chips-ba/openeye/assets/67533663/18e7db5c-8c52-406b-a58e-8860caa327c2)
-<img width="115" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
+<p align="center">
+   <img src="https://github.com/chili-chips-ba/openeye/assets/67533663/18e7db5c-8c52-406b-a58e-8860caa327c2">
+   <img width="115" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
+</p>
 
 ### Public posts:
 > [LinkedIn-2024-09-19](https://www.linkedin.com/posts/chili-chips_fpga-cpu-ethernet-activity-7242729037771522048-as-C?utm_source=share&utm_medium=member_desktop)
