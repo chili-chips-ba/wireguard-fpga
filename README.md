@@ -166,31 +166,58 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 - [ ] Develop software components for management of data flow within VPN tunnels
 
 # Design Blueprint (WIP)
-![PrincipleView](0.doc/Wireguard/datapath-in-principle.png)
+[//]: ![PrincipleView](0.doc/Wireguard/datapath-in-principle.png)
+
+## HW/SW Partitioning
+Since the Wireguard node essentially functions as an IP router with Wireguard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the Wireguard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully realized in RTL on an FPGA.
+
+![HWSWPartitioning](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
+
+In the HW/SW partitioning diagram, we can observe two types of network traffic: control traffic, which originates from the control plane and goes toward the external network (and vice versa), and data traffic, which arrives from the external network and, after processing in the data plane, returns to the external network. Specifically, control traffic represents Wireguard protocol handshake messages, while data traffic consists of end-user traffic, either encrypted or in plaintext, depending on the perspective.
 
 ## Hardware Architecture
 ### HW Block Diagram
-- PHY and MAC IP blocks
-- Parsing and Extraction of Ethernet Packet Header
-- Ethernet inbound Denial of Service (DoS) filter (with _blake2_)
-- WireGuard offload engines for cryptography and key authentication, see next section for more
-- UDP packet disassembler and assembler
+![HWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
 
-### HW Cryptography
+### HW Theory of Operation
+The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
+
+The soft CPU is equipped with a Boot ROM and a DDR3 SDRAM controller for interfacing with off-chip memory. External memory is exclusively used for control plane processes and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
+
+The data plane consists of several IP cores, which are listed and explained in the direction of network traffic propagation:
+- _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)
+- _1G MAC_ - execution of the 1G Ethernet protocol (framing, flow control, FCS, etc.)
+- _Rx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
+- _Per-Packet Round Robin Multiplexer_ - servicing Rx FIFOs on a per-packet basis using a round-robin algorithm
+- _Header Parser_ - extraction of Wireguard-related information from packet headers (IP addresses, UDP ports, Wireguard message type, peer ID, etc.)
+- _Wireguard/UDP Packet Disassembler_ - decapsulation of the payload from the Wireguard data packet for decryption of tunneled traffic
+- _ChaCha20-Poly1305 Decryptor_ - decryption and authentication of tunneled traffic
+- _IP Lookup Engine_ - routing/forwarding table lookup, mapping packets to the appropriate Wireguard peer, and making packet accept/reject decisions
+- _ChaCha20-Poly1305 Encryptor_ - encryption and authentication of traffic to be tunneled
+- _Wireguard/UDP Packet Assembler_ - encapsulation of the encrypted packet into a Wireguard data packet for tunneling to the remote peer
+- _Per-Packet Demultiplexer_ - forwarding packets to Tx FIFOs based on packet type and destination
+- _Tx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
+
+_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
+
+The hardware architecture features three clock signal domains:
+- 125 MHz domain with an 8-bit bus for interfacing data plane with 1G MAC cores (marked in blue)
+- 80 MHz domain with a 32-bit bus for interfacing data plane with the CPU (marked in red)
+- 80 MHz domain with a 128-bit bus for the packet transfer through the data plane pipeline (marked in green)
+
+Although the data plane transfers packets at approximately 10 Gbps, the cores in the data plane pipeline are not expected to process at such a rate. To ensure the system works at wire speed, the data plane pipeline must process packets at a rate of at least 4 Gbps.
+
+## Software Architecture
+### SW Conceptual Class Diagram
+![SWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
+
+### SW Theory of Operation
+WIP
+
 - [blake2](https://www.blake2.net) hashing for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
-- [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption, authenticated with [Poly1305](http://cr.yp.to/mac.html), using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction
 - [Curve25519](http://cr.yp.to/ecdh.html) for ECDH key updates (for now just hooks for future)
 - [SipHash24](https://en.wikipedia.org/wiki/SipHash) for hashtable keys
 - [HKDF](https://eprint.iacr.org/2010/264) for key derivation
-
-### HW Theory of Operation
-WIP
-
-## Software Architecture
-### SW Block Diagram
-WIP
-### SW Theory of Operation
-WIP
 
 ## Hardware Data Flow
 ### HW Flow Chart, Throughputs and Pushbacks
@@ -202,6 +229,18 @@ WIP
 
 ## HW/SW Working Together as a Coherent System
 WIP
+
+![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-Example-Topology.webp)
+
+![Example1](0.doc/Wireguard/wireguard-fpga-muxed-Example-1-A-Handshake-Initiation.webp)
+
+![Example23](0.doc/Wireguard/wireguard-fpga-muxed-Example-2-3-B-Handshake-Initiation-Response.webp)
+
+![Example4](0.doc/Wireguard/wireguard-fpga-muxed-Example-4-A-Handshake-Response.webp)
+
+![Example5](0.doc/Wireguard/wireguard-fpga-muxed-Example-5-A-Transfer-Data.webp)
+
+![Example6](0.doc/Wireguard/wireguard-fpga-muxed-Example-6-B-Transfer-Data.webp)
 
 ## Development and Test Framework
 ### Shared Linux Server with Tools
