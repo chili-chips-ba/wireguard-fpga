@@ -261,5 +261,6 @@ We are grateful to NLnet Foundation for their sponsorship of this development ac
 
 ### Public posts:
 > [LinkedIn-2024-09-19](https://www.linkedin.com/posts/chili-chips_fpga-cpu-ethernet-activity-7242729037771522048-as-C?utm_source=share&utm_medium=member_desktop)
+> [Linkedin-2024-10-27](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7256311551178027008-1nlZ?utm_source=share&utm_medium=member_desktop)
 
 #### End of Document
