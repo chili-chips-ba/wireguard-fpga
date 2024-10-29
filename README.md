@@ -212,12 +212,20 @@ Although the data plane transfers packets at approximately 10 Gbps, the cores in
 ![SWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
 
 ### SW Theory of Operation
-WIP
-
-- [blake2](https://www.blake2.net) hashing for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
-- [Curve25519](http://cr.yp.to/ecdh.html) for ECDH key updates (for now just hooks for future)
-- [SipHash24](https://en.wikipedia.org/wiki/SipHash) for hashtable keys
-- [HKDF](https://eprint.iacr.org/2010/264) for key derivation
+The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the Wireguard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
+- [Curve25519](http://cr.yp.to/ecdh.html) - an ECDH algorithm implementation for establishing a shared secret using a public-private key pair between two remote parties connected via an insecure channel, such as the Internet
+- ChaCha20-Poly1305 - an AEAD algorithm implementation for encryption and authentication of static keys and nonce values to prevent replay attacks
+- XChaCha20-Poly1305 - a XAEAD algorithm implementation for encrypting and authenticating nonce values in Cookie Replay messages to mitigate potential DoS attacks
+- [BLAKE2s](https://www.blake2.net) - an implementation of the BLAKE2s hash function for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
+- RNG - a random number generator used to initialize the DH key generator and generate peer identifiers
+- Timer - timers for rekey, retry, and keepalive procedures
+- [HKDF](https://eprint.iacr.org/2010/264) - an implementation of the algorithm for expanding the ECDH result
+- RTC - a real-time clock used to generate the TAI64N timestamp
+- [SipHash](https://en.wikipedia.org/wiki/SipHash) - a simple non-cryptographic function used for implementing a hashtable for fast lookup of decrypted static public keys of remote peers
+- Routing DB Updater - a subsystem for maintaining the cryptokey routing table content and deploying it to the data plane via the HAL/CSR interface
+- ICMP - implementing basic ICMP protocol functions (echo request/reply, TTL exceeded, etc.)
+- CLI - a USB/UART-based command-line interface for configuring the Wireguard node (setting the local IP address, remote peer IP addresses, network addresses, keys, etc.)
+- HAL/CSR Driver - a CSR-based abstraction for data plane components with an interface for reading/writing the corresponding registers
 
 ## Hardware Data Flow
 ### HW Flow Chart, Throughputs and Pushbacks
