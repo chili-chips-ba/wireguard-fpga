@@ -200,13 +200,6 @@ The data plane consists of several IP cores, which are listed and explained in t
 
 _ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
 
-The hardware architecture features three clock signal domains:
-- 125 MHz domain with an 8-bit bus for interfacing data plane with 1G MAC cores (marked in blue)
-- 80 MHz domain with a 32-bit bus for interfacing data plane with the CPU (marked in red)
-- 80 MHz domain with a 128-bit bus for the packet transfer through the data plane pipeline (marked in green)
-
-Although the data plane transfers packets at approximately 10 Gbps, the cores in the data plane pipeline are not expected to process at such a rate. To ensure the system works at wire speed, the data plane pipeline must process packets at a rate of at least 4 Gbps.
-
 ## Software Architecture
 ### SW Conceptual Class Diagram
 ![SWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
@@ -230,6 +223,17 @@ The conceptual class diagram provides an overview of the components in the softw
 ## Hardware Data Flow
 ### HW Flow Chart, Throughputs and Pushbacks
 WIP
+
+The hardware architecture features three clock signal domains:
+- 125 MHz domain with an 8-bit bus for interfacing data plane with 1G MAC cores (marked in blue)
+- 80 MHz domain with a 32-bit bus for interfacing data plane with the CPU (marked in red)
+- 80 MHz domain with a 128-bit bus for the packet transfer through the data plane pipeline (marked in green)
+
+The blue domain is defined based on the SDR GMII interface, which operates at 125 MHz and connects the Realtek PHY controller with the MAC cores on the FPGA.
+
+The red domain encompasses the entire CSR with all peripherals. The clock signal frequency and bus width are defined based on the assumption that Wireguard peers exchange handshake messages sporadically—during connection initialization and periodically, typically every few minutes, for key rotation. Since handshake signaling does not significantly impact network traffic, we decided to implement the connection between the data and control planes without DMA, utilizing direct CPU interaction with Tx/Rx FIFOs through a CSR interface.
+
+Although the data plane (green domain) transfers packets at approximately 10 Gbps, the cores in the data plane pipeline are not expected to process packets at such a rate. Given that we have 4 x 1Gbps Ethernet interfaces, the cryptographic cores must process packets at a rate of at least 4 Gbps to ensure the system works at wire speed. For some components, such as the _IP Lookup Engine_, packet rate is more critical than data rate because their processing focuses on the packet headers rather than the payload. Assuming that, in the worst-case scenario, the smallest packets (64 bytes) arrive via the 1 Gbps Ethernet interface, the packet rate for each Ethernet interface would be 1,488,096 packets per second (pps). Therefore, in the worst-case scenario, such components must process packets at approximately 6 Mpps rate (e.g. 6 million IP table lookups per second).
 
 ## Software Control Flow
 ### SW Flow Chart, Messages and HW Intercepts
