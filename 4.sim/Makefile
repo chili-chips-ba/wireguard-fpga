@@ -78,13 +78,14 @@ compile:
 		-f ${HW_SRC}/top.filelist \
 		\
 		models/gowin.prim_sim.CHILI.v \
-		models/sdr_sdram/sdr.CHILI.sv \
 		models/bfm_uart.sv \
-		models/bfm_dac.sv \
 		models/bfm_adc.sv \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 
+#		models/sdr_sdram/sdr.CHILI.sv \
+#		models/bfm_dac.sv \
+                
 #		-O1 \
 #		-O3 \
 #		-Wno-fatal \
@@ -139,13 +140,14 @@ xml2stems:
 		--timescale 1ps/1ps \
 		-f ${HW_SRC}/top.filelist \
 		models/gowin.prim_sim.CHILI.v \
-		models/sdr_sdram/sdr.CHILI.sv \
 		models/bfm_uart.sv \
 		models/bfm_dac.sv \
 		models/bfm_adc.sv \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 	xml2stems tb.xml tb.stems
+
+#		models/sdr_sdram/sdr.CHILI.sv \
 
 #------------------------
 rtlbrowse: xml2stems

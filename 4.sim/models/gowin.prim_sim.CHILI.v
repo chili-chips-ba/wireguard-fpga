@@ -281,7 +281,7 @@ end
 // clkout
 always @(clkfb_reg or oclk_effect) begin
     if(oclk_effect == 1'b0) begin
-        clkfb_reg = 1'b0;
+        clkfb_reg <= 1'b0;
     end
     else begin
         if(clkfb_init == 1'b1) begin

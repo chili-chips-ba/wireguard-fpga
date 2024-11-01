@@ -36,7 +36,7 @@ ${HW_SRC}/ip.cpu/imem.sv
 
 # PicoRV32
 ${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv
-${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.ORIG.sv
+#${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.ORIG.sv
 ${HW_SRC}/ip.cpu/soc_cpu.PICORV32.sv
 
 #---CSR
