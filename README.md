@@ -326,12 +326,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 54. Once the entire packet is stored in the Tx FIFO, it is sent to the MAC core of the outgoing interface _if2_, provided that the corresponding 1 Gbps link is active and ready.
 55. The 1G MAC writes its MAC address as the source, calculates the FCS on the fly, which it ultimately appends to the end of the Ethernet frame, and then sends it to the end-user host of peer B.
 
-## Development and Test Framework
-
-### Shared Linux Server with Tools
-
-### Simulation Test Bench (WIP by Simon Southwell)
-
+## Simulation Test Bench (WIP by Simon Southwell)
 #### References:
 - [VProc](https://github.com/wyvernSemi/vproc)
 - [mem_model](https://github.com/wyvernSemi/mem_model)
@@ -340,10 +335,10 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 - [Surfer](https://gitlab.com/surfer-project/surfer)
 - [Verilator](https://verilator.org/guide/latest/install.html)
 
-#### Plug-and-Play Structure
+### Plug-and-Play Structure
 ![TB1](0.doc/sim/vproc_tb.png)
 
-#### How to lite my fire
+### Liting TB fire
 
 Simulation can be built and run with `make -f MakefileVProc.mk [run|gui]`. If `run` then stops after batch run. If `gui` then build, runs and then fires up gtkwave (and looks for waves.gtkw, defined in **WAVESAVEFILE**, which can be overridden). If no run or gui, the just compiles the code.
 
@@ -359,7 +354,19 @@ Read back 0x900dc0de from addr 0x10001000
 
 The same test bench is good to compile for pure HDL `soc_cpu` (PicoRV32 or eduBOS5) or for `VProc soc_cpu`.
 
-### Lab Test and Validation Setup
+## Lab Test and Validation Setup
+TODO
+
+## Shared Linux Server with tools
+TODO
+
+## Build process
+### Hardware
+TODO
+### Software
+TODO
+
+## CPU Live debug and reload
 TODO
 
 ## Closing Notes
