@@ -1,7 +1,7 @@
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
-  <img width="200", src="https://github.com/user-attachments/assets/d12e18d1-13ba-4055-8ce7-3033846aad57">
+  <img width="250", src="https://github.com/user-attachments/assets/d12e18d1-13ba-4055-8ce7-3033846aad57">
 </p>
 With traditional solutions (such as OpenVPN / IPSec) starting to run out of steam, Wireguard is increasingly coming to the forefront as a modern, secure data tunneling and encryption method, one that's also easier to manage than the incumbents. Both software and hardware implementations of Wireguard already exist. However, the software performance is far below the speed of wire. Existing hardware approaches are both prohibitively expensive and based on proprietary, closed-source IP blocks and tools.
 
@@ -78,7 +78,7 @@ While the board we're using is low cost, it is also not particularly known in th
 
 Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not support High-Performance (HP) I/O. Consequently, we cannot push its I/O beyond 600MHz, nor its core logic beyond 100 MHz. 
 
-- [x] Familiarization with HW platform
+- [ ] Familiarization with HW platform
 - Create our first FPGA program that blinks LEDs
 - Verify pinouts and connectivity using simple test routines
 - Generate a few Ethernet test patterns 
@@ -236,6 +236,7 @@ Although the data plane (green domain) transfers packets at approximately 10 Gbp
 WIP
 
 ## Software Control Flow
+
 ### SW Flow Chart, Messages and HW Intercepts
 WIP
 
@@ -326,8 +327,38 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 55. The 1G MAC writes its MAC address as the source, calculates the FCS on the fly, which it ultimately appends to the end of the Ethernet frame, and then sends it to the end-user host of peer B.
 
 ## Development and Test Framework
+
 ### Shared Linux Server with Tools
-### Simulation Test Bench
+
+### Simulation Test Bench (WIP by Simon Southwell)
+
+#### References:
+- [VProc](https://github.com/wyvernSemi/vproc)
+- [mem_model](https://github.com/wyvernSemi/mem_model)
+- [TCP/IP Packet Generator](https://github.com/wyvernSemi/tcpIpPg)
+- [riscV and ISS](https://github.com/wyvernSemi/riscV)
+- [Surfer](https://gitlab.com/surfer-project/surfer)
+- [Verilator](https://verilator.org/guide/latest/install.html)
+
+#### Plug-and-Play Structure
+![TB1](0.doc/sim/vproc_tb.png)
+
+#### How to lite my fire
+
+Simulation can be built and run with `make -f MakefileVProc.mk [run|gui]`. If `run` then stops after batch run. If `gui` then build, runs and then fires up gtkwave (and looks for waves.gtkw, defined in **WAVESAVEFILE**, which can be overridden). If no run or gui, the just compiles the code.
+
+Running the test bench, the VProc test code will successfully issue a write and read to the HDL, all the way to the test bench DMEM. The following shows the relevant output from the simulation:
+```
+VInit(0): initialising DPI-C interface
+VProc version 1.11.1. Copyright (c) 2004-2024 Simon Southwell.
+        0 TOP.tb.error_mon (0) - ERROR_CLEARED
+Entered VuserMain0()
+Written   0x900dc0de  to  addr 0x10001000
+Read back 0x900dc0de from addr 0x10001000
+```
+
+The same test bench is good to compile for pure HDL `soc_cpu` (PicoRV32 or eduBOS5) or for `VProc soc_cpu`.
+
 ### Lab Test and Validation Setup
 TODO
 
@@ -343,8 +374,7 @@ We are grateful to NLnet Foundation for their sponsorship of this development ac
 </p>
 
 ### Public posts:
-> [LinkedIn-2024-09-19](https://www.linkedin.com/posts/chili-chips_fpga-cpu-ethernet-activity-7242729037771522048-as-C?utm_source=share&utm_medium=member_desktop)
->
-> [Linkedin-2024-10-27](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7256311551178027008-1nlZ?utm_source=share&utm_medium=member_desktop)
+- [LinkedIn-2024-09-19](https://www.linkedin.com/posts/chili-chips_fpga-cpu-ethernet-activity-7242729037771522048-as-C?utm_source=share&utm_medium=member_desktop)
+- [Linkedin-2024-10-27](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7256311551178027008-1nlZ?utm_source=share&utm_medium=member_desktop)
 
 #### End of Document
