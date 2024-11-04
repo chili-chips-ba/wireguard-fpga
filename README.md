@@ -326,7 +326,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 54. Once the entire packet is stored in the Tx FIFO, it is sent to the MAC core of the outgoing interface _if2_, provided that the corresponding 1 Gbps link is active and ready.
 55. The 1G MAC writes its MAC address as the source, calculates the FCS on the fly, which it ultimately appends to the end of the Ethernet frame, and then sends it to the end-user host of peer B.
 
-## Simulation Test Bench (WIP by Simon Southwell)
+## Simulation Test Bench
 #### References:
 - [VProc](https://github.com/wyvernSemi/vproc)
 - [mem_model](https://github.com/wyvernSemi/mem_model)
@@ -334,25 +334,212 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 - [riscV and ISS](https://github.com/wyvernSemi/riscV)
 - [Surfer](https://gitlab.com/surfer-project/surfer)
 - [Verilator](https://verilator.org/guide/latest/install.html)
+- [SystemRDL])(https://www.accellera.org/downloads/standards/systemrdl)
 
-### Plug-and-Play Structure
-![TB1](0.doc/sim/vproc_tb.png)
+The WireGuard test bench aims to have a flexible approach to simulation which allows a common test envoironment to be used whilst selecting between alternative CPU components, one of which uses the VProc virtual processor co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32 or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times.
 
-### Liting TB fire
+The VProc component is wrapped up into an <tt>soc_cpu.VPROC</tt> component with identical interfaces to the RTL. Some converion logic is added to this BFM to convert between VProc's generic memory mapped interface and the <tt>soc_if</tt> defined interface. This is very lightweight logic, with less than ten combinatorial gates to match the control signals. In addition, the <tt>soc_cpu.VPROC</tt> component has a <tt>mem_model</tt> component instantiated. This is a 'memory port' to the <tt>mem_model</tt> C software implementation of a sparse memory model, allowing updates to the RISC-V program, if using the rv32 RISC-V ISS model (see below). The diagram below shows a block diagram of the test bench HDL.
 
-Simulation can be built and run with `make -f MakefileVProc.mk [run|gui]`. If `run` then stops after batch run. If `gui` then build, runs and then fires up gtkwave (and looks for waves.gtkw, defined in **WAVESAVEFILE**, which can be overridden). If no run or gui, the just compiles the code.
+<p align="center">
+<img src="https://github.com/user-attachments/assets/73f8b7f7-9716-45c6-af8b-933d22646f70" width=800>
+</p>
 
-Running the test bench, the VProc test code will successfully issue a write and read to the HDL, all the way to the test bench DMEM. The following shows the relevant output from the simulation:
+Shown in the diagram is the WireGuard top level component (<tt>top</tt>) with the <tt>soc_cpu.VPROC</tt> component instantiated in it as one of three possible selected devices for the soc_cpu. The IMEM write port is connected to the UART for program updates and the <tt>soc_if</tt> from  <tt>soc_cpu.VPROC</tt> is connected to the interconnect fabric (<tt>soc_fabric</tt>), just as for the two RTL components. The test bench around the top level WireGuard component has a driver for the UART (<tt>bfm_uart</tt>) and the four GMII interfaces (includeing MDIO signalling) come from the WireGuard core to some verification IP to drive this signalling. This VIP implementation is **TBD**, but might be based on a modified tcpIpPg model, which is only XGMII compliant at this time. Finally the test bench generates clocks and key press resets that go to the top level's <tt>clk_rst_gen</tt> and <tt>debounce</tt> components.
+
+#### Auto-selection of soc_cpu Component
+
+The WireGuard's top level component has the required RTL files listed in <tt>1.hw/top.filelist</tt>. This includes files for the soc_cpu, under the directory <tt>ip.cpu</tt>. The simulation build make file (see below) will process the <tt>top.filelist</tt> file to generate a new local copy, having removed all references to the files under the <tt>ip.cpu</tt> directory. Since the VProc <tt>soc_cpu</tt> component is a test model, the <tt>soc_cpu.VPROC.sv</tt> HDL file is placed in <tt>4.sim/models</tt> whilst the rest of the HDL files come from the VProc and mem_model repositories (auto-checked out by the make file, if necessary). These are referenced within the make file, along with the other test models that are used in the test bench. Thus the VProc device is selected for the simulation as the CPU component.
+
+#### VProc Software
+
+The VProc software consists of DPI-C code for communication and sycnronisation with the simulation, for both the memory model and VProc itself. On top of this are the APIs for VProc and mem_model for use by the running code. In the case of VProc there is a low level C API or, if preferred, a C++ API. In WireGuard, the VProc <tt>soc_cpu</tt> is node 0, and so the entry point for user software is <tt>VUserMain0</tt>, in place of <tt>main</tt>.
+
+The C++ API is defined in a class <tt>VProc</tt> (defined in <tt>VProcClass.h</tt>) from the VProc repository, and a constructor creates an API object, defining the node for which is connected:
+
 ```
-VInit(0): initialising DPI-C interface
-VProc version 1.11.1. Copyright (c) 2004-2024 Simon Southwell.
-        0 TOP.tb.error_mon (0) - ERROR_CLEARED
-Entered VuserMain0()
-Written   0x900dc0de  to  addr 0x10001000
-Read back 0x900dc0de from addr 0x10001000
+VProc (const unsigned node);
 ```
 
-The same test bench is good to compile for pure HDL `soc_cpu` (PicoRV32 or eduBOS5) or for `VProc soc_cpu`.
+For the C++ VProc API there are two basic word access methods:
+
+```
+    int  write (const unsigned   addr, const unsigned    data, const int delta=0);
+    int  read  (const unsigned   addr,       unsigned   *data, const int delta=0);
+```
+
+For these methods, the address argument is agnostic to being a byte address or a word address, but for the WireGuard implementation these are **byte addresses**. The delta argument is unused in WireGuard, and should be left at its default value, with just the address and data arguments used in the call to these methods. Along with these basic methods is a method to advance simulation time without doing a read or write transaction.
+
+```
+int  tick (const unsigned ticks);
+```
+This method's units of the <tt>ticks</tt> argument are in clock cycles, as per the clock that the VProc HDL is connected to. A basic VProc program, then, is shown below:
+
+```
+#include "VProcClass.h"
+extern "C" {
+#include "mem.h"
+}
+
+static const int node    = 0;
+
+extern "C" void VUserMain0(void)
+{   
+    // Create VProc access object for this node
+    VProc* vp0 = new VProc(node);
+    
+    // Wait a bit
+    vp0->tick(100);
+    
+    uint32_t addr  = 0x10001000;
+    uint32_t wdata = 0x900dc0de;
+    
+    vp0->write(addr, wdata);
+    VPrint("Written   0x%08x  to  addr 0x%08x\n", wdata, addr);
+    
+    vp0->tick(3);
+    
+    uint32_t rdata;
+    vp0->read(addr, &rdata);
+    
+    if (rdata == wdata)
+    {
+        VPrint("Read back 0x%08x from addr 0x%08x\n", rdata, addr);
+    }
+    else
+    {   VPrint("***ERROR: data mis-match at addr = 0x%08x. Got 0x%08x, expected 0x%08x\n", addr, rdata, wdata);
+    }
+
+    // Sleep forever
+    while(true)
+        vp0->tick(GO_TO_SLEEP);
+}
+```
+The above code is a slightly abbreviated version of the code in <tt>4.sim/usercode</tt>. Note that the <tt>VUserMain0</tt> function must have C linkage as the VProc software that calls it is in C (as all the programming logic interfaces, including DPI-C, are C). The API also has a set of other methods for finer access control which are listed below, and more details can be found in the VProc manual.
+
+```
+    int  writeByte    (const unsigned   byteaddr, const unsigned    data, const int delta=0);
+    int  writeHword   (const unsigned   byteaddr, const unsigned    data, const int delta=0);
+    int  writeWord    (const unsigned   byteaddr, const unsigned    data, const int delta=0);
+    int  readByte     (const unsigned   byteaddr,       unsigned   *data, const int delta=0);
+    int  readHword    (const unsigned   byteaddr,       unsigned   *data, const int delta=0);
+    int  readWord     (const unsigned   byteaddr,       unsigned   *data, const int delta=0);
+
+```
+The other methods is this class are not, at this point, used by WireGuard. These methods can now be used to write test code to drive the <tt>soc_if</tt> bus of the <tt>soc_cpu</tt> component, and is the basic method to write test code software. As well as the VProc API, the user software can have direct access to the sparse memory model API by including <tt>mem.h</tt>, which are a set of C methods (and <tt>mem.h</tt> must be included as <tt>extern "C"</tt> in C++ code). The functions relevant to WireGuard are shown below:
+
+```
+void     WriteRamByte  (const uint64_t addr, const uint32_t data, const uint32_t node);
+void     WriteRamHWord (const uint64_t addr, const uint32_t data, const int little_endian, const uint32_t node);
+void     WriteRamWord  (const uint64_t addr, const uint32_t data, const int little_endian, const uint32_t node);
+uint32_t ReadRamByte   (const uint64_t addr, const uint32_t node);
+uint32_t ReadRamHWord  (const uint64_t addr, const int little_endian, const uint32_t node);
+uint32_t ReadRamWord   (const uint64_t addr, const int little_endian, const uint32_t node);
+```
+ 
+Note that, as C functions, there are no default parameters and the <tt>little_endian</tt> and <tt>node</tt> arguments must be passed in, even though they are constant. The <tt>little_endian</tt> argument is non-zero for little endian and zero for big endian. The <tt>node</tt> argument is **not** the same as for VProc, but allows multiple separate memory spaces to be modelled, just as for VProc multiple virtual processor instantiations. For WireGuard, this is always 0. All instantiated <tt>mem_model</tt> components in the HDL have (through the DPI) access to the same memory space model as the API, and so data can be exchanged from the simulation and the running code, such as the RISC-V programs over the IMEM write interface. 
+ 
+Compiling co-designed application code, either compiled for the native host machine, or to run on the <tt>rv32</tt> RISC-V ISS will need further layers on top of these APIs, which will be virtualised away by that point (see  the sections below). The diagram below summarises the software layers that make up a program running on the VProc HDL component. The "native test code" use case, shown at the top left, is for the case just described above  that use the APIs directly.
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/373676ee-f7e2-4a1a-b9b9-079ccef90c37">
+</p>
+
+#### Other Software Use Cases
+
+##### Natively Compiled Application
+
+As well as the native test code case seen in the previous section, the WireGuard application can be compiled natively for the host machine, including the hardware access layer (HAL), generated from SystemRDL. The HAL software output from this is processed (**Work in Progress**) to generate a version that makes accesses to the VProc and mem_model APIs in place of accesses with pointers to and from memory. The rest of the application software has these details hidden away in the HAL and sees the same API as presented by the auto-generated code. In both cases transactions happen on the <tt>soc_if bus</tt> port of the <tt>soc_cpu</tt> component. The <tt>main</tt> entry point is also swapped for <tt>VUserMain0</tt> (method is a **Work in Progress**).
+
+##### RISC-V Compiled Application
+
+To execute RISC-V compiled application code, the <tt>rv32</tt> instruction set simulator is used as the code running on the virtual processor. The <tt>VUserMain0</tt> program now becomes software to creates an iss object and integrate with VProc. This uses the ISS's external memory access callback function to direct loads and stores either towards the sparse memory model, the VProc API for simulation transactions, or back to the ISS itself to handle. This ISS integration <tt>VUserMain0</tt> program is located in <tt>4.sim/models/rv32/usercode</tt>. When built the code here is compiled and uses the pre-built library in <tt>4.sim/models/rv32/lib/librv32lnx.a</tt> containing the ISS, with the headers for it in <tt>4.sim/models/rv32/include</tt> (**Work in Progress**).
+
+The ISS supports interrupts, but these are not currently used on WireGuard. The integration software can read a configuration file, if present in the <tt>4.sim/</tt> directory, called <tt>vusermain.cfg</tt>. This allows the ISS and other features to be configured at run-time. The configuration file is in lieu of command line options and the entries in the file are formatted as if they were such, with a command matching the VUserMain program:
+
+```
+vusermain0 [options]
+```
+One of the options is <tt>-h</tt> for a help message, which is as shown below:
+```
+Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
+      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]
+   -t specify test executable (default test.exe)
+   -n specify number of instructions to run (default 0, i.e. run until unimp)
+   -d Enable disassemble mode (default off)
+   -r Enable run-time disassemble mode (default off. Overridden by -d)
+   -C Use cycle count for internal mtime timer (default real-time)
+   -a display ABI register names when disassembling (default x names)
+   -T Use external memory mapped timer model (default internal)
+   -H Halt on unimplemented instructions (default trap)
+   -e Halt on ecall instruction (default trap)
+   -E Halt on ebreak instruction (default trap)
+   -b Halt at a specific address (default off)
+   -A Specify halt address if -b active (default 0x00000040)
+   -D Specify file for debug output (default stdout)
+   -g Enable remote gdb mode (default disabled)
+   -p Specify remote GDB port number (default 49152)
+   -S Specify start address (default 0)
+   -h display this help message
+```
+With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on. More details of all these features can be found in the <tt>rv32</tt> ISS manual.
+
+#### Building and Running Code (**Work in Progress**)
+
+A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the VProc software and to build and run the test bench HDL. The make file makes use of VProc's own <tt>makefile.verilator</tt> file to compile all the software for VProc, mem_model and the user code. The software is compiled in to a local static library, <tt>libvproc.a</tt> which is linked to the simulation code within Verilator.
+
+The make file has a target <tt>help</tt>, which produces the following output:
+
+```
+make -f MakefileVProc.mk help          Display this message
+make -f MakefileVProc.mk               Build C/C++ and HDL code without running simulation
+make -f MakefileVProc.mk run           Build and run batch simulation
+make -f MakefileVProc.mk rungui/gui    Build and run GUI simulation
+make -f MakefileVProc.mk clean         clean previous build artefacts
+
+Command line configurable variables:
+  USER_C:       list of user source code files (default VUserMain0.cpp)
+  USRCODEDIR:   directory containing user source code (default $(CURDIR)/usercode)
+  OPTFLAG:      Optimisation flag for VProc code (default -g)
+  TIMINGOPT:    Verilator timing flags (default --timing)
+  TRACEOPTS:    Verilator trace flags (default --trace-fst --trace-structs)
+  TOPFILELIST:  RTL file list name (default top.filelist)
+  SOCCPUMATCH:  string to match for soc_cpu filtering in h/w file list (default ip.cpu)
+  USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank)
+  WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw)
+```
+
+By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files.
+
+The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with decriptions. Entries with multiple values should be enclosed in double quotes. The user code variable allow different (and multiple) file names from the default, and to change the location of where the user code is located. This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The WireGuard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
+
+#### Selecting soc_cpu
+
+This is a **Work in Progress**
+
+#### Debugging Code
+
+In each of the three usage cases of software, each can be debugged using <tt>gdb</tt>, either for the host computer or the gnu RISC-V toolchain's gdb.
+
+##### Natively Compiled code
+
+For natively compiled code, whether test code or natively compiled application code, so long as each was compiled with the -g flag set (see above for make file options) then the Verilator compiled simulation is an executable file (compiled into an <tt>output/</tt> directory) that contains the all the compiled user code. Therefore, to debug using <tt>gdb</tt>, this executable just needs to be run with the host computer's <tt>gdb</tt>. E.g., from the <tt>4.sim/</tt> directory:
+
+```
+gdb output/Vtb
+```
+
+Debugging then proceeds just as for any other executable.
+
+##### ISS Software
+The ISS has a remote <tt>gdb</tt> interface (enable with the <tt>-g</tt> option in the <tt>vusermain.cfg</tt> file) allowing the loading of programs via this connection, and of doing all the normal debugging steps of the RISC-V code. The ISS manual details how to use the <tt>gdb</tt> remote debug interface but, to summarise, when the ISS is run in GDB mode, it will create a TCP socket and advertise the port number to the screen (e.g. <tt>RV32GDB: Using TCP port number: 49152</tt>). The RISC-V <tt>gdb</tt> is then run and a remote connection is made with a command:
+
+ ```
+ (gdb) target remote :49152
+ ```
+
+A blank before the colon character in the port number indicates the connection is on the local host, but a remote host name can be used to do remote debugging from another machine on the network, or even over the internet, if sufficient access permissions. The program (if not done so by other means) can be loaded over this connection and then debugging commence as normal.
+
+The ISS manual has more details on this and also has an appendix showing how to setup an Eclipse IDE project to debug the code via <tt>gdb</tt>.
 
 ## Lab Test and Validation Setup
 TODO
