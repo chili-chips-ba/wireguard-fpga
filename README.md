@@ -334,7 +334,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 - [riscV and ISS](https://github.com/wyvernSemi/riscV)
 - [Surfer](https://gitlab.com/surfer-project/surfer)
 - [Verilator](https://verilator.org/guide/latest/install.html)
-- [SystemRDL])(https://www.accellera.org/downloads/standards/systemrdl)
+- [SystemRDL](https://www.accellera.org/downloads/standards/systemrdl)
 
 The WireGuard test bench aims to have a flexible approach to simulation which allows a common test envoironment to be used whilst selecting between alternative CPU components, one of which uses the VProc virtual processor co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32 or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times.
 
