@@ -61,7 +61,6 @@
 module soc_cpu #(
    parameter [31:0]   ADDR_RESET     = 32'h 0000_0000,  // Unused
    parameter int      NUM_WORDS_IMEM = 8192,            // Unused
-   parameter logic    EN_IMEM        = 0,               // Default no IMEM (use direct mem.c API)
    parameter [3:0]    NODE           = 0                // CPU defaults to VProc node 0
 )(
    soc_if.MST         bus,
@@ -74,13 +73,6 @@ module soc_cpu #(
 );
 
 //----------------------------------------------------
-// Local constant definitions
-//----------------------------------------------------
-
-// Specify IMEM/DMEM boundary
-localparam [31:0] IMEM_TOP = 32'h0FFF_FFFF;
-
-//----------------------------------------------------
 // Internal signal definitions
 //----------------------------------------------------
 
@@ -88,46 +80,29 @@ localparam [31:0] IMEM_TOP = 32'h0FFF_FFFF;
 logic                 vp_wack, vp_rack,vp_we, vp_rd;
 logic [3:0]           vp_be;
 logic [31:0]          vp_addr;
-logic [31:0]          vp_rdat;
-
-// Signals for memory model
-logic                 mem_we, mem_rd, mem_rvld;
-logic [31:0]          mem_rdat;
-
-// Signals for address decode
-logic                 imem_access;
 
 //--------------------------------------------------------
 // Combinatorial logic
 //
-//   IMEM: 0x0000_0000 - 0x0FFF_FFFF - Instruction Space
-//   BUS : 0x1000_0000 - 0x1FFF_FFFF - Data Space
+// Maps VProc's generic memory mapped interface to comply
+// with the soc_if protocol.
+//
 //--------------------------------------------------------
-
-// Flag whether IMEM or DMEM access
-assign imem_access    = bus.addr <= IMEM_TOP[31:2];
 
 // Combine VProc's WE with BE to produce bus write enables
 assign bus.we         = vp_be & {4{vp_we}};
 
-// Bus access valid on read or write and address not an IMEM access
-assign bus.vld        = (vp_we | vp_rd) & ~imem_access;
+// Bus access valid on read or write
+assign bus.vld        = vp_we | vp_rd;
 
 // Bus output is a word address
 assign bus.addr       = vp_addr[31:2];
 
-// Write acknowledge VProc when writing and either always for IMEM or bus.rdy for DMEM
-assign vp_wack        = vp_we & (imem_access | bus.rdy);
+// Write acknowledge VProc when writing and bus.rdy
+assign vp_wack        = vp_we & bus.rdy;
 
-// Read acknowledge VProc when reading and either mem_rvld for IMEM or bus.rdy for DMEM
-assign vp_rack        = vp_rd & (imem_access ? mem_rvld : bus.rdy);
-
-// Mux read data sources: bus.rdata when DMEM, mem_rdat when IMEM
-assign vp_rdat        = ~imem_access ? bus.rdat : mem_rdat;
-
-// Access the memory only when an IMEM access
-assign mem_we         = vp_we & imem_access;
-assign mem_rd         = vp_rd & imem_access;
+// Read acknowledge VProc when reading and bus.rdy
+assign vp_rack        = vp_rd & bus.rdy;
 
 //-----------------------------------------------------
 // VProc virtual processor
@@ -148,7 +123,7 @@ assign mem_rd         = vp_rd & imem_access;
       // Compile VProc with VPROC_BYTE_ENABLE defined for BE port
       .BE                    (vp_be),                  // o
 
-      .DataIn                (vp_rdat),                // i
+      .DataIn                (bus.rdat),               // i
       .RD                    (vp_rd),                  // o
       .RDAck                 (vp_rack),                // i
 
@@ -161,53 +136,40 @@ assign mem_rd         = vp_rd & imem_access;
    );
 
 //-----------------------------------------------------
-// Instruction memory for the CPU
+// Memory model port for the imem write bus.
 //
-// Only instantiatiate a mem_model port for IMEM
-// reads (slower) if using rv32 ISS *and* not using its
-// internal memory or direct mem.c API interface (which
-// are faster and use no logic simulation processing)
 //-----------------------------------------------------
 
-  generate
-     if (EN_IMEM != 0)
-
-       mem_model u_imem (
-          .clk               (bus.clk),                // i
-          .rst_n             (bus.arst_n),             // i
-
-          .address           (vp_addr),                // i
-          .byteenable        (vp_be),                  // i
-          .write             (mem_we),                 // i
-          .writedata         (bus.wdat),               // i
-          .read              (mem_rd),                 // i
-          .readdata          (mem_rdat),               // o
-          .readdatavalid     (mem_rvld),               // o
-
-          .wr_port_valid     (imem_we),                // i
-          .wr_port_data      (imem_wdat),              // i
-          .wr_port_addr      ({imem_waddr, 2'b00}),    // i
-
-           // Unused burst ports
-          .rx_waitrequest    (),                       // o (unused)
-          .rx_burstcount     ('0),                     // i (unused)
-          .rx_address        ('0),                     // i (unused)
-          .rx_read           ('0),                     // i (unused)
-          .rx_readdata       (),                       // o (unused)
-          .rx_readdatavalid  (),                       // o (unused)
-                                                    
-          .tx_waitrequest    (),                       // o (unused)
-          .tx_burstcount     ('0),                     // i (unused)
-          .tx_address        ('0),                     // i (unused)
-          .tx_write          ('0),                     // i (unused)
-          .tx_writedata      ('0)                      // i (unused)
-       );
-
-   else
-      // When no mem_model interface, tie off read valid signal
-      assign mem_rvld = 1'b1;
-
-  endgenerate
+   mem_model u_imem (
+      .clk               (bus.clk),                // i
+      .rst_n             (bus.arst_n),             // i
+                                                       
+      .address           ('0),                     // i (unused)
+      .byteenable        ('0),                     // i (unused)
+      .write             (1'b0),                   // i (unused)
+      .writedata         ('0),                     // i (unused)
+      .read              (1'b0),                   // i (unused)
+      .readdata          (),                       // o (unused)
+      .readdatavalid     (),                       // o (unused)
+                                                      
+      .wr_port_valid     (imem_we),                // i
+      .wr_port_data      (imem_wdat),              // i
+      .wr_port_addr      ({imem_waddr, 2'b00}),    // i
+   
+       // Unused burst ports
+      .rx_waitrequest    (),                       // o (unused)
+      .rx_burstcount     ('0),                     // i (unused)
+      .rx_address        ('0),                     // i (unused)
+      .rx_read           ('0),                     // i (unused)
+      .rx_readdata       (),                       // o (unused)
+      .rx_readdatavalid  (),                       // o (unused)
+                                                
+      .tx_waitrequest    (),                       // o (unused)
+      .tx_burstcount     ('0),                     // i (unused)
+      .tx_address        ('0),                     // i (unused)
+      .tx_write          ('0),                     // i (unused)
+      .tx_writedata      ('0)                      // i (unused)
+   );
 
 endmodule: soc_cpu
 
