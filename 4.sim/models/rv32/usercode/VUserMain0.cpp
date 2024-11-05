@@ -378,11 +378,11 @@ extern "C" void VUserMain0()
 {
     rv32i_cfg_s   cfg;
 
-    VPrint("\n*****************************\n");
-    VPrint(  "*   Wyvern Semiconductors   *\n");
-    VPrint(  "*  rv32_cpu ISS (on VProc)  *\n");
-    VPrint(  "*     Copyright (c) 2024    *\n");
-    VPrint(  "*****************************\n\n");
+    VPrint("\n  *****************************\n");
+    VPrint(  "  *   Wyvern Semiconductors   *\n");
+    VPrint(  "  *  rv32_cpu ISS (on VProc)  *\n");
+    VPrint(  "  *     Copyright (c) 2024    *\n");
+    VPrint(  "  *****************************\n\n");
 
     VTick(20, node);
 
@@ -410,11 +410,6 @@ extern "C" void VUserMain0()
         // If GDB mode selected, pass execution to the remote GDB interface
         if (cfg.gdb_mode)
         {
-#ifdef __WIN32__
-            WORD versionWanted = MAKEWORD(1, 1);
-            WSADATA wsaData;
-            WSAStartup(versionWanted, &wsaData);
-#endif
             int error = 0;
 
             // Load an executable if specified on the command line
@@ -434,10 +429,6 @@ extern "C" void VUserMain0()
                     fprintf(stderr, "***ERROR in opening PTY\n");
                 }
             }
-
-#ifdef __WIN32__
-            WSACleanup;
-#endif
         }
         // Normal execution mode (not gdb debugging)
         else
