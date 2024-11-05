@@ -39,6 +39,9 @@ static const int strbufsize = 256;
 static char      argstr[strbufsize];
 static rv32*     pCpu;
 
+static uint32_t  ext_access_base_addr = EXT_ACCESS_BASE;
+static uint32_t  ext_access_top_addr  = EXT_ACCESS_TOP;
+
 static double    tv_diff_usec;
 
 #if (!(defined _WIN32) && !(defined _WIN64))
@@ -72,7 +75,7 @@ static void pre_run_setup()
 }
 
 // ---------------------------------------------
-// Actions to run after CPU retruns from
+// Actions to run after CPU returns from
 // executing
 // ---------------------------------------------
 static void post_run_actions()
@@ -111,10 +114,9 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
     uint64_t        curr_cycles;
     uint32_t        cycle_diff;
     static uint64_t last_cycles           = 0;
-    
-    // Select whether making simulator or direct memory model access
-    
-    access_sim = (addr >= EXT_ACCESS_BASE && addr < EXT_ACCESS_TOP);
+
+    // Select whether making simulation or direct memory model access
+    access_sim = addr >= ext_access_base_addr && addr < ext_access_top_addr;
 
     // Synchronise CPU time with simulation
     curr_cycles = pCpu->clk_cycles();
@@ -230,7 +232,7 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
     // Parse the command line arguments and/or configuration file
     // Process the command line options *only* for the INI filename, as we
     // want the command line options to override the INI options
-    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cah")) != EOF)
+    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:")) != EOF)
     {
         switch (c)
         {
@@ -288,9 +290,16 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
         case 'a':
             cfg.abi_en = true;
             break;
+        case 'x':
+            ext_access_base_addr = strtol(optarg, NULL, 0);
+            break;
+        case 'X':
+            ext_access_top_addr  = strtol(optarg, NULL, 0);
+            break;
         case 'h':
         default:
             fprintf(stderr, "Usage: %s -t <test executable> [-hHebdrg][-n <num instructions>]\n      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]\n", argv[0]);
+            fprintf(stderr, "      [-x <base addr>][-X <top addr>]\n");
             fprintf(stderr, "   -t specify test executable (default test.exe)\n");
             fprintf(stderr, "   -n specify number of instructions to run (default 0, i.e. run until unimp)\n");
             fprintf(stderr, "   -d Enable disassemble mode (default off)\n");
@@ -307,6 +316,8 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
             fprintf(stderr, "   -g Enable remote gdb mode (default disabled)\n");
             fprintf(stderr, "   -p Specify remote GDB port number (default 49152)\n");
             fprintf(stderr, "   -S Specify start address (default 0)\n");
+            fprintf(stderr, "   -x Specify base address of external access region (default 0x%08x)\n", EXT_ACCESS_BASE);
+            fprintf(stderr, "   -X Specify top address of external access region (default 0x%08x)\n", EXT_ACCESS_TOP);
             fprintf(stderr, "   -h display this help message\n");
             error = 1;
             break;
@@ -431,14 +442,7 @@ extern "C" void VUserMain0()
                 }
                 else
                 {
-                    if (pCpu->regi_val(10) || pCpu->regi_val(17) != 93)
-                    {
-                        VPrint("*FAIL*: exit code = 0x%08x finish code = 0x%08x running %s\n", pCpu->regi_val(10) >> 1, pCpu->regi_val(17), cfg.exec_fname);
-                    }
-                    else
-                    {
-                        VPrint("PASS: exit code = 0x%08x running %s\n", pCpu->regi_val(10), cfg.exec_fname);
-                    }
+                    VPrint("Exited running %s\n", cfg.exec_fname);
                 }
             }
         }
@@ -451,8 +455,7 @@ extern "C" void VUserMain0()
         delete pCpu;
     }
 
-    VTick(20, node);
-
+    // Allow simulation to continue
     SLEEP_FOREVER;
 }
 
