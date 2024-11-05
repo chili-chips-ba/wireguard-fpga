@@ -47,8 +47,23 @@ MEMMODEL_REPO = https://github.com/wyvernSemi/mem_model.git
 MEMMODELDIR   = $(CURDIR)/../../mem_model
 MEM_C         = mem.c mem_model.c
 
+# --------------------------------------------
+# RV32 ISS variables
+# --------------------------------------------
+# Get OS type
+OSTYPE        = $(shell uname)
+
+ifeq ($(OSTYPE), Linux)
+  RV32LIB     = rv32lnx
+else
+  RV32LIB     = rv32win
+endif
+
+RV32DIR       = $(CURDIR)/models/rv32
+RV32LDOPTS    = -L$(RV32DIR)/lib -l$(RV32LIB) -lWs2_32 
+
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(MEMMODELDIR)/src
+INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(MEMMODELDIR)/src -I$(RV32DIR)/include
 
 # --------------------------------------------
 # Simulation variables
@@ -148,7 +163,7 @@ compile:
            -MAKEFLAGS "$(SIMMAKEFLAGS)"                    \
            -CFLAGS    "$(SIMCFLAGS)"                       \
            -LDFLAGS   "$(SIMLDFLAGS)                       \
-           -Wl,-whole-archive -L../ -lvproc -Wl,-no-whole-archive -ldl"
+           -Wl,-whole-archive -L../ -lvproc -Wl,-no-whole-archive -ldl $(RV32LDOPTS)"
 
 #
 # Generate Verilator test bench executable
