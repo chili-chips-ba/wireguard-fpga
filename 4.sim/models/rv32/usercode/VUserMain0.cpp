@@ -1,3 +1,20 @@
+//==========================================================================
+// Copyright (C) 2024 Chili.CHIPS*ba
+//--------------------------------------------------------------------------
+//                      PROPRIETARY INFORMATION
+//
+// The information contained in this file is the property of CHILI CHIPS LLC.
+// Except as specifically authorized in writing by CHILI CHIPS LLC, the holder
+// of this file: (1) shall keep all information contained herein confidential;
+// and (2) shall protect the same in whole or in part from disclosure and
+// dissemination to all third parties; and (3) shall use the same for operation
+// and maintenance purposes only.
+//--------------------------------------------------------------------------
+// Description:
+//   VProc main program to instantiate and run the rv32 RISC-V instruction
+//   set simulator, with configuration via vusermain.cfg file.
+//
+//==========================================================================
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -378,19 +395,19 @@ extern "C" void VUserMain0()
     }
     else
     {
-        // Create and configure the top level cpu object
+        // Create and configure the top level rv32 ISS cpu object
         pCpu = new rv32(cfg.dbg_fp);
 
-        // Register external memory callback function
+        // Register the ISS external memory callback function
         pCpu->register_ext_mem_callback(ext_mem_access);
 
         // Register ISS interrupt callback
         pCpu->register_int_callback(iss_int_callback);
 
-        // Register VProc user callback, used to update irq status
+        // Register the VProc IRQ callback, used to update irq status from HDL
         VRegIrq(vproc_irq_callback, node);
 
-        // If GDB mode, pass execution to the remote GDB interface
+        // If GDB mode selected, pass execution to the remote GDB interface
         if (cfg.gdb_mode)
         {
 #ifdef __WIN32__
@@ -422,21 +439,23 @@ extern "C" void VUserMain0()
             WSACleanup;
 #endif
         }
+        // Normal execution mode (not gdb debugging)
         else
         {
-            // Load an executable
+            // Load the specified executable to memory
             if (!pCpu->read_elf(cfg.exec_fname))
             {
                 pre_run_setup();
 
-                // Run processor
+                // Run the processor
                 pCpu->run(cfg);
 
                 post_run_actions();
 
+                // If the break from the program was for specified number of instructions...
                 if (cfg.num_instr != 0)
                 {
-
+                    // Display statistics about executoin time.
                     VPrint("\nNumber of executed instructions = %.1f million (%.0f IPS)\n\n",
                                  (float)cfg.num_instr/1e6, (float)cfg.num_instr/(tv_diff_usec/1e6));
                 }
@@ -455,7 +474,7 @@ extern "C" void VUserMain0()
         delete pCpu;
     }
 
-    // Allow simulation to continue
+    // Allow the simulation to continue indefinitely.
     SLEEP_FOREVER;
 }
 
