@@ -127,7 +127,7 @@ all: $(TOPFILELIST) $(SIMEXE)
 #
 $(VLIB): $(VPROCDIR) $(MEMMODELDIR)
 	@make --no-print-directory -C $(VPROCDIR)/test     \
-              -f $(VPROCMKFILE) $(OPTFLAG)                 \
+              -f $(VPROCMKFILE) ARCHFLAG=$(OPTFLAG)        \
               USRFLAGS="$(INCLPATHS) $(USRFLAGS)"          \
               USRCDIR=$(USRCODEDIR)                        \
               USER_C="$(USER_C)"                           \

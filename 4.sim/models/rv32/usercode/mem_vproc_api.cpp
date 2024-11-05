@@ -1,3 +1,20 @@
+//==========================================================================
+// Copyright (C) 2024 Chili.CHIPS*ba
+//--------------------------------------------------------------------------
+//                      PROPRIETARY INFORMATION
+//
+// The information contained in this file is the property of CHILI CHIPS LLC.
+// Except as specifically authorized in writing by CHILI CHIPS LLC, the holder
+// of this file: (1) shall keep all information contained herein confidential;
+// and (2) shall protect the same in whole or in part from disclosure and
+// dissemination to all third parties; and (3) shall use the same for operation
+// and maintenance purposes only.
+//--------------------------------------------------------------------------
+// Description:
+//   Memory access API, selecting between HDL transaction or memory model
+//   direct access.
+//
+//==========================================================================
 
 #include <cstdio>
 #include <cstdlib>
@@ -5,71 +22,71 @@
 
 #include "mem_vproc_api.h"
 
-void write_word(uint32_t addr, uint32_t data, bool access_sim)
+void write_word(uint32_t byte_addr, uint32_t data, bool access_sim)
 {
 if (access_sim)
-        VWriteBE(addr & ~0x3UL, data, 0xf, NORMAL_UPDATE, node);
+        VWriteBE(byte_addr & ~0x3UL, data, 0xf, NORMAL_UPDATE, node);
     else
-        WriteRamWord(addr, data, ENDIAN, node);
+        WriteRamWord(byte_addr, data, ENDIAN, node);
 }
 
-void write_hword(uint32_t addr, uint32_t data, bool access_sim)
+void write_hword(uint32_t byte_addr, uint32_t data, bool access_sim)
 {
     if (access_sim)
-        VWriteBE(addr & ~0x3UL, data << ((addr & 0x2) * 8), 0x3 << (addr & 0x2), NORMAL_UPDATE, node);
+        VWriteBE(byte_addr & ~0x3UL, data << ((byte_addr & 0x2) * 8), 0x3 << (byte_addr & 0x2), NORMAL_UPDATE, node);
     else
-        WriteRamHWord(addr, data, ENDIAN, node);
+        WriteRamHWord(byte_addr, data, ENDIAN, node);
 }
 
-void write_byte(uint32_t addr, uint32_t data, bool access_sim)
+void write_byte(uint32_t byte_addr, uint32_t data, bool access_sim)
 {
     if (access_sim)
-        VWriteBE (addr & ~0x3UL, data << ((addr & 0x3) * 8), 0x1 << (addr & 0x3), NORMAL_UPDATE, node);
+        VWriteBE (byte_addr & ~0x3UL, data << ((byte_addr & 0x3) * 8), 0x1 << (byte_addr & 0x3), NORMAL_UPDATE, node);
     else
-        WriteRamByte(addr, data, ENDIAN, node);
+        WriteRamByte(byte_addr, data, ENDIAN, node);
 }
 
-uint32_t read_word(uint32_t addr, bool access_sim)
+uint32_t read_word(uint32_t byte_addr, bool access_sim)
 {
     uint32_t word;
 
     if (access_sim)
-        VRead(addr & ~0x3, &word, NORMAL_UPDATE, node);
+        VRead(byte_addr & ~0x3, &word, NORMAL_UPDATE, node);
     else
-        word = ReadRamWord(addr, ENDIAN, node);
+        word = ReadRamWord(byte_addr, ENDIAN, node);
     
     return word;
 }
 
-uint32_t read_hword(uint32_t addr, bool access_sim)
+uint32_t read_hword(uint32_t byte_addr, bool access_sim)
 {
     uint32_t word;
     
     if (access_sim)
-        VRead(addr & ~0x3UL, &word, NORMAL_UPDATE, node);
+        VRead(byte_addr & ~0x3UL, &word, NORMAL_UPDATE, node);
     else
-        word = ReadRamWord(addr & ~0x3, ENDIAN, node);
+        word = ReadRamWord(byte_addr & ~0x3, ENDIAN, node);
 
-    return (word >> ((addr & 0x2UL) * 8)) & 0xffff;
+    return (word >> ((byte_addr & 0x2UL) * 8)) & 0xffff;
 }
 
-uint32_t read_byte(uint32_t addr, bool access_sim)
+uint32_t read_byte(uint32_t byte_addr, bool access_sim)
 {
     uint32_t word;
 
     if (access_sim)
-        VRead(addr & ~0x3UL, &word, NORMAL_UPDATE, node);
+        VRead(byte_addr & ~0x3UL, &word, NORMAL_UPDATE, node);
     else
-        word = ReadRamWord(addr & ~0x03, ENDIAN, node);
+        word = ReadRamWord(byte_addr & ~0x03, ENDIAN, node);
 
-    return (word >> ((addr & 0x3UL) * 8)) & 0xff;
+    return (word >> ((byte_addr & 0x3UL) * 8)) & 0xff;
 }
 
-uint32_t read_instr(uint32_t addr, bool access_sim)
+uint32_t read_instr(uint32_t byte_addr, bool access_sim)
 {
     uint32_t word;
 
-    word = read_word(addr, access_sim);
+    word = read_word(byte_addr, access_sim);
 
     return word;
 }
