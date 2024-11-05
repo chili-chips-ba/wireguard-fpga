@@ -479,9 +479,13 @@ Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
    -g Enable remote gdb mode (default disabled)
    -p Specify remote GDB port number (default 49152)
    -S Specify start address (default 0)
+   -x Specify base address of external access region (default 0x20000000)
+   -X Specify top address of external access region (default 0x40000000)
    -h display this help message
 ```
 With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on. More details of all these features can be found in the <tt>rv32</tt> ISS manual.
+
+Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow acess to the CSR registers in the HDL whilst mapping all of the memory internall using the spare memory model of <tt>mem_model</tt>.
 
 #### Building and Running Code (**Work in Progress**)
 

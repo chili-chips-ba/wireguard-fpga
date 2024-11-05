@@ -63,7 +63,7 @@ extern "C" void VUserMain0(void)
     {   VPrint("***ERROR: data mis-match at addr = 0x%08x. Got 0x%08x, expected 0x%08x\n", addr, rdata, wdata);
     }
 
-    // Sleep forever
+    // Sleep forever (and allow simulation to continue)
     while(true)
         vp0->tick(GO_TO_SLEEP);
 }
