@@ -414,7 +414,7 @@ extern "C" void VUserMain0(void)
         vp0->tick(GO_TO_SLEEP);
 }
 ```
-The above code is a slightly abbreviated version of the code in <tt>4.sim/usercode</tt>. Note that the <tt>VUserMain0</tt> function must have C linkage as the VProc software that calls it is in C (as all the programming logic interfaces, including DPI-C, are C). The API also has a set of other methods for finer access control which are listed below, and more details can be found in the VProc manual.
+The above code is a slightly abbreviated version of the code in <tt>4.sim/usercode</tt>. Note that the <tt>VUserMain0</tt> function must have C linkage as the VProc software that calls it is in C (as all the programming logic interfaces, including DPI-C, are C). The API also has a set of other methods for finer access control which are listed below, and more details can be found in the [VProc manual](https://github.com/wyvernSemi/vproc/blob/master/doc/VProc.pdf).
 
 ```
     int  writeByte    (const unsigned   byteaddr, const unsigned    data, const int delta=0);
@@ -441,7 +441,7 @@ Note that, as C functions, there are no default parameters and the <tt>little_en
 Compiling co-designed application code, either compiled for the native host machine, or to run on the <tt>rv32</tt> RISC-V ISS will need further layers on top of these APIs, which will be virtualised away by that point (see  the sections below). The diagram below summarises the software layers that make up a program running on the VProc HDL component. The "native test code" use case, shown at the top left, is for the case just described above  that use the APIs directly.
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/373676ee-f7e2-4a1a-b9b9-079ccef90c37">
+<img src="https://github.com/user-attachments/assets/373676ee-f7e2-4a1a-b9b9-079ccef90c37" width=800>
 </p>
 
 #### Other Software Use Cases
@@ -482,17 +482,17 @@ Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
    -g Enable remote gdb mode (default disabled)
    -p Specify remote GDB port number (default 49152)
    -S Specify start address (default 0)
-   -x Specify base address of external access region (default 0x20000000)
-   -X Specify top address of external access region (default 0x40000000)
+   -x Specify base address of external access region (default 0xFFFFFFFF)
+   -X Specify top address of external access region (default 0xFFFFFFFF)
    -h display this help message
 ```
-With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on and registers dumped on exit. More details of all these features can be found in the <tt>rv32</tt> ISS manual.
+With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on and registers dumped on exit. More details of all these features can be found in the <tt>rv32</tt> [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf).
 
 Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>.
 
 #### Building and Running Code (**Work in Progress**)
 
-A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the VProc software and to build and run the test bench HDL. The make file makes use of VProc's own <tt>makefile.verilator</tt> file to compile all the software for VProc, mem_model and the user code. The software is compiled in to a local static library, <tt>libvproc.a</tt> which is linked to the simulation code within Verilator.
+A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the VProc software and to build and run the test bench HDL. The make file makes use of VProc's own <tt>makefile.verilator</tt> file to compile all the software for VProc, mem_model and the user code, where the user code is the rv32 ISS code when an ISS build is selected (see make file variables below). The software is compiled into a local static library, <tt>libvproc.a</tt> which is linked to the simulation code within Verilator.
 
 The make file has a target <tt>help</tt>, which produces the following output:
 
@@ -522,6 +522,80 @@ The make file has a set of variables (with default settings) that can be overrid
 
 The user code variable allow different (and multiple) file names from the default, and to change the location of where the user code is located (if not the ISS build). This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The WireGuard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
 
+##### Running ISS code
+
+When the test bench is built for the rv32 ISS, the actual 'user' application code is run on the RISC-V ISS model itself, and is compiled using the normal RISC-V GNU toochain to produce a binary file that the ISS can load and run. As described above, the code that is run is slected with the </tt>vusermain.cfg</tt> file and the </tt>-t</tt> option. The various flags configure the ISS and determines when the ISS is halted (if at all). An example assembly file is provided in <tt>4.sw/models/rv32/riscvtest/main.s</tt> (as well as a recompiled <tt>main.bin</tt>). This assembly code reproduces the functionality of the example <tt>VuserMain0.cpp</tt> program discussed previously, writing to memory, reading back and comparing for a mismatch. The example assembly code is compiled with:
+
+```
+$riscv64-unknown-elf-as.exe -fpic -march=rv32imafdc -aghlms=main.list -o main.o main.s
+$riscv64-unknown-elf-ld.exe main.o -Ttext 0 -Tdata 1000 -melf32lriscv -o main.bin
+```
+In this instance, the code is set to compile to use the MAFDC extensions (maths, atomic, float, double and compressed). To run this code the <tt>vusermain.cfg</tt> is set to:
+
+```
+vusermain0 -x 0x10000000 -X 0x20000000 -rEHRca -t ./models/rv32/riscvtest/main.bin
+```
+This sets the address region that will be sent to the HDL <tt>soc_cpu</tt> bus to be between byte addresses 0x10000000 and 0x1FFFFFFF. All other accesses will use the direct memory model's API, with no simulation transactions. The next set of options turn on run-time disassembly (<tt>-r</tt>), exit on <tt>ebreak</tt> (<tt>-E</tt>) or unimplemented instruction (<tt>-H</tt>), dump registers (<tt>-R</tt>) and CSR register (<tt>-c</tt>) and display the registers in ABI format (<tt>-a</tt>). The pre-compiled example program binary is then selected with the <tt>-t</tt> option. Of course, many of these options are not necessary and, for example, the output flags (<tt>-rRca</tt>) can be removed and the program will still run correctly. In the <tt>4.sim/</tt> directory, using <tt>make</tt> to build and run the code gives the following output:
+
+```
+$make -f MakefileVProc.mk BUILD=ISS run
+- V e r i l a t i o n   R e p o r t: Verilator 5.024 2024-04-05 rev v5.024-42-gc561fe8ba
+- Verilator: Built from 2.145 MB sources in 40 modules, into 0.556 MB in 20 C++ files needing 0.001 MB
+- Verilator: Walltime 0.298 s (elab=0.020, cvt=0.087, bld=0.000); cpu 0.000 s on 1 threads; alloced 14.059 MB
+Archive ar -rcs Vtb__ALL.a Vtb__ALL.o
+VInit(0): initialising DPI-C interface
+  VProc version 1.11.4. Copyright (c) 2004-2024 Simon Southwell.
+                   0 TOP.tb.error_mon (0) - ERROR_CLEARED
+
+  *****************************
+  *   Wyvern Semiconductors   *
+  *  rv32_cpu ISS (on VProc)  *
+  *     Copyright (c) 2024    *
+  *****************************
+
+00000000: 0x00001197    auipc     gp, 0x00000001
+00000004: 0x0101a183    lw        gp, 16(gp)
+00000008: 0x0001a103    lw        sp, 0(gp)
+0000000c: 0x10001237    lui       tp, 0x00010001
+00000010: 0x00222023    sw        sp, 0(tp)
+00000014: 0x00022283    lw        t0, 0(tp)
+00000018: 0x00229663    bne       t0, sp, 12
+0000001c: 0x00004505'   addi      a0, zero, 1
+0000001e: 0x00004501'   addi      a0, zero, 0
+00000020: 0x05d00893    addi      a7, zero, 93
+00000024: 0x00009002'   ebreak   
+    *
+
+Register state:
+
+  zero = 0x00000000   ra = 0x00000000   sp = 0x900dc0de   gp = 0x00001000 
+    tp = 0x10001000   t0 = 0x900dc0de   t1 = 0x00000000   t2 = 0x00000000 
+    s0 = 0x00000000   s1 = 0x00000000   a0 = 0x00000000   a1 = 0x00000000 
+    a2 = 0x00000000   a3 = 0x00000000   a4 = 0x00000000   a5 = 0x00000000 
+    a6 = 0x00000000   a7 = 0x0000005d   s2 = 0x00000000   s3 = 0x00000000 
+    s4 = 0x00000000   s5 = 0x00000000   s6 = 0x00000000   s7 = 0x00000000 
+    s8 = 0x00000000   s9 = 0x00000000  s10 = 0x00000000  s11 = 0x00000000 
+    t3 = 0x00000000   t4 = 0x00000000   t5 = 0x00000000   t6 = 0x00000000 
+  
+CSR state:
+
+  mstatus    = 0x00003800
+  mie        = 0x00000000
+  mvtec      = 0x00000000
+  mscratch   = 0x00000000
+  mepc       = 0x00000000
+  mcause     = 0x00000000
+  mtval      = 0x00000000
+  mip        = 0x00000000
+  mcycle     = 0x0000000000000037
+  minstret   = 0x000000000000000b
+  mtime      = 0x0006263f2bfc6bcf
+  mtimecmp   = 0xffffffffffffffff
+Exited running ./models/rv32/riscvtest/main.bin
+- /mnt/hgfs/winhome/simon/git/wireguard-fpga/4.sim/tb.sv:44: Verilog $finish
+```
+Note that the disassembled output is a mixture of 32-bit and compressed 16-bit instructions, with the compressed instruction hexadecimal values shown followed by a <tt>'</tt> character and the instruction heximadecimal value in the lower 16-bits. Unlike for the native compiled code use cases, unless the HDL has changed, the test bench does not need to be re-built when the RISC-V source code is changed or a different binary is to be run, just the RISC-V code is re-compiled or the <tt>vusermain.cfg</tt> updated to point to a different binary file.
+
 #### Debugging Code
 
 In each of the three usage cases of software, each can be debugged using <tt>gdb</tt>, either for the host computer or the gnu RISC-V toolchain's gdb.
@@ -537,7 +611,7 @@ gdb output/Vtb
 Debugging then proceeds just as for any other executable.
 
 ##### ISS Software
-The ISS has a remote <tt>gdb</tt> interface (enable with the <tt>-g</tt> option in the <tt>vusermain.cfg</tt> file) allowing the loading of programs via this connection, and of doing all the normal debugging steps of the RISC-V code. The ISS manual details how to use the <tt>gdb</tt> remote debug interface but, to summarise, when the ISS is run in GDB mode, it will create a TCP socket and advertise the port number to the screen (e.g. <tt>RV32GDB: Using TCP port number: 49152</tt>). The RISC-V <tt>gdb</tt> is then run and a remote connection is made with a command:
+The ISS has a remote <tt>gdb</tt> interface (enable with the <tt>-g</tt> option in the <tt>vusermain.cfg</tt> file) allowing the loading of programs via this connection, and of doing all the normal debugging steps of the RISC-V code. The [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf) details how to use the <tt>gdb</tt> remote debug interface but, to summarise, when the ISS is run in GDB mode, it will create a TCP socket and advertise the port number to the screen (e.g. <tt>RV32GDB: Using TCP port number: 49152</tt>). The RISC-V <tt>gdb</tt> is then run and a remote connection is made with a command:
 
  ```
  (gdb) target remote :49152
@@ -545,7 +619,7 @@ The ISS has a remote <tt>gdb</tt> interface (enable with the <tt>-g</tt> option 
 
 A blank before the colon character in the port number indicates the connection is on the local host, but a remote host name can be used to do remote debugging from another machine on the network, or even over the internet, if sufficient access permissions. The program (if not done so by other means) can be loaded over this connection and then debugging commence as normal.
 
-The ISS manual has more details on this and also has an appendix showing how to setup an Eclipse IDE project to debug the code via <tt>gdb</tt>.
+The [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf) has more details on this and also has an appendix showing how to setup an Eclipse IDE project to debug the code via <tt>gdb</tt>.
 
 ## Lab Test and Validation Setup
 TODO
