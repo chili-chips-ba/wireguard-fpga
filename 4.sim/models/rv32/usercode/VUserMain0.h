@@ -31,11 +31,11 @@ extern "C" {
 #define MEM_OFFSET                         0
 
 #ifndef EXT_ACCESS_BASE
-#define EXT_ACCESS_BASE                    0x20000000
+#define EXT_ACCESS_BASE                    0xFFFFFFFF
 #endif
 
 #ifndef EXT_ACCESS_TOP
-#define EXT_ACCESS_TOP                     0x40000000
+#define EXT_ACCESS_TOP                     0xFFFFFFFF
 #endif
 
 // Define a sleep forever macro
