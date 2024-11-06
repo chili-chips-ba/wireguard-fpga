@@ -463,6 +463,7 @@ One of the options is <tt>-h</tt> for a help message, which is as shown below:
 ```
 Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
       [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]
+      [-x <base addr>][-X <top addr>]
    -t specify test executable (default test.exe)
    -n specify number of instructions to run (default 0, i.e. run until unimp)
    -d Enable disassemble mode (default off)
@@ -476,6 +477,8 @@ Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
    -b Halt at a specific address (default off)
    -A Specify halt address if -b active (default 0x00000040)
    -D Specify file for debug output (default stdout)
+   -R Dump x0 to x31 on exit (default no dump)
+   -c Dump CSR registers on exit (default no dump)
    -g Enable remote gdb mode (default disabled)
    -p Specify remote GDB port number (default 49152)
    -S Specify start address (default 0)
@@ -483,9 +486,9 @@ Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
    -X Specify top address of external access region (default 0x40000000)
    -h display this help message
 ```
-With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on. More details of all these features can be found in the <tt>rv32</tt> ISS manual.
+With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on and registers dumped on exit. More details of all these features can be found in the <tt>rv32</tt> ISS manual.
 
-Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow acess to the CSR registers in the HDL whilst mapping all of the memory internall using the spare memory model of <tt>mem_model</tt>.
+Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>.
 
 #### Building and Running Code (**Work in Progress**)
 
@@ -510,11 +513,14 @@ Command line configurable variables:
   SOCCPUMATCH:  string to match for soc_cpu filtering in h/w file list (default ip.cpu)
   USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank)
   WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw)
+  BUILD:        Select build type from DEFAULT or ISS (default DEFAULT)
 ```
 
 By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files.
 
-The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with decriptions. Entries with multiple values should be enclosed in double quotes. The user code variable allow different (and multiple) file names from the default, and to change the location of where the user code is located. This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The WireGuard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
+The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the makfiles compiles the supplied source code for the ISS. 
+
+The user code variable allow different (and multiple) file names from the default, and to change the location of where the user code is located (if not the ISS build). This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The WireGuard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
 
 #### Debugging Code
 
