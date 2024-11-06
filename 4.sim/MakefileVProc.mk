@@ -19,6 +19,7 @@ TOPFILELIST   = top.filelist
 SOCCPUMATCH   = ip.cpu
 USRSIMOPTS    =
 WAVESAVEFILE  = waves.gtkw
+BUILD         = DEFAULT
 
 # --------------------------------------------
 # Global exported environment variables
@@ -53,17 +54,30 @@ MEM_C         = mem.c mem_model.c
 # Get OS type
 OSTYPE        = $(shell uname)
 
-ifeq ($(OSTYPE), Linux)
-  RV32LIB     = rv32lnx
-else
-  RV32LIB     = rv32win
+#
+# If BUILD is ISS, then override user source code list and directory
+# and define extra flags
+#
+ifeq ("$(BUILD)", "ISS")
+
+  ifeq ($(OSTYPE), Linux)
+    RV32LIB      = rv32lnx
+  else
+    RV32LIB      = rv32win
+    RV32WINOPTS  = -lWs2_32 
+    RV32WINFILES = getopt.c
+  endif
+
+  USER_C         = VUserMain0.cpp mem_vproc_api.cpp $(RV32WINFILES)
+  USRCODEDIR     = $(CURDIR)/models/rv32/usercode
+
+  RV32DIR        = $(CURDIR)/models/rv32
+  RV32INCLOPTS   = -I$(RV32DIR)/include
+  RV32LDOPTS     = -L$(RV32DIR)/lib -l$(RV32LIB) $(RV32WINOPTS)
 endif
 
-RV32DIR       = $(CURDIR)/models/rv32
-RV32LDOPTS    = -L$(RV32DIR)/lib -l$(RV32LIB) -lWs2_32 
-
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(MEMMODELDIR)/src -I$(RV32DIR)/include
+INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(MEMMODELDIR)/src $(RV32INCLOPTS)
 
 # --------------------------------------------
 # Simulation variables
@@ -163,7 +177,10 @@ compile:
            -MAKEFLAGS "$(SIMMAKEFLAGS)"                    \
            -CFLAGS    "$(SIMCFLAGS)"                       \
            -LDFLAGS   "$(SIMLDFLAGS)                       \
-           -Wl,-whole-archive -L../ -lvproc -Wl,-no-whole-archive -ldl $(RV32LDOPTS)"
+                       -Wl,-whole-archive                  \
+                       -L../ -lvproc                       \
+                       -Wl,-no-whole-archive               \
+                       -ldl $(RV32LDOPTS)"
 
 #
 # Generate Verilator test bench executable
@@ -236,6 +253,7 @@ help:
 	@$(info $(SPC) $(SPC) SOCCPUMATCH:  string to match for soc_cpu filtering in h/w file list (default ip.cpu))
 	@$(info $(SPC) $(SPC) USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank))
 	@$(info $(SPC) $(SPC) WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw))
+	@$(info $(SPC) $(SPC) BUILD:        Select build type from DEFAULT or ISS (default DEFAULT))
 	@$(info )
 
 #======================================================

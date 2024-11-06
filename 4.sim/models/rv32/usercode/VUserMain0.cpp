@@ -68,121 +68,6 @@ LARGE_INTEGER freq, start, stop;
 #endif
 
 // ---------------------------------------------
-// Set up actions prior to running CPU
-// ---------------------------------------------
-
-static void pre_run_setup()
-{
-    // Initialise time
-#if (!(defined _WIN32) && !(defined _WIN64)) || defined __CYGWIN__
-    // For non-windows systems, turn off echoing of input key presses
-    struct termios t;
-
-    tcgetattr(STDIN_FILENO, &t);
-    t.c_lflag &= ~ECHO;
-    tcsetattr(STDIN_FILENO, TCSANOW, &t);
-
-    // Log time just before running (LINUX only)
-    (void)gettimeofday(&tv_start, NULL);
-#else
-
-    QueryPerformanceFrequency(&freq);
-    QueryPerformanceCounter(&start);
-#endif
-}
-
-// ---------------------------------------------
-// Actions to run after CPU returns from
-// executing
-// ---------------------------------------------
-static void post_run_actions()
-{
-    // Calculate time difference, in microseconds, from now
-    // to previously saved time stamp
-#if (!(defined _WIN32) && !(defined _WIN64))
-    // For non-windows systems, turn off echoing of input key presses
-    struct termios t;
-
-    tcgetattr(STDIN_FILENO, &t);
-    t.c_lflag |= ECHO;
-    tcsetattr(STDIN_FILENO, TCSANOW, &t);
-
-    // Get time just after running, and calculate run time (LINUX only)
-    (void)gettimeofday(&tv_stop, NULL);
-    tv_diff_usec = ((float)(tv_stop.tv_sec - tv_start.tv_sec)*1e6) + ((float)(tv_stop.tv_usec - tv_start.tv_usec));
-#else
-    QueryPerformanceCounter(&stop);
-    tv_diff_usec = (double)(stop.QuadPart - start.QuadPart)*1e6/(double)freq.QuadPart;
-#endif
-}
-
-// ---------------------------------------------
-// External memory map access
-// callback function
-// ---------------------------------------------
-
-int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv32i_time_t time)
-{
-    const int       write_wait_cycle      = 0;
-    const int       read_data_wait_cycle  = 1;
-    const int       read_instr_wait_cycle = 1;
-    bool            access_sim            = false;
-    int             processed;
-    uint64_t        curr_cycles;
-    uint32_t        cycle_diff;
-    static uint64_t last_cycles           = 0;
-
-    // Select whether making simulation or direct memory model access
-    access_sim = addr >= ext_access_base_addr && addr < ext_access_top_addr;
-
-    // Synchronise CPU time with simulation
-    curr_cycles = pCpu->clk_cycles();
-    cycle_diff  = (uint32_t)(curr_cycles - last_cycles);
-
-    VTick(cycle_diff, node);
-    last_cycles = curr_cycles;
-
-    // Do access
-    switch (type & MEM_NOT_DBG_MASK)
-    {
-    case MEM_RD_ACCESS_BYTE:
-        data = read_byte(addr, access_sim);
-        processed = read_data_wait_cycle;
-        break;
-    case MEM_RD_ACCESS_HWORD:
-        data = read_hword(addr, access_sim);
-        processed = read_data_wait_cycle;
-        break;
-    case MEM_RD_ACCESS_INSTR:
-        data = read_instr(addr, access_sim);
-        processed = read_instr_wait_cycle;
-        break;
-    case MEM_RD_ACCESS_WORD:
-        data = read_word(addr, access_sim);
-        processed = read_data_wait_cycle;
-        break;
-    case MEM_WR_ACCESS_BYTE:
-        write_byte(addr, data, access_sim);
-        processed = write_wait_cycle;
-        break;
-    case MEM_WR_ACCESS_HWORD:
-        write_hword(addr, data, access_sim);
-        processed = write_wait_cycle;
-        break;
-    case MEM_WR_ACCESS_INSTR:
-    case MEM_WR_ACCESS_WORD:
-        write_word(addr, data, access_sim);
-        processed = write_wait_cycle;
-        break;
-    default:
-        processed = RV32I_EXT_MEM_NOT_PROCESSED;
-        break;
-    }
-
-    return processed;
-}
-
-// ---------------------------------------------
 // Parse configuration file arguments
 // ---------------------------------------------
 
@@ -249,7 +134,7 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
     // Parse the command line arguments and/or configuration file
     // Process the command line options *only* for the INI filename, as we
     // want the command line options to override the INI options
-    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:")) != EOF)
+    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:Rc")) != EOF)
     {
         switch (c)
         {
@@ -313,9 +198,15 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
         case 'X':
             ext_access_top_addr  = strtol(optarg, NULL, 0);
             break;
+        case 'R':
+            cfg.dump_regs        = true;
+            break;
+        case 'c':
+            cfg.dump_csrs        = true;
+            break;
         case 'h':
         default:
-            fprintf(stderr, "Usage: %s -t <test executable> [-hHebdrg][-n <num instructions>]\n      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]\n", argv[0]);
+            fprintf(stderr, "Usage: %s -t <test executable> [-hHebdrgxXRc][-n <num instructions>]\n      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]\n", argv[0]);
             fprintf(stderr, "      [-x <base addr>][-X <top addr>]\n");
             fprintf(stderr, "   -t specify test executable (default test.exe)\n");
             fprintf(stderr, "   -n specify number of instructions to run (default 0, i.e. run until unimp)\n");
@@ -330,6 +221,8 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
             fprintf(stderr, "   -b Halt at a specific address (default off)\n");
             fprintf(stderr, "   -A Specify halt address if -b active (default 0x00000040)\n");
             fprintf(stderr, "   -D Specify file for debug output (default stdout)\n");
+            fprintf(stderr, "   -R Dump x0 to x31 on exit (default no dump)\n");
+            fprintf(stderr, "   -c Dump CSR registers on exit (default no dump)\n");
             fprintf(stderr, "   -g Enable remote gdb mode (default disabled)\n");
             fprintf(stderr, "   -p Specify remote GDB port number (default 49152)\n");
             fprintf(stderr, "   -S Specify start address (default 0)\n");
@@ -342,6 +235,201 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
     }
 
     return error;
+}
+
+// ---------------------------------------------
+// Dump registers
+// ---------------------------------------------
+
+void reg_dump(rv32* pCpu, FILE* dfp, bool abi_en)
+{
+    fprintf(dfp, "\nRegister state:\n\n  ");
+
+    // Loop through all the registers
+    for (int idx = 0; idx < rv32i_consts::RV32I_NUM_OF_REGISTERS; idx++)
+    {
+        // Get the appropriate mapped register name (ABI or x)
+        const char* map_str = abi_en ? pCpu->rmap_str[idx] : pCpu->xmap_str[idx];
+
+        // Get the length of the register name string
+        size_t  slen = strlen(map_str);
+
+        // Fetch the value of the register indexed
+        uint32_t rval = pCpu->regi_val(idx);
+
+        // Print out the register name (right justified) followed by the value
+        fprintf(dfp, "%s%s = 0x%08x ", (slen == 2) ? "  " : (slen == 3) ? " ": "",
+                                         map_str,
+                                         rval);
+
+        // After every fourth value, output a new line
+        if ((idx % 4) == 3)
+        {
+            fprintf(dfp, "\n  ");
+        }
+    }
+
+    // Add a final new line
+    fprintf(dfp, "\n");
+}
+
+// ---------------------------------------------
+// Dump CSRs
+// ---------------------------------------------
+
+void csr_dump(rv32* pCpu, FILE* dfp)
+{
+    fprintf(dfp, "CSR state:\n\n");
+    fprintf(dfp, "  mstatus    = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MSTATUS));
+    fprintf(dfp, "  mie        = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MIE));
+    fprintf(dfp, "  mvtec      = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MTVEC));
+    fprintf(dfp, "  mscratch   = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MSCRATCH));
+    fprintf(dfp, "  mepc       = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MEPC));
+    fprintf(dfp, "  mcause     = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MCAUSE));
+    fprintf(dfp, "  mtval      = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MTVAL));
+    fprintf(dfp, "  mip        = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MIP));
+    fprintf(dfp, "  mcycle     = 0x%08x%08x\n", pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MCYCLEH),   pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MCYCLE));
+    fprintf(dfp, "  minstret   = 0x%08x%08x\n", pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MINSTRETH), pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MINSTRET));
+
+    bool fault;
+    uint32_t mtimel = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_ADDRESS,   rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
+    uint32_t mtimeh = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_ADDRESS+4, rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
+    fprintf(dfp, "  mtime      = 0x%08x%08x\n", mtimeh, mtimel);
+
+    mtimel = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_CMP_ADDRESS,   rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
+    mtimeh = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_CMP_ADDRESS+4, rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
+    fprintf(dfp, "  mtimecmp   = 0x%08x%08x\n", mtimeh, mtimel);
+
+}
+// ---------------------------------------------
+// Set up actions prior to running CPU
+// ---------------------------------------------
+
+static void pre_run_setup()
+{
+    // Initialise time
+#if (!(defined _WIN32) && !(defined _WIN64)) || defined __CYGWIN__
+    // For non-windows systems, turn off echoing of input key presses
+    struct termios t;
+
+    tcgetattr(STDIN_FILENO, &t);
+    t.c_lflag &= ~ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+
+    // Log time just before running (LINUX only)
+    (void)gettimeofday(&tv_start, NULL);
+#else
+
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&start);
+#endif
+}
+
+// ---------------------------------------------
+// Actions to run after CPU returns from
+// executing
+// ---------------------------------------------
+static void post_run_actions(rv32i_cfg_s cfg)
+{
+    // Calculate time difference, in microseconds, from now
+    // to previously saved time stamp
+#if (!(defined _WIN32) && !(defined _WIN64))
+    // For non-windows systems, turn off echoing of input key presses
+    struct termios t;
+
+    tcgetattr(STDIN_FILENO, &t);
+    t.c_lflag |= ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+
+    // Get time just after running, and calculate run time (LINUX only)
+    (void)gettimeofday(&tv_stop, NULL);
+    tv_diff_usec = ((float)(tv_stop.tv_sec - tv_start.tv_sec)*1e6) + ((float)(tv_stop.tv_usec - tv_start.tv_usec));
+#else
+    QueryPerformanceCounter(&stop);
+    tv_diff_usec = (double)(stop.QuadPart - start.QuadPart)*1e6/(double)freq.QuadPart;
+#endif
+
+    if (cfg.dump_regs)
+    {
+        reg_dump(pCpu, cfg.dbg_fp, cfg.abi_en);
+    }
+
+    if (cfg.dump_csrs)
+    {
+        csr_dump(pCpu, cfg.dbg_fp);
+    }
+
+    if (cfg.num_instr != 0)
+    {
+        VPrint("\nNumber of executed instructions = %.1f million (%.0f IPS)\n\n",
+               (float)cfg.num_instr/1e6, (float)cfg.num_instr/(tv_diff_usec/1e6));
+    }
+}
+
+// ---------------------------------------------
+// External memory map access
+// callback function
+// ---------------------------------------------
+
+int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv32i_time_t time)
+{
+    const int       write_wait_cycle      = 0;
+    const int       read_data_wait_cycle  = 1;
+    const int       read_instr_wait_cycle = 1;
+    bool            access_sim            = false;
+    int             processed;
+    uint64_t        curr_cycles;
+    uint32_t        cycle_diff;
+    static uint64_t last_cycles           = 0;
+
+    // Select whether making simulation or direct memory model access
+    access_sim = addr >= ext_access_base_addr && addr < ext_access_top_addr;
+
+    // Synchronise CPU time with simulation
+    curr_cycles = pCpu->clk_cycles();
+    cycle_diff  = (uint32_t)(curr_cycles - last_cycles);
+
+    VTick(cycle_diff, node);
+    last_cycles = curr_cycles;
+
+    // Do access
+    switch (type & MEM_NOT_DBG_MASK)
+    {
+    case MEM_RD_ACCESS_BYTE:
+        data = read_byte(addr, access_sim);
+        processed = read_data_wait_cycle;
+        break;
+    case MEM_RD_ACCESS_HWORD:
+        data = read_hword(addr, access_sim);
+        processed = read_data_wait_cycle;
+        break;
+    case MEM_RD_ACCESS_INSTR:
+        data = read_instr(addr, access_sim);
+        processed = read_instr_wait_cycle;
+        break;
+    case MEM_RD_ACCESS_WORD:
+        data = read_word(addr, access_sim);
+        processed = read_data_wait_cycle;
+        break;
+    case MEM_WR_ACCESS_BYTE:
+        write_byte(addr, data, access_sim);
+        processed = write_wait_cycle;
+        break;
+    case MEM_WR_ACCESS_HWORD:
+        write_hword(addr, data, access_sim);
+        processed = write_wait_cycle;
+        break;
+    case MEM_WR_ACCESS_INSTR:
+    case MEM_WR_ACCESS_WORD:
+        write_word(addr, data, access_sim);
+        processed = write_wait_cycle;
+        break;
+    default:
+        processed = RV32I_EXT_MEM_NOT_PROCESSED;
+        break;
+    }
+
+    return processed;
 }
 
 // ---------------------------------------------
@@ -441,19 +529,9 @@ extern "C" void VUserMain0()
                 // Run the processor
                 pCpu->run(cfg);
 
-                post_run_actions();
+                post_run_actions(cfg);
 
-                // If the break from the program was for specified number of instructions...
-                if (cfg.num_instr != 0)
-                {
-                    // Display statistics about executoin time.
-                    VPrint("\nNumber of executed instructions = %.1f million (%.0f IPS)\n\n",
-                                 (float)cfg.num_instr/1e6, (float)cfg.num_instr/(tv_diff_usec/1e6));
-                }
-                else
-                {
-                    VPrint("Exited running %s\n", cfg.exec_fname);
-                }
+                VPrint("Exited running %s\n", cfg.exec_fname);
             }
         }
 

@@ -31,8 +31,14 @@ extern "C" {
 // Define VProc call normal and delta values
 #define NORMAL_UPDATE                           0
 #define DELTA_UPDATE                            1
+
+#ifndef BIG_ENDIAN
 #define BIG_ENDIAN                              0
+#endif
+
+#ifndef LITTLE_ENDIAN
 #define LITTLE_ENDIAN                           1
+#endif
 
 #ifndef ENDIAN
 #define ENDIAN                                   LITTLE_ENDIAN
