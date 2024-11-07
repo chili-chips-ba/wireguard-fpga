@@ -20,6 +20,7 @@ SOCCPUMATCH   = ip.cpu
 USRSIMOPTS    =
 WAVESAVEFILE  = waves.gtkw
 BUILD         = DEFAULT
+TIMEOUTUS     = 15000
 
 # --------------------------------------------
 # Global exported environment variables
@@ -64,11 +65,11 @@ ifeq ("$(BUILD)", "ISS")
     RV32LIB      = rv32lnx
   else
     RV32LIB      = rv32win
-    RV32WINOPTS  = -lWs2_32 
+    RV32WINOPTS  = -lWs2_32
     RV32WINFILES = getopt.c
   endif
 
-  USER_C         = VUserMain0.cpp mem_vproc_api.cpp $(RV32WINFILES)
+  USER_C         = VUserMain0.cpp mem_vproc_api.cpp uart.cpp $(RV32WINFILES)
   USRCODEDIR     = $(CURDIR)/models/rv32/usercode
 
   RV32DIR        = $(CURDIR)/models/rv32
@@ -78,37 +79,39 @@ endif
 
 # C/C++ include paths for VProc, memory model and user code
 INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(MEMMODELDIR)/src $(RV32INCLOPTS)
+USRCDEFS      = -DMEM_MODEL_DEFAULT_ENDIAN=1
 
 # --------------------------------------------
 # Simulation variables
 # --------------------------------------------
 
-TBFILELIST    = $(MEMMODELDIR)/mem_model.sv                \
-                $(VPROCDIR)/f_VProc.sv                     \
-                                                           \
-                models/soc_cpu.VPROC.sv                    \
-                models/bfm_uart.sv                         \
-                models/bfm_adc.sv                          \
-                models/gowin.prim_sim.CHILI.v              \
-                                                           \
+TBFILELIST    = $(MEMMODELDIR)/mem_model.sv                   \
+                $(VPROCDIR)/f_VProc.sv                        \
+                                                              \
+                models/soc_cpu.VPROC.sv                       \
+                models/bfm_uart.sv                            \
+                models/bfm_adc.sv                             \
+                models/gowin.prim_sim.CHILI.v                 \
+                                                              \
                 $(TB_NAME).sv
 
 WORKDIR       = output
 
-SIMOPTS       = --cc                                       \
-                --timescale-override 1ps/1ps               \
-                --exe versimSV.cpp                         \
-                -sv                                        \
-                $(TRACEOPTS) $(TIMINGOPT) $(USRSIMOPTS)    \
-                -Mdir $(WORKDIR)                           \
+SIMOPTS       = --cc                                          \
+                --timescale-override 1ps/1ps                  \
+                --exe versimSV.cpp                            \
+                -sv                                           \
+                $(TRACEOPTS) $(TIMINGOPT) $(USRSIMOPTS)       \
+                -GRUN_SIM_US=$(TIMEOUTUS)                     \
+                -Mdir $(WORKDIR)                              \
                 -Wno-WIDTH
 
-SIMDEFS       = +define+VPROC_BYTE_ENABLE                  \
-                +define+SIM_ONLY                           \
-#                                                          \
-#                +define+SDRAM_DEBUG                        \
-#                +define+DAC_DEBUG                          \
-#                +define+UART_BFM_DEBUG                     \
+SIMDEFS       = +define+VPROC_BYTE_ENABLE                     \
+                +define+SIM_ONLY                              \
+#                                                             \
+#                +define+SDRAM_DEBUG                           \
+#                +define+DAC_DEBUG                             \
+#                +define+UART_BFM_DEBUG                        \
 #                +define+ADC_DEBUG+ADC_BFM_DEBUG
 
 SIMINCLPATHS  = -I$(CURDIR) -I$(VPROCDIR) -I$(MEMMODELDIR)
@@ -129,9 +132,9 @@ SIMEXE        = $(WORKDIR)/V$(TB_NAME)
 #
 # GTKWave variables
 #
-GTKWAVEOPTS = --saveonexit                                 \
-              --stems   ./tb.stems                         \
-              --logfile sim.log                            \
+GTKWAVEOPTS = --saveonexit                                    \
+              --stems   ./tb.stems                            \
+              --logfile sim.log                               \
               --dump    $(WAVEFILE)
 
 WAVEFILE      = wave.fst
@@ -155,31 +158,31 @@ all: $(TOPFILELIST) $(SIMEXE)
 # this directory, including the memory model code and user code.
 #
 $(VLIB): $(VPROCDIR) $(MEMMODELDIR)
-	@make --no-print-directory -C $(VPROCDIR)/test     \
-              -f $(VPROCMKFILE) ARCHFLAG=$(OPTFLAG)        \
-              USRFLAGS="$(INCLPATHS) $(USRFLAGS)"          \
-              USRCDIR=$(USRCODEDIR)                        \
-              USER_C="$(USER_C)"                           \
-              MEMMODELDIR=$(MEMMODELDIR)/src               \
-              MEM_C="$(MEM_C)"                             \
-              TESTDIR=$(CURDIR)                            \
+	@make --no-print-directory -C $(VPROCDIR)/test        \
+              -f $(VPROCMKFILE) ARCHFLAG=$(OPTFLAG)           \
+              USRFLAGS="$(INCLPATHS) $(USRCDEFS) $(USRFLAGS)" \
+              USRCDIR=$(USRCODEDIR)                           \
+              USER_C="$(USER_C)"                              \
+              MEMMODELDIR=$(MEMMODELDIR)/src                  \
+              MEM_C="$(MEM_C)"                                \
+              TESTDIR=$(CURDIR)                               \
               $(VLIB)
 
 #
 # Compile simulation C++ code
 #
 compile:
-	@verilator  -F $(TOPFILELIST) $(TBFILELIST)        \
-                       $(SIMOPTS)                          \
-                       $(SIMDEFS) $(SIMINCLPATHS)          \
-                       $(ARE_TESTS)                        \
-           --top       $(TB_NAME)                          \
-           -MAKEFLAGS "$(SIMMAKEFLAGS)"                    \
-           -CFLAGS    "$(SIMCFLAGS)"                       \
-           -LDFLAGS   "$(SIMLDFLAGS)                       \
-                       -Wl,-whole-archive                  \
-                       -L../ -lvproc                       \
-                       -Wl,-no-whole-archive               \
+	@verilator  -F $(TOPFILELIST) $(TBFILELIST)           \
+                       $(SIMOPTS)                             \
+                       $(SIMDEFS) $(SIMINCLPATHS)             \
+                       $(ARE_TESTS)                           \
+           --top       $(TB_NAME)                             \
+           -MAKEFLAGS "$(SIMMAKEFLAGS)"                       \
+           -CFLAGS    "$(SIMCFLAGS)"                          \
+           -LDFLAGS   "$(SIMLDFLAGS)                          \
+                       -Wl,-whole-archive                     \
+                       -L../ -lvproc                          \
+                       -Wl,-no-whole-archive                  \
                        -ldl $(RV32LDOPTS)"
 
 #
@@ -206,16 +209,16 @@ $(MEMMODELDIR):
 	@git clone $(MEMMODEL_REPO) $(MEMMODELDIR) --recursive
 
 xml2stems:
-	@verilator                                         \
-                --timing                                   \
-                -xml-only                                  \
-                -xml-output tb.xml                         \
-                --timescale 1ps/1ps                        \
-                $(SIMINCLPATHS) $(SIMDEFS)                 \
-                -f $(TOPFILELIST)                          \
-                $(TBFILELIST)                              \
-                -MAKEFLAGS "$(SIMMAKEFLAGS)"               \
-                -Wno-WIDTH                                 \
+	@verilator                                            \
+                --timing                                      \
+                -xml-only                                     \
+                -xml-output tb.xml                            \
+                --timescale 1ps/1ps                           \
+                $(SIMINCLPATHS) $(SIMDEFS)                    \
+                -f $(TOPFILELIST)                             \
+                $(TBFILELIST)                                 \
+                -MAKEFLAGS "$(SIMMAKEFLAGS)"                  \
+                -Wno-WIDTH                                    \
                 --top-module $(TB_NAME)
 	@xml2stems tb.xml tb.stems
 
@@ -228,10 +231,10 @@ run: all
 
 rungui: all xml2stems
 	@$(SIMEXE) | tee sim.log
-	@if [ -e $(WAVESAVEFILE) ]; then                   \
-            gtkwave -a $(WAVESAVEFILE) $(GTKWAVEOPTS);     \
-        else                                               \
-            gtkwave $(GTKWAVEOPTS);                        \
+	@if [ -e $(WAVESAVEFILE) ]; then                      \
+            gtkwave -a $(WAVESAVEFILE) $(GTKWAVEOPTS);        \
+        else                                                  \
+            gtkwave $(GTKWAVEOPTS);                           \
         fi
 
 gui: rungui
@@ -254,6 +257,7 @@ help:
 	@$(info $(SPC) $(SPC) USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank))
 	@$(info $(SPC) $(SPC) WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw))
 	@$(info $(SPC) $(SPC) BUILD:        Select build type from DEFAULT or ISS (default DEFAULT))
+	@$(info $(SPC) $(SPC) TIMEOUTUS:    Test bench timeout period in microseconds (default 15000))
 	@$(info )
 
 #======================================================
