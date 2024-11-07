@@ -46,11 +46,13 @@ extern "C" {
 #include "mem_vproc_api.h"
 #include "rv32.h"
 #include "rv32_cpu_gdb.h"
+#include "uart.h"
 
 // I'm node 0
 int node = 0;
 
-static uint32_t  irq                  = 0;
+static uint32_t  extirq               = 0;
+static uint32_t  swirq                = 0;
 
 static const int strbufsize = 256;
 static char      argstr[strbufsize];
@@ -60,6 +62,9 @@ static uint32_t  ext_access_base_addr = EXT_ACCESS_BASE;
 static uint32_t  ext_access_top_addr  = EXT_ACCESS_TOP;
 
 static double    tv_diff_usec;
+
+static uint32_t  uart0_base_addr = 0x80000000;
+static uint32_t  sw_irq_addr     = 0xafffffff;
 
 #if (!(defined _WIN32) && !(defined _WIN64))
 static struct timeval tv_start, tv_stop;
@@ -383,7 +388,7 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
     static uint64_t last_cycles           = 0;
 
     // Select whether making simulation or direct memory model access
-    access_sim = addr >= ext_access_base_addr && addr < ext_access_top_addr;
+    access_sim  = addr >= ext_access_base_addr && addr < ext_access_top_addr;
 
     // Synchronise CPU time with simulation
     curr_cycles = pCpu->clk_cycles();
@@ -392,41 +397,54 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
     VTick(cycle_diff, node);
     last_cycles = curr_cycles;
 
-    // Do access
-    switch (type & MEM_NOT_DBG_MASK)
+    // Accessing the software interrupt
+    if (addr == sw_irq_addr)
     {
-    case MEM_RD_ACCESS_BYTE:
-        data = read_byte(addr, access_sim);
-        processed = read_data_wait_cycle;
-        break;
-    case MEM_RD_ACCESS_HWORD:
-        data = read_hword(addr, access_sim);
-        processed = read_data_wait_cycle;
-        break;
-    case MEM_RD_ACCESS_INSTR:
-        data = read_instr(addr, access_sim);
-        processed = read_instr_wait_cycle;
-        break;
-    case MEM_RD_ACCESS_WORD:
-        data = read_word(addr, access_sim);
-        processed = read_data_wait_cycle;
-        break;
-    case MEM_WR_ACCESS_BYTE:
-        write_byte(addr, data, access_sim);
-        processed = write_wait_cycle;
-        break;
-    case MEM_WR_ACCESS_HWORD:
-        write_hword(addr, data, access_sim);
-        processed = write_wait_cycle;
-        break;
-    case MEM_WR_ACCESS_INSTR:
-    case MEM_WR_ACCESS_WORD:
-        write_word(addr, data, access_sim);
-        processed = write_wait_cycle;
-        break;
-    default:
-        processed = RV32I_EXT_MEM_NOT_PROCESSED;
-        break;
+        swirq   = data & 0x1;
+        processed = 0;
+    }
+    else if ((processed = uart_reg_access(addr, data, type, uart0_base_addr)) == RV32I_EXT_MEM_NOT_PROCESSED)
+    {
+        // Do access
+        switch (type & MEM_NOT_DBG_MASK)
+        {
+        case MEM_RD_ACCESS_BYTE:
+            data = read_byte(addr, access_sim);
+            processed = read_data_wait_cycle;
+            break;
+        case MEM_RD_ACCESS_HWORD:
+            data = read_hword(addr, access_sim);
+            processed = read_data_wait_cycle;
+            break;
+        case MEM_RD_ACCESS_INSTR:
+            data = read_instr(addr, access_sim);
+            processed = read_instr_wait_cycle;
+            break;
+        case MEM_RD_ACCESS_WORD:
+            data = read_word(addr, access_sim);
+            processed = read_data_wait_cycle;
+            break;
+        case MEM_WR_ACCESS_BYTE:
+            write_byte(addr, data, access_sim);
+            processed = write_wait_cycle;
+            break;
+        case MEM_WR_ACCESS_HWORD:
+            write_hword(addr, data, access_sim);
+            processed = write_wait_cycle;
+            break;
+        case MEM_WR_ACCESS_INSTR:
+            // When loading instructions, always use direct memory API
+            write_word(addr, data, 0);
+            processed = 0;
+            break;
+        case MEM_WR_ACCESS_WORD:
+            write_word(addr, data, access_sim);
+            processed = write_wait_cycle;
+            break;
+        default:
+            processed = RV32I_EXT_MEM_NOT_PROCESSED;
+            break;
+        }
     }
 
     return processed;
@@ -443,7 +461,7 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
 // in the main program flow.
 int vproc_irq_callback(int val)
 {
-    irq = val;
+    extirq = val;
 
     return 0;
 }
@@ -453,9 +471,13 @@ int vproc_irq_callback(int val)
 // cycle.
 uint32_t iss_int_callback(const rv32i_time_t time, rv32i_time_t *wakeup_time)
 {
+    bool terminate;
+    
     *wakeup_time = time + 1;
 
-    return irq;
+    bool uart_irq = uart_tick(time, terminate);
+
+    return extirq | swirq | (uart_irq ? 1 : 0);
 }
 
 // ---------------------------------------------
