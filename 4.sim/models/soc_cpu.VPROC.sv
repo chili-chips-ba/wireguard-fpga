@@ -66,7 +66,6 @@ module soc_cpu #(
    soc_if.MST         bus,
 
 // access point for reloading CPU program memory
-// (unused if EN_IMEM is 0)
    input logic        imem_we,
    input logic [31:2] imem_waddr,
    input logic [31:0] imem_wdat
@@ -80,6 +79,14 @@ module soc_cpu #(
 logic                 vp_wack, vp_rack,vp_we, vp_rd;
 logic [3:0]           vp_be;
 logic [31:0]          vp_addr;
+logic [31:0]          vp_wdat;
+logic [31:0]          vp_rdat;
+logic                 cpu_access;
+
+logic                 imem_write;
+logic                 imem_read;
+logic [31:0]          imem_readdata;
+logic                 imem_readdatavalid;
 
 //--------------------------------------------------------
 // Combinatorial logic
@@ -89,20 +96,55 @@ logic [31:0]          vp_addr;
 //
 //--------------------------------------------------------
 
+// Flag if accessin the local IMEM
+assign cpu_access     = vp_addr[31:28] == '0;
+
 // Combine VProc's WE with BE to produce bus write enables
 assign bus.we         = vp_be & {4{vp_we}};
 
 // Bus access valid on read or write
-assign bus.vld        = vp_we | vp_rd;
+assign bus.vld        = (vp_we | vp_rd) & ~cpu_access;
 
 // Bus output is a word address
 assign bus.addr       = vp_addr[31:2];
 
-// Write acknowledge VProc when writing and bus.rdy
-assign vp_wack        = vp_we & bus.rdy;
+// Export write data onto bus
+assign bus.wdat       = vp_wdat;
 
-// Read acknowledge VProc when reading and bus.rdy
-assign vp_rack        = vp_rd & bus.rdy;
+// Write to IMEM
+assign imem_write     = vp_we & cpu_access;
+
+// Read from IMEM
+assign imem_read      = vp_rd & cpu_access;
+
+`ifndef VERILATOR
+
+  // Write acknowledge VProc when writing and bus.rdy
+assign vp_wack        = vp_we & (bus.rdy | cpu_access);
+
+  // Read acknowledge VProc when reading and bus.rdy
+assign vp_rack        = vp_rd & (bus.rdy | imem_readdatavalid);
+
+  // Mux source of read data
+assign vp_rdat        = cpu_access ? imem_readdata : bus.rdat;
+
+`else
+
+// For Verilator, ensure all input signals resolved before sampling
+always @(negedge bus.clk)
+begin
+
+  // Write acknowledge VProc when writing and bus.rdy
+  vp_wack             = vp_we & (bus.rdy | cpu_access);
+
+  // Read acknowledge VProc when reading and bus.rdy
+  vp_rack             = vp_rd & (bus.rdy | imem_readdatavalid);
+
+  // Mux source of read data
+  vp_rdat             = cpu_access ? imem_readdata : bus.rdat;
+
+end
+`endif
 
 //-----------------------------------------------------
 // VProc virtual processor
@@ -116,14 +158,14 @@ assign vp_rack        = vp_rd & bus.rdy;
 
       .Addr                  (vp_addr),                // o
 
-      .DataOut               (bus.wdat),               // o
+      .DataOut               (vp_wdat),                // o
       .WE                    (vp_we),                  // o
       .WRAck                 (vp_wack),                // i
 
       // Compile VProc with VPROC_BYTE_ENABLE defined for BE port
       .BE                    (vp_be),                  // o
 
-      .DataIn                (bus.rdat),               // i
+      .DataIn                (vp_rdat),                // i
       .RD                    (vp_rd),                  // o
       .RDAck                 (vp_rack),                // i
 
@@ -143,19 +185,22 @@ assign vp_rack        = vp_rd & bus.rdy;
    mem_model u_imem (
       .clk               (bus.clk),                // i
       .rst_n             (bus.arst_n),             // i
-                                                       
-      .address           ('0),                     // i (unused)
-      .byteenable        ('0),                     // i (unused)
-      .write             (1'b0),                   // i (unused)
-      .writedata         ('0),                     // i (unused)
-      .read              (1'b0),                   // i (unused)
-      .readdata          (),                       // o (unused)
-      .readdatavalid     (),                       // o (unused)
-                                                      
+
+      // Port used for reading program from VProc
+      // when not using memory model's direct C API
+      .address           (vp_addr),                // i
+      .byteenable        (4'hf),                   // i
+      .write             (imem_write),             // i
+      .writedata         (vp_wdat),                // i
+      .read              (imem_read),              // i
+      .readdata          (imem_readdata),          // o
+      .readdatavalid     (imem_readdatavalid),     // o
+
+       // Port used when loading program via UART
       .wr_port_valid     (imem_we),                // i
       .wr_port_data      (imem_wdat),              // i
       .wr_port_addr      ({imem_waddr, 2'b00}),    // i
-   
+
        // Unused burst ports
       .rx_waitrequest    (),                       // o (unused)
       .rx_burstcount     ('0),                     // i (unused)
@@ -163,7 +208,7 @@ assign vp_rack        = vp_rd & bus.rdy;
       .rx_read           ('0),                     // i (unused)
       .rx_readdata       (),                       // o (unused)
       .rx_readdatavalid  (),                       // o (unused)
-                                                
+
       .tx_waitrequest    (),                       // o (unused)
       .tx_burstcount     ('0),                     // i (unused)
       .tx_address        ('0),                     // i (unused)
