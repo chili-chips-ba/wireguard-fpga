@@ -66,6 +66,8 @@ static double    tv_diff_usec;
 static uint32_t  uart0_base_addr = 0x80000000;
 static uint32_t  sw_irq_addr     = 0xafffffff;
 
+static uint32_t  max_sync_diff   = 1000;
+
 #if (!(defined _WIN32) && !(defined _WIN64))
 static struct timeval tv_start, tv_stop;
 #else
@@ -390,18 +392,39 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
     // Select whether making simulation or direct memory model access
     access_sim  = addr >= ext_access_base_addr && addr < ext_access_top_addr;
 
-    // Synchronise CPU time with simulation
+    // -------------------------------------------
+    // Synchronise ISS time and simulation time
+    // -------------------------------------------
     curr_cycles = pCpu->clk_cycles();
     cycle_diff  = (uint32_t)(curr_cycles - last_cycles);
 
-    VTick(cycle_diff, node);
-    last_cycles = curr_cycles;
+    // Force synchronisation of simulation when reading instructions and the
+    // ISS/sim skew reaches a limit to minimise simulation interaction when
+    // no load/stores for a while.
+    if (!access_sim)
+    {
+        if ((type & MEM_NOT_DBG_MASK) == MEM_RD_ACCESS_INSTR && cycle_diff >= max_sync_diff)
+        {
+            VTick(cycle_diff, node);
+            last_cycles = curr_cycles;
+        }
+    }
+    // Synchronise CPU time with simulation at simulation access load or store
+    else
+    {
+        VTick(cycle_diff, node);
+        last_cycles = curr_cycles;
+    }
+
+    // -------------------------------------------
+    // Make memory access
+    // -------------------------------------------
 
     // Accessing the software interrupt
     if (addr == sw_irq_addr)
     {
-        swirq   = data & 0x1;
-        processed = 0;
+        swirq   = (data & 0x1) << 2;
+        processed = write_wait_cycle;
     }
     else if ((processed = uart_reg_access(addr, data, type, uart0_base_addr)) == RV32I_EXT_MEM_NOT_PROCESSED)
     {
@@ -466,13 +489,13 @@ int vproc_irq_callback(int val)
     return 0;
 }
 
-// The ISS interrupt callback will return an interrupt when irq
-// is non-zero, else it returns 0. The wakeup time in this model is always the next
+// The ISS interrupt callback will return an interrupt when IRQs
+// non-zero, else it returns 0. The wakeup time in this model is always the next
 // cycle.
 uint32_t iss_int_callback(const rv32i_time_t time, rv32i_time_t *wakeup_time)
 {
     bool terminate;
-    
+
     *wakeup_time = time + 1;
 
     bool uart_irq = uart_tick(time, terminate);
