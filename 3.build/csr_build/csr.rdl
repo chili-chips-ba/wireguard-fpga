@@ -1,0 +1,68 @@
+addrmap csr {
+   default accesswidth = 32;
+   default regwidth = 32;
+   regfile ip_lookup_engine {
+       regfile table {   
+
+          reg ip_address {
+             regwidth = 64;
+             buffer_writes = true;
+             field {
+                sw = rw;
+                hw = r;
+             } address[32];
+             field {
+                sw = rw;
+                hw = r;
+             } mask[32];
+          } allowed_ip[2];
+
+          reg public_key {
+             regwidth = 32;
+             buffer_writes = true;
+             field {
+                sw = rw;
+                hw = r;
+             } key[32];
+          } public_key;
+
+          reg endpoint {
+             regwidth = 64;
+             buffer_writes = true;
+             field {
+                sw = rw;
+                hw = rw;
+                we;
+             } address[32];
+             field {
+                sw = rw;
+                hw = rw;
+                we;
+             } port[16];
+             field {
+                sw = rw;
+                hw = rw;
+                we;
+             } interface[3];
+          } endpoint;
+       } table[16];
+
+       reg control {
+          regwidth = 32;
+          field {
+             sw = rw;
+             hw = r;
+             singlepulse = true;
+          } update = 0;
+       } control;
+
+       table.allowed_ip->wbuffer_trigger = control;
+       table.public_key->wbuffer_trigger = control;
+       table.endpoint->wbuffer_trigger = control;
+
+   } ip_lookup_engine;
+};
+
+addrmap wireguard {
+    csr csr0 @ 0x2000_0000;
+};
