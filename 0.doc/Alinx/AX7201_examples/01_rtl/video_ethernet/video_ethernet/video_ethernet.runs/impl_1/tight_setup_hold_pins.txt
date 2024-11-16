@@ -1,0 +1,21 @@
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|       Launch Clock       |      Capture Clock       |                                                 Pin                                                      |
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[4]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[2]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[3]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[1]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[5]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[0]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[6]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                   camera_delay_inst/cmos_data_d0_reg[7]/D|
+|                sys_clk_p |               cmos1_pclk |                                                                  camera_delay_inst/cmos_href_buf_reg[0]/D|
+|                sys_clk_p |                e3_rx_clk |                                                                              mac_test3/cmos_href_d0_reg/D|
+|                sys_clk_p |                e2_rx_clk |                                                                              mac_test2/cmos_href_d0_reg/D|
+|                sys_clk_p |                e3_rx_clk |                                                                             mac_test3/cmos_vsync_d0_reg/D|
+|                sys_clk_p |                e1_rx_clk |                                                                             mac_test1/cmos_vsync_d0_reg/D|
+|                sys_clk_p |                e4_rx_clk |                                                                             mac_test4/cmos_vsync_d0_reg/D|
+|                sys_clk_p |                e4_rx_clk |                                                                              mac_test4/cmos_href_d0_reg/D|
+|                sys_clk_p |                e1_rx_clk |                                                                              mac_test1/cmos_href_d0_reg/D|
+|                sys_clk_p |                e2_rx_clk |                                                                             mac_test2/cmos_vsync_d0_reg/D|
++--------------------------+--------------------------+----------------------------------------------------------------------------------------------------------+
