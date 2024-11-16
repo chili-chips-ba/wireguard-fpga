@@ -46,6 +46,7 @@ extern "C" {
 #include "mem_vproc_api.h"
 #include "rv32.h"
 #include "rv32_cpu_gdb.h"
+#include "rv32_timing_config.h"
 #include "uart.h"
 
 // I'm node 0
@@ -530,6 +531,22 @@ extern "C" void VUserMain0()
     {
         // Create and configure the top level rv32 ISS cpu object
         pCpu = new rv32(cfg.dbg_fp);
+        
+        // Configure the ISS timing model
+        rv32_timing_config rv32_time_cfg;
+        
+        // Update the ISS with the selected core's timing. Choose one of:
+        //    rv32_timing_config::risc_v_core_e::DEFAULT,
+        //    rv32_timing_config::risc_v_core_e::PICORV32
+        //    rv32_timing_config::risc_v_core_e::EDUBOS5STG2
+        //    rv32_timing_config::risc_v_core_e::EDUBOS5STG3
+        //    rv32_timing_config::risc_v_core_e::IBEXMULSGL
+        //    rv32_timing_config::risc_v_core_e::IBEXMULFAST
+        //    rv32_timing_config::risc_v_core_e::IBEXMULSLOW
+        //
+        // See rv32_timing_config.h for supported timing models
+        //
+        rv32_time_cfg.update_timing(pCpu, rv32_timing_config::risc_v_core_e::PICORV32);
 
         // Register the ISS external memory callback function
         pCpu->register_ext_mem_callback(ext_mem_access);
