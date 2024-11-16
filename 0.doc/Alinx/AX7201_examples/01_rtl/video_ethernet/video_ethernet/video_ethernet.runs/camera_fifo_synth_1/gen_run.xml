@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="camera_fifo_synth_1" LaunchPart="xc7a200tfbg484-2" LaunchTime="1677215603">
+  <File Type="VDS-TIMINGSUMMARY" Name="camera_fifo_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="camera_fifo.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="camera_fifo_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="camera_fifo_utilization_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="camera_fifo_timing_summary_synth.pb"/>
+  <File Type="PA-TCL" Name="camera_fifo.tcl"/>
+  <File Type="REPORTS-TCL" Name="camera_fifo_reports.tcl"/>
+  <File Type="RDS-RDS" Name="camera_fifo.vds"/>
+  <File Type="RDS-PROPCONSTRS" Name="camera_fifo_drc_synth.rpt"/>
+  <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/camera_fifo">
+    <File Path="$PSRCDIR/sources_1/new/ip/camera_fifo/camera_fifo.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="camera_fifo"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/camera_fifo">
+    <File Path="$PSRCDIR/sources_1/new/ip/camera_fifo/camera_fifo.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="camera_fifo"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
+    <Filter Type="Utils"/>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2019">
+      <Desc>Vivado Synthesis Defaults</Desc>
+    </StratHandle>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>
