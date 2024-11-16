@@ -44,15 +44,15 @@ extern "C" {
 #define ENDIAN                                   LITTLE_ENDIAN
 #endif
 
-extern int      node;
+extern const int node;
 
-extern void     write_word  (uint32_t byte_addr, uint32_t data, bool access_sim = false);
-extern void     write_hword (uint32_t byte_addr, uint32_t data, bool access_sim = false);
-extern void     write_byte  (uint32_t byte_addr, uint32_t data, bool access_sim = false);
-extern uint32_t read_word   (uint32_t byte_addr, bool access_sim = false);
-extern uint32_t read_instr  (uint32_t byte_addr, bool access_sim = false);
-extern uint32_t read_hword  (uint32_t byte_addr, bool access_sim = false);
-extern uint32_t read_byte   (uint32_t byte_addr, bool access_sim = false);
+extern void      write_word  (uint32_t byte_addr, uint32_t data, bool access_sim = false);
+extern void      write_hword (uint32_t byte_addr, uint32_t data, bool access_sim = false);
+extern void      write_byte  (uint32_t byte_addr, uint32_t data, bool access_sim = false);
+extern uint32_t  read_word   (uint32_t byte_addr, bool access_sim = false);
+extern uint32_t  read_instr  (uint32_t byte_addr, bool access_sim = false);
+extern uint32_t  read_hword  (uint32_t byte_addr, bool access_sim = false);
+extern uint32_t  read_byte   (uint32_t byte_addr, bool access_sim = false);
 
 #endif
 
