@@ -482,13 +482,20 @@ Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
    -g Enable remote gdb mode (default disabled)
    -p Specify remote GDB port number (default 49152)
    -S Specify start address (default 0)
+   -I Enable instruction cache timing model (default disabled)
+   -l Specify number of bytes in icache line (default 8)
+   -w Specify number of ways in icache (default 2)
+   -s Specify number of sets in icache (default 256)
+   -j Specify cached IMEM base address (default 0x00000000)
+   -J Specify cached IMEM top address (default 0x7fffffff)
+   -P Specify penalty, in cycles, of one slow mem access (default 4)
    -x Specify base address of external access region (default 0xFFFFFFFF)
    -X Specify top address of external access region (default 0xFFFFFFFF)
    -h display this help message
 ```
 With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on and registers dumped on exit. More details of all these features can be found in the <tt>rv32</tt> [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf).
 
-Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>.
+Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>. The cache model can be enabled with the <tt>-I</tt> option and the cache configured. The <tt>-l</tt> option specifies the number of bytes in a cache line, which can be 4, 8 or 16. The number of ways is set with <tt>-w</tt> and can be either 1 or 2, and the number of sets is specified with the <tt>-s</tt> options and can be 128, 256, 512 or 1024.
 
 #### Building and Running Code (**Work in Progress**)
 
@@ -527,7 +534,7 @@ Control of when the simulation exits can be specified with the <tt>TIMEOUTUS</tt
 
 ##### Configuring ISS timing model
 
-Configuration of the timing model is done from the supplied integration code in <tt>VUserMain0.cpp</tt>. The main <tt>VUserMain0</tt> function creates an <tt>rv32_timing_config</tt> object which has an <tt>update_timing</tt> method that takes a pointer to the iss object and an enumberated type to select the model to use for the particular core timings required. This second argument is selected from one of the following:
+Configuration of the timing model is done from the supplied integration code in <tt>VUserMain0.cpp</tt>. The main <tt>pre_run_setup()</tt> function, in <tt>VUserMain0.cpp</tt>, creates an <tt>rv32_timing_config</tt> object (<tt>rv32_time_cfg</tt>) which has an <tt>update_timing</tt> method that takes a pointer to the iss object and an enumerated type to select the model to use for the particular core timings required. This second argument is selected from one of the following:
 
 * <tt>rv32_timing_config::risc_v_core_e::DEFAULT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> : Default timing values
 * <tt>rv32_timing_config::risc_v_core_e::PICORV32&nbsp;&nbsp;&nbsp;&nbsp;</tt> : picoRV32 timings

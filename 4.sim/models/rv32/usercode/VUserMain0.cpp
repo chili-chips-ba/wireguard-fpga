@@ -16,305 +16,94 @@
 //
 //==========================================================================
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#if !defined _WIN32 && !defined _WIN64
-#include <unistd.h>
-#include <termios.h>
-#include <sys/time.h>
-
-#define STRDUP strdup
-#else
-# undef   UNICODE
-# define  WIN32_LEAN_AND_MEAN
-
-# include <windows.h>
-# include <winsock2.h>
-# include <ws2tcpip.h>
-
-#define STRDUP _strdup
-
-extern "C" {
-
-    extern int getopt(int nargc, char** nargv, const char* ostr);
-    extern char* optarg;
-}
-#endif
+#include <cstdio>
+#include <cstdlib>
+#include <cstdint>
 
 #include "VUserMain0.h"
-#include "mem_vproc_api.h"
-#include "rv32.h"
-#include "rv32_cpu_gdb.h"
-#include "rv32_timing_config.h"
-#include "uart.h"
+#include "vuserutils.h"
 
-// I'm node 0
-int node = 0;
+// ---------------------------------------------
+// CONSTANTS
+// ---------------------------------------------
 
-static uint32_t  extirq               = 0;
-static uint32_t  swirq                = 0;
+// I'm VProc node 0
+const  int             node            = 0;
 
-static const int strbufsize = 256;
-static char      argstr[strbufsize];
-static rv32*     pCpu;
+const  uint32_t        uart0_base_addr = 0x80000000;
+const  uint32_t        sw_irq_addr     = 0xafffffff;
+const  uint32_t        max_sync_diff   = 1000;
 
-static uint32_t  ext_access_base_addr = EXT_ACCESS_BASE;
-static uint32_t  ext_access_top_addr  = EXT_ACCESS_TOP;
+// ---------------------------------------------
+// LOCAL STATICS
+// ---------------------------------------------
 
-static double    tv_diff_usec;
+static uint32_t        extirq          = 0;
+static uint32_t        swirq           = 0;
 
-static uint32_t  uart0_base_addr = 0x80000000;
-static uint32_t  sw_irq_addr     = 0xafffffff;
+static rv32*           pCpu;
 
-static uint32_t  max_sync_diff   = 1000;
+static vusermain_cfg_t vcfg;
+static rv32_cache*     icache          = NULL;
+
+static double          tv_diff_usec;
 
 #if (!(defined _WIN32) && !(defined _WIN64))
-static struct timeval tv_start, tv_stop;
+static struct          timeval tv_start, tv_stop;
 #else
-LARGE_INTEGER freq, start, stop;
+LARGE_INTEGER          freq, start, stop;
 #endif
 
 // ---------------------------------------------
-// Parse configuration file arguments
+// Forward declarations
 // ---------------------------------------------
 
-int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, const int node)
-{
-    int    error = 0;
-    int    c;
-    int    argc = 0;
-    char*  argvBuf[MAXARGS];
-    char** argv = NULL;
+int      ext_mem_access     (const uint32_t addr, uint32_t& data, const int type, const rv32i_time_t time);
+int      vproc_irq_callback (int val);
+uint32_t iss_int_callback   (const rv32i_time_t time, rv32i_time_t *wakeup_time);
 
-    char   delim[2];
-    char   vusermainname[16];
-    FILE*  fp;
-
-    int returnVal  = 0;
-
-    if (argcIn > 1)
-    {
-        argc = argcIn;
-        argv = argvIn;
-    }
-    else
-    {
-        fp = fopen(CFGFILENAME, "r");
-        if (fp == NULL)
-        {
-            printf("parseArgs: failed to open file %s\n", CFGFILENAME);
-            returnVal = 1;
-        }
-
-        strcpy(delim, " ");
-        sprintf(vusermainname, "vusermain%c", '0' + node);
-
-        while (fgets(argstr, strbufsize, fp) != NULL)
-        {
-            char* name = strtok(argstr, delim);
-
-            if (strcmp(name, vusermainname) == 0)
-            {
-                argvBuf[argc++] = name;
-                break;
-            }
-        }
-
-        fclose(fp);
-
-        while((argvBuf[argc] = strtok(NULL, " ")) != NULL && argc < MAXARGS)
-        {
-            unsigned lastchar = argvBuf[argc][strlen(argvBuf[argc])-1];
-
-            // If last character is CR or LF, delete it
-            if (lastchar == '\r' || lastchar == '\n')
-            {
-                argvBuf[argc][strlen(argvBuf[argc])-1] = 0;
-            }
-
-            argc++;
-        }
-
-        argv = argvBuf;
-    }
-
-    // Parse the command line arguments and/or configuration file
-    // Process the command line options *only* for the INI filename, as we
-    // want the command line options to override the INI options
-    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:Rc")) != EOF)
-    {
-        switch (c)
-        {
-        case 't':
-            cfg.exec_fname = optarg;
-            cfg.user_fname = true;
-            break;
-        case 'n':
-            cfg.num_instr = atoi(optarg);
-            break;
-        case 'b':
-            cfg.en_brk_on_addr = true;
-            break;
-        case 'A':
-            cfg.brk_addr = strtol(optarg, NULL, 0);
-            break;
-        case 'r':
-            cfg.rt_dis = true;
-            break;
-        case 'd':
-            cfg.dis_en = true;
-            break;
-        case 'H':
-            cfg.hlt_on_inst_err = true;
-            break;
-        case 'T':
-            cfg.use_external_timer = true;
-            break;
-        case 'e':
-            cfg.hlt_on_ecall = true;
-            break;
-        case 'E':
-            cfg.hlt_on_ebreak = true;
-            break;
-        case 'D':
-            if ((cfg.dbg_fp = fopen(optarg, "wb")) == NULL)
-            {
-                fprintf(stderr, "**ERROR: unable to open specified debug file (%s) for writing.\n", optarg);
-                error = 1;
-            }
-            break;
-        case 'g':
-            cfg.gdb_mode = true;
-            break;
-        case 'p':
-            cfg.gdb_ip_portnum = strtol(optarg, NULL, 0);
-            break;
-        case 'S':
-            cfg.update_rst_vec = true;
-            cfg.new_rst_vec    = strtol(optarg, NULL, 0);
-            break;
-        case 'C':
-            cfg.use_cycles_for_mtime = true;
-            break;
-        case 'a':
-            cfg.abi_en = true;
-            break;
-        case 'x':
-            ext_access_base_addr = strtol(optarg, NULL, 0);
-            break;
-        case 'X':
-            ext_access_top_addr  = strtol(optarg, NULL, 0);
-            break;
-        case 'R':
-            cfg.dump_regs        = true;
-            break;
-        case 'c':
-            cfg.dump_csrs        = true;
-            break;
-        case 'h':
-        default:
-            fprintf(stderr, "Usage: %s -t <test executable> [-hHebdrgxXRc][-n <num instructions>]\n      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]\n", argv[0]);
-            fprintf(stderr, "      [-x <base addr>][-X <top addr>]\n");
-            fprintf(stderr, "   -t specify test executable (default test.exe)\n");
-            fprintf(stderr, "   -n specify number of instructions to run (default 0, i.e. run until unimp)\n");
-            fprintf(stderr, "   -d Enable disassemble mode (default off)\n");
-            fprintf(stderr, "   -r Enable run-time disassemble mode (default off. Overridden by -d)\n");
-            fprintf(stderr, "   -C Use cycle count for internal mtime timer (default real-time)\n");
-            fprintf(stderr, "   -a display ABI register names when disassembling (default x names)\n");
-            fprintf(stderr, "   -T Use external memory mapped timer model (default internal)\n");
-            fprintf(stderr, "   -H Halt on unimplemented instructions (default trap)\n");
-            fprintf(stderr, "   -e Halt on ecall instruction (default trap)\n");
-            fprintf(stderr, "   -E Halt on ebreak instruction (default trap)\n");
-            fprintf(stderr, "   -b Halt at a specific address (default off)\n");
-            fprintf(stderr, "   -A Specify halt address if -b active (default 0x00000040)\n");
-            fprintf(stderr, "   -D Specify file for debug output (default stdout)\n");
-            fprintf(stderr, "   -R Dump x0 to x31 on exit (default no dump)\n");
-            fprintf(stderr, "   -c Dump CSR registers on exit (default no dump)\n");
-            fprintf(stderr, "   -g Enable remote gdb mode (default disabled)\n");
-            fprintf(stderr, "   -p Specify remote GDB port number (default 49152)\n");
-            fprintf(stderr, "   -S Specify start address (default 0)\n");
-            fprintf(stderr, "   -x Specify base address of external access region (default 0x%08x)\n", EXT_ACCESS_BASE);
-            fprintf(stderr, "   -X Specify top address of external access region (default 0x%08x)\n", EXT_ACCESS_TOP);
-            fprintf(stderr, "   -h display this help message\n");
-            error = 1;
-            break;
-        }
-    }
-
-    return error;
-}
-
-// ---------------------------------------------
-// Dump registers
-// ---------------------------------------------
-
-void reg_dump(rv32* pCpu, FILE* dfp, bool abi_en)
-{
-    fprintf(dfp, "\nRegister state:\n\n  ");
-
-    // Loop through all the registers
-    for (int idx = 0; idx < rv32i_consts::RV32I_NUM_OF_REGISTERS; idx++)
-    {
-        // Get the appropriate mapped register name (ABI or x)
-        const char* map_str = abi_en ? pCpu->rmap_str[idx] : pCpu->xmap_str[idx];
-
-        // Get the length of the register name string
-        size_t  slen = strlen(map_str);
-
-        // Fetch the value of the register indexed
-        uint32_t rval = pCpu->regi_val(idx);
-
-        // Print out the register name (right justified) followed by the value
-        fprintf(dfp, "%s%s = 0x%08x ", (slen == 2) ? "  " : (slen == 3) ? " ": "",
-                                         map_str,
-                                         rval);
-
-        // After every fourth value, output a new line
-        if ((idx % 4) == 3)
-        {
-            fprintf(dfp, "\n  ");
-        }
-    }
-
-    // Add a final new line
-    fprintf(dfp, "\n");
-}
-
-// ---------------------------------------------
-// Dump CSRs
-// ---------------------------------------------
-
-void csr_dump(rv32* pCpu, FILE* dfp)
-{
-    fprintf(dfp, "CSR state:\n\n");
-    fprintf(dfp, "  mstatus    = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MSTATUS));
-    fprintf(dfp, "  mie        = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MIE));
-    fprintf(dfp, "  mvtec      = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MTVEC));
-    fprintf(dfp, "  mscratch   = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MSCRATCH));
-    fprintf(dfp, "  mepc       = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MEPC));
-    fprintf(dfp, "  mcause     = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MCAUSE));
-    fprintf(dfp, "  mtval      = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MTVAL));
-    fprintf(dfp, "  mip        = 0x%08x\n",     pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MIP));
-    fprintf(dfp, "  mcycle     = 0x%08x%08x\n", pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MCYCLEH),   pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MCYCLE));
-    fprintf(dfp, "  minstret   = 0x%08x%08x\n", pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MINSTRETH), pCpu->csr_val(rv32csr_consts::RV32CSR_ADDR_MINSTRET));
-
-    bool fault;
-    uint32_t mtimel = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_ADDRESS,   rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
-    uint32_t mtimeh = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_ADDRESS+4, rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
-    fprintf(dfp, "  mtime      = 0x%08x%08x\n", mtimeh, mtimel);
-
-    mtimel = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_CMP_ADDRESS,   rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
-    mtimeh = pCpu->read_mem(rv32i_consts::RV32I_RTCLOCK_CMP_ADDRESS+4, rv32i_consts::RV32I_MEM_RD_ACCESS_WORD, fault);
-    fprintf(dfp, "  mtimecmp   = 0x%08x%08x\n", mtimeh, mtimel);
-
-}
 // ---------------------------------------------
 // Set up actions prior to running CPU
 // ---------------------------------------------
 
-static void pre_run_setup()
+static void pre_run_setup(rv32* pCpu)
 {
+
+    // Register the ISS external memory callback function
+    pCpu->register_ext_mem_callback(ext_mem_access);
+
+    // Register ISS interrupt callback
+    pCpu->register_int_callback(iss_int_callback);
+
+    // Register the VProc IRQ callback, used to update irq status from HDL
+    VRegIrq(vproc_irq_callback, node);
+
+    // Configure the ISS timing model
+    rv32_timing_config rv32_time_cfg;
+
+    // Set up ICACHE if enabled
+    if (vcfg.enable_icache)
+    {
+        icache = new rv32_cache(vcfg.icache_line_bytes,
+                                vcfg.icache_ways,
+                                vcfg.icache_sets,
+                                vcfg.icache_base_addr,
+                                vcfg.icache_top_addr);
+    }
+
+    // Update the ISS with the selected core's timing. Choose one of:
+    //    rv32_timing_config::risc_v_core_e::DEFAULT,
+    //    rv32_timing_config::risc_v_core_e::PICORV32
+    //    rv32_timing_config::risc_v_core_e::EDUBOS5STG2
+    //    rv32_timing_config::risc_v_core_e::EDUBOS5STG3
+    //    rv32_timing_config::risc_v_core_e::IBEXMULSGL
+    //    rv32_timing_config::risc_v_core_e::IBEXMULFAST
+    //    rv32_timing_config::risc_v_core_e::IBEXMULSLOW
+    //
+    // See rv32_timing_config.h for supported timing models
+    //
+    rv32_time_cfg.update_timing(pCpu, rv32_timing_config::risc_v_core_e::PICORV32);
+
     // Initialise time
 #if (!(defined _WIN32) && !(defined _WIN64)) || defined __CYGWIN__
     // For non-windows systems, turn off echoing of input key presses
@@ -337,6 +126,7 @@ static void pre_run_setup()
 // Actions to run after CPU returns from
 // executing
 // ---------------------------------------------
+
 static void post_run_actions(rv32i_cfg_s cfg)
 {
     // Calculate time difference, in microseconds, from now
@@ -375,11 +165,10 @@ static void post_run_actions(rv32i_cfg_s cfg)
 }
 
 // ---------------------------------------------
-// External memory map access
-// callback function
+// External memory map access callback function
 // ---------------------------------------------
 
-int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv32i_time_t time)
+int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const rv32i_time_t time)
 {
     const int       write_wait_cycle      = 0;
     const int       read_data_wait_cycle  = 1;
@@ -391,7 +180,7 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
     static uint64_t last_cycles           = 0;
 
     // Select whether making simulation or direct memory model access
-    access_sim  = addr >= ext_access_base_addr && addr < ext_access_top_addr;
+    access_sim  = addr >= vcfg.ext_access_base_addr && addr < vcfg.ext_access_top_addr;
 
     // -------------------------------------------
     // Synchronise ISS time and simulation time
@@ -424,7 +213,7 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
     // Accessing the software interrupt
     if (addr == sw_irq_addr)
     {
-        swirq   = (data & 0x1) << 2;
+        swirq     = (data & 0x1) << 2;
         processed = write_wait_cycle;
     }
     else if ((processed = uart_reg_access(addr, data, type, uart0_base_addr)) == RV32I_EXT_MEM_NOT_PROCESSED)
@@ -433,19 +222,31 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
         switch (type & MEM_NOT_DBG_MASK)
         {
         case MEM_RD_ACCESS_BYTE:
-            data = read_byte(addr, access_sim);
+            data      = read_byte(addr, access_sim);
             processed = read_data_wait_cycle;
             break;
         case MEM_RD_ACCESS_HWORD:
-            data = read_hword(addr, access_sim);
+            data      = read_hword(addr, access_sim);
             processed = read_data_wait_cycle;
             break;
         case MEM_RD_ACCESS_INSTR:
-            data = read_instr(addr, access_sim);
+            data      = read_instr(addr, access_sim);
             processed = read_instr_wait_cycle;
+
+            // Process caching if enabled
+            if (vcfg.enable_icache)
+            {
+                // Add wait states for icache miss
+                if (icache->rv32_cache_access(addr) == RV32_CACHE_MISS)
+                {
+                    // Additional wait states is the access time to slow memory times the number
+                    // of words fetched to fill the line.
+                    processed += vcfg.penalty_slow_mem * icache->get_line_width()/4;
+                }
+            }
             break;
         case MEM_RD_ACCESS_WORD:
-            data = read_word(addr, access_sim);
+            data      = read_word(addr, access_sim);
             processed = read_data_wait_cycle;
             break;
         case MEM_WR_ACCESS_BYTE:
@@ -475,7 +276,7 @@ int ext_mem_access(const uint32_t addr, uint32_t& data, const int type, const rv
 }
 
 // ---------------------------------------------
-// Interrupt callback functions
+// VProc interrupt callback function
 // ---------------------------------------------
 
 // Note: the VProc CB function can only be active when the main thread
@@ -489,6 +290,10 @@ int vproc_irq_callback(int val)
 
     return 0;
 }
+
+// ---------------------------------------------
+// ISS interrupt callback function
+// ---------------------------------------------
 
 // The ISS interrupt callback will return an interrupt when IRQs
 // non-zero, else it returns 0. The wakeup time in this model is always the next
@@ -504,58 +309,36 @@ uint32_t iss_int_callback(const rv32i_time_t time, rv32i_time_t *wakeup_time)
     return extirq | swirq | (uart_irq ? 1 : 0);
 }
 
-// ---------------------------------------------
-// Main entry point for node 0 VPRoc
-// ---------------------------------------------
+// =============================================
+// Main entry point for VProc node 0
+// =============================================
 
 extern "C" void VUserMain0()
 {
     rv32i_cfg_s   cfg;
 
-    VPrint("\n  *****************************\n");
-    VPrint(  "  *   Wyvern Semiconductors   *\n");
-    VPrint(  "  *  rv32_cpu ISS (on VProc)  *\n");
-    VPrint(  "  *     Copyright (c) 2024    *\n");
-    VPrint(  "  *****************************\n\n");
+    VPrint("\n  ******************************\n");
+    VPrint(  "  *   Wyvern Semiconductors    *\n");
+    VPrint(  "  * rv32 RISC-V ISS (on VProc) *\n");
+    VPrint(  "  *     Copyright (c) 2024     *\n");
+    VPrint(  "  ******************************\n\n");
 
     VTick(20, node);
 
     // Parse arguments. As no argc and argv, pass in these as null, and it will look for
     // vusermain.cfg, which should have a single line with the command line options. If this
     // doesn't exist, no parsing is done.
-    if (parseArgs(0, NULL, cfg, node))
+    if (parseArgs(0, NULL, cfg, vcfg, node))
     {
         VPrint("Error in parsing args\n");
     }
     else
     {
-        // Create and configure the top level rv32 ISS cpu object
+        // Create the top level rv32 ISS cpu object
         pCpu = new rv32(cfg.dbg_fp);
-        
-        // Configure the ISS timing model
-        rv32_timing_config rv32_time_cfg;
-        
-        // Update the ISS with the selected core's timing. Choose one of:
-        //    rv32_timing_config::risc_v_core_e::DEFAULT,
-        //    rv32_timing_config::risc_v_core_e::PICORV32
-        //    rv32_timing_config::risc_v_core_e::EDUBOS5STG2
-        //    rv32_timing_config::risc_v_core_e::EDUBOS5STG3
-        //    rv32_timing_config::risc_v_core_e::IBEXMULSGL
-        //    rv32_timing_config::risc_v_core_e::IBEXMULFAST
-        //    rv32_timing_config::risc_v_core_e::IBEXMULSLOW
-        //
-        // See rv32_timing_config.h for supported timing models
-        //
-        rv32_time_cfg.update_timing(pCpu, rv32_timing_config::risc_v_core_e::PICORV32);
 
-        // Register the ISS external memory callback function
-        pCpu->register_ext_mem_callback(ext_mem_access);
-
-        // Register ISS interrupt callback
-        pCpu->register_int_callback(iss_int_callback);
-
-        // Register the VProc IRQ callback, used to update irq status from HDL
-        VRegIrq(vproc_irq_callback, node);
+        // Configure the ISS and other setups before running
+        pre_run_setup(pCpu);
 
         // If GDB mode selected, pass execution to the remote GDB interface
         if (cfg.gdb_mode)
@@ -567,7 +350,7 @@ extern "C" void VUserMain0()
             {
                 if (pCpu->read_elf(cfg.exec_fname))
                 {
-                    error = 1;
+                    error++;
                 }
             }
 
@@ -577,6 +360,7 @@ extern "C" void VUserMain0()
                 if (rv32gdb_process_gdb(pCpu, cfg.gdb_ip_portnum, cfg))
                 {
                     fprintf(stderr, "***ERROR in opening PTY\n");
+                    error++;
                 }
             }
         }
@@ -586,16 +370,15 @@ extern "C" void VUserMain0()
             // Load the specified executable to memory
             if (!pCpu->read_elf(cfg.exec_fname))
             {
-                pre_run_setup();
-
                 // Run the processor
                 pCpu->run(cfg);
-
-                post_run_actions(cfg);
 
                 VPrint("Exited running %s\n", cfg.exec_fname);
             }
         }
+
+        // Run any actions after ISS exits
+        post_run_actions(cfg);
 
         // Clean up
         if (cfg.dbg_fp != stdout)
