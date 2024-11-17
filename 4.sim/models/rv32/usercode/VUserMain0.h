@@ -87,6 +87,8 @@ typedef struct vusermain_cfg_s {
     unsigned    icache_top_addr;
     
     unsigned    penalty_slow_mem;
+    
+    rv32_timing_config::risc_v_core_e riscv_core;
 
     vusermain_cfg_s()
     {
@@ -101,6 +103,8 @@ typedef struct vusermain_cfg_s {
         icache_top_addr      = RV32_CACHE_DEFAULT_ILIMIT;
         
         penalty_slow_mem     = RV32_SLOW_MEM_PENALTY;
+        
+        riscv_core           = rv32_timing_config::risc_v_core_e::DEFAULT;
     }
 
 } vusermain_cfg_t;

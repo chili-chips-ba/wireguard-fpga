@@ -491,11 +491,22 @@ Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
    -P Specify penalty, in cycles, of one slow mem access (default 4)
    -x Specify base address of external access region (default 0xFFFFFFFF)
    -X Specify top address of external access region (default 0xFFFFFFFF)
+   -V Specify RISC-V core timing model to use (default "DEFAULT")
    -h display this help message
 ```
 With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on and registers dumped on exit. More details of all these features can be found in the <tt>rv32</tt> [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf).
 
-Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>. The cache model can be enabled with the <tt>-I</tt> option and the cache configured. The <tt>-l</tt> option specifies the number of bytes in a cache line, which can be 4, 8 or 16. The number of ways is set with <tt>-w</tt> and can be either 1 or 2, and the number of sets is specified with the <tt>-s</tt> options and can be 128, 256, 512 or 1024.
+Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>. The cache model can be enabled with the <tt>-I</tt> option and the cache configured. The <tt>-l</tt> option specifies the number of bytes in a cache line, which can be 4, 8 or 16. The number of ways is set with <tt>-w</tt> and can be either 1 or 2, and the number of sets is specified with the <tt>-s</tt> options and can be 128, 256, 512 or 1024. A set of pre-configured timing models can be specified with the <tt>-V</tt> option. The argument must be one of the following:
+
+* DEFAULT
+* PICORV32
+* EDUBOS5STG2
+* EDUBOS5STG3
+* IBEXMULSGL
+* IBEXMULFAST
+* IBEXMULSLOW
+
+This reflects the available models as detailed in the _Configuring ISS timing model_ section below.
 
 #### Building and Running Code (**Work in Progress**)
 
@@ -534,7 +545,7 @@ Control of when the simulation exits can be specified with the <tt>TIMEOUTUS</tt
 
 ##### Configuring ISS timing model
 
-Configuration of the timing model is done from the supplied integration code in <tt>VUserMain0.cpp</tt>. The main <tt>pre_run_setup()</tt> function, in <tt>VUserMain0.cpp</tt>, creates an <tt>rv32_timing_config</tt> object (<tt>rv32_time_cfg</tt>) which has an <tt>update_timing</tt> method that takes a pointer to the iss object and an enumerated type to select the model to use for the particular core timings required. This second argument is selected from one of the following:
+Configuration of the timing model can done from the supplied integration code in <tt>VUserMain0.cpp</tt>. The main <tt>pre_run_setup()</tt> function, in <tt>VUserMain0.cpp</tt>, creates an <tt>rv32_timing_config</tt> object (<tt>rv32_time_cfg</tt>) which has an <tt>update_timing</tt> method that takes a pointer to the iss object and an enumerated type to select the model to use for the particular core timings required. This second argument is selected from one of the following:
 
 * <tt>rv32_timing_config::risc_v_core_e::DEFAULT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> : Default timing values
 * <tt>rv32_timing_config::risc_v_core_e::PICORV32&nbsp;&nbsp;&nbsp;&nbsp;</tt> : picoRV32 timings
@@ -543,6 +554,8 @@ Configuration of the timing model is done from the supplied integration code in 
 * <tt>rv32_timing_config::risc_v_core_e::IBEXMULSGL&nbsp;&nbsp;</tt> : IBEX single cycle multipler
 * <tt>rv32_timing_config::risc_v_core_e::IBEXMULFAST&nbsp;</tt> : IBEX fast multi-cycle multiplier
 * <tt>rv32_timing_config::risc_v_core_e::IBEXMULSLOW&nbsp;</tt> : IBEX slow multi-cycle multiplier
+
+As detailed in the _RISC-V Compiled Application_ section above, the ISS can be configured via the <tt>vusermain.cfg</tt> file using the <tt>-V</tt> option.
 
 ##### Running ISS code
 
@@ -569,11 +582,11 @@ VInit(0): initialising DPI-C interface
   VProc version 1.11.4. Copyright (c) 2004-2024 Simon Southwell.
                    0 TOP.tb.error_mon (0) - ERROR_CLEARED
 
-  *****************************
-  *   Wyvern Semiconductors   *
-  *  rv32_cpu ISS (on VProc)  *
-  *     Copyright (c) 2024    *
-  *****************************
+  ******************************
+  *   Wyvern Semiconductors    *
+  * rv32 RISC-V ISS (on VProc) *
+  *     Copyright (c) 2024     *
+  ******************************
 
 00000000: 0x00001197    auipc     gp, 0x00000001
 00000004: 0x0101a183    lw        gp, 16(gp)

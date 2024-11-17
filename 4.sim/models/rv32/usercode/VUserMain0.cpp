@@ -102,7 +102,7 @@ static void pre_run_setup(rv32* pCpu)
     //
     // See rv32_timing_config.h for supported timing models
     //
-    rv32_time_cfg.update_timing(pCpu, rv32_timing_config::risc_v_core_e::PICORV32);
+    rv32_time_cfg.update_timing(pCpu, vcfg.riscv_core);
 
     // Initialise time
 #if (!(defined _WIN32) && !(defined _WIN64)) || defined __CYGWIN__
@@ -330,7 +330,7 @@ extern "C" void VUserMain0()
     // doesn't exist, no parsing is done.
     if (parseArgs(0, NULL, cfg, vcfg, node))
     {
-        VPrint("Error in parsing args\n");
+        VPrint("***Error in parsing args. ISS not run.\n");
     }
     else
     {

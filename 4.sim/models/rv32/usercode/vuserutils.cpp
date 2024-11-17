@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 
 #include "VUserMain0.h"
 #include "rv32.h"
@@ -48,6 +49,8 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
     char   delim[2];
     char   vusermainname[16];
     FILE*  fp;
+    
+    std::string core;
 
     int returnVal  = 0;
 
@@ -100,7 +103,7 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
     // Parse the command line arguments and/or configuration file
     // Process the command line options *only* for the INI filename, as we
     // want the command line options to override the INI options
-    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:RcIl:w:s:j:J:P:")) != EOF)
+    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:RcIl:w:s:j:J:P:V:")) != EOF)
     {
         switch (c)
         {
@@ -139,7 +142,7 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
             if ((cfg.dbg_fp = fopen(optarg, "wb")) == NULL)
             {
                 fprintf(stderr, "**ERROR: unable to open specified debug file (%s) for writing.\n", optarg);
-                error = 1;
+                error++;
             }
             break;
         case 'g':
@@ -191,12 +194,34 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
         case 'P':
             vcfg.penalty_slow_mem = strtol(optarg, NULL, 0);
             break;
+        case 'V':
+            core = optarg;
+            if (core == "DEFAULT")
+                vcfg.riscv_core = rv32_timing_config::risc_v_core_e::DEFAULT;
+            else if (core == "PICORV32")
+                vcfg.riscv_core = rv32_timing_config::risc_v_core_e::PICORV32;
+            else if (core == "EDUBOS5STG2")
+                vcfg.riscv_core = rv32_timing_config::risc_v_core_e::EDUBOS5STG2;
+            else if (core == "EDUBOS5STG3")
+                vcfg.riscv_core = rv32_timing_config::risc_v_core_e::EDUBOS5STG3;
+            else if (core == "IBEXMULSGL")
+                vcfg.riscv_core = rv32_timing_config::risc_v_core_e::IBEXMULSGL;
+            else if (core == "IBEXMULFAST")
+                vcfg.riscv_core = rv32_timing_config::risc_v_core_e::IBEXMULFAST;
+            else if (core == "IBEXMULSLOW")
+                vcfg.riscv_core = rv32_timing_config::risc_v_core_e::IBEXMULSLOW;
+            else
+            {
+                fprintf(stderr, "parseArgs(): ***ERROR: unrecognised RISC-V core specification\n");
+                error++;
+            }
+            break;
         case 'h':
         default:
             fprintf(stderr, "Usage: %s -t <test executable> [-hHebdrgxXRcI][-n <num instructions>]\n", argv[0]);
             fprintf(stderr, "      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]\n");
             fprintf(stderr, "      [-l <line bytes>][-w <ways>][-s <sets>][-j <imem base addr>][-J <imem top addr>]\n");
-            fprintf(stderr, "      [-P <cycles>][-x <base addr>][-X <top addr>]\n");
+            fprintf(stderr, "      [-P <cycles>][-x <base addr>][-X <top addr>][-V <core>]\n");
             fprintf(stderr, "   -t specify test executable (default test.exe)\n");
             fprintf(stderr, "   -n specify number of instructions to run (default 0, i.e. run until unimp)\n");
             fprintf(stderr, "   -d Enable disassemble mode (default off)\n");
@@ -224,8 +249,9 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
             fprintf(stderr, "   -P Specify penalty, in cycles, of one slow mem access (default %d)\n", RV32_SLOW_MEM_PENALTY);
             fprintf(stderr, "   -x Specify base address of external access region (default 0x%08x)\n", EXT_ACCESS_BASE);
             fprintf(stderr, "   -X Specify top address of external access region (default 0x%08x)\n", EXT_ACCESS_TOP);
+            fprintf(stderr, "   -V Specify RISC-V core timing model to use (default \"DEFAULT\")\n");
             fprintf(stderr, "   -h display this help message\n");
-            error = 1;
+            error++;
             break;
         }
     }
