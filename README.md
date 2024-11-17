@@ -461,9 +461,10 @@ vusermain0 [options]
 ```
 One of the options is <tt>-h</tt> for a help message, which is as shown below:
 ```
-Usage:vusermain0 -t <test executable> [-hHebdrg][-n <num instructions>]
+Usage:vusermain0 -t <test executable> [-hHebdrgxXRcI][-n <num instructions>]
       [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]
-      [-x <base addr>][-X <top addr>]
+      [-l <line bytes>][-w <ways>][-s <sets>][-j <imem base addr>][-J <imem top addr>]
+      [-P <cycles>][-x <base addr>][-X <top addr>][-V <core>]
    -t specify test executable (default test.exe)
    -n specify number of instructions to run (default 0, i.e. run until unimp)
    -d Enable disassemble mode (default off)
