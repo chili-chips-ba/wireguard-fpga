@@ -69,7 +69,7 @@ ifeq ("$(BUILD)", "ISS")
     RV32WINFILES = getopt.c
   endif
 
-  USER_C         = VUserMain0.cpp mem_vproc_api.cpp uart.cpp $(RV32WINFILES)
+  USER_C         = VUserMain0.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp $(RV32WINFILES)
   USRCODEDIR     = $(CURDIR)/models/rv32/usercode
 
   RV32DIR        = $(CURDIR)/models/rv32
