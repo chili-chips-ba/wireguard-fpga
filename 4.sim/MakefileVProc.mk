@@ -40,6 +40,7 @@ VPROC_REPO    = https://github.com/wyvernSemi/vproc.git
 VLIB          = $(CURDIR)/libvproc.a
 VPROCDIR      = $(CURDIR)/../../vproc
 VPROCMKFILE   = makefile.verilator
+VPROCVERSION  = VERSION_1_11_3
 
 # --------------------------------------------
 # Memory model variables
@@ -48,6 +49,7 @@ VPROCMKFILE   = makefile.verilator
 MEMMODEL_REPO = https://github.com/wyvernSemi/mem_model.git
 MEMMODELDIR   = $(CURDIR)/../../mem_model
 MEM_C         = mem.c mem_model.c
+MEMVERSION    = VERSION_1_0_0
 
 # --------------------------------------------
 # RV32 ISS variables
@@ -200,13 +202,13 @@ $(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST)
 # Check out VProc repo if not at expected location
 #
 $(VPROCDIR):
-	@git clone $(VPROC_REPO) $(VPROCDIR) --recursive
+	@git clone --depth 1 --branch $(VPROCVERSION) $(VPROC_REPO) $(VPROCDIR) --recursive
 
 #
 # Check out memory model repo if not at expected location
 #
 $(MEMMODELDIR):
-	@git clone $(MEMMODEL_REPO) $(MEMMODELDIR) --recursive
+	@git clone --depth 1 --branch $(MEMVERSION) $(MEMMODEL_REPO) $(MEMMODELDIR) --recursive
 
 xml2stems:
 	@verilator                                            \
