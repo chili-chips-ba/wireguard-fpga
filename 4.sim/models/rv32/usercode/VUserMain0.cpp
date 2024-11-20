@@ -78,9 +78,6 @@ static void pre_run_setup(rv32* pCpu)
     // Register the VProc IRQ callback, used to update irq status from HDL
     VRegIrq(vproc_irq_callback, node);
 
-    // Configure the ISS timing model
-    rv32_timing_config rv32_time_cfg;
-
     // Set up ICACHE if enabled
     if (vcfg.enable_icache)
     {
@@ -90,6 +87,9 @@ static void pre_run_setup(rv32* pCpu)
                                 vcfg.icache_base_addr,
                                 vcfg.icache_top_addr);
     }
+
+    // Configure the ISS timing model
+    rv32_timing_config rv32_time_cfg;
 
     // Update the ISS with the selected core's timing. Choose one of:
     //    rv32_timing_config::risc_v_core_e::DEFAULT,
@@ -356,7 +356,7 @@ extern "C" void VUserMain0()
 
             if (!error)
             {
-                // Start procssing commands from GDB
+                // Start processing commands from GDB
                 if (rv32gdb_process_gdb(pCpu, cfg.gdb_ip_portnum, cfg))
                 {
                     fprintf(stderr, "***ERROR in opening PTY\n");
