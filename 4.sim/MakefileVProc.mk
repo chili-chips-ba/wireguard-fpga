@@ -247,6 +247,7 @@ help:
 	@$(info make -f MakefileVProc.mk run           Build and run batch simulation)
 	@$(info make -f MakefileVProc.mk rungui/gui    Build and run GUI simulation)
 	@$(info make -f MakefileVProc.mk clean         clean previous build artefacts)
+	@$(info make -f MakefileVProc.mk deepclean     clean previous build artefacts and checked out repos)
 	@$(info )
 	@$(info Command line configurable variables:)
 	@$(info $(SPC) $(SPC) USER_C:       list of user source code files (default VUserMain0.cpp))
@@ -267,5 +268,17 @@ help:
 #======================================================
 
 clean:
-	@make --no-print-directory -C $(VPROCDIR)/test -f $(VPROCMKFILE) TESTDIR=$(CURDIR) clean
+	@if [ -e $(VPROCDIR) ]; then                                                               \
+          make --no-print-directory -C $(VPROCDIR)/test -f $(VPROCMKFILE) TESTDIR=$(CURDIR) clean; \
+        fi
 	@rm -rf $(WORKDIR) $(WAVEFILE) $(TOPFILELIST) obj_dir
+
+deepclean: clean
+	@if [ -e $(VPROCDIR) ]; then                         \
+          rm -rf $(VPROCDIR)_old;                            \
+          mv $(VPROCDIR) $(VPROCDIR)_old;                    \
+        fi
+	@if [ -e $(MEMMODELDIR) ]; then                      \
+          rm -rf $(MEMMODELDIR)_old;                         \
+          mv $(MEMMODELDIR) $(MEMMODELDIR)_old;              \
+        fi

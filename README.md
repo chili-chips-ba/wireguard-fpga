@@ -521,6 +521,7 @@ make -f MakefileVProc.mk               Build C/C++ and HDL code without running 
 make -f MakefileVProc.mk run           Build and run batch simulation
 make -f MakefileVProc.mk rungui/gui    Build and run GUI simulation
 make -f MakefileVProc.mk clean         clean previous build artefacts
+make -f MakefileVProc.mk deepclean     clean previous build artefacts and checked out repos
 
 Command line configurable variables:
   USER_C:       list of user source code files (default VUserMain0.cpp)
@@ -536,7 +537,7 @@ Command line configurable variables:
   TIMEOUTUS:    Test bench timeout period in microseconds (default 15000)
 ```
 
-By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files.
+By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files. A target of <tt>deepclean</tt> will also remove the _VProc_ and *mem_model* repositories (actually renaming them with and `_old` suffix). This is useful to get any new versions of these repositories that have beem specified for WireGuard.
 
 The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the makfiles compiles the supplied source code for the ISS. 
 
