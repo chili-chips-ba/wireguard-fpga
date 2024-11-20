@@ -661,7 +661,16 @@ The [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manua
 TODO
 
 ## Shared Linux Server with tools
-TODO
+**WIP**
+
+### Tool Versions
+#### Simulation
+* _Verilator_ **v5.024**
+* _VProc_ **v1.11.3**
+* _Mem Model_ **v1.0.0**
+* _rv32_ ISS **v1.1.3**
+
+Note: the test bench make file (`4.sim/MakefileVProc.mk`) will check out *VProc* and *mem_model* to the specified revisions when not already present. The *rv32* ISS has a pre-compiled library and associated headers already present in the `4.sim/models/rv32` directory at the specified version.
 
 ## Build process
 ### Hardware
