@@ -248,7 +248,7 @@ One way to achieve this is by using write-buffered registers (WBR). However, imp
 
 ![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control.webp)
 
-The operation of this mechanism works as follows:
+The atomic CSR update mechanism works as follows:
 1. When the CPU needs to update the routing table, it activates the PAUSE signal by writing to the FCR.P register.
 2. The active FCR.P signal instructs the input multiplexer to transition into the PAUSED state after completing the servicing of the current queue. The CPU periodically checks the ready bits in the FCR register.
 3. Once the first component finishes processing its packet and clears its datapath, it deactivates the TVALID signal and transitions to the IDLE state. The CPU continues to check the ready bits in the FCR register.
