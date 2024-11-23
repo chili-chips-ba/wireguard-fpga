@@ -1,0 +1,18 @@
+https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md
+
+---------RTL Lint
+https://github.com/verilator/verilator
+https://github.com/chipsalliance/verible
+https://github.com/MikePopoloski/slang
+https://github.com/AsFigo/yoYoLint
+https://github.com/AsFigo/pyslint
+https://github.com/dalance/svlint
+
+
+---------CDC Lint
+https://github.com/BerkeleyLab/Bedrock/blob/master/build-tools/cdc_snitch.md
+https://github.com/chili-chips-ba/openCologne/issues/26
+https://github.com/verilator/verilator/issues/5288
+https://github.com/MikePopoloski/slang/issues/1063
+
+---------
