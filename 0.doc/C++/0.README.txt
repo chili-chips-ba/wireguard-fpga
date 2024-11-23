@@ -1,0 +1,8 @@
+https://opentitan.org/book/doc/contributing/style_guides/c_cpp_coding_style.html
+
+----
+from Ibex devbook: C / C++ code should be formatted with clang-format before committing. Either run
+   `clang-format -i filename.cc`, or
+   `git clang-format` on added files
+
+----
