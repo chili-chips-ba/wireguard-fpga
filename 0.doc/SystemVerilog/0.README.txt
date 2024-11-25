@@ -15,4 +15,18 @@ https://github.com/chili-chips-ba/openCologne/issues/26
 https://github.com/verilator/verilator/issues/5288
 https://github.com/MikePopoloski/slang/issues/1063
 
+- - -
+https://www.slideshare.net/slideshow/clock-domain-crossing-all-parts-combined-pdf/272325530
+
+- - -
+https://www.linkedin.com/pulse/reliable-cdc-constraints-1-lukas-vik-copcf
+https://www.linkedin.com/pulse/reliable-cdc-constraints-2-counters-fifos-lukas-vik-ist5c
+https://www.linkedin.com/pulse/reliable-cdc-constraints-3-pulses-lukas-vik-31tif
+https://www.linkedin.com/pulse/reliable-cdc-constraints-4-build-tool-settings-lukas-vik-yknsc
+
+---------
+https://github.com/laforest/FPGADesignElements
+https://github.com/open-logic/open-logic
+
+
 ---------
