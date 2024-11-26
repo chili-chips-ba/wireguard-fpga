@@ -10,3 +10,8 @@ Using Quantum Key Distribution for Securing Real-Time Applications
 https://dspace.vsb.cz/bitstream/handle/10084/120150/MEH0005_FEI_P1807_2601V018_2017.pdf?sequence=1&isAllowed=y
 
 -------------
+CAM:
+https://github.com/alexforencich/verilog-cam/tree/master/rtl
+https://www.ece.lsu.edu/v/2015/cam.v.html
+
+-------------
