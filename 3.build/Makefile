@@ -94,10 +94,12 @@ $(SW_APP)/main.c
 	-nostdlib \
 	-static \
 	-Winline \
+	-Wno-implicit-int -Wno-implicit-function-declaration \
 	-g \
+	-save-temps \
 	-fverbose-asm \
 	-o $(SW_BLD)/main.elf \
-	-O0 \
+	-O2 \
 	\
 	$(SW_SRC)/boot_crt.S \
 	$(SW_APP)/soc.c \
@@ -105,7 +107,8 @@ $(SW_APP)/main.c
 	$(SW_APP)/uart.c \
 	$(SW_APP)/dac.c \
 	$(SW_APP)/adc.c \
-	$(SW_APP)/main.c
+	$(SW_APP)/dhry.h \
+	$(SW_APP)/dhry_1.c  $(SW_APP)/dhry_2.c -lgcc
 
 #---
 # Other options:

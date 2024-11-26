@@ -71,6 +71,7 @@ compile:
 		+define+SIM_ONLY \
 		+define+SDRAM_DEBUG \
 		+define+DAC_DEBUG \
+		+define+CPU_DEBUGFSM \
 		+define+UART_BFM_DEBUG \
 		+define+ADC_DEBUG+ADC_BFM_DEBUG \
 		$(ARE_TESTS) \

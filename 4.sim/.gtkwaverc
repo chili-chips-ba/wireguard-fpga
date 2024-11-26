@@ -1,21 +1,24 @@
 [*]
-[*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Sat Apr 20 07:43:13 2024
+[*] GTKWave Analyzer v3.3.117 (w)1999-2023 BSI
+[*] Tue Nov 26 21:00:23 2024
 [*]
-[dumpfile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/output/wave.fst"
-[dumpfile_mtime] "Sat Apr 20 06:25:58 2024"
-[dumpfile_size] 31441595
-[savefile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/.gtkwaverc"
-[timestart] 2
+[dumpfile] "/home/tibrahimovic/projects/wireguard-fpga/4.sim/output/wave.fst"
+[dumpfile_mtime] "Tue Nov 26 21:00:01 2024"
+[dumpfile_size] 10948102
+[savefile] "/home/tibrahimovic/projects/wireguard-fpga/4.sim/.gtkwaverc"
+[timestart] 0
 [size] 1380 793
-[pos] -1 -1
-*0.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] 33062 32871
+*-29.150150 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
 [treeopen] TOP.tb.dut.
-[sst_width] 214
+[treeopen] TOP.tb.dut.u_cpu.
+[sst_width] 349
 [signals_width] 319
 [sst_expanded] 1
-[sst_vpaned_height] 220
+[sst_vpaned_height] 330
+@22
+TOP.tb.dut.u_cpu.u_cpu.reg_pc[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
