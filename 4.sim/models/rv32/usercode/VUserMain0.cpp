@@ -344,6 +344,9 @@ extern "C" void VUserMain0()
         if (cfg.gdb_mode)
         {
             int error = 0;
+            
+            // Set to halt on ebreak when in gdb mode
+            cfg.hlt_on_ebreak = true;
 
             // Load an executable if specified on the command line
             if (cfg.user_fname)
