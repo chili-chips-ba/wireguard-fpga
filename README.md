@@ -687,7 +687,7 @@ TODO
 ### Tool Versions
 #### Simulation
 * _Verilator_ **v5.024**
-* _VProc_ **v1.11.3**
+* _VProc_ **v1.12.0**
 * _Mem Model_ **v1.0.0**
 * _rv32_ ISS **v1.1.4**
 
