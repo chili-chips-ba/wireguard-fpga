@@ -1,50 +1,61 @@
 [*]
-[*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Fri Mar  1 09:32:13 2024
+[*] GTKWave Analyzer v3.3.111 (w)1999-2020 BSI
+[*] Thu Dec 05 15:06:44 2024
 [*]
-[dumpfile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/output/wave.fst"
-[dumpfile_mtime] "Fri Mar  1 08:15:59 2024"
-[dumpfile_size] 1384684
-[savefile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/wave.gtkw"
-[timestart] 2
-[size] 1380 793
-[pos] -262 -89
-*0.000000 3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[dumpfile] "C:\git\wireguard-fpga\4.sim\wave.fst"
+[dumpfile_mtime] "Thu Dec 05 15:06:30 2024"
+[dumpfile_size] 29580
+[savefile] "C:\git\wireguard-fpga\4.sim\wave.gtkw"
+[timestart] 0
+[size] 1920 1017
+[pos] -1 -1
+*-21.478687 92500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
-[treeopen] TOP.tb.dut.u_sdram.
 [sst_width] 299
 [signals_width] 198
 [sst_expanded] 1
-[sst_vpaned_height] 337
-@200
--CPU
-@100000028
-[color] 3
-TOP.tb.dut.u_cpu.u_cpu.cpu_state[2:0]
+[sst_vpaned_height] 455
+@800200
+-tb
+@420
+TOP.tb.DISABLE_SIM_CTRL
+TOP.tb.DLY_PCB_PAD_PS
+TOP.tb.HALF_PERIOD_PS
+TOP.tb.RUN_SIM_US
 @28
-TOP.tb.dut.u_cpu.cpu_valid
-TOP.tb.dut.u_cpu.cpu_ready
+TOP.tb.clk_27
+TOP.tb.clk_fpll[2:0]
+TOP.tb.key[2:1]
+TOP.tb.led_n[3:2]
+TOP.tb.uart_rx
+TOP.tb.uart_tx
+@1000200
+-tb
+@800200
+-dut
+@420
+TOP.tb.dut.NUM_WORDS_DMEM
+TOP.tb.dut.NUM_WORDS_IMEM
+@28
+TOP.tb.dut.clk_27
+TOP.tb.dut.clk_54
+TOP.tb.dut.clk_fpll[2:0]
 @22
-[color] 3
-TOP.tb.dut.u_cpu.cpu_addr[31:0]
-TOP.tb.dut.u_cpu.cpu_wdata[31:0]
-TOP.tb.dut.u_cpu.cpu_wstrb[3:0]
-TOP.tb.dut.u_cpu.cpu_rdata[31:0]
+TOP.tb.dut.imem_waddr[31:2]
+TOP.tb.dut.imem_wdat[31:0]
 @28
-[color] 6
-TOP.tb.dut.u_sdram.u_sdram_ctrl.clk
-@200
--SDRAM
-@100000028
-[color] 3
-TOP.tb.dut.u_sdram.u_sdram_ctrl.state[2:0]
-[color] 3
-TOP.tb.dut.u_sdram.u_sdram_ctrl.sdram_cmd[2:0]
-@28
-TOP.tb.dut.u_sdram.u_sdram_ctrl.refr_15us
-TOP.tb.bfm_sdram.Data_in_enable
-@23
-TOP.tb.bfm_sdram.Data_out_enable2[3:0]
+TOP.tb.dut.imem_we
+TOP.tb.dut.key1_clean
+TOP.tb.dut.key[2:1]
+TOP.tb.dut.led_n[3:2]
+TOP.tb.dut.srst54_n
+TOP.tb.dut.strobe_27
+TOP.tb.dut.tick_1us
+TOP.tb.dut.tick_cca15us
+TOP.tb.dut.uart_rx
+TOP.tb.dut.uart_tx
+@1000200
+-dut
 [pattern_trace] 1
 [pattern_trace] 0

@@ -17,7 +17,8 @@
 `timescale 1ps/1ps
 
 module tb #(
-   parameter int RUN_SIM_US = 15_000
+   parameter int RUN_SIM_US       = 15_000,
+   parameter int DISABLE_SIM_CTRL = 1
 )();
 
    localparam DLY_PCB_PAD_PS = 1_000;
@@ -119,6 +120,22 @@ module tb #(
       .dac_data      (dac_data)
 */
    );
+   
+   
+// //--------------------------------------------------------------
+// Instantiation of Verilator simulation control
+// //--------------------------------------------------------------
+
+  verilator_sim_ctrl
+  #(
+     .NODE                    (15),
+     .CLK_PERIOD_PS           (HALF_PERIOD_PS * 2),
+     .DISABLE_SIM_CTRL        (DISABLE_SIM_CTRL)
+  ) simctrl
+  (
+    .clk                      (clk_27),
+    .cycle_count              ()
+  );
 
 //--------------------------------------------------------------
 // model of external SDRAM

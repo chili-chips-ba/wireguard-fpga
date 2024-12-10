@@ -10,17 +10,18 @@
 # Command line modifiable variables
 # --------------------------------------------
 
-USER_C        = VUserMain0.cpp
-USRCODEDIR    = $(CURDIR)/usercode
-OPTFLAG       = -g
-TIMINGOPT     = --timing
-TRACEOPTS     = --trace-fst --trace-structs
-TOPFILELIST   = top.filelist
-SOCCPUMATCH   = ip.cpu
-USRSIMOPTS    =
-WAVESAVEFILE  = waves.gtkw
-BUILD         = DEFAULT
-TIMEOUTUS     = 15000
+USER_C           = VUserMain0.cpp VUserMainVSC.cpp
+USRCODEDIR       = $(CURDIR)/usercode
+OPTFLAG          = -g
+TIMINGOPT        = --timing
+TRACEOPTS        = --trace-fst --trace-structs
+TOPFILELIST      = top.filelist
+SOCCPUMATCH      = ip.cpu
+USRSIMOPTS       =
+WAVESAVEFILE     = waves.gtkw
+BUILD            = DEFAULT
+TIMEOUTUS        = 15000
+DISABLE_SIM_CTRL = 1
 
 # --------------------------------------------
 # Global exported environment variables
@@ -41,6 +42,9 @@ VLIB          = $(CURDIR)/libvproc.a
 VPROCDIR      = $(CURDIR)/../../vproc
 VPROCMKFILE   = makefile.verilator
 VPROCVERSION  = VERSION_1_12_0
+
+AUX_C         = VerilatorSimCtrl.cpp
+AUXDIR        = $(VPROCDIR)/verilator/src
 
 # --------------------------------------------
 # Memory model variables
@@ -71,7 +75,7 @@ ifeq ("$(BUILD)", "ISS")
     RV32WINFILES = getopt.c
   endif
 
-  USER_C         = VUserMain0.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp $(RV32WINFILES)
+  USER_C         = VUserMain0.cpp  VUserMainVSC.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp $(RV32WINFILES)
   USRCODEDIR     = $(CURDIR)/models/rv32/usercode
 
   RV32DIR        = $(CURDIR)/models/rv32
@@ -80,7 +84,7 @@ ifeq ("$(BUILD)", "ISS")
 endif
 
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(MEMMODELDIR)/src $(RV32INCLOPTS)
+INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(VPROCDIR)/verilator/src -I$(MEMMODELDIR)/src $(RV32INCLOPTS)
 USRCDEFS      = -DMEM_MODEL_DEFAULT_ENDIAN=1
 
 # --------------------------------------------
@@ -89,6 +93,7 @@ USRCDEFS      = -DMEM_MODEL_DEFAULT_ENDIAN=1
 
 TBFILELIST    = $(MEMMODELDIR)/mem_model.sv                   \
                 $(VPROCDIR)/f_VProc.sv                        \
+                $(VPROCDIR)/verilator/verilator_sim_ctrl.sv   \
                                                               \
                 models/soc_cpu.VPROC.sv                       \
                 models/bfm_uart.sv                            \
@@ -105,6 +110,7 @@ SIMOPTS       = --cc                                          \
                 -sv                                           \
                 $(TRACEOPTS) $(TIMINGOPT) $(USRSIMOPTS)       \
                 -GRUN_SIM_US=$(TIMEOUTUS)                     \
+                -GDISABLE_SIM_CTRL=$(DISABLE_SIM_CTRL)        \
                 -Mdir $(WORKDIR)                              \
                 -Wno-WIDTH
 
@@ -116,7 +122,7 @@ SIMDEFS       = +define+VPROC_BYTE_ENABLE                     \
 #                +define+UART_BFM_DEBUG                        \
 #                +define+ADC_DEBUG+ADC_BFM_DEBUG
 
-SIMINCLPATHS  = -I$(CURDIR) -I$(VPROCDIR) -I$(MEMMODELDIR)
+SIMINCLPATHS  = -I$(CURDIR) -I$(VPROCDIR) -I$(VPROCDIR)/verilator -I$(MEMMODELDIR)
 SIMCFLAGS     = -std=c++20 -Wno-attributes
 
 # Get OS type
@@ -167,6 +173,8 @@ $(VLIB): $(VPROCDIR) $(MEMMODELDIR)
               USER_C="$(USER_C)"                              \
               MEMMODELDIR=$(MEMMODELDIR)/src                  \
               MEM_C="$(MEM_C)"                                \
+              AUXDIR=$(AUXDIR)                                \
+              AUX_C="$(AUX_C)"                                \
               TESTDIR=$(CURDIR)                               \
               $(VLIB)
 
