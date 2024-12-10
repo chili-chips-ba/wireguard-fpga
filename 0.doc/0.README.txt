@@ -15,3 +15,8 @@ https://github.com/alexforencich/verilog-cam/tree/master/rtl
 https://www.ece.lsu.edu/v/2015/cam.v.html
 
 -------------
+RNG:
+https://opentrng.org
+https://github.com/eniokaljic/SMAC-FPGA/blob/main/hw/random_gen.vhd
+
+-------------
