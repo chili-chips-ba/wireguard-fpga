@@ -1,0 +1,3 @@
+${HW_SRC}/axis_lib/axis_register
+${HW_SRC}/dpe_if.sv
+${HW_SRC}/dpe_multiplexer.sv
