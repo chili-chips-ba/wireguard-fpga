@@ -208,12 +208,16 @@ module dpe_multiplexer #(
         .s_axis_tkeep(s_tkeep),
         .s_axis_tlast(s_tlast),
         .s_axis_tuser(s_tuser),
+        .s_axis_tid('0),
+        .s_axis_tdest('0),
         .m_axis_tvalid(s_out_tvalid),
         .m_axis_tready(outp.tready),
         .m_axis_tdata(outp.tdata),
         .m_axis_tkeep(outp.tkeep),
         .m_axis_tlast(outp.tlast),
-        .m_axis_tuser(outp.tuser)
+        .m_axis_tuser(outp.tuser),
+        .m_axis_tid(),
+        .m_axis_tdest()
     );
 
 endmodule
