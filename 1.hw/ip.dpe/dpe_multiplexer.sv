@@ -1,3 +1,19 @@
+//==========================================================================
+// Copyright (C) 2024 Chili.CHIPS*ba
+//--------------------------------------------------------------------------
+//                      PROPRIETARY INFORMATION
+//
+// The information contained in this file is the property of CHILI CHIPS LLC.
+// Except as specifically authorized in writing by CHILI CHIPS LLC, the holder
+// of this file: (1) shall keep all information contained herein confidential;
+// and (2) shall protect the same in whole or in part from disclosure and
+// dissemination to all third parties; and (3) shall use the same for operation
+// and maintenance purposes only.
+//--------------------------------------------------------------------------
+// Description: 
+//   DPE Multiplexer
+//==========================================================================
+
 module dpe_multiplexer #(
     parameter TDATA_WIDTH = 128,
     parameter TUSER_WIDTH = 5
@@ -15,7 +31,6 @@ module dpe_multiplexer #(
     dpe_if.s_axis     in4,
     dpe_if.m_axis     outp
 );
-
     typedef enum logic [3:0] {
         IDLE,
         R0, S0,
@@ -219,5 +234,4 @@ module dpe_multiplexer #(
         .m_axis_tid(),
         .m_axis_tdest()
     );
-
 endmodule
