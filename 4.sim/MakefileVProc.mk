@@ -41,7 +41,7 @@ VPROC_REPO    = https://github.com/wyvernSemi/vproc.git
 VLIB          = $(CURDIR)/libvproc.a
 VPROCDIR      = $(CURDIR)/../../vproc
 VPROCMKFILE   = makefile.verilator
-VPROCVERSION  = VERSION_1_12_1
+VPROCVERSION  = VERSION_1_12_2
 
 AUX_C         = VerilatorSimCtrl.cpp
 AUXDIR        = $(VPROCDIR)/verilator/src
@@ -258,17 +258,18 @@ help:
 	@$(info make -f MakefileVProc.mk deepclean     clean previous build artefacts and checked out repos)
 	@$(info )
 	@$(info Command line configurable variables:)
-	@$(info $(SPC) $(SPC) USER_C:       list of user source code files (default VUserMain0.cpp))
-	@$(info $(SPC) $(SPC) USRCODEDIR:   directory containing user source code (default $$(CURDIR)/usercode))
-	@$(info $(SPC) $(SPC) OPTFLAG:      Optimisation flag for VProc code (default -g))
-	@$(info $(SPC) $(SPC) TIMINGOPT:    Verilator timing flags (default --timing))
-	@$(info $(SPC) $(SPC) TRACEOPTS:    Verilator trace flags (default --trace-fst --trace-structs))
-	@$(info $(SPC) $(SPC) TOPFILELIST:  RTL file list name (default top.filelist))
-	@$(info $(SPC) $(SPC) SOCCPUMATCH:  string to match for soc_cpu filtering in h/w file list (default ip.cpu))
-	@$(info $(SPC) $(SPC) USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank))
-	@$(info $(SPC) $(SPC) WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw))
-	@$(info $(SPC) $(SPC) BUILD:        Select build type from DEFAULT or ISS (default DEFAULT))
-	@$(info $(SPC) $(SPC) TIMEOUTUS:    Test bench timeout period in microseconds (default 15000))
+	@$(info $(SPC) $(SPC) USER_C:           list of user source code files (default VUserMain0.cpp))
+	@$(info $(SPC) $(SPC) USRCODEDIR:       directory containing user source code (default $$(CURDIR)/usercode))
+	@$(info $(SPC) $(SPC) OPTFLAG:          Optimisation flag for VProc code (default -g))
+	@$(info $(SPC) $(SPC) TIMINGOPT:        Verilator timing flags (default --timing))
+	@$(info $(SPC) $(SPC) TRACEOPTS:        Verilator trace flags (default --trace-fst --trace-structs))
+	@$(info $(SPC) $(SPC) TOPFILELIST:      RTL file list name (default top.filelist))
+	@$(info $(SPC) $(SPC) SOCCPUMATCH:      string to match for soc_cpu filtering in h/w file list (default ip.cpu))
+	@$(info $(SPC) $(SPC) USRSIMOPTS:       additional Verilator flags, such as setting generics (default blank))
+	@$(info $(SPC) $(SPC) WAVESAVEFILE:     name of .gtkw file to use when displaying waveforms (default waves.gtkw))
+	@$(info $(SPC) $(SPC) BUILD:            Select build type from DEFAULT or ISS (default DEFAULT))
+	@$(info $(SPC) $(SPC) TIMEOUTUS:        Test bench timeout period in microseconds (default 15000))
+	@$(info $(SPC) $(SPC) DISABLE_SIM_CTRL: Disable/enable Verilator simulation control (default disabled))
 	@$(info )
 
 #======================================================
