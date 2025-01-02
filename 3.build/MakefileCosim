@@ -1,0 +1,31 @@
+#=============================================================
+# Copyright (C) 2025 Chili.CHIPS*ba
+#=============================================================
+
+RDLPREFIX = csr
+RDLDIR    = csr_build
+GENDIR    = $(RDLDIR)/generated-files
+RDLSRC    = $(RDLDIR)/$(RDLPREFIX).rdl
+
+COSIMRDL  = $(GENDIR)/$(RDLPREFIX)_cosim.rdl
+COSIMHDR  = $(GENDIR)/$(RDLPREFIX)_cosim.h
+PKRDLHDR  = $(GENDIR)/$(RDLPREFIX).h
+HWHDR     = $(GENDIR)/$(RDLPREFIX)_hw.h
+
+all: $(COSIMHDR) $(HWHDR)
+
+$(COSIMHDR): $(COSIMRDL) $(PKRDLHDR)
+	@python3 sysrdl_cosim.py -c -r $< -o $@
+        
+$(HWHDR): $(COSIMRDL) $(PKRDLHDR)
+	@python3 sysrdl_cosim.py -r $< -o $@
+
+$(COSIMRDL): $(RDLSRC)
+	@sed -e "/buffer_writes/d" -e "/wbuffer_trigger/d" < $^ > $@
+
+$(PKRDLHDR): $(COSIMRDL)
+	@peakrdl c-header $^ -b ltoh -o $@
+
+clean:
+	@rm -rf $(COSIMRDL) $(COSIMHDR) $(HWHDR) $(PKRDLHDR)
+
