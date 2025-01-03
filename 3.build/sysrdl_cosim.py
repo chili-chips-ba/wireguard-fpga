@@ -75,10 +75,15 @@ class Listener(RDLListener) :
     type_prefix = name[:-1].lower()
     vp_type     = type_prefix + "vp_t";
     field       = node.get_path_segment();
+    
+    if self.cosim :
+      cast_type   = "uint64_t"
+    else :
+      cast_type   = type_prefix + "t*"
 
     print("// -----------------------------------------------------\n//");
     print("class " + vp_type + " {\npublic:")
-    print("    " + vp_type + " (uint32_t* reg_addr = 0) : reg((" + type_prefix + "t*)reg_addr) {};\n")
+    print("    " + vp_type + " (uint32_t* reg_addr = 0) : reg((" + cast_type + ")reg_addr) {};\n")
 
   # -----------------------------------------
   # Generate register class tail end
@@ -90,10 +95,15 @@ class Listener(RDLListener) :
     for h in self.hier_list :
       hier_str += h + "__"
     type_prefix = hier_str[:-1].lower()
+    
+    if self.cosim :
+      cast_type   = "uint64_t"
+    else :
+      cast_type   = type_prefix + "t*"
 
     print("\n    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}")
 
-    print("\nprivate:\n    " + type_prefix + "t* reg;\n};\n")
+    print("\nprivate:\n    " + cast_type + " reg;\n};\n")
 
   # -----------------------------------------
   # Process field for target
@@ -119,8 +129,8 @@ class Listener(RDLListener) :
       reg_name = self.hier_list[-2].lower()
 
       # Add write and read methods for whole register
-      print("    inline void     " + reg_name + "(const " + base_type + " data) {reg->w = data;};")
-      print("    inline " + base_type + " " + reg_name + "()                    {return reg->w;};\n")
+      print("    inline void     full(const " + base_type + " data) {reg->w = data;};")
+      print("    inline " + base_type + " full()                    {return reg->w;};\n")
 
     # Add write and read methods for each field
     field_name = node.get_path_segment()
@@ -156,15 +166,15 @@ class Listener(RDLListener) :
 
       # Add write and read methods for whole register
       if node.parent.get_property("regwidth") == 64 :
-        print("    inline void     " + reg_name + " (const " + base_type + " data) {VWrite(reg, (uint32_t)(data & 0xffffffff), 0, "+ str(self.vpnode) +");")
+        print("    inline void     full(const " + base_type + " data) {VWrite(reg, (uint32_t)(data & 0xffffffff), 0, "+ str(self.vpnode) +");")
         print("                                                    VWrite(reg + 4, (uint32_t)((data >> 32) & 0xffffffff), 0, " + str(self.vpnode) + ");};\n")
-        print("    inline " + base_type + " " + reg_name + "()                    {uint64_t val; uint32_t rdata;")
+        print("    inline " + base_type + " full()                    {uint64_t val; uint32_t rdata;")
         print("                                                     VRead(reg, &rdata, 0, " + str(self.vpnode) + "); val = rdata;")
         print("                                                     VRead(reg + 4, &rdata, 0, " + str(self.vpnode) + "); val |= (uint64_t)rdata << 32;")
         print("                                                     return val;};\n")
       else :
-        print("    inline void     " + reg_name + " (const " + base_type + " data) {VWrite(reg, data, 0, "+ str(self.vpnode) +");};")
-        print("    inline " + base_type + " " + reg_name + "()                    {uint32_t rdata;")
+        print("    inline void     full(const " + base_type + " data) {VWrite(reg, data, 0, "+ str(self.vpnode) +");};")
+        print("    inline " + base_type + " full()                    {uint32_t rdata;")
         print("                                                     VRead(reg, &rdata, 0, " + str(self.vpnode) + "); return rdata;};")
 
     # Add write and read methods for each field
