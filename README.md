@@ -721,7 +721,7 @@ To generate all the required HAL headers a make file is provided as `3.build/Mak
 The `csr_hw.h` and `csr_cosim.h` files present the same API to the application and can be appropriately selected at compile time using something like the following:
 
 ```
-ifdef VPROC
+#ifdef VPROC
 #include "csr_cosim.h"
 #else
 #include "csr_hw.h"
