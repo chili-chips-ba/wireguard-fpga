@@ -33,12 +33,13 @@ class Listener(RDLListener) :
   # -----------------------------------------
   # Constructor
   # -----------------------------------------
-  def __init__(self, outfile, cosim = False, vpnode = 0):
+  def __init__(self, outfile, cosim = False, delay = 32, vpnode = 0):
     self.level      = 0
     self.hier_list = []
     self.new_reg   = True
     self.cosim     = cosim
     self.vpnode    = vpnode
+    self.delay     = delay # cosim only
 
     if outfile == None :
       self.out_file = "_CSR_COSIM_H_"
@@ -64,8 +65,9 @@ class Listener(RDLListener) :
     print("\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
 
     if self.cosim :
-      print("#include \"VUser.h\"");
-    print("#include \"csr.h\"\n");
+      print("#include <stdlib.h>")
+      print("#include \"VUser.h\"")
+    print("#include \"csr.h\"\n")
 
   # -----------------------------------------
   # Generate a register class header
@@ -97,7 +99,7 @@ class Listener(RDLListener) :
     type_prefix = hier_str[:-1].lower()
     
     if self.cosim :
-      cast_type   = "uint64_t"
+      cast_type   = "uint32_t"
     else :
       cast_type   = type_prefix + "t*"
 
@@ -166,16 +168,30 @@ class Listener(RDLListener) :
 
       # Add write and read methods for whole register
       if node.parent.get_property("regwidth") == 64 :
-        print("    inline void     full(const " + base_type + " data) {VWrite(reg, (uint32_t)(data & 0xffffffff), 0, "+ str(self.vpnode) +");")
-        print("                                                    VWrite(reg + 4, (uint32_t)((data >> 32) & 0xffffffff), 0, " + str(self.vpnode) + ");};\n")
-        print("    inline " + base_type + " full()                    {uint64_t val; uint32_t rdata;")
-        print("                                                     VRead(reg, &rdata, 0, " + str(self.vpnode) + "); val = rdata;")
-        print("                                                     VRead(reg + 4, &rdata, 0, " + str(self.vpnode) + "); val |= (uint64_t)rdata << 32;")
-        print("                                                     return val;};\n")
+        print("    inline void     full (const " + base_type + " data) {")
+        print("                        VWrite(reg, (uint32_t)(data & 0xffffffff), 0, "+ str(self.vpnode) +");")
+        print("                        VWrite(reg + 4, (uint32_t)((data >> 32) & 0xffffffff), 0, " + str(self.vpnode) + ");")
+        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");")
+        print("                    };\n")
+        print("    inline " + base_type + " full() {")
+        print("                        uint64_t val;")
+        print("                        uint32_t rdata;\n")
+        print("                        VRead(reg, &rdata, 0, " + str(self.vpnode) + "); val = rdata;")
+        print("                        VRead(reg + 4, &rdata, 0, " + str(self.vpnode) + "); val |= (uint64_t)rdata << 32;")
+        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");\n")
+        print("                        return val;")
+        print("                    };\n")
       else :
-        print("    inline void     full(const " + base_type + " data) {VWrite(reg, data, 0, "+ str(self.vpnode) +");};")
-        print("    inline " + base_type + " full()                    {uint32_t rdata;")
-        print("                                                     VRead(reg, &rdata, 0, " + str(self.vpnode) + "); return rdata;};")
+        print("    inline void     full(const " + base_type + " data) {")
+        print("                        VWrite(reg, data, 0, "+ str(self.vpnode) +");")
+        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");")
+        print("                    };\n")
+        print("    inline " + base_type + " full()                    {")
+        print("                        uint32_t rdata;")
+        print("                        VRead(reg, &rdata, 0, " + str(self.vpnode) + ");")
+        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");\n")
+        print("                        return rdata;")
+        print("                    };")
 
     # Add write and read methods for each field
     field_name = node.get_path_segment()
@@ -210,23 +226,29 @@ class Listener(RDLListener) :
     # Field write method when read-modify-write
     if rmw :
       print("    inline void     " + field_name + " (const " + base_type + " data) {")
-      print("                        uint32_t rdata; VRead(reg + " + str(offset*4) + ", &rdata, 0, " + str(self.vpnode) + ");");
-      print("                        " + base_type + " tmpdata = ((" + base_type + ")rdata << " + str(offset*32) + ") & ~" + prefix + "bm;")
-      print("                        tmpdata |= ((data << " + prefix + "bp)" + " & " + prefix + "bm) >> " +  str(offset*32) + ";")
-      print("                        uint32_t wdata = (uint32_t)(tmpdata & 0xffffffff);")
-      print("                        VWriteBE(reg + " + str(offset*4) + ", wdata, " + str(hex(be)) + ", 0, " + str(self.vpnode) + ");")
-      print("            };\n")
+      print("                                uint32_t rdata; VRead(reg + " + str(offset*4) + ", &rdata, 0, " + str(self.vpnode) + ");");
+      print("                                " + base_type + " tmpdata = ((" + base_type + ")rdata << " + str(offset*32) + ") & ~" + prefix + "bm;")
+      print("                                tmpdata |= ((data << " + prefix + "bp)" + " & " + prefix + "bm) >> " +  str(offset*32) + ";")
+      print("                                uint32_t wdata = (uint32_t)(tmpdata & 0xffffffff);\n")
+      print("                                VWriteBE(reg + " + str(offset*4) + ", wdata, " + str(hex(be)) + ", 0, " + str(self.vpnode) + ");")
+      print("                                VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");")
+      print("                      };\n")
 
     # Write aligned field
     else :
       print("    inline void     " + field_name + " (const " + base_type + " data) {")
-      print("                        uint32_t wdata = (uint32_t)(data & 0xffffffff);")
-      print("                        VWriteBE(reg + " + str(offset*4) + ", wdata << " + str(lsb%32) + ", "+ str(hex(be)) + ", 0, " + str(self.vpnode) + ");};\n")
+      print("                        uint32_t wdata = (uint32_t)(data & 0xffffffff);\n")
+      print("                        VWriteBE(reg + " + str(offset*4) + ", wdata << " + str(lsb%32) + ", "+ str(hex(be)) + ", 0, " + str(self.vpnode) + ");")
+      print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");");
+      print("                    };\n")
 
     # Field read method
     print("    inline "+ base_type + " " + field_name + " () {")
-    print("                        uint32_t rdata; VRead(reg + " + str(offset*4) + ", &rdata, 0, " + str(self.vpnode) + ");");
-    print("                        return (((" + base_type + ")rdata << " + str(offset*32) + ") & " + prefix + "bm) >> " + prefix + "bp;};\n")
+    print("                        uint32_t rdata;\n")
+    print("                        VRead(reg + " + str(offset*4) + ", &rdata, 0, " + str(self.vpnode) + ");");
+    print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");\n")
+    print("                        return (((" + base_type + ")rdata << " + str(offset*32) + ") & " + prefix + "bm) >> " + prefix + "bp;")
+    print("                    };\n")
 
     self.new_reg = False
 
@@ -378,8 +400,9 @@ def processCmdLine():
     # Specific command line options added here
     parser.add_argument('-r', '--rdl_file',    dest='rdlFile', default='csrSw.rdl', action='store',      help='Specify the RDL file for processing')
     parser.add_argument('-o', '--output_file', dest='outFile', default=None,        action='store',      help='Specify an ouput header file')
-    parser.add_argument('-v', '--vp_node',     dest='vpnode',  default=0,           action='store',      help='Specify VProc node number for soc_cpu')
     parser.add_argument('-c', '--cosim',       dest='cosim',   default=False,       action='store_true', help='Generate cosim header')
+    parser.add_argument('-v', '--vp_node',     dest='vpnode',  default=0,           action='store',      help='Specify VProc node number for soc_cpu (cosim only)')
+    parser.add_argument('-d', '--delay_range', dest='delay',   default=32,          action='store',      help='Specify maximum delay between transactions (cosim only)')
 
     return parser.parse_args()
 
@@ -417,7 +440,7 @@ if __name__ == "__main__":
 
     # Traverse the register model!
     walker   = RDLWalker(unroll=False)
-    listener = Listener(cmdArgs.outFile, cmdArgs.cosim, cmdArgs.vpnode)
+    listener = Listener(cmdArgs.outFile, cmdArgs.cosim, cmdArgs.delay + 1, cmdArgs.vpnode)
 
     walker.walk(root, listener)
 

@@ -40,7 +40,7 @@ VPROC_REPO    = https://github.com/wyvernSemi/vproc.git
 VLIB          = $(CURDIR)/libvproc.a
 VPROCDIR      = $(CURDIR)/../../vproc
 VPROCMKFILE   = makefile.verilator
-VPROCVERSION  = VERSION_1_12_0
+VPROCVERSION  = VERSION_1_12_2
 
 # --------------------------------------------
 # Memory model variables
