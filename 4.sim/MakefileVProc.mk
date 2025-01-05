@@ -51,7 +51,7 @@ OSTYPE           = $(shell uname)
 #
 ifeq ("$(BUILD)", "ISS")
 
-  ifeq ($(OSTYPE), Linux)
+  ifeq ("$(OSTYPE)", "Linux")
     RV32LIB      = rv32lnx
   else
     RV32LIB      = rv32win
@@ -92,6 +92,12 @@ VOBJS            = $(addprefix $(VOBJDIR)/,                   \
                     $(USER_CPP_BASE:%.cpp=%.o))
 
 USERLIB          = libuser.a
+
+ifneq ("$(OSTYPE)", "Linux")
+  COSIMLDOPT     = -lcosimwin
+else
+  COSIMLDOPT     = -lcosimlnx
+endif
 
 # --------------------------------------------
 # Simulation variables
@@ -194,7 +200,7 @@ compile: $(USERLIB)
            -CFLAGS    "$(SIMCFLAGS)"                          \
            -LDFLAGS   "$(SIMLDFLAGS)                          \
                        -Wl,-whole-archive                     \
-                       -L$(COSIMDIR)/lib -lcosim              \
+                       -L$(COSIMDIR)/lib $(COSIMLDOPT)        \
                        -L$(CURDIR) -luser                     \
                        -Wl,-no-whole-archive                  \
                        -ldl $(RV32LDOPTS)"
