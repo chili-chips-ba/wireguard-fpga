@@ -458,7 +458,7 @@ uint32_t ReadRamWord   (const uint64_t addr, const int little_endian, const uint
  
 Note that, as C functions, there are no default parameters and the <tt>little_endian</tt> and <tt>node</tt> arguments must be passed in, even though they are constant. The <tt>little_endian</tt> argument is non-zero for little endian and zero for big endian. The <tt>node</tt> argument is **not** the same as for VProc, but allows multiple separate memory spaces to be modelled, just as for VProc multiple virtual processor instantiations. For WireGuard, this is always 0. All instantiated <tt>mem_model</tt> components in the HDL have (through the DPI) access to the same memory space model as the API, and so data can be exchanged from the simulation and the running code, such as the RISC-V programs over the IMEM write interface. 
  
-Compiling co-designed application code, either compiled for the native host machine, or to run on the <tt>rv32</tt> RISC-V ISS will need further layers on top of these APIs, which will be virtualised away by that point (see  the sections below). The diagram below summarises the software layers that make up a program running on the VProc HDL component. The "native test code" use case, shown at the top left, is for the case just described above  that use the APIs directly.
+Compiling co-designed application code, either compiled for the native host machine, or to run on the <tt>rv32</tt> RISC-V ISS will need further layers on top of these APIs, which will be virtualised away by that point (see the sections below). The diagram below summarises the software layers that make up a program running on the VProc HDL component. The "native test code" use case, shown at the top left, is for the case just described above  that use the APIs directly.
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/373676ee-f7e2-4a1a-b9b9-079ccef90c37" width=800>
@@ -468,11 +468,11 @@ Compiling co-designed application code, either compiled for the native host mach
 
 ##### Natively Compiled Application
 
-As well as the native test code case seen in the previous section, the WireGuard application can be compiled natively for the host machine, including the hardware access layer (HAL), generated from SystemRDL. The HAL software output from this is processed (**Work in Progress**) to generate a version that makes accesses to the VProc and mem_model APIs in place of accesses with pointers to and from memory. The rest of the application software has these details hidden away in the HAL and sees the same API as presented by the auto-generated code. In both cases transactions happen on the <tt>soc_if bus</tt> port of the <tt>soc_cpu</tt> component. The <tt>main</tt> entry point is also swapped for <tt>VUserMain0</tt> (method is a **Work in Progress**).
+As well as the native test code case seen in the previous section, the WireGuard application can be compiled natively for the host machine, including the hardware access layer (HAL), generated from SystemRDL. The HAL software output from this is processed to generate a version that makes accesses to the VProc and mem_model APIs in place of accesses with pointers to and from memory (see the *Co-simulation HAL* section below). The rest of the application software has these details hidden away in the HAL and sees the same API as presented by the auto-generated code. In both cases transactions happen on the <tt>soc_if bus</tt> port of the <tt>soc_cpu</tt> component. The <tt>main</tt> entry point is also swapped for <tt>VUserMain0</tt>.
 
 ##### RISC-V Compiled Application
 
-To execute RISC-V compiled application code, the <tt>rv32</tt> instruction set simulator is used as the code running on the virtual processor. The <tt>VUserMain0</tt> program now becomes software to creates an iss object and integrate with VProc. This uses the ISS's external memory access callback function to direct loads and stores either towards the sparse memory model, the VProc API for simulation transactions, or back to the ISS itself to handle. This ISS integration <tt>VUserMain0</tt> program is located in <tt>4.sim/models/rv32/usercode</tt>. When built the code here is compiled and uses the pre-built library in <tt>4.sim/models/rv32/lib/librv32lnx.a</tt> containing the ISS, with the headers for it in <tt>4.sim/models/rv32/include</tt> (**Work in Progress**).
+To execute RISC-V compiled application code, the <tt>rv32</tt> instruction set simulator is used as the code running on the virtual processor. The <tt>VUserMain0</tt> program now becomes software to creates an iss object and integrate with VProc. This uses the ISS's external memory access callback function to direct loads and stores either towards the sparse memory model, the VProc API for simulation transactions, or back to the ISS itself to handle. This ISS integration <tt>VUserMain0</tt> program is located in <tt>4.sim/models/rv32/usercode</tt>. When built the code here is compiled and uses the pre-built library in <tt>4.sim/models/rv32/lib/librv32lnx.a</tt> containing the ISS, with the headers for it in <tt>4.sim/models/rv32/include</tt> .
 
 The ISS supports interrupts, but these are not currently used on WireGuard. The integration software can read a configuration file, if present in the <tt>4.sim/</tt> directory, called <tt>vusermain.cfg</tt>. This allows the ISS and other features to be configured at run-time. The configuration file is in lieu of command line options and the entries in the file are formatted as if they were such, with a command matching the VUserMain program:
 
@@ -531,7 +531,7 @@ This reflects the available models as detailed in the _Configuring ISS timing mo
 
 #### Building and Running Code (**Work in Progress**)
 
-A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the VProc software and to build and run the test bench HDL. The make file makes use of VProc's own <tt>makefile.verilator</tt> file to compile all the software for VProc, mem_model and the user code, where the user code is the rv32 ISS code when an ISS build is selected (see make file variables below). The software is compiled into a local static library, <tt>libvproc.a</tt> which is linked to the simulation code within Verilator.
+A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below), the provided user code that's the rv32 ISS integration software. The user software is compiled into a local static library, <tt>libuser.a</tt> which is linked to the simulation code within Verilator along with the precompiled <tt>libcosim.a</tt> in <tt>4.sim/models/cosim/lib</tt>, containing the precompiled code for *VProc* and *mem_model*. The headers for the *VProc* and *mem_model* API software are in <tt>4.sim/models/cosim/include</tt>. The HDL for these models is in <tt>4.sim/models/cosim</tt>, and the make file picks these up from there to compile with the rest of the test bench HDL.
 
 The make file has a target <tt>help</tt>, which produces the following output:
 
@@ -541,12 +541,11 @@ make -f MakefileVProc.mk               Build C/C++ and HDL code without running 
 make -f MakefileVProc.mk run           Build and run batch simulation
 make -f MakefileVProc.mk rungui/gui    Build and run GUI simulation
 make -f MakefileVProc.mk clean         clean previous build artefacts
-make -f MakefileVProc.mk deepclean     clean previous build artefacts and checked out repos
 
 Command line configurable variables:
   USER_C:       list of user source code files (default VUserMain0.cpp)
   USRCODEDIR:   directory containing user source code (default $(CURDIR)/usercode)
-  OPTFLAG:      Optimisation flag for VProc code (default -g)
+  OPTFLAG:      Optimisation flag for user VProc code (default -g)
   TIMINGOPT:    Verilator timing flags (default --timing)
   TRACEOPTS:    Verilator trace flags (default --trace-fst --trace-structs)
   TOPFILELIST:  RTL file list name (default top.filelist)
@@ -557,7 +556,7 @@ Command line configurable variables:
   TIMEOUTUS:    Test bench timeout period in microseconds (default 15000)
 ```
 
-By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files. A target of <tt>deepclean</tt> will also remove the _VProc_ and *mem_model* repositories (actually renaming them with and `_old` suffix). This is useful to get any new versions of these repositories that have beem specified for WireGuard.
+By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files.
 
 The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the makfiles compiles the supplied source code for the ISS. 
 
@@ -721,7 +720,7 @@ To generate all the required HAL headers a make file is provided as `3.build/Mak
 The `csr_hw.h` and `csr_cosim.h` files present the same API to the application and can be appropriately selected at compile time using something like the following:
 
 ```
-#ifdef VPROC
+ifdef VPROC
 #include "csr_cosim.h"
 #else
 #include "csr_hw.h"
@@ -780,7 +779,7 @@ WGMAIN (void)
 ```
 As for the header selection, the compile option definition selection can be abstracted away into a common header (perhaps the same one).
 
-The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the time to clock cycles and call the *VProc* API function `VTick` (or its c++ API equivalent) to advance simulation time the appropriate amount.
+The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its c++ API equivalent) to advance simulation time the appropriate amount.
 
 ## Lab Test and Validation Setup
 TODO

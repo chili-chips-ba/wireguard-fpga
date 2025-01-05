@@ -320,7 +320,7 @@ extern "C" void VUserMain0()
     VPrint("\n  ******************************\n");
     VPrint(  "  *   Wyvern Semiconductors    *\n");
     VPrint(  "  * rv32 RISC-V ISS (on VProc) *\n");
-    VPrint(  "  *     Copyright (c) 2024     *\n");
+    VPrint(  "  *     Copyright (c) 2025     *\n");
     VPrint(  "  ******************************\n\n");
 
     VTick(20, node);

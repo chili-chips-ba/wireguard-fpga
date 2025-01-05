@@ -1,8 +1,8 @@
 ###################################################################
-# Makefile for virtual processor WireGuardtop level  test bench
+# Makefile for virtual processor WireGuard top level test bench
 # code in Verilator
 #
-# Copyright (C) 2024 Chili.CHIPS*ba
+# Copyright (C) 2024 - 2025 Chili.CHIPS*ba
 #
 ###################################################################
 
@@ -10,25 +10,25 @@
 # Command line modifiable variables
 # --------------------------------------------
 
-USER_C        = VUserMain0.cpp
-USRCODEDIR    = $(CURDIR)/usercode
-OPTFLAG       = -g
-TIMINGOPT     = --timing
-TRACEOPTS     = --trace-fst --trace-structs
-TOPFILELIST   = top.filelist
-SOCCPUMATCH   = ip.cpu
-USRSIMOPTS    =
-WAVESAVEFILE  = waves.gtkw
-BUILD         = DEFAULT
-TIMEOUTUS     = 15000
+USER_C           = VUserMain0.cpp
+USRCODEDIR       = $(CURDIR)/usercode
+OPTFLAG          = -g
+TIMINGOPT        = --timing
+TRACEOPTS        = --trace-fst --trace-structs
+TOPFILELIST      = top.filelist
+SOCCPUMATCH      = ip.cpu
+USRSIMOPTS       =
+WAVESAVEFILE     = waves.gtkw
+BUILD            = DEFAULT
+TIMEOUTUS        = 15000
 
 # --------------------------------------------
 # Global exported environment variables
 # --------------------------------------------
 
-HW_SRC       := $(CURDIR)/../1.hw
-BLD_DIR      := $(CURDIR)/../3.build
-TB_NAME      := tb
+HW_SRC          := $(CURDIR)/../1.hw
+BLD_DIR         := $(CURDIR)/../3.build
+TB_NAME         := tb
 
 export BLD_DIR HW_SRC TB_NAME
 
@@ -36,26 +36,14 @@ export BLD_DIR HW_SRC TB_NAME
 # VProc C/C++ variables
 # --------------------------------------------
 
-VPROC_REPO    = https://github.com/wyvernSemi/vproc.git
-VLIB          = $(CURDIR)/libvproc.a
-VPROCDIR      = $(CURDIR)/../../vproc
-VPROCMKFILE   = makefile.verilator
-VPROCVERSION  = VERSION_1_12_2
-
-# --------------------------------------------
-# Memory model variables
-# --------------------------------------------
-
-MEMMODEL_REPO = https://github.com/wyvernSemi/mem_model.git
-MEMMODELDIR   = $(CURDIR)/../../mem_model
-MEM_C         = mem.c mem_model.c
-MEMVERSION    = VERSION_1_0_0
+# Location of VProc and memory model libraries
+COSIMDIR         = $(CURDIR)/models/cosim
 
 # --------------------------------------------
 # RV32 ISS variables
 # --------------------------------------------
 # Get OS type
-OSTYPE        = $(shell uname)
+OSTYPE           = $(shell uname)
 
 #
 # If BUILD is ISS, then override user source code list and directory
@@ -79,67 +67,89 @@ ifeq ("$(BUILD)", "ISS")
   RV32LDOPTS     = -L$(RV32DIR)/lib -l$(RV32LIB) $(RV32WINOPTS)
 endif
 
+# --------------------------------------------
+# VProc user code build variables
+# --------------------------------------------
+
+# Compiler executables and standard flags
+CC               = gcc
+C++              = g++
+CPPSTD           = -std=c++20
+
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS     = -I$(USRCODEDIR) -I$(VPROCDIR)/code -I$(MEMMODELDIR)/src $(RV32INCLOPTS)
-USRCDEFS      = -DMEM_MODEL_DEFAULT_ENDIAN=1
+INCLPATHS        = -I$(USRCODEDIR) -I$(COSIMDIR)/include $(RV32INCLOPTS)
+DEFS             = -DVERILATOR -DVPROC_SV
+
+VOBJDIR          = $(CURDIR)/obj
+
+# Separate C and C++ source files
+USER_CPP_BASE    = $(notdir $(filter %cpp, $(USER_C)))
+USER_C_BASE      = $(notdir $(filter %c,   $(USER_C)))
+
+# Create list of object files (excluding any veriuser object)
+VOBJS            = $(addprefix $(VOBJDIR)/,                   \
+                    $(USER_C_BASE:%.c=%.o)                    \
+                    $(USER_CPP_BASE:%.cpp=%.o))
+
+USERLIB          = libuser.a
 
 # --------------------------------------------
 # Simulation variables
 # --------------------------------------------
 
-TBFILELIST    = $(MEMMODELDIR)/mem_model.sv                   \
-                $(VPROCDIR)/f_VProc.sv                        \
+TBFILELIST       = $(COSIMDIR)/mem_model.sv                   \
+                   $(COSIMDIR)/f_VProc.sv                     \
                                                               \
-                models/soc_cpu.VPROC.sv                       \
-                models/bfm_uart.sv                            \
-                models/bfm_adc.sv                             \
-                models/gowin.prim_sim.CHILI.v                 \
+                   models/soc_cpu.VPROC.sv                    \
+                   models/bfm_uart.sv                         \
+                   models/bfm_adc.sv                          \
+                   models/gowin.prim_sim.CHILI.v              \
                                                               \
-                $(TB_NAME).sv
+                   $(TB_NAME).sv
 
-WORKDIR       = output
+WORKDIR          = output
 
-SIMOPTS       = --cc                                          \
-                --timescale-override 1ps/1ps                  \
-                --exe versimSV.cpp                            \
-                -sv                                           \
-                $(TRACEOPTS) $(TIMINGOPT) $(USRSIMOPTS)       \
-                -GRUN_SIM_US=$(TIMEOUTUS)                     \
-                -Mdir $(WORKDIR)                              \
-                -Wno-WIDTH
+SIMOPTS          = --cc                                       \
+                   --timescale-override 1ps/1ps               \
+                   --exe versimSV.cpp                         \
+                   -sv                                        \
+                   $(TRACEOPTS) $(TIMINGOPT) $(USRSIMOPTS)    \
+                   -GRUN_SIM_US=$(TIMEOUTUS)                  \
+                   -Mdir $(WORKDIR)                           \
+                   -Wno-WIDTH
 
-SIMDEFS       = +define+VPROC_BYTE_ENABLE                     \
-                +define+SIM_ONLY                              \
+SIMDEFS          = +define+VPROC_BYTE_ENABLE                  \
+                   +define+SIM_ONLY                           \
 #                                                             \
-#                +define+SDRAM_DEBUG                           \
-#                +define+DAC_DEBUG                             \
-#                +define+UART_BFM_DEBUG                        \
-#                +define+ADC_DEBUG+ADC_BFM_DEBUG
+#                   +define+SDRAM_DEBUG                        \
+#                   +define+DAC_DEBUG                          \
+#                   +define+UART_BFM_DEBUG                     \
+#                   +define+ADC_DEBUG+ADC_BFM_DEBUG
 
-SIMINCLPATHS  = -I$(CURDIR) -I$(VPROCDIR) -I$(MEMMODELDIR)
-SIMCFLAGS     = -std=c++20 -Wno-attributes
+SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR)
+SIMCFLAGS        = -std=c++20 -Wno-attributes
 
 # Get OS type
-OSTYPE       := $(shell uname)
+OSTYPE          := $(shell uname)
 
 ifneq ($(OSTYPE), Linux)
-  SIMLDFLAGS  = -Wl,-export-all-symbols
+  SIMLDFLAGS     = -Wl,-export-all-symbols
 else
-  SIMLDFLAGS  = -Wl,-E
+  SIMLDFLAGS     = -Wl,-E
 endif
 
-SIMMAKEFLAGS  = --quiet
-SIMEXE        = $(WORKDIR)/V$(TB_NAME)
+SIMMAKEFLAGS     = --quiet
+SIMEXE           = $(WORKDIR)/V$(TB_NAME)
 
 #
 # GTKWave variables
 #
-GTKWAVEOPTS = --saveonexit                                    \
-              --stems   ./tb.stems                            \
-              --logfile sim.log                               \
-              --dump    $(WAVEFILE)
+GTKWAVEOPTS    = --saveonexit                                 \
+                 --stems   ./tb.stems                         \
+                 --logfile sim.log                            \
+                 --dump    $(WAVEFILE)
 
-WAVEFILE      = wave.fst
+WAVEFILE         = wave.fst
 
 #
 # Formatting
@@ -155,25 +165,26 @@ SPC =
 
 all: $(TOPFILELIST) $(SIMEXE)
 
-#
-# Call VProc's Verilator test makefile to compile library into
-# this directory, including the memory model code and user code.
-#
-$(VLIB): $(VPROCDIR) $(MEMMODELDIR)
-	@make --no-print-directory -C $(VPROCDIR)/test        \
-              -f $(VPROCMKFILE) ARCHFLAG=$(OPTFLAG)           \
-              USRFLAGS="$(INCLPATHS) $(USRCDEFS) $(USRFLAGS)" \
-              USRCDIR=$(USRCODEDIR)                           \
-              USER_C="$(USER_C)"                              \
-              MEMMODELDIR=$(MEMMODELDIR)/src                  \
-              MEM_C="$(MEM_C)"                                \
-              TESTDIR=$(CURDIR)                               \
-              $(VLIB)
+# Rule to build object file temporary directory
+$(VOBJDIR):
+	@mkdir $(VOBJDIR)
+
+# Rule to build user C sources
+$(VOBJDIR)/%.o: $(USRCODEDIR)/%.c
+	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build user C++ sources
+$(VOBJDIR)/%.o: $(USRCODEDIR)/%.cpp
+	@$(C++) -c -fPIC $(OPTFLAGS) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build library of user code
+$(USERLIB): $(VOBJDIR) $(VOBJS)
+	@ar cr $(USERLIB) $(VOBJS)
 
 #
 # Compile simulation C++ code
 #
-compile:
+compile: $(USERLIB)
 	@verilator  -F $(TOPFILELIST) $(TBFILELIST)           \
                        $(SIMOPTS)                             \
                        $(SIMDEFS) $(SIMINCLPATHS)             \
@@ -183,32 +194,21 @@ compile:
            -CFLAGS    "$(SIMCFLAGS)"                          \
            -LDFLAGS   "$(SIMLDFLAGS)                          \
                        -Wl,-whole-archive                     \
-                       -L../ -lvproc                          \
+                       -L$(COSIMDIR)/lib -lcosim              \
+                       -L$(CURDIR) -luser                     \
                        -Wl,-no-whole-archive                  \
                        -ldl $(RV32LDOPTS)"
 
 #
 # Generate Verilator test bench executable
 #
-$(SIMEXE): $(VLIB) compile
+$(SIMEXE): compile
 	@make --no-print-directory $(SIMMAKEFLAGS) -C$(WORKDIR) -f V$(TB_NAME).mk V$(TB_NAME)
 
 # Create local file list for top, with PicoRv32 files removed
 # So soc_cpu.VPROC can be used instead
 $(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST)
 	@sed -e "/$(SOCCPUMATCH)/d" $< > $@
-
-#
-# Check out VProc repo if not at expected location
-#
-$(VPROCDIR):
-	@git clone --depth 1 --branch $(VPROCVERSION) $(VPROC_REPO) $(VPROCDIR) --recursive
-
-#
-# Check out memory model repo if not at expected location
-#
-$(MEMMODELDIR):
-	@git clone --depth 1 --branch $(MEMVERSION) $(MEMMODEL_REPO) $(MEMMODELDIR) --recursive
 
 xml2stems:
 	@verilator                                            \
@@ -247,12 +247,11 @@ help:
 	@$(info make -f MakefileVProc.mk run           Build and run batch simulation)
 	@$(info make -f MakefileVProc.mk rungui/gui    Build and run GUI simulation)
 	@$(info make -f MakefileVProc.mk clean         clean previous build artefacts)
-	@$(info make -f MakefileVProc.mk deepclean     clean previous build artefacts and checked out repos)
 	@$(info )
 	@$(info Command line configurable variables:)
 	@$(info $(SPC) $(SPC) USER_C:       list of user source code files (default VUserMain0.cpp))
 	@$(info $(SPC) $(SPC) USRCODEDIR:   directory containing user source code (default $$(CURDIR)/usercode))
-	@$(info $(SPC) $(SPC) OPTFLAG:      Optimisation flag for VProc code (default -g))
+	@$(info $(SPC) $(SPC) OPTFLAG:      Optimisation flag for user VProc code (default -g))
 	@$(info $(SPC) $(SPC) TIMINGOPT:    Verilator timing flags (default --timing))
 	@$(info $(SPC) $(SPC) TRACEOPTS:    Verilator trace flags (default --trace-fst --trace-structs))
 	@$(info $(SPC) $(SPC) TOPFILELIST:  RTL file list name (default top.filelist))
@@ -268,17 +267,4 @@ help:
 #======================================================
 
 clean:
-	@if [ -e $(VPROCDIR) ]; then                                                               \
-          make --no-print-directory -C $(VPROCDIR)/test -f $(VPROCMKFILE) TESTDIR=$(CURDIR) clean; \
-        fi
-	@rm -rf $(WORKDIR) $(WAVEFILE) $(TOPFILELIST) obj_dir
-
-deepclean: clean
-	@if [ -e $(VPROCDIR) ]; then                         \
-          rm -rf $(VPROCDIR)_old;                            \
-          mv $(VPROCDIR) $(VPROCDIR)_old;                    \
-        fi
-	@if [ -e $(MEMMODELDIR) ]; then                      \
-          rm -rf $(MEMMODELDIR)_old;                         \
-          mv $(MEMMODELDIR) $(MEMMODELDIR)_old;              \
-        fi
+	@rm -rf $(WORKDIR) $(WAVEFILE) $(TOPFILELIST) $(VOBJDIR) $(USERLIB) obj_dir
