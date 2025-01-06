@@ -690,7 +690,7 @@ The `csr_cosim.hdl` is a filtered version of `3.build/csr_build/csr.rdl` that re
 The wrapper HAL headers are generated with a Python script `sysrdl_cosim.py` which has some command line options:
 
 ```
-usage: sysrdl_cosim.py [-h] [-r RDLFILE] [-o OUTFILE] [-c] [-v VPNODE] [-d DELAY]
+usage: sysrdl_cosim.py [-h] [-r RDLFILE] [-o OUTFILE] [-c] [-v VPNODE] [-d DELAY] [-C CLKPERIOD]
 
 Process command line options.
 
@@ -705,10 +705,11 @@ options:
                         Specify VProc node number for soc_cpu (cosim only)
   -d DELAY, --delay_range DELAY
                         Specify maximum delay between transactions (cosim only)
-
+  -C CLKPERIOD, --clk_period CLKPERIOD
+                        Specify the VProc soc_cpu clock period in ps (cosim only)
 ```
 
-The main options used are to specify the RDL file (`-r` or `--rd_file`) and to specify the output file (`-o` or `-output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used.
+The main options used are to specify the RDL file (`-r` or `--rd_file`) and to specify the output file (`-o` or `-output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used. Finally the *VProc* test bench `soc_cpu` module's clock period in picoseconds can be specified for use in co-simulation abstraction of delay and timing functions. It defaults to 37036 to match the `tb.sv` `HALF_PERIOD_PS` definition (times 2).
 
 To generate all the required HAL headers a make file is provided as `3.build/MakefileCosim` to wrap app the script calls. Running this make file (`make -f MakefileCosim`) produces the following files in `3.build/csr_build/generated-files`:
 
@@ -758,28 +759,17 @@ A convention has been used where to access a whole register the 'bit field' acce
 
 The HAL software abstracts away the details of hardware and co-simulation register accesses but a couple of other consideration are needed to allow code to compile both for hardware and simulation. The first of these is the `main` entry point.
 
-A normal application compiled for the target has a `main()` entry point function. In *VProc* co-simulation, this is not the case as the logic simulation itself has a `main()` function already defined and there can be multiple *VProc* node instantiations, each with their own entry point. These are named `VUserMain<n>`, where `<n>` is the node number. So, node 0 has an entry point function `VUserMain0`. Application code, to compile for both environments, must take care of this:
+A normal application compiled for the target has a `main()` entry point function. In *VProc* co-simulation, this is not the case as the logic simulation itself has a `main()` function already defined and there can be multiple *VProc* node instantiations, each with their own entry point. These are named `VUserMain<n>`, where `<n>` is the node number. So, node 0 has an entry point function `VUserMain0`. The auto-generated HAL co-simulation headers include a `WGMAIN` definition that is either `main` for the hardware code or `VUserMain0` for *VProc* code (assuming node 0 for `soc_cpu`). This is then used in place of `main` at the top level application code.
 
 ```
-#ifdef VPROC
-#  ifdef __cplusplus
-#    define WGMAIN  extern "C" VUserMain0
-#  else
-#    define WGMAIN  VUserMain0
-#  endif
-#else
-#  define WGMAIN  main
-#endif
-
 // Application top level
 WGMAIN (void)
 {
   // Top level source code here
 }
 ```
-As for the header selection, the compile option definition selection can be abstracted away into a common header (perhaps the same one).
 
-The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its c++ API equivalent) to advance simulation time the appropriate amount.
+The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 27MHz that the test bench uses. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `sysrdl_cosim.py`. 
 
 ## Lab Test and Validation Setup
 TODO
