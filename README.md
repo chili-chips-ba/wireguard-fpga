@@ -763,7 +763,7 @@ A normal application compiled for the target has a `main()` entry point function
 
 ```
 // Application top level
-WGMAIN (void)
+void WGMAIN (void)
 {
   // Top level source code here
 }
