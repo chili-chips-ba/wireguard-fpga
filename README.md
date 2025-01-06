@@ -784,8 +784,6 @@ TODO
 * _Mem Model_ **v1.0.0**
 * _rv32_ ISS **v1.1.4**
 
-Note: the test bench make file (`4.sim/MakefileVProc.mk`) will check out *VProc* and *mem_model* to the specified revisions when not already present. The *rv32* ISS has a pre-compiled library and associated headers already present in the `4.sim/models/rv32` directory at the specified version.
-
 ## Build process
 ### Hardware
 TODO
