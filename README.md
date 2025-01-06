@@ -727,15 +727,17 @@ ifdef VPROC
 #include "csr_hw.h"
 #endif
 ```
-This might more usefully be placed in a common header, such as `wireguard_csr.h` to hide the selection from the application, and the `VPROC` definition will be defined when compiling for the *VProc* test beanch, with the default being to compile for the target hardware.
+This has been done in the `wireguard_regs.h` header in the `3.build/csr_build/generated-files/` directory, and including this header in the application code makes available the register HAL.
 
 ### Using the HAL
 
 The HAL provides a hierarchical access to the registers via a set of pointer dereferencing and a final access method (for reads and writes of registers and their bit fields) that reflects the hierarchy of the RDL specification. The following shows some example accesses, based on the `3.build/csr_build/csr.rdl` (as at its first revision on 10/11/2024):
 
 ```
+    #include "wireguard_regs.h"
+
     // Create a CSR register object. A base address can be specified
-    // but defaults to the address specified in RDL
+    // but defaults to the address specified in the RDL
     csr_vp_t* csr = new csr_vp_t();
 
     // Write to address field and read back.
@@ -762,6 +764,8 @@ The HAL software abstracts away the details of hardware and co-simulation regist
 A normal application compiled for the target has a `main()` entry point function. In *VProc* co-simulation, this is not the case as the logic simulation itself has a `main()` function already defined and there can be multiple *VProc* node instantiations, each with their own entry point. These are named `VUserMain<n>`, where `<n>` is the node number. So, node 0 has an entry point function `VUserMain0`. The auto-generated HAL co-simulation headers include a `WGMAIN` definition that is either `main` for the hardware code or `VUserMain0` for *VProc* code (assuming node 0 for `soc_cpu`). This is then used in place of `main` at the top level application code.
 
 ```
+#include "wireguard_regs.h"
+
 // Application top level
 void WGMAIN (void)
 {
