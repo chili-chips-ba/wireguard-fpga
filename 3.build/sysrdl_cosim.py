@@ -33,13 +33,14 @@ class Listener(RDLListener) :
   # -----------------------------------------
   # Constructor
   # -----------------------------------------
-  def __init__(self, outfile, cosim = False, delay = 32, vpnode = 0):
+  def __init__(self, outfile, cosim = False, delay = 32, clkperiod = 37036, vpnode = 0):
     self.level      = 0
     self.hier_list = []
     self.new_reg   = True
     self.cosim     = cosim
     self.vpnode    = vpnode
     self.delay     = delay # cosim only
+    self.clkperiod = clkperiod
 
     if outfile == None :
       self.out_file = "_CSR_COSIM_H_"
@@ -60,14 +61,24 @@ class Listener(RDLListener) :
     print("// Copyright (C) "+ str(datetime.now().year) + " Chili.CHIPS*ba\n//")
     print("// ----------------------------------------------------------------------")
 
-    print("\n#ifndef " + self.out_file + " \n#define " + self.out_file);
-
-    print("\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n");
+    print("\n#ifndef " + self.out_file + " \n#define " + self.out_file + "\n");
 
     if self.cosim :
       print("#include <stdlib.h>")
+      print("\n#ifdef __cplusplus\nextern \"C\" {\n#endif");
       print("#include \"VUser.h\"")
+      print("#ifdef __cplusplus\n}\n#endif\n");
+      
     print("#include \"csr.h\"\n")
+    
+    if self.cosim :
+      print("// Definitions for co-simulation builds")
+      print("#define WGMAIN                  VUserMain" + str(self.vpnode))
+      print("#define NO_DELTA_UPDATE         0\n")
+      print("#ifndef SOC_CPU_VPNODE\n#define SOC_CPU_VPNODE          " + str(self.vpnode) + "\n#endif\n")
+      print("#ifndef SOC_CPU_CLK_PERIOD_PS\n#define SOC_CPU_CLK_PERIOD_PS   " + str(self.clkperiod) + "\n#endif\n")
+    else :
+      print("#define WGMAIN          main\n")
 
   # -----------------------------------------
   # Generate a register class header
@@ -169,27 +180,27 @@ class Listener(RDLListener) :
       # Add write and read methods for whole register
       if node.parent.get_property("regwidth") == 64 :
         print("    inline void     full (const " + base_type + " data) {")
-        print("                        VWrite(reg, (uint32_t)(data & 0xffffffff), 0, "+ str(self.vpnode) +");")
-        print("                        VWrite(reg + 4, (uint32_t)((data >> 32) & 0xffffffff), 0, " + str(self.vpnode) + ");")
-        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");")
+        print("                        VWrite(reg, (uint32_t)(data & 0xffffffff), NO_DELTA_UPDATE, SOC_CPU_VPNODE);")
+        print("                        VWrite(reg + 4, (uint32_t)((data >> 32) & 0xffffffff), NO_DELTA_UPDATE, SOC_CPU_VPNODE);")
+        print("                        VTick(rand() % " + str(self.delay) + ", SOC_CPU_VPNODE);")
         print("                    };\n")
         print("    inline " + base_type + " full() {")
         print("                        uint64_t val;")
         print("                        uint32_t rdata;\n")
-        print("                        VRead(reg, &rdata, 0, " + str(self.vpnode) + "); val = rdata;")
-        print("                        VRead(reg + 4, &rdata, 0, " + str(self.vpnode) + "); val |= (uint64_t)rdata << 32;")
-        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");\n")
+        print("                        VRead(reg, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE); val = rdata;")
+        print("                        VRead(reg + 4, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE); val |= (uint64_t)rdata << 32;")
+        print("                        VTick(rand() % " + str(self.delay) + ", SOC_CPU_VPNODE);\n")
         print("                        return val;")
         print("                    };\n")
       else :
         print("    inline void     full(const " + base_type + " data) {")
-        print("                        VWrite(reg, data, 0, "+ str(self.vpnode) +");")
-        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");")
+        print("                        VWrite(reg, data, NO_DELTA_UPDATE, SOC_CPU_VPNODE);")
+        print("                        VTick(rand() % " + str(self.delay) + ", SOC_CPU_VPNODE);")
         print("                    };\n")
         print("    inline " + base_type + " full()                    {")
         print("                        uint32_t rdata;")
-        print("                        VRead(reg, &rdata, 0, " + str(self.vpnode) + ");")
-        print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");\n")
+        print("                        VRead(reg, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);")
+        print("                        VTick(rand() % " + str(self.delay) + ", SOC_CPU_VPNODE);\n")
         print("                        return rdata;")
         print("                    };")
 
@@ -226,27 +237,27 @@ class Listener(RDLListener) :
     # Field write method when read-modify-write
     if rmw :
       print("    inline void     " + field_name + " (const " + base_type + " data) {")
-      print("                                uint32_t rdata; VRead(reg + " + str(offset*4) + ", &rdata, 0, " + str(self.vpnode) + ");");
+      print("                                uint32_t rdata; VRead(reg + " + str(offset*4) + ", &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);");
       print("                                " + base_type + " tmpdata = ((" + base_type + ")rdata << " + str(offset*32) + ") & ~" + prefix + "bm;")
       print("                                tmpdata |= ((data << " + prefix + "bp)" + " & " + prefix + "bm) >> " +  str(offset*32) + ";")
       print("                                uint32_t wdata = (uint32_t)(tmpdata & 0xffffffff);\n")
-      print("                                VWriteBE(reg + " + str(offset*4) + ", wdata, " + str(hex(be)) + ", 0, " + str(self.vpnode) + ");")
-      print("                                VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");")
+      print("                                VWriteBE(reg + " + str(offset*4) + ", wdata, " + str(hex(be)) + ", NO_DELTA_UPDATE, SOC_CPU_VPNODE);")
+      print("                                VTick(rand() % " + str(self.delay) + ", SOC_CPU_VPNODE);")
       print("                      };\n")
 
     # Write aligned field
     else :
       print("    inline void     " + field_name + " (const " + base_type + " data) {")
       print("                        uint32_t wdata = (uint32_t)(data & 0xffffffff);\n")
-      print("                        VWriteBE(reg + " + str(offset*4) + ", wdata << " + str(lsb%32) + ", "+ str(hex(be)) + ", 0, " + str(self.vpnode) + ");")
-      print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");");
+      print("                        VWriteBE(reg + " + str(offset*4) + ", wdata << " + str(lsb%32) + ", "+ str(hex(be)) + ", NO_DELTA_UPDATE, SOC_CPU_VPNODE);")
+      print("                        VTick(rand() % " + str(self.delay) + ", SOC_CPU_VPNODE);");
       print("                    };\n")
 
     # Field read method
     print("    inline "+ base_type + " " + field_name + " () {")
     print("                        uint32_t rdata;\n")
-    print("                        VRead(reg + " + str(offset*4) + ", &rdata, 0, " + str(self.vpnode) + ");");
-    print("                        VTick(rand() % " + str(self.delay) + ", " + str(self.vpnode) + ");\n")
+    print("                        VRead(reg + " + str(offset*4) + ", &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);");
+    print("                        VTick(rand() % " + str(self.delay) + ", SOC_CPU_VPNODE);\n")
     print("                        return (((" + base_type + ")rdata << " + str(offset*32) + ") & " + prefix + "bm) >> " + prefix + "bp;")
     print("                    };\n")
 
@@ -398,11 +409,12 @@ def processCmdLine():
     parser = argparse.ArgumentParser(description='Process command line options.')
 
     # Specific command line options added here
-    parser.add_argument('-r', '--rdl_file',    dest='rdlFile', default='csrSw.rdl', action='store',      help='Specify the RDL file for processing')
-    parser.add_argument('-o', '--output_file', dest='outFile', default=None,        action='store',      help='Specify an ouput header file')
-    parser.add_argument('-c', '--cosim',       dest='cosim',   default=False,       action='store_true', help='Generate cosim header')
-    parser.add_argument('-v', '--vp_node',     dest='vpnode',  default=0,           action='store',      help='Specify VProc node number for soc_cpu (cosim only)')
-    parser.add_argument('-d', '--delay_range', dest='delay',   default=32,          action='store',      help='Specify maximum delay between transactions (cosim only)')
+    parser.add_argument('-r', '--rdl_file',    dest='rdlFile',   default='csrSw.rdl', action='store',      help='Specify the RDL file for processing')
+    parser.add_argument('-o', '--output_file', dest='outFile',   default=None,        action='store',      help='Specify an ouput header file')
+    parser.add_argument('-c', '--cosim',       dest='cosim',     default=False,       action='store_true', help='Generate cosim header')
+    parser.add_argument('-v', '--vp_node',     dest='vpnode',    default=0,           action='store',      help='Specify VProc node number for soc_cpu (cosim only)')
+    parser.add_argument('-d', '--delay_range', dest='delay',     default=32,          action='store',      help='Specify maximum delay between transactions (cosim only)')
+    parser.add_argument('-C', '--clk_period',  dest='clkperiod', default=37036,       action='store',      help='Specify the VProc soc_cpu clock period in ps (cosim only)')
 
     return parser.parse_args()
 
@@ -440,11 +452,10 @@ if __name__ == "__main__":
 
     # Traverse the register model!
     walker   = RDLWalker(unroll=False)
-    listener = Listener(cmdArgs.outFile, cmdArgs.cosim, cmdArgs.delay + 1, cmdArgs.vpnode)
+    listener = Listener(cmdArgs.outFile, cmdArgs.cosim, cmdArgs.delay + 1, cmdArgs.clkperiod, cmdArgs.vpnode)
 
     walker.walk(root, listener)
 
-    print("#ifdef __cplusplus\n}\n#endif")
     print("\n#endif")
 
     if cmdArgs.outFile != None :
