@@ -33,7 +33,7 @@ class Listener(RDLListener) :
   # -----------------------------------------
   # Constructor
   # -----------------------------------------
-  def __init__(self, outfile, cosim = False, delay = 32, clkperiod = 37036, vpnode = 0):
+  def __init__(self, outfile, cosim = False, delay = 32, clkperiod = 18518, vpnode = 0):
     self.level      = 0
     self.hier_list = []
     self.new_reg   = True
@@ -414,7 +414,7 @@ def processCmdLine():
     parser.add_argument('-c', '--cosim',       dest='cosim',     default=False,       action='store_true', help='Generate cosim header')
     parser.add_argument('-v', '--vp_node',     dest='vpnode',    default=0,           action='store',      help='Specify VProc node number for soc_cpu (cosim only)')
     parser.add_argument('-d', '--delay_range', dest='delay',     default=32,          action='store',      help='Specify maximum delay between transactions (cosim only)')
-    parser.add_argument('-C', '--clk_period',  dest='clkperiod', default=37036,       action='store',      help='Specify the VProc soc_cpu clock period in ps (cosim only)')
+    parser.add_argument('-C', '--clk_period',  dest='clkperiod', default=18518,       action='store',      help='Specify the VProc soc_cpu clock period in ps (cosim only)')
 
     return parser.parse_args()
 
