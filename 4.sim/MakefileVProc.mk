@@ -78,7 +78,7 @@ CPPSTD           = -std=c++20
 
 # C/C++ include paths for VProc, memory model and user code
 INCLPATHS        = -I$(USRCODEDIR) -I$(COSIMDIR)/include $(RV32INCLOPTS)
-DEFS             = -DVERILATOR -DVPROC_SV
+DEFS             = -DVERILATOR -DVPROC_SV -DVPROC
 
 VOBJDIR          = $(CURDIR)/obj
 
