@@ -529,11 +529,11 @@ Specific to the WireGuard project is the ability to specify the region where mem
 
 This reflects the available models as detailed in the _Configuring ISS timing model_ section below.
 
-#### Building and Running Code (**Work in Progress**)
+#### Building and Running Code
 
-A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below), the provided user code that's the rv32 ISS integration software. The user software is compiled into a local static library, <tt>libuser.a</tt> which is linked to the simulation code within Verilator along with the precompiled <tt>libcosimlnx.a</tt> (or <tt>libcosimwin.a</tt> for MSYS2/mingw64) in <tt>4.sim/models/cosim/lib</tt>, containing the precompiled code for *VProc* and *mem_model*. The headers for the *VProc* and *mem_model* API software are in <tt>4.sim/models/cosim/include</tt>. The HDL for these models is in <tt>4.sim/models/cosim</tt>, and the make file picks these up from there to compile with the rest of the test bench HDL.
+A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below), the provided user code that's the rv32 ISS integration software. By default the make file will compile the <tt>VuserMain0.cpp</tt> user code in <tt>4.sim/usercode</tt>, but the directory and list of file to compile can be specified on the command line (see below). The user software is compiled into a local static library, <tt>libuser.a</tt> which is linked to the simulation code within Verilator along with the precompiled <tt>libcosimlnx.a</tt> (or <tt>libcosimwin.a</tt> for MSYS2/mingw64 on Windows) located in <tt>4.sim/models/cosim/lib</tt> and containing the precompiled code for *VProc* and *mem_model*. The headers for the *VProc* and *mem_model* API software are in <tt>4.sim/models/cosim/include</tt>. The HDL required for these models' use in the WireGuard trest bench can be found in <tt>4.sim/models/cosim</tt>, and the make file picks these up from there to compile with the rest of the test bench HDL.
 
-The make file has a target <tt>help</tt>, which produces the following output:
+The <tt>MakefileVProc.mk</tt> make file has a target <tt>help</tt>, which produces the following output:
 
 ```
 make -f MakefileVProc.mk help          Display this message
@@ -556,13 +556,21 @@ Command line configurable variables:
   TIMEOUTUS:    Test bench timeout period in microseconds (default 15000)
 ```
 
-By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files.
+By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed in batch mode. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files of previous compilations.
 
-The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the makfiles compiles the supplied source code for the ISS. 
+The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the make file compiles the supplied source code for the ISS. 
 
-The user code variable allow different (and multiple) file names from the default, and to change the location of where the user code is located (if not the ISS build). This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The WireGuard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
+The <tt>USER_C</tt> and <tt>USERCODEDIR</tt> make file variable allows different (and multiple) user source file names to override the defaults, and to change the location of where the user code is located (if not the ISS build). This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The WireGuard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
 
-Control of when the simulation exits can be specified with the <tt>TIMEOUTUS</tt> variable in units of microseconds.
+Control of when the simulation exits can be specified with the <tt>TIMEOUTUS</tt> variable in units of microseconds. Some example commands using the make file are shown below:
+
+```
+make -f MakefileVProc.mk run                                                   # Build and run default VUserMain0.cpp code in usercode/
+make -f MakefileVProc.mk                                                       # Build but don't run default code
+make -f MakefileVProc.mk USER_C="test1.cpp subfuncs.cpp" USRCODEDIR=test1 run  # Build and run test1.cpp and subfuncs.cpp in test1/
+make -f MakefileVProc.mk BUILD=ISS gui                                         # Build and run ISS simulation and show waves
+make -f MakefileVProc.mk clean                                                 # Clean all intermediate files
+```
 
 ##### Configuring ISS timing model
 
