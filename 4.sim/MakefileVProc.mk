@@ -38,6 +38,7 @@ export BLD_DIR HW_SRC TB_NAME
 
 # Location of VProc and memory model libraries
 COSIMDIR         = $(CURDIR)/models/cosim
+UDPDIR           = $(CURDIR)/models/udpPgIp
 
 # --------------------------------------------
 # RV32 ISS variables
@@ -77,7 +78,7 @@ C++              = g++
 CPPSTD           = -std=c++20
 
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS        = -I$(USRCODEDIR) -I$(COSIMDIR)/include $(RV32INCLOPTS)
+INCLPATHS        = -I$(USRCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR) $(RV32INCLOPTS)
 DEFS             = -DVERILATOR -DVPROC_SV -DVPROC
 
 VOBJDIR          = $(CURDIR)/obj
@@ -95,8 +96,10 @@ USERLIB          = libuser.a
 
 ifneq ("$(OSTYPE)", "Linux")
   COSIMLDOPT     = -lcosimwin
+  UDPLDOPT       = -ludpwin
 else
   COSIMLDOPT     = -lcosimlnx
+  UDPLDOPT       = -ludplnx
 endif
 
 # --------------------------------------------
@@ -105,6 +108,7 @@ endif
 
 TBFILELIST       = $(COSIMDIR)/mem_model.sv                   \
                    $(COSIMDIR)/f_VProc.sv                     \
+                   $(UDPDIR)/udp_ip_pg.v                      \
                                                               \
                    models/soc_cpu.VPROC.sv                    \
                    models/bfm_uart.sv                         \
@@ -132,7 +136,7 @@ SIMDEFS          = +define+VPROC_BYTE_ENABLE                  \
 #                   +define+UART_BFM_DEBUG                     \
 #                   +define+ADC_DEBUG+ADC_BFM_DEBUG
 
-SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR)
+SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR) -I$(UDPDIR)
 SIMCFLAGS        = -std=c++20 -Wno-attributes
 
 # Get OS type
@@ -201,6 +205,7 @@ compile: $(USERLIB)
            -LDFLAGS   "$(SIMLDFLAGS)                          \
                        -Wl,-whole-archive                     \
                        -L$(COSIMDIR)/lib $(COSIMLDOPT)        \
+                       -L$(UDPDIR)/lib $(UDPLDOPT)            \
                        -L$(CURDIR) -luser                     \
                        -Wl,-no-whole-archive                  \
                        -ldl $(RV32LDOPTS)"
