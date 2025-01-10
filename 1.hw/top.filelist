@@ -44,6 +44,9 @@ ${HW_SRC}/ip.csr/csr_pkg.sv
 ${HW_SRC}/ip.csr/csr_if.sv
 ${HW_SRC}/ip.csr/soc_csr.sv
 
+#---GMII
+${HW_SRC}/ip.infra/gmii_if.sv
+
 #---TOP
 ${HW_SRC}/top.sv
 
