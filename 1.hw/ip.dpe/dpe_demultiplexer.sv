@@ -22,7 +22,7 @@ module dpe_demultiplexer #(
     input  logic      rst,
     
     dpe_if.s_axis     inp,
-	dpe_if.m_axis     outp0,
+    dpe_if.m_axis     outp0,
     dpe_if.m_axis     outp1,
     dpe_if.m_axis     outp2,
     dpe_if.m_axis     outp3,
@@ -33,98 +33,98 @@ module dpe_demultiplexer #(
     logic [TDATA_WIDTH-1:0]        s0_tdata;
     logic                          s0_tlast;
     logic [(TDATA_WIDTH+7)/8-1:0]  s0_tkeep;
-	logic                          s1_tready;
+    logic                          s1_tready;
     logic                          s1_tvalid;
     logic [TDATA_WIDTH-1:0]        s1_tdata;
     logic                          s1_tlast;
     logic [(TDATA_WIDTH+7)/8-1:0]  s1_tkeep;
-	logic                          s2_tready;
+    logic                          s2_tready;
     logic                          s2_tvalid;
     logic [TDATA_WIDTH-1:0]        s2_tdata;
     logic                          s2_tlast;
     logic [(TDATA_WIDTH+7)/8-1:0]  s2_tkeep;
-	logic                          s3_tready;
+    logic                          s3_tready;
     logic                          s3_tvalid;
     logic [TDATA_WIDTH-1:0]        s3_tdata;
     logic                          s3_tlast;
     logic [(TDATA_WIDTH+7)/8-1:0]  s3_tkeep;
-	logic                          s4_tready;
+    logic                          s4_tready;
     logic                          s4_tvalid;
     logic [TDATA_WIDTH-1:0]        s4_tdata;
     logic                          s4_tlast;
     logic [(TDATA_WIDTH+7)/8-1:0]  s4_tkeep;
-	
-	// Backpressure
-	assign inp.tready = (!inp.tuser[0] | s0_tready) &
-	                    (!inp.tuser[1] | s1_tready) &
-						(!inp.tuser[2] | s2_tready) &
-						(!inp.tuser[3] | s3_tready) &
-						(!inp.tuser[4] | s4_tready);
-	
-	// Demultiplexer
-	always_comb begin
-		if (inp.tuser[0] == 1'b1) begin
-			s0_tvalid = inp.tvalid;
-			s0_tdata = inp.tdata;
-			s0_tkeep = inp.tkeep;
-			s0_tlast = inp.tlast;
-		end else begin
-			s0_tvalid = 1'b0;
-			s0_tdata = '0;
-			s0_tkeep = '0;
-			s0_tlast = '0;
-		end
-		if (inp.tuser[1] == 1'b1) begin
-			s1_tvalid = inp.tvalid;
-			s1_tdata = inp.tdata;
-			s1_tkeep = inp.tkeep;
-			s1_tlast = inp.tlast;
-		end else begin
-			s1_tvalid = 1'b0;
-			s1_tdata = '0;
-			s1_tkeep = '0;
-			s1_tlast = '0;
-		end
-		if (inp.tuser[2] == 1'b1) begin
-			s2_tvalid = inp.tvalid;
-			s2_tdata = inp.tdata;
-			s2_tkeep = inp.tkeep;
-			s2_tlast = inp.tlast;
-		end else begin
-			s2_tvalid = 1'b0;
-			s2_tdata = '0;
-			s2_tkeep = '0;
-			s2_tlast = '0;
-		end
-		if (inp.tuser[3] == 1'b1) begin
-			s3_tvalid = inp.tvalid;
-			s3_tdata = inp.tdata;
-			s3_tkeep = inp.tkeep;
-			s3_tlast = inp.tlast;
-		end else begin
-			s3_tvalid = 1'b0;
-			s3_tdata = '0;
-			s3_tkeep = '0;
-			s3_tlast = '0;
-		end
-		if (inp.tuser[4] == 1'b1) begin
-			s4_tvalid = inp.tvalid;
-			s4_tdata = inp.tdata;
-			s4_tkeep = inp.tkeep;
-			s4_tlast = inp.tlast;
-		end else begin
-			s4_tvalid = 1'b0;
-			s4_tdata = '0;
-			s4_tkeep = '0;
-			s4_tlast = '0;
-		end
-	end
-	
+    
+    // Backpressure
+    assign inp.tready = (!inp.tuser[0] | s0_tready) &
+                        (!inp.tuser[1] | s1_tready) &
+                        (!inp.tuser[2] | s2_tready) &
+                        (!inp.tuser[3] | s3_tready) &
+                        (!inp.tuser[4] | s4_tready);
+    
+    // Demultiplexer
+    always_comb begin
+        if (inp.tuser[0] == 1'b1) begin
+            s0_tvalid = inp.tvalid;
+            s0_tdata = inp.tdata;
+            s0_tkeep = inp.tkeep;
+            s0_tlast = inp.tlast;
+        end else begin
+            s0_tvalid = 1'b0;
+            s0_tdata = '0;
+            s0_tkeep = '0;
+            s0_tlast = '0;
+        end
+        if (inp.tuser[1] == 1'b1) begin
+            s1_tvalid = inp.tvalid;
+            s1_tdata = inp.tdata;
+            s1_tkeep = inp.tkeep;
+            s1_tlast = inp.tlast;
+        end else begin
+            s1_tvalid = 1'b0;
+            s1_tdata = '0;
+            s1_tkeep = '0;
+            s1_tlast = '0;
+        end
+        if (inp.tuser[2] == 1'b1) begin
+            s2_tvalid = inp.tvalid;
+            s2_tdata = inp.tdata;
+            s2_tkeep = inp.tkeep;
+            s2_tlast = inp.tlast;
+        end else begin
+            s2_tvalid = 1'b0;
+            s2_tdata = '0;
+            s2_tkeep = '0;
+            s2_tlast = '0;
+        end
+        if (inp.tuser[3] == 1'b1) begin
+            s3_tvalid = inp.tvalid;
+            s3_tdata = inp.tdata;
+            s3_tkeep = inp.tkeep;
+            s3_tlast = inp.tlast;
+        end else begin
+            s3_tvalid = 1'b0;
+            s3_tdata = '0;
+            s3_tkeep = '0;
+            s3_tlast = '0;
+        end
+        if (inp.tuser[4] == 1'b1) begin
+            s4_tvalid = inp.tvalid;
+            s4_tdata = inp.tdata;
+            s4_tkeep = inp.tkeep;
+            s4_tlast = inp.tlast;
+        end else begin
+            s4_tvalid = 1'b0;
+            s4_tdata = '0;
+            s4_tkeep = '0;
+            s4_tlast = '0;
+        end
+    end
+    
     // Skid buffer
     axis_register #(
         .DATA_WIDTH(TDATA_WIDTH),
         .USER_WIDTH(TUSER_WIDTH),
-		.USER_ENABLE(0)
+        .USER_ENABLE(0)
     ) sbuff0 (
         .clk(clk),
         .rst(rst),
@@ -145,12 +145,12 @@ module dpe_demultiplexer #(
         .m_axis_tid(),
         .m_axis_tdest()
     );
-	
-	// Skid buffer
+    
+    // Skid buffer
     axis_register #(
         .DATA_WIDTH(TDATA_WIDTH),
         .USER_WIDTH(TUSER_WIDTH),
-		.USER_ENABLE(0)
+        .USER_ENABLE(0)
     ) sbuff1 (
         .clk(clk),
         .rst(rst),
@@ -171,12 +171,12 @@ module dpe_demultiplexer #(
         .m_axis_tid(),
         .m_axis_tdest()
     );
-	
-	// Skid buffer
+    
+    // Skid buffer
     axis_register #(
         .DATA_WIDTH(TDATA_WIDTH),
         .USER_WIDTH(TUSER_WIDTH),
-		.USER_ENABLE(0)
+        .USER_ENABLE(0)
     ) sbuff2 (
         .clk(clk),
         .rst(rst),
@@ -197,12 +197,12 @@ module dpe_demultiplexer #(
         .m_axis_tid(),
         .m_axis_tdest()
     );
-	
-	// Skid buffer
+    
+    // Skid buffer
     axis_register #(
         .DATA_WIDTH(TDATA_WIDTH),
         .USER_WIDTH(TUSER_WIDTH),
-		.USER_ENABLE(0)
+        .USER_ENABLE(0)
     ) sbuff3 (
         .clk(clk),
         .rst(rst),
@@ -223,12 +223,12 @@ module dpe_demultiplexer #(
         .m_axis_tid(),
         .m_axis_tdest()
     );
-	
-	// Skid buffer
+    
+    // Skid buffer
     axis_register #(
         .DATA_WIDTH(TDATA_WIDTH),
         .USER_WIDTH(TUSER_WIDTH),
-		.USER_ENABLE(0)
+        .USER_ENABLE(0)
     ) sbuff4 (
         .clk(clk),
         .rst(rst),
