@@ -45,7 +45,7 @@ module tb;
         '{8'h15, 8'h16, 8'h17, 8'h18, 8'h19, 8'h00},  // to Output 2
         '{8'h1F, 8'h20, 8'h21, 8'h22, 8'h00, 8'h00},  // to Output 3
         '{8'h29, 8'h2A, 8'h2B, 8'h2C, 8'h00, 8'h00},  // to Output 4
-		'{8'h33, 8'h34, 8'h35, 8'h36, 8'h37, 8'h00}   // to all outputs
+        '{8'h33, 8'h34, 8'h35, 8'h36, 8'h37, 8'h00}   // to all outputs
     };
     
     // Clock generation
@@ -59,7 +59,7 @@ module tb;
         .clk(clk),
         .rst(rst),
         .inp(inp),
-		.outp0(outp0),
+        .outp0(outp0),
         .outp1(outp1),
         .outp2(outp2),
         .outp3(outp3),
@@ -85,10 +85,10 @@ module tb;
         begin
             @(posedge clk);
             // Send packet 0
-			#1ps;
+            #1ps;
             inp.tvalid = 1;
             for (int i = 0; i < 6; i++) begin
-				inp.tuser = 5'b00001;
+                inp.tuser = 5'b00001;
                 inp.tdata = '0;
                 inp.tdata[7:0] = packet_data[0][i];
                 inp.tkeep = '1;
@@ -99,10 +99,10 @@ module tb;
             end
             inp.tvalid = 0;
             inp.tlast = 0;
-			// Send packet 1
+            // Send packet 1
             inp.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
-				inp.tuser = 5'b00010;
+                inp.tuser = 5'b00010;
                 inp.tdata = '0;
                 inp.tdata[7:0] = packet_data[1][i];
                 inp.tkeep = '1;
@@ -113,10 +113,10 @@ module tb;
             end
             inp.tvalid = 0;
             inp.tlast = 0;
-			// Send packet 2
+            // Send packet 2
             inp.tvalid = 1;
             for (int i = 0; i < 5; i++) begin
-				inp.tuser = 5'b00100;
+                inp.tuser = 5'b00100;
                 inp.tdata = '0;
                 inp.tdata[7:0] = packet_data[2][i];
                 inp.tkeep = '1;
@@ -127,10 +127,10 @@ module tb;
             end
             inp.tvalid = 0;
             inp.tlast = 0;
-			// Send packet 3
+            // Send packet 3
             inp.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
-				inp.tuser = 5'b01000;
+                inp.tuser = 5'b01000;
                 inp.tdata = '0;
                 inp.tdata[7:0] = packet_data[3][i];
                 inp.tkeep = '1;
@@ -141,10 +141,10 @@ module tb;
             end
             inp.tvalid = 0;
             inp.tlast = 0;
-			// Send packet 4
+            // Send packet 4
             inp.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
-				inp.tuser = 5'b10000;
+                inp.tuser = 5'b10000;
                 inp.tdata = '0;
                 inp.tdata[7:0] = packet_data[4][i];
                 inp.tkeep = '1;
@@ -155,10 +155,10 @@ module tb;
             end
             inp.tvalid = 0;
             inp.tlast = 0;
-			// Send packet 5
+            // Send packet 5
             inp.tvalid = 1;
             for (int i = 0; i < 5; i++) begin
-				inp.tuser = 5'b11111;
+                inp.tuser = 5'b11111;
                 inp.tdata = '0;
                 inp.tdata[7:0] = packet_data[5][i];
                 inp.tkeep = '1;
@@ -173,7 +173,7 @@ module tb;
         
         #(CLK_PERIOD * 7);
         $display("Stimulus completed successfully");
-	$finish(2);
+    $finish(2);
     end
     
     // Outputs ready control process
@@ -181,66 +181,66 @@ module tb;
         @(posedge clk);
         #1ps;
         outp0.tready = 1;
-		outp1.tready = 1;
-		outp2.tready = 1;
-		outp3.tready = 1;
-		outp4.tready = 1;
+        outp1.tready = 1;
+        outp2.tready = 1;
+        outp3.tready = 1;
+        outp4.tready = 1;
         #(CLK_PERIOD * 7);
         outp0.tready = 0;
-		outp1.tready = 0;
-		outp2.tready = 0;
-		outp3.tready = 0;
-		outp4.tready = 0;
+        outp1.tready = 0;
+        outp2.tready = 0;
+        outp3.tready = 0;
+        outp4.tready = 0;
         #CLK_PERIOD;
         outp0.tready = 1;
-		outp1.tready = 1;
-		outp2.tready = 1;
-		outp3.tready = 1;
-		outp4.tready = 1;
+        outp1.tready = 1;
+        outp2.tready = 1;
+        outp3.tready = 1;
+        outp4.tready = 1;
         #(CLK_PERIOD * 4);
         outp0.tready = 0;
-		outp1.tready = 0;
-		outp2.tready = 0;
-		outp3.tready = 0;
-		outp4.tready = 0;
+        outp1.tready = 0;
+        outp2.tready = 0;
+        outp3.tready = 0;
+        outp4.tready = 0;
         #(CLK_PERIOD * 3);
         outp0.tready = 1;
-		outp1.tready = 1;
-		outp2.tready = 1;
-		outp3.tready = 1;
-		outp4.tready = 1;
+        outp1.tready = 1;
+        outp2.tready = 1;
+        outp3.tready = 1;
+        outp4.tready = 1;
         #(CLK_PERIOD * 4);
         outp0.tready = 0;
-		outp1.tready = 0;
-		outp2.tready = 0;
-		outp3.tready = 0;
-		outp4.tready = 0;
+        outp1.tready = 0;
+        outp2.tready = 0;
+        outp3.tready = 0;
+        outp4.tready = 0;
         #(CLK_PERIOD * 2);
         outp0.tready = 1;
-		outp1.tready = 1;
-		outp2.tready = 1;
-		outp3.tready = 1;
-		outp4.tready = 1;
+        outp1.tready = 1;
+        outp2.tready = 1;
+        outp3.tready = 1;
+        outp4.tready = 1;
         #(CLK_PERIOD * 6);
         outp0.tready = 0;
-		outp1.tready = 0;
-		outp2.tready = 0;
-		outp3.tready = 0;
-		outp4.tready = 0;
+        outp1.tready = 0;
+        outp2.tready = 0;
+        outp3.tready = 0;
+        outp4.tready = 0;
         #(CLK_PERIOD * 2);
         outp0.tready = 1;
-		outp1.tready = 1;
-		outp2.tready = 1;
-		outp3.tready = 1;
-		outp4.tready = 1;
+        outp1.tready = 1;
+        outp2.tready = 1;
+        outp3.tready = 1;
+        outp4.tready = 1;
     end
     
     // Monitor process
     int expected_data_count0 = 0;
-	int expected_data_count1 = 0;
-	int expected_data_count2 = 0;
-	int expected_data_count3 = 0;
-	int expected_data_count4 = 0;
+    int expected_data_count1 = 0;
+    int expected_data_count2 = 0;
+    int expected_data_count3 = 0;
+    int expected_data_count4 = 0;
     
     always @(posedge clk) begin
         if (!rst) begin
@@ -252,7 +252,7 @@ module tb;
                     expected_data_count0 = 0;
                 end
             end
-			if (outp1.tvalid && outp1.tready) begin
+            if (outp1.tvalid && outp1.tready) begin
                 expected_data_count1++;
                 
                 if (outp1.tlast) begin
@@ -260,7 +260,7 @@ module tb;
                     expected_data_count1 = 0;
                 end
             end
-			if (outp2.tvalid && outp2.tready) begin
+            if (outp2.tvalid && outp2.tready) begin
                 expected_data_count2++;
                 
                 if (outp2.tlast) begin
@@ -268,7 +268,7 @@ module tb;
                     expected_data_count2 = 0;
                 end
             end
-			if (outp3.tvalid && outp3.tready) begin
+            if (outp3.tvalid && outp3.tready) begin
                 expected_data_count3++;
                 
                 if (outp3.tlast) begin
@@ -276,7 +276,7 @@ module tb;
                     expected_data_count3 = 0;
                 end
             end
-			if (outp4.tvalid && outp4.tready) begin
+            if (outp4.tvalid && outp4.tready) begin
                 expected_data_count4++;
                 
                 if (outp4.tlast) begin
