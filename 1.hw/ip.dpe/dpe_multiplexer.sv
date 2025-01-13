@@ -22,13 +22,13 @@ module dpe_multiplexer #(
     input  logic      rst,
     
     input  logic      pause,
-    output logic      paused,
+    output logic      is_idle,
     
-    dpe_if.s_axis     in0,
-    dpe_if.s_axis     in1,
-    dpe_if.s_axis     in2,
-    dpe_if.s_axis     in3,
-    dpe_if.s_axis     in4,
+    dpe_if.s_axis     inp0,
+    dpe_if.s_axis     inp1,
+    dpe_if.s_axis     inp2,
+    dpe_if.s_axis     inp3,
+    dpe_if.s_axis     inp4,
     dpe_if.m_axis     outp
 );
     typedef enum logic [3:0] {
@@ -69,61 +69,61 @@ module dpe_multiplexer #(
             end
             
             R0: begin
-                if (in0.tvalid && s_tready)         next_state = S0;
-                else if (pause)                     next_state = IDLE;
-                else if (!in0.tvalid && s_tready)   next_state = R1;
+                if (inp0.tvalid && s_tready)         next_state = S0;
+                else if (pause)                      next_state = IDLE;
+                else if (!inp0.tvalid && s_tready)   next_state = R1;
             end
             
             S0: begin
-                if (in0.tlast && in0.tvalid && s_tready) begin
+                if (inp0.tlast && inp0.tvalid && s_tready) begin
                     next_state = pause ? IDLE : R1;
                 end
             end
             
             R1: begin
-                if (in1.tvalid && s_tready)         next_state = S1;
-                else if (pause)                     next_state = IDLE;
-                else if (!in1.tvalid && s_tready)   next_state = R2;
+                if (inp1.tvalid && s_tready)         next_state = S1;
+                else if (pause)                      next_state = IDLE;
+                else if (!inp1.tvalid && s_tready)   next_state = R2;
             end
             
             S1: begin
-                if (in1.tlast && in1.tvalid && s_tready) begin
+                if (inp1.tlast && inp1.tvalid && s_tready) begin
                     next_state = pause ? IDLE : R2;
                 end
             end
             
             R2: begin
-                if (in2.tvalid && s_tready)         next_state = S2;
-                else if (pause)                     next_state = IDLE;
-                else if (!in2.tvalid && s_tready)   next_state = R3;
+                if (inp2.tvalid && s_tready)         next_state = S2;
+                else if (pause)                      next_state = IDLE;
+                else if (!inp2.tvalid && s_tready)   next_state = R3;
             end
             
             S2: begin
-                if (in2.tlast && in2.tvalid && s_tready) begin
+                if (inp2.tlast && inp2.tvalid && s_tready) begin
                     next_state = pause ? IDLE : R3;
                 end
             end
             
             R3: begin
-                if (in3.tvalid && s_tready)         next_state = S3;
-                else if (pause)                     next_state = IDLE;
-                else if (!in3.tvalid && s_tready)   next_state = R4;
+                if (inp3.tvalid && s_tready)         next_state = S3;
+                else if (pause)                      next_state = IDLE;
+                else if (!inp3.tvalid && s_tready)   next_state = R4;
             end
             
             S3: begin
-                if (in3.tlast && in3.tvalid && s_tready) begin
+                if (inp3.tlast && inp3.tvalid && s_tready) begin
                     next_state = pause ? IDLE : R4;
                 end
             end
             
             R4: begin
-                if (in4.tvalid && s_tready)         next_state = S4;
-                else if (pause)                     next_state = IDLE;
-                else if (!in4.tvalid && s_tready)   next_state = R0;
+                if (inp4.tvalid && s_tready)         next_state = S4;
+                else if (pause)                      next_state = IDLE;
+                else if (!inp4.tvalid && s_tready)   next_state = R0;
             end
             
             S4: begin
-                if (in4.tlast && in4.tvalid && s_tready) begin
+                if (inp4.tlast && inp4.tvalid && s_tready) begin
                     next_state = pause ? IDLE : R0;
                 end
             end
@@ -136,75 +136,75 @@ module dpe_multiplexer #(
     // Outputs logic
     always_comb begin
         // Default assignments
-        paused = 0;
+        is_idle = 0;
         s_tvalid = 0;
         s_tdata = '0;
         s_tlast = 0;
         s_tkeep = '0;
         s_tuser = '0;
-        in0.tready = 0;
-        in1.tready = 0;
-        in2.tready = 0;
-        in3.tready = 0;
-        in4.tready = 0;
+        inp0.tready = 0;
+        inp1.tready = 0;
+        inp2.tready = 0;
+        inp3.tready = 0;
+        inp4.tready = 0;
         
         case (state)
             IDLE: begin
-                paused = !s_out_tvalid;
+                is_idle = !s_out_tvalid;
             end
             
             R0, S0: begin
-                paused = 0;
-                s_tvalid = in0.tvalid;
-                s_tdata = in0.tdata;
-                s_tlast = in0.tlast;
-                s_tkeep = in0.tkeep;
+                is_idle = 0;
+                s_tvalid = inp0.tvalid;
+                s_tdata = inp0.tdata;
+                s_tlast = inp0.tlast;
+                s_tkeep = inp0.tkeep;
                 s_tuser = 5'b00001;
-                in0.tready = s_tready;
+                inp0.tready = s_tready;
             end
             
             R1, S1: begin
-                paused = 0;
-                s_tvalid = in1.tvalid;
-                s_tdata = in1.tdata;
-                s_tlast = in1.tlast;
-                s_tkeep = in1.tkeep;
+                is_idle = 0;
+                s_tvalid = inp1.tvalid;
+                s_tdata = inp1.tdata;
+                s_tlast = inp1.tlast;
+                s_tkeep = inp1.tkeep;
                 s_tuser = 5'b00010;
-                in1.tready = s_tready;
+                inp1.tready = s_tready;
             end
             
             R2, S2: begin
-                paused = 0;
-                s_tvalid = in2.tvalid;
-                s_tdata = in2.tdata;
-                s_tlast = in2.tlast;
-                s_tkeep = in2.tkeep;
+                is_idle = 0;
+                s_tvalid = inp2.tvalid;
+                s_tdata = inp2.tdata;
+                s_tlast = inp2.tlast;
+                s_tkeep = inp2.tkeep;
                 s_tuser = 5'b00100;
-                in2.tready = s_tready;
+                inp2.tready = s_tready;
             end
             
             R3, S3: begin
-                paused = 0;
-                s_tvalid = in3.tvalid;
-                s_tdata = in3.tdata;
-                s_tlast = in3.tlast;
-                s_tkeep = in3.tkeep;
+                is_idle = 0;
+                s_tvalid = inp3.tvalid;
+                s_tdata = inp3.tdata;
+                s_tlast = inp3.tlast;
+                s_tkeep = inp3.tkeep;
                 s_tuser = 5'b01000;
-                in3.tready = s_tready;
+                inp3.tready = s_tready;
             end
             
             R4, S4: begin
-                paused = 0;
-                s_tvalid = in4.tvalid;
-                s_tdata = in4.tdata;
-                s_tlast = in4.tlast;
-                s_tkeep = in4.tkeep;
+                is_idle = 0;
+                s_tvalid = inp4.tvalid;
+                s_tdata = inp4.tdata;
+                s_tlast = inp4.tlast;
+                s_tkeep = inp4.tkeep;
                 s_tuser = 5'b10000;
-                in4.tready = s_tready;
+                inp4.tready = s_tready;
             end
             
             default:
-                paused = !s_out_tvalid;
+                is_idle = !s_out_tvalid;
         endcase
     end
     
