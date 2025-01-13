@@ -3,11 +3,14 @@
 #==========================================================================
 
 #---AXIS library
-${HW_SRC}/axis_lib/axis_register
+${HW_SRC}/../ip.infra/axis_lib/axis_register
+
+#---DPE interface
+${HW_SRC}/../ip.infra/dpe_if.sv
 
 #---DPE components
-${HW_SRC}/dpe_if.sv
 ${HW_SRC}/dpe_multiplexer.sv
+${HW_SRC}/dpe_demultiplexer.sv
 
 #---TOP
 #${HW_SRC}/dpe_top.sv

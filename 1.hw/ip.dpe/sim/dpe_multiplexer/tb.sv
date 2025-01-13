@@ -27,14 +27,14 @@ module tb;
     logic clk = 0;
     logic rst = 1;
     logic pause = 0;
-    logic paused;
+    logic is_idle;
     
     // Interfaces
-    dpe_if #(DATA_WIDTH, USER_WIDTH) in0();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) in1();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) in2();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) in3();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) in4();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp0();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp1();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp2();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp3();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp4();
     dpe_if #(DATA_WIDTH, USER_WIDTH) outp();
     
     // Test data type and constants
@@ -60,42 +60,42 @@ module tb;
         .clk(clk),
         .rst(rst),
         .pause(pause),
-        .paused(paused),
-        .in0(in0),
-        .in1(in1),
-        .in2(in2),
-        .in3(in3),
-        .in4(in4),
+        .is_idle(is_idle),
+        .inp0(inp0),
+        .inp1(inp1),
+        .inp2(inp2),
+        .inp3(inp3),
+        .inp4(inp4),
         .outp(outp)
     );
     
     // Main stimulus process
     initial begin
         // Initialize all input interfaces
-        in0.tvalid = 0;
-        in0.tlast = 0;
-        in0.tkeep = '0;
-        in0.tdata = '0;
+        inp0.tvalid = 0;
+        inp0.tlast = 0;
+        inp0.tkeep = '0;
+        inp0.tdata = '0;
         
-        in1.tvalid = 0;
-        in1.tlast = 0;
-        in1.tkeep = '0;
-        in1.tdata = '0;
+        inp1.tvalid = 0;
+        inp1.tlast = 0;
+        inp1.tkeep = '0;
+        inp1.tdata = '0;
         
-        in2.tvalid = 0;
-        in2.tlast = 0;
-        in2.tkeep = '0;
-        in2.tdata = '0;
+        inp2.tvalid = 0;
+        inp2.tlast = 0;
+        inp2.tkeep = '0;
+        inp2.tdata = '0;
         
-        in3.tvalid = 0;
-        in3.tlast = 0;
-        in3.tkeep = '0;
-        in3.tdata = '0;
+        inp3.tvalid = 0;
+        inp3.tlast = 0;
+        inp3.tkeep = '0;
+        inp3.tdata = '0;
         
-        in4.tvalid = 0;
-        in4.tlast = 0;
-        in4.tkeep = '0;
-        in4.tdata = '0;
+        inp4.tvalid = 0;
+        inp4.tlast = 0;
+        inp4.tkeep = '0;
+        inp4.tdata = '0;
         
         // Reset assertion
         #(CLK_PERIOD * 4);
@@ -110,90 +110,90 @@ module tb;
             begin
                 @(posedge clk);
                 #1ps;
-                in0.tvalid = 1;
+                inp0.tvalid = 1;
                 for (int i = 0; i < 6; i++) begin
-                    in0.tdata = '0;
-                    in0.tdata[7:0] = packet_data[0][i];
-                    in0.tkeep = '1;
-                    in0.tlast = (i == 5);
+                    inp0.tdata = '0;
+                    inp0.tdata[7:0] = packet_data[0][i];
+                    inp0.tkeep = '1;
+                    inp0.tlast = (i == 5);
                     @(posedge clk);
-                    while (!in0.tready) @(posedge clk);
+                    while (!inp0.tready) @(posedge clk);
                     #1ps;
                 end
-                in0.tvalid = 0;
-                in0.tlast = 0;
+                inp0.tvalid = 0;
+                inp0.tlast = 0;
             end
             
             // Input 1 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                in1.tvalid = 1;
+                inp1.tvalid = 1;
                 for (int i = 0; i < 4; i++) begin
-                    in1.tdata = '0;
-                    in1.tdata[7:0] = packet_data[1][i];
-                    in1.tkeep = '1;
-                    in1.tlast = (i == 3);
+                    inp1.tdata = '0;
+                    inp1.tdata[7:0] = packet_data[1][i];
+                    inp1.tkeep = '1;
+                    inp1.tlast = (i == 3);
                     @(posedge clk);                    
-                    while (!in1.tready) @(posedge clk);
+                    while (!inp1.tready) @(posedge clk);
                     #1ps;
                 end
-                in1.tvalid = 0;
-                in1.tlast = 0;
+                inp1.tvalid = 0;
+                inp1.tlast = 0;
             end
             
             // Input 2 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                in2.tvalid = 1;
+                inp2.tvalid = 1;
                 for (int i = 0; i < 5; i++) begin
-                    in2.tdata = '0;
-                    in2.tdata[7:0] = packet_data[2][i];
-                    in2.tkeep = '1;
-                    in2.tlast = (i == 4);
+                    inp2.tdata = '0;
+                    inp2.tdata[7:0] = packet_data[2][i];
+                    inp2.tkeep = '1;
+                    inp2.tlast = (i == 4);
                     @(posedge clk);
-                    while (!in2.tready) @(posedge clk);
+                    while (!inp2.tready) @(posedge clk);
                     #1ps;
                 end
-                in2.tvalid = 0;
-                in2.tlast = 0;
+                inp2.tvalid = 0;
+                inp2.tlast = 0;
             end
             
             // Input 3 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                in3.tvalid = 1;
+                inp3.tvalid = 1;
                 for (int i = 0; i < 4; i++) begin
-                    in3.tdata = '0;
-                    in3.tdata[7:0] = packet_data[3][i];
-                    in3.tkeep = '1;
-                    in3.tlast = (i == 3);
+                    inp3.tdata = '0;
+                    inp3.tdata[7:0] = packet_data[3][i];
+                    inp3.tkeep = '1;
+                    inp3.tlast = (i == 3);
                     @(posedge clk);
-                    while (!in3.tready) @(posedge clk);
+                    while (!inp3.tready) @(posedge clk);
                     #1ps;
                 end
-                in3.tvalid = 0;
-                in3.tlast = 0;
+                inp3.tvalid = 0;
+                inp3.tlast = 0;
             end
             
             // Input 4 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                in4.tvalid = 1;
+                inp4.tvalid = 1;
                 for (int i = 0; i < 4; i++) begin
-                    in4.tdata = '0;
-                    in4.tdata[7:0] = packet_data[4][i];
-                    in4.tkeep = '1;
-                    in4.tlast = (i == 3);
+                    inp4.tdata = '0;
+                    inp4.tdata[7:0] = packet_data[4][i];
+                    inp4.tkeep = '1;
+                    inp4.tlast = (i == 3);
                     @(posedge clk);
-                    while (!in4.tready) @(posedge clk);
+                    while (!inp4.tready) @(posedge clk);
                     #1ps;
                 end
-                in4.tvalid = 0;
-                in4.tlast = 0;
+                inp4.tvalid = 0;
+                inp4.tlast = 0;
             end
         join
         

@@ -16,7 +16,7 @@ export BLD_DIR HW_SRC TB_NAME
 
 #------------------------
 .PHONY: all
-all: clean sim wave
+all: clean sim wave-alt
 
 #------------------------
 clean:
