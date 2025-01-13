@@ -13,7 +13,7 @@ ${HW_SRC}/dpe_multiplexer.sv
 ${HW_SRC}/dpe_demultiplexer.sv
 
 #---TOP
-#${HW_SRC}/dpe_top.sv
+${HW_SRC}/dpe_top.sv
 
 #==========================================================================
 # End-of-File

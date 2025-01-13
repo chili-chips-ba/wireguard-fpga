@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   DPE Demultiplexer Testbench
+//   DPE top-level module testbench
 //==========================================================================
 
 `timescale 1ps/1ps
@@ -26,9 +26,15 @@ module tb;
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
+    logic pause = 0;
+    logic is_idle;
     
     // Interfaces
-    dpe_if #(DATA_WIDTH, USER_WIDTH) inp();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp0();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp1();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp2();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp3();
+    dpe_if #(DATA_WIDTH, USER_WIDTH) inp4();
     dpe_if #(DATA_WIDTH, USER_WIDTH) outp0();
     dpe_if #(DATA_WIDTH, USER_WIDTH) outp1();
     dpe_if #(DATA_WIDTH, USER_WIDTH) outp2();
@@ -37,28 +43,32 @@ module tb;
     
     // Test data type and constants
     typedef logic [7:0] test_data_t [6];
-    typedef test_data_t packet_data_t [6];
+    typedef test_data_t packet_data_t [5];
     
     const packet_data_t packet_data = '{
-        '{8'h01, 8'h02, 8'h03, 8'h04, 8'h05, 8'h06},  // to Output 0
-        '{8'h0B, 8'h0C, 8'h0D, 8'h0E, 8'h00, 8'h00},  // to Output 1
-        '{8'h15, 8'h16, 8'h17, 8'h18, 8'h19, 8'h00},  // to Output 2
-        '{8'h1F, 8'h20, 8'h21, 8'h22, 8'h00, 8'h00},  // to Output 3
-        '{8'h29, 8'h2A, 8'h2B, 8'h2C, 8'h00, 8'h00},  // to Output 4
-        '{8'h33, 8'h34, 8'h35, 8'h36, 8'h37, 8'h00}   // to all outputs
+        '{8'h01, 8'h02, 8'h03, 8'h04, 8'h05, 8'h06},  // Input 0
+        '{8'h0B, 8'h0C, 8'h0D, 8'h0E, 8'h00, 8'h00},  // Input 1
+        '{8'h15, 8'h16, 8'h17, 8'h18, 8'h19, 8'h00},  // Input 2
+        '{8'h1F, 8'h20, 8'h21, 8'h22, 8'h00, 8'h00},  // Input 3
+        '{8'h29, 8'h2A, 8'h2B, 8'h2C, 8'h00, 8'h00}   // Input 4
     };
     
     // Clock generation
     always #(CLK_PERIOD/2) clk = ~clk;
     
     // DUT instantiation
-    dpe_demultiplexer #(
-        .TDATA_WIDTH(DATA_WIDTH),
-        .TUSER_WIDTH(USER_WIDTH)
+    dpe_top #(
+        .TDATA_WIDTH(DATA_WIDTH)
     ) DUT (
         .clk(clk),
         .rst(rst),
-        .inp(inp),
+        .pause(pause),
+        .is_idle(is_idle),
+        .inp0(inp0),
+        .inp1(inp1),
+        .inp2(inp2),
+        .inp3(inp3),
+        .inp4(inp4),
         .outp0(outp0),
         .outp1(outp1),
         .outp2(outp2),
@@ -68,12 +78,32 @@ module tb;
     
     // Main stimulus process
     initial begin
-        // Initialize input interface
-        inp.tvalid = 0;
-        inp.tlast = 0;
-        inp.tkeep = '0;
-        inp.tdata = '0;
-               
+        // Initialize all input interfaces
+        inp0.tvalid = 0;
+        inp0.tlast = 0;
+        inp0.tkeep = '0;
+        inp0.tdata = '0;
+        
+        inp1.tvalid = 0;
+        inp1.tlast = 0;
+        inp1.tkeep = '0;
+        inp1.tdata = '0;
+        
+        inp2.tvalid = 0;
+        inp2.tlast = 0;
+        inp2.tkeep = '0;
+        inp2.tdata = '0;
+        
+        inp3.tvalid = 0;
+        inp3.tlast = 0;
+        inp3.tkeep = '0;
+        inp3.tdata = '0;
+        
+        inp4.tvalid = 0;
+        inp4.tlast = 0;
+        inp4.tkeep = '0;
+        inp4.tdata = '0;
+        
         // Reset assertion
         #(CLK_PERIOD * 4);
         @(posedge clk);
@@ -81,95 +111,98 @@ module tb;
         rst = 0;
         #(CLK_PERIOD);
         
-        // Input stimulus
-        begin
-            @(posedge clk);
-            // Send packet 0
-            #1ps;
-            inp.tvalid = 1;
-            for (int i = 0; i < 6; i++) begin
-                inp.tuser = 5'b00001;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[0][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 5);
+        // Start all stimulus processes in parallel
+        fork
+            // Input 0 stimulus
+            begin
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
                 #1ps;
+                inp0.tvalid = 1;
+                for (int i = 0; i < 6; i++) begin
+                    inp0.tdata = '0;
+                    inp0.tdata[7:0] = packet_data[0][i];
+                    inp0.tkeep = '1;
+                    inp0.tlast = (i == 5);
+                    @(posedge clk);
+                    while (!inp0.tready) @(posedge clk);
+                    #1ps;
+                end
+                inp0.tvalid = 0;
+                inp0.tlast = 0;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
-            // Send packet 1
-            inp.tvalid = 1;
-            for (int i = 0; i < 4; i++) begin
-                inp.tuser = 5'b00010;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[1][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 3);
+            
+            // Input 1 stimulus
+            begin
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
                 #1ps;
+                inp1.tvalid = 1;
+                for (int i = 0; i < 4; i++) begin
+                    inp1.tdata = '0;
+                    inp1.tdata[7:0] = packet_data[1][i];
+                    inp1.tkeep = '1;
+                    inp1.tlast = (i == 3);
+                    @(posedge clk);                    
+                    while (!inp1.tready) @(posedge clk);
+                    #1ps;
+                end
+                inp1.tvalid = 0;
+                inp1.tlast = 0;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
-            // Send packet 2
-            inp.tvalid = 1;
-            for (int i = 0; i < 5; i++) begin
-                inp.tuser = 5'b00100;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[2][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 4);
+            
+            // Input 2 stimulus
+            begin
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
                 #1ps;
+                inp2.tvalid = 1;
+                for (int i = 0; i < 5; i++) begin
+                    inp2.tdata = '0;
+                    inp2.tdata[7:0] = packet_data[2][i];
+                    inp2.tkeep = '1;
+                    inp2.tlast = (i == 4);
+                    @(posedge clk);
+                    while (!inp2.tready) @(posedge clk);
+                    #1ps;
+                end
+                inp2.tvalid = 0;
+                inp2.tlast = 0;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
-            // Send packet 3
-            inp.tvalid = 1;
-            for (int i = 0; i < 4; i++) begin
-                inp.tuser = 5'b01000;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[3][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 3);
+            
+            // Input 3 stimulus
+            begin
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
                 #1ps;
+                inp3.tvalid = 1;
+                for (int i = 0; i < 4; i++) begin
+                    inp3.tdata = '0;
+                    inp3.tdata[7:0] = packet_data[3][i];
+                    inp3.tkeep = '1;
+                    inp3.tlast = (i == 3);
+                    @(posedge clk);
+                    while (!inp3.tready) @(posedge clk);
+                    #1ps;
+                end
+                inp3.tvalid = 0;
+                inp3.tlast = 0;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
-            // Send packet 4
-            inp.tvalid = 1;
-            for (int i = 0; i < 4; i++) begin
-                inp.tuser = 5'b10000;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[4][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 3);
+            
+            // Input 4 stimulus
+            begin
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
                 #1ps;
+                inp4.tvalid = 1;
+                for (int i = 0; i < 4; i++) begin
+                    inp4.tdata = '0;
+                    inp4.tdata[7:0] = packet_data[4][i];
+                    inp4.tkeep = '1;
+                    inp4.tlast = (i == 3);
+                    @(posedge clk);
+                    while (!inp4.tready) @(posedge clk);
+                    #1ps;
+                end
+                inp4.tvalid = 0;
+                inp4.tlast = 0;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
-            // Send packet 5
-            inp.tvalid = 1;
-            for (int i = 0; i < 5; i++) begin
-                inp.tuser = 5'b11111;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[5][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 4);
-                @(posedge clk);
-                while (!inp.tready) @(posedge clk);
-                #1ps;
-            end
-            inp.tvalid = 0;
-            inp.tlast = 0;
-        end
+        join
         
         #(CLK_PERIOD * 7);
         $display("Stimulus completed successfully");

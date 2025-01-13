@@ -199,7 +199,7 @@ module tb;
         
         #(CLK_PERIOD * 7);
         $display("Stimulus completed successfully");
-	$finish(2);
+    $finish(2);
     end
     
     // Output ready control process
