@@ -22,12 +22,12 @@ module tb;
     localparam DATA_WIDTH = 128;
     localparam KEEP_WIDTH = DATA_WIDTH/8;
     localparam INP_USER_WIDTH = 5;
-	localparam OUTP_USER_WIDTH = 128;
+    localparam OUTP_USER_WIDTH = 128;
     
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
-	logic is_idle;
+    logic is_idle;
     
     // Interfaces
     dpe_if #(DATA_WIDTH, INP_USER_WIDTH) inp();
@@ -39,49 +39,49 @@ module tb;
     
     const packet_data_t packet_data = '{
         '{128'h00050008F85ABFE5363A83B59434E6A2, 
-		  128'h090A0100090A26631140000017039C00,
-		  128'hF40600000001AE1488006CCAC6A90200,
-		  128'hCF2C3786BC020000000000000002AB7D,
-		  128'hD2302D3D2334C570347A3263B7398A20,
-		  128'h989CF26AF51C16BD8C5466DC08A9DB53,
-		  128'h85E58342D52EAB3CABF4B5FF0AF991C3,
-		  128'h08A437F52A662C69698CAA1B663078ED,
-		  128'h70BBF2FAB15757F16B1983B4E1E38051,
-		  128'h3319107F4160B4F8E66A004C3BBE7331,
-		  128'h0000000000005430B61799C89613B7E3},
-		'{128'h00450008F85ABFE5363A83B59434E6A2, 
-		  128'h090A0100090A26631140000017039C00,
-		  128'hF40600000004AE1488006CCAC6A90200,
-		  128'hCF2C3786BC020000000000000002AB7D,
-		  128'hD2302D3D2334C570347A3263B7398A20,
-		  128'h989CF26AF51C16BD8C5466DC08A9DB53,
-		  128'h85E58342D52EAB3CABF4B5FF0AF991C3,
-		  128'h08A437F52A662C69698CAA1B663078ED,
-		  128'h70BBF2FAB15757F16B1983B4E1E38051,
-		  128'h3319107F4160B4F8E66A004C3BBE7331,
-		  128'h0000000000005430B61799C89613B7E3},
-		'{128'h00450008F85ABFE5363A83B59434E6A2, 
-		  128'h090A0100090A26631140000017039C00,
-		  128'hF40600000001AE1488006CCAC6A90200,
-		  128'hCF2C3786BC020000000000000002AB7D,
-		  128'hD2302D3D2334C570347A3263B7398A20,
-		  128'h989CF26AF51C16BD8C5466DC08A9DB53,
-		  128'h85E58342D52EAB3CABF4B5FF0AF991C3,
-		  128'h08A437F52A662C69698CAA1B663078ED,
-		  128'h70BBF2FAB15757F16B1983B4E1E38051,
-		  128'h3319107F4160B4F8E66A004C3BBE7331,
-		  128'h0000000000005430B61799C89613B7E3},
-		'{128'h00450008F85ABFE5363A83B59434E6A2, 
-		  128'h090A0100090A275D1140000076093C00,
-		  128'hF406000000044E1428006CCAC6A90200,
-		  128'h1D65B6E256190000000000000003AB7D,
-		  128'h0000000000007196D0A09230B29CF5D4,
-		  '0,
-		  '0,
-		  '0,
-		  '0,
-		  '0,
-		  '0}
+          128'h090A0100090A26631140000017039C00,
+          128'hF40600000001AE1488006CCAC6A90200,
+          128'hCF2C3786BC020000000000000002AB7D,
+          128'hD2302D3D2334C570347A3263B7398A20,
+          128'h989CF26AF51C16BD8C5466DC08A9DB53,
+          128'h85E58342D52EAB3CABF4B5FF0AF991C3,
+          128'h08A437F52A662C69698CAA1B663078ED,
+          128'h70BBF2FAB15757F16B1983B4E1E38051,
+          128'h3319107F4160B4F8E66A004C3BBE7331,
+          128'h0000000000005430B61799C89613B7E3},
+        '{128'h00450008F85ABFE5363A83B59434E6A2, 
+          128'h090A0100090A26631140000017039C00,
+          128'hF40600000004AE1488006CCAC6A90200,
+          128'hCF2C3786BC020000000000000002AB7D,
+          128'hD2302D3D2334C570347A3263B7398A20,
+          128'h989CF26AF51C16BD8C5466DC08A9DB53,
+          128'h85E58342D52EAB3CABF4B5FF0AF991C3,
+          128'h08A437F52A662C69698CAA1B663078ED,
+          128'h70BBF2FAB15757F16B1983B4E1E38051,
+          128'h3319107F4160B4F8E66A004C3BBE7331,
+          128'h0000000000005430B61799C89613B7E3},
+        '{128'h00450008F85ABFE5363A83B59434E6A2, 
+          128'h090A0100090A26631140000017039C00,
+          128'hF40600000001AE1488006CCAC6A90200,
+          128'hCF2C3786BC020000000000000002AB7D,
+          128'hD2302D3D2334C570347A3263B7398A20,
+          128'h989CF26AF51C16BD8C5466DC08A9DB53,
+          128'h85E58342D52EAB3CABF4B5FF0AF991C3,
+          128'h08A437F52A662C69698CAA1B663078ED,
+          128'h70BBF2FAB15757F16B1983B4E1E38051,
+          128'h3319107F4160B4F8E66A004C3BBE7331,
+          128'h0000000000005430B61799C89613B7E3},
+        '{128'h00450008F85ABFE5363A83B59434E6A2, 
+          128'h090A0100090A275D1140000076093C00,
+          128'hF406000000044E1428006CCAC6A90200,
+          128'h1D65B6E256190000000000000003AB7D,
+          128'h0000000000007196D0A09230B29CF5D4,
+          '0,
+          '0,
+          '0,
+          '0,
+          '0,
+          '0}
     };
     
     // Clock generation
@@ -91,7 +91,7 @@ module tb;
     dpe_wg_disassembler DUT (
         .clk(clk),
         .rst(rst),
-		.is_idle(is_idle),
+        .is_idle(is_idle),
         .inp(inp),
         .outp(outp)
     );
@@ -126,11 +126,11 @@ module tb;
                 while (!inp.tready) @(posedge clk);
                 #1ps;
             end
-			inp.tvalid = 0;
+            inp.tvalid = 0;
             inp.tlast = 0;
-			inp.tkeep = '0;
-			inp.tdata = '0;
-			// Send packet 1
+            inp.tkeep = '0;
+            inp.tdata = '0;
+            // Send packet 1
             inp.tvalid = 1;
             for (int i = 0; i < 11; i++) begin
                 inp.tuser = 5'b00010;
@@ -141,11 +141,11 @@ module tb;
                 while (!inp.tready) @(posedge clk);
                 #1ps;
             end
-			inp.tvalid = 0;
+            inp.tvalid = 0;
             inp.tlast = 0;
-			inp.tkeep = '0;
-			inp.tdata = '0;
-			// Send packet 2
+            inp.tkeep = '0;
+            inp.tdata = '0;
+            // Send packet 2
             inp.tvalid = 1;
             for (int i = 0; i < 11; i++) begin
                 inp.tuser = 5'b00100;
@@ -156,11 +156,11 @@ module tb;
                 while (!inp.tready) @(posedge clk);
                 #1ps;
             end
-			inp.tvalid = 0;
+            inp.tvalid = 0;
             inp.tlast = 0;
-			inp.tkeep = '0;
-			inp.tdata = '0;
-			// Send packet 3
+            inp.tkeep = '0;
+            inp.tdata = '0;
+            // Send packet 3
             inp.tvalid = 1;
             for (int i = 0; i < 5; i++) begin
                 inp.tuser = 5'b00100;
@@ -171,10 +171,10 @@ module tb;
                 while (!inp.tready) @(posedge clk);
                 #1ps;
             end
-			inp.tvalid = 0;
+            inp.tvalid = 0;
             inp.tlast = 0;
-			inp.tkeep = '0;
-			inp.tdata = '0;
+            inp.tkeep = '0;
+            inp.tdata = '0;
         end
         
         #(CLK_PERIOD * 7);
