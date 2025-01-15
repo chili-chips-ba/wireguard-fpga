@@ -18,10 +18,14 @@
             strs: [
                 "TOP",
                 "tb",
-                "inp0",
+                "DUT",
             ],
         ))),
         displayed_items_order: [
+            (37),
+            (38),
+            (39),
+            (40),
             (1),
             (2),
             (3),
@@ -58,9 +62,143 @@
             (35),
             (36),
             (18),
+            (41),
         ],
         displayed_items: {
-            (25): Variable((
+            (23): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp3",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp3.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (11): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp1",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp1.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (35): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (22): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp3",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp3.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (3): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp0",
+                        ],
+                    ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp0.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (12): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp1",
+                        ],
+                    ),
+                    name: "tvalid",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp1.tvalid",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (36): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp",
+                        ],
+                    ),
+                    name: "tvalid",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp.tvalid",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (27): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -69,14 +207,109 @@
                             "inp4",
                         ],
                     ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp4.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (31): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp",
+                        ],
+                    ),
                     name: "tdata",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…inp4.tdata [127:0]",
+                display_name: "…outp.tdata [127:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (15): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp2",
+                        ],
+                    ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp2.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (29): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp4",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp4.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (4): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp0",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp0.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (2): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp0",
+                        ],
+                    ),
+                    name: "tkeep",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp0.tkeep [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
                 field_formats: [],
             )),
             (17): Variable((
@@ -96,6 +329,382 @@
                 display_name_type: Unique,
                 manual_name: None,
                 format: Some("Binary"),
+                field_formats: [],
+            )),
+            (26): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp4",
+                        ],
+                    ),
+                    name: "tkeep",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp4.tkeep [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (25): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp4",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp4.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (5): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp0",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp0.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (30): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp4",
+                        ],
+                    ),
+                    name: "tvalid",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp4.tvalid",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (21): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp3",
+                        ],
+                    ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp3.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (7): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp1",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp1.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (8): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp1",
+                        ],
+                    ),
+                    name: "tkeep",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp1.tkeep [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (40): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                        ],
+                    ),
+                    name: "is_idle",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "is_idle",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (28): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp4",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp4.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (10): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp1",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp1.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (34): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (19): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp3",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp3.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (1): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp0",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp0.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (39): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                        ],
+                    ),
+                    name: "pause",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "pause",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (41): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "DUT",
+                        ],
+                    ),
+                    name: "state",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "state [3:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (37): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                        ],
+                    ),
+                    name: "clk",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "clk",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (16): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp2",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp2.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (13): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp2",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp2.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (38): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                        ],
+                    ),
+                    name: "rst",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "rst",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (6): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp0",
+                        ],
+                    ),
+                    name: "tvalid",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp0.tvalid",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
                 field_formats: [],
             )),
             (33): Variable((
@@ -136,254 +745,7 @@
                 format: None,
                 field_formats: [],
             )),
-            (21): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp3",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp3.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (26): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp4",
-                        ],
-                    ),
-                    name: "tkeep",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp4.tkeep [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (12): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp1",
-                        ],
-                    ),
-                    name: "tvalid",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp1.tvalid",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (1): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp0",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp0.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (28): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp4",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp4.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (27): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp4",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp4.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (24): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp3",
-                        ],
-                    ),
-                    name: "tvalid",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp3.tvalid",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (29): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp4",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp4.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (20): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp3",
-                        ],
-                    ),
-                    name: "tkeep",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp3.tkeep [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (22): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp3",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp3.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (8): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp1",
-                        ],
-                    ),
-                    name: "tkeep",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp1.tkeep [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (7): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp1",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp1.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (30): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp4",
-                        ],
-                    ),
-                    name: "tvalid",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp4.tvalid",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (36): Variable((
+            (32): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -392,87 +754,11 @@
                             "outp",
                         ],
                     ),
-                    name: "tvalid",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp.tvalid",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (35): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (10): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp1",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp1.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (13): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp2",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp2.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (2): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp0",
-                        ],
-                    ),
                     name: "tkeep",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…inp0.tkeep [15:0]",
+                display_name: "…outp.tkeep [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -497,7 +783,7 @@
                 format: None,
                 field_formats: [],
             )),
-            (23): Variable((
+            (24): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -506,30 +792,11 @@
                             "inp3",
                         ],
                     ),
-                    name: "tuser",
+                    name: "tvalid",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…inp3.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (3): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp0",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp0.tlast",
+                display_name: "…inp3.tvalid",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -554,64 +821,7 @@
                 format: None,
                 field_formats: [],
             )),
-            (34): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (5): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp0",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp0.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (6): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp0",
-                        ],
-                    ),
-                    name: "tvalid",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp0.tvalid",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (19): Variable((
+            (20): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -620,132 +830,18 @@
                             "inp3",
                         ],
                     ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp3.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (11): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp1",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp1.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (16): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp2",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp2.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (4): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp0",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp0.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (15): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp2",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp2.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (31): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (32): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp",
-                        ],
-                    ),
                     name: "tkeep",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…outp.tkeep [15:0]",
+                display_name: "…inp3.tkeep [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
             )),
         },
-        display_item_ref_counter: 36,
+        display_item_ref_counter: 41,
         viewports: [
             (
                 curr_left: (0.0),
@@ -760,7 +856,7 @@
         ],
         cursor: None,
         markers: {},
-        focused_item: Some((0)),
+        focused_item: None,
         focused_transaction: (None, None),
         selected_items: [],
         default_variable_name_type: Unique,
