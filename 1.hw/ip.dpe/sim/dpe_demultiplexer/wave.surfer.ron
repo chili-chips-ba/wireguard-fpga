@@ -17,11 +17,11 @@
         active_scope: Some(WaveScope((
             strs: [
                 "TOP",
-                "tb",
-                "inp",
             ],
         ))),
         displayed_items_order: [
+            (37),
+            (38),
             (1),
             (2),
             (3),
@@ -60,82 +60,6 @@
             (36),
         ],
         displayed_items: {
-            (17): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp1",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp1.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (9): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp0",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp0.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (23): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp2",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp2.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (21): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp2",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp2.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
             (6): Variable((
                 variable_ref: (
                     path: (
@@ -155,45 +79,26 @@
                 format: None,
                 field_formats: [],
             )),
-            (8): Variable((
+            (1): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "TOP",
                             "tb",
-                            "outp0",
+                            "inp",
                         ],
                     ),
-                    name: "tkeep",
+                    name: "tdata",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…outp0.tkeep [15:0]",
+                display_name: "…inp.tdata [127:0]",
                 display_name_type: Unique,
                 manual_name: None,
-                format: None,
+                format: Some("Unsigned"),
                 field_formats: [],
             )),
-            (35): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp4",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp4.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (14): Variable((
+            (15): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -202,11 +107,49 @@
                             "outp1",
                         ],
                     ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp1.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (34): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp4",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp4.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (32): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp4",
+                        ],
+                    ),
                     name: "tkeep",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…outp1.tkeep [15:0]",
+                display_name: "…outp4.tkeep [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -231,20 +174,19 @@
                 format: None,
                 field_formats: [],
             )),
-            (4): Variable((
+            (37): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "TOP",
                             "tb",
-                            "inp",
                         ],
                     ),
-                    name: "tready",
+                    name: "clk",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…inp.tready",
+                display_name: "clk",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -269,7 +211,45 @@
                 format: None,
                 field_formats: [],
             )),
-            (11): Variable((
+            (19): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp2",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp2.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (21): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp2",
+                        ],
+                    ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp2.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (9): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -278,30 +258,30 @@
                             "outp0",
                         ],
                     ),
-                    name: "tuser",
+                    name: "tlast",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…outp0.tuser [4:0]",
+                display_name: "…outp0.tlast",
                 display_name_type: Unique,
                 manual_name: None,
-                format: Some("Binary"),
+                format: None,
                 field_formats: [],
             )),
-            (34): Variable((
+            (30): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "TOP",
                             "tb",
-                            "outp4",
+                            "outp3",
                         ],
                     ),
-                    name: "tready",
+                    name: "tvalid",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…outp4.tready",
+                display_name: "…outp3.tvalid",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -326,44 +306,6 @@
                 format: Some("Unsigned"),
                 field_formats: [],
             )),
-            (1): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (3): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
             (5): Variable((
                 variable_ref: (
                     path: (
@@ -381,291 +323,6 @@
                 display_name_type: Unique,
                 manual_name: None,
                 format: Some("Binary"),
-                field_formats: [],
-            )),
-            (2): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "inp",
-                        ],
-                    ),
-                    name: "tkeep",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…inp.tkeep [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (20): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp2",
-                        ],
-                    ),
-                    name: "tkeep",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp2.tkeep [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (29): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp3",
-                        ],
-                    ),
-                    name: "tuser",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp3.tuser [4:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-            )),
-            (19): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp2",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp2.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (24): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp2",
-                        ],
-                    ),
-                    name: "tvalid",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp2.tvalid",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (33): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp4",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp4.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (31): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp4",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp4.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (32): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp4",
-                        ],
-                    ),
-                    name: "tkeep",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp4.tkeep [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (36): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp4",
-                        ],
-                    ),
-                    name: "tvalid",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp4.tvalid",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (15): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp1",
-                        ],
-                    ),
-                    name: "tlast",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp1.tlast",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (13): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp1",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp1.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
-                field_formats: [],
-            )),
-            (22): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp2",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp2.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (26): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp3",
-                        ],
-                    ),
-                    name: "tkeep",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp3.tkeep [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (28): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp3",
-                        ],
-                    ),
-                    name: "tready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp3.tready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-            )),
-            (25): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "TOP",
-                            "tb",
-                            "outp3",
-                        ],
-                    ),
-                    name: "tdata",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "…outp3.tdata [127:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Unsigned"),
                 field_formats: [],
             )),
             (27): Variable((
@@ -706,6 +363,120 @@
                 format: None,
                 field_formats: [],
             )),
+            (28): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp3",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp3.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (29): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp3",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp3.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (14): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp1",
+                        ],
+                    ),
+                    name: "tkeep",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp1.tkeep [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (3): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp",
+                        ],
+                    ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (33): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp4",
+                        ],
+                    ),
+                    name: "tlast",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp4.tlast",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (8): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp0",
+                        ],
+                    ),
+                    name: "tkeep",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp0.tkeep [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
             (18): Variable((
                 variable_ref: (
                     path: (
@@ -725,7 +496,120 @@
                 format: None,
                 field_formats: [],
             )),
-            (30): Variable((
+            (4): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (36): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp4",
+                        ],
+                    ),
+                    name: "tvalid",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp4.tvalid",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (31): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp4",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp4.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (22): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp2",
+                        ],
+                    ),
+                    name: "tready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp2.tready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (17): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp1",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp1.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (38): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                        ],
+                    ),
+                    name: "rst",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "rst",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (26): Variable((
                 variable_ref: (
                     path: (
                         strs: [
@@ -734,18 +618,170 @@
                             "outp3",
                         ],
                     ),
-                    name: "tvalid",
+                    name: "tkeep",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "…outp3.tvalid",
+                display_name: "…outp3.tkeep [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
             )),
+            (35): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp4",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp4.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (23): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp2",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp2.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (24): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp2",
+                        ],
+                    ),
+                    name: "tvalid",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp2.tvalid",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (11): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp0",
+                        ],
+                    ),
+                    name: "tuser",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp0.tuser [4:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+            )),
+            (2): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "inp",
+                        ],
+                    ),
+                    name: "tkeep",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…inp.tkeep [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (25): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp3",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp3.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
+            (20): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp2",
+                        ],
+                    ),
+                    name: "tkeep",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp2.tkeep [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+            )),
+            (13): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "TOP",
+                            "tb",
+                            "outp1",
+                        ],
+                    ),
+                    name: "tdata",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…outp1.tdata [127:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Unsigned"),
+                field_formats: [],
+            )),
         },
-        display_item_ref_counter: 36,
+        display_item_ref_counter: 38,
         viewports: [
             (
                 curr_left: (0.000000005513429512308925),
@@ -762,7 +798,7 @@
             4659,
         ])),
         markers: {},
-        focused_item: Some((23)),
+        focused_item: None,
         focused_transaction: (None, None),
         selected_items: [],
         default_variable_name_type: Unique,
@@ -770,9 +806,9 @@
         display_variable_indices: true,
         graphics: {},
     )),
-    drag_started: false,
+    drag_started: true,
     drag_source_idx: None,
-    drag_target_idx: Some((23)),
+    drag_target_idx: None,
     previous_waves: None,
     count: None,
     blacklisted_translators: [],
