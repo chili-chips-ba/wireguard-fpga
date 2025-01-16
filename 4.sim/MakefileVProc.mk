@@ -39,6 +39,9 @@ export BLD_DIR HW_SRC TB_NAME
 # Location of VProc and memory model libraries
 COSIMDIR         = $(CURDIR)/models/cosim
 UDPDIR           = $(CURDIR)/models/udpPgIp
+UDP_C            = VUserMainUdp.cpp
+UDPCODEDIR       = $(CURDIR)/usercode
+
 
 # --------------------------------------------
 # RV32 ISS variables
@@ -78,14 +81,14 @@ C++              = g++
 CPPSTD           = -std=c++20
 
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS        = -I$(USRCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR) $(RV32INCLOPTS)
+INCLPATHS        = -I$(USRCODEDIR) -I$(UDPCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR) $(RV32INCLOPTS)
 DEFS             = -DVERILATOR -DVPROC_SV -DVPROC
 
 VOBJDIR          = $(CURDIR)/obj
 
 # Separate C and C++ source files
-USER_CPP_BASE    = $(notdir $(filter %cpp, $(USER_C)))
-USER_C_BASE      = $(notdir $(filter %c,   $(USER_C)))
+USER_CPP_BASE    = $(notdir $(filter %cpp, $(USER_C) $(UDP_C)))
+USER_C_BASE      = $(notdir $(filter %c,   $(USER_C) $(UDP_C)))
 
 # Create list of object files (excluding any veriuser object)
 VOBJS            = $(addprefix $(VOBJDIR)/,                   \
@@ -114,6 +117,7 @@ TBFILELIST       = $(COSIMDIR)/mem_model.sv                   \
                    models/soc_cpu.VPROC.sv                    \
                    models/bfm_uart.sv                         \
                    models/bfm_adc.sv                          \
+                   models/bfm_phy_mdio.sv                     \
                    models/gowin.prim_sim.CHILI.v              \
                                                               \
                    $(TB_NAME).sv
@@ -186,6 +190,14 @@ $(VOBJDIR)/%.o: $(USRCODEDIR)/%.c
 
 # Rule to build user C++ sources
 $(VOBJDIR)/%.o: $(USRCODEDIR)/%.cpp
+	@$(C++) -c -fPIC $(OPTFLAGS) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build UDP user C sources
+$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.c
+	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build UDP user C++ sources
+$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.cpp
 	@$(C++) -c -fPIC $(OPTFLAGS) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build library of user code

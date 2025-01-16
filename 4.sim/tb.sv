@@ -17,10 +17,13 @@
 `timescale 1ps/1ps
 
 module tb #(
-   parameter int RUN_SIM_US = 15_000
+   parameter int RUN_SIM_US     = 15_000,
+   parameter int ETH_START_NODE = 1,
+   parameter int MDIO_BUFF_ADDR = 32'h50000000
 )();
 
    localparam DLY_PCB_PAD_PS = 1_000;
+   localparam NUM_ETH_PORTS  = 4;
 
 //--------------------------------------------------------------
 // Generate clock and run sim for the specified amount of time
@@ -118,6 +121,43 @@ module tb #(
       .dac_pwd       (dac_pwd),
       .dac_data      (dac_data)
 */
+   );
+
+//--------------------------------------------------------------
+// Ethernet UDP/IPv4 BFM
+//--------------------------------------------------------------
+
+wire                                      gmiiclk;
+wire                                      gmiiarst_n;
+gmii_if                                   gmii [NUM_ETH_PORTS] (gmiiclk, gmiiarst_n) ;
+wire                                      mdioclk;
+wire    [NUM_ETH_PORTS-1:0]               mdio;
+wire    [NUM_ETH_PORTS-1:0]               mdio_en;
+wire    [NUM_ETH_PORTS-1:0]               mdio_out;
+
+ bfm_ethernet
+   #(.START_NODE                          (ETH_START_NODE),
+     .NUM_PORTS                           (NUM_ETH_PORTS),
+     .MDIO_BUFF_ADDR                      (MDIO_BUFF_ADDR)
+   ) bfm_udp
+   (
+     .clk                                 (gmiiclk),
+     .arst_n                              (gmiiarst_n),
+
+     // GMII interface
+     .gmii                                (gmii),
+
+     // MDIO interface
+     .mdioclk                             (mdioclk),
+     .mdio                                (mdio),
+
+`ifdef VERILATOR
+     .mdio_en                             (mdio_en),
+     .mdio_out                            (mdio_out),
+`endif
+
+     // Simulation halt request
+     .halt_req                            ()
    );
 
 //--------------------------------------------------------------
@@ -219,11 +259,11 @@ module tb #(
 
 //--------------------------------------------------------------
 /* Assertions have to be done like this
-  
+
     always_ff @(posedge clk) begin
-  
+
        $display("a = %b, b = %b, c = %b, y = %b",a,b,c,y);
-  
+
        if ($past(b) > 2'b0) begin
           if (y !== 1'b1) $fatal("Assertion failed for Test Case: b > 2'b0");
        end
@@ -242,6 +282,6 @@ Version History:
  2024/02/14 TI: initial creation
  2024/02/25 JI: adapted to Verilation limitations in handling HiZ and INOUT ports
  2024/03/28 JI: added DAC
- 2024/10/31 SS: Made compatible with current dut ports and commented out 
+ 2024/10/31 SS: Made compatible with current dut ports and commented out
                 non-compiling test components
 */
