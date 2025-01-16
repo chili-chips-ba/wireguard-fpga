@@ -19,11 +19,11 @@ interface gmii_if (
    input  logic clk     // bus clock
 );
 
-   logic [7:0]     tdx;
+   logic [7:0]     txd;
    logic           txen;
    logic           txer;
    
-   logic [7:0]     rdx;
+   logic [7:0]     rxd;
    logic           rxdv;
    logic           rxer;
 
@@ -31,7 +31,7 @@ interface gmii_if (
   // master side
   //---------------------------------------- 
    modport MST (
-     output tdx,
+     output txd,
             txen,
             txer,
 
@@ -46,7 +46,7 @@ interface gmii_if (
   //---------------------------------------- 
    modport SLV (
      input  arst_n, clk,
-            tdx,
+            txd,
             txen,
             txer,
 
