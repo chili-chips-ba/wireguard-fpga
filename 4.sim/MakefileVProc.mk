@@ -20,7 +20,7 @@ SOCCPUMATCH      = ip.cpu
 USRSIMOPTS       =
 WAVESAVEFILE     = waves.gtkw
 BUILD            = DEFAULT
-TIMEOUTUS        = 15000
+TIMEOUTUS        = 1000
 
 # --------------------------------------------
 # Global exported environment variables

@@ -22,29 +22,53 @@ module tb #(
    parameter int MDIO_BUFF_ADDR = 32'h50000000
 )();
 
-   localparam DLY_PCB_PAD_PS = 1_000;
-   localparam NUM_ETH_PORTS  = 4;
+   localparam DLY_PCB_PAD_PS    = 1_000;
+   localparam NUM_ETH_PORTS     = 4;
 
 //--------------------------------------------------------------
-// Generate clock and run sim for the specified amount of time
-   localparam  HALF_PERIOD_PS = 18_518; // 27MHz
+// Generate clocks and run sim for the specified amount of time
+   localparam  HALF_PERIOD_PS      =  18_518; // 27MHz
+   localparam  HALF_MDIO_PERIOD_PS = 200_000; // 2.5MHz
+   localparam  HALF_GMII_PERIOD_PS =   4_000; // 125MHz
+   localparam  GMII_RST_CYLES      =      10;
+
    logic       clk_27;
    logic [2:0] clk_fpll;
    logic [2:1] key;
 
    initial begin
-      key      = 2'b0;
-      clk_27   = 1'b0;
-      clk_fpll = '0; // FIXME, add corresponding generators if used in future
+      key          = 2'b0;
+      gmiiclk      = 1'b0;
+      mdioclk      = 1'b0;
+      clk_27       = 1'b0;
+      clk_fpll     = '0; // FIXME, add corresponding generators if used in future
+
+      gmiiarst_n   = 1'b0;
 
       fork
          forever begin: clock_gen
-            #(HALF_PERIOD_PS * 1ps) clk_27 = ~clk_27;
+            #(HALF_PERIOD_PS * 1ps)
+               clk_27  = ~clk_27;
+         end
+
+         forever begin: gmii_clock_gen
+            #(HALF_GMII_PERIOD_PS * 1ps)
+               gmiiclk = ~gmiiclk;
+         end
+
+         forever begin: mdio_clock_gen
+            #(HALF_MDIO_PERIOD_PS * 1ps)
+               mdioclk = ~mdioclk;
+         end
+
+         begin : gmii_arst_n
+            #(HALF_GMII_PERIOD_PS*2*GMII_RST_CYLES * 1ps)
+               gmiiarst_n = 1'b1;
          end
 
          begin: run_sim
             #(RUN_SIM_US * 1us);
-            $finish(2);
+               $finish(2);
          end
       join
    end
@@ -127,13 +151,28 @@ module tb #(
 // Ethernet UDP/IPv4 BFM
 //--------------------------------------------------------------
 
-wire                                      gmiiclk;
-wire                                      gmiiarst_n;
+logic                                     gmiiclk;
+logic                                     gmiiarst_n;
 gmii_if                                   gmii [NUM_ETH_PORTS] (gmiiclk, gmiiarst_n) ;
-wire                                      mdioclk;
+logic                                     mdioclk;
 wire    [NUM_ETH_PORTS-1:0]               mdio;
 wire    [NUM_ETH_PORTS-1:0]               mdio_en;
 wire    [NUM_ETH_PORTS-1:0]               mdio_out;
+
+
+// Pullup on MDIO lines
+assign (pull1, pull0) mdio = {NUM_ETH_PORTS{1'b1}};
+
+genvar PORT;
+generate
+  for (PORT = 0; PORT < NUM_ETH_PORTS; PORT++)
+  begin
+`ifdef VERILATOR
+    assign mdio[PORT]      =  mdio_en[PORT] ? mdio_out[PORT] : 1'bz;
+`endif
+  end
+endgenerate
+
 
  bfm_ethernet
    #(.START_NODE                          (ETH_START_NODE),
