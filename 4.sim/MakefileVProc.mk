@@ -111,6 +111,7 @@ endif
 
 TBFILELIST       = $(COSIMDIR)/mem_model.sv                   \
                    $(COSIMDIR)/f_VProc.sv                     \
+                   $(UDPDIR)/gmii_rgmii_conv.v                \
                    $(UDPDIR)/udp_ip_pg.v                      \
                    $(UDPDIR)/bfm_ethernet.sv                  \
                                                               \
