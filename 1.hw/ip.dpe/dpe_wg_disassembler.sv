@@ -11,7 +11,21 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   DPE WireGuard Diassembler
+//   DPE WireGuard Disassembler
+//
+//                        |---------------------------------------->
+//                        |                                is_idle
+//                     --------
+//   inp               |      |----------|
+//  ------------------>| FSMD |          |
+//      |              |      |----|    \v
+//      |              --------    |----|\         ----------
+//      |                 ^             | |        |  SKID  |
+//      |  ------------   |             | |--------| BUFFER |------>
+//      |  | PIPELINE |   |             | | s_outp | DEPTH=1| outp
+//      |->|  BUFFER  |-----------------|/         ----------
+//         |  DEPTH=3 | s_inp           /
+//         ------------                 MUX
 //==========================================================================
 
 module dpe_wg_disassembler (
@@ -30,6 +44,7 @@ module dpe_wg_disassembler (
     localparam PROT_IP = 16'h0008;
     localparam PROT_IPv4 = 4'h4;
     localparam PROT_UDP = 8'h11;
+    localparam PROT_WG = 16'h6cca;
     localparam PROT_WGD = 8'h04;
     
     typedef enum logic [3:0] {
@@ -96,12 +111,11 @@ module dpe_wg_disassembler (
             end
             
             HEADER_2: begin
-                if (inp.tvalid && inp.tready && (inp.tdata[87:80] == PROT_WGD)) begin
+                if (inp.tvalid && inp.tready && ((inp.tdata[47:32] == PROT_WG) || (inp.tdata[31:16] == PROT_WG)) && (inp.tdata[87:80] == PROT_WGD)) begin
                     next_state = PAYLOAD_1;
                     next_wg_rcv[15:0] = inp.tdata[127:112];
                 end else if (inp.tvalid && inp.tready) begin
                     next_state = BYPASS_3;
-                    next_wg_rcv = '0;
                 end
             end
             
@@ -179,27 +193,7 @@ module dpe_wg_disassembler (
         s_outp.tlast = 0;
         s_outp.tuser = '0;
         case (state)
-            IDLE, HEADER_1, HEADER_2: begin
-                if (wg_rcv == '0) begin
-                    s_outp.tvalid = s_inp.tvalid;
-                    s_outp.tdata = s_inp.tdata;
-                    s_outp.tkeep = s_inp.tkeep;
-                    s_outp.tlast = s_inp.tlast;
-                    s_outp.tuser[4:0] = s_inp.tuser;
-                end else begin
-                    s_outp.tvalid = s_inp.tvalid;
-                    s_outp.tdata[127:48] = s_inp.tdata[79:0];
-                    s_outp.tdata[47:0] = wg_enp;
-                    s_outp.tkeep = '1;
-                    s_outp.tlast = s_inp.tlast;
-                    s_outp.tuser[127:96] = wg_rcv;
-                    s_outp.tuser[95:32] = wg_cnt;
-                    s_outp.tuser[5] = 1;
-                    s_outp.tuser[4:0] = s_inp.tuser;
-                end
-            end
-            
-            BYPASS_1, BYPASS_2, BYPASS_3: begin
+            IDLE, HEADER_1, HEADER_2, BYPASS_1, BYPASS_2, BYPASS_3: begin
                 s_outp.tvalid = s_inp.tvalid;
                 s_outp.tdata = s_inp.tdata;
                 s_outp.tkeep = s_inp.tkeep;
