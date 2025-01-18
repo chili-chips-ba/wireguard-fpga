@@ -18,6 +18,7 @@ TRACEOPTS        = --trace-fst --trace-structs
 TOPFILELIST      = top.filelist
 SOCCPUMATCH      = ip.cpu
 USRSIMOPTS       =
+USRCFLAGS        =
 WAVESAVEFILE     = waves.gtkw
 BUILD            = DEFAULT
 TIMEOUTUS        = 1000
@@ -143,7 +144,7 @@ SIMDEFS          = +define+VPROC_BYTE_ENABLE                  \
 #                   +define+ADC_DEBUG+ADC_BFM_DEBUG
 
 SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR) -I$(UDPDIR)
-SIMCFLAGS        = -std=c++20 -Wno-attributes
+SIMCFLAGS        = -std=c++20 -Wno-attributes $(USRCFLAGS)
 
 # Get OS type
 OSTYPE          := $(shell uname)
