@@ -30,9 +30,12 @@
 
 extern "C" void VUserMain1(void)
 {
+    const int node = 1;
+    
+    VPrint("UDP/IPv4 node %d\n\n", node);
     
     // Create VProc access object for this node
-    VProc* vp = new VProc(1);
+    VProc* vp = new VProc(node);
 
     // Sleep forever (and allow simulation to continue)
     while(true)
@@ -41,9 +44,12 @@ extern "C" void VUserMain1(void)
 
 extern "C" void VUserMain2(void)
 {
+    const int node = 2;
+    
+    VPrint("UDP/IPv4 node %d\n\n", node);
     
     // Create VProc access object for this node
-    VProc* vp = new VProc(2);
+    VProc* vp = new VProc(node);
 
     // Sleep forever (and allow simulation to continue)
     while(true)
@@ -52,9 +58,12 @@ extern "C" void VUserMain2(void)
 
 extern "C" void VUserMain3(void)
 {
+    const int node = 3;
+    
+    VPrint("UDP/IPv4 node %d\n\n", node);
     
     // Create VProc access object for this node
-    VProc* vp = new VProc(3);
+    VProc* vp = new VProc(node);
 
     // Sleep forever (and allow simulation to continue)
     while(true)
@@ -62,9 +71,12 @@ extern "C" void VUserMain3(void)
 }
 extern "C" void VUserMain4(void)
 {
+    const int node = 4;
+    
+    VPrint("UDP/IPv4 node %d\n\n", node);
     
     // Create VProc access object for this node
-    VProc* vp = new VProc(4);
+    VProc* vp = new VProc(node);
 
     // Sleep forever (and allow simulation to continue)
     while(true)

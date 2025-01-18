@@ -36,7 +36,7 @@ static const int node    = 0;
 
 extern "C" void VUserMain0(void)
 {
-    VPrint("Entered VuserMain%d()\n", node);
+    VPrint("VProc soc_cpu entered VUserMain%d()\n\n", node);
     
     // Create VProc access object for this node
     VProc* vp0 = new VProc(node);

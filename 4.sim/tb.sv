@@ -33,12 +33,17 @@ module tb #(
    localparam  GMII_RST_CYLES      =      10;
 
    logic       clk_27;
+   logic       gmiiclk;
+   logic       gmiiclkx2;
+   logic       mdioclk;
    logic [2:0] clk_fpll;
    logic [2:1] key;
+   logic       gmiiarst_n;
 
    initial begin
       key          = 2'b0;
       gmiiclk      = 1'b0;
+      gmiiclkx2    = 1'b0;
       mdioclk      = 1'b0;
       clk_27       = 1'b0;
       clk_fpll     = '0; // FIXME, add corresponding generators if used in future
@@ -54,6 +59,11 @@ module tb #(
          forever begin: gmii_clock_gen
             #(HALF_GMII_PERIOD_PS * 1ps)
                gmiiclk = ~gmiiclk;
+         end
+
+         forever begin: gmii_clockx2_gen
+            #(HALF_GMII_PERIOD_PS/2 * 1ps)
+               gmiiclkx2 = ~gmiiclkx2;
          end
 
          forever begin: mdio_clock_gen
@@ -151,10 +161,7 @@ module tb #(
 // Ethernet UDP/IPv4 BFM
 //--------------------------------------------------------------
 
-logic                                     gmiiclk;
-logic                                     gmiiarst_n;
 gmii_if                                   gmii [NUM_ETH_PORTS] (gmiiclk, gmiiarst_n) ;
-logic                                     mdioclk;
 wire    [NUM_ETH_PORTS-1:0]               mdio;
 wire    [NUM_ETH_PORTS-1:0]               mdio_en;
 wire    [NUM_ETH_PORTS-1:0]               mdio_out;
@@ -170,6 +177,11 @@ generate
 `ifdef VERILATOR
     assign mdio[PORT]      =  mdio_en[PORT] ? mdio_out[PORT] : 1'bz;
 `endif
+
+    // Tie off GMII inputs
+    assign gmii[PORT].txen = 1'b0;
+    assign gmii[PORT].txer = 1'b0;
+    assign gmii[PORT].txd  = '0;
   end
 endgenerate
 
@@ -181,6 +193,7 @@ endgenerate
    ) bfm_udp
    (
      .clk                                 (gmiiclk),
+     .clkx2                               (gmiiclkx2),
      .arst_n                              (gmiiarst_n),
 
      // GMII interface
