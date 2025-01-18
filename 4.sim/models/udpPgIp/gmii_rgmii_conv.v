@@ -39,6 +39,9 @@
 module gmii_rgmii_conv
 (
   input                               clk,
+`ifdef VERILATOR
+  input                               clkx2,
+`endif
 
   // GMII to RGMII
   input      [7:0]                    gmiitxd,
@@ -66,12 +69,30 @@ reg   [7:0] gmiirxdneg;
 reg         gmiirxdvneg;
 reg         gmiirxerneg;
 
+`ifdef VERILATOR
+
+reg   [3:0] rgmiitxd90;
+reg         rgmiitxctl90;
+
+always @(posedge clkx2)
+begin
+  rgmiitxd90                       <= clk ? gmiitxd[3:0] : gmiitxd[7:4];
+  rgmiitxctl90                     <= clk ? gmiitxen     : gmiitxer;
+end
+
+assign rgmiitxd                    = rgmiitxd90;
+assign rgmiitxctl                  = rgmiitxctl90;
+
+`else
+
 // Time-division multiplex the GMII TX input onto RGMII
 // with a hold delay (needed, even for Verilator, since using clock
 // as mux control, and must ensure signals are sample corrrectly
 // at destination).
-assign #`HoldDly rgmiitxd           = clk ? gmiitxd[3:0] : gmiitxd[7:4];
-assign #`HoldDly rgmiitxctl         = clk ? gmiitxen     : gmiitxer;
+assign #`HoldDly rgmiitxd          = clk ? gmiitxd[3:0] : gmiitxd[7:4];
+assign #`HoldDly rgmiitxctl        = clk ? gmiitxen     : gmiitxer;
+
+`endif
 
 always @(posedge clk)
 begin
