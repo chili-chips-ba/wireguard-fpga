@@ -15,7 +15,11 @@
 //    i.e. create SV testbenches
 ///////////////////////////////////////////////////////////////////////////////
 
+#if TRACE_VCD
+#include <verilated_vcd_c.h>
+#else
 #include <verilated_fst_c.h>
+#endif 
 #include "verilated.h"
 #include "Vtb.h" //change to V<projectname>
 
@@ -28,23 +32,36 @@ int main(int argc, char** argv, char**) {
    const std::unique_ptr<VerilatedContext> contextp{new VerilatedContext};
    contextp->traceEverOn(true);
    contextp->commandArgs(argc, argv);
-   VerilatedFstC *m_trace = new VerilatedFstC;
-   
+
    // Construct the Verilated model, from Vtop.h generated from Verilating
    const std::unique_ptr<Vtb> topp{new Vtb{contextp.get()}};
 
+#ifndef NO_TRACE
+# if TRACE_VCD
+   VerilatedVcdC *m_trace = new VerilatedVcdC;
+# else
+   VerilatedFstC *m_trace = new VerilatedFstC;
+# endif
+   
    m_trace->set_time_resolution("1ps");
    m_trace->set_time_unit("1ps");
    topp->trace(m_trace, 20);
+# if TRACE_VCD
+   m_trace->open("wave.vcd");
+# else
    m_trace->open("wave.fst");
+#endif
+#endif
+
 
    // Simulate until $finish
    long long int t0 = 0;
    while (!contextp->gotFinish()) {
       // Evaluate model
       topp->eval();
+#ifndef NO_TRACE
       m_trace->dump(contextp->time());
-
+#endif
       // Advance time
       if (!topp->eventsPending()) break;
       contextp->time(topp->nextTimeSlot());
@@ -55,7 +72,9 @@ int main(int argc, char** argv, char**) {
       VL_DEBUG_IF(VL_PRINTF("+ Exiting without $finish; no events left\n"););
    }
 
+#ifndef NO_TRACE
    m_trace->close();
+#endif
 
    // Closing cleanup
    topp->final();
