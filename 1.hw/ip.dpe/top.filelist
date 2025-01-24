@@ -2,9 +2,27 @@
 # List of file to make 'dpe_top.sv' design module
 #==========================================================================
 
+#---FPGA specific library
+#${HW_SRC}/../fpgatech_lib/XILINX/BUFGMUX.v
+
 #---AXIS library
-${HW_SRC}/../ip.infra/axis_lib/axis_register.v
-${HW_SRC}/../ip.infra/axis_lib/axis_pipeline_register.v
+${HW_SRC}/../ip.infra/axis/axis_register.v
+${HW_SRC}/../ip.infra/axis/axis_pipeline_register.v
+${HW_SRC}/../ip.infra/axis/axis_async_fifo_adapter.v
+${HW_SRC}/../ip.infra/axis/axis_adapter.v
+${HW_SRC}/../ip.infra/axis/axis_async_fifo.v
+
+#---Ethernet library
+${HW_SRC}/../ip.infra/ethernet/eth_mac_1g_gmii_fifo.v
+${HW_SRC}/../ip.infra/ethernet/eth_mac_1g_gmii.v
+${HW_SRC}/../ip.infra/ethernet/eth_mac_1g.v
+${HW_SRC}/../ip.infra/ethernet/gmii_phy_if.v
+${HW_SRC}/../ip.infra/ethernet/axis_gmii_rx.v
+${HW_SRC}/../ip.infra/ethernet/axis_gmii_tx.v
+${HW_SRC}/../ip.infra/ethernet/ssio_sdr_out.v
+${HW_SRC}/../ip.infra/ethernet/ssio_sdr_in.v
+${HW_SRC}/../ip.infra/ethernet/lfsr.v
+${HW_SRC}/../ip.infra/ethernet/oddr.v
 
 #---DPE interface
 ${HW_SRC}/../ip.infra/dpe_if.sv
