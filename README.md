@@ -1,9 +1,11 @@
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
-  <img width="250", src="https://github.com/user-attachments/assets/d12e18d1-13ba-4055-8ce7-3033846aad57">
-  <img width="250", src="0.doc/wireguard-fpga.logo.png">
+  <img width="250", src="0.doc/artwork/wireguard-fpga.logo.png">
+  <img width="250", src="0.doc/artwork/ethernet-cable.png">
+  <img width="250", src="0.doc/artwork/wireguard-fpga.logo.png">
 </p>
+
 With traditional solutions (such as OpenVPN / IPSec) starting to run out of steam, Wireguard is increasingly coming to the forefront as a modern, secure data tunneling and encryption method, one that's also easier to manage than the incumbents. Both software and hardware implementations of Wireguard already exist. However, the software performance is far below the speed of wire. Existing hardware approaches are both prohibitively expensive and based on proprietary, closed-source IP blocks and tools.<br> 
 
 - The intent of this project is to bridge these gaps with an FPGA open-source implementation of Wireguard, written in SystemVerilog HDL.
