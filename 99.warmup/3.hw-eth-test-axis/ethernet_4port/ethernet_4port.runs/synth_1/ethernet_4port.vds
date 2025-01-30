@@ -1,0 +1,812 @@
+#-----------------------------------------------------------
+# Vivado v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Thu Jan 30 18:23:21 2025
+# Process ID: 4688
+# Current directory: C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/synth_1
+# Command line: vivado.exe -log ethernet_4port.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ethernet_4port.tcl
+# Log file: C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/synth_1/ethernet_4port.vds
+# Journal file: C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/synth_1\vivado.jou
+# Running On: DESKTOP-RQ3T0OR, OS: Windows, CPU Frequency: 1800 MHz, CPU Physical cores: 4, Host memory: 8463 MB
+#-----------------------------------------------------------
+source ethernet_4port.tcl -notrace
+create_project: Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 441.844 ; gain = 163.375
+Command: read_checkpoint -auto_incremental -incremental C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.srcs/utils_1/imports/synth_1/ethernet_4port.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.srcs/utils_1/imports/synth_1/ethernet_4port.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top ethernet_4port -part xc7a200tfbg484-2
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a200t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a200t'
+INFO: [Device 21-403] Loading part xc7a200tfbg484-2
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 3560
+WARNING: [Synth 8-11065] parameter 'ADDR_WIDTH' becomes localparam in 'axis_async_fifo' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:145]
+WARNING: [Synth 8-11065] parameter 'OUTPUT_FIFO_ADDR_WIDTH' becomes localparam in 'axis_async_fifo' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:147]
+WARNING: [Synth 8-11065] parameter 'MIN_LEN_WIDTH' becomes localparam in 'axis_gmii_tx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:93]
+WARNING: [Synth 8-11065] parameter 'MAC_CTRL_ENABLE' becomes localparam in 'eth_mac_1g' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g.v:191]
+WARNING: [Synth 8-11065] parameter 'TX_USER_WIDTH_INT' becomes localparam in 'eth_mac_1g' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g.v:192]
+WARNING: [Synth 8-11065] parameter 'STYLE_INT' becomes localparam in 'lfsr' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/lfsr.v:355]
+WARNING: [Synth 8-11065] parameter 'BYTE_LANES' becomes localparam in 'mac_ctrl_rx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_rx.v:112]
+WARNING: [Synth 8-11065] parameter 'HDR_SIZE' becomes localparam in 'mac_ctrl_rx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_rx.v:114]
+WARNING: [Synth 8-11065] parameter 'CYCLE_COUNT' becomes localparam in 'mac_ctrl_rx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_rx.v:116]
+WARNING: [Synth 8-11065] parameter 'PTR_WIDTH' becomes localparam in 'mac_ctrl_rx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_rx.v:118]
+WARNING: [Synth 8-11065] parameter 'OFFSET' becomes localparam in 'mac_ctrl_rx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_rx.v:120]
+WARNING: [Synth 8-11065] parameter 'BYTE_LANES' becomes localparam in 'mac_ctrl_tx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_tx.v:101]
+WARNING: [Synth 8-11065] parameter 'HDR_SIZE' becomes localparam in 'mac_ctrl_tx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_tx.v:103]
+WARNING: [Synth 8-11065] parameter 'CYCLE_COUNT' becomes localparam in 'mac_ctrl_tx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_tx.v:105]
+WARNING: [Synth 8-11065] parameter 'PTR_WIDTH' becomes localparam in 'mac_ctrl_tx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_tx.v:107]
+WARNING: [Synth 8-11065] parameter 'OFFSET' becomes localparam in 'mac_ctrl_tx' with formal parameter declaration list [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/mac_ctrl_tx.v:109]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 1313.992 ; gain = 411.879
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'ethernet_4port' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:29]
+INFO: [Synth 8-6157] synthesizing module 'IBUFGDS' [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:72266]
+INFO: [Synth 8-6155] done synthesizing module 'IBUFGDS' (0#1) [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:72266]
+INFO: [Synth 8-6157] synthesizing module 'PLLE2_BASE' [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:109492]
+	Parameter CLKFBOUT_MULT bound to: 5 - type: integer 
+	Parameter CLKFBOUT_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKIN1_PERIOD bound to: 5.000000 - type: double 
+	Parameter CLKOUT0_DIVIDE bound to: 8 - type: integer 
+	Parameter CLKOUT0_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT0_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT1_DIVIDE bound to: 1 - type: integer 
+	Parameter CLKOUT1_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT1_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT2_DIVIDE bound to: 1 - type: integer 
+	Parameter CLKOUT2_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT2_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT3_DIVIDE bound to: 1 - type: integer 
+	Parameter CLKOUT3_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT3_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT4_DIVIDE bound to: 1 - type: integer 
+	Parameter CLKOUT4_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT4_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT5_DIVIDE bound to: 1 - type: integer 
+	Parameter CLKOUT5_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT5_PHASE bound to: 0.000000 - type: double 
+	Parameter DIVCLK_DIVIDE bound to: 1 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'PLLE2_BASE' (0#1) [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:109492]
+INFO: [Synth 8-6157] synthesizing module 'BUFG' [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:1519]
+INFO: [Synth 8-6155] done synthesizing module 'BUFG' (0#1) [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:1519]
+INFO: [Synth 8-6157] synthesizing module 'sync_reset' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/sync_reset.v:35]
+	Parameter N bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'sync_reset' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/sync_reset.v:35]
+INFO: [Synth 8-6157] synthesizing module 'IBUFG' [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:72252]
+INFO: [Synth 8-6155] done synthesizing module 'IBUFG' (0#1) [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:72252]
+INFO: [Synth 8-6157] synthesizing module 'eth_mac_1g_gmii_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:34]
+	Parameter TARGET bound to: XILINX - type: string 
+	Parameter IODDR_STYLE bound to: IODDR - type: string 
+	Parameter CLOCK_INPUT_STYLE bound to: BUFR - type: string 
+	Parameter ENABLE_PADDING bound to: 1 - type: integer 
+	Parameter MIN_FRAME_LENGTH bound to: 64 - type: integer 
+	Parameter TX_FIFO_DEPTH bound to: 4096 - type: integer 
+	Parameter TX_FRAME_FIFO bound to: 1 - type: integer 
+	Parameter RX_FIFO_DEPTH bound to: 4096 - type: integer 
+	Parameter RX_FRAME_FIFO bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'eth_mac_1g_gmii' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:34]
+	Parameter TARGET bound to: XILINX - type: string 
+	Parameter IODDR_STYLE bound to: IODDR - type: string 
+	Parameter CLOCK_INPUT_STYLE bound to: BUFR - type: string 
+	Parameter ENABLE_PADDING bound to: 1 - type: integer 
+	Parameter MIN_FRAME_LENGTH bound to: 64 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'gmii_phy_if' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/gmii_phy_if.v:34]
+	Parameter TARGET bound to: XILINX - type: string 
+	Parameter IODDR_STYLE bound to: IODDR - type: string 
+	Parameter CLOCK_INPUT_STYLE bound to: BUFR - type: string 
+INFO: [Synth 8-6157] synthesizing module 'ssio_sdr_in' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/ssio_sdr_in.v:34]
+	Parameter TARGET bound to: XILINX - type: string 
+	Parameter CLOCK_INPUT_STYLE bound to: BUFR - type: string 
+	Parameter WIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'BUFIO' [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:1791]
+INFO: [Synth 8-6155] done synthesizing module 'BUFIO' (0#1) [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:1791]
+INFO: [Synth 8-6157] synthesizing module 'BUFR' [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:1857]
+	Parameter BUFR_DIVIDE bound to: BYPASS - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'BUFR' (0#1) [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:1857]
+INFO: [Synth 8-6155] done synthesizing module 'ssio_sdr_in' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/ssio_sdr_in.v:34]
+INFO: [Synth 8-6157] synthesizing module 'ssio_sdr_out' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/ssio_sdr_out.v:34]
+	Parameter TARGET bound to: XILINX - type: string 
+	Parameter IODDR_STYLE bound to: IODDR - type: string 
+	Parameter WIDTH bound to: 10 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'oddr' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/oddr.v:34]
+	Parameter TARGET bound to: XILINX - type: string 
+	Parameter IODDR_STYLE bound to: IODDR - type: string 
+	Parameter WIDTH bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ODDR' [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:94765]
+	Parameter DDR_CLK_EDGE bound to: SAME_EDGE - type: string 
+	Parameter SRTYPE bound to: ASYNC - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'ODDR' (0#1) [C:/Xilinx/Vivado/2023.1/scripts/rt/data/unisim_comp.v:94765]
+INFO: [Synth 8-6155] done synthesizing module 'oddr' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/oddr.v:34]
+INFO: [Synth 8-6155] done synthesizing module 'ssio_sdr_out' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/ssio_sdr_out.v:34]
+INFO: [Synth 8-6155] done synthesizing module 'gmii_phy_if' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/gmii_phy_if.v:34]
+INFO: [Synth 8-6157] synthesizing module 'eth_mac_1g' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g.v:34]
+	Parameter ENABLE_PADDING bound to: 1 - type: integer 
+	Parameter MIN_FRAME_LENGTH bound to: 64 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'axis_gmii_rx' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_rx.v:34]
+	Parameter DATA_WIDTH bound to: 8 - type: integer 
+	Parameter PTP_TS_ENABLE bound to: 0 - type: integer 
+	Parameter PTP_TS_WIDTH bound to: 96 - type: integer 
+	Parameter USER_WIDTH bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'lfsr' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/lfsr.v:34]
+	Parameter LFSR_WIDTH bound to: 32 - type: integer 
+	Parameter LFSR_POLY bound to: 79764919 - type: integer 
+	Parameter LFSR_CONFIG bound to: GALOIS - type: string 
+	Parameter LFSR_FEED_FORWARD bound to: 0 - type: integer 
+	Parameter REVERSE bound to: 1 - type: integer 
+	Parameter DATA_WIDTH bound to: 8 - type: integer 
+	Parameter STYLE bound to: AUTO - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'lfsr' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/lfsr.v:34]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_rx.v:189]
+INFO: [Synth 8-6155] done synthesizing module 'axis_gmii_rx' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_rx.v:34]
+INFO: [Synth 8-6157] synthesizing module 'axis_gmii_tx' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:34]
+	Parameter DATA_WIDTH bound to: 8 - type: integer 
+	Parameter ENABLE_PADDING bound to: 1 - type: integer 
+	Parameter MIN_FRAME_LENGTH bound to: 64 - type: integer 
+	Parameter PTP_TS_ENABLE bound to: 0 - type: integer 
+	Parameter PTP_TS_WIDTH bound to: 96 - type: integer 
+	Parameter PTP_TS_CTRL_IN_TUSER bound to: 0 - type: integer 
+	Parameter PTP_TAG_ENABLE bound to: 0 - type: integer 
+	Parameter PTP_TAG_WIDTH bound to: 16 - type: integer 
+	Parameter USER_WIDTH bound to: 1 - type: integer 
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:367]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:241]
+INFO: [Synth 8-6155] done synthesizing module 'axis_gmii_tx' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:34]
+INFO: [Synth 8-6155] done synthesizing module 'eth_mac_1g' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g.v:34]
+WARNING: [Synth 8-7071] port 'tx_ptp_ts' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_ptp_ts' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_axis_ptp_ts' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_axis_ptp_ts_tag' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_axis_ptp_ts_valid' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_lfc_req' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_lfc_resend' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_lfc_en' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_lfc_req' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_lfc_ack' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_pfc_req' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_pfc_resend' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_pfc_en' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_pfc_req' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_pfc_ack' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_lfc_pause_en' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_pause_req' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_pause_ack' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'tx_start_packet' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'rx_start_packet' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_mcf' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_mcf' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_lfc_pkt' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_lfc_xon' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_lfc_xoff' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_lfc_paused' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_pfc_pkt' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_pfc_xon' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_pfc_xoff' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_tx_pfc_paused' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_lfc_pkt' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_lfc_xon' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_lfc_xoff' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_lfc_paused' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_pfc_pkt' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_pfc_xon' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_pfc_xoff' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'stat_rx_pfc_paused' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_eth_dst_mcast' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_check_eth_dst_mcast' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_eth_dst_ucast' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_check_eth_dst_ucast' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_eth_src' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_check_eth_src' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_eth_type' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_opcode_lfc' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_check_opcode_lfc' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_opcode_pfc' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_check_opcode_pfc' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_forward' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_mcf_rx_enable' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_lfc_eth_dst' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_lfc_eth_src' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_lfc_eth_type' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_lfc_opcode' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_lfc_en' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_lfc_quanta' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_lfc_refresh' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_pfc_eth_dst' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_pfc_eth_src' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_pfc_eth_type' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_pfc_opcode' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_pfc_en' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_pfc_quanta' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_tx_pfc_refresh' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_rx_lfc_opcode' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_rx_lfc_en' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_rx_pfc_opcode' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7071] port 'cfg_rx_pfc_en' of module 'eth_mac_1g' is unconnected for instance 'eth_mac_1g_inst' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+WARNING: [Synth 8-7023] instance 'eth_mac_1g_inst' of module 'eth_mac_1g' has 98 connections declared, but only 29 given [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:222]
+INFO: [Synth 8-6155] done synthesizing module 'eth_mac_1g_gmii' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii.v:34]
+INFO: [Synth 8-6157] synthesizing module 'axis_async_fifo_adapter' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo_adapter.v:34]
+	Parameter DEPTH bound to: 4096 - type: integer 
+	Parameter S_DATA_WIDTH bound to: 8 - type: integer 
+	Parameter S_KEEP_ENABLE bound to: 1'b0 
+	Parameter S_KEEP_WIDTH bound to: 1 - type: integer 
+	Parameter M_DATA_WIDTH bound to: 8 - type: integer 
+	Parameter M_KEEP_ENABLE bound to: 0 - type: integer 
+	Parameter ID_ENABLE bound to: 0 - type: integer 
+	Parameter DEST_ENABLE bound to: 0 - type: integer 
+	Parameter USER_ENABLE bound to: 1 - type: integer 
+	Parameter USER_WIDTH bound to: 1 - type: integer 
+	Parameter RAM_PIPELINE bound to: 1 - type: integer 
+	Parameter FRAME_FIFO bound to: 1 - type: integer 
+	Parameter USER_BAD_FRAME_VALUE bound to: 1'b1 
+	Parameter USER_BAD_FRAME_MASK bound to: 1'b1 
+	Parameter DROP_OVERSIZE_FRAME bound to: 1 - type: integer 
+	Parameter DROP_BAD_FRAME bound to: 1 - type: integer 
+	Parameter DROP_WHEN_FULL bound to: 0 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'axis_async_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:34]
+	Parameter DEPTH bound to: 4096 - type: integer 
+	Parameter DATA_WIDTH bound to: 8 - type: integer 
+	Parameter KEEP_ENABLE bound to: 0 - type: integer 
+	Parameter KEEP_WIDTH bound to: 1 - type: integer 
+	Parameter LAST_ENABLE bound to: 1 - type: integer 
+	Parameter ID_ENABLE bound to: 0 - type: integer 
+	Parameter ID_WIDTH bound to: 8 - type: integer 
+	Parameter DEST_ENABLE bound to: 0 - type: integer 
+	Parameter DEST_WIDTH bound to: 8 - type: integer 
+	Parameter USER_ENABLE bound to: 1 - type: integer 
+	Parameter USER_WIDTH bound to: 1 - type: integer 
+	Parameter RAM_PIPELINE bound to: 1 - type: integer 
+	Parameter OUTPUT_FIFO_ENABLE bound to: 0 - type: integer 
+	Parameter FRAME_FIFO bound to: 1 - type: integer 
+	Parameter USER_BAD_FRAME_VALUE bound to: 1'b1 
+	Parameter USER_BAD_FRAME_MASK bound to: 1'b1 
+	Parameter DROP_OVERSIZE_FRAME bound to: 1 - type: integer 
+	Parameter DROP_BAD_FRAME bound to: 1 - type: integer 
+	Parameter DROP_WHEN_FULL bound to: 0 - type: integer 
+	Parameter MARK_WHEN_FULL bound to: 0 - type: integer 
+	Parameter PAUSE_ENABLE bound to: 0 - type: integer 
+	Parameter FRAME_PAUSE bound to: 1 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'axis_async_fifo' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:34]
+INFO: [Synth 8-6155] done synthesizing module 'axis_async_fifo_adapter' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo_adapter.v:34]
+WARNING: [Synth 8-7071] port 's_pause_req' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7071] port 's_pause_ack' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7071] port 'm_pause_req' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7071] port 'm_pause_ack' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7071] port 's_status_depth' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7071] port 's_status_depth_commit' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7071] port 'm_status_depth' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7071] port 'm_status_depth_commit' of module 'axis_async_fifo_adapter' is unconnected for instance 'tx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+WARNING: [Synth 8-7023] instance 'tx_fifo' of module 'axis_async_fifo_adapter' has 34 connections declared, but only 26 given [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:275]
+INFO: [Synth 8-6157] synthesizing module 'axis_async_fifo_adapter__parameterized0' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo_adapter.v:34]
+	Parameter DEPTH bound to: 4096 - type: integer 
+	Parameter S_DATA_WIDTH bound to: 8 - type: integer 
+	Parameter S_KEEP_ENABLE bound to: 0 - type: integer 
+	Parameter M_DATA_WIDTH bound to: 8 - type: integer 
+	Parameter M_KEEP_ENABLE bound to: 1'b0 
+	Parameter M_KEEP_WIDTH bound to: 1 - type: integer 
+	Parameter ID_ENABLE bound to: 0 - type: integer 
+	Parameter DEST_ENABLE bound to: 0 - type: integer 
+	Parameter USER_ENABLE bound to: 1 - type: integer 
+	Parameter USER_WIDTH bound to: 1 - type: integer 
+	Parameter RAM_PIPELINE bound to: 1 - type: integer 
+	Parameter FRAME_FIFO bound to: 1 - type: integer 
+	Parameter USER_BAD_FRAME_VALUE bound to: 1'b1 
+	Parameter USER_BAD_FRAME_MASK bound to: 1'b1 
+	Parameter DROP_OVERSIZE_FRAME bound to: 1 - type: integer 
+	Parameter DROP_BAD_FRAME bound to: 1 - type: integer 
+	Parameter DROP_WHEN_FULL bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'axis_async_fifo__parameterized0' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:34]
+	Parameter DEPTH bound to: 4096 - type: integer 
+	Parameter DATA_WIDTH bound to: 8 - type: integer 
+	Parameter KEEP_ENABLE bound to: 0 - type: integer 
+	Parameter KEEP_WIDTH bound to: 1 - type: integer 
+	Parameter LAST_ENABLE bound to: 1 - type: integer 
+	Parameter ID_ENABLE bound to: 0 - type: integer 
+	Parameter ID_WIDTH bound to: 8 - type: integer 
+	Parameter DEST_ENABLE bound to: 0 - type: integer 
+	Parameter DEST_WIDTH bound to: 8 - type: integer 
+	Parameter USER_ENABLE bound to: 1 - type: integer 
+	Parameter USER_WIDTH bound to: 1 - type: integer 
+	Parameter RAM_PIPELINE bound to: 1 - type: integer 
+	Parameter OUTPUT_FIFO_ENABLE bound to: 0 - type: integer 
+	Parameter FRAME_FIFO bound to: 1 - type: integer 
+	Parameter USER_BAD_FRAME_VALUE bound to: 1'b1 
+	Parameter USER_BAD_FRAME_MASK bound to: 1'b1 
+	Parameter DROP_OVERSIZE_FRAME bound to: 1 - type: integer 
+	Parameter DROP_BAD_FRAME bound to: 1 - type: integer 
+	Parameter DROP_WHEN_FULL bound to: 1 - type: integer 
+	Parameter MARK_WHEN_FULL bound to: 0 - type: integer 
+	Parameter PAUSE_ENABLE bound to: 0 - type: integer 
+	Parameter FRAME_PAUSE bound to: 1 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'axis_async_fifo__parameterized0' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:34]
+INFO: [Synth 8-6155] done synthesizing module 'axis_async_fifo_adapter__parameterized0' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo_adapter.v:34]
+WARNING: [Synth 8-7071] port 's_pause_req' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7071] port 's_pause_ack' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7071] port 'm_pause_req' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7071] port 'm_pause_ack' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7071] port 's_status_depth' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7071] port 's_status_depth_commit' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7071] port 'm_status_depth' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7071] port 'm_status_depth_commit' of module 'axis_async_fifo_adapter' is unconnected for instance 'rx_fifo' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+WARNING: [Synth 8-7023] instance 'rx_fifo' of module 'axis_async_fifo_adapter' has 34 connections declared, but only 26 given [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:326]
+INFO: [Synth 8-6155] done synthesizing module 'eth_mac_1g_gmii_fifo' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/eth_mac_1g_gmii_fifo.v:34]
+WARNING: [Synth 8-7071] port 'tx_axis_tkeep' of module 'eth_mac_1g_gmii_fifo' is unconnected for instance 'eth_1' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:240]
+WARNING: [Synth 8-7071] port 'rx_axis_tkeep' of module 'eth_mac_1g_gmii_fifo' is unconnected for instance 'eth_1' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:240]
+WARNING: [Synth 8-7071] port 'tx_error_underflow' of module 'eth_mac_1g_gmii_fifo' is unconnected for instance 'eth_1' [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:240]
+WARNING: [Synth 8-7023] instance 'eth_1' of module 'eth_mac_1g_gmii_fifo' has 38 connections declared, but only 35 given [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:240]
+INFO: [Synth 8-6155] done synthesizing module 'ethernet_4port' (0#1) [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:29]
+WARNING: [Synth 8-6014] Unused sequential element ptp_ts_reg_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_rx.v:259]
+WARNING: [Synth 8-6014] Unused sequential element m_axis_ptp_ts_reg_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:413]
+WARNING: [Synth 8-6014] Unused sequential element m_axis_ptp_ts_tag_reg_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:414]
+WARNING: [Synth 8-6014] Unused sequential element m_axis_ptp_ts_valid_reg_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet/axis_gmii_tx.v:415]
+WARNING: [Synth 8-6014] Unused sequential element wr_ptr_temp_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:423]
+WARNING: [Synth 8-6014] Unused sequential element send_frame_reg_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:436]
+WARNING: [Synth 8-6014] Unused sequential element rd_ptr_temp_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:670]
+WARNING: [Synth 8-6014] Unused sequential element wr_ptr_temp_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:423]
+WARNING: [Synth 8-6014] Unused sequential element send_frame_reg_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:436]
+WARNING: [Synth 8-6014] Unused sequential element rd_ptr_temp_reg was removed.  [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/axis/axis_async_fifo.v:670]
+WARNING: [Synth 8-3848] Net e1_mdc in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:37]
+WARNING: [Synth 8-3848] Net e2_reset in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:51]
+WARNING: [Synth 8-3848] Net e2_mdc in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:52]
+WARNING: [Synth 8-3848] Net e2_gtxc in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:60]
+WARNING: [Synth 8-3848] Net e2_txen in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:61]
+WARNING: [Synth 8-3848] Net e2_txer in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:62]
+WARNING: [Synth 8-3848] Net e2_txd in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:63]
+WARNING: [Synth 8-3848] Net e3_reset in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:66]
+WARNING: [Synth 8-3848] Net e3_mdc in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:67]
+WARNING: [Synth 8-3848] Net e3_gtxc in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:75]
+WARNING: [Synth 8-3848] Net e3_txen in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:76]
+WARNING: [Synth 8-3848] Net e3_txer in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:77]
+WARNING: [Synth 8-3848] Net e3_txd in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:78]
+WARNING: [Synth 8-3848] Net e4_reset in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:81]
+WARNING: [Synth 8-3848] Net e4_mdc in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:82]
+WARNING: [Synth 8-3848] Net e4_gtxc in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:90]
+WARNING: [Synth 8-3848] Net e4_txen in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:91]
+WARNING: [Synth 8-3848] Net e4_txer in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:92]
+WARNING: [Synth 8-3848] Net e4_txd in module/entity ethernet_4port does not have driver. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/ethernet_4port.v:93]
+WARNING: [Synth 8-3917] design ethernet_4port has port e1_reset driven by constant 1
+WARNING: [Synth 8-7129] Port s_axis_tkeep[0] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[7] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[6] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[5] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[4] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[3] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[2] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[1] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[0] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[7] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[6] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[5] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[4] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[3] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[2] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[1] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[0] in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_pause_req in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_pause_req in module axis_async_fifo__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[0] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[7] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[6] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[5] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[4] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[3] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[2] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[1] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[0] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[7] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[6] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[5] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[4] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[3] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[2] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[1] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[0] in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_pause_req in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_pause_req in module axis_async_fifo is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[95] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[94] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[93] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[92] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[91] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[90] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[89] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[88] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[87] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[86] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[85] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[84] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[83] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[82] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[81] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[80] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[79] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[78] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[77] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[76] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[75] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[74] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[73] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[72] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[71] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[70] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[69] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[68] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[67] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[66] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[65] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[64] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[63] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[62] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[61] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[60] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[59] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[58] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[57] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[56] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[55] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[54] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[53] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[52] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[51] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[50] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[49] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[48] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[47] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[46] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[45] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[44] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[43] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[42] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[41] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[40] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[39] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[38] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[37] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[36] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[35] in module axis_gmii_tx is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ptp_ts[34] in module axis_gmii_tx is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:17 ; elapsed = 00:00:17 . Memory (MB): peak = 1457.832 ; gain = 555.719
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:17 ; elapsed = 00:00:18 . Memory (MB): peak = 1457.832 ; gain = 555.719
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:17 ; elapsed = 00:00:18 . Memory (MB): peak = 1457.832 ; gain = 555.719
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.097 . Memory (MB): peak = 1458.234 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 5 Unisim elements for replacement
+WARNING: [Netlist 29-432] The IBUFG primitive 'e1_rxc_bufg_inst' has been retargeted to an IBUF primitive only. No BUFG will be added. If a global buffer is intended, please instantiate an available global clock primitive from the current architecture.
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc]
+WARNING: [Designutils 20-1567] Use of 'set_false_path' with '-reset_path' is not supported by synthesis. The constraint will not be passed to synthesis. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:355]
+WARNING: [Designutils 20-1567] Use of 'set_false_path' with '-reset_path' is not supported by synthesis. The constraint will not be passed to synthesis. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:356]
+WARNING: [Designutils 20-1567] Use of 'set_false_path' with '-reset_path' is not supported by synthesis. The constraint will not be passed to synthesis. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:357]
+WARNING: [Designutils 20-1567] Use of 'set_false_path' with '-reset_path' is not supported by synthesis. The constraint will not be passed to synthesis. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:358]
+WARNING: [Vivado 12-507] No nets matched 'e1_txc_IBUF'. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:361]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:361]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-507] No nets matched 'e2_txc_IBUF'. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:362]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:362]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-507] No nets matched 'e3_txc_IBUF'. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:363]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:363]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-507] No nets matched 'e4_txc_IBUF'. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:364]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc:364]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+Finished Parsing XDC File [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ip.infra/top.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/ethernet_4port_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/ethernet_4port_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+INFO: [Timing 38-2] Deriving generated clocks
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1565.250 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 3 instances were transformed.
+  IBUFG => IBUF: 1 instance 
+  IBUFGDS => IBUFDS: 1 instance 
+  PLLE2_BASE => PLLE2_ADV: 1 instance 
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.017 . Memory (MB): peak = 1565.250 ; gain = 0.000
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:31 ; elapsed = 00:00:33 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a200tfbg484-2
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:31 ; elapsed = 00:00:33 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:31 ; elapsed = 00:00:33 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg_reg' in module 'axis_gmii_rx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg_reg' in module 'axis_gmii_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+              STATE_IDLE |                              001 |                              000
+           STATE_PAYLOAD |                              010 |                              001
+         STATE_WAIT_LAST |                              100 |                              010
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg_reg' using encoding 'one-hot' in module 'axis_gmii_rx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+              STATE_IDLE |                              000 |                              000
+          STATE_PREAMBLE |                              001 |                              001
+           STATE_PAYLOAD |                              010 |                              010
+              STATE_LAST |                              011 |                              011
+               STATE_PAD |                              100 |                              100
+               STATE_FCS |                              101 |                              101
+               STATE_IFG |                              110 |                              110
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg_reg' using encoding 'sequential' in module 'axis_gmii_tx'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:33 ; elapsed = 00:00:35 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 1     
+	   2 Input   13 Bit       Adders := 4     
+	   3 Input   13 Bit       Adders := 8     
+	   2 Input    8 Bit       Adders := 1     
+	   2 Input    7 Bit       Adders := 1     
+	   2 Input    6 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 1     
+	   2 Input    2 Bit       Adders := 1     
++---XORs : 
+	   2 Input     13 Bit         XORs := 10    
+	   2 Input      2 Bit         XORs := 1     
+	   2 Input      1 Bit         XORs := 63    
+	   3 Input      1 Bit         XORs := 14    
+	   4 Input      1 Bit         XORs := 14    
+	   5 Input      1 Bit         XORs := 14    
+	   6 Input      1 Bit         XORs := 12    
+	   8 Input      1 Bit         XORs := 4     
+	   7 Input      1 Bit         XORs := 6     
+	   9 Input      1 Bit         XORs := 6     
++---XORs : 
+	               13 Bit    Wide XORs := 48    
++---Registers : 
+	               32 Bit    Registers := 2     
+	               13 Bit    Registers := 30    
+	               10 Bit    Registers := 6     
+	                8 Bit    Registers := 9     
+	                7 Bit    Registers := 1     
+	                6 Bit    Registers := 1     
+	                4 Bit    Registers := 4     
+	                3 Bit    Registers := 2     
+	                2 Bit    Registers := 12    
+	                1 Bit    Registers := 101   
++---RAMs : 
+	              40K Bit	(4096 X 10 bit)          RAMs := 2     
++---Muxes : 
+	   2 Input   13 Bit        Muxes := 24    
+	   2 Input    8 Bit        Muxes := 10    
+	   3 Input    8 Bit        Muxes := 1     
+	   4 Input    8 Bit        Muxes := 1     
+	   7 Input    8 Bit        Muxes := 3     
+	   7 Input    6 Bit        Muxes := 1     
+	   3 Input    3 Bit        Muxes := 2     
+	   2 Input    3 Bit        Muxes := 10    
+	   7 Input    3 Bit        Muxes := 1     
+	   3 Input    2 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 10    
+	   2 Input    1 Bit        Muxes := 108   
+	   3 Input    1 Bit        Muxes := 3     
+	   7 Input    1 Bit        Muxes := 16    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 740 (col length:100)
+BRAMs: 730 (col length: RAMB18 100 RAMB36 50)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-3917] design ethernet_4port has port e1_reset driven by constant 1
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:40 ; elapsed = 00:00:41 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping Report (see note below)
++---------------+---------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name    | RTL Object                      | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++---------------+---------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|ethernet_4port | eth_1/tx_fifo/fifo_inst/mem_reg | 4 K x 10(NO_CHANGE)    | W |   | 4 K x 10(WRITE_FIRST)  |   | R | Port A and B     | 1      | 1      | 
+|ethernet_4port | eth_1/rx_fifo/fifo_inst/mem_reg | 4 K x 10(NO_CHANGE)    | W |   | 4 K x 10(WRITE_FIRST)  |   | R | Port A and B     | 1      | 1      | 
++---------------+---------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:50 ; elapsed = 00:00:51 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:52 ; elapsed = 00:00:54 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping Report
++---------------+---------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name    | RTL Object                      | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++---------------+---------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|ethernet_4port | eth_1/tx_fifo/fifo_inst/mem_reg | 4 K x 10(NO_CHANGE)    | W |   | 4 K x 10(WRITE_FIRST)  |   | R | Port A and B     | 1      | 1      | 
+|ethernet_4port | eth_1/rx_fifo/fifo_inst/mem_reg | 4 K x 10(NO_CHANGE)    | W |   | 4 K x 10(WRITE_FIRST)  |   | R | Port A and B     | 1      | 1      | 
++---------------+---------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:53 ; elapsed = 00:00:55 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[0]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[6]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[2]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[7]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[3]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[8]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[4]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[9]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[5]  to handle IOB=TRUE attribute
+INFO: [Synth 8-4163] Replicating register \eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/output_q_reg_reg[1]  to handle IOB=TRUE attribute
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-----------+------+
+|      |Cell       |Count |
++------+-----------+------+
+|1     |BUFG       |     2|
+|2     |BUFIO      |     1|
+|3     |BUFR       |     1|
+|4     |CARRY4     |    36|
+|5     |LUT1       |    11|
+|6     |LUT2       |    82|
+|7     |LUT3       |    84|
+|8     |LUT4       |    43|
+|9     |LUT5       |    77|
+|10    |LUT6       |   161|
+|11    |ODDR       |     1|
+|12    |PLLE2_BASE |     1|
+|13    |RAMB18E1   |     2|
+|14    |RAMB36E1   |     2|
+|15    |FDPE       |    15|
+|16    |FDRE       |   445|
+|17    |FDSE       |    66|
+|18    |IBUF       |    12|
+|19    |IBUFG      |     1|
+|20    |IBUFGDS    |     1|
+|21    |OBUF       |    14|
+|22    |OBUFT      |    40|
++------+-----------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 120 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:39 ; elapsed = 00:00:58 . Memory (MB): peak = 1565.250 ; gain = 555.719
+Synthesis Optimization Complete : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 1565.250 ; gain = 663.137
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.031 . Memory (MB): peak = 1565.250 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 45 Unisim elements for replacement
+WARNING: [Netlist 29-432] The IBUFG primitive 'e1_rxc_bufg_inst' has been retargeted to an IBUF primitive only. No BUFG will be added. If a global buffer is intended, please instantiate an available global clock primitive from the current architecture.
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1565.250 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 3 instances were transformed.
+  IBUFG => IBUF: 1 instance 
+  IBUFGDS => IBUFDS: 1 instance 
+  PLLE2_BASE => PLLE2_ADV: 1 instance 
+
+Synth Design complete | Checksum: d7799b76
+INFO: [Common 17-83] Releasing license: Synthesis
+88 Infos, 250 Warnings, 4 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:09 ; elapsed = 00:01:12 . Memory (MB): peak = 1565.250 ; gain = 1098.535
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+INFO: [Common 17-1381] The checkpoint 'C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/synth_1/ethernet_4port.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file ethernet_4port_utilization_synth.rpt -pb ethernet_4port_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu Jan 30 18:24:48 2025...

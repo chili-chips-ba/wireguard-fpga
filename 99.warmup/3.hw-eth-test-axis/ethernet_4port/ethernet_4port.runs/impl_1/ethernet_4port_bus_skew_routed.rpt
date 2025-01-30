@@ -1,0 +1,16 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Thu Jan 30 18:28:19 2025
+| Host         : DESKTOP-RQ3T0OR running 64-bit major release  (build 9200)
+| Command      : report_bus_skew -warn_on_violation -file ethernet_4port_bus_skew_routed.rpt -pb ethernet_4port_bus_skew_routed.pb -rpx ethernet_4port_bus_skew_routed.rpx
+| Design       : ethernet_4port
+| Device       : 7a200t-fbg484
+| Speed File   : -2  PRODUCTION 1.23 2018-06-13
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Bus Skew Report
+
+No bus skew constraints
+

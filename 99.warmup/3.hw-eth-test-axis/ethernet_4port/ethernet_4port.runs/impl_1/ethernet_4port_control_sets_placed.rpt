@@ -1,0 +1,109 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Thu Jan 30 18:26:11 2025
+| Host         : DESKTOP-RQ3T0OR running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file ethernet_4port_control_sets_placed.rpt
+| Design       : ethernet_4port
+| Device       : xc7a200t
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |    31 |
+|    Minimum number of control sets                        |    31 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    94 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |    31 |
+| >= 0 to < 4        |     0 |
+| >= 4 to < 6        |     6 |
+| >= 6 to < 8        |     3 |
+| >= 8 to < 10       |     4 |
+| >= 10 to < 12      |     0 |
+| >= 12 to < 14      |     6 |
+| >= 14 to < 16      |     1 |
+| >= 16              |    11 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |              50 |           28 |
+| No           | No                    | Yes                    |              15 |           10 |
+| No           | Yes                   | No                     |             100 |           34 |
+| Yes          | No                    | No                     |              46 |           11 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |             295 |           82 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++-------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+------------------+----------------+--------------+
+|                            Clock Signal                           |                                           Enable Signal                                          |                                    Set/Reset Signal                                   | Slice Load Count | Bel Load Count | Bels / Slice |
++-------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+------------------+----------------+--------------+
+|  tx_clk                                                           |                                                                                                  | eth_1/eth_mac_1g_gmii_inst/tx_mii_select_sync[1]                                      |                2 |              4 |         2.00 |
+|  tx_clk                                                           |                                                                                                  | sync_reset_inst/Q[0]                                                                  |                2 |              4 |         2.00 |
+|  tx_clk                                                           | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/mii_msn_next                        |                                                                                       |                1 |              4 |         4.00 |
+|  clk125_int                                                       |                                                                                                  | sync_reset_inst/rst0                                                                  |                3 |              4 |         1.33 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK |                                                                                                  | sync_reset_inst/Q[0]                                                                  |                2 |              4 |         2.00 |
+|  tx_clk                                                           | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/FSM_sequential_state_reg[2]_i_1_n_0 | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/Q[0]                                      |                3 |              5 |         1.67 |
+|  tx_clk                                                           | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/frame_min_count_reg[5]_i_1_n_0      |                                                                                       |                2 |              6 |         3.00 |
+|  tx_clk                                                           | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/frame_ptr_reg[7]_i_2_n_0            | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/frame_ptr_reg[7]_i_1_n_0 |                4 |              7 |         1.75 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_rx_inst/gmii_rxd_d4                         | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_rst_reg_reg[0]_0[0]                    |                2 |              7 |         3.50 |
+|  tx_clk                                                           |                                                                                                  | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/Q[0]                                      |                5 |              8 |         1.60 |
+|  tx_clk                                                           | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/s_tdata_reg[7]_i_2_n_0              | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/s_tdata_reg[7]_i_1_n_0   |                2 |              8 |         4.00 |
+|  clk125_int                                                       |                                                                                                  | sync_reset_inst/sync_reg_reg[3]_0[0]                                                  |                3 |              9 |         3.00 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK |                                                                                                  | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_rx_inst/state_next1              |                2 |              9 |         4.50 |
+|  tx_clk                                                           | eth_1/tx_fifo/fifo_inst/wr_ptr_commit_sync_reg0                                                  | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/Q[0]                                      |                4 |             13 |         3.25 |
+|  clk125_int                                                       | eth_1/tx_fifo/fifo_inst/wr_ptr_sync_commit_reg[12]_i_1_n_0                                       | sync_reset_inst/SR[0]                                                                 |                4 |             13 |         3.25 |
+|  clk125_int                                                       | eth_1/tx_fifo/fifo_inst/wr_ptr_commit_reg[12]_i_1_n_0                                            | sync_reset_inst/SR[0]                                                                 |                4 |             13 |         3.25 |
+|  clk125_int                                                       | eth_1/rx_fifo/fifo_inst/wr_ptr_commit_sync_reg0                                                  | sync_reset_inst/Q[0]                                                                  |                5 |             13 |         2.60 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK | eth_1/rx_fifo/fifo_inst/wr_ptr_commit_reg[12]_i_1__0_n_0                                         | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/SR[0]                                     |                3 |             13 |         4.33 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK | eth_1/rx_fifo/fifo_inst/wr_ptr_sync_commit_reg[12]_i_1__0_n_0                                    | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/SR[0]                                     |                3 |             13 |         4.33 |
+|  tx_clk                                                           |                                                                                                  |                                                                                       |                9 |             14 |         1.56 |
+|  clk125_int                                                       |                                                                                                  |                                                                                       |                9 |             16 |         1.78 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK |                                                                                                  |                                                                                       |               10 |             20 |         2.00 |
+|  clk125_int                                                       | eth_1/tx_fifo/fifo_inst/wr_ptr_reg__0                                                            | sync_reset_inst/SR[0]                                                                 |                7 |             25 |         3.57 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK | eth_1/rx_fifo/fifo_inst/wr_ptr_reg__0                                                            | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/SR[0]                                     |                4 |             25 |         6.25 |
+|  tx_clk                                                           | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/update_crc4_out                     | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_tx_inst/reset_crc5_out           |               10 |             32 |         3.20 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_rx_inst/m_axis_tvalid_reg_i_1_n_0           | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_rx_inst/reset_crc7_out           |                8 |             32 |         4.00 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK |                                                                                                  | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_rst_reg_reg[0]_0[0]                    |               14 |             34 |         2.43 |
+|  eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rx_ssio_sdr_inst/CLK | eth_1/eth_mac_1g_gmii_inst/eth_mac_1g_inst/axis_gmii_rx_inst/gmii_rxd_d4                         |                                                                                       |                8 |             36 |         4.50 |
+|  tx_clk                                                           | eth_1/tx_fifo/fifo_inst/rd_ptr_reg_rep[11]_i_2_n_0                                               | eth_1/eth_mac_1g_gmii_inst/gmii_phy_if_inst/rd_ptr_gray_reg                           |               10 |             38 |         3.80 |
+|  clk125_int                                                       | eth_1/rx_fifo/fifo_inst/rd_ptr_reg_rep[11]_i_2__0_n_0                                            | sync_reset_inst/rd_ptr_gray_reg                                                       |                9 |             38 |         4.22 |
+|  clk125_int                                                       |                                                                                                  | sync_reset_inst/Q[0]                                                                  |               11 |             39 |         3.55 |
++-------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+------------------+----------------+--------------+
+
+
