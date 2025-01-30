@@ -1,0 +1,113 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
+| Date         : Thu Jan 30 18:28:16 2025
+| Host         : DESKTOP-RQ3T0OR running 64-bit major release  (build 9200)
+| Command      : report_methodology -file ethernet_4port_methodology_drc_routed.rpt -pb ethernet_4port_methodology_drc_routed.pb -rpx ethernet_4port_methodology_drc_routed.rpx
+| Design       : ethernet_4port
+| Device       : xc7a200tfbg484-2
+| Speed File   : -2
+| Design State : Fully Routed
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report Methodology
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: design_1
+      Design limits: <entire design considered>
+             Max violations: <unlimited>
+             Violations found: 15
++-----------+------------------+------------------------------------------------+------------+
+| Rule      | Severity         | Description                                    | Violations |
++-----------+------------------+------------------------------------------------+------------+
+| TIMING-6  | Critical Warning | No common primary clock between related clocks | 2          |
+| TIMING-7  | Critical Warning | No common node between related clocks          | 2          |
+| TIMING-14 | Critical Warning | LUT on the clock tree                          | 1          |
+| TIMING-18 | Warning          | Missing input or output delay                  | 10         |
++-----------+------------------+------------------------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+TIMING-6#1 Critical Warning
+No common primary clock between related clocks  
+The clocks clk125_pll_out and e1_rx_clk are related (timed together) but they have no common primary clock. The design could fail in hardware. To find a timing path between these clocks, run the following command: report_timing -from [get_clocks clk125_pll_out] -to [get_clocks e1_rx_clk]
+Related violations: <none>
+
+TIMING-6#2 Critical Warning
+No common primary clock between related clocks  
+The clocks e1_rx_clk and clk125_pll_out are related (timed together) but they have no common primary clock. The design could fail in hardware. To find a timing path between these clocks, run the following command: report_timing -from [get_clocks e1_rx_clk] -to [get_clocks clk125_pll_out]
+Related violations: <none>
+
+TIMING-7#1 Critical Warning
+No common node between related clocks  
+The clocks clk125_pll_out and e1_rx_clk are related (timed together) but they have no common node. The design could fail in hardware. To find a timing path between these clocks, run the following command: report_timing -from [get_clocks clk125_pll_out] -to [get_clocks e1_rx_clk]
+Related violations: <none>
+
+TIMING-7#2 Critical Warning
+No common node between related clocks  
+The clocks e1_rx_clk and clk125_pll_out are related (timed together) but they have no common node. The design could fail in hardware. To find a timing path between these clocks, run the following command: report_timing -from [get_clocks e1_rx_clk] -to [get_clocks clk125_pll_out]
+Related violations: <none>
+
+TIMING-14#1 Critical Warning
+LUT on the clock tree  
+The LUT eth_1/eth_mac_1g_gmii_inst/oddr[0].oddr_inst_i_2 has been found on the clock tree. Run opt_design to optimize the clock trees, then re-run report_methodology. If LUT(s) are still present in the clock trees, modify the RTL or the synthesis options accordingly to move the clock gating logic to dedicated clock enable resources. Keep in mind that post-opt_design database cannot be used for pin-planning tasks
+Related violations: <none>
+
+TIMING-18#1 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[0] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#2 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[1] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#3 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[2] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#4 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[3] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#5 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[4] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#6 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[5] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#7 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[6] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#8 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxd[7] relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#9 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxdv relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+TIMING-18#10 Warning
+Missing input or output delay  
+An input delay is missing on e1_rxer relative to the rising and/or falling clock edge(s) of e1_rx_clk.
+Related violations: <none>
+
+

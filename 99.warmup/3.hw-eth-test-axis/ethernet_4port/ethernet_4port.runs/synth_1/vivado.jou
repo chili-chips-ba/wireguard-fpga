@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Thu Jan 30 18:23:21 2025
+# Process ID: 4688
+# Current directory: C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/synth_1
+# Command line: vivado.exe -log ethernet_4port.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ethernet_4port.tcl
+# Log file: C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/synth_1/ethernet_4port.vds
+# Journal file: C:/Users/Korisnik/Desktop/Freelance/wireguad_ethernet/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/synth_1\vivado.jou
+# Running On: DESKTOP-RQ3T0OR, OS: Windows, CPU Frequency: 1800 MHz, CPU Physical cores: 4, Host memory: 8463 MB
+#-----------------------------------------------------------
+source ethernet_4port.tcl -notrace

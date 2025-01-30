@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="impl_1" LaunchPart="xc7a200tfbg484-2" LaunchTime="1738257796">
+  <File Type="ROUTE-PWR" Name="ethernet_4port_power_routed.rpt"/>
+  <File Type="PA-TCL" Name="ethernet_4port.tcl"/>
+  <File Type="ROUTE-PWR-SUM" Name="ethernet_4port_power_summary_routed.pb"/>
+  <File Type="REPORTS-TCL" Name="ethernet_4port_reports.tcl"/>
+  <File Type="OPT-RQA-PB" Name="ethernet_4port_rqa_opted.pb"/>
+  <File Type="BITSTR-MMI" Name="ethernet_4port.mmi"/>
+  <File Type="OPT-METHODOLOGY-DRC" Name="ethernet_4port_methodology_drc_opted.rpt"/>
+  <File Type="INIT-TIMING" Name="ethernet_4port_timing_summary_init.rpt"/>
+  <File Type="OPT-TIMING" Name="ethernet_4port_timing_summary_opted.rpt"/>
+  <File Type="OPT-DCP" Name="ethernet_4port_opt.dcp"/>
+  <File Type="OPT-DRC" Name="ethernet_4port_drc_opted.rpt"/>
+  <File Type="OPT-HWDEF" Name="ethernet_4port.hwdef"/>
+  <File Type="PWROPT-DCP" Name="ethernet_4port_pwropt.dcp"/>
+  <File Type="PWROPT-DRC" Name="ethernet_4port_drc_pwropted.rpt"/>
+  <File Type="PWROPT-TIMING" Name="ethernet_4port_timing_summary_pwropted.rpt"/>
+  <File Type="PLACE-DCP" Name="ethernet_4port_placed.dcp"/>
+  <File Type="PLACE-IO" Name="ethernet_4port_io_placed.rpt"/>
+  <File Type="PLACE-CLK" Name="ethernet_4port_clock_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL" Name="ethernet_4port_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL-PB" Name="ethernet_4port_utilization_placed.pb"/>
+  <File Type="PLACE-CTRL" Name="ethernet_4port_control_sets_placed.rpt"/>
+  <File Type="PLACE-SIMILARITY" Name="ethernet_4port_incremental_reuse_placed.rpt"/>
+  <File Type="PLACE-PRE-SIMILARITY" Name="ethernet_4port_incremental_reuse_pre_placed.rpt"/>
+  <File Type="BG-BIN" Name="ethernet_4port.bin"/>
+  <File Type="PLACE-TIMING" Name="ethernet_4port_timing_summary_placed.rpt"/>
+  <File Type="ROUTE-PWR-RPX" Name="ethernet_4port_power_routed.rpx"/>
+  <File Type="PLACE-RQA-PB" Name="ethernet_4port_rqa_placed.pb"/>
+  <File Type="POSTPLACE-PWROPT-DCP" Name="ethernet_4port_postplace_pwropt.dcp"/>
+  <File Type="BITSTR-MSK" Name="ethernet_4port.msk"/>
+  <File Type="POSTPLACE-PWROPT-TIMING" Name="ethernet_4port_timing_summary_postplace_pwropted.rpt"/>
+  <File Type="PHYSOPT-DCP" Name="ethernet_4port_physopt.dcp"/>
+  <File Type="PHYSOPT-DRC" Name="ethernet_4port_drc_physopted.rpt"/>
+  <File Type="BITSTR-RBT" Name="ethernet_4port.rbt"/>
+  <File Type="PHYSOPT-TIMING" Name="ethernet_4port_timing_summary_physopted.rpt"/>
+  <File Type="ROUTE-ERROR-DCP" Name="ethernet_4port_routed_error.dcp"/>
+  <File Type="ROUTE-DCP" Name="ethernet_4port_routed.dcp"/>
+  <File Type="ROUTE-BLACKBOX-DCP" Name="ethernet_4port_routed_bb.dcp"/>
+  <File Type="ROUTE-DRC" Name="ethernet_4port_drc_routed.rpt"/>
+  <File Type="ROUTE-DRC-PB" Name="ethernet_4port_drc_routed.pb"/>
+  <File Type="ROUTE-DRC-RPX" Name="ethernet_4port_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC" Name="ethernet_4port_methodology_drc_routed.rpt"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="ethernet_4port_methodology_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="ethernet_4port_methodology_drc_routed.pb"/>
+  <File Type="ROUTE-RQS-PB" Name="ethernet_4port_rqs_routed.pb"/>
+  <File Type="ROUTE-STATUS" Name="ethernet_4port_route_status.rpt"/>
+  <File Type="ROUTE-STATUS-PB" Name="ethernet_4port_route_status.pb"/>
+  <File Type="ROUTE-TIMINGSUMMARY" Name="ethernet_4port_timing_summary_routed.rpt"/>
+  <File Type="ROUTE-TIMING-PB" Name="ethernet_4port_timing_summary_routed.pb"/>
+  <File Type="ROUTE-TIMING-RPX" Name="ethernet_4port_timing_summary_routed.rpx"/>
+  <File Type="ROUTE-SIMILARITY" Name="ethernet_4port_incremental_reuse_routed.rpt"/>
+  <File Type="ROUTE-CLK" Name="ethernet_4port_clock_utilization_routed.rpt"/>
+  <File Type="ROUTE-BUS-SKEW" Name="ethernet_4port_bus_skew_routed.rpt"/>
+  <File Type="ROUTE-BUS-SKEW-PB" Name="ethernet_4port_bus_skew_routed.pb"/>
+  <File Type="ROUTE-BUS-SKEW-RPX" Name="ethernet_4port_bus_skew_routed.rpx"/>
+  <File Type="POSTROUTE-PHYSOPT-DCP" Name="ethernet_4port_postroute_physopt.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-BLACKBOX-DCP" Name="ethernet_4port_postroute_physopt_bb.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="ethernet_4port_timing_summary_postroute_physopted.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="ethernet_4port_timing_summary_postroute_physopted.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="ethernet_4port_timing_summary_postroute_physopted.rpx"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="ethernet_4port_bus_skew_postroute_physopted.rpt"/>
+  <File Type="BG-BIT" Name="ethernet_4port.bit"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-PB" Name="ethernet_4port_bus_skew_postroute_physopted.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="ethernet_4port_bus_skew_postroute_physopted.rpx"/>
+  <File Type="BITSTR-NKY" Name="ethernet_4port.nky"/>
+  <File Type="BITSTR-BMM" Name="ethernet_4port_bd.bmm"/>
+  <File Type="PDI-FILE" Name="ethernet_4port.pdi"/>
+  <File Type="BOOT-PDI-FILE" Name="ethernet_4port_soc.pdi"/>
+  <File Type="PL-PDI-FILE" Name="ethernet_4port_pld.pdi"/>
+  <File Type="RCFI_FILE" Name="ethernet_4port.rcfi"/>
+  <File Type="CFI_FILE" Name="ethernet_4port.cfi"/>
+  <File Type="RNPI_FILE" Name="ethernet_4port.rnpi"/>
+  <File Type="NPI_FILE" Name="ethernet_4port.npi"/>
+  <File Type="RBD_FILE" Name="ethernet_4port.rbd"/>
+  <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
+  <File Type="BITSTR-LTX" Name="ethernet_4port.ltx"/>
+  <File Type="BITSTR-SYSDEF" Name="ethernet_4port.sysdef"/>
+  <File Type="BG-BGN" Name="ethernet_4port.bgn"/>
+  <File Type="BG-DRC" Name="ethernet_4port.drc"/>
+  <File Type="RDI-RDI" Name="ethernet_4port.vdi"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
+  <File Type="ROUTE-RQS" Name="ethernet_4port_routed.rqs"/>
+  <File Type="POSTROUTE-PHYSOPT-RQS" Name="ethernet_4port_postroute_physopted.rqs"/>
+  <File Type="ROUTE-RQS-RPT" Name="route_report_qor_suggestions_0.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-RQS-RPT" Name="postroute_physopt_report_qor_suggestions_0.rpt"/>
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PPRDIR/../ip.infra/axis/axis_adapter.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/axis/axis_async_fifo.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/axis/axis_async_fifo_adapter.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/axis_gmii_rx.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/axis_gmii_tx.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/eth_mac_1g.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/eth_mac_1g_gmii.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/eth_mac_1g_gmii_fifo.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/gmii_phy_if.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/lfsr.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/mac_ctrl_rx.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/mac_ctrl_tx.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/mac_pause_ctrl_rx.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/mac_pause_ctrl_tx.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/oddr.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/ssio_sdr_in.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet/ssio_sdr_out.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/axis/sync_reset.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../ip.infra/ethernet_4port.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="ethernet_4port"/>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">
+    <Filter Type="Constrs"/>
+    <File Path="$PPRDIR/../ip.infra/top.xdc">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="ConstrsType" Val="XDC"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1" RelGenDir="$PGENDIR/utils_1">
+    <Filter Type="Utils"/>
+    <File Path="$PSRCDIR/utils_1/imports/synth_1/ethernet_4port.dcp">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="AutoDcp" Val="1"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2023">
+      <Desc>Default settings for Implementation.</Desc>
+    </StratHandle>
+    <Step Id="init_design"/>
+    <Step Id="opt_design"/>
+    <Step Id="power_opt_design"/>
+    <Step Id="place_design"/>
+    <Step Id="post_place_power_opt_design"/>
+    <Step Id="phys_opt_design"/>
+    <Step Id="route_design"/>
+    <Step Id="post_route_phys_opt_design"/>
+    <Step Id="write_bitstream"/>
+  </Strategy>
+</GenRun>
