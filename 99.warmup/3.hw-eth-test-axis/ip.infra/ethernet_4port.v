@@ -119,6 +119,15 @@ wire clk80_int;
 wire e1_rxc_bufg;
 wire e1_txc_bufg;
 
+wire e2_rxc_bufg;
+wire e2_txc_bufg;
+
+wire e3_rxc_bufg;
+wire e3_txc_bufg;
+
+wire e4_rxc_bufg;
+wire e4_txc_bufg;
+
 PLLE2_BASE #(
 	.CLKFBOUT_MULT(5),
 	.CLKFBOUT_PHASE(0.0),
@@ -191,23 +200,23 @@ e1_rxc_bufg_inst (
     .O(e1_rxc_bufg)
 );
 
-//IBUFG
-//e2_rxc_bufg_inst (
-//    .I(e2_rxc),
-//    .O(e2_rxc_bufg)
-//);
+IBUFG
+e2_rxc_bufg_inst (
+    .I(e2_rxc),
+    .O(e2_rxc_bufg)
+);
 
-//IBUFG
-//e3_rxc_bufg_inst (
-//    .I(e3_rxc),
-//    .O(e3_rxc_bufg)
-//);
+IBUFG
+e3_rxc_bufg_inst (
+    .I(e3_rxc),
+    .O(e3_rxc_bufg)
+);
 
-//IBUFG
-//e4_rxc_bufg_inst (
-//    .I(e4_rxc),
-//    .O(e4_rxc_bufg)
-//);
+IBUFG
+e4_rxc_bufg_inst (
+    .I(e4_rxc),
+    .O(e4_rxc_bufg)
+);
 
 /*************************************************************************
 ehternet 1 test
@@ -282,76 +291,76 @@ eth_1 (
 
 assign led = ~led_int;
 
-///*************************************************************************
-//ehternet 2 test
-//**************************************************************************/
+/*************************************************************************
+ehternet 2 test
+**************************************************************************/
 
-//// AXI between MAC and Ethernet modules
-//wire [7:0] rx_tx_axis_tdata_2;
-//wire rx_tx_axis_tvalid_2;
-//wire rx_tx_axis_tready_2;
-//wire rx_tx_axis_tlast_2;
-//wire rx_tx_axis_tuser_2;
+// AXI between MAC and Ethernet modules
+wire [7:0] rx_tx_axis_tdata_2;
+wire rx_tx_axis_tvalid_2;
+wire rx_tx_axis_tready_2;
+wire rx_tx_axis_tlast_2;
+wire rx_tx_axis_tuser_2;
 
-//assign e2_reset = 1'b1; 
+assign e2_reset = 1'b1; 
 
-///*************************************************************************
-//Mac layer protocol test
-//****************************************************************************/
+/*************************************************************************
+Mac layer protocol test
+****************************************************************************/
 
-//eth_mac_1g_gmii_fifo #(
-//    .TARGET("XILINX"),
-//    .IODDR_STYLE("IODDR"),
-//    .CLOCK_INPUT_STYLE("BUFR"),
-//    .ENABLE_PADDING(1),
-//    .MIN_FRAME_LENGTH(64),
-//    .TX_FIFO_DEPTH(4096),
-//    .TX_FRAME_FIFO(1),
-//    .RX_FIFO_DEPTH(4096),
-//    .RX_FRAME_FIFO(1)
-//)
-//eth_2 (
-//    .gtx_clk(clk125_int),
-//    .gtx_rst(rst_int), 
-//    .logic_clk(clk125_int), 
-//    .logic_rst(rst_int), 
+eth_mac_1g_gmii_fifo #(
+    .TARGET("XILINX"),
+    .IODDR_STYLE("IODDR"),
+    .CLOCK_INPUT_STYLE("BUFR"),
+    .ENABLE_PADDING(1),
+    .MIN_FRAME_LENGTH(64),
+    .TX_FIFO_DEPTH(4096),
+    .TX_FRAME_FIFO(1),
+    .RX_FIFO_DEPTH(4096),
+    .RX_FRAME_FIFO(1)
+)
+eth_2 (
+    .gtx_clk(clk125_int),
+    .gtx_rst(rst_int), 
+    .logic_clk(clk125_int), 
+    .logic_rst(rst_int), 
 
-//    .tx_axis_tdata(rx_tx_axis_tdata_2),
-//    .tx_axis_tvalid(rx_tx_axis_tvalid_2),
-//    .tx_axis_tready(rx_tx_axis_tready_2),
-//    .tx_axis_tlast(rx_tx_axis_tlast_2),
-//    .tx_axis_tuser(rx_tx_axis_tuser_2),
+    .tx_axis_tdata(rx_tx_axis_tdata_2),
+    .tx_axis_tvalid(rx_tx_axis_tvalid_2),
+    .tx_axis_tready(rx_tx_axis_tready_2),
+    .tx_axis_tlast(rx_tx_axis_tlast_2),
+    .tx_axis_tuser(rx_tx_axis_tuser_2),
 
-//    .rx_axis_tdata(rx_tx_axis_tdata_2),
-//    .rx_axis_tvalid(rx_tx_axis_tvalid_2),
-//    .rx_axis_tready(rx_tx_axis_tready_2),
-//    .rx_axis_tlast(rx_tx_axis_tlast_2),
-//    .rx_axis_tuser(rx_tx_axis_tuser_2),
+    .rx_axis_tdata(rx_tx_axis_tdata_2),
+    .rx_axis_tvalid(rx_tx_axis_tvalid_2),
+    .rx_axis_tready(rx_tx_axis_tready_2),
+    .rx_axis_tlast(rx_tx_axis_tlast_2),
+    .rx_axis_tuser(rx_tx_axis_tuser_2),
 
-//    .gmii_rx_clk(e2_rxc_bufg),
-//    .gmii_rxd(e2_rxd),
-//    .gmii_rx_dv(e2_rxdv),
-//    .gmii_rx_er(e2_rxer),
-//    .mii_tx_clk(e2_txc), 
-//    .gmii_tx_clk(e2_gtxc),
-//    .gmii_txd(e2_txd),
-//    .gmii_tx_en(e2_txen),
-//    .gmii_tx_er(e2_txer),
+    .gmii_rx_clk(e2_rxc_bufg),
+    .gmii_rxd(e2_rxd),
+    .gmii_rx_dv(e2_rxdv),
+    .gmii_rx_er(e2_rxer),
+    .mii_tx_clk(e2_txc), 
+    .gmii_tx_clk(e2_gtxc),
+    .gmii_txd(e2_txd),
+    .gmii_tx_en(e2_txen),
+    .gmii_tx_er(e2_txer),
     
-//    .tx_fifo_overflow(),
-//    .tx_fifo_bad_frame(),
-//    .tx_fifo_good_frame(),
-//    .rx_error_bad_frame(),
-//    .rx_error_bad_fcs(),
-//    .rx_fifo_overflow(),
-//    .rx_fifo_bad_frame(),
-//    .rx_fifo_good_frame(),
-//    .speed(),
+    .tx_fifo_overflow(),
+    .tx_fifo_bad_frame(),
+    .tx_fifo_good_frame(),
+    .rx_error_bad_frame(),
+    .rx_error_bad_fcs(),
+    .rx_fifo_overflow(),
+    .rx_fifo_bad_frame(),
+    .rx_fifo_good_frame(),
+    .speed(),
 
-//    .cfg_ifg(8'd12),
-//    .cfg_tx_enable(1'b1),
-//    .cfg_rx_enable(1'b1)
-//);
+    .cfg_ifg(8'd12),
+    .cfg_tx_enable(1'b1),
+    .cfg_rx_enable(1'b1)
+);
 
 ///*************************************************************************
 //ehternet 3 test
@@ -424,75 +433,75 @@ assign led = ~led_int;
 //    .cfg_rx_enable(1'b1)
 //);
 
-///*************************************************************************
-//ehternet 4 test
-//**************************************************************************/
+/*************************************************************************
+ehternet 4 test
+**************************************************************************/
 
-//// AXI between MAC and Ethernet modules
-//wire [7:0] rx_tx_axis_tdata_4;
-//wire rx_tx_axis_tvalid_4;
-//wire rx_tx_axis_tready_4;
-//wire rx_tx_axis_tlast_4;
-//wire rx_tx_axis_tuser_4;
+// AXI between MAC and Ethernet modules
+wire [7:0] rx_tx_axis_tdata_4;
+wire rx_tx_axis_tvalid_4;
+wire rx_tx_axis_tready_4;
+wire rx_tx_axis_tlast_4;
+wire rx_tx_axis_tuser_4;
 
-//assign e4_reset = 1'b1; 
+assign e4_reset = 1'b1; 
 
-///*************************************************************************
-//Mac layer protocol test
-//****************************************************************************/
+/*************************************************************************
+Mac layer protocol test
+****************************************************************************/
 
-//eth_mac_1g_gmii_fifo #(
-//    .TARGET("XILINX"),
-//    .IODDR_STYLE("IODDR"),
-//    .CLOCK_INPUT_STYLE("BUFR"),
-//    .ENABLE_PADDING(1),
-//    .MIN_FRAME_LENGTH(64),
-//    .TX_FIFO_DEPTH(4096),
-//    .TX_FRAME_FIFO(1),
-//    .RX_FIFO_DEPTH(4096),
-//    .RX_FRAME_FIFO(1)
-//)
-//eth_4 (
-//    .gtx_clk(clk125_int),
-//    .gtx_rst(rst_int), 
-//    .logic_clk(clk125_int), 
-//    .logic_rst(rst_int), 
+eth_mac_1g_gmii_fifo #(
+    .TARGET("XILINX"),
+    .IODDR_STYLE("IODDR"),
+    .CLOCK_INPUT_STYLE("BUFR"),
+    .ENABLE_PADDING(1),
+    .MIN_FRAME_LENGTH(64),
+    .TX_FIFO_DEPTH(4096),
+    .TX_FRAME_FIFO(1),
+    .RX_FIFO_DEPTH(4096),
+    .RX_FRAME_FIFO(1)
+)
+eth_4 (
+    .gtx_clk(clk125_int),
+    .gtx_rst(rst_int), 
+    .logic_clk(clk125_int), 
+    .logic_rst(rst_int), 
 
-//    .tx_axis_tdata(rx_tx_axis_tdata_4),
-//    .tx_axis_tvalid(rx_tx_axis_tvalid_4),
-//    .tx_axis_tready(rx_tx_axis_tready_4),
-//    .tx_axis_tlast(rx_tx_axis_tlast_4),
-//    .tx_axis_tuser(rx_tx_axis_tuser_4),
+    .tx_axis_tdata(rx_tx_axis_tdata_4),
+    .tx_axis_tvalid(rx_tx_axis_tvalid_4),
+    .tx_axis_tready(rx_tx_axis_tready_4),
+    .tx_axis_tlast(rx_tx_axis_tlast_4),
+    .tx_axis_tuser(rx_tx_axis_tuser_4),
 
-//    .rx_axis_tdata(rx_tx_axis_tdata_4),
-//    .rx_axis_tvalid(rx_tx_axis_tvalid_4),
-//    .rx_axis_tready(rx_tx_axis_tready_4),
-//    .rx_axis_tlast(rx_tx_axis_tlast_4),
-//    .rx_axis_tuser(rx_tx_axis_tuser_4),
+    .rx_axis_tdata(rx_tx_axis_tdata_4),
+    .rx_axis_tvalid(rx_tx_axis_tvalid_4),
+    .rx_axis_tready(rx_tx_axis_tready_4),
+    .rx_axis_tlast(rx_tx_axis_tlast_4),
+    .rx_axis_tuser(rx_tx_axis_tuser_4),
 
-//    .gmii_rx_clk(e4_rxc_bufg),
-//    .gmii_rxd(e4_rxd),
-//    .gmii_rx_dv(e4_rxdv),
-//    .gmii_rx_er(e4_rxer),
-//    .mii_tx_clk(e4_txc), 
-//    .gmii_tx_clk(e4_gtxc),
-//    .gmii_txd(e4_txd),
-//    .gmii_tx_en(e4_txen),
-//    .gmii_tx_er(e4_txer),
+    .gmii_rx_clk(e4_rxc_bufg),
+    .gmii_rxd(e4_rxd),
+    .gmii_rx_dv(e4_rxdv),
+    .gmii_rx_er(e4_rxer),
+    .mii_tx_clk(e4_txc), 
+    .gmii_tx_clk(e4_gtxc),
+    .gmii_txd(e4_txd),
+    .gmii_tx_en(e4_txen),
+    .gmii_tx_er(e4_txer),
     
-//    .tx_fifo_overflow(),
-//    .tx_fifo_bad_frame(),
-//    .tx_fifo_good_frame(),
-//    .rx_error_bad_frame(),
-//    .rx_error_bad_fcs(),
-//    .rx_fifo_overflow(),
-//    .rx_fifo_bad_frame(),
-//    .rx_fifo_good_frame(),
-//    .speed(),
+    .tx_fifo_overflow(),
+    .tx_fifo_bad_frame(),
+    .tx_fifo_good_frame(),
+    .rx_error_bad_frame(),
+    .rx_error_bad_fcs(),
+    .rx_fifo_overflow(),
+    .rx_fifo_bad_frame(),
+    .rx_fifo_good_frame(),
+    .speed(),
 
-//    .cfg_ifg(8'd12),
-//    .cfg_tx_enable(1'b1),
-//    .cfg_rx_enable(1'b1)
-//);
+    .cfg_ifg(8'd12),
+    .cfg_tx_enable(1'b1),
+    .cfg_rx_enable(1'b1)
+);
 
 endmodule
