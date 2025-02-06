@@ -1,9 +1,9 @@
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
-  <img width="200", src="0.doc/artwork/wireguard-fpga.logo.png">
+  <img width="200", src="0.doc/artwork/Wireguard-fpga.logo.png">
   <img width="150", src="0.doc/artwork/ethernet-cable.png">
-  <img width="200", src="0.doc/artwork/wireguard-fpga.logo.png">
+  <img width="200", src="0.doc/artwork/Wireguard-fpga.logo.png">
 </p>
 
 With traditional solutions (such as OpenVPN / IPSec) starting to run out of steam, Wireguard is increasingly coming to the forefront as a modern, secure data tunneling and encryption method, one that's also easier to manage than the incumbents. Both software and hardware implementations of Wireguard already exist. However, the software performance is far below the speed of wire. Existing hardware approaches are both prohibitively expensive and based on proprietary, closed-source IP blocks and tools.<br> 
@@ -33,7 +33,7 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 **[Ref1]** Wireguard implementations in software:
 >- [Netbird](https://github.com/netbirdio/netbird)
 >- [Tailscale](https://tailscale.com/blog/more-throughput)
->- [Linux Kernel](https://thenewstack.io/wireguard-vpn-protocol-coming-to-a-linux-kernel-near-you)
+>- [Linux Kernel](https://thenewstack.io/Wireguard-vpn-protocol-coming-to-a-linux-kernel-near-you)
   
 **[Ref2]** 100Gbps [_Blackwire_](https://github.com/brightai-nl/BrightAI-Blackwire) Wireguard 
   
@@ -174,13 +174,13 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 ## HW/SW Partitioning
 Since the Wireguard node essentially functions as an IP router with Wireguard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the Wireguard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully realized in RTL on an FPGA.
 
-![HWSWPartitioning](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
+![HWSWPartitioning](0.doc/Wireguard/Wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
 
 In the HW/SW partitioning diagram, we can observe two types of network traffic: control traffic, which originates from the control plane and goes toward the external network (and vice versa), and data traffic, which arrives from the external network and, after processing in the data plane, returns to the external network. Specifically, control traffic represents Wireguard protocol handshake messages, while data traffic consists of end-user traffic, either encrypted or in plaintext, depending on the perspective.
 
 ## Hardware Architecture
 ### HW Block Diagram
-![HWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
+![HWArchitecture](0.doc/Wireguard/Wireguard-fpga-muxed-Architecture-HW.webp)
 
 ### HW Theory of Operation
 The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
@@ -205,7 +205,7 @@ _ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracke
 
 ## Software Architecture
 ### SW Conceptual Class Diagram
-![SWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
+![SWArchitecture](0.doc/Wireguard/Wireguard-fpga-muxed-Architecture-SW.webp)
 
 ### SW Theory of Operation
 The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the Wireguard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
@@ -236,9 +236,9 @@ The red domain encompasses the entire CSR with all peripherals. The clock signal
 
 Although the Data Plane Engine (green domain) transfers packets at approximately 10 Gbps, the cores in the DPE pipeline are not expected to process packets at such a rate. Given that we have 4 x 1Gbps Ethernet interfaces, the cryptographic cores must process packets at a rate of at least 4 Gbps to ensure the system works at wire speed. For some components, such as the _IP Lookup Engine_, packet rate is more critical than data rate because their processing focuses on the packet headers rather than the payload. Assuming that, in the worst-case scenario, the smallest packets (64 bytes) arrive via the 1 Gbps Ethernet interface, the packet rate for each Ethernet interface would be 1,488,096 packets per second (pps). Therefore, in the worst-case scenario, such components must process packets at approximately 6 Mpps rate (e.g. 6 million IP table lookups per second).
 
-![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-Interfaces.webp)
+![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-Interfaces.webp)
 
-The cores within the DPE transmit packets via the AXI4-Stream interface. Although data transfer on the TDATA bus is organized as little-endian, it is important to note that the internal organization of fields within the headers of Ethernet, IP, and UDP protocols follows big-endian format (also known as network byte order). On the other hand, the fields within the headers of the WireGuard protocol are transmitted in little-endian format.
+The cores within the DPE transmit packets via the AXI4-Stream interface. Although data transfer on the TDATA bus is organized as little-endian, it is important to note that the internal organization of fields within the headers of Ethernet, IP, and UDP protocols follows big-endian format (also known as network byte order). On the other hand, the fields within the headers of the Wireguard protocol are transmitted in little-endian format.
 
 ![ExampleToplogy](0.doc/Wireguard/hw_st_if_packet_data.png)
 
@@ -246,10 +246,10 @@ The cores within the DPE transmit packets via the AXI4-Stream interface. Althoug
 
 ### SW Flow Chart, Messages and HW Intercepts
 
-During the initial WireGuard handshake and subsequent periodic key rotations,  the control plane must update the cryptokey routing table implemented in register memory within the CSR. Since the CSR manages the operation of the DPE, such changes must be made atomically to prevent unpredictable behavior in the DPE.
+During the initial Wireguard handshake and subsequent periodic key rotations,  the control plane must update the cryptokey routing table implemented in register memory within the CSR. Since the CSR manages the operation of the DPE, such changes must be made atomically to prevent unpredictable behavior in the DPE.
 One way to achieve this is by using [write-buffered registers](https://peakrdl-regblock.readthedocs.io/en/latest/udps/write_buffering.html) (WBR). However, implementing 1 bit of WBR  memory requires three flip-flops: one to store the current value, one to hold the future value, and one for the write-enable signal. Therefore, we consider an alternative mechanism for atomic CSR updates based on flow control between the CPU and the DPE. Suppose the CPU needs to update the contents of a routing table implemented using many registers. Before starting the update, the CPU must pause packet processing within the DPE. However, such a pause cannot be implemented using the inherent stall mechanism supported by the AXI protocol (by deactivating the TREADY signal at the end of the pipeline), as a packet that has already entered the DPE must be processed according to the rules in effect at the time of its entry. We introduce a graceful flow control mechanism coordinated through a dedicated Flow Control Register (FCR) to address this.
 
-![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control.webp)
+![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-CSR-Flow-Control.webp)
 
 The atomic CSR update mechanism works as follows:
 1. When the CPU needs to update the routing table, it activates the PAUSE signal by writing to the FCR.P register.
@@ -261,16 +261,16 @@ The atomic CSR update mechanism works as follows:
 7. The multiplexer returns to its default operation mode and begins accepting packets from the next queue in a round-robin fashion.
 8. As packets start arriving, all components within the DPE gradually transition back to their active states.
 
-![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control-Animated.gif)
+![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-CSR-Flow-Control-Animated.gif)
 
 ## HW/SW Working Together as a Coherent System
-The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
+The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/Wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/Wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
 - 10.10.0.2 - the end-user host at site A
 - 10.9.0.1 - Wireguard peer A
 - 10.9.0.2 - Wireguard peer B
 - 10.10.0.1 - the end-user host at site B
 
-![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-Example-Topology.webp)
+![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-Example-Topology.webp)
 
 To illustrate the operation of the system as a whole, we will follow the step-by-step passage of packets through the system in several phases:
 - Sending a Handshake Initiation from peer A
@@ -279,70 +279,70 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 - Encryption and tunneling of the ICMP Echo Request packet (from host A to host B via peer A)
 - Detunneling and decryption of the ICMP Echo Request packet (from host A to host B via peer B)
 
-![Example1](0.doc/Wireguard/wireguard-fpga-muxed-Example-1-A-Handshake-Initiation.webp)
+![Example1](0.doc/Wireguard/Wireguard-fpga-muxed-Example-1-A-Handshake-Initiation.webp)
 
-1. The WireGuard Agent on peer A initiates the establishment of the VPN tunnel by generating the contents of the _Handshake Initiation_ packet.
+1. The Wireguard Agent on peer A initiates the establishment of the VPN tunnel by generating the contents of the _Handshake Initiation_ packet.
 2. The CPU transfers the _Handshake Initiation_ packet from RAM to the Rx FIFO via the CSR interface towards the data plane.
 3. Once the entire packet is stored in the Rx FIFO, the Round Robin Multiplexer services the packet from the FIFO and injects it into the data plane pipeline.
-4. In the first three cycles of the packet transfer, the Header Parser extracts important information from the packet header (including the destination IP address and type of WireGuard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Initiation_), the WireGuard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
-5. The IP Lookup Engine searches the routing table based on the destination IP address and determines the outgoing Ethernet interface, supplementing this information to the packet before forwarding it. Similar to the previous step, the WireGuard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
+4. In the first three cycles of the packet transfer, the Header Parser extracts important information from the packet header (including the destination IP address and type of Wireguard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Initiation_), the Wireguard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
+5. The IP Lookup Engine searches the routing table based on the destination IP address and determines the outgoing Ethernet interface, supplementing this information to the packet before forwarding it. Similar to the previous step, the Wireguard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
 6. Based on the accompanying metadata, the Demultiplexer directs the packet to the corresponding Tx FIFO (to _if1_).
 7. Once the entire packet is stored in the Tx FIFO, it is dispatched to the MAC core of the outgoing interface _if1_, provided that the corresponding 1 Gbps link is active and ready.
 8. The 1G MAC writes its MAC address as the source address, calculates the FCS on the fly, adds it to the end of the Ethernet frame, and sends it to peer B.
 
-![Example23](0.doc/Wireguard/wireguard-fpga-muxed-Example-2-3-B-Handshake-Initiation-Response.webp)
+![Example23](0.doc/Wireguard/Wireguard-fpga-muxed-Example-2-3-B-Handshake-Initiation-Response.webp)
 
 9. On peer B, the 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if1_).
 10. Once the entire packet is stored, the Rx FIFO signals the Round-Robin Multiplexer.
 11. The Round-Robin Multiplexer services the packet from the FIFO and injects it into the data plane pipeline.
-12. The Header Parser extracts important information from the packet header (including the destination IP address and type of WireGuard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Initiation_), the WireGuard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
-13. The IP Lookup Engine searches the routing table based on the destination IP address and determines that the control plane is the destination, supplementing this information to the packet before forwarding it. Similar to the previous step, the WireGuard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
+12. The Header Parser extracts important information from the packet header (including the destination IP address and type of Wireguard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Initiation_), the Wireguard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
+13. The IP Lookup Engine searches the routing table based on the destination IP address and determines that the control plane is the destination, supplementing this information to the packet before forwarding it. Similar to the previous step, the Wireguard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
 14. Based on the accompanying metadata, the Demultiplexer directs the packet to the corresponding Tx FIFO (toward the CPU).
-15. Once the entire packet is stored in the Tx FIFO, the CPU transfers the packet from the FIFO to RAM via the CSR-based interface and hands it over to the WireGuard Agent for further processing.
-16. The WireGuard Agent processes the _Handshake Initiation_ request and generates the _Handshake Response_.
-17. The Routing DB Updater updates the routing table per the WireGuard Agent's instructions (adding the peer's IP address and WireGuard-related data).
+15. Once the entire packet is stored in the Tx FIFO, the CPU transfers the packet from the FIFO to RAM via the CSR-based interface and hands it over to the Wireguard Agent for further processing.
+16. The Wireguard Agent processes the _Handshake Initiation_ request and generates the _Handshake Response_.
+17. The Routing DB Updater updates the routing table per the Wireguard Agent's instructions (adding the peer's IP address and Wireguard-related data).
 18. The CPU updates the registers from which the data plane reads the routing table and the corresponding cryptographic keys via the CSR interface.
 19. The CPU transfers the _Handshake Response_ packet from RAM to the Rx FIFO (to the data plane) via the CSR interface.
 20. The Round-Robin Multiplexer services the packet from the FIFO and injects it into the data plane pipeline.
-21. The Header Parser extracts important information from the packet header (including the destination IP address and type of WireGuard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Response_), the WireGuard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
-22. The IP Lookup Engine searches the routing table based on the destination IP address and determines the outgoing Ethernet interface, supplementing this information to the packet before forwarding it. Similar to the previous step, the WireGuard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
+21. The Header Parser extracts important information from the packet header (including the destination IP address and type of Wireguard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Response_), the Wireguard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
+22. The IP Lookup Engine searches the routing table based on the destination IP address and determines the outgoing Ethernet interface, supplementing this information to the packet before forwarding it. Similar to the previous step, the Wireguard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
 23. Based on the accompanying metadata, the Demultiplexer directs the packet to the corresponding Tx FIFO (toward _if1_).
 24. Once the entire packet is stored in the Tx FIFO, it is dispatched to the MAC core of the outgoing interface _if1_, provided that the corresponding 1 Gbps link is active and ready.
 25. The 1G MAC writes its MAC address as the source address, calculates the FCS on the fly, adds it to the end of the Ethernet frame, and sends it to peer A.
 
-![Example4](0.doc/Wireguard/wireguard-fpga-muxed-Example-4-A-Handshake-Response.webp)
+![Example4](0.doc/Wireguard/Wireguard-fpga-muxed-Example-4-A-Handshake-Response.webp)
 
 26. On peer A, the 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if1_).
 27. Once the entire packet is stored, the Rx FIFO signals the Roung-Robin Multiplexer.
 28. The Round-Robin Multiplexer services the packet from the FIFO and injects it into the data plane pipeline.
-29. The Header Parser extracts important information from the packet header (including the destination IP address and type of WireGuard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Response_), the WireGuard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
-30. The IP Lookup Engine searches the routing table based on the destination IP address and determines that the control plane is the destination, supplementing this information to the packet before forwarding it. Similar to the previous step, the WireGuard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
+29. The Header Parser extracts important information from the packet header (including the destination IP address and type of Wireguard message) and supplements the extracted metadata to the packet before passing it along. Now, knowing the message type (_Handshake Response_), the Wireguard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
+30. The IP Lookup Engine searches the routing table based on the destination IP address and determines that the control plane is the destination, supplementing this information to the packet before forwarding it. Similar to the previous step, the Wireguard/UDP Packet Assembler and ChaCha20-Poly1305 Encryptor forward the packet without any additional processing.
 31. Based on the accompanying metadata, the Demultiplexer directs the packet to the corresponding Tx FIFO (toward the CPU).
-32. Once the entire packet is stored in the Tx FIFO, the CPU transfers the packet from the FIFO to RAM via the CSR-based interface and hands it over to the WireGuard Agent for further processing.
-33. The WireGuard Agent processes the _Handshake Response_.
-34. The Routing DB Updater updates the routing table per the WireGuard Agent's instructions (adding the peer's IP address and WireGuard-related data).
+32. Once the entire packet is stored in the Tx FIFO, the CPU transfers the packet from the FIFO to RAM via the CSR-based interface and hands it over to the Wireguard Agent for further processing.
+33. The Wireguard Agent processes the _Handshake Response_.
+34. The Routing DB Updater updates the routing table per the Wireguard Agent's instructions (adding the peer's IP address and Wireguard-related data).
 35. The CPU updates the registers from which the data plane reads the routing table and the corresponding cryptographic keys. The session is now officially established, and the exchange of user data over the encrypted VPN tunnel can commence.
 
-![Example5](0.doc/Wireguard/wireguard-fpga-muxed-Example-5-A-Transfer-Data.webp)
+![Example5](0.doc/Wireguard/Wireguard-fpga-muxed-Example-5-A-Transfer-Data.webp)
 
 36. On peer A, an end-user packet (_ICMP Echo Request_) arrives via the _if2_ Ethernet interface. The 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if2_).
 37. Once the entire packet is stored, the Rx FIFO signals the Round-Robin Multiplexer.
 38. The Round-Robin Multiplexer services the packet from the FIFO and injects it into the data plane pipeline.
-39. The Header Parser extracts important information from the packet header (including the destination IP address and protocol type) and supplements the extracted metadata to the packet before passing it along. Now, knowing the protocol type (ICMP), the WireGuard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
-40. The IP Lookup Engine searches the routing table based on the destination IP address and determines the target WireGuard peer and the outgoing Ethernet interface, supplementing this information to the packet before forwarding it.
+39. The Header Parser extracts important information from the packet header (including the destination IP address and protocol type) and supplements the extracted metadata to the packet before passing it along. Now, knowing the protocol type (ICMP), the Wireguard/UDP Packet Disassembler and ChaCha20-Poly1305 Decryptor forward the packet without any further processing.
+40. The IP Lookup Engine searches the routing table based on the destination IP address and determines the target Wireguard peer and the outgoing Ethernet interface, supplementing this information to the packet before forwarding it.
 41. Based on the information about the target peer and the corresponding key, the ChaCha20-Poly1305 Encryptor encrypts the packet and adds an authentication tag.
-42. The WireGuard/UDP Packet Assembler adds WireGuard, UDP, IP, and Ethernet headers filled with the appropriate data to the encrypted packet and forwards it.
+42. The Wireguard/UDP Packet Assembler adds Wireguard, UDP, IP, and Ethernet headers filled with the appropriate data to the encrypted packet and forwards it.
 43. Based on the accompanying metadata, the Demultiplexer directs the packet to the corresponding Tx FIFO (toward _if1_).
 44. Once the entire packet is stored in the Tx FIFO, it is sent to the MAC core of the outgoing interface _if1_, provided that the corresponding 1 Gbps link is active and ready.
 45. The 1G MAC writes its MAC address as the source, calculates the FCS on the fly, which it ultimately appends to the end of the Ethernet frame, and then sends it to peer B.
 
-![Example6](0.doc/Wireguard/wireguard-fpga-muxed-Example-6-B-Transfer-Data.webp)
+![Example6](0.doc/Wireguard/Wireguard-fpga-muxed-Example-6-B-Transfer-Data.webp)
 
 46. On peer B, the 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if1_).
 47. Once the entire packet is stored, the Rx FIFO signals the Round-Robin Multiplexer.
 48. The Round-Robin Multiplexer services the packet from the FIFO and injects it into the data plane pipeline.
-49. The Header Parser extracts important information from the packet header (including source/destination IP addresses and the type of WireGuard message) and supplements the extracted metadata to the packet before passing it along.
-50. Based on the destination IP address, the WireGuard/UDP Packet Disassembler knows that the packet is intended for this peer, extracting the encrypted payload and forwarding it for further processing.
+49. The Header Parser extracts important information from the packet header (including source/destination IP addresses and the type of Wireguard message) and supplements the extracted metadata to the packet before passing it along.
+50. Based on the destination IP address, the Wireguard/UDP Packet Disassembler knows that the packet is intended for this peer, extracting the encrypted payload and forwarding it for further processing.
 51. The ChaCha20-Poly1305 Decryptor decrypts the packet and, after verifying the authentication tag, forwards it further.
 52. The IP Lookup Engine now receives the decrypted plaintext user packet (_ICMP Echo Request_). After searching the cryptokey routing table based on the source IP address of the decrypted plaintext packet, a decision is made to accept or reject the packet. If the packet correspondingly routes, it is forwarded.
 53. Based on the accompanying metadata, the Demultiplexer directs the packet to the corresponding Tx FIFO (toward _if2_).
@@ -350,441 +350,31 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 55. The 1G MAC writes its MAC address as the source, calculates the FCS on the fly, which it ultimately appends to the end of the Ethernet frame, and then sends it to the end-user host of peer B.
 
 ## Simulation Test Bench
-#### References:
-- [VProc](https://github.com/wyvernSemi/vproc)
-- [mem_model](https://github.com/wyvernSemi/mem_model)
-- [TCP/IP Packet Generator](https://github.com/wyvernSemi/tcpIpPg)
-- [riscV and ISS](https://github.com/wyvernSemi/riscV)
-- [Surfer](https://gitlab.com/surfer-project/surfer)
-- [Verilator](https://verilator.org/guide/latest/install.html)
-- [SystemRDL](https://www.accellera.org/downloads/standards/systemrdl)
 
-The WireGuard test bench aims to have a flexible approach to simulation which allows a common test envoironment to be used whilst selecting between alternative CPU components, one of which uses the VProc virtual processor co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32 or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times.
+The [Wireguard FPGA test bench](4.sim/README) aims to have a flexible approach to simulation which allows a common test environment to be used whilst selecting between alternative CPU components, one of which uses the [_VProc_ virtual processor](https://github.com/wyvernSemi/vproc) co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32, IBEX or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times. The test bench has the following features:
 
-The VProc component is wrapped up into an <tt>soc_cpu.VPROC</tt> component with identical interfaces to the RTL. Some converion logic is added to this BFM to convert between VProc's generic memory mapped interface and the <tt>soc_if</tt> defined interface. This is very lightweight logic, with less than ten combinatorial gates to match the control signals. In addition, the <tt>soc_cpu.VPROC</tt> component has a <tt>mem_model</tt> component instantiated. This is a 'memory port' to the <tt>mem_model</tt> C software implementation of a sparse memory model, allowing updates to the RISC-V program, if using the rv32 RISC-V ISS model ([see below](#risc-v-compiled-application)). The diagram below shows a block diagram of the test bench HDL.
+* A [_VProc_](https://github.com/wyvernSemi/vproc) virtual processor based [`soc_cpu.VPROC`](4.sim/models/README.md#soc-cpu-vproc) component
+  * [Selectable](4.sim/README.md#auto-selection-of-soc_cpu-component) between this or an RTL softcore
+  * Can run natively compiled test code
+  * Can run the application compiled natively with the [auto-generated co-sim HAL](3.build/README.md#co-simulation-hal)
+  * Can run RISC-V compiled code using the [rv32 RISC-V ISS model](4.sim/models/rv32/README.md)
+* Uses a C [sparse memory model](https://github.com/wyvernSemi/mem_model)
+  * An [HDL component](4.sim/models/cosim/README.md) instantiated in logic gives logic access to this memory
+  * An API is provided to _VProc_ running code for direct access
+* The [_udpIpPg VIP_](https://github.com/wyvernSemi/udpIpPg) is used to drive the logic's four ethernet ports in a four port [`bfm_ethernet`](4.sim/models/README.md#bfm_phy_ethernet) block.
+  * An [MDIO slave interface](4.sim/models/README.md#bfm_phy_mdio) is also provided that maps *mem_model* memory areas to the registers with instantiated *mem_model* components
 
-<p align="center">
-<img src="https://github.com/user-attachments/assets/98cb3a19-11c7-4470-a4e1-41c503429e14" width=800>
-</p>
-
-Shown in the diagram is the WireGuard top level component (<tt>top</tt>) with the <tt>soc_cpu.VPROC</tt> component instantiated in it as one of three possible selected devices for the soc_cpu. The IMEM write port is connected to the UART for program updates and the <tt>soc_if</tt> from  <tt>soc_cpu.VPROC</tt> is connected to the interconnect fabric (<tt>soc_fabric</tt>), just as for the two RTL components. The test bench around the top level WireGuard component has a driver for the UART (<tt>bfm_uart</tt>) and the four GMII/RGMII interfaces (including MDIO signals) coming from the WireGuard core to some verification IP (`bfm_ethernet`) to drive this signalling. This BFM implementation is based around the [_udpIpP_](https://github.com/wyvernSemi/udpIpPg) GMII/RGMII VProc based VIP. In addtion there are MDIO slave models for reading and writing over the PHY MDIO signals from WireGuard, and these also read and write to allocated _VProc_ memory for access by _VProc_ `soc_cpu` code. MDIO registers access are displayed to the console as well, for logging purpose, displaying the name of the clause 22 register accessed. Finally the test bench generates clocks and key press resets that go to the top level's <tt>clk_rst_gen</tt> and <tt>debounce</tt> components.
-
-#### Auto-selection of soc_cpu Component
-
-The WireGuard's top level component has the required RTL files listed in <tt>1.hw/top.filelist</tt>. This includes files for the soc_cpu, under the directory <tt>ip.cpu</tt>. The simulation build make file ([see below](#building-and-running-code)) will process the <tt>top.filelist</tt> file to generate a new local copy, having removed all references to the files under the <tt>ip.cpu</tt> directory. Since the VProc <tt>soc_cpu</tt> component is a test model, the <tt>soc_cpu.VPROC.sv</tt> HDL file is placed in <tt>4.sim/models</tt> whilst the rest of the HDL files come from the VProc and mem_model repositories (auto-checked out by the make file, if necessary). These are referenced within the make file, along with the other test models that are used in the test bench. Thus the VProc device is selected for the simulation as the CPU component.
-
-#### VProc Software
-
-The VProc software consists of DPI-C code for communication and sycnronisation with the simulation, for both the memory model and VProc itself. On top of this are the APIs for VProc and mem_model for use by the running code. In the case of VProc there is a low level C API or, if preferred, a C++ API. In WireGuard, the VProc <tt>soc_cpu</tt> is node 0, and so the entry point for user software is <tt>VUserMain0</tt>, in place of <tt>main</tt>.
-
-The C++ API is defined in a class <tt>VProc</tt> (defined in <tt>VProcClass.h</tt>) from the VProc repository, and a constructor creates an API object, defining the node for which is connected:
-
-```
-VProc (const unsigned node);
-```
-
-For the C++ VProc API there are two basic word access methods:
-
-```
-    int  write (const unsigned   addr, const unsigned    data, const int delta=0);
-    int  read  (const unsigned   addr,       unsigned   *data, const int delta=0);
-```
-
-For these methods, the address argument is agnostic to being a byte address or a word address, but for the WireGuard implementation these are **byte addresses**. The delta argument is unused in WireGuard, and should be left at its default value, with just the address and data arguments used in the call to these methods. Along with these basic methods is a method to advance simulation time without doing a read or write transaction.
-
-```
-int  tick (const unsigned ticks);
-```
-This method's units of the <tt>ticks</tt> argument are in clock cycles, as per the clock that the VProc HDL is connected to. A basic VProc program, then, is shown below:
-
-```
-#include "VProcClass.h"
-extern "C" {
-#include "mem.h"
-}
-
-static const int node    = 0;
-
-extern "C" void VUserMain0(void)
-{   
-    // Create VProc access object for this node
-    VProc* vp0 = new VProc(node);
-    
-    // Wait a bit
-    vp0->tick(100);
-    
-    uint32_t addr  = 0x10001000;
-    uint32_t wdata = 0x900dc0de;
-    
-    vp0->write(addr, wdata);
-    VPrint("Written   0x%08x  to  addr 0x%08x\n", wdata, addr);
-    
-    vp0->tick(3);
-    
-    uint32_t rdata;
-    vp0->read(addr, &rdata);
-    
-    if (rdata == wdata)
-    {
-        VPrint("Read back 0x%08x from addr 0x%08x\n", rdata, addr);
-    }
-    else
-    {   VPrint("***ERROR: data mis-match at addr = 0x%08x. Got 0x%08x, expected 0x%08x\n", addr, rdata, wdata);
-    }
-
-    // Sleep forever
-    while(true)
-        vp0->tick(GO_TO_SLEEP);
-}
-```
-The above code is a slightly abbreviated version of the code in <tt>4.sim/usercode</tt>. Note that the <tt>VUserMain0</tt> function must have C linkage as the VProc software that calls it is in C (as all the programming logic interfaces, including DPI-C, are C). The API also has a set of other methods for finer access control which are listed below, and more details can be found in the [VProc manual](https://github.com/wyvernSemi/vproc/blob/master/doc/VProc.pdf).
-
-```
-    int  writeByte    (const unsigned   byteaddr, const unsigned    data, const int delta=0);
-    int  writeHword   (const unsigned   byteaddr, const unsigned    data, const int delta=0);
-    int  writeWord    (const unsigned   byteaddr, const unsigned    data, const int delta=0);
-    int  readByte     (const unsigned   byteaddr,       unsigned   *data, const int delta=0);
-    int  readHword    (const unsigned   byteaddr,       unsigned   *data, const int delta=0);
-    int  readWord     (const unsigned   byteaddr,       unsigned   *data, const int delta=0);
-
-```
-The other methods is this class are not, at this point, used by WireGuard. These methods can now be used to write test code to drive the <tt>soc_if</tt> bus of the <tt>soc_cpu</tt> component, and is the basic method to write test code software. As well as the VProc API, the user software can have direct access to the sparse memory model API by including <tt>mem.h</tt>, which are a set of C methods (and <tt>mem.h</tt> must be included as <tt>extern "C"</tt> in C++ code). The functions relevant to WireGuard are shown below:
-
-```
-void     WriteRamByte  (const uint64_t addr, const uint32_t data, const uint32_t node);
-void     WriteRamHWord (const uint64_t addr, const uint32_t data, const int little_endian, const uint32_t node);
-void     WriteRamWord  (const uint64_t addr, const uint32_t data, const int little_endian, const uint32_t node);
-uint32_t ReadRamByte   (const uint64_t addr, const uint32_t node);
-uint32_t ReadRamHWord  (const uint64_t addr, const int little_endian, const uint32_t node);
-uint32_t ReadRamWord   (const uint64_t addr, const int little_endian, const uint32_t node);
-```
- 
-Note that, as C functions, there are no default parameters and the <tt>little_endian</tt> and <tt>node</tt> arguments must be passed in, even though they are constant. The <tt>little_endian</tt> argument is non-zero for little endian and zero for big endian. The <tt>node</tt> argument is **not** the same as for VProc, but allows multiple separate memory spaces to be modelled, just as for VProc multiple virtual processor instantiations. For WireGuard, this is always 0. All instantiated <tt>mem_model</tt> components in the HDL have (through the DPI) access to the same memory space model as the API, and so data can be exchanged from the simulation and the running code, such as the RISC-V programs over the IMEM write interface. 
- 
-Compiling co-designed application code, either compiled for the native host machine, or to run on the <tt>rv32</tt> RISC-V ISS will need further layers on top of these APIs, which will be virtualised away by that point ([see the sections below](#co-simulation-hal)). The diagram below summarises the software layers that make up a program running on the VProc HDL component. The "native test code" use case, shown at the top left, is for the case just described above  that use the APIs directly.
+The figure below shows an oveview block diagram of the test bench HDL.
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/373676ee-f7e2-4a1a-b9b9-079ccef90c37" width=800>
+<img src="https://github.com/user-attachments/assets/98cb3a19-11c7-4470-a4e1-41c503429e14" width=600>
 </p>
 
-#### Other Software Use Cases
-
-##### Natively Compiled Application
-
-As well as the native test code case seen in the previous section, the WireGuard application can be compiled natively for the host machine, including the hardware access layer (HAL), generated from SystemRDL. The HAL software output from this is processed to generate a version that makes accesses to the VProc and mem_model APIs in place of accesses with pointers to and from memory (see the [Co-simulation HAL](#co-simulation-hal) section below). The rest of the application software has these details hidden away in the HAL and sees the same API as presented by the auto-generated code. In both cases transactions happen on the <tt>soc_if bus</tt> port of the <tt>soc_cpu</tt> component. The <tt>main</tt> entry point is also swapped for <tt>VUserMain0</tt>.
-
-##### RISC-V Compiled Application
-
-To execute RISC-V compiled application code, the <tt>rv32</tt> instruction set simulator is used as the code running on the virtual processor. The <tt>VUserMain0</tt> program now becomes software to creates an iss object and integrate with VProc. This uses the ISS's external memory access callback function to direct loads and stores either towards the sparse memory model, the VProc API for simulation transactions, or back to the ISS itself to handle. This ISS integration <tt>VUserMain0</tt> program is located in <tt>4.sim/models/rv32/usercode</tt>. When built the code here is compiled and uses the pre-built library in <tt>4.sim/models/rv32/lib/librv32lnx.a</tt> containing the ISS, with the headers for it in <tt>4.sim/models/rv32/include</tt> .
-
-The ISS supports interrupts, but these are not currently used on WireGuard. The integration software can read a configuration file, if present in the <tt>4.sim/</tt> directory, called <tt>vusermain.cfg</tt>. This allows the ISS and other features to be configured at run-time. The configuration file is in lieu of command line options and the entries in the file are formatted as if they were such, with a command matching the VUserMain program:
-
-```
-vusermain0 [options]
-```
-One of the options is <tt>-h</tt> for a help message, which is as shown below:
-```
-Usage:vusermain0 -t <test executable> [-hHebdrgxXRcI][-n <num instructions>]
-      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]
-      [-l <line bytes>][-w <ways>][-s <sets>][-j <imem base addr>][-J <imem top addr>]
-      [-P <cycles>][-x <base addr>][-X <top addr>][-V <core>]
-   -t specify test executable (default test.exe)
-   -n specify number of instructions to run (default 0, i.e. run until unimp)
-   -d Enable disassemble mode (default off)
-   -r Enable run-time disassemble mode (default off. Overridden by -d)
-   -C Use cycle count for internal mtime timer (default real-time)
-   -a display ABI register names when disassembling (default x names)
-   -T Use external memory mapped timer model (default internal)
-   -H Halt on unimplemented instructions (default trap)
-   -e Halt on ecall instruction (default trap)
-   -E Halt on ebreak instruction (default trap)
-   -b Halt at a specific address (default off)
-   -A Specify halt address if -b active (default 0x00000040)
-   -D Specify file for debug output (default stdout)
-   -R Dump x0 to x31 on exit (default no dump)
-   -c Dump CSR registers on exit (default no dump)
-   -g Enable remote gdb mode (default disabled)
-   -p Specify remote GDB port number (default 49152)
-   -S Specify start address (default 0)
-   -I Enable instruction cache timing model (default disabled)
-   -l Specify number of bytes in icache line (default 8)
-   -w Specify number of ways in icache (default 2)
-   -s Specify number of sets in icache (default 256)
-   -j Specify cached IMEM base address (default 0x00000000)
-   -J Specify cached IMEM top address (default 0x7fffffff)
-   -P Specify penalty, in cycles, of one slow mem access (default 4)
-   -x Specify base address of external access region (default 0xFFFFFFFF)
-   -X Specify top address of external access region (default 0xFFFFFFFF)
-   -V Specify RISC-V core timing model to use (default "DEFAULT")
-   -h display this help message
-```
-With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on and registers dumped on exit. More details of all these features can be found in the <tt>rv32</tt> [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf).
-
-Specific to the WireGuard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>. The cache model can be enabled with the <tt>-I</tt> option and the cache configured. The <tt>-l</tt> option specifies the number of bytes in a cache line, which can be 4, 8 or 16. The number of ways is set with <tt>-w</tt> and can be either 1 or 2, and the number of sets is specified with the <tt>-s</tt> options and can be 128, 256, 512 or 1024. A set of pre-configured timing models can be specified with the <tt>-V</tt> option. The argument must be one of the following:
-
-* DEFAULT
-* PICORV32
-* EDUBOS5STG2
-* EDUBOS5STG3
-* IBEXMULSGL
-* IBEXMULFAST
-* IBEXMULSLOW
-
-This reflects the available models as detailed in the _Configuring ISS timing model_ section below.
-
-#### Building and Running Code
-
-A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below), the provided user code that's the rv32 ISS integration software. By default the make file will compile the <tt>VuserMain0.cpp</tt> user code in <tt>4.sim/usercode</tt>, but the directory and list of file to compile can be specified on the command line (see below). The user software is compiled into a local static library, <tt>libuser.a</tt> which is linked to the simulation code within Verilator along with the precompiled <tt>libcosimlnx.a</tt> (or <tt>libcosimwin.a</tt> for MSYS2/mingw64 on Windows) located in <tt>4.sim/models/cosim/lib</tt> and containing the precompiled code for *VProc* and *mem_model*. The headers for the *VProc* and *mem_model* API software are in <tt>4.sim/models/cosim/include</tt>. The HDL required for these models' use in the WireGuard trest bench can be found in <tt>4.sim/models/cosim</tt>, and the make file picks these up from there to compile with the rest of the test bench HDL.
-
-The <tt>MakefileVProc.mk</tt> make file has a target <tt>help</tt>, which produces the following output:
-
-```
-make -f MakefileVProc.mk help          Display this message
-make -f MakefileVProc.mk               Build C/C++ and HDL code without running simulation
-make -f MakefileVProc.mk run           Build and run batch simulation
-make -f MakefileVProc.mk rungui/gui    Build and run GUI simulation
-make -f MakefileVProc.mk clean         clean previous build artefacts
-
-Command line configurable variables:
-  USER_C:       list of user source code files (default VUserMain0.cpp)
-  USRCODEDIR:   directory containing user source code (default $(CURDIR)/usercode)
-  OPTFLAG:      Optimisation flag for user VProc code (default -g)
-  TIMINGOPT:    Verilator timing flags (default --timing)
-  TRACEOPTS:    Verilator trace flags (default --trace-fst --trace-structs)
-  TOPFILELIST:  RTL file list name (default top.filelist)
-  SOCCPUMATCH:  string to match for soc_cpu filtering in h/w file list (default ip.cpu)
-  USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank)
-  WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw)
-  BUILD:        Select build type from DEFAULT or ISS (default DEFAULT)
-  TIMEOUTUS:    Test bench timeout period in microseconds (default 15000)
-```
-
-By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed in batch mode. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files of previous compilations.
-
-The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the make file compiles the supplied source code for the ISS. 
-
-The <tt>USER_C</tt> and <tt>USERCODEDIR</tt> make file variable allows different (and multiple) user source file names to override the defaults, and to change the location of where the user code is located (if not the ISS build). This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The WireGuard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
-
-Control of when the simulation exits can be specified with the <tt>TIMEOUTUS</tt> variable in units of microseconds. Some example commands using the make file are shown below:
-
-```
-make -f MakefileVProc.mk run                                                   # Build and run default VUserMain0.cpp code in usercode/
-make -f MakefileVProc.mk                                                       # Build but don't run default code
-make -f MakefileVProc.mk USER_C="test1.cpp subfuncs.cpp" USRCODEDIR=test1 run  # Build and run test1.cpp and subfuncs.cpp in test1/
-make -f MakefileVProc.mk BUILD=ISS gui                                         # Build and run ISS simulation and show waves
-make -f MakefileVProc.mk clean                                                 # Clean all intermediate files
-```
-
-##### Configuring ISS timing model
-
-Configuration of the timing model can done from the supplied integration code in <tt>VUserMain0.cpp</tt>. The main <tt>pre_run_setup()</tt> function, in <tt>VUserMain0.cpp</tt>, creates an <tt>rv32_timing_config</tt> object (<tt>rv32_time_cfg</tt>) which has an <tt>update_timing</tt> method that takes a pointer to the iss object and an enumerated type to select the model to use for the particular core timings required. This second argument is selected from one of the following:
-
-* <tt>rv32_timing_config::risc_v_core_e::DEFAULT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> : Default timing values
-* <tt>rv32_timing_config::risc_v_core_e::PICORV32&nbsp;&nbsp;&nbsp;&nbsp;</tt> : picoRV32 timings
-* <tt>rv32_timing_config::risc_v_core_e::EDUBOS5STG2&nbsp;</tt> : 2 stage eduBOS5
-* <tt>rv32_timing_config::risc_v_core_e::EDUBOS5STG3&nbsp;</tt> : 3 stage eduBOS5
-* <tt>rv32_timing_config::risc_v_core_e::IBEXMULSGL&nbsp;&nbsp;</tt> : IBEX single cycle multipler
-* <tt>rv32_timing_config::risc_v_core_e::IBEXMULFAST&nbsp;</tt> : IBEX fast multi-cycle multiplier
-* <tt>rv32_timing_config::risc_v_core_e::IBEXMULSLOW&nbsp;</tt> : IBEX slow multi-cycle multiplier
-
-As detailed in the _RISC-V Compiled Application_ section above, the ISS can be configured via the <tt>vusermain.cfg</tt> file using the <tt>-V</tt> option.
-
-##### Running ISS code
-
-When the test bench is built for the rv32 ISS, the actual 'user' application code is run on the RISC-V ISS model itself, and is compiled using the normal RISC-V GNU toochain to produce a binary file that the ISS can load and run. As described above, the code that is run is slected with the </tt>vusermain.cfg</tt> file and the </tt>-t</tt> option. The various flags configure the ISS and determines when the ISS is halted (if at all). An example assembly file is provided in <tt>4.sw/models/rv32/riscvtest/main.s</tt> (as well as a recompiled <tt>main.bin</tt>). This assembly code reproduces the functionality of the example <tt>VuserMain0.cpp</tt> program discussed previously, writing to memory, reading back and comparing for a mismatch. The example assembly code is compiled with:
-
-```
-$riscv64-unknown-elf-as.exe -fpic -march=rv32imafdc -aghlms=main.list -o main.o main.s
-$riscv64-unknown-elf-ld.exe main.o -Ttext 0 -Tdata 1000 -melf32lriscv -o main.bin
-```
-In this instance, the code is set to compile to use the MAFDC extensions (maths, atomic, float, double and compressed). To run this code the <tt>vusermain.cfg</tt> is set to:
-
-```
-vusermain0 -x 0x10000000 -X 0x20000000 -rEHRca -t ./models/rv32/riscvtest/main.bin
-```
-This sets the address region that will be sent to the HDL <tt>soc_cpu</tt> bus to be between byte addresses 0x10000000 and 0x1FFFFFFF. All other accesses will use the direct memory model's API, with no simulation transactions. The next set of options turn on run-time disassembly (<tt>-r</tt>), exit on <tt>ebreak</tt> (<tt>-E</tt>) or unimplemented instruction (<tt>-H</tt>), dump registers (<tt>-R</tt>) and CSR register (<tt>-c</tt>) and display the registers in ABI format (<tt>-a</tt>). The pre-compiled example program binary is then selected with the <tt>-t</tt> option. Of course, many of these options are not necessary and, for example, the output flags (<tt>-rRca</tt>) can be removed and the program will still run correctly. In the <tt>4.sim/</tt> directory, using <tt>make</tt> to build and run the code gives the following output:
-
-```
-$make -f MakefileVProc.mk BUILD=ISS run
-- V e r i l a t i o n   R e p o r t: Verilator 5.024 2024-04-05 rev v5.024-42-gc561fe8ba
-- Verilator: Built from 2.145 MB sources in 40 modules, into 0.556 MB in 20 C++ files needing 0.001 MB
-- Verilator: Walltime 0.298 s (elab=0.020, cvt=0.087, bld=0.000); cpu 0.000 s on 1 threads; alloced 14.059 MB
-Archive ar -rcs Vtb__ALL.a Vtb__ALL.o
-VInit(0): initialising DPI-C interface
-  VProc version 1.11.4. Copyright (c) 2004-2024 Simon Southwell.
-                   0 TOP.tb.error_mon (0) - ERROR_CLEARED
-
-  ******************************
-  *   Wyvern Semiconductors    *
-  * rv32 RISC-V ISS (on VProc) *
-  *     Copyright (c) 2024     *
-  ******************************
-
-00000000: 0x00001197    auipc     gp, 0x00000001
-00000004: 0x0101a183    lw        gp, 16(gp)
-00000008: 0x0001a103    lw        sp, 0(gp)
-0000000c: 0x10001237    lui       tp, 0x00010001
-00000010: 0x00222023    sw        sp, 0(tp)
-00000014: 0x00022283    lw        t0, 0(tp)
-00000018: 0x00229663    bne       t0, sp, 12
-0000001c: 0x00004505'   addi      a0, zero, 1
-0000001e: 0x00004501'   addi      a0, zero, 0
-00000020: 0x05d00893    addi      a7, zero, 93
-00000024: 0x00009002'   ebreak   
-    *
-
-Register state:
-
-  zero = 0x00000000   ra = 0x00000000   sp = 0x900dc0de   gp = 0x00001000 
-    tp = 0x10001000   t0 = 0x900dc0de   t1 = 0x00000000   t2 = 0x00000000 
-    s0 = 0x00000000   s1 = 0x00000000   a0 = 0x00000000   a1 = 0x00000000 
-    a2 = 0x00000000   a3 = 0x00000000   a4 = 0x00000000   a5 = 0x00000000 
-    a6 = 0x00000000   a7 = 0x0000005d   s2 = 0x00000000   s3 = 0x00000000 
-    s4 = 0x00000000   s5 = 0x00000000   s6 = 0x00000000   s7 = 0x00000000 
-    s8 = 0x00000000   s9 = 0x00000000  s10 = 0x00000000  s11 = 0x00000000 
-    t3 = 0x00000000   t4 = 0x00000000   t5 = 0x00000000   t6 = 0x00000000 
-  
-CSR state:
-
-  mstatus    = 0x00003800
-  mie        = 0x00000000
-  mvtec      = 0x00000000
-  mscratch   = 0x00000000
-  mepc       = 0x00000000
-  mcause     = 0x00000000
-  mtval      = 0x00000000
-  mip        = 0x00000000
-  mcycle     = 0x0000000000000037
-  minstret   = 0x000000000000000b
-  mtime      = 0x0006263f2bfc6bcf
-  mtimecmp   = 0xffffffffffffffff
-Exited running ./models/rv32/riscvtest/main.bin
-- /mnt/hgfs/winhome/simon/git/wireguard-fpga/4.sim/tb.sv:44: Verilog $finish
-```
-Note that the disassembled output is a mixture of 32-bit and compressed 16-bit instructions, with the compressed instruction hexadecimal values shown followed by a <tt>'</tt> character and the instruction heximadecimal value in the lower 16-bits. Unlike for the native compiled code use cases, unless the HDL has changed, the test bench does not need to be re-built when the RISC-V source code is changed or a different binary is to be run, just the RISC-V code is re-compiled or the <tt>vusermain.cfg</tt> updated to point to a different binary file.
-
-#### Debugging Code
-
-In each of the three usage cases of software, each can be debugged using <tt>gdb</tt>, either for the host computer or the gnu RISC-V toolchain's gdb.
-
-##### Natively Compiled code
-
-For natively compiled code, whether test code or natively compiled application code, so long as each was compiled with the -g flag set ([see above](#building-and-running-code) for make file options) then the Verilator compiled simulation is an executable file (compiled into an <tt>output/</tt> directory) that contains the all the compiled user code. Therefore, to debug using <tt>gdb</tt>, this executable just needs to be run with the host computer's <tt>gdb</tt>. E.g., from the <tt>4.sim/</tt> directory:
-
-```
-gdb output/Vtb
-```
-
-Debugging then proceeds just as for any other executable.
-
-##### ISS Software
-The ISS has a remote <tt>gdb</tt> interface (enable with the <tt>-g</tt> option in the <tt>vusermain.cfg</tt> file) allowing the loading of programs via this connection, and of doing all the normal debugging steps of the RISC-V code. The [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf) details how to use the <tt>gdb</tt> remote debug interface but, to summarise, when the ISS is run in GDB mode, it will create a TCP socket and advertise the port number to the screen (e.g. <tt>RV32GDB: Using TCP port number: 49152</tt>). The RISC-V <tt>gdb</tt> is then run and a remote connection is made with a command:
-
- ```
- (gdb) target remote :49152
- ```
-
-A blank before the colon character in the port number indicates the connection is on the local host, but a remote host name can be used to do remote debugging from another machine on the network, or even over the internet, if sufficient access permissions. The program (if not done so by other means) can be loaded over this connection and then debugging commence as normal.
-
-The [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf) has more details on this and also has an appendix showing how to setup an Eclipse IDE project to debug the code via <tt>gdb</tt>.
+More details on the architecture and usage of the Wireguard test bench can be found in the [README.md](4.sim/README.md) in the `4.sim` directory.
 
 ## Co-simulation HAL
 
-The WireGuard control and status register harware abstraction layer (HAL) software is auto-generated, as is the CSR RTL, using `peakrdl`. For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using `systemrdl-compiler` that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The platform targetted header uses the `peakrdl c-header` output directly and unmodified. The `peakrdl` output is produced using the following command:
-
-```
-    peakrdl c-header csr_cosim.rdl -b ltoh -o csr.h
-```
-
-The `csr_cosim.hdl` is a filtered version of `3.build/csr_build/csr.rdl` that removes buffer write commands that are not understood by `systemrdl-compiler` and are not used for `c-header` generation. Other than that, the RDL is identical.
-
-The wrapper HAL headers are generated with a Python script `sysrdl_cosim.py` which has some command line options:
-
-```
-usage: sysrdl_cosim.py [-h] [-r RDLFILE] [-o OUTFILE] [-c] [-v VPNODE] [-d DELAY] [-C CLKPERIOD]
-
-Process command line options.
-
-options:
-  -h, --help            show this help message and exit
-  -r RDLFILE, --rdl_file RDLFILE
-                        Specify the RDL file for processing
-  -o OUTFILE, --output_file OUTFILE
-                        Specify an ouput header file
-  -c, --cosim           Generate cosim header
-  -v VPNODE, --vp_node VPNODE
-                        Specify VProc node number for soc_cpu (cosim only)
-  -d DELAY, --delay_range DELAY
-                        Specify maximum delay between transactions (cosim only)
-  -C CLKPERIOD, --clk_period CLKPERIOD
-                        Specify the VProc soc_cpu clock period in ps (cosim only)
-```
-
-The main options used are to specify the RDL file (`-r` or `--rd_file`) and to specify the output file (`-o` or `-output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used. Finally the *VProc* test bench `soc_cpu` module's clock period in picoseconds can be specified for use in co-simulation abstraction of delay and timing functions. It defaults to 18518 to match the `tb.sv` `HALF_PERIOD_PS` definition for the base 27MHz clock that's doubled to 54MHz for the internal logic.
-
-To generate all the required HAL headers a make file is provided as `3.build/MakefileCosim` to wrap app the script calls. Running this make file (`make -f MakefileCosim`) produces the following files in `3.build/csr_build/generated-files`:
-
-  * `csr_cosim.rdl` : The intermediate filtered RDL specification
-  * `csr.h`         : The `peakrdl c-header` output file used by the target header
-  * `csr_hw.h`      : The HAL for the RISC-V hardware target (and for the *rv32* ISS), which uses `csr.h`
-  * `csr_cosim.h`   : The HAL for the *VProc* based WireGuard logic simulation test bench
-
-The `csr_hw.h` and `csr_cosim.h` files present the same API to the application and can be appropriately selected at compile time using something like the following:
-
-```
-ifdef VPROC
-#include "csr_cosim.h"
-#else
-#include "csr_hw.h"
-#endif
-```
-This has been done in the `wireguard_regs.h` header in the `3.build/csr_build/generated-files/` directory, and including this header in the application code makes available the register HAL.
-
-### Using the HAL
-
-The HAL provides a hierarchical access to the registers via a set of pointer dereferencing and a final access method (for reads and writes of registers and their bit fields) that reflects the hierarchy of the RDL specification. The following shows some example accesses, based on the `3.build/csr_build/csr.rdl` (as at its first revision on 10/11/2024):
-
-```
-    #include "wireguard_regs.h"
-
-    // Create a CSR register object. A base address can be specified
-    // but defaults to the address specified in the RDL
-    csr_vp_t* csr = new csr_vp_t();
-
-    // Write to address field and read back.
-    csr->ip_lookup_engine->table[0]->allowed_ip[0]->address(0x12345678);
-    printf("address = 0x%08lx\n\n", csr->ip_lookup_engine->table[0]->allowed_ip[0]->address());
-    
-    // Write to whole endpoint register
-    csr->ip_lookup_engine->table[3]->endpoint->full(0x5555555555555555ULL);
-    
-    // Write to bit field in endpoint register
-    csr->ip_lookup_engine->table[3]->endpoint->interface(0x7);
-    
-    // Read back bit field in endpoint register
-    printf("interface = 0x%1lx\n\n", csr->ip_lookup_engine->table[3]->endpoint->interface());
-```
-The above code will compile either natively for *VProc* or for the RISC-V hardware, with the appropriate header, as decribed above. Write accesses use a method with the final register bit field name with an appropriate argument (this is either a `uint64_t` or `uint32_t` as appropriate to the register's definition). A read access is done in the same manner bit without an argument and returns a value (either a `uint64_t` or `uint32_t` as appropriate).
-
-A convention has been used where to access a whole register the 'bit field' access method is named `full`, with bit field accesses using their declared names, as normal. Some assumptions have been made with the script as it stands based on the current `csr.rdl` (but new features can be added). The main one currently is that arrays can't be multi-dimensional (hierarchy can be used to achieve the same thing) and an error is thrown if detected.
-
-### Other Co-simulation considerations
-
-The HAL software abstracts away the details of hardware and co-simulation register accesses but a couple of other consideration are needed to allow code to compile both for hardware and simulation. The first of these is the `main` entry point.
-
-A normal application compiled for the target has a `main()` entry point function. In *VProc* co-simulation, this is not the case as the logic simulation itself has a `main()` function already defined and there can be multiple *VProc* node instantiations, each with their own entry point. These are named `VUserMain<n>`, where `<n>` is the node number. So, node 0 has an entry point function `VUserMain0`. The auto-generated HAL co-simulation headers include a `WGMAIN` definition that is either `main` for the hardware code or `VUserMain0` for *VProc* code (assuming node 0 for `soc_cpu`). This is then used in place of `main` at the top level application code.
-
-```
-#include "wireguard_regs.h"
-
-// Application top level
-void WGMAIN (void)
-{
-  // Top level source code here
-}
-```
-
-The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 54MHz that the test bench uses for the `soc_cpu`. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `sysrdl_cosim.py`. 
+The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#co-simulation-hal), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#co-simulation-hal) in the `3.build/` directory.
 
 ## Lab Test and Validation Setup
 TODO
