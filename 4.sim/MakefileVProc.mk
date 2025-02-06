@@ -39,7 +39,7 @@ export BLD_DIR HW_SRC TB_NAME
 
 # Location of VProc and memory model libraries
 COSIMDIR         = $(CURDIR)/models/cosim
-UDPDIR           = $(CURDIR)/models/udpPgIp
+UDPDIR           = $(CURDIR)/models/udpIpPg
 UDP_C            = VUserMainUdp.cpp
 UDPCODEDIR       = $(CURDIR)/usercode
 
