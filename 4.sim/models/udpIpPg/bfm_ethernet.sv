@@ -128,7 +128,7 @@ generate
 
     // PHY MDIO slave BFM
     bfm_phy_mdio #(
-      .MDIO_BUFF_ADDR                  (MDIO_BUFF_ADDR),
+      .MDIO_BUFF_ADDR                  (MDIO_BUFF_ADDR + UDP*256),
       .NODE                            (START_NODE+UDP)
     ) phymdio
     (
