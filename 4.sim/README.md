@@ -16,6 +16,7 @@
   * [ISS Software](#iss-software)
 * [The mem_model Co-Simulation Sparse Memory Model](#the-mem_model-co-simulation-sparse-memory-model)
 * [Driving the Wireguard Logic Ethernet Ports](#driving-the-wireguard-logic-ethernet-ports)
+  * [_udpIpPg_ Software](#udpippg-software)
 * [References](#references)
 
 ## Introduction
@@ -40,25 +41,25 @@ The VProc software consists of DPI-C code for communication and sycnronisation w
 
 The _VProc_ software is compiled into libraries located in `4.sim/models/cosim/lib`, with the headers in `4.sim/models/cosim/include (see [here](models/cosim/README.md) for more details). The C++ API is defined in a class <tt>VProc</tt> (defined in <tt>VProcClass.h</tt>), and a constructor creates an API object, defining the node for which it is connected:
 
-```
-VProc (const unsigned node);
+```c++
+VProc (const uint32_t node);
 ```
 
 For the C++ VProc API there are two basic word access methods:
 
-```
+```c++
     int  write (const unsigned   addr, const unsigned    data, const int delta=0);
     int  read  (const unsigned   addr,       unsigned   *data, const int delta=0);
 ```
 
 For these methods, the address argument is agnostic to being a byte address or a word address, but for the Wireguard implementation these are **byte addresses**. The delta argument is unused in Wireguard, and should be left at its default value, with just the address and data arguments used in the call to these methods. Along with these basic methods is a method to advance simulation time without doing a read or write transaction.
 
-```
+```c++
 int  tick (const unsigned ticks);
 ```
 This method's units of the <tt>ticks</tt> argument are in clock cycles, as per the clock that the VProc HDL is connected to. A basic VProc program, then, is shown below:
 
-```
+```c++
 #include "VProcClass.h"
 extern "C" {
 #include "mem.h"
@@ -100,7 +101,7 @@ extern "C" void VUserMain0(void)
 ```
 The above code is a slightly abbreviated version of the code in <tt>4.sim/usercode</tt>. Note that the <tt>VUserMain0</tt> function must have C linkage as the VProc software that calls it is in C (as all the programming logic interfaces, including DPI-C, are C). The API also has a set of other methods for finer access control which are listed below, and more details can be found in the [VProc manual](https://github.com/wyvernSemi/vproc/blob/master/doc/VProc.pdf).
 
-```
+```c++
     int  writeByte    (const unsigned   byteaddr, const unsigned    data, const int delta=0);
     int  writeHword   (const unsigned   byteaddr, const unsigned    data, const int delta=0);
     int  writeWord    (const unsigned   byteaddr, const unsigned    data, const int delta=0);
@@ -111,7 +112,7 @@ The above code is a slightly abbreviated version of the code in <tt>4.sim/userco
 ```
 The other methods is this class are not, at this point, used by Wireguard. These methods can now be used to write test code to drive the <tt>soc_if</tt> bus of the <tt>soc_cpu</tt> component, and is the basic method to write test code software. As well as the VProc API, the user software can have direct access to the sparse memory model API by including <tt>mem.h</tt>, which are a set of C methods (and <tt>mem.h</tt> must be included as <tt>extern "C"</tt> in C++ code). The functions relevant to Wireguard are shown below:
 
-```
+```c++
 void     WriteRamByte  (const uint64_t addr, const uint32_t data, const uint32_t node);
 void     WriteRamHWord (const uint64_t addr, const uint32_t data, const int little_endian, const uint32_t node);
 void     WriteRamWord  (const uint64_t addr, const uint32_t data, const int little_endian, const uint32_t node);
@@ -365,6 +366,72 @@ The Wireguard FPGA logic has interfaces for four Ethernet ports, transferring UD
 
 More details on the ethernet driver and udpIpPg can be found in the  [README.md](models/udpIpPg/README.md) file in 4.sim/models/udPgIp.
 
+### _udpIpPg_ Software
+
+Since the _udpIpPg_ bus functional model is based around a _VProc_ component, just as is the [`soc_cpu.VPROC`](#vproc-software), the basic structure usage the same, but with a different API suitable for UDP datagram generation and payload reception. For each of the four instantiated _udpIpPg_ blocks in the `bfm_ethernet` module, there is a `VUserMain<n>` entry point, where `<n>` ranges from 1 to 4 for these models. The basic API for the user code is fairly simple and is as follows:
+
+```c++
+class udpIpPg  : public udpVProc
+{
+public:
+    // Constructor
+    udpVProc(int nodeIn);
+
+    // Function to register user callback function to receive packets
+    void           registerUsrRxCbFunc (pUsrRxCbFunc_t pFunc, void* hdlIn);
+
+    // Method to generate a UDP/IPv4 packet
+    uint32_t       genUdpIpPkt         (udpConfig_t &cfg, uint32_t* frm_buf, uint32_t* payload, uint32_t payload_len);
+    
+    // Method to send a pre-prepared (raw) ethernet frame
+    uint32_t       UdpVpSendRawEthFrame(uint32_t* frame, uint32_t len);
+
+    // Method to idle for specified number of cycles
+    uint32_t       UdpVpSendIdle(uint32_t ticks);
+
+    // Method to set the halt output signal
+    void           UdpVpSetHalt(uint32_t val);
+
+}
+```
+Construction of the API object is just a matter of calling the constructor with the node numbeor associated with the _VProc_ for this instance. This shoul mathc the `VUserMain<n>` "main" enntry point. The `registerUsrRxCbFunc` method allows a user supplied callback function to be registered that will be called for each received packet. As well as the pointer to the callback function, and optional `hdl` handle void pointer can be specified which will be passed to the callback function when called. This can be used, for example, as a pointer to a buffer or queue in which to place received data. The callback function itelef has two parameters. The first is of type `rxInfo_t`, which is a structure containing certain information about the received packet.
+
+```c++
+    // Structure for received packet information
+typedef struct {
+    uint64_t mac_src_addr;
+    uint32_t ipv4_src_addr;
+    uint32_t udp_src_port;
+    uint32_t udp_dst_port;
+    uint8_t  rx_payload[ETH_MTU];
+    uint32_t rx_len;
+} rxInfo_t;
+```
+
+The callback strcuture parameter has information about the source MAC and PIv4 addresses, as well as the source and destination ports. The payload, if any, will be in the `rx_payload[]` buffer, with the length of this given in `rx_len`.
+
+Generation and transmitting of packets is done in two stages. An ethernet packet, encoded with IPv4 and UDP, is constructed into a frame buffer using the `genUdpIpPkt` method. The first parameter is a simple configuration structure (see below), followed by a frame buffer pointer with sufficent space for the packet, which won't be more than 2Kbytes.
+
+```c++
+// Structure definition for transmit parameters
+typedef class {
+public:
+    // UDP controls
+    uint32_t dst_port;
+
+    // IPV4 parameters
+    uint32_t ip_dst_addr ;
+
+    // MAC parameters
+    uint64_t mac_dst_addr;
+} udpConfig_t;
+```
+
+A pointer to a buffer with a payload followed by the length of the payload make up the last two parameters. Note that the type of the buffers are `uint32_t`, but each entry represents a byte or symbol since the encoding procesess internally can expand the byte data to more than 8 bits for cetain protocols, and consistency between all buffers in the encoding is maintained. The method returns the total length of the packet upon return.
+
+Once the packet has been constructed it is sent over the GMII interface in the logic simulation, via _VProc_, with a call to the `UdpVpSendRawEthFrame`, which is provided with the frame buffer pointer and the length returned by `genUdpIpPkt`. When no packet is to be transmitted, the interface must send idle symbols, and the `UdpVpSendIdle` method does just this, specifying the number of clock cycles. This is comparable to the `tick` method for the `soc_cpu.VPROC` [software](#vproc-software).
+
+Finally, the 
 
 ## References:
 - [VProc](https://github.com/wyvernSemi/vproc)
