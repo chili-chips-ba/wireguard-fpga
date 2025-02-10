@@ -15,7 +15,7 @@
 //==========================================================================
 
 module dpe_multiplexer (
-	input  logic  sys_clk,
+    input  logic  sys_clk,
     input  logic  sys_rst,
     
     input  logic  pause,
@@ -28,8 +28,8 @@ module dpe_multiplexer (
     dpe_if.s_axis from_eth_4,
     dpe_if.m_axis to_dpe
 );
-	import dpe_pkg::*;
-	
+    import dpe_pkg::*;
+    
     typedef enum logic [3:0] {
         IDLE,
         R0, S0,
@@ -41,7 +41,7 @@ module dpe_multiplexer (
     
     state_t state, next_state;
     
-	dpe_if to_dpe_sbuff(.clk(sys_clk), .rst(sys_rst));
+    dpe_if to_dpe_sbuff(.clk(sys_clk), .rst(sys_rst));
     
     // FSM registers
     always_ff @(posedge sys_clk) begin
@@ -135,9 +135,9 @@ module dpe_multiplexer (
         to_dpe_sbuff.tlast = 0;
         to_dpe_sbuff.tkeep = '0;
         to_dpe_sbuff.tuser_bypass_all = 0;
-		to_dpe_sbuff.tuser_bypass_stage = 0;
-		to_dpe_sbuff.tuser_src = '0;
-		to_dpe_sbuff.tuser_dst = '0;
+        to_dpe_sbuff.tuser_bypass_stage = 0;
+        to_dpe_sbuff.tuser_src = '0;
+        to_dpe_sbuff.tuser_dst = '0;
         from_cpu.tready = 0;
         from_eth_1.tready = 0;
         from_eth_2.tready = 0;
@@ -155,10 +155,10 @@ module dpe_multiplexer (
                 to_dpe_sbuff.tdata = from_cpu.tdata;
                 to_dpe_sbuff.tlast = from_cpu.tlast;
                 to_dpe_sbuff.tkeep = from_cpu.tkeep;
-				to_dpe_sbuff.tuser_bypass_all = from_cpu.tuser_bypass_all;
-				to_dpe_sbuff.tuser_bypass_stage = from_cpu.tuser_bypass_stage;
-				to_dpe_sbuff.tuser_src = DPE_ADDR_CPU;
-				to_dpe_sbuff.tuser_dst = from_cpu.tuser_dst;
+                to_dpe_sbuff.tuser_bypass_all = from_cpu.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_cpu.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_src = DPE_ADDR_CPU;
+                to_dpe_sbuff.tuser_dst = from_cpu.tuser_dst;
                 from_cpu.tready = to_dpe_sbuff.tready;
             end
             
@@ -168,10 +168,10 @@ module dpe_multiplexer (
                 to_dpe_sbuff.tdata = from_eth_1.tdata;
                 to_dpe_sbuff.tlast = from_eth_1.tlast;
                 to_dpe_sbuff.tkeep = from_eth_1.tkeep;
-				to_dpe_sbuff.tuser_bypass_all = from_eth_1.tuser_bypass_all;
-				to_dpe_sbuff.tuser_bypass_stage = from_eth_1.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_1.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_1.tuser_bypass_stage;
                 to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_1;
-				to_dpe_sbuff.tuser_dst = from_eth_1.tuser_dst;
+                to_dpe_sbuff.tuser_dst = from_eth_1.tuser_dst;
                 from_eth_1.tready = to_dpe_sbuff.tready;
             end
             
@@ -181,10 +181,10 @@ module dpe_multiplexer (
                 to_dpe_sbuff.tdata = from_eth_2.tdata;
                 to_dpe_sbuff.tlast = from_eth_2.tlast;
                 to_dpe_sbuff.tkeep = from_eth_2.tkeep;
-				to_dpe_sbuff.tuser_bypass_all = from_eth_2.tuser_bypass_all;
-				to_dpe_sbuff.tuser_bypass_stage = from_eth_2.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_2.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_2.tuser_bypass_stage;
                 to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_2;
-				to_dpe_sbuff.tuser_dst = from_eth_2.tuser_dst;
+                to_dpe_sbuff.tuser_dst = from_eth_2.tuser_dst;
                 from_eth_2.tready = to_dpe_sbuff.tready;
             end
             
@@ -194,10 +194,10 @@ module dpe_multiplexer (
                 to_dpe_sbuff.tdata = from_eth_3.tdata;
                 to_dpe_sbuff.tlast = from_eth_3.tlast;
                 to_dpe_sbuff.tkeep = from_eth_3.tkeep;
-				to_dpe_sbuff.tuser_bypass_all = from_eth_3.tuser_bypass_all;
-				to_dpe_sbuff.tuser_bypass_stage = from_eth_3.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_3.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_3.tuser_bypass_stage;
                 to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_3;
-				to_dpe_sbuff.tuser_dst = from_eth_3.tuser_dst;
+                to_dpe_sbuff.tuser_dst = from_eth_3.tuser_dst;
                 from_eth_3.tready = to_dpe_sbuff.tready;
             end
             
@@ -207,10 +207,10 @@ module dpe_multiplexer (
                 to_dpe_sbuff.tdata = from_eth_4.tdata;
                 to_dpe_sbuff.tlast = from_eth_4.tlast;
                 to_dpe_sbuff.tkeep = from_eth_4.tkeep;
-				to_dpe_sbuff.tuser_bypass_all = from_eth_4.tuser_bypass_all;
-				to_dpe_sbuff.tuser_bypass_stage = from_eth_4.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_4.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_4.tuser_bypass_stage;
                 to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_4;
-				to_dpe_sbuff.tuser_dst = from_eth_4.tuser_dst;
+                to_dpe_sbuff.tuser_dst = from_eth_4.tuser_dst;
                 from_eth_4.tready = to_dpe_sbuff.tready;
             end
             

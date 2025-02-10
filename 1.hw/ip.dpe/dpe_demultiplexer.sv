@@ -25,14 +25,14 @@ module dpe_demultiplexer (
     dpe_if.m_axis to_eth_3,
     dpe_if.m_axis to_eth_4
 );
-	import dpe_pkg::*;
-	
+    import dpe_pkg::*;
+    
     dpe_if from_dpe_sbuff(.clk(sys_clk), .rst(sys_rst));
-	dpe_if to_cpu_sbuff(.clk(sys_clk), .rst(sys_rst));
-	dpe_if to_eth_1_sbuff(.clk(sys_clk), .rst(sys_rst));
-	dpe_if to_eth_2_sbuff(.clk(sys_clk), .rst(sys_rst));
-	dpe_if to_eth_3_sbuff(.clk(sys_clk), .rst(sys_rst));
-	dpe_if to_eth_4_sbuff(.clk(sys_clk), .rst(sys_rst));
+    dpe_if to_cpu_sbuff(.clk(sys_clk), .rst(sys_rst));
+    dpe_if to_eth_1_sbuff(.clk(sys_clk), .rst(sys_rst));
+    dpe_if to_eth_2_sbuff(.clk(sys_clk), .rst(sys_rst));
+    dpe_if to_eth_3_sbuff(.clk(sys_clk), .rst(sys_rst));
+    dpe_if to_eth_4_sbuff(.clk(sys_clk), .rst(sys_rst));
         
     // Backpressure
     assign from_dpe_sbuff.tready = ((from_dpe_sbuff.tuser_dst != DPE_ADDR_CPU && from_dpe_sbuff.tuser_dst != DPE_ADDR_BCAST) | to_cpu_sbuff.tready) &
@@ -48,99 +48,99 @@ module dpe_demultiplexer (
             to_cpu_sbuff.tdata = from_dpe_sbuff.tdata;
             to_cpu_sbuff.tkeep = from_dpe_sbuff.tkeep;
             to_cpu_sbuff.tlast = from_dpe_sbuff.tlast;
-			to_cpu_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
-			to_cpu_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
-			to_cpu_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
-			to_cpu_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
+            to_cpu_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
+            to_cpu_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
+            to_cpu_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
+            to_cpu_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
         end else begin
             to_cpu_sbuff.tvalid = 1'b0;
             to_cpu_sbuff.tdata = '0;
             to_cpu_sbuff.tkeep = '0;
             to_cpu_sbuff.tlast = '0;
-			to_cpu_sbuff.tuser_bypass_all = 0;
-			to_cpu_sbuff.tuser_bypass_stage = 0;
-			to_cpu_sbuff.tuser_src = '0;
-			to_cpu_sbuff.tuser_dst = '0;
+            to_cpu_sbuff.tuser_bypass_all = 0;
+            to_cpu_sbuff.tuser_bypass_stage = 0;
+            to_cpu_sbuff.tuser_src = '0;
+            to_cpu_sbuff.tuser_dst = '0;
         end
         if (from_dpe_sbuff.tuser_dst == DPE_ADDR_ETH_1 || from_dpe_sbuff.tuser_dst == DPE_ADDR_BCAST) begin
             to_eth_1_sbuff.tvalid = from_dpe_sbuff.tvalid;
             to_eth_1_sbuff.tdata = from_dpe_sbuff.tdata;
             to_eth_1_sbuff.tkeep = from_dpe_sbuff.tkeep;
             to_eth_1_sbuff.tlast = from_dpe_sbuff.tlast;
-			to_eth_1_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
-			to_eth_1_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
-			to_eth_1_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
-			to_eth_1_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
+            to_eth_1_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
+            to_eth_1_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
+            to_eth_1_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
+            to_eth_1_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
         end else begin
             to_eth_1_sbuff.tvalid = 1'b0;
             to_eth_1_sbuff.tdata = '0;
             to_eth_1_sbuff.tkeep = '0;
             to_eth_1_sbuff.tlast = '0;
-			to_eth_1_sbuff.tuser_bypass_all = 0;
-			to_eth_1_sbuff.tuser_bypass_stage = 0;
-			to_eth_1_sbuff.tuser_src = '0;
-			to_eth_1_sbuff.tuser_dst = '0;
+            to_eth_1_sbuff.tuser_bypass_all = 0;
+            to_eth_1_sbuff.tuser_bypass_stage = 0;
+            to_eth_1_sbuff.tuser_src = '0;
+            to_eth_1_sbuff.tuser_dst = '0;
         end
         if (from_dpe_sbuff.tuser_dst == DPE_ADDR_ETH_2 || from_dpe_sbuff.tuser_dst == DPE_ADDR_BCAST) begin
             to_eth_2_sbuff.tvalid = from_dpe_sbuff.tvalid;
             to_eth_2_sbuff.tdata = from_dpe_sbuff.tdata;
             to_eth_2_sbuff.tkeep = from_dpe_sbuff.tkeep;
             to_eth_2_sbuff.tlast = from_dpe_sbuff.tlast;
-			to_eth_2_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
-			to_eth_2_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
-			to_eth_2_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
-			to_eth_2_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
+            to_eth_2_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
+            to_eth_2_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
+            to_eth_2_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
+            to_eth_2_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
         end else begin
             to_eth_2_sbuff.tvalid = 1'b0;
             to_eth_2_sbuff.tdata = '0;
             to_eth_2_sbuff.tkeep = '0;
             to_eth_2_sbuff.tlast = '0;
-			to_eth_2_sbuff.tuser_bypass_all = 0;
-			to_eth_2_sbuff.tuser_bypass_stage = 0;
-			to_eth_2_sbuff.tuser_src = '0;
-			to_eth_2_sbuff.tuser_dst = '0;
+            to_eth_2_sbuff.tuser_bypass_all = 0;
+            to_eth_2_sbuff.tuser_bypass_stage = 0;
+            to_eth_2_sbuff.tuser_src = '0;
+            to_eth_2_sbuff.tuser_dst = '0;
         end
         if (from_dpe_sbuff.tuser_dst == DPE_ADDR_ETH_3 || from_dpe_sbuff.tuser_dst == DPE_ADDR_BCAST) begin
             to_eth_3_sbuff.tvalid = from_dpe_sbuff.tvalid;
             to_eth_3_sbuff.tdata = from_dpe_sbuff.tdata;
             to_eth_3_sbuff.tkeep = from_dpe_sbuff.tkeep;
             to_eth_3_sbuff.tlast = from_dpe_sbuff.tlast;
-			to_eth_3_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
-			to_eth_3_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
-			to_eth_3_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
-			to_eth_3_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
+            to_eth_3_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
+            to_eth_3_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
+            to_eth_3_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
+            to_eth_3_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
         end else begin
             to_eth_3_sbuff.tvalid = 1'b0;
             to_eth_3_sbuff.tdata = '0;
             to_eth_3_sbuff.tkeep = '0;
             to_eth_3_sbuff.tlast = '0;
-			to_eth_3_sbuff.tuser_bypass_all = 0;
-			to_eth_3_sbuff.tuser_bypass_stage = 0;
-			to_eth_3_sbuff.tuser_src = '0;
-			to_eth_3_sbuff.tuser_dst = '0;
+            to_eth_3_sbuff.tuser_bypass_all = 0;
+            to_eth_3_sbuff.tuser_bypass_stage = 0;
+            to_eth_3_sbuff.tuser_src = '0;
+            to_eth_3_sbuff.tuser_dst = '0;
         end
         if (from_dpe_sbuff.tuser_dst == DPE_ADDR_ETH_4 || from_dpe_sbuff.tuser_dst == DPE_ADDR_BCAST) begin
             to_eth_4_sbuff.tvalid = from_dpe_sbuff.tvalid;
             to_eth_4_sbuff.tdata = from_dpe_sbuff.tdata;
             to_eth_4_sbuff.tkeep = from_dpe_sbuff.tkeep;
             to_eth_4_sbuff.tlast = from_dpe_sbuff.tlast;
-			to_eth_4_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
-			to_eth_4_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
-			to_eth_4_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
-			to_eth_4_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
+            to_eth_4_sbuff.tuser_bypass_all = from_dpe_sbuff.tuser_bypass_all;
+            to_eth_4_sbuff.tuser_bypass_stage = from_dpe_sbuff.tuser_bypass_stage;
+            to_eth_4_sbuff.tuser_src = from_dpe_sbuff.tuser_src;
+            to_eth_4_sbuff.tuser_dst = from_dpe_sbuff.tuser_dst;
         end else begin
             to_eth_4_sbuff.tvalid = 1'b0;
             to_eth_4_sbuff.tdata = '0;
             to_eth_4_sbuff.tkeep = '0;
             to_eth_4_sbuff.tlast = '0;
-			to_eth_4_sbuff.tuser_bypass_all = 0;
-			to_eth_4_sbuff.tuser_bypass_stage = 0;
-			to_eth_4_sbuff.tuser_src = '0;
-			to_eth_4_sbuff.tuser_dst = '0;
+            to_eth_4_sbuff.tuser_bypass_all = 0;
+            to_eth_4_sbuff.tuser_bypass_stage = 0;
+            to_eth_4_sbuff.tuser_src = '0;
+            to_eth_4_sbuff.tuser_dst = '0;
         end
     end
     
-	// Skid buffer
+    // Skid buffer
     axis_register #(
         .DATA_WIDTH(128),
         .USER_WIDTH(8)
@@ -164,7 +164,7 @@ module dpe_demultiplexer (
         .m_axis_tid(),
         .m_axis_tdest()
     );
-	
+    
     // Skid buffer
     axis_register #(
         .DATA_WIDTH(128),
