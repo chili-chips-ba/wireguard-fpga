@@ -18,10 +18,10 @@
 `define _DPE_PKG
 package dpe_pkg;
     localparam DPE_ADDR_CPU   = 3'h0;
-	localparam DPE_ADDR_ETH_1 = 3'h1;
-	localparam DPE_ADDR_ETH_2 = 3'h2;
-	localparam DPE_ADDR_ETH_3 = 3'h3;
-	localparam DPE_ADDR_ETH_4 = 3'h4;
-	localparam DPE_ADDR_BCAST = 3'h7;
+    localparam DPE_ADDR_ETH_1 = 3'h1;
+    localparam DPE_ADDR_ETH_2 = 3'h2;
+    localparam DPE_ADDR_ETH_3 = 3'h3;
+    localparam DPE_ADDR_ETH_4 = 3'h4;
+    localparam DPE_ADDR_BCAST = 3'h7;
 endpackage: dpe_pkg
 `endif

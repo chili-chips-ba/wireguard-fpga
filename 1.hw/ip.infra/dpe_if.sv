@@ -15,8 +15,8 @@
 //==========================================================================
 
 interface dpe_if (
-	input         clk,
-	input         rst
+    input         clk,
+    input         rst
 );
     logic         tready;
     logic         tvalid;
@@ -24,38 +24,38 @@ interface dpe_if (
     logic         tlast;
     logic [15:0]  tkeep;
     logic         tuser_bypass_all;
-	logic         tuser_bypass_stage;
-	logic [2:0]   tuser_src;
-	logic [2:0]   tuser_dst;
-	logic [7:0]   tid;
+    logic         tuser_bypass_stage;
+    logic [2:0]   tuser_src;
+    logic [2:0]   tuser_dst;
+    logic [7:0]   tid;
     
     modport m_axis (
-		input     clk,
-		input     rst,
+        input     clk,
+        input     rst,
         input     tready,
         output    tvalid,
         output    tdata,
         output    tlast,
         output    tkeep,
         output    tuser_bypass_all,
-		output    tuser_bypass_stage,
-		output    tuser_src,
-		output    tuser_dst,
-		output    tid
+        output    tuser_bypass_stage,
+        output    tuser_src,
+        output    tuser_dst,
+        output    tid
     );
     
     modport s_axis (
-	    input     clk,
-		input     rst,
+        input     clk,
+        input     rst,
         output    tready,
         input     tvalid,
         input     tdata,
         input     tlast,
         input     tkeep,
         input     tuser_bypass_all,
-		input     tuser_bypass_stage,
-		input     tuser_src,
-		input     tuser_dst,
-		input     tid
+        input     tuser_bypass_stage,
+        input     tuser_src,
+        input     tuser_dst,
+        input     tid
     );
 endinterface
