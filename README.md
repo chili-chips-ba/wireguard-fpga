@@ -81,12 +81,12 @@ While the board we're using is low cost, it is also not particularly known in th
 
 Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not support High-Performance (HP) I/O. Consequently, we cannot push its I/O beyond 600MHz, nor its core logic beyond 100 MHz. 
 
-- [ ] Familiarization with HW platform
+- [x] Familiarization with HW platform
 - Create our first FPGA program that blinks LEDs
 - Verify pinouts and connectivity using simple test routines
 - Generate a few Ethernet test patterns 
 
-- [ ] Familiarization with SW platform
+- [x] Familiarization with SW platform
 - Initial bring up of embedded CPU within a _cookie-cutter_ SOC, such as [Ref5]
 - Design and test a simple SW interface to rudimentary HW Ethernet datapath
 
