@@ -27,7 +27,7 @@ module tb;
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
-    logic is_idle;
+    logic fcr_idle;
     
     // Interfaces
     dpe_if #(DATA_WIDTH, INP_USER_WIDTH) inp();
@@ -91,7 +91,7 @@ module tb;
     dpe_wg_disassembler DUT (
         .clk(clk),
         .rst(rst),
-        .is_idle(is_idle),
+        .fcr_idle(fcr_idle),
         .inp(inp),
         .outp(outp)
     );
