@@ -17,9 +17,9 @@
 `timescale 1ps/1ps
 
 module tb;
-	// Constants
+    // Constants
     localparam CLK_PERIOD = 12_500;
-	import dpe_pkg::*;
+    import dpe_pkg::*;
     
     // Clock and reset signals
     logic clk = 0;
@@ -84,9 +84,9 @@ module tb;
             from_dpe.tvalid = 1;
             for (int i = 0; i < 6; i++) begin
                 from_dpe.tuser_bypass_all = 0;
-				from_dpe.tuser_bypass_stage = 0;
-				from_dpe.tuser_src = DPE_ADDR_CPU;
-				from_dpe.tuser_dst = DPE_ADDR_CPU;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_CPU;
                 from_dpe.tdata = '0;
                 from_dpe.tdata[7:0] = packet_data[0][i];
                 from_dpe.tkeep = '1;
@@ -101,9 +101,9 @@ module tb;
             from_dpe.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
                 from_dpe.tuser_bypass_all = 0;
-				from_dpe.tuser_bypass_stage = 0;
-				from_dpe.tuser_src = DPE_ADDR_CPU;
-				from_dpe.tuser_dst = DPE_ADDR_ETH_1;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_1;
                 from_dpe.tdata = '0;
                 from_dpe.tdata[7:0] = packet_data[1][i];
                 from_dpe.tkeep = '1;
@@ -118,9 +118,9 @@ module tb;
             from_dpe.tvalid = 1;
             for (int i = 0; i < 5; i++) begin
                 from_dpe.tuser_bypass_all = 0;
-				from_dpe.tuser_bypass_stage = 0;
-				from_dpe.tuser_src = DPE_ADDR_CPU;
-				from_dpe.tuser_dst = DPE_ADDR_ETH_2;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_2;
                 from_dpe.tdata = '0;
                 from_dpe.tdata[7:0] = packet_data[2][i];
                 from_dpe.tkeep = '1;
@@ -135,9 +135,9 @@ module tb;
             from_dpe.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
                 from_dpe.tuser_bypass_all = 0;
-				from_dpe.tuser_bypass_stage = 0;
-				from_dpe.tuser_src = DPE_ADDR_CPU;
-				from_dpe.tuser_dst = DPE_ADDR_ETH_3;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_3;
                 from_dpe.tdata = '0;
                 from_dpe.tdata[7:0] = packet_data[3][i];
                 from_dpe.tkeep = '1;
@@ -152,9 +152,9 @@ module tb;
             from_dpe.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
                 from_dpe.tuser_bypass_all = 0;
-				from_dpe.tuser_bypass_stage = 0;
-				from_dpe.tuser_src = DPE_ADDR_CPU;
-				from_dpe.tuser_dst = DPE_ADDR_ETH_4;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_4;
                 from_dpe.tdata = '0;
                 from_dpe.tdata[7:0] = packet_data[4][i];
                 from_dpe.tkeep = '1;
@@ -169,9 +169,9 @@ module tb;
             from_dpe.tvalid = 1;
             for (int i = 0; i < 5; i++) begin
                 from_dpe.tuser_bypass_all = 0;
-				from_dpe.tuser_bypass_stage = 0;
-				from_dpe.tuser_src = DPE_ADDR_CPU;
-				from_dpe.tuser_dst = DPE_ADDR_BCAST;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_BCAST;
                 from_dpe.tdata = '0;
                 from_dpe.tdata[7:0] = packet_data[5][i];
                 from_dpe.tkeep = '1;

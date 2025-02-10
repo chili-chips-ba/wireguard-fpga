@@ -20,7 +20,7 @@ module tb;
     // Constants
     localparam CLK_PERIOD = 12_500;
     import dpe_pkg::*;
-	
+    
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
@@ -79,46 +79,46 @@ module tb;
         from_cpu.tlast = 0;
         from_cpu.tkeep = '0;
         from_cpu.tdata = '0;
-		from_cpu.tuser_bypass_all = 0;
-		from_cpu.tuser_bypass_stage = 0;
-		from_cpu.tuser_src = '0;
-		from_cpu.tuser_dst = '0;
+        from_cpu.tuser_bypass_all = 0;
+        from_cpu.tuser_bypass_stage = 0;
+        from_cpu.tuser_src = '0;
+        from_cpu.tuser_dst = '0;
         
         from_eth_1.tvalid = 0;
         from_eth_1.tlast = 0;
         from_eth_1.tkeep = '0;
         from_eth_1.tdata = '0;
-		from_eth_1.tuser_bypass_all = 0;
-		from_eth_1.tuser_bypass_stage = 0;
-		from_eth_1.tuser_src = '0;
-		from_eth_1.tuser_dst = '0;
+        from_eth_1.tuser_bypass_all = 0;
+        from_eth_1.tuser_bypass_stage = 0;
+        from_eth_1.tuser_src = '0;
+        from_eth_1.tuser_dst = '0;
         
         from_eth_2.tvalid = 0;
         from_eth_2.tlast = 0;
         from_eth_2.tkeep = '0;
         from_eth_2.tdata = '0;
-		from_eth_2.tuser_bypass_all = 0;
-		from_eth_2.tuser_bypass_stage = 0;
-		from_eth_2.tuser_src = '0;
-		from_eth_2.tuser_dst = '0;
+        from_eth_2.tuser_bypass_all = 0;
+        from_eth_2.tuser_bypass_stage = 0;
+        from_eth_2.tuser_src = '0;
+        from_eth_2.tuser_dst = '0;
         
         from_eth_3.tvalid = 0;
         from_eth_3.tlast = 0;
         from_eth_3.tkeep = '0;
         from_eth_3.tdata = '0;
-		from_eth_3.tuser_bypass_all = 0;
-		from_eth_3.tuser_bypass_stage = 0;
-		from_eth_3.tuser_src = '0;
-		from_eth_3.tuser_dst = '0;
+        from_eth_3.tuser_bypass_all = 0;
+        from_eth_3.tuser_bypass_stage = 0;
+        from_eth_3.tuser_src = '0;
+        from_eth_3.tuser_dst = '0;
         
         from_eth_4.tvalid = 0;
         from_eth_4.tlast = 0;
         from_eth_4.tkeep = '0;
         from_eth_4.tdata = '0;
-		from_eth_4.tuser_bypass_all = 0;
-		from_eth_4.tuser_bypass_stage = 0;
-		from_eth_4.tuser_src = '0;
-		from_eth_4.tuser_dst = '0;
+        from_eth_4.tuser_bypass_all = 0;
+        from_eth_4.tuser_bypass_stage = 0;
+        from_eth_4.tuser_src = '0;
+        from_eth_4.tuser_dst = '0;
         
         // Reset assertion
         #(CLK_PERIOD * 4);
@@ -134,8 +134,8 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_cpu.tvalid = 1;
-				from_cpu.tkeep = '1;
-				from_cpu.tuser_dst = DPE_ADDR_ETH_1;
+                from_cpu.tkeep = '1;
+                from_cpu.tuser_dst = DPE_ADDR_ETH_1;
                 for (int i = 0; i < 6; i++) begin
                     from_cpu.tdata[7:0] = packet_data[0][i];
                     from_cpu.tlast = (i == 5);
@@ -152,8 +152,8 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_eth_1.tvalid = 1;
-				from_eth_1.tkeep = '1;
-				from_eth_1.tuser_dst = DPE_ADDR_CPU;
+                from_eth_1.tkeep = '1;
+                from_eth_1.tuser_dst = DPE_ADDR_CPU;
                 for (int i = 0; i < 4; i++) begin
                     from_eth_1.tdata[7:0] = packet_data[1][i];
                     from_eth_1.tlast = (i == 3);
@@ -170,8 +170,8 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_eth_2.tvalid = 1;
-				from_eth_2.tkeep = '1;
-				from_eth_2.tuser_dst = DPE_ADDR_ETH_3;
+                from_eth_2.tkeep = '1;
+                from_eth_2.tuser_dst = DPE_ADDR_ETH_3;
                 for (int i = 0; i < 5; i++) begin
                     from_eth_2.tdata[7:0] = packet_data[2][i];
                     from_eth_2.tlast = (i == 4);
@@ -189,7 +189,7 @@ module tb;
                 #1ps;
                 from_eth_3.tvalid = 1;
                 from_eth_3.tkeep = '1;
-				from_eth_3.tuser_dst = DPE_ADDR_ETH_2;
+                from_eth_3.tuser_dst = DPE_ADDR_ETH_2;
                 for (int i = 0; i < 4; i++) begin
                     from_eth_3.tdata[7:0] = packet_data[3][i];
                     from_eth_3.tlast = (i == 3);
@@ -206,8 +206,8 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_eth_4.tvalid = 1;
-				from_eth_4.tkeep = '1;
-				from_eth_4.tuser_dst = DPE_ADDR_BCAST;
+                from_eth_4.tkeep = '1;
+                from_eth_4.tuser_dst = DPE_ADDR_BCAST;
                 for (int i = 0; i < 4; i++) begin
                     from_eth_4.tdata[7:0] = packet_data[4][i];
                     from_eth_4.tlast = (i == 3);
