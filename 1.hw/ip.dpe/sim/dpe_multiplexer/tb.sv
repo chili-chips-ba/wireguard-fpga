@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024 Chili.CHIPS*ba
+// Copyright (C) 2024-2025 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   DPE Multiplexer Testbench
+//   DPE multiplexer testbench
 //==========================================================================
 
 `timescale 1ps/1ps
@@ -19,9 +19,6 @@
 module tb;
     // Constants
     localparam CLK_PERIOD = 12_500;
-    localparam DATA_WIDTH = 128;
-    localparam KEEP_WIDTH = DATA_WIDTH/8;
-    localparam USER_WIDTH = 5;
     
     // Clock and reset signals
     logic clk = 0;
@@ -30,12 +27,12 @@ module tb;
     logic is_idle;
     
     // Interfaces
-    dpe_if #(DATA_WIDTH, USER_WIDTH) inp0();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) inp1();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) inp2();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) inp3();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) inp4();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) outp();
+    dpe_if from_cpu(.clk(clk), .rst(rst));
+    dpe_if from_eth_1(.clk(clk), .rst(rst));
+    dpe_if from_eth_2(.clk(clk), .rst(rst));
+    dpe_if from_eth_3(.clk(clk), .rst(rst));
+    dpe_if from_eth_4(.clk(clk), .rst(rst));
+    dpe_if to_dpe(.clk(clk), .rst(rst));
     
     // Test data type and constants
     typedef logic [7:0] test_data_t [6];
@@ -53,49 +50,46 @@ module tb;
     always #(CLK_PERIOD/2) clk = ~clk;
     
     // DUT instantiation
-    dpe_multiplexer #(
-        .TDATA_WIDTH(DATA_WIDTH),
-        .TUSER_WIDTH(USER_WIDTH)
-    ) DUT (
-        .clk(clk),
-        .rst(rst),
+    dpe_multiplexer DUT (
+        .sys_clk(clk),
+        .sys_rst(rst),
         .pause(pause),
         .is_idle(is_idle),
-        .inp0(inp0),
-        .inp1(inp1),
-        .inp2(inp2),
-        .inp3(inp3),
-        .inp4(inp4),
-        .outp(outp)
+        .from_cpu(from_cpu),
+        .from_eth_1(from_eth_1),
+        .from_eth_2(from_eth_2),
+        .from_eth_3(from_eth_3),
+        .from_eth_4(from_eth_4),
+        .to_dpe(to_dpe)
     );
     
     // Main stimulus process
     initial begin
         // Initialize all input interfaces
-        inp0.tvalid = 0;
-        inp0.tlast = 0;
-        inp0.tkeep = '0;
-        inp0.tdata = '0;
+        from_cpu.tvalid = 0;
+        from_cpu.tlast = 0;
+        from_cpu.tkeep = '0;
+        from_cpu.tdata = '0;
         
-        inp1.tvalid = 0;
-        inp1.tlast = 0;
-        inp1.tkeep = '0;
-        inp1.tdata = '0;
+        from_eth_1.tvalid = 0;
+        from_eth_1.tlast = 0;
+        from_eth_1.tkeep = '0;
+        from_eth_1.tdata = '0;
         
-        inp2.tvalid = 0;
-        inp2.tlast = 0;
-        inp2.tkeep = '0;
-        inp2.tdata = '0;
+        from_eth_2.tvalid = 0;
+        from_eth_2.tlast = 0;
+        from_eth_2.tkeep = '0;
+        from_eth_2.tdata = '0;
         
-        inp3.tvalid = 0;
-        inp3.tlast = 0;
-        inp3.tkeep = '0;
-        inp3.tdata = '0;
+        from_eth_3.tvalid = 0;
+        from_eth_3.tlast = 0;
+        from_eth_3.tkeep = '0;
+        from_eth_3.tdata = '0;
         
-        inp4.tvalid = 0;
-        inp4.tlast = 0;
-        inp4.tkeep = '0;
-        inp4.tdata = '0;
+        from_eth_4.tvalid = 0;
+        from_eth_4.tlast = 0;
+        from_eth_4.tkeep = '0;
+        from_eth_4.tdata = '0;
         
         // Reset assertion
         #(CLK_PERIOD * 4);
@@ -110,90 +104,90 @@ module tb;
             begin
                 @(posedge clk);
                 #1ps;
-                inp0.tvalid = 1;
+                from_cpu.tvalid = 1;
                 for (int i = 0; i < 6; i++) begin
-                    inp0.tdata = '0;
-                    inp0.tdata[7:0] = packet_data[0][i];
-                    inp0.tkeep = '1;
-                    inp0.tlast = (i == 5);
+                    from_cpu.tdata = '0;
+                    from_cpu.tdata[7:0] = packet_data[0][i];
+                    from_cpu.tkeep = '1;
+                    from_cpu.tlast = (i == 5);
                     @(posedge clk);
-                    while (!inp0.tready) @(posedge clk);
+                    while (!from_cpu.tready) @(posedge clk);
                     #1ps;
                 end
-                inp0.tvalid = 0;
-                inp0.tlast = 0;
+                from_cpu.tvalid = 0;
+                from_cpu.tlast = 0;
             end
             
             // Input 1 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                inp1.tvalid = 1;
+                from_eth_1.tvalid = 1;
                 for (int i = 0; i < 4; i++) begin
-                    inp1.tdata = '0;
-                    inp1.tdata[7:0] = packet_data[1][i];
-                    inp1.tkeep = '1;
-                    inp1.tlast = (i == 3);
+                    from_eth_1.tdata = '0;
+                    from_eth_1.tdata[7:0] = packet_data[1][i];
+                    from_eth_1.tkeep = '1;
+                    from_eth_1.tlast = (i == 3);
                     @(posedge clk);                    
-                    while (!inp1.tready) @(posedge clk);
+                    while (!from_eth_1.tready) @(posedge clk);
                     #1ps;
                 end
-                inp1.tvalid = 0;
-                inp1.tlast = 0;
+                from_eth_1.tvalid = 0;
+                from_eth_1.tlast = 0;
             end
             
             // Input 2 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                inp2.tvalid = 1;
+                from_eth_2.tvalid = 1;
                 for (int i = 0; i < 5; i++) begin
-                    inp2.tdata = '0;
-                    inp2.tdata[7:0] = packet_data[2][i];
-                    inp2.tkeep = '1;
-                    inp2.tlast = (i == 4);
+                    from_eth_2.tdata = '0;
+                    from_eth_2.tdata[7:0] = packet_data[2][i];
+                    from_eth_2.tkeep = '1;
+                    from_eth_2.tlast = (i == 4);
                     @(posedge clk);
-                    while (!inp2.tready) @(posedge clk);
+                    while (!from_eth_2.tready) @(posedge clk);
                     #1ps;
                 end
-                inp2.tvalid = 0;
-                inp2.tlast = 0;
+                from_eth_2.tvalid = 0;
+                from_eth_2.tlast = 0;
             end
             
             // Input 3 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                inp3.tvalid = 1;
+                from_eth_3.tvalid = 1;
                 for (int i = 0; i < 4; i++) begin
-                    inp3.tdata = '0;
-                    inp3.tdata[7:0] = packet_data[3][i];
-                    inp3.tkeep = '1;
-                    inp3.tlast = (i == 3);
+                    from_eth_3.tdata = '0;
+                    from_eth_3.tdata[7:0] = packet_data[3][i];
+                    from_eth_3.tkeep = '1;
+                    from_eth_3.tlast = (i == 3);
                     @(posedge clk);
-                    while (!inp3.tready) @(posedge clk);
+                    while (!from_eth_3.tready) @(posedge clk);
                     #1ps;
                 end
-                inp3.tvalid = 0;
-                inp3.tlast = 0;
+                from_eth_3.tvalid = 0;
+                from_eth_3.tlast = 0;
             end
             
             // Input 4 stimulus
             begin
                 @(posedge clk);
                 #1ps;
-                inp4.tvalid = 1;
+                from_eth_4.tvalid = 1;
                 for (int i = 0; i < 4; i++) begin
-                    inp4.tdata = '0;
-                    inp4.tdata[7:0] = packet_data[4][i];
-                    inp4.tkeep = '1;
-                    inp4.tlast = (i == 3);
+                    from_eth_4.tdata = '0;
+                    from_eth_4.tdata[7:0] = packet_data[4][i];
+                    from_eth_4.tkeep = '1;
+                    from_eth_4.tlast = (i == 3);
                     @(posedge clk);
-                    while (!inp4.tready) @(posedge clk);
+                    while (!from_eth_4.tready) @(posedge clk);
                     #1ps;
                 end
-                inp4.tvalid = 0;
-                inp4.tlast = 0;
+                from_eth_4.tvalid = 0;
+                from_eth_4.tlast = 0;
             end
         join
         
@@ -206,24 +200,24 @@ module tb;
     initial begin
         @(posedge clk);
         #1ps;
-        outp.tready = 1;
+        to_dpe.tready = 1;
         #(CLK_PERIOD * 7);
-        outp.tready = 0;
+        to_dpe.tready = 0;
         #CLK_PERIOD;
-        outp.tready = 1;
+        to_dpe.tready = 1;
         #(CLK_PERIOD * 4);
-        outp.tready = 0;
+        to_dpe.tready = 0;
         pause = 1;
         #(CLK_PERIOD * 3);
-        outp.tready = 1;
+        to_dpe.tready = 1;
         #(CLK_PERIOD * 4);
-        outp.tready = 0;
+        to_dpe.tready = 0;
         #(CLK_PERIOD * 2);
-        outp.tready = 1;
+        to_dpe.tready = 1;
         #(CLK_PERIOD * 6);
-        outp.tready = 0;
+        to_dpe.tready = 0;
         #(CLK_PERIOD * 2);
-        outp.tready = 1;
+        to_dpe.tready = 1;
         pause = 0;
     end
     
@@ -232,10 +226,10 @@ module tb;
     
     always @(posedge clk) begin
         if (!rst) begin
-            if (outp.tvalid && outp.tready) begin
+            if (to_dpe.tvalid && to_dpe.tready) begin
                 expected_data_count++;
                 
-                if (outp.tlast) begin
+                if (to_dpe.tlast) begin
                     $display("Packet received with %0d words", expected_data_count);
                     expected_data_count = 0;
                 end

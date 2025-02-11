@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024 Chili.CHIPS*ba
+// Copyright (C) 2024-2025 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -11,26 +11,25 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   DPE Multiplexer
+//   DPE multiplexer
 //==========================================================================
 
-module dpe_multiplexer #(
-    parameter TDATA_WIDTH = 128,
-    parameter TUSER_WIDTH = 5
-) (
-    input  logic      clk,
-    input  logic      rst,
+module dpe_multiplexer (
+    input  logic  sys_clk,
+    input  logic  sys_rst,
     
-    input  logic      pause,
-    output logic      is_idle,
+    input  logic  pause,
+    output logic  is_idle,
     
-    dpe_if.s_axis     inp0,
-    dpe_if.s_axis     inp1,
-    dpe_if.s_axis     inp2,
-    dpe_if.s_axis     inp3,
-    dpe_if.s_axis     inp4,
-    dpe_if.m_axis     outp
+    dpe_if.s_axis from_cpu,
+    dpe_if.s_axis from_eth_1,
+    dpe_if.s_axis from_eth_2,
+    dpe_if.s_axis from_eth_3,
+    dpe_if.s_axis from_eth_4,
+    dpe_if.m_axis to_dpe
 );
+    import dpe_pkg::*;
+    
     typedef enum logic [3:0] {
         IDLE,
         R0, S0,
@@ -42,17 +41,11 @@ module dpe_multiplexer #(
     
     state_t state, next_state;
     
-    logic                          s_tready;
-    logic                          s_tvalid;
-    logic [TDATA_WIDTH-1:0]        s_tdata;
-    logic                          s_tlast;
-    logic [(TDATA_WIDTH+7)/8-1:0]  s_tkeep;
-    logic [TUSER_WIDTH-1:0]        s_tuser;
-    logic                          s_out_tvalid;
+    dpe_if to_dpe_sbuff(.clk(sys_clk), .rst(sys_rst));
     
     // FSM registers
-    always_ff @(posedge clk) begin
-        if (rst) begin
+    always_ff @(posedge sys_clk) begin
+        if (sys_rst) begin
             state <= IDLE;
         end else begin
             state <= next_state;
@@ -69,61 +62,61 @@ module dpe_multiplexer #(
             end
             
             R0: begin
-                if (inp0.tvalid && s_tready)         next_state = S0;
-                else if (pause)                      next_state = IDLE;
-                else if (!inp0.tvalid && s_tready)   next_state = R1;
+                if (from_cpu.tvalid && to_dpe_sbuff.tready)       next_state = S0;
+                else if (pause)                                   next_state = IDLE;
+                else if (!from_cpu.tvalid && to_dpe_sbuff.tready) next_state = R1;
             end
             
             S0: begin
-                if (inp0.tlast && inp0.tvalid && s_tready) begin
+                if (from_cpu.tlast && from_cpu.tvalid && to_dpe_sbuff.tready) begin
                     next_state = pause ? IDLE : R1;
                 end
             end
             
             R1: begin
-                if (inp1.tvalid && s_tready)         next_state = S1;
-                else if (pause)                      next_state = IDLE;
-                else if (!inp1.tvalid && s_tready)   next_state = R2;
+                if (from_eth_1.tvalid && to_dpe_sbuff.tready)       next_state = S1;
+                else if (pause)                                     next_state = IDLE;
+                else if (!from_eth_1.tvalid && to_dpe_sbuff.tready) next_state = R2;
             end
             
             S1: begin
-                if (inp1.tlast && inp1.tvalid && s_tready) begin
+                if (from_eth_1.tlast && from_eth_1.tvalid && to_dpe_sbuff.tready) begin
                     next_state = pause ? IDLE : R2;
                 end
             end
             
             R2: begin
-                if (inp2.tvalid && s_tready)         next_state = S2;
-                else if (pause)                      next_state = IDLE;
-                else if (!inp2.tvalid && s_tready)   next_state = R3;
+                if (from_eth_2.tvalid && to_dpe_sbuff.tready)       next_state = S2;
+                else if (pause)                                     next_state = IDLE;
+                else if (!from_eth_2.tvalid && to_dpe_sbuff.tready) next_state = R3;
             end
             
             S2: begin
-                if (inp2.tlast && inp2.tvalid && s_tready) begin
+                if (from_eth_2.tlast && from_eth_2.tvalid && to_dpe_sbuff.tready) begin
                     next_state = pause ? IDLE : R3;
                 end
             end
             
             R3: begin
-                if (inp3.tvalid && s_tready)         next_state = S3;
-                else if (pause)                      next_state = IDLE;
-                else if (!inp3.tvalid && s_tready)   next_state = R4;
+                if (from_eth_3.tvalid && to_dpe_sbuff.tready)       next_state = S3;
+                else if (pause)                                     next_state = IDLE;
+                else if (!from_eth_3.tvalid && to_dpe_sbuff.tready) next_state = R4;
             end
             
             S3: begin
-                if (inp3.tlast && inp3.tvalid && s_tready) begin
+                if (from_eth_3.tlast && from_eth_3.tvalid && to_dpe_sbuff.tready) begin
                     next_state = pause ? IDLE : R4;
                 end
             end
             
             R4: begin
-                if (inp4.tvalid && s_tready)         next_state = S4;
-                else if (pause)                      next_state = IDLE;
-                else if (!inp4.tvalid && s_tready)   next_state = R0;
+                if (from_eth_4.tvalid && to_dpe_sbuff.tready)       next_state = S4;
+                else if (pause)                                     next_state = IDLE;
+                else if (!from_eth_4.tvalid && to_dpe_sbuff.tready) next_state = R0;
             end
             
             S4: begin
-                if (inp4.tlast && inp4.tvalid && s_tready) begin
+                if (from_eth_4.tlast && from_eth_4.tvalid && to_dpe_sbuff.tready) begin
                     next_state = pause ? IDLE : R0;
                 end
             end
@@ -133,104 +126,120 @@ module dpe_multiplexer #(
         endcase
     end
     
-    // Outputs logic
+    // outputs logic
     always_comb begin
         // Default assignments
         is_idle = 0;
-        s_tvalid = 0;
-        s_tdata = '0;
-        s_tlast = 0;
-        s_tkeep = '0;
-        s_tuser = '0;
-        inp0.tready = 0;
-        inp1.tready = 0;
-        inp2.tready = 0;
-        inp3.tready = 0;
-        inp4.tready = 0;
+        to_dpe_sbuff.tvalid = 0;
+        to_dpe_sbuff.tdata = '0;
+        to_dpe_sbuff.tlast = 0;
+        to_dpe_sbuff.tkeep = '0;
+        to_dpe_sbuff.tuser_bypass_all = 0;
+        to_dpe_sbuff.tuser_bypass_stage = 0;
+        to_dpe_sbuff.tuser_src = '0;
+        to_dpe_sbuff.tuser_dst = '0;
+        from_cpu.tready = 0;
+        from_eth_1.tready = 0;
+        from_eth_2.tready = 0;
+        from_eth_3.tready = 0;
+        from_eth_4.tready = 0;
         
         case (state)
             IDLE: begin
-                is_idle = !s_out_tvalid;
+                is_idle = !to_dpe.tvalid;
             end
             
             R0, S0: begin
                 is_idle = 0;
-                s_tvalid = inp0.tvalid;
-                s_tdata = inp0.tdata;
-                s_tlast = inp0.tlast;
-                s_tkeep = inp0.tkeep;
-                s_tuser = 5'b00001;
-                inp0.tready = s_tready;
+                to_dpe_sbuff.tvalid = from_cpu.tvalid;
+                to_dpe_sbuff.tdata = from_cpu.tdata;
+                to_dpe_sbuff.tlast = from_cpu.tlast;
+                to_dpe_sbuff.tkeep = from_cpu.tkeep;
+                to_dpe_sbuff.tuser_bypass_all = from_cpu.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_cpu.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_src = DPE_ADDR_CPU;
+                to_dpe_sbuff.tuser_dst = from_cpu.tuser_dst;
+                from_cpu.tready = to_dpe_sbuff.tready;
             end
             
             R1, S1: begin
                 is_idle = 0;
-                s_tvalid = inp1.tvalid;
-                s_tdata = inp1.tdata;
-                s_tlast = inp1.tlast;
-                s_tkeep = inp1.tkeep;
-                s_tuser = 5'b00010;
-                inp1.tready = s_tready;
+                to_dpe_sbuff.tvalid = from_eth_1.tvalid;
+                to_dpe_sbuff.tdata = from_eth_1.tdata;
+                to_dpe_sbuff.tlast = from_eth_1.tlast;
+                to_dpe_sbuff.tkeep = from_eth_1.tkeep;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_1.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_1.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_1;
+                to_dpe_sbuff.tuser_dst = from_eth_1.tuser_dst;
+                from_eth_1.tready = to_dpe_sbuff.tready;
             end
             
             R2, S2: begin
                 is_idle = 0;
-                s_tvalid = inp2.tvalid;
-                s_tdata = inp2.tdata;
-                s_tlast = inp2.tlast;
-                s_tkeep = inp2.tkeep;
-                s_tuser = 5'b00100;
-                inp2.tready = s_tready;
+                to_dpe_sbuff.tvalid = from_eth_2.tvalid;
+                to_dpe_sbuff.tdata = from_eth_2.tdata;
+                to_dpe_sbuff.tlast = from_eth_2.tlast;
+                to_dpe_sbuff.tkeep = from_eth_2.tkeep;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_2.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_2.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_2;
+                to_dpe_sbuff.tuser_dst = from_eth_2.tuser_dst;
+                from_eth_2.tready = to_dpe_sbuff.tready;
             end
             
             R3, S3: begin
                 is_idle = 0;
-                s_tvalid = inp3.tvalid;
-                s_tdata = inp3.tdata;
-                s_tlast = inp3.tlast;
-                s_tkeep = inp3.tkeep;
-                s_tuser = 5'b01000;
-                inp3.tready = s_tready;
+                to_dpe_sbuff.tvalid = from_eth_3.tvalid;
+                to_dpe_sbuff.tdata = from_eth_3.tdata;
+                to_dpe_sbuff.tlast = from_eth_3.tlast;
+                to_dpe_sbuff.tkeep = from_eth_3.tkeep;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_3.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_3.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_3;
+                to_dpe_sbuff.tuser_dst = from_eth_3.tuser_dst;
+                from_eth_3.tready = to_dpe_sbuff.tready;
             end
             
             R4, S4: begin
                 is_idle = 0;
-                s_tvalid = inp4.tvalid;
-                s_tdata = inp4.tdata;
-                s_tlast = inp4.tlast;
-                s_tkeep = inp4.tkeep;
-                s_tuser = 5'b10000;
-                inp4.tready = s_tready;
+                to_dpe_sbuff.tvalid = from_eth_4.tvalid;
+                to_dpe_sbuff.tdata = from_eth_4.tdata;
+                to_dpe_sbuff.tlast = from_eth_4.tlast;
+                to_dpe_sbuff.tkeep = from_eth_4.tkeep;
+                to_dpe_sbuff.tuser_bypass_all = from_eth_4.tuser_bypass_all;
+                to_dpe_sbuff.tuser_bypass_stage = from_eth_4.tuser_bypass_stage;
+                to_dpe_sbuff.tuser_src = DPE_ADDR_ETH_4;
+                to_dpe_sbuff.tuser_dst = from_eth_4.tuser_dst;
+                from_eth_4.tready = to_dpe_sbuff.tready;
             end
             
             default:
-                is_idle = !s_out_tvalid;
+                is_idle = !to_dpe.tvalid;
         endcase
     end
     
-    assign outp.tvalid = s_out_tvalid;
-    
     // Skid buffer
     axis_register #(
-        .DATA_WIDTH(TDATA_WIDTH),
-        .USER_WIDTH(TUSER_WIDTH)
+        .DATA_WIDTH(128),
+        .USER_WIDTH(8)
     ) sbuff (
-        .clk(clk),
-        .rst(rst),
-        .s_axis_tvalid(s_tvalid),
-        .s_axis_tready(s_tready),
-        .s_axis_tdata(s_tdata),
-        .s_axis_tkeep(s_tkeep),
-        .s_axis_tlast(s_tlast),
-        .s_axis_tuser(s_tuser),
+        .clk(sys_clk),
+        .rst(sys_rst),
+        .s_axis_tvalid(to_dpe_sbuff.tvalid),
+        .s_axis_tready(to_dpe_sbuff.tready),
+        .s_axis_tdata(to_dpe_sbuff.tdata),
+        .s_axis_tkeep(to_dpe_sbuff.tkeep),
+        .s_axis_tlast(to_dpe_sbuff.tlast),
+        .s_axis_tuser({to_dpe_sbuff.tuser_bypass_all,to_dpe_sbuff.tuser_bypass_stage,to_dpe_sbuff.tuser_src,to_dpe_sbuff.tuser_dst}),
         .s_axis_tid('0),
         .s_axis_tdest('0),
-        .m_axis_tvalid(s_out_tvalid),
-        .m_axis_tready(outp.tready),
-        .m_axis_tdata(outp.tdata),
-        .m_axis_tkeep(outp.tkeep),
-        .m_axis_tlast(outp.tlast),
-        .m_axis_tuser(outp.tuser),
+        .m_axis_tvalid(to_dpe.tvalid),
+        .m_axis_tready(to_dpe.tready),
+        .m_axis_tdata(to_dpe.tdata),
+        .m_axis_tkeep(to_dpe.tkeep),
+        .m_axis_tlast(to_dpe.tlast),
+        .m_axis_tuser({to_dpe.tuser_bypass_all,to_dpe.tuser_bypass_stage,to_dpe.tuser_src,to_dpe.tuser_dst}),
         .m_axis_tid(),
         .m_axis_tdest()
     );
