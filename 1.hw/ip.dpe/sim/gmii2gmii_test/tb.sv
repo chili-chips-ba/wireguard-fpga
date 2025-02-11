@@ -19,6 +19,7 @@
 module tb;
     // Constants
     localparam CLK_PERIOD = 8_000;
+	localparam CLK25_PERIOD = 40_000;
     localparam DATA_WIDTH = 128;
     localparam KEEP_WIDTH = DATA_WIDTH/8;
     localparam INP_USER_WIDTH = 1;
@@ -26,6 +27,7 @@ module tb;
     
     // Clock and reset signals
     logic clk = 0;
+	logic clk25 = 0;
     logic rst = 1;
     logic is_idle;
     
@@ -94,6 +96,7 @@ module tb;
     
     // Clock generation
     always #(CLK_PERIOD/2) clk = ~clk;
+	always #(CLK25_PERIOD/2) clk25 = ~clk25;
     
     // DUT instantiation
     eth_mac_1g_gmii_fifo #(
@@ -131,7 +134,7 @@ module tb;
         .gmii_rxd(gmii_rxd),
         .gmii_rx_dv(gmii_rx_dv),
         .gmii_rx_er(gmii_rx_er),
-        .mii_tx_clk(),
+        .mii_tx_clk(clk25),
         .gmii_tx_clk(gmii_tx_clk),
         .gmii_txd(gmii_txd),
         .gmii_tx_en(gmii_tx_en),
@@ -152,7 +155,7 @@ module tb;
         .cfg_tx_enable(1'b1),
         .cfg_rx_enable(1'b1)
     );
-    assign gmii_rx_clk = gmii_tx_clk;
+    assign gmii_rx_clk = clk25;
     assign gmii_rxd = gmii_txd;
     assign gmii_rx_dv = gmii_tx_en;
     assign gmii_rx_er = gmii_tx_er;
@@ -171,7 +174,7 @@ module tb;
         @(posedge clk);
         #1ps;
         rst = 0;
-        #(CLK_PERIOD);
+        #(CLK_PERIOD * 50);
         
         // Input stimulus
         begin
@@ -236,7 +239,7 @@ module tb;
             inp.tdata = '0;*/
         end
         
-        #(CLK_PERIOD * 300);
+        #(CLK_PERIOD * 5000);
         $display("Stimulus completed successfully");
     $finish(2);
     end

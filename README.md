@@ -81,12 +81,12 @@ While the board we're using is low cost, it is also not particularly known in th
 
 Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not support High-Performance (HP) I/O. Consequently, we cannot push its I/O beyond 600MHz, nor its core logic beyond 100 MHz. 
 
-- [ ] Familiarization with HW platform
+- [x] Familiarization with HW platform
 - Create our first FPGA program that blinks LEDs
 - Verify pinouts and connectivity using simple test routines
 - Generate a few Ethernet test patterns 
 
-- [ ] Familiarization with SW platform
+- [x] Familiarization with SW platform
 - Initial bring up of embedded CPU within a _cookie-cutter_ SOC, such as [Ref5]
 - Design and test a simple SW interface to rudimentary HW Ethernet datapath
 
@@ -174,13 +174,13 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 ## HW/SW Partitioning
 Since the Wireguard node essentially functions as an IP router with Wireguard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the Wireguard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully realized in RTL on an FPGA.
 
-![HWSWPartitioning](0.doc/Wireguard/Wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
+![HWSWPartitioning](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
 
 In the HW/SW partitioning diagram, we can observe two types of network traffic: control traffic, which originates from the control plane and goes toward the external network (and vice versa), and data traffic, which arrives from the external network and, after processing in the data plane, returns to the external network. Specifically, control traffic represents Wireguard protocol handshake messages, while data traffic consists of end-user traffic, either encrypted or in plaintext, depending on the perspective.
 
 ## Hardware Architecture
 ### HW Block Diagram
-![HWArchitecture](0.doc/Wireguard/Wireguard-fpga-muxed-Architecture-HW.webp)
+![HWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
 
 ### HW Theory of Operation
 The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
@@ -205,7 +205,7 @@ _ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracke
 
 ## Software Architecture
 ### SW Conceptual Class Diagram
-![SWArchitecture](0.doc/Wireguard/Wireguard-fpga-muxed-Architecture-SW.webp)
+![SWArchitecture](0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
 
 ### SW Theory of Operation
 The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the Wireguard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
@@ -236,7 +236,7 @@ The red domain encompasses the entire CSR with all peripherals. The clock signal
 
 Although the Data Plane Engine (green domain) transfers packets at approximately 10 Gbps, the cores in the DPE pipeline are not expected to process packets at such a rate. Given that we have 4 x 1Gbps Ethernet interfaces, the cryptographic cores must process packets at a rate of at least 4 Gbps to ensure the system works at wire speed. For some components, such as the _IP Lookup Engine_, packet rate is more critical than data rate because their processing focuses on the packet headers rather than the payload. Assuming that, in the worst-case scenario, the smallest packets (64 bytes) arrive via the 1 Gbps Ethernet interface, the packet rate for each Ethernet interface would be 1,488,096 packets per second (pps). Therefore, in the worst-case scenario, such components must process packets at approximately 6 Mpps rate (e.g. 6 million IP table lookups per second).
 
-![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-Interfaces.webp)
+![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-Interfaces.webp)
 
 The cores within the DPE transmit packets via the AXI4-Stream interface. Although data transfer on the TDATA bus is organized as little-endian, it is important to note that the internal organization of fields within the headers of Ethernet, IP, and UDP protocols follows big-endian format (also known as network byte order). On the other hand, the fields within the headers of the Wireguard protocol are transmitted in little-endian format.
 
@@ -249,7 +249,7 @@ The cores within the DPE transmit packets via the AXI4-Stream interface. Althoug
 During the initial Wireguard handshake and subsequent periodic key rotations,  the control plane must update the cryptokey routing table implemented in register memory within the CSR. Since the CSR manages the operation of the DPE, such changes must be made atomically to prevent unpredictable behavior in the DPE.
 One way to achieve this is by using [write-buffered registers](https://peakrdl-regblock.readthedocs.io/en/latest/udps/write_buffering.html) (WBR). However, implementing 1 bit of WBR  memory requires three flip-flops: one to store the current value, one to hold the future value, and one for the write-enable signal. Therefore, we consider an alternative mechanism for atomic CSR updates based on flow control between the CPU and the DPE. Suppose the CPU needs to update the contents of a routing table implemented using many registers. Before starting the update, the CPU must pause packet processing within the DPE. However, such a pause cannot be implemented using the inherent stall mechanism supported by the AXI protocol (by deactivating the TREADY signal at the end of the pipeline), as a packet that has already entered the DPE must be processed according to the rules in effect at the time of its entry. We introduce a graceful flow control mechanism coordinated through a dedicated Flow Control Register (FCR) to address this.
 
-![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-CSR-Flow-Control.webp)
+![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control.webp)
 
 The atomic CSR update mechanism works as follows:
 1. When the CPU needs to update the routing table, it activates the PAUSE signal by writing to the FCR.P register.
@@ -261,16 +261,16 @@ The atomic CSR update mechanism works as follows:
 7. The multiplexer returns to its default operation mode and begins accepting packets from the next queue in a round-robin fashion.
 8. As packets start arriving, all components within the DPE gradually transition back to their active states.
 
-![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-CSR-Flow-Control-Animated.gif)
+![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control-Animated.gif)
 
 ## HW/SW Working Together as a Coherent System
-The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/Wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/Wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
+The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
 - 10.10.0.2 - the end-user host at site A
 - 10.9.0.1 - Wireguard peer A
 - 10.9.0.2 - Wireguard peer B
 - 10.10.0.1 - the end-user host at site B
 
-![ExampleToplogy](0.doc/Wireguard/Wireguard-fpga-muxed-Example-Topology.webp)
+![ExampleToplogy](0.doc/Wireguard/wireguard-fpga-muxed-Example-Topology.webp)
 
 To illustrate the operation of the system as a whole, we will follow the step-by-step passage of packets through the system in several phases:
 - Sending a Handshake Initiation from peer A
@@ -279,7 +279,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 - Encryption and tunneling of the ICMP Echo Request packet (from host A to host B via peer A)
 - Detunneling and decryption of the ICMP Echo Request packet (from host A to host B via peer B)
 
-![Example1](0.doc/Wireguard/Wireguard-fpga-muxed-Example-1-A-Handshake-Initiation.webp)
+![Example1](0.doc/Wireguard/wireguard-fpga-muxed-Example-1-A-Handshake-Initiation.webp)
 
 1. The Wireguard Agent on peer A initiates the establishment of the VPN tunnel by generating the contents of the _Handshake Initiation_ packet.
 2. The CPU transfers the _Handshake Initiation_ packet from RAM to the Rx FIFO via the CSR interface towards the data plane.
@@ -290,7 +290,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 7. Once the entire packet is stored in the Tx FIFO, it is dispatched to the MAC core of the outgoing interface _if1_, provided that the corresponding 1 Gbps link is active and ready.
 8. The 1G MAC writes its MAC address as the source address, calculates the FCS on the fly, adds it to the end of the Ethernet frame, and sends it to peer B.
 
-![Example23](0.doc/Wireguard/Wireguard-fpga-muxed-Example-2-3-B-Handshake-Initiation-Response.webp)
+![Example23](0.doc/Wireguard/wireguard-fpga-muxed-Example-2-3-B-Handshake-Initiation-Response.webp)
 
 9. On peer B, the 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if1_).
 10. Once the entire packet is stored, the Rx FIFO signals the Round-Robin Multiplexer.
@@ -310,7 +310,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 24. Once the entire packet is stored in the Tx FIFO, it is dispatched to the MAC core of the outgoing interface _if1_, provided that the corresponding 1 Gbps link is active and ready.
 25. The 1G MAC writes its MAC address as the source address, calculates the FCS on the fly, adds it to the end of the Ethernet frame, and sends it to peer A.
 
-![Example4](0.doc/Wireguard/Wireguard-fpga-muxed-Example-4-A-Handshake-Response.webp)
+![Example4](0.doc/Wireguard/wireguard-fpga-muxed-Ewxample-4-A-Handshake-Response.webp)
 
 26. On peer A, the 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if1_).
 27. Once the entire packet is stored, the Rx FIFO signals the Roung-Robin Multiplexer.
@@ -323,7 +323,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 34. The Routing DB Updater updates the routing table per the Wireguard Agent's instructions (adding the peer's IP address and Wireguard-related data).
 35. The CPU updates the registers from which the data plane reads the routing table and the corresponding cryptographic keys. The session is now officially established, and the exchange of user data over the encrypted VPN tunnel can commence.
 
-![Example5](0.doc/Wireguard/Wireguard-fpga-muxed-Example-5-A-Transfer-Data.webp)
+![Example5](0.doc/Wireguard/wireguard-fpga-muxed-Example-5-A-Transfer-Data.webp)
 
 36. On peer A, an end-user packet (_ICMP Echo Request_) arrives via the _if2_ Ethernet interface. The 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if2_).
 37. Once the entire packet is stored, the Rx FIFO signals the Round-Robin Multiplexer.
@@ -336,7 +336,7 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 44. Once the entire packet is stored in the Tx FIFO, it is sent to the MAC core of the outgoing interface _if1_, provided that the corresponding 1 Gbps link is active and ready.
 45. The 1G MAC writes its MAC address as the source, calculates the FCS on the fly, which it ultimately appends to the end of the Ethernet frame, and then sends it to peer B.
 
-![Example6](0.doc/Wireguard/Wireguard-fpga-muxed-Example-6-B-Transfer-Data.webp)
+![Example6](0.doc/Wireguard/wireguard-fpga-muxed-Example-6-B-Transfer-Data.webp)
 
 46. On peer B, the 1G MAC receives the incoming Ethernet frame and calculates the FCS on the fly. If the frame is valid, it is forwarded to the Rx FIFO (from _if1_).
 47. Once the entire packet is stored, the Rx FIFO signals the Round-Robin Multiplexer.

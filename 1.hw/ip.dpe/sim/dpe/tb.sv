@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   DPE multiplexer testbench
+//   DPE top-level module testbench
 //==========================================================================
 
 `timescale 1ps/1ps
@@ -19,6 +19,7 @@
 module tb;
     // Constants
     localparam CLK_PERIOD = 12_500;
+    import dpe_pkg::*;
     
     // Clock and reset signals
     logic clk = 0;
@@ -32,7 +33,11 @@ module tb;
     dpe_if from_eth_2(.clk(clk), .rst(rst));
     dpe_if from_eth_3(.clk(clk), .rst(rst));
     dpe_if from_eth_4(.clk(clk), .rst(rst));
-    dpe_if to_dpe(.clk(clk), .rst(rst));
+    dpe_if to_cpu(.clk(clk), .rst(rst));
+    dpe_if to_eth_1(.clk(clk), .rst(rst));
+    dpe_if to_eth_2(.clk(clk), .rst(rst));
+    dpe_if to_eth_3(.clk(clk), .rst(rst));
+    dpe_if to_eth_4(.clk(clk), .rst(rst));
     
     // Test data type and constants
     typedef logic [7:0] test_data_t [6];
@@ -50,7 +55,7 @@ module tb;
     always #(CLK_PERIOD/2) clk = ~clk;
     
     // DUT instantiation
-    dpe_multiplexer DUT (
+    dpe DUT (
         .sys_clk(clk),
         .sys_rst(rst),
         .pause(pause),
@@ -60,7 +65,11 @@ module tb;
         .from_eth_2(from_eth_2),
         .from_eth_3(from_eth_3),
         .from_eth_4(from_eth_4),
-        .to_dpe(to_dpe)
+        .to_cpu(to_cpu),
+        .to_eth_1(to_eth_1),
+        .to_eth_2(to_eth_2),
+        .to_eth_3(to_eth_3),
+        .to_eth_4(to_eth_4)
     );
     
     // Main stimulus process
@@ -70,26 +79,46 @@ module tb;
         from_cpu.tlast = 0;
         from_cpu.tkeep = '0;
         from_cpu.tdata = '0;
+        from_cpu.tuser_bypass_all = 0;
+        from_cpu.tuser_bypass_stage = 0;
+        from_cpu.tuser_src = '0;
+        from_cpu.tuser_dst = '0;
         
         from_eth_1.tvalid = 0;
         from_eth_1.tlast = 0;
         from_eth_1.tkeep = '0;
         from_eth_1.tdata = '0;
+        from_eth_1.tuser_bypass_all = 0;
+        from_eth_1.tuser_bypass_stage = 0;
+        from_eth_1.tuser_src = '0;
+        from_eth_1.tuser_dst = '0;
         
         from_eth_2.tvalid = 0;
         from_eth_2.tlast = 0;
         from_eth_2.tkeep = '0;
         from_eth_2.tdata = '0;
+        from_eth_2.tuser_bypass_all = 0;
+        from_eth_2.tuser_bypass_stage = 0;
+        from_eth_2.tuser_src = '0;
+        from_eth_2.tuser_dst = '0;
         
         from_eth_3.tvalid = 0;
         from_eth_3.tlast = 0;
         from_eth_3.tkeep = '0;
         from_eth_3.tdata = '0;
+        from_eth_3.tuser_bypass_all = 0;
+        from_eth_3.tuser_bypass_stage = 0;
+        from_eth_3.tuser_src = '0;
+        from_eth_3.tuser_dst = '0;
         
         from_eth_4.tvalid = 0;
         from_eth_4.tlast = 0;
         from_eth_4.tkeep = '0;
         from_eth_4.tdata = '0;
+        from_eth_4.tuser_bypass_all = 0;
+        from_eth_4.tuser_bypass_stage = 0;
+        from_eth_4.tuser_src = '0;
+        from_eth_4.tuser_dst = '0;
         
         // Reset assertion
         #(CLK_PERIOD * 4);
@@ -105,10 +134,10 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_cpu.tvalid = 1;
+                from_cpu.tkeep = '1;
+                from_cpu.tuser_dst = DPE_ADDR_ETH_1;
                 for (int i = 0; i < 6; i++) begin
-                    from_cpu.tdata = '0;
                     from_cpu.tdata[7:0] = packet_data[0][i];
-                    from_cpu.tkeep = '1;
                     from_cpu.tlast = (i == 5);
                     @(posedge clk);
                     while (!from_cpu.tready) @(posedge clk);
@@ -123,10 +152,10 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_eth_1.tvalid = 1;
+                from_eth_1.tkeep = '1;
+                from_eth_1.tuser_dst = DPE_ADDR_CPU;
                 for (int i = 0; i < 4; i++) begin
-                    from_eth_1.tdata = '0;
                     from_eth_1.tdata[7:0] = packet_data[1][i];
-                    from_eth_1.tkeep = '1;
                     from_eth_1.tlast = (i == 3);
                     @(posedge clk);                    
                     while (!from_eth_1.tready) @(posedge clk);
@@ -141,10 +170,10 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_eth_2.tvalid = 1;
+                from_eth_2.tkeep = '1;
+                from_eth_2.tuser_dst = DPE_ADDR_ETH_3;
                 for (int i = 0; i < 5; i++) begin
-                    from_eth_2.tdata = '0;
                     from_eth_2.tdata[7:0] = packet_data[2][i];
-                    from_eth_2.tkeep = '1;
                     from_eth_2.tlast = (i == 4);
                     @(posedge clk);
                     while (!from_eth_2.tready) @(posedge clk);
@@ -159,10 +188,10 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_eth_3.tvalid = 1;
+                from_eth_3.tkeep = '1;
+                from_eth_3.tuser_dst = DPE_ADDR_ETH_2;
                 for (int i = 0; i < 4; i++) begin
-                    from_eth_3.tdata = '0;
                     from_eth_3.tdata[7:0] = packet_data[3][i];
-                    from_eth_3.tkeep = '1;
                     from_eth_3.tlast = (i == 3);
                     @(posedge clk);
                     while (!from_eth_3.tready) @(posedge clk);
@@ -177,10 +206,10 @@ module tb;
                 @(posedge clk);
                 #1ps;
                 from_eth_4.tvalid = 1;
+                from_eth_4.tkeep = '1;
+                from_eth_4.tuser_dst = DPE_ADDR_BCAST;
                 for (int i = 0; i < 4; i++) begin
-                    from_eth_4.tdata = '0;
                     from_eth_4.tdata[7:0] = packet_data[4][i];
-                    from_eth_4.tkeep = '1;
                     from_eth_4.tlast = (i == 3);
                     @(posedge clk);
                     while (!from_eth_4.tready) @(posedge clk);
@@ -196,42 +225,112 @@ module tb;
     $finish(2);
     end
     
-    // Output ready control process
+    // Outputs ready control process
     initial begin
         @(posedge clk);
         #1ps;
-        to_dpe.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 7);
-        to_dpe.tready = 0;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #CLK_PERIOD;
-        to_dpe.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 4);
-        to_dpe.tready = 0;
-        pause = 1;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #(CLK_PERIOD * 3);
-        to_dpe.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 4);
-        to_dpe.tready = 0;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #(CLK_PERIOD * 2);
-        to_dpe.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 6);
-        to_dpe.tready = 0;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #(CLK_PERIOD * 2);
-        to_dpe.tready = 1;
-        pause = 0;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
     end
     
     // Monitor process
-    int expected_data_count = 0;
+    int expected_data_count0 = 0;
+    int expected_data_count1 = 0;
+    int expected_data_count2 = 0;
+    int expected_data_count3 = 0;
+    int expected_data_count4 = 0;
     
     always @(posedge clk) begin
         if (!rst) begin
-            if (to_dpe.tvalid && to_dpe.tready) begin
-                expected_data_count++;
+            if (to_cpu.tvalid && to_cpu.tready) begin
+                expected_data_count0++;
                 
-                if (to_dpe.tlast) begin
-                    $display("Packet received with %0d words", expected_data_count);
-                    expected_data_count = 0;
+                if (to_cpu.tlast) begin
+                    $display("Packet received with %0d words at port 0", expected_data_count0);
+                    expected_data_count0 = 0;
+                end
+            end
+            if (to_eth_1.tvalid && to_eth_1.tready) begin
+                expected_data_count1++;
+                
+                if (to_eth_1.tlast) begin
+                    $display("Packet received with %0d words at port 1", expected_data_count1);
+                    expected_data_count1 = 0;
+                end
+            end
+            if (to_eth_2.tvalid && to_eth_2.tready) begin
+                expected_data_count2++;
+                
+                if (to_eth_2.tlast) begin
+                    $display("Packet received with %0d words at port 2", expected_data_count2);
+                    expected_data_count2 = 0;
+                end
+            end
+            if (to_eth_3.tvalid && to_eth_3.tready) begin
+                expected_data_count3++;
+                
+                if (to_eth_3.tlast) begin
+                    $display("Packet received with %0d words at port 3", expected_data_count3);
+                    expected_data_count3 = 0;
+                end
+            end
+            if (to_eth_4.tvalid && to_eth_4.tready) begin
+                expected_data_count4++;
+                
+                if (to_eth_4.tlast) begin
+                    $display("Packet received with %0d words at port 4", expected_data_count4);
+                    expected_data_count4 = 0;
                 end
             end
         end

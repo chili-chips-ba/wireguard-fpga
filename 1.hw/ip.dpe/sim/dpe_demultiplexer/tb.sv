@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024 Chili.CHIPS*ba
+// Copyright (C) 2024-2025 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   DPE Demultiplexer Testbench
+//   DPE demultiplexer testbench
 //==========================================================================
 
 `timescale 1ps/1ps
@@ -19,21 +19,19 @@
 module tb;
     // Constants
     localparam CLK_PERIOD = 12_500;
-    localparam DATA_WIDTH = 128;
-    localparam KEEP_WIDTH = DATA_WIDTH/8;
-    localparam USER_WIDTH = 5;
+    import dpe_pkg::*;
     
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
     
     // Interfaces
-    dpe_if #(DATA_WIDTH, USER_WIDTH) inp();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) outp0();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) outp1();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) outp2();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) outp3();
-    dpe_if #(DATA_WIDTH, USER_WIDTH) outp4();
+    dpe_if from_dpe(.clk(clk), .rst(rst));
+    dpe_if to_cpu(.clk(clk), .rst(rst));
+    dpe_if to_eth_1(.clk(clk), .rst(rst));
+    dpe_if to_eth_2(.clk(clk), .rst(rst));
+    dpe_if to_eth_3(.clk(clk), .rst(rst));
+    dpe_if to_eth_4(.clk(clk), .rst(rst));
     
     // Test data type and constants
     typedef logic [7:0] test_data_t [6];
@@ -52,27 +50,24 @@ module tb;
     always #(CLK_PERIOD/2) clk = ~clk;
     
     // DUT instantiation
-    dpe_demultiplexer #(
-        .TDATA_WIDTH(DATA_WIDTH),
-        .TUSER_WIDTH(USER_WIDTH)
-    ) DUT (
-        .clk(clk),
-        .rst(rst),
-        .inp(inp),
-        .outp0(outp0),
-        .outp1(outp1),
-        .outp2(outp2),
-        .outp3(outp3),
-        .outp4(outp4)
+    dpe_demultiplexer DUT (
+        .sys_clk(clk),
+        .sys_rst(rst),
+        .from_dpe(from_dpe),
+        .to_cpu(to_cpu),
+        .to_eth_1(to_eth_1),
+        .to_eth_2(to_eth_2),
+        .to_eth_3(to_eth_3),
+        .to_eth_4(to_eth_4)
     );
     
     // Main stimulus process
     initial begin
         // Initialize input interface
-        inp.tvalid = 0;
-        inp.tlast = 0;
-        inp.tkeep = '0;
-        inp.tdata = '0;
+        from_dpe.tvalid = 0;
+        from_dpe.tlast = 0;
+        from_dpe.tkeep = '0;
+        from_dpe.tdata = '0;
                
         // Reset assertion
         #(CLK_PERIOD * 4);
@@ -86,89 +81,107 @@ module tb;
             @(posedge clk);
             // Send packet 0
             #1ps;
-            inp.tvalid = 1;
+            from_dpe.tvalid = 1;
             for (int i = 0; i < 6; i++) begin
-                inp.tuser = 5'b00001;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[0][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 5);
+                from_dpe.tuser_bypass_all = 0;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_CPU;
+                from_dpe.tdata = '0;
+                from_dpe.tdata[7:0] = packet_data[0][i];
+                from_dpe.tkeep = '1;
+                from_dpe.tlast = (i == 5);
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
+                while (!from_dpe.tready) @(posedge clk);
                 #1ps;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
+            from_dpe.tvalid = 0;
+            from_dpe.tlast = 0;
             // Send packet 1
-            inp.tvalid = 1;
+            from_dpe.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
-                inp.tuser = 5'b00010;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[1][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 3);
+                from_dpe.tuser_bypass_all = 0;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_1;
+                from_dpe.tdata = '0;
+                from_dpe.tdata[7:0] = packet_data[1][i];
+                from_dpe.tkeep = '1;
+                from_dpe.tlast = (i == 3);
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
+                while (!from_dpe.tready) @(posedge clk);
                 #1ps;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
+            from_dpe.tvalid = 0;
+            from_dpe.tlast = 0;
             // Send packet 2
-            inp.tvalid = 1;
+            from_dpe.tvalid = 1;
             for (int i = 0; i < 5; i++) begin
-                inp.tuser = 5'b00100;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[2][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 4);
+                from_dpe.tuser_bypass_all = 0;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_2;
+                from_dpe.tdata = '0;
+                from_dpe.tdata[7:0] = packet_data[2][i];
+                from_dpe.tkeep = '1;
+                from_dpe.tlast = (i == 4);
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
+                while (!from_dpe.tready) @(posedge clk);
                 #1ps;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
+            from_dpe.tvalid = 0;
+            from_dpe.tlast = 0;
             // Send packet 3
-            inp.tvalid = 1;
+            from_dpe.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
-                inp.tuser = 5'b01000;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[3][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 3);
+                from_dpe.tuser_bypass_all = 0;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_3;
+                from_dpe.tdata = '0;
+                from_dpe.tdata[7:0] = packet_data[3][i];
+                from_dpe.tkeep = '1;
+                from_dpe.tlast = (i == 3);
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
+                while (!from_dpe.tready) @(posedge clk);
                 #1ps;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
+            from_dpe.tvalid = 0;
+            from_dpe.tlast = 0;
             // Send packet 4
-            inp.tvalid = 1;
+            from_dpe.tvalid = 1;
             for (int i = 0; i < 4; i++) begin
-                inp.tuser = 5'b10000;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[4][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 3);
+                from_dpe.tuser_bypass_all = 0;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_ETH_4;
+                from_dpe.tdata = '0;
+                from_dpe.tdata[7:0] = packet_data[4][i];
+                from_dpe.tkeep = '1;
+                from_dpe.tlast = (i == 3);
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
+                while (!from_dpe.tready) @(posedge clk);
                 #1ps;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
+            from_dpe.tvalid = 0;
+            from_dpe.tlast = 0;
             // Send packet 5
-            inp.tvalid = 1;
+            from_dpe.tvalid = 1;
             for (int i = 0; i < 5; i++) begin
-                inp.tuser = 5'b11111;
-                inp.tdata = '0;
-                inp.tdata[7:0] = packet_data[5][i];
-                inp.tkeep = '1;
-                inp.tlast = (i == 4);
+                from_dpe.tuser_bypass_all = 0;
+                from_dpe.tuser_bypass_stage = 0;
+                from_dpe.tuser_src = DPE_ADDR_CPU;
+                from_dpe.tuser_dst = DPE_ADDR_BCAST;
+                from_dpe.tdata = '0;
+                from_dpe.tdata[7:0] = packet_data[5][i];
+                from_dpe.tkeep = '1;
+                from_dpe.tlast = (i == 4);
                 @(posedge clk);
-                while (!inp.tready) @(posedge clk);
+                while (!from_dpe.tready) @(posedge clk);
                 #1ps;
             end
-            inp.tvalid = 0;
-            inp.tlast = 0;
+            from_dpe.tvalid = 0;
+            from_dpe.tlast = 0;
         end
         
         #(CLK_PERIOD * 7);
@@ -180,59 +193,59 @@ module tb;
     initial begin
         @(posedge clk);
         #1ps;
-        outp0.tready = 1;
-        outp1.tready = 1;
-        outp2.tready = 1;
-        outp3.tready = 1;
-        outp4.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 7);
-        outp0.tready = 0;
-        outp1.tready = 0;
-        outp2.tready = 0;
-        outp3.tready = 0;
-        outp4.tready = 0;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #CLK_PERIOD;
-        outp0.tready = 1;
-        outp1.tready = 1;
-        outp2.tready = 1;
-        outp3.tready = 1;
-        outp4.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 4);
-        outp0.tready = 0;
-        outp1.tready = 0;
-        outp2.tready = 0;
-        outp3.tready = 0;
-        outp4.tready = 0;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #(CLK_PERIOD * 3);
-        outp0.tready = 1;
-        outp1.tready = 1;
-        outp2.tready = 1;
-        outp3.tready = 1;
-        outp4.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 4);
-        outp0.tready = 0;
-        outp1.tready = 0;
-        outp2.tready = 0;
-        outp3.tready = 0;
-        outp4.tready = 0;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #(CLK_PERIOD * 2);
-        outp0.tready = 1;
-        outp1.tready = 1;
-        outp2.tready = 1;
-        outp3.tready = 1;
-        outp4.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
         #(CLK_PERIOD * 6);
-        outp0.tready = 0;
-        outp1.tready = 0;
-        outp2.tready = 0;
-        outp3.tready = 0;
-        outp4.tready = 0;
+        to_cpu.tready = 0;
+        to_eth_1.tready = 0;
+        to_eth_2.tready = 0;
+        to_eth_3.tready = 0;
+        to_eth_4.tready = 0;
         #(CLK_PERIOD * 2);
-        outp0.tready = 1;
-        outp1.tready = 1;
-        outp2.tready = 1;
-        outp3.tready = 1;
-        outp4.tready = 1;
+        to_cpu.tready = 1;
+        to_eth_1.tready = 1;
+        to_eth_2.tready = 1;
+        to_eth_3.tready = 1;
+        to_eth_4.tready = 1;
     end
     
     // Monitor process
@@ -244,42 +257,42 @@ module tb;
     
     always @(posedge clk) begin
         if (!rst) begin
-            if (outp0.tvalid && outp0.tready) begin
+            if (to_cpu.tvalid && to_cpu.tready) begin
                 expected_data_count0++;
                 
-                if (outp0.tlast) begin
+                if (to_cpu.tlast) begin
                     $display("Packet received with %0d words at port 0", expected_data_count0);
                     expected_data_count0 = 0;
                 end
             end
-            if (outp1.tvalid && outp1.tready) begin
+            if (to_eth_1.tvalid && to_eth_1.tready) begin
                 expected_data_count1++;
                 
-                if (outp1.tlast) begin
+                if (to_eth_1.tlast) begin
                     $display("Packet received with %0d words at port 1", expected_data_count1);
                     expected_data_count1 = 0;
                 end
             end
-            if (outp2.tvalid && outp2.tready) begin
+            if (to_eth_2.tvalid && to_eth_2.tready) begin
                 expected_data_count2++;
                 
-                if (outp2.tlast) begin
+                if (to_eth_2.tlast) begin
                     $display("Packet received with %0d words at port 2", expected_data_count2);
                     expected_data_count2 = 0;
                 end
             end
-            if (outp3.tvalid && outp3.tready) begin
+            if (to_eth_3.tvalid && to_eth_3.tready) begin
                 expected_data_count3++;
                 
-                if (outp3.tlast) begin
+                if (to_eth_3.tlast) begin
                     $display("Packet received with %0d words at port 3", expected_data_count3);
                     expected_data_count3 = 0;
                 end
             end
-            if (outp4.tvalid && outp4.tready) begin
+            if (to_eth_4.tvalid && to_eth_4.tready) begin
                 expected_data_count4++;
                 
-                if (outp4.tlast) begin
+                if (to_eth_4.tlast) begin
                     $display("Packet received with %0d words at port 4", expected_data_count4);
                     expected_data_count4 = 0;
                 end

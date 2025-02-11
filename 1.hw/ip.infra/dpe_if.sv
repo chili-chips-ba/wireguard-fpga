@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024 Chili.CHIPS*ba
+// Copyright (C) 2024-2025 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -14,32 +14,48 @@
 //   DPE AXI-Stream Interface
 //==========================================================================
 
-interface dpe_if #(
-    parameter TDATA_WIDTH = 128,
-    parameter TUSER_WIDTH = 5
-) ();
-    logic                               tready;
-    logic                               tvalid;
-    logic [TDATA_WIDTH-1:0]             tdata;
-    logic                               tlast;
-    logic [((TDATA_WIDTH+7)/8)-1:0]     tkeep;
-    logic [TUSER_WIDTH-1:0]             tuser;
+interface dpe_if (
+    input         clk,
+    input         rst
+);
+    logic         tready;
+    logic         tvalid;
+    logic [127:0] tdata;
+    logic         tlast;
+    logic [15:0]  tkeep;
+    logic         tuser_bypass_all;
+    logic         tuser_bypass_stage;
+    logic [2:0]   tuser_src;
+    logic [2:0]   tuser_dst;
+    logic [7:0]   tid;
     
     modport m_axis (
+        input     clk,
+        input     rst,
         input     tready,
         output    tvalid,
         output    tdata,
         output    tlast,
         output    tkeep,
-        output    tuser
+        output    tuser_bypass_all,
+        output    tuser_bypass_stage,
+        output    tuser_src,
+        output    tuser_dst,
+        output    tid
     );
     
     modport s_axis (
+        input     clk,
+        input     rst,
         output    tready,
         input     tvalid,
         input     tdata,
         input     tlast,
         input     tkeep,
-        input     tuser
+        input     tuser_bypass_all,
+        input     tuser_bypass_stage,
+        input     tuser_src,
+        input     tuser_dst,
+        input     tid
     );
 endinterface
