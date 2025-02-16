@@ -28,4 +28,11 @@
 
 `define MEM_MODEL_SV
 
-`include "mem_model.v"
+// verilator lint_save
+// verilator lint_off UNUSEDSIGNAL
+// verilator lint_off PINCONNECTEMPTY
+// verilator lint_off BLKSEQ
+// verilator lint_off GENUNNAMED
+// verilator lint_off DECLFILENAME
+`include "f_mem_model.v"
+// verilator lint_restore

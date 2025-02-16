@@ -29,9 +29,10 @@ TIMEOUTUS        = 1000
 
 HW_SRC          := $(CURDIR)/../1.hw
 BLD_DIR         := $(CURDIR)/../3.build
+SIM_DIR         := $(CURDIR)/../4.sim
 TB_NAME         := tb
 
-export BLD_DIR HW_SRC TB_NAME
+export BLD_DIR HW_SRC SIM_DIR TB_NAME
 
 # --------------------------------------------
 # VProc C/C++ variables
@@ -98,31 +99,21 @@ VOBJS            = $(addprefix $(VOBJDIR)/,                   \
 
 USERLIB          = libuser.a
 
-ifneq ("$(OSTYPE)", "Linux")
-  COSIMLDOPT     = -lcosimwin
-  UDPLDOPT       = -ludpwin
-else
+ifeq ("$(OSTYPE)", "Linux")
   COSIMLDOPT     = -lcosimlnx
   UDPLDOPT       = -ludplnx
+  WARNOPTS       = -Wall models/config.vlt
+else
+  COSIMLDOPT     = -lcosimwin
+  UDPLDOPT       = -ludpwin
+  WARNOPTS       =
 endif
 
 # --------------------------------------------
 # Simulation variables
 # --------------------------------------------
 
-TBFILELIST       = $(COSIMDIR)/mem_model.sv                   \
-                   $(COSIMDIR)/f_VProc.sv                     \
-                   $(UDPDIR)/gmii_rgmii_conv.v                \
-                   $(UDPDIR)/udp_ip_pg.v                      \
-                   $(UDPDIR)/bfm_ethernet.sv                  \
-                                                              \
-                   models/soc_cpu.VPROC.sv                    \
-                   models/bfm_uart.sv                         \
-                   models/bfm_adc.sv                          \
-                   models/bfm_phy_mdio.sv                     \
-                   models/gowin.prim_sim.CHILI.v              \
-                                                              \
-                   $(TB_NAME).sv
+TBFILELIST       = $(TB_NAME).filelist
 
 WORKDIR          = output
 
@@ -210,20 +201,22 @@ $(USERLIB): $(VOBJDIR) $(VOBJS)
 # Compile simulation C++ code
 #
 compile: $(USERLIB)
-	@verilator  -F $(TOPFILELIST) $(TBFILELIST)           \
-                       $(SIMOPTS)                             \
-                       $(SIMDEFS) $(SIMINCLPATHS)             \
-                       $(ARE_TESTS)                           \
-           --top       $(TB_NAME)                             \
-           -MAKEFLAGS "$(SIMMAKEFLAGS)"                       \
-           -CFLAGS    "$(SIMCFLAGS)"                          \
-           -LDFLAGS   "$(SIMLDFLAGS)                          \
-                       -Wl,-whole-archive                     \
-                       -L$(COSIMDIR)/lib $(COSIMLDOPT)        \
-                       -L$(UDPDIR)/lib $(UDPLDOPT)            \
-                       -L$(CURDIR) -luser                     \
-                       -Wl,-no-whole-archive                  \
-                       -ldl $(RV32LDOPTS)"
+	@verilator     $(WARNOPTS)                            \
+	               -F $(TOPFILELIST)                      \
+                   -F $(TBFILELIST)                       \
+	               $(SIMOPTS)                             \
+	               $(SIMDEFS) $(SIMINCLPATHS)             \
+	               $(ARE_TESTS)                           \
+	   --top       $(TB_NAME)                             \
+	   -MAKEFLAGS "$(SIMMAKEFLAGS)"                       \
+	   -CFLAGS    "$(SIMCFLAGS)"                          \
+	   -LDFLAGS   "$(SIMLDFLAGS)                          \
+	               -Wl,-whole-archive                     \
+	               -L$(COSIMDIR)/lib $(COSIMLDOPT)        \
+	               -L$(UDPDIR)/lib $(UDPLDOPT)            \
+	               -L$(CURDIR) -luser                     \
+	               -Wl,-no-whole-archive                  \
+	               -ldl $(RV32LDOPTS)"
 
 #
 # Generate Verilator test bench executable
@@ -238,16 +231,16 @@ $(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST)
 
 xml2stems:
 	@verilator                                            \
-                --timing                                      \
-                -xml-only                                     \
-                -xml-output tb.xml                            \
-                --timescale 1ps/1ps                           \
-                $(SIMINCLPATHS) $(SIMDEFS)                    \
-                -f $(TOPFILELIST)                             \
-                $(TBFILELIST)                                 \
-                -MAKEFLAGS "$(SIMMAKEFLAGS)"                  \
-                -Wno-WIDTH                                    \
-                --top-module $(TB_NAME)
+	        --timing                                      \
+	        -xml-only                                     \
+	        -xml-output tb.xml                            \
+	        --timescale 1ps/1ps                           \
+	        $(SIMINCLPATHS) $(SIMDEFS)                    \
+	        -f $(TOPFILELIST)                             \
+	        $(TBFILELIST)                                 \
+	        -MAKEFLAGS "$(SIMMAKEFLAGS)"                  \
+	        -Wno-WIDTH                                    \
+	        --top-module $(TB_NAME)
 	@xml2stems tb.xml tb.stems
 
 #======================================================
@@ -260,10 +253,10 @@ run: all
 rungui: all xml2stems
 	@$(SIMEXE) | tee sim.log
 	@if [ -e $(WAVESAVEFILE) ]; then                      \
-            gtkwave -a $(WAVESAVEFILE) $(GTKWAVEOPTS);        \
-        else                                                  \
-            gtkwave $(GTKWAVEOPTS);                           \
-        fi
+	    gtkwave -a $(WAVESAVEFILE) $(GTKWAVEOPTS);        \
+	else                                                  \
+	    gtkwave $(GTKWAVEOPTS);                           \
+	fi
 
 gui: rungui
 
