@@ -67,7 +67,7 @@ generate
   begin
 
     if (RGMII)
-    begin
+    begin:gen_rgmii
       // When RGMII, instantiate convertor and use gmii_if.tx[3:0], gmii_if.rdx[3:0], gmii_if.txen and
       // gmii_if.rxdv for the RGMI signalling.
       gmii_rgmii_conv conv
@@ -97,7 +97,7 @@ generate
       assign gmii[UDP].rxer            = '0;
     end
     else
-    begin
+    begin:gen_gmii
        // When in GMII mode, wire interface straight through to udpIpPg
        assign gmii[UDP].rxd            = udp_gmii_txd[UDP];
        assign gmii[UDP].rxdv           = udp_gmii_txen[UDP];

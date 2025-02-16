@@ -22,7 +22,7 @@ module tb #(
    parameter int MDIO_BUFF_ADDR = 32'h50000000
 )();
 
-   localparam DLY_PCB_PAD_PS    = 1_000;
+   //localparam DLY_PCB_PAD_PS    = 1_000;
    localparam NUM_ETH_PORTS     = 4;
 
 //--------------------------------------------------------------
@@ -85,7 +85,9 @@ module tb #(
 
 //--------------------------------------------------------------
    logic        uart_rx, uart_tx;
+// verilator lint_off UNUSEDSIGNAL
    logic [3:2]  led_n;
+// verilator lint_off UNUSEDSIGNAL
 /*
    logic        O_sdram_clk,
                 O_sdram_cke,
@@ -185,7 +187,7 @@ generate
   end
 endgenerate
 
-
+// verilator lint_off PINCONNECTEMPTY
  bfm_ethernet
    #(.START_NODE                          (ETH_START_NODE),
      .NUM_PORTS                           (NUM_ETH_PORTS),
@@ -211,6 +213,7 @@ endgenerate
      // Simulation halt request
      .halt_req                            ()
    );
+// verilator lint_on PINCONNECTEMPTY
 
 //--------------------------------------------------------------
 // model of external SDRAM

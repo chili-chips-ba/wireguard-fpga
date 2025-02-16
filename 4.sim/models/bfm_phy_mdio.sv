@@ -242,5 +242,4 @@ end
      .tx_writedata      ('0)                      // (unused)
   );
 
-
 endmodule
