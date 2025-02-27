@@ -65,7 +65,7 @@ ifeq ("$(BUILD)", "ISS")
     RV32WINFILES = getopt.c
   endif
 
-  USER_C         = VUserMain0.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp $(RV32WINFILES)
+  USER_C         = VUserMain0.cpp $(UDP_C) mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp $(RV32WINFILES)
   USRCODEDIR     = $(CURDIR)/models/rv32/usercode
 
   RV32DIR        = $(CURDIR)/models/rv32
@@ -268,7 +268,8 @@ help:
 	@$(info make -f MakefileVProc.mk clean         clean previous build artefacts)
 	@$(info )
 	@$(info Command line configurable variables:)
-	@$(info $(SPC) $(SPC) USER_C:       list of user source code files (default VUserMain0.cpp))
+	@$(info $(SPC) $(SPC) USER_C:       list of user source code files for soc_cpu (default VUserMain0.cpp))
+	@$(info $(SPC) $(SPC) UDP_C:        list of user source code files for udpIpPg modules (default VUserMainUdp.cpp))
 	@$(info $(SPC) $(SPC) USRCODEDIR:   directory containing user source code (default $$(CURDIR)/usercode))
 	@$(info $(SPC) $(SPC) OPTFLAG:      Optimisation flag for user VProc code (default -g))
 	@$(info $(SPC) $(SPC) TIMINGOPT:    Verilator timing flags (default --timing))
