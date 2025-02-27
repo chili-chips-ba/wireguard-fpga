@@ -196,7 +196,15 @@ This reflects the available models as detailed in the _Configuring ISS timing mo
 
 ## Building and Running Code
 
-A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below), the provided user code that's the rv32 ISS integration software. By default the make file will compile the <tt>VuserMain0.cpp</tt> user code in <tt>4.sim/usercode</tt>, but the directory and list of file to compile can be specified on the command line (see below). The user software is compiled into a local static library, <tt>libuser.a</tt> which is linked to the simulation code within Verilator along with the precompiled <tt>libcosimlnx.a</tt> (or <tt>libcosimwin.a</tt> for MSYS2/mingw64 on Windows) located in <tt>4.sim/models/cosim/lib</tt> and containing the precompiled code for *VProc* and *mem_model*. The headers for the *VProc* and *mem_model* API software are in <tt>4.sim/models/cosim/include</tt>. The HDL required for these models' use in the Wireguard trest bench can be found in <tt>4.sim/models/cosim</tt>, and the make file picks these up from there to compile with the rest of the test bench HDL.
+A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software, for both the `soc_cpu` and _udpIpPg_ components, and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below) the provided `soc_cpu` user code that's the _rv32_ ISS integration software. By default, the make file will compile the <tt>VUserMain0.cpp</tt> user code for `soc_cpu` and `VUserMainUdp.cpp` for _udpIpPg_ located in <tt>4.sim/usercode</tt>, but the directory and list of files to compile can be specified on the command line (see below). The `VUserMainUdp.cpp` file contains the `VUserMain<n>` entry points for all four instantiated _udpIpPg_ modules (nodes 1 to 4). To alter which files to compile, the make file `USER_C` variable can be updated to list a set of C++ files for the `soc_cpu`. Similarly, the `UDP_C` variable can be updated with a list of files for the Ethernet components. The location of the source files is in the variable `USRCODEDIR`, which may also be altered. Any modifications can be done to the make file itself, or on the command line. E.g., to add additional files to the `soc_cpu` build:
+
+```
+make -f MakefileVProc.mk USER_C="VUserMain0.cpp MyTest1Class.cpp"
+```
+
+If many variants of software build are required then either scripts can be constructed with the various command line variable modification calls to `make` or other make files which set these varaiable and call the common make file. This is useful in managing source code for multiple tests located in different directories, compiling for ISS (perhaps also calling the RISC-V application build), or for compiling application code natively which will have a different set of source files.
+
+The user software is compiled into a local static library, <tt>libuser.a</tt> which is linked to the simulation code within Verilator along with the precompiled <tt>libcosimlnx.a</tt> (or <tt>libcosimwin.a</tt> for MSYS2/mingw64 on Windows) located in <tt>4.sim/models/cosim/lib</tt> and containing the precompiled code for *VProc* and *mem_model*. The headers for the *VProc* and *mem_model* API software are in <tt>4.sim/models/cosim/include</tt>. The HDL required for these models' use in the Wireguard trest bench can be found in <tt>4.sim/models/cosim</tt>, and the make file picks these up from there to compile with the rest of the test bench HDL.
 
 The <tt>MakefileVProc.mk</tt> make file has a target <tt>help</tt>, which produces the following output:
 
@@ -209,6 +217,7 @@ make -f MakefileVProc.mk clean         clean previous build artefacts
 
 Command line configurable variables:
   USER_C:       list of user source code files (default VUserMain0.cpp)
+  UDP_C:        list of user source code files (default VUserMainUdp.cpp)
   USRCODEDIR:   directory containing user source code (default $(CURDIR)/usercode)
   OPTFLAG:      Optimisation flag for user VProc code (default -g)
   TIMINGOPT:    Verilator timing flags (default --timing)
