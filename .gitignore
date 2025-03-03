@@ -30,7 +30,6 @@
 *.cache
 *.data
 *.ipdefs
-*.hw
 *.ip_user_files
 *.runs
 *.gen
