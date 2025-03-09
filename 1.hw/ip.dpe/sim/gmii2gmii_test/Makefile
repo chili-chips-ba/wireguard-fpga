@@ -23,10 +23,13 @@ clean:
 	rm -rf output
 
 compile:
-	verilator \
-	    -Wno-lint \
-		-Wno-SELRANGE \
-		-Wno-MULTIDRIVEN \
+	#verilator \
+	   # -Wno-lint \
+		#-Wno-SELRANGE \
+		#-Wno-MULTIDRIVEN \
+   verilator \
+      -Wall \
+      -Wno-PINCONNECTEMPTY \
 		--cc \
 		--timing \
 		--trace-fst \

@@ -1,3 +1,4 @@
+// verilator lint_off BLKSEQ
 //==========================================================================
 // Copyright (C) 2024-2025 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
@@ -18,27 +19,25 @@
 
 module tb;
     // Constants
-    localparam CLK_PERIOD = 8_000;
+   localparam CLK_PERIOD = 8_000;
 	localparam CLK25_PERIOD = 40_000;
-    localparam DATA_WIDTH = 128;
-    localparam KEEP_WIDTH = DATA_WIDTH/8;
-    localparam INP_USER_WIDTH = 1;
-    localparam OUTP_USER_WIDTH = 1;
+   localparam DATA_WIDTH = 128;
     
-    // Clock and reset signals
-    logic clk = 0;
+   // Clock and reset signals
+   logic clk = 0;
 	logic clk25 = 0;
-    logic rst = 1;
-    logic is_idle;
+   logic rst;
     
     // Interfaces
-    dpe_if #(DATA_WIDTH, INP_USER_WIDTH) inp();
-    dpe_if #(DATA_WIDTH, OUTP_USER_WIDTH) outp();
+    dpe_if inp  (.clk(clk), .rst(rst));
+    dpe_if outp (.clk(clk), .rst(rst));
     logic       gmii_rx_clk;
     logic [7:0] gmii_rxd;
     logic       gmii_rx_dv;
     logic       gmii_rx_er;
+    // verilator lint_off UNUSED
     logic       gmii_tx_clk;
+    // verilator lint_on UNUSED
     logic [7:0] gmii_txd;
     logic       gmii_tx_en;
     logic       gmii_tx_er;
@@ -94,8 +93,8 @@ module tb;
           '0}
     };
     
-    // Clock generation
-    always #(CLK_PERIOD/2) clk = ~clk;
+   // Clock generation
+   always #(CLK_PERIOD/2) clk = ~clk;
 	always #(CLK25_PERIOD/2) clk25 = ~clk25;
     
     // DUT instantiation
@@ -103,7 +102,7 @@ module tb;
         .TARGET("GENERIC"),
         .IODDR_STYLE("IODDR"),
         .CLOCK_INPUT_STYLE("BUFR"),
-        .AXIS_DATA_WIDTH(128),
+        .AXIS_DATA_WIDTH(DATA_WIDTH),
         .ENABLE_PADDING(1),
         .MIN_FRAME_LENGTH(64),
         .TX_FIFO_DEPTH(4096),
@@ -121,14 +120,14 @@ module tb;
         .tx_axis_tvalid(inp.tvalid),
         .tx_axis_tready(inp.tready),
         .tx_axis_tlast(inp.tlast),
-        .tx_axis_tuser(inp.tuser),
+        .tx_axis_tuser(0),
         
         .rx_axis_tdata(outp.tdata),
         .rx_axis_tkeep(outp.tkeep),
         .rx_axis_tvalid(outp.tvalid),
         .rx_axis_tready(outp.tready),
         .rx_axis_tlast(outp.tlast),
-        .rx_axis_tuser(outp.tuser),
+        .rx_axis_tuser(),
         
         .gmii_rx_clk(gmii_rx_clk),
         .gmii_rxd(gmii_rxd),
@@ -155,6 +154,7 @@ module tb;
         .cfg_tx_enable(1'b1),
         .cfg_rx_enable(1'b1)
     );
+    
     assign gmii_rx_clk = clk25;
     assign gmii_rxd = gmii_txd;
     assign gmii_rx_dv = gmii_tx_en;
@@ -167,9 +167,13 @@ module tb;
         inp.tlast = 0;
         inp.tkeep = '0;
         inp.tdata = '0;
-        inp.tuser = 0;
+        inp.tuser_bypass_all = 0;
+        inp.tuser_bypass_stage = 0;
+        inp.tuser_src = '0;
+        inp.tuser_dst = '0;
                
         // Reset assertion
+        rst = 1;
         #(CLK_PERIOD * 4);
         @(posedge clk);
         #1ps;
@@ -276,3 +280,4 @@ module tb;
         end
     end
 endmodule
+// verilator lint_on BLKSEQ

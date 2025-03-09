@@ -89,8 +89,6 @@ module tb;
     
     // DUT instantiation
     dpe_wg_disassembler DUT (
-        .clk(clk),
-        .rst(rst),
         .fcr_idle(fcr_idle),
         .inp(inp),
         .outp(outp)

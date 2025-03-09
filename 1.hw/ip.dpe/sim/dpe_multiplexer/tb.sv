@@ -51,8 +51,6 @@ module tb;
     
     // DUT instantiation
     dpe_multiplexer DUT (
-        .sys_clk(clk),
-        .sys_rst(rst),
         .pause(pause),
         .is_idle(is_idle),
         .from_cpu(from_cpu),

@@ -1,22 +1,9 @@
 #==========================================================================
 # List of file to make 'top.sv' design module
-#   DeviceName= "GW2AR-18C"
-#   PN        = "GW2AR-LV18QN88C8/I7"
 #==========================================================================
 
 #---Target-specific components
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_iobuf.sv
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_ilvds.sv
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_iddr.sv
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_iser8.sv
-
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_obuf.sv
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_olvds.sv
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_oddr.sv
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_oser10.sv
-
-${HW_SRC}/fpgatech_lib/GOWIN/fpga_pll.sv
-#${HW_SRC}/fpgatech_lib/GOWIN/fpga_srl.sv
+${HW_SRC}/fpgatech_lib/XILINX/fpga_plls.sv
 
 #---Common infrastructure components
 ${HW_SRC}/ip.infra/soc_pkg.sv
@@ -40,12 +27,27 @@ ${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv
 ${HW_SRC}/ip.cpu/soc_cpu.PICORV32.sv
 
 #---CSR
-${HW_SRC}/ip.csr/csr_pkg.sv
-${HW_SRC}/ip.csr/csr_if.sv
-${HW_SRC}/ip.csr/soc_csr.sv
+${HW_SRC}/csr.peakrdl/csr_pkg.sv
+${HW_SRC}/csr.peakrdl/csr_if.sv
+${HW_SRC}/ip.infra/soc_csr.sv
+#${HW_SRC}/ip.csr/csr_pkg.sv
+#${HW_SRC}/ip.csr/csr_if.sv
+#${HW_SRC}/ip.csr/soc_csr.sv
 
 #---GMII
 ${HW_SRC}/ip.infra/gmii_if.sv
+
+#---DPE interface library
+${HW_SRC}/ip.infra/dpe_if.sv
+${HW_SRC}/ip.infra/dpe_pkg.sv
+${HW_SRC}/ip.infra/dpe_if_skid_buffer.sv
+
+#---DPE
+${HW_SRC}/ip.dpe/dpe.sv
+${HW_SRC}/ip.dpe/dpe_multiplexer.sv
+${HW_SRC}/ip.dpe/dpe_demultiplexer.sv
+${HW_SRC}/ip.dpe/dpe_dummy_switch.sv
+#${HW_SRC}/ip.dpe/dpe_wg_disassembler.sv
 
 #---TOP
 ${HW_SRC}/top.sv
