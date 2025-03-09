@@ -11,17 +11,25 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   Package with declaration commonly used across the entire DPE
+//   Ethernet PHY Controller (placeholder)
 //==========================================================================
 
-`ifndef _DPE_PKG
-`define _DPE_PKG
-package dpe_pkg;
-    localparam DPE_ADDR_CPU   = 3'h0;
-    localparam DPE_ADDR_ETH_1 = 3'h1;
-    localparam DPE_ADDR_ETH_2 = 3'h2;
-    localparam DPE_ADDR_ETH_3 = 3'h3;
-    localparam DPE_ADDR_ETH_4 = 3'h4;
-    localparam DPE_ADDR_BCAST = 3'h7;
-endpackage: dpe_pkg
-`endif
+module ethernet_phy (
+   output logic  e1_reset,
+   output logic  e1_mdc,
+   inout  logic  e1_mdio,
+   output logic  e2_reset,
+   output logic  e2_mdc,
+   inout  logic  e2_mdio,
+   output logic  e3_reset,
+   output logic  e3_mdc,
+   inout  logic  e3_mdio,
+   output logic  e4_reset,
+   output logic  e4_mdc,
+   inout  logic  e4_mdio
+);
+   assign e1_reset = 1'b1;
+   assign e2_reset = 1'b1;
+   assign e3_reset = 1'b1;
+   assign e4_reset = 1'b1;
+endmodule
