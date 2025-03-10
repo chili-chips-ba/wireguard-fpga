@@ -16,7 +16,7 @@
 //==========================================================================
 
 interface csr_if ();
-   import csr_pkg::*;
+   import old_csr_pkg::*;
    
 // UART_TX
    logic        uart_tx_write;
