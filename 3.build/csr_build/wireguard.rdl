@@ -1,0 +1,211 @@
+addrmap csr {
+	littleendian;
+	default accesswidth = 32;
+	default regwidth = 32;
+	
+	regfile rx_fifo {
+		reg {
+			field { 
+				name = "TDATA[31:0]";
+				desc = "1st 4-byte segment of TDATA";
+			    sw = rw;
+				hw = r; 
+			} tdata[32];
+		} data_31_0;
+		
+		reg {
+			field {
+				name = "TDATA[63:32]";
+				desc = "2nd 4-byte segment of TDATA";
+			    sw = rw;
+				hw = r;
+			} tdata[32];
+		} data_63_32;
+		
+		reg {
+			field {
+				name = "TDATA[95:64]";
+				desc = "3rd 4-byte segment of TDATA";
+				sw = rw;
+				hw = r;
+			} tdata[32];
+		} data_95_64;
+		
+		reg {
+			field {
+			    name = "TDATA[127:96]";
+				desc = "4th 4-byte segment of TDATA";
+				sw = rw;
+				hw = r;
+			} tdata[32];
+		} data_127_96;
+		
+		reg {
+			field {
+				name = "TKEEP[15:0]";
+				desc = "Byte-enable for TDATA (e.g. TKEEP[15] corresponds to TDATA[127:119])";
+				sw = rw;
+				hw = r;
+			} tkeep[31:16];
+			
+			field {
+				name = "TLAST";
+				desc = "Indicates boundary of a packet, i.e. active on last transfer";
+				sw = rw;
+				hw = r;
+			} tlast[8:8];
+			
+			field {
+				name = "TUSER[7:7] = bypass_all";
+				desc = "DPE is bypassed when active";
+				sw = rw;
+				hw = r;
+			} tuser_bypass_all[7:7];
+			
+			field {
+				name = "TUSER[6:6] = bypass_stage";
+				desc = "Next stage of the DPE is bypassed when active";
+				sw = rw;
+				hw = r;
+			} tuser_bypass_stage[6:6];
+			
+			field {
+				name = "TUSER[5:3] = src";
+				desc = "Internal source address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4)";
+				sw = rw;
+				hw = r;
+			} tuser_src[5:3];
+			
+			field {
+				name = "TUSER[2:0] = dst";
+				desc = "Internal destination address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast)";
+				sw = rw;
+				hw = r;
+			} tuser_dst[2:0];
+		} control;
+		
+		reg {
+			field {
+				name = "TVALID";
+				desc = "Indicates valid transfer from the CPU to the Rx FIFO (single pulse trigger)";
+				singlepulse = true;
+				sw = rw;
+				hw = r;
+			} tvalid = 0;
+		} trigger;
+		
+		reg {
+			field {
+				name = "TREADY";
+				desc = "Indicates that the Rx FIFO can accept a transfer";
+				sw = r;
+				hw = w;
+			} tready;
+		} status;
+	} rx_fifo;
+	
+	regfile tx_fifo {
+		reg {
+			field {
+				name = "TDATA[31:0]";
+				desc = "1st 4-byte segment of TDATA";
+				sw = r;
+				hw = w;
+			} tdata[32];
+		} data_31_0;
+		
+		reg {
+			field {
+				name = "TDATA[63:32]";
+				desc = "2nd 4-byte segment of TDATA";
+				sw = r;
+				hw = w;
+			} tdata[32];
+		} data_63_32;
+		
+		reg {
+			field {
+				name = "TDATA[95:64]";
+				desc = "3rd 4-byte segment of TDATA";
+				sw = r;
+				hw = w;
+			} tdata[32];
+		} data_95_64;
+		
+		reg {
+			field {
+				name = "TDATA[127:96]";
+				desc = "4th 4-byte segment of TDATA";
+				sw = r;
+				hw = w;
+			} tdata[32];
+		} data_127_96;
+		
+		reg {
+			field {
+				name = "TKEEP[15:0]";
+				desc = "Byte-enable for TDATA (e.g. TKEEP[15] corresponds to TDATA[127:119])";
+				sw = rw;
+				hw = w;
+			} tkeep[31:16];
+			
+			field {
+				name = "TLAST";
+				desc = "Indicates boundary of a packet, i.e. active on last transfer";
+				sw = rw;
+				hw = w;
+			} tlast[8:8];
+			
+			field {
+				name = "TUSER[7:7] = bypass_all";
+				desc = "If active, DPE was bypassed";
+				sw = rw;
+				hw = w;
+			} tuser_bypass_all[7:7];
+			
+			field {
+				name = "TUSER[6:6] = bypass_stage";
+				desc = "If active, last stage of the DPE was bypassed";
+				sw = rw;
+				hw = w;
+			} tuser_bypass_stage[6:6];
+			
+			field {
+				name = "TUSER[5:3] = src";
+				desc = "Internal source address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4)";
+				sw = rw;
+				hw = w;
+			} tuser_src[5:3];
+			
+			field {
+				name = "TUSER[2:0] = dst";
+				desc = "Internal destination address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast)";
+				sw = rw;
+				hw = w;
+			} tuser_dst[2:0];
+		} control;
+		
+		reg {
+			field {
+				name = "TREADY";
+				desc = "Indicates that the CPU can accept a transfer";
+				singlepulse = true;
+				sw = rw;
+				hw = r;
+			} tready = 0;
+		} trigger;
+		
+		reg {
+			field {
+				name = "TVALID";
+				desc = "Indicates valid transfer from the Tx FIFO to the CPU";
+				sw = r;
+				hw = w;
+			} tvalid;
+		} status;
+	} tx_fifo;
+};
+
+addrmap wireguard {
+    csr csr0 @ 0x2000_0000;
+};
