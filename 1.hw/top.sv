@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   Top-Level Module
+//   WireGuard FPGA top-level module
 //==========================================================================
 
 module top #(
@@ -87,6 +87,7 @@ module top #(
    input [1:0]  key_in
 );
    import csr_pkg::*;
+   import soc_pkg::*;
    
 //==========================================================================
 // Clock and reset generation
@@ -96,8 +97,8 @@ module top #(
    logic        sys_rst;
    logic        eth_gtx_clk;
    logic        eth_gtx_rst;
-    
-   fpga_plls fpga_plls_inst (
+   
+   fpga_plls u_fpga_plls (
       .clk_p(clk_p),
       .clk_n(clk_n),
       .rst_n(rst_n),
@@ -106,9 +107,31 @@ module top #(
       .eth_gtx_clk(eth_gtx_clk),
       .eth_gtx_rst(eth_gtx_rst)
    );
- 
+   
+   logic        tick_1us;
+   cnt_1us_t    cnt_1us;
+
+   always_ff @(posedge sys_rst or posedge sys_clk) begin
+      if (sys_rst == 1'b1) begin
+         tick_1us  <= 1'b0;
+         cnt_1us   <= '0;
+      end
+      else begin
+         // number of clocks for 1us time-tick pulse depends 
+         //   on board, i.e. the period of available clocks
+         tick_1us  <= (cnt_1us == cnt_1us_t'(NUM_1US_CLKS-1));
+
+         if (tick_1us == 1'b1) begin
+            cnt_1us <= '0;
+         end         
+         else begin
+            cnt_1us <= cnt_1us_t'(cnt_1us + cnt_1us_t'(1));
+         end
+      end
+   end
+
 //==========================================================================
-// Interconnect
+// CPU<->DPE<->Ethernet Interconnect
 //==========================================================================
    dpe_if from_cpu   (.clk(sys_clk), .rst(sys_rst));
    dpe_if from_eth_1 (.clk(sys_clk), .rst(sys_rst));
@@ -122,35 +145,79 @@ module top #(
    dpe_if to_eth_4   (.clk(sys_clk), .rst(sys_rst));
    csr_pkg::csr__in_t  to_csr;
    csr_pkg::csr__out_t from_csr;
+ 
+//=================================
+// CPU Subsystem
+//=================================
+   localparam NUM_WORDS_IMEM = 8192; //=> 32kB InstructionRAM
+   localparam NUM_WORDS_DMEM = 8192; //=> 32kB DataRAM
 
-//==========================================================================
-// CSR
-//==========================================================================
-   csr csr_inst (
-      .clk(sys_clk),
-      .rst(sys_rst),
+   soc_if bus_cpu   (.arst_n(~sys_rst), .clk(sys_clk));
+   soc_if bus_adc   (.arst_n(~sys_rst), .clk(sys_clk));
+   soc_if bus_dmem  (.arst_n(~sys_rst), .clk(sys_clk));
+   soc_if bus_csr   (.arst_n(~sys_rst), .clk(sys_clk));
+   soc_if bus_sdram (.arst_n(~sys_rst), .clk(sys_clk));
 
-      .s_cpuif_req(0),
-      .s_cpuif_req_is_wr(0),
-      .s_cpuif_addr('0),
-      .s_cpuif_wr_data('0),
-      .s_cpuif_wr_biten('0),
-      .s_cpuif_req_stall_wr(),
-      .s_cpuif_req_stall_rd(),
-      .s_cpuif_rd_ack(),
-      .s_cpuif_rd_err(),
-      .s_cpuif_rd_data(),
-      .s_cpuif_wr_ack(),
-      .s_cpuif_wr_err(),
+   csr_if csr ();
 
+   logic        imem_we;
+   logic [31:2] imem_waddr;
+   logic [31:0] imem_wdat;
+
+//---------------------------------   
+   soc_cpu #(
+      .ADDR_RESET     (32'h 0000_0000),
+      .NUM_WORDS_IMEM (NUM_WORDS_IMEM)
+   ) 
+   u_cpu (
+      .bus        (bus_cpu),    //MST
+
+      .imem_we    (imem_we),    //-\ access point for 
+      .imem_waddr (imem_waddr), // | reloading CPU 
+      .imem_wdat  (imem_wdat)   //-/ program memory 
+   ); 
+
+//---------------------------------
+   soc_fabric u_fabric (
+      .cpu   (bus_cpu),  //SLV
+      .adc   (bus_adc),  //SLV - TODO: Remove ADC infra
+
+      .dmem  (bus_dmem), //MST
+      .csr   (bus_csr),  //MST
+      .sdram (bus_sdram) //MST - TODO: Remove SDRAM infra
+   );
+
+//---------------------------------
+   soc_ram #(.NUM_WORDS(NUM_WORDS_DMEM)) u_dmem (
+      .bus (bus_dmem)    //SLV
+   );
+
+//---------------------------------
+   soc_csr u_soc_csr (
+      .bus(bus_csr),     //SLV
       .hwif_in(to_csr),
       .hwif_out(from_csr)
-    );
-   
-//==========================================================================
-// CPU FIFOs
-//==========================================================================
-   cpu_fifo cpu_fifo_inst (
+   );
+                   
+//---------------------------------
+   uart u_uart (
+      .arst_n     (~sys_rst),   //i 
+      .clk        (sys_clk),     //i 
+      .tick_1us   (tick_1us),   //i 
+                               
+      .uart_rx    (uart_rx),    //i 
+      .uart_tx    (uart_tx),    //o
+                               
+      .csr        (csr),        //SLV_UART - TODO: Implementation of UART registers inside PeakRDL-generated CSR
+
+   // IMEM Write port, for live updates of CPU program
+      .imem_we    (imem_we),    //o
+      .imem_waddr (imem_waddr), //o[31:2]
+      .imem_wdat  (imem_wdat)   //o[31:0]
+   );
+
+//---------------------------------
+   cpu_fifo u_cpu_fifo (
       .to_cpu(to_cpu),
       .from_cpu(from_cpu),
       .from_csr(from_csr),
@@ -160,7 +227,7 @@ module top #(
 //==========================================================================
 // DPE
 //==========================================================================  
-   dpe dpe_inst (
+   dpe u_dpe (
       .pause(0),
       .is_idle(),
       .from_cpu(from_cpu),
@@ -178,7 +245,8 @@ module top #(
 //==========================================================================
 // ILA
 //==========================================================================
-   ila_0 ila_0_inst (
+`ifdef VIVADO_GUI_BUILD
+   ila_0 u_ila_0 (
       .clk(sys_clk),
       .probe0(from_eth_1.tdata),
       .probe1(from_eth_1.tkeep),
@@ -193,13 +261,14 @@ module top #(
       .probe10(to_eth_1.tlast),
       .probe11('0)
    );
+`endif
 
 //==========================================================================
 // Ethernet subsystems
 //==========================================================================
    ethernet_mac #(
       .TARGET(TARGET)
-   ) eth_1 (
+   ) u_eth_1 (
       .gtx_clk(eth_gtx_clk),
       .gtx_rst(eth_gtx_rst),
       .gmii_rx_clk(e1_rxc),
@@ -221,7 +290,7 @@ module top #(
 //--------------------------------------------------------------------------
    ethernet_mac #(
       .TARGET(TARGET)
-   ) eth_2 (
+   ) u_eth_2 (
       .gtx_clk(eth_gtx_clk),
       .gtx_rst(eth_gtx_rst),
       .gmii_rx_clk(e2_rxc),
@@ -241,7 +310,7 @@ module top #(
 //--------------------------------------------------------------------------    
    ethernet_mac #(
       .TARGET(TARGET)
-   ) eth_3 (
+   ) u_eth_3 (
       .gtx_clk(eth_gtx_clk),
       .gtx_rst(eth_gtx_rst),
       .gmii_rx_clk(e3_rxc),
@@ -261,7 +330,7 @@ module top #(
 //--------------------------------------------------------------------------
    ethernet_mac #(
       .TARGET(TARGET)
-   ) eth_4 (
+   ) u_eth_4 (
       .gtx_clk(eth_gtx_clk),
       .gtx_rst(eth_gtx_rst),
       .gmii_rx_clk(e4_rxc),
@@ -279,7 +348,7 @@ module top #(
    );
  
  //--------------------------------------------------------------------------
-   ethernet_phy phy (
+   ethernet_phy u_phy (
       .e1_reset(e1_reset),
       .e1_mdc(e1_mdc),
       .e1_mdio(e1_mdio),

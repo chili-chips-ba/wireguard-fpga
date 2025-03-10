@@ -20,7 +20,7 @@
 //    variables are in RAM, they cost less than FPGA flip-flops and LUTs.
 //==========================================================================
 
-package csr_pkg;
+package old_csr_pkg;
  //import soc_pkg::clog2;
    
 //-----------------------------------------------------------
@@ -251,7 +251,7 @@ package csr_pkg;
       logic misc;
    } sel_t;
 
-endpackage: csr_pkg
+endpackage: old_csr_pkg
 
 /*
 -----------------------------------------------------------------------------

@@ -26,7 +26,7 @@ package soc_pkg;
 // Timebase Generator
 //--------------------------------------
 // Clock period in full pico-seconds. Round down to the nearest integer
-   localparam PERIOD_PS = 18_518; // 54 MHz clock
+   localparam PERIOD_PS = 8_000; // 80 MHz clock
                                       
 // number of clocks needed for 1usec period (-1 because we count from 0)
    localparam NUM_1US_CLKS  = (1_000_000 / PERIOD_PS) - 1; 

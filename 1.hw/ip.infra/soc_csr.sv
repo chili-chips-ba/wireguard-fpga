@@ -11,20 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   CSR (aka GPIO) block for our SOC bus. Standardized template, then 
-//   customized to each particular SOC design. 
-//
-//   This is the CSR register block. While it does not need to be so, for
-//   simplicity, we try to keep only one CSR block for the entire SOC.
-//
-//   Our CSR accepts any-size writes: Byte, HalfWord, FullWord, treating
-//   them all as the full 32-bit access. That greatly simplifies register 
-//   operations. With it, any variety of Store instruction that the compiler
-//   may put to use will still work. Similarly, this allows free register 
-//   layout, which now does not need to be aligned with any byte boundaries 
-//   within 32-bit word.
-//
-//   The reads are always full 32-bit access anyway.
+//   CSR wrapper for PeakRDL-generated CSR
 //==========================================================================
 
 module soc_csr 
@@ -35,8 +22,34 @@ module soc_csr
    csr_pkg::csr__in_t  hwif_in,
    csr_pkg::csr__out_t hwif_out
 );
+   logic cpuif_req_stall_wr;
+   logic cpuif_req_stall_rd;
+   logic cpuif_rd_ack;
+   logic cpuif_wr_ack;
    
+   assign bus.rdy = (!cpuif_req_stall_wr & cpuif_wr_ack) | (!cpuif_req_stall_rd & cpuif_rd_ack);
+   
+   csr csr_inst (
+      .clk(bus.clk),
+      .rst(~bus.arst_n),
 
+      .s_cpuif_req(bus.vld),
+      .s_cpuif_req_is_wr(|bus.we),
+      .s_cpuif_addr({bus.addr[5:2],2'b00}),
+      .s_cpuif_wr_data(bus.wdat),
+      .s_cpuif_wr_biten(bus.we),
+      .s_cpuif_req_stall_wr(cpuif_req_stall_wr),
+      .s_cpuif_req_stall_rd(cpuif_req_stall_rd),
+      .s_cpuif_rd_ack(cpuif_rd_ack),
+      .s_cpuif_rd_err(),
+      .s_cpuif_rd_data(bus.rdat),
+      .s_cpuif_wr_ack(cpuif_wr_ack),
+      .s_cpuif_wr_err(),
+
+      .hwif_in(hwif_in),
+      .hwif_out(hwif_out)
+   );
+   
 //=========================================
 // Sim-only
 //=========================================
@@ -45,11 +58,11 @@ module soc_csr
 
    always @(posedge bus.clk) begin
       if ({bus.vld, bus.rdy} == 2'b11) begin
-         if (write == 1) begin  
+         if (|bus.we == 1) begin  
             $display("%t %m WRITE [%08x]<=%08x", $time, 
                      {bus.addr, 2'd0}, bus.wdat);
          end
-         if (read == 1) begin  
+         if (|bus.we == 0) begin  
             $display("%t %m READ [%08x]=>%08x", $time, 
                      {bus.addr, 2'd0}, bus.rdat);
          end

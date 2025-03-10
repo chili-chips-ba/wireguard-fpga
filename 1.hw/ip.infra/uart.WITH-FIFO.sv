@@ -47,7 +47,7 @@ module uart (
    output logic [31:2] imem_waddr,
    output logic [31:0] imem_wdat
 );
-
+   
 //--------------------------------------
 // Common
 //--------------------------------------
