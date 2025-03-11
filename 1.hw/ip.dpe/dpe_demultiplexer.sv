@@ -54,8 +54,8 @@ module dpe_demultiplexer (
          to_cpu_sbuff.tdata = '0;
          to_cpu_sbuff.tkeep = '0;
          to_cpu_sbuff.tlast = '0;
-         to_cpu_sbuff.tuser_bypass_all = 0;
-         to_cpu_sbuff.tuser_bypass_stage = 0;
+         to_cpu_sbuff.tuser_bypass_all = 1'b0;
+         to_cpu_sbuff.tuser_bypass_stage = 1'b0;
          to_cpu_sbuff.tuser_src = '0;
          to_cpu_sbuff.tuser_dst = '0;
       end
@@ -73,8 +73,8 @@ module dpe_demultiplexer (
          to_eth_1_sbuff.tdata = '0;
          to_eth_1_sbuff.tkeep = '0;
          to_eth_1_sbuff.tlast = '0;
-         to_eth_1_sbuff.tuser_bypass_all = 0;
-         to_eth_1_sbuff.tuser_bypass_stage = 0;
+         to_eth_1_sbuff.tuser_bypass_all = 1'b0;
+         to_eth_1_sbuff.tuser_bypass_stage = 1'b0;
          to_eth_1_sbuff.tuser_src = '0;
          to_eth_1_sbuff.tuser_dst = '0;
       end
@@ -92,8 +92,8 @@ module dpe_demultiplexer (
          to_eth_2_sbuff.tdata = '0;
          to_eth_2_sbuff.tkeep = '0;
          to_eth_2_sbuff.tlast = '0;
-         to_eth_2_sbuff.tuser_bypass_all = 0;
-         to_eth_2_sbuff.tuser_bypass_stage = 0;
+         to_eth_2_sbuff.tuser_bypass_all = 1'b0;
+         to_eth_2_sbuff.tuser_bypass_stage = 1'b0;
          to_eth_2_sbuff.tuser_src = '0;
          to_eth_2_sbuff.tuser_dst = '0;
       end
@@ -111,8 +111,8 @@ module dpe_demultiplexer (
          to_eth_3_sbuff.tdata = '0;
          to_eth_3_sbuff.tkeep = '0;
          to_eth_3_sbuff.tlast = '0;
-         to_eth_3_sbuff.tuser_bypass_all = 0;
-         to_eth_3_sbuff.tuser_bypass_stage = 0;
+         to_eth_3_sbuff.tuser_bypass_all = 1'b0;
+         to_eth_3_sbuff.tuser_bypass_stage = 1'b0;
          to_eth_3_sbuff.tuser_src = '0;
          to_eth_3_sbuff.tuser_dst = '0;
       end
@@ -130,8 +130,8 @@ module dpe_demultiplexer (
          to_eth_4_sbuff.tdata = '0;
          to_eth_4_sbuff.tkeep = '0;
          to_eth_4_sbuff.tlast = '0;
-         to_eth_4_sbuff.tuser_bypass_all = 0;
-         to_eth_4_sbuff.tuser_bypass_stage = 0;
+         to_eth_4_sbuff.tuser_bypass_all = 1'b0;
+         to_eth_4_sbuff.tuser_bypass_stage = 1'b0;
          to_eth_4_sbuff.tuser_src = '0;
          to_eth_4_sbuff.tuser_dst = '0;
       end

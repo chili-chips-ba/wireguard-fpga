@@ -25,7 +25,7 @@ module tb;
     logic clk = 0;
     logic rst = 1;
     logic pause = 0;
-    logic is_idle;
+    //logic is_idle;
     
     // Interfaces
     dpe_if from_cpu(.clk(clk), .rst(rst));
@@ -52,12 +52,12 @@ module tb;
     };
     
     // Clock generation
-    always #(CLK_PERIOD/2) clk = ~clk;
+    always #(CLK_PERIOD/2) clk <= ~clk;
     
     // DUT instantiation
     dpe DUT (
         .pause(pause),
-        .is_idle(is_idle),
+        .is_idle(),
         .from_cpu(from_cpu),
         .from_eth_1(from_eth_1),
         .from_eth_2(from_eth_2),
@@ -292,43 +292,43 @@ module tb;
     always @(posedge clk) begin
         if (!rst) begin
             if (to_cpu.tvalid && to_cpu.tready) begin
-                expected_data_count0++;
+                expected_data_count0 <= expected_data_count0 + 1;
                 
                 if (to_cpu.tlast) begin
                     $display("Packet received with %0d words at port 0", expected_data_count0);
-                    expected_data_count0 = 0;
+                    expected_data_count0 <= 0;
                 end
             end
             if (to_eth_1.tvalid && to_eth_1.tready) begin
-                expected_data_count1++;
+                expected_data_count1 <= expected_data_count1 + 1;
                 
                 if (to_eth_1.tlast) begin
                     $display("Packet received with %0d words at port 1", expected_data_count1);
-                    expected_data_count1 = 0;
+                    expected_data_count1 <= 0;
                 end
             end
             if (to_eth_2.tvalid && to_eth_2.tready) begin
-                expected_data_count2++;
+                expected_data_count2 <= expected_data_count2 + 1;
                 
                 if (to_eth_2.tlast) begin
                     $display("Packet received with %0d words at port 2", expected_data_count2);
-                    expected_data_count2 = 0;
+                    expected_data_count2 <= 0;
                 end
             end
             if (to_eth_3.tvalid && to_eth_3.tready) begin
-                expected_data_count3++;
+                expected_data_count3 <= expected_data_count3 + 1;
                 
                 if (to_eth_3.tlast) begin
                     $display("Packet received with %0d words at port 3", expected_data_count3);
-                    expected_data_count3 = 0;
+                    expected_data_count3 <= 0;
                 end
             end
             if (to_eth_4.tvalid && to_eth_4.tready) begin
-                expected_data_count4++;
+                expected_data_count4 <= expected_data_count4 + 1;
                 
                 if (to_eth_4.tlast) begin
                     $display("Packet received with %0d words at port 4", expected_data_count4);
-                    expected_data_count4 = 0;
+                    expected_data_count4 <= 0;
                 end
             end
         end
