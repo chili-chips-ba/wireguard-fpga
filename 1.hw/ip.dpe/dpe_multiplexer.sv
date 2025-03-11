@@ -53,7 +53,7 @@ module dpe_multiplexer (
    always_comb begin
       next_state = state;
         
-      case (state)
+      unique case (state)
          IDLE: begin
             if (!pause) next_state = R0;
          end
@@ -126,28 +126,28 @@ module dpe_multiplexer (
 // Outputs logic
    always_comb begin
       // Default assignments
-      is_idle = 0;
-      to_dpe_sbuff.tvalid = 0;
+      is_idle = 1'b0;
+      to_dpe_sbuff.tvalid = 1'b0;
       to_dpe_sbuff.tdata = '0;
-      to_dpe_sbuff.tlast = 0;
+      to_dpe_sbuff.tlast = 1'b0;
       to_dpe_sbuff.tkeep = '0;
-      to_dpe_sbuff.tuser_bypass_all = 0;
-      to_dpe_sbuff.tuser_bypass_stage = 0;
+      to_dpe_sbuff.tuser_bypass_all = 1'b0;
+      to_dpe_sbuff.tuser_bypass_stage = 1'b0;
       to_dpe_sbuff.tuser_src = '0;
       to_dpe_sbuff.tuser_dst = '0;
-      from_cpu.tready = 0;
-      from_eth_1.tready = 0;
-      from_eth_2.tready = 0;
-      from_eth_3.tready = 0;
-      from_eth_4.tready = 0;
+      from_cpu.tready = 1'b0;
+      from_eth_1.tready = 1'b0;
+      from_eth_2.tready = 1'b0;
+      from_eth_3.tready = 1'b0;
+      from_eth_4.tready = 1'b0;
         
-      case (state)
+      unique case (state)
          IDLE: begin
             is_idle = !to_dpe.tvalid;
          end
             
          R0, S0: begin
-            is_idle = 0;
+            is_idle = 1'b0;
             to_dpe_sbuff.tvalid = from_cpu.tvalid;
             to_dpe_sbuff.tdata = from_cpu.tdata;
             to_dpe_sbuff.tlast = from_cpu.tlast;
@@ -160,7 +160,7 @@ module dpe_multiplexer (
          end
             
          R1, S1: begin
-            is_idle = 0;
+            is_idle = 1'b0;
             to_dpe_sbuff.tvalid = from_eth_1.tvalid;
             to_dpe_sbuff.tdata = from_eth_1.tdata;
             to_dpe_sbuff.tlast = from_eth_1.tlast;
@@ -173,7 +173,7 @@ module dpe_multiplexer (
          end
             
          R2, S2: begin
-            is_idle = 0;
+            is_idle = 1'b0;
             to_dpe_sbuff.tvalid = from_eth_2.tvalid;
             to_dpe_sbuff.tdata = from_eth_2.tdata;
             to_dpe_sbuff.tlast = from_eth_2.tlast;
@@ -186,7 +186,7 @@ module dpe_multiplexer (
          end
             
          R3, S3: begin
-            is_idle = 0;
+            is_idle = 1'b0;
             to_dpe_sbuff.tvalid = from_eth_3.tvalid;
             to_dpe_sbuff.tdata = from_eth_3.tdata;
             to_dpe_sbuff.tlast = from_eth_3.tlast;
@@ -199,7 +199,7 @@ module dpe_multiplexer (
          end
             
          R4, S4: begin
-            is_idle = 0;
+            is_idle = 1'b0;
             to_dpe_sbuff.tvalid = from_eth_4.tvalid;
             to_dpe_sbuff.tdata = from_eth_4.tdata;
             to_dpe_sbuff.tlast = from_eth_4.tlast;

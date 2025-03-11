@@ -20,14 +20,14 @@ module top #(
 ) (
    input        clk_p,        //board clock positive
    input        clk_n,        //board clock negative 
-   input        rst_n,        //reset ,low active
+   input        rst_n,        //reset, low active
    output [1:0] led,          //display network rate status
    
 // Ethernet 1
    output       e1_reset,     //phy reset
    output       e1_mdc,       //phy emdio clock
    inout        e1_mdio,      //phy emdio data
-   input	       e1_rxc,       //125Mhz ethernet gmii rx clock
+   input        e1_rxc,       //125Mhz ethernet gmii rx clock
    input        e1_rxdv,      //GMII recieving data valid
    input        e1_rxer,      //GMII recieving data error                    
    input  [7:0] e1_rxd,       //GMII recieving data          
@@ -41,7 +41,7 @@ module top #(
    output       e2_reset,     //phy reset
    output       e2_mdc,       //phy emdio clock
    inout        e2_mdio,      //phy emdio data
-   input	       e2_rxc,       //125Mhz ethernet gmii rx clock
+   input        e2_rxc,       //125Mhz ethernet gmii rx clock
    input        e2_rxdv,      //GMII recieving data valid
    input        e2_rxer,      //GMII recieving data error                    
    input  [7:0] e2_rxd,       //GMII recieving data          
@@ -55,7 +55,7 @@ module top #(
    output       e3_reset,     //phy reset
    output       e3_mdc,       //phy emdio clock
    inout        e3_mdio,      //phy emdio data
-   input	       e3_rxc,       //125Mhz ethernet gmii rx clock
+   input        e3_rxc,       //125Mhz ethernet gmii rx clock
    input        e3_rxdv,      //GMII recieving data valid
    input        e3_rxer,      //GMII recieving data error                    
    input  [7:0] e3_rxd,       //GMII recieving data          
@@ -69,7 +69,7 @@ module top #(
    output       e4_reset,     //phy reset
    output       e4_mdc,       //phy emdio clock
    inout        e4_mdio,      //phy emdio data
-   input	       e4_rxc,       //125Mhz ethernet gmii rx clock
+   input        e4_rxc,       //125Mhz ethernet gmii rx clock
    input        e4_rxdv,      //GMII recieving data valid
    input        e4_rxer,      //GMII recieving data error                    
    input  [7:0] e4_rxd,       //GMII recieving data
@@ -202,7 +202,7 @@ module top #(
 //---------------------------------
    uart u_uart (
       .arst_n     (~sys_rst),   //i 
-      .clk        (sys_clk),     //i 
+      .clk        (sys_clk),    //i 
       .tick_1us   (tick_1us),   //i 
                                
       .uart_rx    (uart_rx),    //i 

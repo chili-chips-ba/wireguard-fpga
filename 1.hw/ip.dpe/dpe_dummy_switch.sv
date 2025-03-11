@@ -61,10 +61,10 @@ module dpe_dummy_switch (
       outp_sbuff.tkeep = inp.tkeep;
       outp_sbuff.tlast = inp.tlast;
       outp_sbuff.tuser_bypass_all = inp.tuser_bypass_all;
-      outp_sbuff.tuser_bypass_stage = 0;
+      outp_sbuff.tuser_bypass_stage = 1'b0;
       outp_sbuff.tuser_src = inp.tuser_src;
-      if (inp.tuser_bypass_all == 0 && inp.tuser_bypass_stage == 0) begin
-         case (inp.tuser_src)
+      if (inp.tuser_bypass_all == 1'b0 && inp.tuser_bypass_stage == 1'b0) begin
+         unique case (inp.tuser_src)
             DPE_ADDR_CPU: begin
                outp_sbuff.tuser_dst = DPE_ADDR_ETH_1;
             end

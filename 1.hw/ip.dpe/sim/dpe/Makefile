@@ -24,6 +24,8 @@ clean:
 
 compile:
 	verilator \
+                -Wall \
+                -Wno-PINCONNECTEMPTY \
 		--cc \
 		--timing \
 		--trace-fst \
