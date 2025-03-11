@@ -48,11 +48,11 @@ ${HW_SRC}/ip.cpu/soc_cpu.PICORV32.sv
 
 #---PeakRDL-generated CSR + SOC CSR wrapper
 ${HW_SRC}/csr.peakrdl/csr_pkg.sv
-${HW_SRC}/csr.peakrdl/csr_if.sv
+${HW_SRC}/csr.peakrdl/csr.sv
 ${HW_SRC}/ip.infra/soc_csr.sv
 
 #---old CSR
-${HW_SRC}/ip.csr/csr_pkg.sv
+${HW_SRC}/ip.csr/old_csr_pkg.sv
 ${HW_SRC}/ip.csr/csr_if.sv
 #${HW_SRC}/ip.csr/soc_csr.sv
 

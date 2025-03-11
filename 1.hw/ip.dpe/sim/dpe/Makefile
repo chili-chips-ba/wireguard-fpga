@@ -3,8 +3,8 @@
 #=============================================================
 SHELL   := /bin/bash
 
-BLD_DIR := $(CURDIR)/build
-HW_SRC	:= $(CURDIR)/../../.
+BLD_DIR := $(CURDIR)/../../../../3.build
+HW_SRC	:= $(CURDIR)/../../../.
 TB_NAME := tb
 
 ARE_TESTS := 
@@ -26,6 +26,7 @@ compile:
 	verilator \
                 -Wall \
                 -Wno-PINCONNECTEMPTY \
+                -Wno-UNUSEDPARAM \
 		--cc \
 		--timing \
 		--trace-fst \
