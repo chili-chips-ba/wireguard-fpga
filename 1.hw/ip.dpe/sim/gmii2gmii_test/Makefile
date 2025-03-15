@@ -1,10 +1,10 @@
 #=============================================================
-# Copyright (C) 2024 Chili.CHIPS*ba
+# Copyright (C) 2024-2025 Chili.CHIPS*ba
 #=============================================================
 SHELL   := /bin/bash
 
-BLD_DIR := $(CURDIR)/build
-HW_SRC	:= $(CURDIR)/../../.
+BLD_DIR := $(CURDIR)/../../../../3.build
+HW_SRC  := $(CURDIR)/../../../.
 TB_NAME := tb
 
 ARE_TESTS := 
@@ -23,19 +23,16 @@ clean:
 	rm -rf output
 
 compile:
-	#verilator \
-	   # -Wno-lint \
-		#-Wno-SELRANGE \
-		#-Wno-MULTIDRIVEN \
-   verilator \
-      -Wall \
-      -Wno-PINCONNECTEMPTY \
+	verilator \
+		-Wall \
+		-Wno-PINCONNECTEMPTY \
+		-Wno-UNUSEDPARAM \
 		--cc \
 		--timing \
 		--trace-fst \
 		--trace-structs \
 		--timescale-override 1ps/1ps \
-                --exe versimSV.cpp \
+		--exe versimSV.cpp \
 		--Mdir ./output \
 		+define+SIM_ONLY \
 		$(ARE_TESTS) \
@@ -84,3 +81,4 @@ rtlbrowse: xml2stems
 #=============================================================
 # End-of-File
 #=============================================================
+

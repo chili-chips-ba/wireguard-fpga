@@ -277,15 +277,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../1.hw/fpgatech_lib/XILINX/fpga_plls.sv">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../../1.hw/fpgatech_lib/XILINX/fpga_plls.sv"/>
-          <Attr Name="ImportTime" Val="1739264299"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../1.hw/ip.infra/ethernet_mac.sv">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../../1.hw/ip.infra/ethernet_mac.sv"/>
@@ -455,7 +446,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../1.hw/ip.infra/uart.WITH-FIFO.sv">
+      <File Path="$PPRDIR/../../1.hw/ip.infra/uart.sv">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -483,7 +474,28 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../1.hw/ip.csr/csr_pkg.sv">
+      <File Path="$PPRDIR/../../1.hw/ip.infra/clk_rst_gen.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../1.hw/fpgatech_lib/XILINX/fpga_pll_125M.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../1.hw/fpgatech_lib/XILINX/fpga_pll_80M.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../1.hw/ip.csr/old_csr_pkg.sv">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>

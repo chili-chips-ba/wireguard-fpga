@@ -3,7 +3,8 @@
 #==========================================================================
 
 #---Target-specific components
-${HW_SRC}/fpgatech_lib/XILINX/fpga_plls.sv
+${HW_SRC}/fpgatech_lib/XILINX/fpga_pll_80M.sv
+${HW_SRC}/fpgatech_lib/XILINX/fpga_pll_125M.sv
 
 #---External AXIS library
 ${HW_SRC}/external_lib/axis/axis_register.v
@@ -31,8 +32,8 @@ ${HW_SRC}/ip.infra/soc_if.sv
 ${HW_SRC}/ip.infra/soc_ram.sv
 ${HW_SRC}/ip.infra/soc_fabric.sv
 
-#${HW_SRC}/ip.infra/clk_rst_gen.sv
-${HW_SRC}/ip.infra/uart.WITH-FIFO.sv
+${HW_SRC}/ip.infra/clk_rst_gen.sv
+${HW_SRC}/ip.infra/uart.sv
 #${HW_SRC}/ip.infra/debounce.sv
 ${HW_SRC}/ip.infra/sync_fifo_ram.sv
 #${HW_SRC}/ip.infra/sync_fifo_srl.sv

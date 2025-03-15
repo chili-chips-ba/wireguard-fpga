@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024 Chili.CHIPS*ba
+// Copyright (C) 2024-2025 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -11,67 +11,77 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   Clock and reset generation. It includes standard and SOC-specific elements.
-//   Customized for Sipeed TangNano20K board and Elreg nextgen Sonar+Doppler
+//   Clock and reset generation
 //==========================================================================
 
 module clk_rst_gen 
-   import soc_pkg::*;
 (
-   input  logic        clk_27,    // 27MHz clock oscillator on TangNano20K
-   input  logic [2:0]  clk_fpll,  // clock from onboard FractionalPLL (MS5351)
-   input  logic        force_rst, // 1 to forcible reset everything 
-                        
-   output logic        clk_54,    // clk_27 x 2
-   output logic        srst54_n,  // reset synchronized to clk_54
-
-   output logic        strobe_27, // 27Mhz strobe for clk_54
-   output logic        tick_1us   // pulse1 tick every 1us
+   input  clk_p,
+   input  clk_n,
+   input  rst_n,
+   output sys_clk,
+   output sys_rst,
+   output eth_gtx_clk,
+   output eth_gtx_rst
 );
 
-   fpga_pll u_pll (
-      .clk_27    (clk_27),       //i
-      .force_rst (force_rst),    //i            
-
-      .srst_n    (srst54_n),     //o
-      .clk_54    (clk_54),       //o
-      .clk_108   ()              //o
+//==========================================================================
+// Generate single end clock from differential input clock
+//==========================================================================
+   wire clk; 
+   
+   IBUFGDS sys_clk_ibufgds
+   (
+      .O(clk),
+      .I(clk_p),
+      .IB(clk_n)
    );
+    
+//==========================================================================
+// PLL for system clock domain
+//==========================================================================
+   wire sys_pll_locked;
+   wire sys_pll_clk;
+   
+   fpga_pll_80M u_sys_pll (
+      .clk(clk),
+      .rst_n(rst_n),
+      .sys_pll_clk(sys_pll_clk),
+      .sys_pll_locked(sys_pll_locked)
+   );
+   
+   sync_reset #(
+      .N(4)
+   ) sys_sync_reset_inst (
+      .clk(sys_pll_clk),
+      .rst(~sys_pll_locked),
+      .out(sys_rst)
+   );
+   
+   assign sys_clk = sys_pll_clk;
 
-
-//-----------------------------------------------------
-// Clock strobes, markers and ticks
-//-----------------------------------------------------
-   cnt_1us_t  cnt_1us;
-
-   always_ff @(negedge srst54_n or posedge clk_54) begin
-      if (srst54_n == 1'b0) begin
-         strobe_27 <= 1'b0;
-
-         tick_1us  <= 1'b0;
-         cnt_1us   <= '0;
-      end
-      else begin
-         strobe_27 <= ~strobe_27;
-
-         // number of clocks for 1us time-tick pulse depends 
-         //   on board, i.e. the period of available clocks
-         tick_1us  <= (cnt_1us == cnt_1us_t'(NUM_1US_CLKS-1));
-
-         if (tick_1us == 1'b1) begin
-            cnt_1us <= '0;
-         end         
-         else begin
-            cnt_1us <= cnt_1us_t'(cnt_1us + cnt_1us_t'(1));
-         end
-      end
-   end
+//==========================================================================
+// PLL for Ethernet clock domain
+//==========================================================================
+   wire eth_pll_locked;
+   wire eth_pll_clk;
+   
+   fpga_pll_125M u_eth_pll (
+      .clk(clk),
+      .rst_n(rst_n),
+      .eth_pll_clk(eth_pll_clk),
+      .eth_pll_locked(eth_pll_locked)
+   );
+   
+   sync_reset #(
+      .N(4)
+   ) eth_sync_reset_inst (
+      .clk(eth_pll_clk),
+      .rst(~eth_pll_locked),
+      .out(eth_gtx_rst)
+   );
+   
+   assign eth_gtx_clk = eth_pll_clk;
    
 endmodule: clk_rst_gen
 
-/*
------------------------------------------------------------------------------
-Version History:
------------------------------------------------------------------------------
- 2024/4/7 JI: initial creation    
-*/
