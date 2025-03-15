@@ -98,7 +98,7 @@ module top #(
    logic        eth_gtx_clk;
    logic        eth_gtx_rst;
    
-   fpga_plls u_fpga_plls (
+   clk_rst_gen u_clk_rst_gen (
       .clk_p(clk_p),
       .clk_n(clk_n),
       .rst_n(rst_n),
@@ -107,28 +107,6 @@ module top #(
       .eth_gtx_clk(eth_gtx_clk),
       .eth_gtx_rst(eth_gtx_rst)
    );
-   
-   logic        tick_1us;
-   cnt_1us_t    cnt_1us;
-
-   always_ff @(posedge sys_rst or posedge sys_clk) begin
-      if (sys_rst == 1'b1) begin
-         tick_1us  <= 1'b0;
-         cnt_1us   <= '0;
-      end
-      else begin
-         // number of clocks for 1us time-tick pulse depends 
-         //   on board, i.e. the period of available clocks
-         tick_1us  <= (cnt_1us == cnt_1us_t'(NUM_1US_CLKS-1));
-
-         if (tick_1us == 1'b1) begin
-            cnt_1us <= '0;
-         end         
-         else begin
-            cnt_1us <= cnt_1us_t'(cnt_1us + cnt_1us_t'(1));
-         end
-      end
-   end
 
 //==========================================================================
 // CPU<->DPE<->Ethernet Interconnect
@@ -168,8 +146,7 @@ module top #(
    soc_cpu #(
       .ADDR_RESET     (32'h 0000_0000),
       .NUM_WORDS_IMEM (NUM_WORDS_IMEM)
-   ) 
-   u_cpu (
+   ) u_cpu (
       .bus        (bus_cpu),    //MST
 
       .imem_we    (imem_we),    //-\ access point for 
@@ -203,7 +180,6 @@ module top #(
    uart u_uart (
       .arst_n     (~sys_rst),   //i 
       .clk        (sys_clk),    //i 
-      .tick_1us   (tick_1us),   //i 
                                
       .uart_rx    (uart_rx),    //i 
       .uart_tx    (uart_tx),    //o
