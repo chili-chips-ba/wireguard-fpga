@@ -4,7 +4,7 @@
  */
 
 #include "chacha20.h"
-#include <string.h>
+#include "string_bare.h"
 
 // Function to rotate left
 static inline uint32_t rotate_left(uint32_t x, uint32_t n)

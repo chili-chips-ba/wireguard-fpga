@@ -6,7 +6,7 @@ LDFLAGS =
 OBJDUMP = objdump  # Use objdump to generate hex files
 BUILD_DIR = build_output
 
-SRCS = main.c chacha20.c poly1305.c chacha20poly1305.c
+SRCS = main.c chacha20.c poly1305.c chacha20poly1305.c string_bare.c
 OBJS = $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRCS))
 HEX_FILES = $(patsubst %.o, %.hex, $(OBJS))
 

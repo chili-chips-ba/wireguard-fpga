@@ -1,0 +1,86 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x0000000000100000 0x0000000000400000 xr
+RAM              0x0000000000000000 0x0000000000008000 xrw
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+
+.text           0x0000000000100000      0x2a0
+                0x0000000000100000                . = ALIGN (0x4)
+ *(.text)
+ .text          0x0000000000100000       0xd4 /tmp/ccBrfmSx.o
+ .text          0x00000000001000d4       0x98 /tmp/ccjl4zmO.o
+                0x00000000001000d4                delay
+                0x0000000000100118                main
+ .text          0x000000000010016c      0x120 /tmp/ccbFHGep.o
+                0x000000000010016c                putchar
+                0x00000000001001bc                print
+                0x0000000000100210                print_hex
+ *(.text*)
+ *(.rodata)
+ .rodata        0x000000000010028c       0x11 /tmp/ccbFHGep.o
+ *(.rodata*)
+ *(.srodata)
+ *(.srodata*)
+                0x00000000001002a0                . = ALIGN (0x4)
+ *fill*         0x000000000010029d        0x3 
+                0x00000000001002a0                _etext = .
+                0x00000000001002a0                _sidata = _etext
+
+.rela.dyn       0x00000000001002a0        0x0
+ .rela.text     0x00000000001002a0        0x0 /tmp/ccBrfmSx.o
+
+.data           0x0000000000000000        0x0 load address 0x00000000001002a0
+                0x0000000000000000                . = ALIGN (0x4)
+                0x0000000000000000                _sdata = .
+                0x0000000000000000                _ram_start = .
+                0x0000000000000000                . = ALIGN (0x4)
+ *(.data)
+ .data          0x0000000000000000        0x0 /tmp/ccBrfmSx.o
+ .data          0x0000000000000000        0x0 /tmp/ccjl4zmO.o
+ .data          0x0000000000000000        0x0 /tmp/ccbFHGep.o
+ *(.data*)
+ *(.sdata)
+ *(.sdata*)
+                0x0000000000000000                . = ALIGN (0x4)
+                0x0000000000000000                _edata = .
+
+.bss            0x0000000000000000        0x0 load address 0x00000000001002a0
+                0x0000000000000000                . = ALIGN (0x4)
+                0x0000000000000000                _sbss = .
+ *(.bss)
+ .bss           0x0000000000000000        0x0 /tmp/ccBrfmSx.o
+ .bss           0x0000000000000000        0x0 /tmp/ccjl4zmO.o
+ .bss           0x0000000000000000        0x0 /tmp/ccbFHGep.o
+ *(.bss*)
+ *(.sbss)
+ *(.sbss*)
+ *(COMMON)
+                0x0000000000000000                . = ALIGN (0x4)
+                0x0000000000000000                _ebss = .
+
+.heap           0x0000000000000000        0x0
+                0x0000000000000000                . = ALIGN (0x4)
+                0x0000000000000000                _heap_start = .
+LOAD /tmp/ccBrfmSx.o
+LOAD /tmp/ccjl4zmO.o
+LOAD /tmp/ccbFHGep.o
+OUTPUT(/home/harun/demo-projects-main/openXC7-TetriSaraj-Private/2.sw/main.elf elf32-littleriscv)
+
+.riscv.attributes
+                0x0000000000000000       0x21
+ .riscv.attributes
+                0x0000000000000000       0x1f /tmp/ccBrfmSx.o
+ .riscv.attributes
+                0x000000000000001f       0x21 /tmp/ccjl4zmO.o
+ .riscv.attributes
+                0x0000000000000040       0x21 /tmp/ccbFHGep.o
+
+.comment        0x0000000000000000        0xf
+ .comment       0x0000000000000000        0xf /tmp/ccjl4zmO.o
+                                         0x10 (size before relaxing)
+ .comment       0x000000000000000f       0x10 /tmp/ccbFHGep.o
