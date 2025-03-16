@@ -174,7 +174,7 @@ module top #(
                    
 //---------------------------------
    uart u_uart (
-      .arst_n     (sys_rst_n),   //i 
+      .arst_n     (sys_rst_n),  //i 
       .clk        (sys_clk),    //i 
                                
       .uart_rx    (uart_rx),    //i 
