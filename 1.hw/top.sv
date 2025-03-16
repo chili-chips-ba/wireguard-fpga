@@ -131,10 +131,8 @@ module top #(
    localparam NUM_WORDS_DMEM = 8192; //=> 32kB DataRAM
 
    soc_if bus_cpu   (.arst_n(~sys_rst), .clk(sys_clk));
-   soc_if bus_adc   (.arst_n(~sys_rst), .clk(sys_clk));
    soc_if bus_dmem  (.arst_n(~sys_rst), .clk(sys_clk));
    soc_if bus_csr   (.arst_n(~sys_rst), .clk(sys_clk));
-   soc_if bus_sdram (.arst_n(~sys_rst), .clk(sys_clk));
 
    csr_if csr ();
 
@@ -157,11 +155,9 @@ module top #(
 //---------------------------------
    soc_fabric u_fabric (
       .cpu   (bus_cpu),  //SLV
-      .adc   (bus_adc),  //SLV - TODO: Remove ADC infra
 
       .dmem  (bus_dmem), //MST
-      .csr   (bus_csr),  //MST
-      .sdram (bus_sdram) //MST - TODO: Remove SDRAM infra
+      .csr   (bus_csr)   //MST
    );
 
 //---------------------------------
@@ -323,7 +319,7 @@ module top #(
       .tx_fifo(to_eth_4)
    );
  
- //--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
    ethernet_phy u_phy (
       .e1_reset(e1_reset),
       .e1_mdc(e1_mdc),
