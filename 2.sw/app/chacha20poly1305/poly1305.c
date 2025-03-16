@@ -4,7 +4,7 @@
  */
 
 #include "poly1305.h"
-#include <string.h>
+#include "string_bare.h"
 
 #define BLOCK_SIZE 16
 

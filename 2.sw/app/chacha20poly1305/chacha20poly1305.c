@@ -6,7 +6,7 @@
 #include "chacha20poly1305.h"
 #include "chacha20.h"
 #include "poly1305.h"
-#include <string.h>
+#include "string_bare.h"
 #include <stdlib.h>
 
 // Helper function to encode a 64-bit value in little-endian format
