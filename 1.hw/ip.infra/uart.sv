@@ -32,19 +32,22 @@
 //  This module also houses the FSM for loading new CPU program via Rx UART.
 //==========================================================================
 
-module uart (
-   input  logic    arst_n,
-   input  logic    clk,
+module uart 
+   import csr_pkg::*;
+(
+   input  logic               arst_n,
+   input  logic               clk,
                     
-   input  logic    uart_rx,
-   output logic    uart_tx,
+   input  logic               uart_rx,
+   output logic               uart_tx,
                   
-   csr_if.SLV_UART csr,
+   input  csr_pkg::csr__out_t from_csr,
+   output csr_pkg::csr__in_t  to_csr,
 
 // IMEM Write port, for live updates of CPU program
-   output logic        imem_we,
-   output logic [31:2] imem_waddr,
-   output logic [31:0] imem_wdat
+   output logic               imem_we,
+   output logic [31:2]        imem_waddr,
+   output logic [31:0]        imem_wdat
 );
    import soc_pkg::*;
 //--------------------------------------
@@ -72,6 +75,27 @@ module uart (
 
    typedef logic [3:0] cnt1us_t;
 
+   logic       tick_1us;
+   cnt_1us_t   cnt_1us;
+
+   always_ff @(negedge arst_n or posedge clk) begin
+      if (arst_n == 1'b0) begin
+         tick_1us  <= 1'b0;
+         cnt_1us   <= '0;
+      end
+      else begin
+         // number of clocks for 1us time-tick pulse depends 
+         //   on board, i.e. the period of available clocks
+         tick_1us  <= (cnt_1us == cnt_1us_t'(NUM_1US_CLKS-1));
+
+         if (tick_1us == 1'b1) begin
+            cnt_1us <= '0;
+         end         
+         else begin
+            cnt_1us <= cnt_1us_t'(cnt_1us + cnt_1us_t'(1));
+         end
+      end
+   end
    
 //--------------------------------------
 // Rx
@@ -137,34 +161,12 @@ module uart (
    logic       rx_fifo_we, rx_fifo_full, rx_oflow;
    logic       rx_fifo_empty;
    
-   logic       tick_1us;
-   cnt_1us_t   cnt_1us;
-
-   always_ff @(negedge arst_n or posedge clk) begin
-      if (arst_n == 1'b0) begin
-         tick_1us  <= 1'b0;
-         cnt_1us   <= '0;
-      end
-      else begin
-         // number of clocks for 1us time-tick pulse depends 
-         //   on board, i.e. the period of available clocks
-         tick_1us  <= (cnt_1us == cnt_1us_t'(NUM_1US_CLKS-1));
-
-         if (tick_1us == 1'b1) begin
-            cnt_1us <= '0;
-         end         
-         else begin
-            cnt_1us <= cnt_1us_t'(cnt_1us + cnt_1us_t'(1));
-         end
-      end
-   end
-   
    always_comb begin
       rx_cnt1us_is0     = (rx_cnt1us == '0);
       rx_nextbit        = tick_1us & rx_cnt1us_is0;
 
-      csr.uart_rx.oflow = rx_oflow;
-      csr.uart_rx.valid = ~rx_fifo_empty;
+      to_csr.uart.rx.oflow.next = rx_oflow;
+      to_csr.uart.rx.valid.next = ~rx_fifo_empty;
 
       rx_fifo_we        = rx_nextbit & (rx_state == STOP);
    end
@@ -190,7 +192,7 @@ module uart (
          end
         // SW Clear-on-Read is async to UART traffic 
         //  and with lower priority to HW Set
-         else if (csr.uart_rx_read == 1'b1) begin
+         else if (from_csr.uart.rx_trigger.read.value == 1'b1) begin
             rx_oflow <= 1'b0;
          end
 
@@ -278,14 +280,14 @@ module uart (
                   
       .din       (rx_shift),
       .we        (rx_fifo_we),  
-      .re        (csr.uart_rx_read), // FIFO internal logic prevents underflow
+      .re        (from_csr.uart.rx_trigger.read.value), // FIFO internal logic prevents underflow
                   
      // Outputs   
       .dcount    (),
       .empty     (rx_fifo_empty),
       .full      (rx_fifo_full),
                   
-      .dout_comb (csr.uart_rx.data), 
+      .dout_comb (to_csr.uart.rx.data.next), 
                   // fall-through: Data is available w/o read
 
       .dout      ()
@@ -449,14 +451,14 @@ module uart (
       .arst_n    (arst_n),
       .clk       (clk), 
                   
-      .din       (csr.uart_tx_data),
-      .we        (csr.uart_tx_write),
+      .din       (from_csr.uart.tx.data.value),
+      .we        (from_csr.uart.tx_trigger.write.value),
       .re        (tx_fifo_re),
                   
      // Outputs   
       .dcount    (),
       .empty     (tx_fifo_empty),
-      .full      (csr.uart_tx_busy), // SW write is ignored when FIFO is full
+      .full      (to_csr.uart.tx.busy.next), // SW write is ignored when FIFO is full
                   
       .dout_comb (tx_data), 
                   // fall-through: Data is available w/o read

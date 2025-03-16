@@ -1,3 +1,4 @@
+rm -rf output
 mkdir output
 mkdir output/sw
 peakrdl regblock wireguard.rdl -o output/hw/ --cpuif passthrough --top csr

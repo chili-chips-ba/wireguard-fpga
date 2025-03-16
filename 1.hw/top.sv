@@ -95,6 +95,7 @@ module top #(
    logic [1:0]  led_int;
    logic        sys_clk;
    logic        sys_rst;
+   logic        sys_rst_n;
    logic        eth_gtx_clk;
    logic        eth_gtx_rst;
    
@@ -104,6 +105,7 @@ module top #(
       .rst_n(rst_n),
       .sys_clk(sys_clk),
       .sys_rst(sys_rst),
+      .sys_rst_n(sys_rst_n),
       .eth_gtx_clk(eth_gtx_clk),
       .eth_gtx_rst(eth_gtx_rst)
    );
@@ -130,11 +132,9 @@ module top #(
    localparam NUM_WORDS_IMEM = 8192; //=> 32kB InstructionRAM
    localparam NUM_WORDS_DMEM = 8192; //=> 32kB DataRAM
 
-   soc_if bus_cpu   (.arst_n(~sys_rst), .clk(sys_clk));
-   soc_if bus_dmem  (.arst_n(~sys_rst), .clk(sys_clk));
-   soc_if bus_csr   (.arst_n(~sys_rst), .clk(sys_clk));
-
-   csr_if csr ();
+   soc_if bus_cpu   (.arst_n(sys_rst_n), .clk(sys_clk));
+   soc_if bus_dmem  (.arst_n(sys_rst_n), .clk(sys_clk));
+   soc_if bus_csr   (.arst_n(sys_rst_n), .clk(sys_clk));
 
    logic        imem_we;
    logic [31:2] imem_waddr;
@@ -154,33 +154,34 @@ module top #(
 
 //---------------------------------
    soc_fabric u_fabric (
-      .cpu   (bus_cpu),  //SLV
+      .cpu   (bus_cpu),         //SLV
 
-      .dmem  (bus_dmem), //MST
-      .csr   (bus_csr)   //MST
+      .dmem  (bus_dmem),        //MST
+      .csr   (bus_csr)          //MST
    );
 
 //---------------------------------
    soc_ram #(.NUM_WORDS(NUM_WORDS_DMEM)) u_dmem (
-      .bus (bus_dmem)    //SLV
+      .bus (bus_dmem)           //SLV
    );
 
 //---------------------------------
    soc_csr u_soc_csr (
-      .bus(bus_csr),     //SLV
-      .hwif_in(to_csr),
-      .hwif_out(from_csr)
+      .bus(bus_csr),            //SLV
+      .hwif_in(to_csr),         //i
+      .hwif_out(from_csr)       //o
    );
                    
 //---------------------------------
    uart u_uart (
-      .arst_n     (~sys_rst),   //i 
+      .arst_n     (sys_rst_n),   //i 
       .clk        (sys_clk),    //i 
                                
       .uart_rx    (uart_rx),    //i 
       .uart_tx    (uart_tx),    //o
                                
-      .csr        (csr),        //SLV_UART - TODO: Implementation of UART registers inside PeakRDL-generated CSR
+      .from_csr(from_csr),      //i
+      .to_csr(to_csr),          //o
 
    // IMEM Write port, for live updates of CPU program
       .imem_we    (imem_we),    //o

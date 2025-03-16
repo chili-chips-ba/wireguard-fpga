@@ -14,7 +14,9 @@
 //   CPU FIFOs
 //==========================================================================
 
-module cpu_fifo (   
+module cpu_fifo
+   import csr_pkg::*;
+(   
    dpe_if.s_axis              to_cpu,
    dpe_if.m_axis              from_cpu,
    input  csr_pkg::csr__out_t from_csr,

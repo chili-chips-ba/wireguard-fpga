@@ -21,6 +21,7 @@ module clk_rst_gen
    input  rst_n,
    output sys_clk,
    output sys_rst,
+   output sys_rst_n,
    output eth_gtx_clk,
    output eth_gtx_rst
 );
@@ -36,12 +37,13 @@ module clk_rst_gen
       .I(clk_p),
       .IB(clk_n)
    );
-    
+
 //==========================================================================
 // PLL for system clock domain
 //==========================================================================
    wire sys_pll_locked;
    wire sys_pll_clk;
+   wire sys_reset;
    
    fpga_pll_80M u_sys_pll (
       .clk(clk),
@@ -55,9 +57,11 @@ module clk_rst_gen
    ) sys_sync_reset_inst (
       .clk(sys_pll_clk),
       .rst(~sys_pll_locked),
-      .out(sys_rst)
+      .out(sys_reset)
    );
    
+   assign sys_rst = sys_reset;
+   assign sys_rst_n = ~sys_reset;
    assign sys_clk = sys_pll_clk;
 
 //==========================================================================
