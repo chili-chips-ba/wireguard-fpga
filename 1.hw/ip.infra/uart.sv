@@ -53,6 +53,7 @@ module uart
 //--------------------------------------
 // Common
 //--------------------------------------
+   logic [7:0] d;
 
    typedef enum logic[3:0] {
       IDLE  = 4'd14,
@@ -150,6 +151,7 @@ module uart
    localparam bit[3:0] RX_WAIT_D7   = 4'd7;
    localparam bit[3:0] RX_WAIT_STOP = 4'd8;
    
+   (* fsm_encoding = "none" *)
    state_t     rx_state;
                 
    cnt1us_t    rx_cnt1us; // counts 1us ticks
@@ -287,8 +289,7 @@ module uart
       .empty     (rx_fifo_empty),
       .full      (rx_fifo_full),
                   
-      .dout_comb (to_csr.uart.rx.data.next), 
-                  // fall-through: Data is available w/o read
+      .dout_comb (to_csr.uart.rx.data.next), // fall-through: Data is available w/o read
 
       .dout      ()
     );
@@ -327,6 +328,7 @@ module uart
    localparam bit[3:0] TX_WAIT_D7    = 4'd8;
    localparam bit[3:0] TX_WAIT_STOP  = 4'd8;
 
+   (* fsm_encoding = "none" *)
    state_t     tx_state;
    cnt1us_t    tx_cnt1us; // counts 1us ticks
    logic       tx_cnt1us_is0;
@@ -460,8 +462,7 @@ module uart
       .empty     (tx_fifo_empty),
       .full      (to_csr.uart.tx.busy.next), // SW write is ignored when FIFO is full
                   
-      .dout_comb (tx_data), 
-                  // fall-through: Data is available w/o read
+      .dout_comb (tx_data), // fall-through: Data is available w/o read
 
       .dout      ()
     );

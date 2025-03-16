@@ -136,8 +136,7 @@ module sync_fifo_ram #(
 //  endgenerate
 //`endif
 
-   //logic [DWIDTH-1:0] mem [2**AWIDTH] /* synthesis syn_ramstyle = "distributed_ram" */;
-   (* ram_style = "distributed", ramstyle = "no_rw_check, mlab" *) logic [DWIDTH-1:0] mem [2**AWIDTH];
+   logic [DWIDTH-1:0] mem [2**AWIDTH] /* synthesis syn_ramstyle = "distributed_ram" */;
 
    always_comb begin
       dout_comb = mem[rd_addr];

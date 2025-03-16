@@ -35,7 +35,7 @@ module soc_csr
 
       .s_cpuif_req(bus.vld),
       .s_cpuif_req_is_wr(|bus.we),
-      .s_cpuif_addr({bus.addr[5:2],2'b00}),
+      .s_cpuif_addr({bus.addr[6:2],2'b00}),
       .s_cpuif_wr_data(bus.wdat),
       .s_cpuif_wr_biten(bus.we),
       .s_cpuif_req_stall_wr(cpuif_req_stall_wr),
