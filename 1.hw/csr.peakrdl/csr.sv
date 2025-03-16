@@ -7,7 +7,7 @@ module csr (
 
         input wire s_cpuif_req,
         input wire s_cpuif_req_is_wr,
-        input wire [5:0] s_cpuif_addr,
+        input wire [6:0] s_cpuif_addr,
         input wire [31:0] s_cpuif_wr_data,
         input wire [31:0] s_cpuif_wr_biten,
         output wire s_cpuif_req_stall_wr,
@@ -27,7 +27,7 @@ module csr (
     //--------------------------------------------------------------------------
     logic cpuif_req;
     logic cpuif_req_is_wr;
-    logic [5:0] cpuif_addr;
+    logic [6:0] cpuif_addr;
     logic [31:0] cpuif_wr_data;
     logic [31:0] cpuif_wr_biten;
     logic cpuif_req_stall_wr;
@@ -84,6 +84,12 @@ module csr (
             logic trigger;
             logic status;
         } tx_fifo;
+        struct {
+            logic rx;
+            logic rx_trigger;
+            logic tx;
+            logic tx_trigger;
+        } uart;
     } decoded_reg_strb_t;
     decoded_reg_strb_t decoded_reg_strb;
     logic decoded_req;
@@ -92,20 +98,24 @@ module csr (
     logic [31:0] decoded_wr_biten;
 
     always_comb begin
-        decoded_reg_strb.rx_fifo.data_31_0 = cpuif_req_masked & (cpuif_addr == 6'h0);
-        decoded_reg_strb.rx_fifo.data_63_32 = cpuif_req_masked & (cpuif_addr == 6'h4);
-        decoded_reg_strb.rx_fifo.data_95_64 = cpuif_req_masked & (cpuif_addr == 6'h8);
-        decoded_reg_strb.rx_fifo.data_127_96 = cpuif_req_masked & (cpuif_addr == 6'hc);
-        decoded_reg_strb.rx_fifo.control = cpuif_req_masked & (cpuif_addr == 6'h10);
-        decoded_reg_strb.rx_fifo.trigger = cpuif_req_masked & (cpuif_addr == 6'h14);
-        decoded_reg_strb.rx_fifo.status = cpuif_req_masked & (cpuif_addr == 6'h18);
-        decoded_reg_strb.tx_fifo.data_31_0 = cpuif_req_masked & (cpuif_addr == 6'h20);
-        decoded_reg_strb.tx_fifo.data_63_32 = cpuif_req_masked & (cpuif_addr == 6'h24);
-        decoded_reg_strb.tx_fifo.data_95_64 = cpuif_req_masked & (cpuif_addr == 6'h28);
-        decoded_reg_strb.tx_fifo.data_127_96 = cpuif_req_masked & (cpuif_addr == 6'h2c);
-        decoded_reg_strb.tx_fifo.control = cpuif_req_masked & (cpuif_addr == 6'h30);
-        decoded_reg_strb.tx_fifo.trigger = cpuif_req_masked & (cpuif_addr == 6'h34);
-        decoded_reg_strb.tx_fifo.status = cpuif_req_masked & (cpuif_addr == 6'h38);
+        decoded_reg_strb.rx_fifo.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h0);
+        decoded_reg_strb.rx_fifo.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h4);
+        decoded_reg_strb.rx_fifo.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h8);
+        decoded_reg_strb.rx_fifo.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'hc);
+        decoded_reg_strb.rx_fifo.control = cpuif_req_masked & (cpuif_addr == 7'h10);
+        decoded_reg_strb.rx_fifo.trigger = cpuif_req_masked & (cpuif_addr == 7'h14);
+        decoded_reg_strb.rx_fifo.status = cpuif_req_masked & (cpuif_addr == 7'h18);
+        decoded_reg_strb.tx_fifo.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h20);
+        decoded_reg_strb.tx_fifo.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h24);
+        decoded_reg_strb.tx_fifo.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h28);
+        decoded_reg_strb.tx_fifo.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'h2c);
+        decoded_reg_strb.tx_fifo.control = cpuif_req_masked & (cpuif_addr == 7'h30);
+        decoded_reg_strb.tx_fifo.trigger = cpuif_req_masked & (cpuif_addr == 7'h34);
+        decoded_reg_strb.tx_fifo.status = cpuif_req_masked & (cpuif_addr == 7'h38);
+        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 7'h40);
+        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 7'h44);
+        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 7'h48);
+        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 7'h4c);
     end
 
     // Pass down signals to next stage
@@ -210,6 +220,26 @@ module csr (
                 } tready;
             } trigger;
         } tx_fifo;
+        struct {
+            struct {
+                struct {
+                    logic next;
+                    logic load_next;
+                } read;
+            } rx_trigger;
+            struct {
+                struct {
+                    logic [7:0] next;
+                    logic load_next;
+                } data;
+            } tx;
+            struct {
+                struct {
+                    logic next;
+                    logic load_next;
+                } write;
+            } tx_trigger;
+        } uart;
     } field_combo_t;
     field_combo_t field_combo;
 
@@ -288,6 +318,23 @@ module csr (
                 } tready;
             } trigger;
         } tx_fifo;
+        struct {
+            struct {
+                struct {
+                    logic value;
+                } read;
+            } rx_trigger;
+            struct {
+                struct {
+                    logic [7:0] value;
+                } data;
+            } tx;
+            struct {
+                struct {
+                    logic value;
+                } write;
+            } tx_trigger;
+        } uart;
     } field_storage_t;
     field_storage_t field_storage;
 
@@ -659,6 +706,71 @@ module csr (
         end
     end
     assign hwif_out.tx_fifo.trigger.tready.value = field_storage.tx_fifo.trigger.tready.value;
+    assign hwif_out.uart.rx.data.swacc = decoded_reg_strb.uart.rx;
+    // Field: csr.uart.rx_trigger.read
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.uart.rx_trigger.read.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.uart.rx_trigger && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.uart.rx_trigger.read.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
+            load_next_c = '1;
+        end else begin // HW Write
+            next_c = decoded_reg_strb.uart.rx;
+            load_next_c = '1;
+        end
+        field_combo.uart.rx_trigger.read.next = next_c;
+        field_combo.uart.rx_trigger.read.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(field_combo.uart.rx_trigger.read.load_next) begin
+            field_storage.uart.rx_trigger.read.value <= field_combo.uart.rx_trigger.read.next;
+        end
+    end
+    assign hwif_out.uart.rx_trigger.read.value = field_storage.uart.rx_trigger.read.value;
+    // Field: csr.uart.tx.data
+    always_comb begin
+        automatic logic [7:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.uart.tx.data.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.uart.tx && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.uart.tx.data.value & ~decoded_wr_biten[7:0]) | (decoded_wr_data[7:0] & decoded_wr_biten[7:0]);
+            load_next_c = '1;
+        end
+        field_combo.uart.tx.data.next = next_c;
+        field_combo.uart.tx.data.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(field_combo.uart.tx.data.load_next) begin
+            field_storage.uart.tx.data.value <= field_combo.uart.tx.data.next;
+        end
+    end
+    assign hwif_out.uart.tx.data.value = field_storage.uart.tx.data.value;
+    assign hwif_out.uart.tx.data.swmod = decoded_reg_strb.uart.tx && decoded_req_is_wr;
+    // Field: csr.uart.tx_trigger.write
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.uart.tx_trigger.write.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.uart.tx_trigger && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.uart.tx_trigger.write.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
+            load_next_c = '1;
+        end else begin // HW Write
+            next_c = decoded_reg_strb.uart.tx && decoded_req_is_wr;
+            load_next_c = '1;
+        end
+        field_combo.uart.tx_trigger.write.next = next_c;
+        field_combo.uart.tx_trigger.write.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(field_combo.uart.tx_trigger.write.load_next) begin
+            field_storage.uart.tx_trigger.write.value <= field_combo.uart.tx_trigger.write.next;
+        end
+    end
+    assign hwif_out.uart.tx_trigger.write.value = field_storage.uart.tx_trigger.write.value;
 
     //--------------------------------------------------------------------------
     // Write response
@@ -676,7 +788,7 @@ module csr (
     logic [31:0] readback_data;
 
     // Assign readback values to a flattened array
-    logic [31:0] readback_array[14];
+    logic [31:0] readback_array[18];
     assign readback_array[0][31:0] = (decoded_reg_strb.rx_fifo.data_31_0 && !decoded_req_is_wr) ? field_storage.rx_fifo.data_31_0.tdata.value : '0;
     assign readback_array[1][31:0] = (decoded_reg_strb.rx_fifo.data_63_32 && !decoded_req_is_wr) ? field_storage.rx_fifo.data_63_32.tdata.value : '0;
     assign readback_array[2][31:0] = (decoded_reg_strb.rx_fifo.data_95_64 && !decoded_req_is_wr) ? field_storage.rx_fifo.data_95_64.tdata.value : '0;
@@ -707,6 +819,17 @@ module csr (
     assign readback_array[12][31:1] = '0;
     assign readback_array[13][0:0] = (decoded_reg_strb.tx_fifo.status && !decoded_req_is_wr) ? hwif_in.tx_fifo.status.tvalid.next : '0;
     assign readback_array[13][31:1] = '0;
+    assign readback_array[14][7:0] = (decoded_reg_strb.uart.rx && !decoded_req_is_wr) ? hwif_in.uart.rx.data.next : '0;
+    assign readback_array[14][29:8] = '0;
+    assign readback_array[14][30:30] = (decoded_reg_strb.uart.rx && !decoded_req_is_wr) ? hwif_in.uart.rx.oflow.next : '0;
+    assign readback_array[14][31:31] = (decoded_reg_strb.uart.rx && !decoded_req_is_wr) ? hwif_in.uart.rx.valid.next : '0;
+    assign readback_array[15][0:0] = (decoded_reg_strb.uart.rx_trigger && !decoded_req_is_wr) ? field_storage.uart.rx_trigger.read.value : '0;
+    assign readback_array[15][31:1] = '0;
+    assign readback_array[16][7:0] = (decoded_reg_strb.uart.tx && !decoded_req_is_wr) ? field_storage.uart.tx.data.value : '0;
+    assign readback_array[16][30:8] = '0;
+    assign readback_array[16][31:31] = (decoded_reg_strb.uart.tx && !decoded_req_is_wr) ? hwif_in.uart.tx.busy.next : '0;
+    assign readback_array[17][0:0] = (decoded_reg_strb.uart.tx_trigger && !decoded_req_is_wr) ? field_storage.uart.tx_trigger.write.value : '0;
+    assign readback_array[17][31:1] = '0;
 
     // Reduce the array
     always_comb begin
@@ -714,7 +837,7 @@ module csr (
         readback_done = decoded_req & ~decoded_req_is_wr;
         readback_err = '0;
         readback_data_var = '0;
-        for(int i=0; i<14; i++) readback_data_var |= readback_array[i];
+        for(int i=0; i<18; i++) readback_data_var |= readback_array[i];
         readback_data = readback_data_var;
     end
 

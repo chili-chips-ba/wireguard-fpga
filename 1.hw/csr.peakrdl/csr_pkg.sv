@@ -4,7 +4,7 @@
 package csr_pkg;
 
     localparam CSR_DATA_WIDTH = 32;
-    localparam CSR_MIN_ADDR_WIDTH = 6;
+    localparam CSR_MIN_ADDR_WIDTH = 7;
 
     typedef struct {
         logic next;
@@ -101,8 +101,40 @@ package csr_pkg;
     } csr__tx_fifo__in_t;
 
     typedef struct {
+        logic [7:0] next;
+    } csr__uart__rx__data__in_t;
+
+    typedef struct {
+        logic next;
+    } csr__uart__rx__oflow__in_t;
+
+    typedef struct {
+        logic next;
+    } csr__uart__rx__valid__in_t;
+
+    typedef struct {
+        csr__uart__rx__data__in_t data;
+        csr__uart__rx__oflow__in_t oflow;
+        csr__uart__rx__valid__in_t valid;
+    } csr__uart__rx__in_t;
+
+    typedef struct {
+        logic next;
+    } csr__uart__tx__busy__in_t;
+
+    typedef struct {
+        csr__uart__tx__busy__in_t busy;
+    } csr__uart__tx__in_t;
+
+    typedef struct {
+        csr__uart__rx__in_t rx;
+        csr__uart__tx__in_t tx;
+    } csr__uart__in_t;
+
+    typedef struct {
         csr__rx_fifo__in_t rx_fifo;
         csr__tx_fifo__in_t tx_fifo;
+        csr__uart__in_t uart;
     } csr__in_t;
 
     typedef struct {
@@ -200,7 +232,48 @@ package csr_pkg;
     } csr__tx_fifo__out_t;
 
     typedef struct {
+        logic swacc;
+    } csr__uart__rx__data__out_t;
+
+    typedef struct {
+        csr__uart__rx__data__out_t data;
+    } csr__uart__rx__out_t;
+
+    typedef struct {
+        logic value;
+    } csr__uart__rx_trigger_read_2925067f__read_next_708aa0d6__out_t;
+
+    typedef struct {
+        csr__uart__rx_trigger_read_2925067f__read_next_708aa0d6__out_t read;
+    } csr__uart__rx_trigger_read_2925067f__out_t;
+
+    typedef struct {
+        logic [7:0] value;
+        logic swmod;
+    } csr__uart__tx__data__out_t;
+
+    typedef struct {
+        csr__uart__tx__data__out_t data;
+    } csr__uart__tx__out_t;
+
+    typedef struct {
+        logic value;
+    } csr__uart__tx_trigger_write_d2a2fe0e__write_next_c7fe028d__out_t;
+
+    typedef struct {
+        csr__uart__tx_trigger_write_d2a2fe0e__write_next_c7fe028d__out_t write;
+    } csr__uart__tx_trigger_write_d2a2fe0e__out_t;
+
+    typedef struct {
+        csr__uart__rx__out_t rx;
+        csr__uart__rx_trigger_read_2925067f__out_t rx_trigger;
+        csr__uart__tx__out_t tx;
+        csr__uart__tx_trigger_write_d2a2fe0e__out_t tx_trigger;
+    } csr__uart__out_t;
+
+    typedef struct {
         csr__rx_fifo__out_t rx_fifo;
         csr__tx_fifo__out_t tx_fifo;
+        csr__uart__out_t uart;
     } csr__out_t;
 endpackage
