@@ -4,7 +4,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include "string_bare.h"
 #include <stdint.h>
 #include <inttypes.h>
@@ -40,15 +39,10 @@ int main(void)
     uint8_t *plaintext = (uint8_t *)plaintext_str;
     size_t plaintext_len = strlen(plaintext_str);
 
-    uint8_t *ciphertext = (uint8_t *)malloc(plaintext_len);
-    uint8_t *decrypted = (uint8_t *)malloc(plaintext_len);
+    // Use stack allocation instead of malloc
+    uint8_t ciphertext[256]; // Buffer large enough for the plaintext
+    uint8_t decrypted[256];  // Buffer large enough for the plaintext
     uint8_t auth_tag[16];
-
-    if (!ciphertext || !decrypted)
-    {
-        printf("Memory allocation failed\n");
-        return -1;
-    }
 
     printf("=== ChaCha20-Poly1305 AEAD Test ===\n\n");
 
@@ -67,8 +61,6 @@ int main(void)
     if (ret != 0)
     {
         printf("Encryption failed with error %d\n", ret);
-        free(ciphertext);
-        free(decrypted);
         return -1;
     }
 
@@ -85,8 +77,6 @@ int main(void)
     if (ret != 0)
     {
         printf("Decryption failed with error %d\n", ret);
-        free(ciphertext);
-        free(decrypted);
         return -1;
     }
 
@@ -120,7 +110,9 @@ int main(void)
     // Test with tampered AAD
     printf("\nModifying AAD and attempting to decrypt...\n");
     ciphertext[0] ^= 1; // Restore ciphertext
-    uint8_t *modified_aad = (uint8_t *)malloc(aad_len);
+
+    // Use stack allocation for modified AAD
+    uint8_t modified_aad[256];
     memcpy(modified_aad, aad, aad_len);
     modified_aad[0] ^= 1; // Flip one bit in AAD
 
@@ -159,10 +151,6 @@ int main(void)
         printf("SECURITY WARNING: Tampered tag was accepted!\n");
         printf("Test FAILED\n");
     }
-
-    free(ciphertext);
-    free(decrypted);
-    free(modified_aad);
 
     return 0;
 }
