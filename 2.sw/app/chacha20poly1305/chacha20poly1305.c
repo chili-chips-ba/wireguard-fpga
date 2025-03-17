@@ -7,7 +7,6 @@
 #include "chacha20.h"
 #include "poly1305.h"
 #include "string_bare.h"
-#include <stdlib.h>
 
 // Helper function to encode a 64-bit value in little-endian format
 static void encode_le64(uint8_t *dst, uint64_t value)
@@ -56,7 +55,11 @@ int chacha20poly1305_encrypt(
     size_t ciphertext_padding = (16 - (plaintext_len % 16)) % 16;
     size_t auth_data_len = aad_len + aad_padding + plaintext_len + ciphertext_padding + 16;
 
-    uint8_t *auth_data = (uint8_t *)calloc(auth_data_len, 1);
+    // Use stack allocation with a reasonable maximum size
+    uint8_t auth_data_stack[1024];
+    memset(auth_data_stack, 0, sizeof(auth_data_stack));
+
+    uint8_t *auth_data = auth_data_stack;
     if (!auth_data)
         return -1; // Memory allocation failure
 
@@ -75,7 +78,6 @@ int chacha20poly1305_encrypt(
     // 4. Compute the Poly1305 tag over the authenticated data
     poly1305_mac(auth_tag, poly1305_key, auth_data, auth_data_len);
 
-    free(auth_data);
     return 0;
 }
 
@@ -98,7 +100,11 @@ int chacha20poly1305_decrypt(
     size_t ciphertext_padding = (16 - (ciphertext_len % 16)) % 16;
     size_t auth_data_len = aad_len + aad_padding + ciphertext_len + ciphertext_padding + 16;
 
-    uint8_t *auth_data = (uint8_t *)calloc(auth_data_len, 1);
+    // Use stack allocation with a reasonable maximum size
+    uint8_t auth_data_stack[1024];
+    memset(auth_data_stack, 0, sizeof(auth_data_stack));
+
+    uint8_t *auth_data = auth_data_stack;
     if (!auth_data)
         return -1; // Memory allocation failure
 
@@ -117,8 +123,6 @@ int chacha20poly1305_decrypt(
     // 3. Compute and verify the Poly1305 tag
     uint8_t calculated_tag[16];
     poly1305_mac(calculated_tag, poly1305_key, auth_data, auth_data_len);
-
-    free(auth_data);
 
     if (!poly1305_verify(auth_tag, calculated_tag))
         return -1; // Authentication failed
