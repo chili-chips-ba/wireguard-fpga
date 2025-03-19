@@ -1,228 +1,290 @@
 addrmap csr {
+   name = "csr";
+   desc = "WireGuard FPGA CSR";
+   
    littleendian;
    default accesswidth = 32;
    default regwidth = 32;
    
-   regfile rx_fifo {
-      reg {
-         field { 
-            name = "TDATA[31:0]";
-            desc = "1st 4-byte segment of TDATA";
-             sw = rw;
-            hw = r; 
-         } tdata[32];
-      } data_31_0;
+   regfile cpu_fifo {
+      name = "csr.cpu_fifo";
+      desc = "CPU FIFOs CSR";
       
-      reg {
-         field {
-            name = "TDATA[63:32]";
-            desc = "2nd 4-byte segment of TDATA";
-             sw = rw;
-            hw = r;
-         } tdata[32];
-      } data_63_32;
-      
-      reg {
-         field {
-            name = "TDATA[95:64]";
-            desc = "3rd 4-byte segment of TDATA";
-            sw = rw;
-            hw = r;
-         } tdata[32];
-      } data_95_64;
-      
-      reg {
-         field {
-             name = "TDATA[127:96]";
-            desc = "4th 4-byte segment of TDATA";
-            sw = rw;
-            hw = r;
-         } tdata[32];
-      } data_127_96;
-      
-      reg {
-         field {
-            name = "TKEEP[15:0]";
-            desc = "Byte-enable for TDATA (e.g. TKEEP[15] corresponds to TDATA[127:119])";
-            sw = rw;
-            hw = r;
-         } tkeep[31:16];
+      regfile rx {
+         name = "csr.cpu_fifo.rx";
+         desc = "Rx FIFO CSR (CPU --> DPE)";
          
-         field {
-            name = "TLAST";
-            desc = "Indicates boundary of a packet, i.e. active on last transfer";
-            sw = rw;
-            hw = r;
-         } tlast[8:8];
+         reg {
+            name = "csr.cpu_fifo.rx.data_31_0";
+            desc = "Rx FIFO Data Register";
+            
+            field {
+               name = "csr.cpu_fifo.rx.data_31_0.tdata[31:0]";
+               desc = "1st 4-byte segment of TDATA, i.e. TDATA[31:0]";
+               sw = rw;
+               hw = r; 
+            } tdata[32] = 0;
+         } data_31_0;
          
-         field {
-            name = "TUSER[7:7] = bypass_all";
-            desc = "DPE is bypassed when active";
-            sw = rw;
-            hw = r;
-         } tuser_bypass_all[7:7];
+         reg {
+            name = "csr.cpu_fifo.rx.data_63_32";
+            desc = "Rx FIFO Data Register";
+            
+            field {
+               name = "csr.cpu_fifo.rx.data_63_32.tdata[31:0]";
+               desc = "2nd 4-byte segment of TDATA, i.e. TDATA[63:32]";
+               sw = rw;
+               hw = r;
+            } tdata[32] = 0;
+         } data_63_32;
          
-         field {
-            name = "TUSER[6:6] = bypass_stage";
-            desc = "Next stage of the DPE is bypassed when active";
-            sw = rw;
-            hw = r;
-         } tuser_bypass_stage[6:6];
+         reg {
+            name = "csr.cpu_fifo.rx.data_95_64";
+            desc = "Rx FIFO Data Register";
+            
+            field {
+               name = "csr.cpu_fifo.rx.data_95_64.tdata[31:0]";
+               desc = "3rd 4-byte segment of TDATA, i.e. TDATA[95:64]";
+               sw = rw;
+               hw = r;
+            } tdata[32] = 0;
+         } data_95_64;
          
-         field {
-            name = "TUSER[5:3] = src";
-            desc = "Internal source address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4)";
-            sw = rw;
-            hw = r;
-         } tuser_src[5:3];
+         reg {
+            name = "csr.cpu_fifo.rx.data_127_96";
+            desc = "Rx FIFO Data Register";
+            
+            field {
+                name = "csr.cpu_fifo.rx.data_127_96.tdata[31:0]";
+               desc = "4th 4-byte segment of TDATA, i.e. TDATA[127:96]";
+               sw = rw;
+               hw = r;
+            } tdata[32] = 0;
+         } data_127_96;
          
-         field {
-            name = "TUSER[2:0] = dst";
-            desc = "Internal destination address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast)";
-            sw = rw;
-            hw = r;
-         } tuser_dst[2:0];
-      } control;
+         reg {
+            name = "csr.cpu_fifo.rx.control";
+            desc = "Rx FIFO Control Register";
+            
+            field {
+               name = "csr.cpu_fifo.rx.control.tkeep[15:0]";
+               desc = "Byte-enable for TDATA (e.g. TKEEP[15] corresponds to TDATA[127:119])";
+               sw = rw;
+               hw = r;
+            } tkeep[31:16] = 0;
+            
+            field {
+               name = "csr.cpu_fifo.rx.control.tlast";
+               desc = "Indicates boundary of a packet, i.e. active on last transfer";
+               sw = rw;
+               hw = r;
+            } tlast[15:15] = 0;
+            
+            field {
+               name = "csr.cpu_fifo.rx.control.tuser_bypass_all";
+               desc = "DPE is bypassed when active";
+               sw = rw;
+               hw = r;
+            } tuser_bypass_all[7:7] = 0;
+            
+            field {
+               name = "csr.cpu_fifo.rx.control.tuser_bypass_stage";
+               desc = "Next stage of the DPE is bypassed when active";
+               sw = rw;
+               hw = r;
+            } tuser_bypass_stage[6:6] = 0;
+            
+            field {
+               name = "csr.cpu_fifo.rx.control.tuser_src[2:0]";
+               desc = "Internal source address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4)";
+               sw = rw;
+               hw = r;
+            } tuser_src[5:3] = 0;
+            
+            field {
+               name = "csr.cpu_fifo.rx.control.tuser_dst[2:0]";
+               desc = "Internal destination address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast)";
+               sw = rw;
+               hw = r;
+            } tuser_dst[2:0] = 0;
+         } control;
+         
+         reg {
+            name = "csr.cpu_fifo.rx.trigger";
+            desc = "Rx FIFO Trigger Register";
+            
+            field {
+               name = "csr.cpu_fifo.rx.trigger.tvalid";
+               desc = "Indicates valid transfer from the CPU to the Rx FIFO (single pulse trigger)";
+               singlepulse = true;
+               sw = rw;
+               hw = r;
+            } tvalid = 0;
+         } trigger;
+         
+         reg {
+            name = "csr.cpu_fifo.rx.status";
+            desc = "Rx FIFO Status Register";
+            
+            field {
+               name = "csr.cpu_fifo.rx.status.tready";
+               desc = "Indicates that the Rx FIFO can accept a transfer";
+               sw = r;
+               hw = w;
+            } tready;
+         } status;
+      } rx;
       
-      reg {
-         field {
-            name = "TVALID";
-            desc = "Indicates valid transfer from the CPU to the Rx FIFO (single pulse trigger)";
-            singlepulse = true;
-            sw = rw;
-            hw = r;
-         } tvalid = 0;
-      } trigger;
-      
-      reg {
-         field {
-            name = "TREADY";
-            desc = "Indicates that the Rx FIFO can accept a transfer";
-            sw = r;
-            hw = w;
-         } tready;
-      } status;
-   } rx_fifo;
-   
-   regfile tx_fifo {
-      reg {
-         field {
-            name = "TDATA[31:0]";
-            desc = "1st 4-byte segment of TDATA";
-            sw = r;
-            hw = w;
-         } tdata[32];
-      } data_31_0;
-      
-      reg {
-         field {
-            name = "TDATA[63:32]";
-            desc = "2nd 4-byte segment of TDATA";
-            sw = r;
-            hw = w;
-         } tdata[32];
-      } data_63_32;
-      
-      reg {
-         field {
-            name = "TDATA[95:64]";
-            desc = "3rd 4-byte segment of TDATA";
-            sw = r;
-            hw = w;
-         } tdata[32];
-      } data_95_64;
-      
-      reg {
-         field {
-            name = "TDATA[127:96]";
-            desc = "4th 4-byte segment of TDATA";
-            sw = r;
-            hw = w;
-         } tdata[32];
-      } data_127_96;
-      
-      reg {
-         field {
-            name = "TKEEP[15:0]";
-            desc = "Byte-enable for TDATA (e.g. TKEEP[15] corresponds to TDATA[127:119])";
-            sw = rw;
-            hw = w;
-         } tkeep[31:16];
+      regfile tx {
+         name = "csr.cpu_fifo.tx";
+         desc = "Tx FIFO CSR (DPE --> CPU)";
          
-         field {
-            name = "TLAST";
-            desc = "Indicates boundary of a packet, i.e. active on last transfer";
-            sw = rw;
-            hw = w;
-         } tlast[8:8];
+         reg {
+            name = "csr.cpu_fifo.tx.data_31_0";
+            desc = "Tx FIFO Data Register";
+            
+            field {
+               name = "csr.cpu_fifo.tx.data_31_0.tdata[31:0]";
+               desc = "1st 4-byte segment of TDATA, i.e. TDATA[31:0]";
+               sw = r;
+               hw = w;
+            } tdata[32];
+         } data_31_0;
          
-         field {
-            name = "TUSER[7:7] = bypass_all";
-            desc = "If active, DPE was bypassed";
-            sw = rw;
-            hw = w;
-         } tuser_bypass_all[7:7];
+         reg {
+            name = "csr.cpu_fifo.tx.data_63_32";
+            desc = "Tx FIFO Data Register";
+            
+            field {
+               name = "csr.cpu_fifo.tx.data_63_32.tdata[31:0]";
+               desc = "2nd 4-byte segment of TDATA, i.e. TDATA[63:32]";
+               sw = r;
+               hw = w;
+            } tdata[32];
+         } data_63_32;
          
-         field {
-            name = "TUSER[6:6] = bypass_stage";
-            desc = "If active, last stage of the DPE was bypassed";
-            sw = rw;
-            hw = w;
-         } tuser_bypass_stage[6:6];
+         reg {
+            name = "csr.cpu_fifo.tx.data_95_64";
+            desc = "Tx FIFO Data Register";
+            
+            field {
+               name = "csr.cpu_fifo.tx.data_95_64.tdata[31:0]";
+               desc = "3rd 4-byte segment of TDATA, i.e. TDATA[95:64]";
+               sw = r;
+               hw = w;
+            } tdata[32];
+         } data_95_64;
          
-         field {
-            name = "TUSER[5:3] = src";
-            desc = "Internal source address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4)";
-            sw = rw;
-            hw = w;
-         } tuser_src[5:3];
+         reg {
+            name = "csr.cpu_fifo.tx.data_127_96";
+            desc = "Tx FIFO Data Register";
+            
+            field {
+               name = "csr.cpu_fifo.tx.data_127_96.tdata[31:0]";
+               desc = "4th 4-byte segment of TDATA, i.e. TDATA[127:96]";
+               sw = r;
+               hw = w;
+            } tdata[32];
+         } data_127_96;
          
-         field {
-            name = "TUSER[2:0] = dst";
-            desc = "Internal destination address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast)";
-            sw = rw;
-            hw = w;
-         } tuser_dst[2:0];
-      } control;
-      
-      reg {
-         field {
-            name = "TREADY";
-            desc = "Indicates that the CPU can accept a transfer";
-            singlepulse = true;
-            sw = rw;
-            hw = r;
-         } tready = 0;
-      } trigger;
-      
-      reg {
-         field {
-            name = "TVALID";
-            desc = "Indicates valid transfer from the Tx FIFO to the CPU";
-            sw = r;
-            hw = w;
-         } tvalid;
-      } status;
-   } tx_fifo;
+         reg {
+            name = "csr.cpu_fifo.tx.control";
+            desc = "Tx FIFO Control Register";
+            
+            field {
+               name = "csr.cpu_fifo.tx.control.tkeep[15:0]";
+               desc = "Byte-enable for TDATA (e.g. TKEEP[15] corresponds to TDATA[127:119])";
+               sw = r;
+               hw = w;
+            } tkeep[31:16];
+            
+            field {
+               name = "csr.cpu_fifo.tx.control.tlast";
+               desc = "Indicates boundary of a packet, i.e. active on last transfer";
+               sw = r;
+               hw = w;
+            } tlast[15:15];
+            
+            field {
+               name = "csr.cpu_fifo.tx.control.tuser_bypass_all";
+               desc = "If active, DPE was bypassed";
+               sw = r;
+               hw = w;
+            } tuser_bypass_all[7:7];
+            
+            field {
+               name = "csr.cpu_fifo.tx.control.tuser_bypass_stage";
+               desc = "If active, last stage of the DPE was bypassed";
+               sw = r;
+               hw = w;
+            } tuser_bypass_stage[6:6];
+            
+            field {
+               name = "csr.cpu_fifo.tx.control.tuser_src[2:0]";
+               desc = "Internal source address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4)";
+               sw = r;
+               hw = w;
+            } tuser_src[5:3];
+            
+            field {
+               name = "csr.cpu_fifo.tx.control.tuser_dst[2:0]";
+               desc = "Internal destination address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast)";
+               sw = r;
+               hw = w;
+            } tuser_dst[2:0];
+         } control;
+         
+         reg {
+            name = "csr.cpu_fifo.tx.trigger";
+            desc = "Tx FIFO Trigger Register";
+            
+            field {
+               name = "csr.cpu_fifo.tx.trigger.tready";
+               desc = "Indicates that the CPU can accept a transfer";
+               singlepulse = true;
+               sw = rw;
+               hw = r;
+            } tready = 0;
+         } trigger;
+         
+         reg {
+            name = "csr.cpu_fifo.tx.status";
+            desc = "Tx FIFO Status Register";
+            
+            field {
+               name = "csr.cpu_fifo.tx.status.tvalid";
+               desc = "Indicates valid transfer from the Tx FIFO to the CPU";
+               sw = r;
+               hw = w;
+            } tvalid;
+         } status;
+      } tx;
+   } cpu_fifo;
    
    regfile uart {
+      name = "csr.uart";
+      desc = "UART CSR";
+         
       reg {
+         name = "csr.uart.rx";
+         desc = "UART Rx Register";
+         
          field {
-            name = "uart.rx.valid";
+            name = "csr.uart.rx.valid";
             desc = "Indicates valid data transfer from the UART to the CPU";
             sw = r;
             hw = w;
          } valid[31:31];
          
          field {
-            name = "uart.rx.oflow";
+            name = "csr.uart.rx.oflow";
             desc = "Indicates that some data bytes are lost";
             sw = r;
             hw = w;
          } oflow[30:30];
          
          field {
-            name = "uart.rx.data[7:0]";
+            name = "csr.uart.rx.data[7:0]";
             desc = "Received data";
             sw = r;
             hw = w;
@@ -231,42 +293,123 @@ addrmap csr {
       } rx;
       
       reg {
+         name = "csr.uart.rx_trigger";
+         desc = "UART Rx Trigger Register";
+         
          field {
-            name = "uart.rx_trigger.read";
+            name = "csr.uart.rx_trigger.read";
             desc = "Indicates that the CPU can accept next data transfer, used internally - don't try to read or write!";
-         } read;
+         } read = 0;
       } rx_trigger;
       
       rx_trigger.read->next = rx.data->swacc;
       
       reg {
+         name = "csr.uart.tx";
+         desc = "UART Tx Register";
+         
          field {
-            name = "uart.tx.busy";
+            name = "csr.uart.tx.busy";
             desc = "Indicates that UART cannot accept next data transfer";
             sw = r;
             hw = w;
          } busy[31:31];
          
          field {
-            name = "uart.tx.data[7:0]";
+            name = "csr.uart.tx.data[7:0]";
             desc = "Data to send";
             sw = rw;
             hw = r;
             swmod = true;
-         } data[7:0];
+         } data[7:0] = 0;
       } tx;
       
       reg {
+         name = "csr.uart.tx_trigger";
+         desc = "UART Tx Trigger Register";
+         
          field {
-            name = "uart.tx_trigger.write";
+            name = "csr.uart.tx_trigger.write";
             desc = "Indicates valid data transfer from the CPU to the UART, used internally - don't try to read or write!";
-         } write;
+         } write = 0;
       } tx_trigger;
       
       tx_trigger.write->next = tx.data->swmod;
    } uart;
+   
+   reg {
+      name = "csr.gpio";
+      desc = "GPIO Register";
+         
+      field {
+         name = "csr.gpio.led2";
+         desc = "Output to LED2 (0 - off, 1 - on)";
+         sw = rw;
+         hw = r;
+      } led2[9:9] = 0;
+      
+      field {
+         name = "csr.gpio.led1";
+         desc = "Output to LED1 (0 - off, 1 - on)";
+         sw = rw;
+         hw = r;
+      } led1[8:8] = 0;
+      
+      field {
+         name = "csr.gpio.key2";
+         desc = "Input from KEY2 (0 - not pressed, 1 - pressed)";
+         sw = r;
+         hw = w;
+      } key2[1:1];
+         
+      field {
+         name = "csr.gpio.key1";
+         desc = "Input from KEY1 (0 - not pressed, 1 - pressed)";
+         sw = r;
+         hw = w;
+      } key1[0:0];
+   } gpio;
+   
+   regfile ethernet {
+      name = "csr.ethernet[i]";
+      desc = "Ethernet CSR";
+      
+      reg {
+         name = "csr.ethernet[i].status";
+         desc = "Ethernet Status Register";
+         field {
+            name = "csr.ethernet[i].status.speed[1:0]";
+            desc = "Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)";
+            sw = r;
+            hw = w;
+         } speed[1:0];
+      } status;
+   } ethernet[4];
+   
+   regfile dpe {
+      name = "csr.dpe";
+      desc = "Data Plane Engine CSR";
+      
+      reg {
+         name = "csr.dpe.fcr";
+         desc = "DPE Flow Control Register";
+         field {
+            name = "csr.dpe.fcr.pause";
+            desc = "Pauses DPE";
+            sw = rw;
+            hw = r;
+         } pause[31:31] = 0;
+         
+         field {
+            name = "csr.dpe.fcr.idle";
+            desc = "Indicates that all stages of DPE have been succesfully paused";
+            sw = r;
+            hw = w;
+         } idle[0:0];
+      } fcr;
+   } dpe;
 };
 
 addrmap wireguard {
-   csr csr0 @ 0x2000_0000;
+   csr csr @ 0x2000_0000;
 };

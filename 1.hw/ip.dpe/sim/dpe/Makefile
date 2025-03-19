@@ -27,6 +27,7 @@ compile:
 		-Wall \
 		-Wno-PINCONNECTEMPTY \
 		-Wno-UNUSEDPARAM \
+                -Wno-GENUNNAMED \
 		--cc \
 		--timing \
 		--trace-fst \

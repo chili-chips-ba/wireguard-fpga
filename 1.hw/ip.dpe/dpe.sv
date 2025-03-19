@@ -11,54 +11,55 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description: 
-//   DPE top-level module
+//   Data Plane Engine
 //==========================================================================
 
-module dpe (
-   input  logic  pause,
-   output logic  is_idle,
-    
-   dpe_if.s_axis from_cpu,
-   dpe_if.s_axis from_eth_1,
-   dpe_if.s_axis from_eth_2,
-   dpe_if.s_axis from_eth_3,
-   dpe_if.s_axis from_eth_4,
-   dpe_if.m_axis to_cpu,
-   dpe_if.m_axis to_eth_1,
-   dpe_if.m_axis to_eth_2,
-   dpe_if.m_axis to_eth_3,
-   dpe_if.m_axis to_eth_4
+module dpe
+   import csr_pkg::*;
+(
+   input  csr_pkg::csr__out_t from_csr,
+   output csr_pkg::csr__in_t  to_csr,  
+   dpe_if.s_axis              from_cpu,
+   dpe_if.s_axis              from_eth_1,
+   dpe_if.s_axis              from_eth_2,
+   dpe_if.s_axis              from_eth_3,
+   dpe_if.s_axis              from_eth_4,
+   dpe_if.m_axis              to_cpu,
+   dpe_if.m_axis              to_eth_1,
+   dpe_if.m_axis              to_eth_2,
+   dpe_if.m_axis              to_eth_3,
+   dpe_if.m_axis              to_eth_4
 );
    import dpe_pkg::*;
    
-   dpe_if muxed_1 (.clk(from_cpu.clk), .rst(from_cpu.rst));
-   dpe_if muxed_2 (.clk(from_cpu.clk), .rst(from_cpu.rst));
+   dpe_if                     muxed_1 (.clk(from_cpu.clk), .rst(from_cpu.rst));
+   dpe_if                     muxed_2 (.clk(from_cpu.clk), .rst(from_cpu.rst));
     
 // DPE multiplexer
    dpe_multiplexer mux (
-      .pause(pause),
-      .is_idle(is_idle),
-      .from_cpu(from_cpu),
-      .from_eth_1(from_eth_1),
-      .from_eth_2(from_eth_2),
-      .from_eth_3(from_eth_3),
-      .from_eth_4(from_eth_4),
-      .to_dpe(muxed_1)
+      .pause                 (from_csr.dpe.fcr.pause.value),
+      .is_idle               (to_csr.dpe.fcr.idle.next),
+      .from_cpu              (from_cpu),
+      .from_eth_1            (from_eth_1),
+      .from_eth_2            (from_eth_2),
+      .from_eth_3            (from_eth_3),
+      .from_eth_4            (from_eth_4),
+      .to_dpe                (muxed_1)
    );
 
 // DPE dummy switch
    dpe_dummy_switch switch (
-      .inp(muxed_1),
-      .outp(muxed_2)
+      .inp                   (muxed_1),
+      .outp                  (muxed_2)
    );
     
 // DPE demultiplexer
    dpe_demultiplexer demux (
-      .from_dpe(muxed_2),
-      .to_cpu(to_cpu),
-      .to_eth_1(to_eth_1),
-      .to_eth_2(to_eth_2),
-      .to_eth_3(to_eth_3),
-      .to_eth_4(to_eth_4)
+      .from_dpe              (muxed_2),
+      .to_cpu                (to_cpu),
+      .to_eth_1              (to_eth_1),
+      .to_eth_2              (to_eth_2),
+      .to_eth_3              (to_eth_3),
+      .to_eth_4              (to_eth_4)
    );
 endmodule

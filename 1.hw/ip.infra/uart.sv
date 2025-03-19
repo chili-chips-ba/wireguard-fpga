@@ -24,9 +24,6 @@
 //     - New Tx data is accepted from SW when tx.busy=0/TxFIFO not full
 //     - New Rx data is loaded into RxFIFO only when RxFIFO is not full. 
 //       Otherwise, 'rx.overflow' is raised
-//
-//   Both Rx flags are Clear-on-Read -- Zero value on them tells HW that
-//   SW has got the posted value. See 'csr_pkg.sv for additional detail.
 //--------------------------------------------------------------------------
 //
 //  This module also houses the FSM for loading new CPU program via Rx UART.
@@ -50,10 +47,10 @@ module uart
    output logic [31:0]        imem_wdat
 );
    import soc_pkg::*;
+
 //--------------------------------------
 // Common
 //--------------------------------------
-   logic [7:0] d;
 
    typedef enum logic[3:0] {
       IDLE  = 4'd14,
@@ -772,10 +769,3 @@ module uart
 */
 
 endmodule: uart
-
-/*
------------------------------------------------------------------------------
-Version History:
------------------------------------------------------------------------------
- 2024/3/2 JI: original creation
-*/

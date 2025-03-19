@@ -21,7 +21,6 @@ module top #(
    input        clk_p,        //board clock positive
    input        clk_n,        //board clock negative 
    input        rst_n,        //reset, low active
-   output [1:0] led,          //display network rate status
    
 // Ethernet 1
    output       e1_reset,     //phy reset
@@ -84,7 +83,10 @@ module top #(
    output       uart_tx,
     
 // Keys
-   input [1:0]  key_in
+   input [1:0]  key_in,
+
+// LEDs   
+   output [1:0] led
 );
    import csr_pkg::*;
    import soc_pkg::*;
@@ -92,127 +94,136 @@ module top #(
 //==========================================================================
 // Clock and reset generation
 //==========================================================================
-   logic [1:0]  led_int;
-   logic        sys_clk;
-   logic        sys_rst;
-   logic        sys_rst_n;
-   logic        eth_gtx_clk;
-   logic        eth_gtx_rst;
+   logic               sys_clk;
+   logic               sys_rst;
+   logic               sys_rst_n;
+   logic               eth_gtx_clk;
+   logic               eth_gtx_rst;
    
    clk_rst_gen u_clk_rst_gen (
-      .clk_p(clk_p),
-      .clk_n(clk_n),
-      .rst_n(rst_n),
-      .sys_clk(sys_clk),
-      .sys_rst(sys_rst),
-      .sys_rst_n(sys_rst_n),
-      .eth_gtx_clk(eth_gtx_clk),
-      .eth_gtx_rst(eth_gtx_rst)
+      .clk_p           (clk_p),
+      .clk_n           (clk_n),
+      .rst_n           (rst_n),
+      .sys_clk         (sys_clk),
+      .sys_rst         (sys_rst),
+      .sys_rst_n       (sys_rst_n),
+      .eth_gtx_clk     (eth_gtx_clk),
+      .eth_gtx_rst     (eth_gtx_rst)
    );
 
 //==========================================================================
 // CPU<->DPE<->Ethernet Interconnect
 //==========================================================================
-   dpe_if from_cpu   (.clk(sys_clk), .rst(sys_rst));
-   dpe_if from_eth_1 (.clk(sys_clk), .rst(sys_rst));
-   dpe_if from_eth_2 (.clk(sys_clk), .rst(sys_rst));
-   dpe_if from_eth_3 (.clk(sys_clk), .rst(sys_rst));
-   dpe_if from_eth_4 (.clk(sys_clk), .rst(sys_rst));
-   dpe_if to_cpu     (.clk(sys_clk), .rst(sys_rst));
-   dpe_if to_eth_1   (.clk(sys_clk), .rst(sys_rst));
-   dpe_if to_eth_2   (.clk(sys_clk), .rst(sys_rst));
-   dpe_if to_eth_3   (.clk(sys_clk), .rst(sys_rst));
-   dpe_if to_eth_4   (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              from_cpu      (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              from_eth_1    (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              from_eth_2    (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              from_eth_3    (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              from_eth_4    (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              to_cpu        (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              to_eth_1      (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              to_eth_2      (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              to_eth_3      (.clk(sys_clk), .rst(sys_rst));
+   dpe_if              to_eth_4      (.clk(sys_clk), .rst(sys_rst));
    csr_pkg::csr__in_t  to_csr;
    csr_pkg::csr__out_t from_csr;
  
 //=================================
 // CPU Subsystem
 //=================================
-   localparam NUM_WORDS_IMEM = 8192; //=> 32kB InstructionRAM
-   localparam NUM_WORDS_DMEM = 8192; //=> 32kB DataRAM
+   localparam          NUM_WORDS_IMEM = 8192; //=> 32kB InstructionRAM
+   localparam          NUM_WORDS_DMEM = 8192; //=> 32kB DataRAM
 
-   soc_if bus_cpu   (.arst_n(sys_rst_n), .clk(sys_clk));
-   soc_if bus_dmem  (.arst_n(sys_rst_n), .clk(sys_clk));
-   soc_if bus_csr   (.arst_n(sys_rst_n), .clk(sys_clk));
+   soc_if              bus_cpu       (.arst_n(sys_rst_n), .clk(sys_clk));
+   soc_if              bus_dmem      (.arst_n(sys_rst_n), .clk(sys_clk));
+   soc_if              bus_csr       (.arst_n(sys_rst_n), .clk(sys_clk));
 
-   logic        imem_we;
-   logic [31:2] imem_waddr;
-   logic [31:0] imem_wdat;
+   logic               imem_we;
+   logic [31:2]        imem_waddr;
+   logic [31:0]        imem_wdat;
 
 //---------------------------------   
    soc_cpu #(
-      .ADDR_RESET     (32'h 0000_0000),
-      .NUM_WORDS_IMEM (NUM_WORDS_IMEM)
+      .ADDR_RESET      (32'h 0000_0000),
+      .NUM_WORDS_IMEM  (NUM_WORDS_IMEM)
    ) u_cpu (
-      .bus        (bus_cpu),    //MST
+      .bus             (bus_cpu),    //MST
 
-      .imem_we    (imem_we),    //-\ access point for 
-      .imem_waddr (imem_waddr), // | reloading CPU 
-      .imem_wdat  (imem_wdat)   //-/ program memory 
+      .imem_we         (imem_we),    //-\ access point for 
+      .imem_waddr      (imem_waddr), // | reloading CPU 
+      .imem_wdat       (imem_wdat)   //-/ program memory 
    ); 
 
 //---------------------------------
    soc_fabric u_fabric (
-      .cpu   (bus_cpu),         //SLV
+      .cpu             (bus_cpu),    //SLV
 
-      .dmem  (bus_dmem),        //MST
-      .csr   (bus_csr)          //MST
+      .dmem            (bus_dmem),   //MST
+      .csr             (bus_csr)     //MST
    );
 
 //---------------------------------
-   soc_ram #(.NUM_WORDS(NUM_WORDS_DMEM)) u_dmem (
-      .bus (bus_dmem)           //SLV
+   soc_ram #(
+      .NUM_WORDS       (NUM_WORDS_DMEM)
+   ) u_dmem (
+      .bus             (bus_dmem)    //SLV
    );
 
 //---------------------------------
    soc_csr u_soc_csr (
-      .bus(bus_csr),            //SLV
-      .hwif_in(to_csr),         //i
-      .hwif_out(from_csr)       //o
+      .bus             (bus_csr),    //SLV
+      .hwif_in         (to_csr),     //i
+      .hwif_out        (from_csr)    //o
    );
                    
 //---------------------------------
    uart u_uart (
-      .arst_n     (sys_rst_n),  //i 
-      .clk        (sys_clk),    //i 
+      .arst_n          (sys_rst_n),  //i 
+      .clk             (sys_clk),    //i 
                                
-      .uart_rx    (uart_rx),    //i 
-      .uart_tx    (uart_tx),    //o
+      .uart_rx         (uart_rx),    //i 
+      .uart_tx         (uart_tx),    //o
                                
-      .from_csr(from_csr),      //i
-      .to_csr(to_csr),          //o
+      .from_csr        (from_csr),   //i
+      .to_csr          (to_csr),     //o
 
    // IMEM Write port, for live updates of CPU program
-      .imem_we    (imem_we),    //o
-      .imem_waddr (imem_waddr), //o[31:2]
-      .imem_wdat  (imem_wdat)   //o[31:0]
+      .imem_we         (imem_we),    //o
+      .imem_waddr      (imem_waddr), //o[31:2]
+      .imem_wdat       (imem_wdat)   //o[31:0]
    );
 
 //---------------------------------
    cpu_fifo u_cpu_fifo (
-      .to_cpu(to_cpu),
-      .from_cpu(from_cpu),
-      .from_csr(from_csr),
-      .to_csr(to_csr)
+      .from_csr        (from_csr),   //i
+      .to_csr          (to_csr),     //o
+      .to_cpu          (to_cpu),     //SLV
+      .from_cpu        (from_cpu)    //MST
    );
+   
+//==========================================================================
+// GPIO
+//==========================================================================  
+   assign led[1] = ~from_csr.gpio.led2.value;
+   assign led[0] = ~from_csr.gpio.led1.value;
+   assign to_csr.gpio.key2.next = ~key_in[1];  //TODO: Add debounce
+   assign to_csr.gpio.key1.next = ~key_in[0];  //TODO: Add debounce
 
 //==========================================================================
 // DPE
 //==========================================================================  
    dpe u_dpe (
-      .pause(0),
-      .is_idle(),
-      .from_cpu(from_cpu),
-      .from_eth_1(from_eth_1),
-      .from_eth_2(from_eth_2),
-      .from_eth_3(from_eth_3),
-      .from_eth_4(from_eth_4),
-      .to_cpu(to_cpu),
-      .to_eth_1(to_eth_1),
-      .to_eth_2(to_eth_2),
-      .to_eth_3(to_eth_3),
-      .to_eth_4(to_eth_4)
+      .from_csr        (from_csr),   //i
+      .to_csr          (to_csr),     //o
+      .from_cpu        (from_cpu),   //SLV
+      .from_eth_1      (from_eth_1), //SLV
+      .from_eth_2      (from_eth_2), //SLV
+      .from_eth_3      (from_eth_3), //SLV
+      .from_eth_4      (from_eth_4), //SLV
+      .to_cpu          (to_cpu),     //MST
+      .to_eth_1        (to_eth_1),   //MST
+      .to_eth_2        (to_eth_2),   //MST
+      .to_eth_3        (to_eth_3),   //MST
+      .to_eth_4        (to_eth_4)    //MST
    );
 
 //==========================================================================
@@ -220,19 +231,19 @@ module top #(
 //==========================================================================
 `ifdef VIVADO_GUI_BUILD
    ila_0 u_ila_0 (
-      .clk(sys_clk),
-      .probe0(from_eth_1.tdata),
-      .probe1(from_eth_1.tkeep),
-      .probe2(from_eth_1.tvalid),
-      .probe3(from_eth_1.tready),
-      .probe4(from_eth_1.tlast),
-      .probe5('0),
-      .probe6(to_eth_1.tdata),
-      .probe7(to_eth_1.tkeep),
-      .probe8(to_eth_1.tvalid),
-      .probe9(to_eth_1.tready),
-      .probe10(to_eth_1.tlast),
-      .probe11('0)
+      .clk             (sys_clk),
+      .probe0          (from_eth_1.tdata),
+      .probe1          (from_eth_1.tkeep),
+      .probe2          (from_eth_1.tvalid),
+      .probe3          (from_eth_1.tready),
+      .probe4          (from_eth_1.tlast),
+      .probe5          ('0),
+      .probe6          (to_eth_1.tdata),
+      .probe7          (to_eth_1.tkeep),
+      .probe8          (to_eth_1.tvalid),
+      .probe9          (to_eth_1.tready),
+      .probe10         (to_eth_1.tlast),
+      .probe11         ('0)
    );
 `endif
 
@@ -240,99 +251,97 @@ module top #(
 // Ethernet subsystems
 //==========================================================================
    ethernet_mac #(
-      .TARGET(TARGET)
+      .TARGET          (TARGET)
    ) u_eth_1 (
-      .gtx_clk(eth_gtx_clk),
-      .gtx_rst(eth_gtx_rst),
-      .gmii_rx_clk(e1_rxc),
-      .gmii_rxd(e1_rxd),
-      .gmii_rx_dv(e1_rxdv),
-      .gmii_rx_er(e1_rxer),
-      .mii_tx_clk(e1_txc), 
-      .gmii_tx_clk(e1_gtxc),
-      .gmii_txd(e1_txd),
-      .gmii_tx_en(e1_txen),
-      .gmii_tx_er(e1_txer),
-      .speed(led_int),
-      .rx_fifo(from_eth_1),
-      .tx_fifo(to_eth_1)
+      .gtx_clk         (eth_gtx_clk),
+      .gtx_rst         (eth_gtx_rst),
+      .gmii_rx_clk     (e1_rxc),
+      .gmii_rxd        (e1_rxd),
+      .gmii_rx_dv      (e1_rxdv),
+      .gmii_rx_er      (e1_rxer),
+      .mii_tx_clk      (e1_txc), 
+      .gmii_tx_clk     (e1_gtxc),
+      .gmii_txd        (e1_txd),
+      .gmii_tx_en      (e1_txen),
+      .gmii_tx_er      (e1_txer),
+      .speed           (to_csr.ethernet[0].status.speed.next),
+      .rx_fifo         (from_eth_1),
+      .tx_fifo         (to_eth_1)
    );
-    
-   assign led = ~led_int;
     
 //--------------------------------------------------------------------------
    ethernet_mac #(
-      .TARGET(TARGET)
+      .TARGET          (TARGET)
    ) u_eth_2 (
-      .gtx_clk(eth_gtx_clk),
-      .gtx_rst(eth_gtx_rst),
-      .gmii_rx_clk(e2_rxc),
-      .gmii_rxd(e2_rxd),
-      .gmii_rx_dv(e2_rxdv),
-      .gmii_rx_er(e2_rxer),
-      .mii_tx_clk(e2_txc), 
-      .gmii_tx_clk(e2_gtxc),
-      .gmii_txd(e2_txd),
-      .gmii_tx_en(e2_txen),
-      .gmii_tx_er(e2_txer),
-      .speed(),
-      .rx_fifo(from_eth_2),
-      .tx_fifo(to_eth_2)
+      .gtx_clk         (eth_gtx_clk),
+      .gtx_rst         (eth_gtx_rst),
+      .gmii_rx_clk     (e2_rxc),
+      .gmii_rxd        (e2_rxd),
+      .gmii_rx_dv      (e2_rxdv),
+      .gmii_rx_er      (e2_rxer),
+      .mii_tx_clk      (e2_txc), 
+      .gmii_tx_clk     (e2_gtxc),
+      .gmii_txd        (e2_txd),
+      .gmii_tx_en      (e2_txen),
+      .gmii_tx_er      (e2_txer),
+      .speed           (to_csr.ethernet[1].status.speed.next),
+      .rx_fifo         (from_eth_2),
+      .tx_fifo         (to_eth_2)
    );
     
 //--------------------------------------------------------------------------    
    ethernet_mac #(
-      .TARGET(TARGET)
+      .TARGET          (TARGET)
    ) u_eth_3 (
-      .gtx_clk(eth_gtx_clk),
-      .gtx_rst(eth_gtx_rst),
-      .gmii_rx_clk(e3_rxc),
-      .gmii_rxd(e3_rxd),
-      .gmii_rx_dv(e3_rxdv),
-      .gmii_rx_er(e3_rxer),
-      .mii_tx_clk(e3_txc), 
-      .gmii_tx_clk(e3_gtxc),
-      .gmii_txd(e3_txd),
-      .gmii_tx_en(e3_txen),
-      .gmii_tx_er(e3_txer),
-      .speed(),
-      .rx_fifo(from_eth_3),
-      .tx_fifo(to_eth_3)
+      .gtx_clk         (eth_gtx_clk),
+      .gtx_rst         (eth_gtx_rst),
+      .gmii_rx_clk     (e3_rxc),
+      .gmii_rxd        (e3_rxd),
+      .gmii_rx_dv      (e3_rxdv),
+      .gmii_rx_er      (e3_rxer),
+      .mii_tx_clk      (e3_txc), 
+      .gmii_tx_clk     (e3_gtxc),
+      .gmii_txd        (e3_txd),
+      .gmii_tx_en      (e3_txen),
+      .gmii_tx_er      (e3_txer),
+      .speed           (to_csr.ethernet[2].status.speed.next),
+      .rx_fifo         (from_eth_3),
+      .tx_fifo         (to_eth_3)
    );
     
 //--------------------------------------------------------------------------
    ethernet_mac #(
-      .TARGET(TARGET)
+      .TARGET          (TARGET)
    ) u_eth_4 (
-      .gtx_clk(eth_gtx_clk),
-      .gtx_rst(eth_gtx_rst),
-      .gmii_rx_clk(e4_rxc),
-      .gmii_rxd(e4_rxd),
-      .gmii_rx_dv(e4_rxdv),
-      .gmii_rx_er(e4_rxer),
-      .mii_tx_clk(e4_txc), 
-      .gmii_tx_clk(e4_gtxc),
-      .gmii_txd(e4_txd),
-      .gmii_tx_en(e4_txen),
-      .gmii_tx_er(e4_txer),
-      .speed(),
-      .rx_fifo(from_eth_4),
-      .tx_fifo(to_eth_4)
+      .gtx_clk         (eth_gtx_clk),
+      .gtx_rst         (eth_gtx_rst),
+      .gmii_rx_clk     (e4_rxc),
+      .gmii_rxd        (e4_rxd),
+      .gmii_rx_dv      (e4_rxdv),
+      .gmii_rx_er      (e4_rxer),
+      .mii_tx_clk      (e4_txc), 
+      .gmii_tx_clk     (e4_gtxc),
+      .gmii_txd        (e4_txd),
+      .gmii_tx_en      (e4_txen),
+      .gmii_tx_er      (e4_txer),
+      .speed           (to_csr.ethernet[3].status.speed.next),
+      .rx_fifo         (from_eth_4),
+      .tx_fifo         (to_eth_4)
    );
  
 //--------------------------------------------------------------------------
    ethernet_phy u_phy (
-      .e1_reset(e1_reset),
-      .e1_mdc(e1_mdc),
-      .e1_mdio(e1_mdio),
-      .e2_reset(e2_reset),
-      .e2_mdc(e2_mdc),
-      .e2_mdio(e2_mdio),
-      .e3_reset(e3_reset),
-      .e3_mdc(e3_mdc),
-      .e3_mdio(e3_mdio),
-      .e4_reset(e4_reset),
-      .e4_mdc(e4_mdc),
-      .e4_mdio(e4_mdio)
+      .e1_reset        (e1_reset),
+      .e1_mdc          (e1_mdc),
+      .e1_mdio         (e1_mdio),
+      .e2_reset        (e2_reset),
+      .e2_mdc          (e2_mdc),
+      .e2_mdio         (e2_mdio),
+      .e3_reset        (e3_reset),
+      .e3_mdc          (e3_mdc),
+      .e3_mdio         (e3_mdio),
+      .e4_reset        (e4_reset),
+      .e4_mdc          (e4_mdc),
+      .e4_mdio         (e4_mdio)
    );
 endmodule
