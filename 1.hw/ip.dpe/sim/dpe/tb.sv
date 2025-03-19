@@ -20,14 +20,15 @@ module tb;
     // Constants
     localparam CLK_PERIOD = 12_500;
     import dpe_pkg::*;
+    import csr_pkg::*;
     
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
-    logic pause = 0;
-    //logic is_idle;
     
     // Interfaces
+    csr_pkg::csr__out_t from_csr;
+    //csr_pkg::csr__in_t to_csr;
     dpe_if from_cpu(.clk(clk), .rst(rst));
     dpe_if from_eth_1(.clk(clk), .rst(rst));
     dpe_if from_eth_2(.clk(clk), .rst(rst));
@@ -56,8 +57,8 @@ module tb;
     
     // DUT instantiation
     dpe DUT (
-        .pause(pause),
-        .is_idle(),
+        .from_csr(from_csr),
+        .to_csr(),
         .from_cpu(from_cpu),
         .from_eth_1(from_eth_1),
         .from_eth_2(from_eth_2),
@@ -72,6 +73,8 @@ module tb;
     
     // Main stimulus process
     initial begin
+        from_csr.dpe.fcr.pause.value = 0;
+
         // Initialize all input interfaces
         from_cpu.tvalid = 0;
         from_cpu.tlast = 0;

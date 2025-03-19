@@ -62,7 +62,7 @@ module soc_fabric (
 //return RDY+RDAT to CPU from the selected peripheral
    assign cpu.rdy   = dmem_sel ? dmem.rdy 
                     : csr_sel  ? csr.rdy
-                               : 1'b0;
+                               : 1'b1;
                      
    assign cpu.rdat  = dmem_sel ? dmem.rdat 
                     : csr_sel  ? csr.rdat

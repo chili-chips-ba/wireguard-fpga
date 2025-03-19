@@ -18,36 +18,44 @@ module soc_csr
    import soc_pkg::*;
    import csr_pkg::*;
 (
-   soc_if.SLV          bus,
-   csr_pkg::csr__in_t  hwif_in,
-   csr_pkg::csr__out_t hwif_out
+   soc_if.SLV                 bus,
+   input csr_pkg::csr__in_t   hwif_in,
+   output csr_pkg::csr__out_t hwif_out
 );
-   logic cpuif_req_stall_wr;
-   logic cpuif_req_stall_rd;
-   logic cpuif_rd_ack;
-   logic cpuif_wr_ack;
+   /*logic                    cpuif_req_stall_wr;
+   logic                    cpuif_req_stall_rd;
+   logic                    cpuif_rd_ack;
+   logic                    cpuif_wr_ack;*/
+   logic [31:0]             s_cpuif_wr_biten;
    
-   assign bus.rdy = (!cpuif_req_stall_wr & cpuif_wr_ack) | (!cpuif_req_stall_rd & cpuif_rd_ack);
+   /*assign bus.rdy =         (!cpuif_req_stall_wr & cpuif_wr_ack) | 
+                            (!cpuif_req_stall_rd & cpuif_rd_ack);*/
+   assign bus.rdy = 1'b1;
+   
+   assign s_cpuif_wr_biten[31:24] = bus.we[3] ? '1 : '0;
+   assign s_cpuif_wr_biten[23:16] = bus.we[2] ? '1 : '0;
+   assign s_cpuif_wr_biten[15:8]  = bus.we[1] ? '1 : '0;
+   assign s_cpuif_wr_biten[7:0]   = bus.we[0] ? '1 : '0;
    
    csr csr_inst (
-      .clk(bus.clk),
-      .rst(~bus.arst_n),
+      .clk                  (bus.clk),
+      .rst                  (~bus.arst_n),
 
-      .s_cpuif_req(bus.vld),
-      .s_cpuif_req_is_wr(|bus.we),
-      .s_cpuif_addr({bus.addr[6:2],2'b00}),
-      .s_cpuif_wr_data(bus.wdat),
-      .s_cpuif_wr_biten(bus.we),
-      .s_cpuif_req_stall_wr(cpuif_req_stall_wr),
-      .s_cpuif_req_stall_rd(cpuif_req_stall_rd),
-      .s_cpuif_rd_ack(cpuif_rd_ack),
-      .s_cpuif_rd_err(),
-      .s_cpuif_rd_data(bus.rdat),
-      .s_cpuif_wr_ack(cpuif_wr_ack),
-      .s_cpuif_wr_err(),
+      .s_cpuif_req          (bus.vld),
+      .s_cpuif_req_is_wr    (|bus.we),
+      .s_cpuif_addr         ({bus.addr[6:2],2'b00}),
+      .s_cpuif_wr_data      (bus.wdat),
+      .s_cpuif_wr_biten     (s_cpuif_wr_biten),
+      .s_cpuif_req_stall_wr (cpuif_req_stall_wr),
+      .s_cpuif_req_stall_rd (cpuif_req_stall_rd),
+      .s_cpuif_rd_ack       (cpuif_rd_ack),
+      .s_cpuif_rd_err       (),
+      .s_cpuif_rd_data      (bus.rdat),
+      .s_cpuif_wr_ack       (cpuif_wr_ack),
+      .s_cpuif_wr_err       (),
 
-      .hwif_in(hwif_in),
-      .hwif_out(hwif_out)
+      .hwif_in              (hwif_in),
+      .hwif_out             (hwif_out)
    );
    
 //=========================================
