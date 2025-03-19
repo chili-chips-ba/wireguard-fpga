@@ -371,14 +371,14 @@ addrmap csr {
    } gpio;
    
    regfile ethernet {
-      name = "csr.ethernet[i]";
+      name = "csr.ethernet[0..3]";
       desc = "Ethernet CSR";
       
       reg {
-         name = "csr.ethernet[i].status";
+         name = "csr.ethernet[0..3].status";
          desc = "Ethernet Status Register";
          field {
-            name = "csr.ethernet[i].status.speed[1:0]";
+            name = "csr.ethernet[0..3].status.speed[1:0]";
             desc = "Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)";
             sw = r;
             hw = w;
