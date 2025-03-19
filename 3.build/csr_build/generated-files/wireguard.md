@@ -23,16 +23,16 @@ Don't override. Generated from: wireguard
 
 <p>WireGuard FPGA CSR</p>
 
-|Offset| Identifier|      Name     |
-|------|-----------|---------------|
-| 0x00 |  cpu_fifo |  csr.cpu_fifo |
-| 0x40 |    uart   |    csr.uart   |
-| 0x50 |    gpio   |    csr.gpio   |
-| 0x54 |ethernet[0]|csr.ethernet<i>|
-| 0x58 |ethernet[1]|csr.ethernet<i>|
-| 0x5C |ethernet[2]|csr.ethernet<i>|
-| 0x60 |ethernet[3]|csr.ethernet<i>|
-| 0x64 |    dpe    |    csr.dpe    |
+|Offset| Identifier|       Name       |
+|------|-----------|------------------|
+| 0x00 |  cpu_fifo |   csr.cpu_fifo   |
+| 0x40 |    uart   |     csr.uart     |
+| 0x50 |    gpio   |     csr.gpio     |
+| 0x54 |ethernet[0]|csr.ethernet[0..3]|
+| 0x58 |ethernet[1]|csr.ethernet[0..3]|
+| 0x5C |ethernet[2]|csr.ethernet[0..3]|
+| 0x60 |ethernet[3]|csr.ethernet[0..3]|
+| 0x64 |    dpe    |      csr.dpe     |
 
 ## cpu_fifo register file
 
@@ -493,9 +493,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet CSR</p>
 
-|Offset|Identifier|         Name         |
-|------|----------|----------------------|
-|  0x0 |  status  |csr.ethernet<i>.status|
+|Offset|Identifier|           Name          |
+|------|----------|-------------------------|
+|  0x0 |  status  |csr.ethernet[0..3].status|
 
 ### status register
 
@@ -505,9 +505,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet Status Register</p>
 
-|Bits|Identifier|Access|Reset|               Name              |
-|----|----------|------|-----|---------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet<i>.status.speed[1:0]|
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
@@ -524,9 +524,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet CSR</p>
 
-|Offset|Identifier|         Name         |
-|------|----------|----------------------|
-|  0x0 |  status  |csr.ethernet<i>.status|
+|Offset|Identifier|           Name          |
+|------|----------|-------------------------|
+|  0x0 |  status  |csr.ethernet[0..3].status|
 
 ### status register
 
@@ -536,9 +536,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet Status Register</p>
 
-|Bits|Identifier|Access|Reset|               Name              |
-|----|----------|------|-----|---------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet<i>.status.speed[1:0]|
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
@@ -555,9 +555,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet CSR</p>
 
-|Offset|Identifier|         Name         |
-|------|----------|----------------------|
-|  0x0 |  status  |csr.ethernet<i>.status|
+|Offset|Identifier|           Name          |
+|------|----------|-------------------------|
+|  0x0 |  status  |csr.ethernet[0..3].status|
 
 ### status register
 
@@ -567,9 +567,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet Status Register</p>
 
-|Bits|Identifier|Access|Reset|               Name              |
-|----|----------|------|-----|---------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet<i>.status.speed[1:0]|
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
@@ -586,9 +586,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet CSR</p>
 
-|Offset|Identifier|         Name         |
-|------|----------|----------------------|
-|  0x0 |  status  |csr.ethernet<i>.status|
+|Offset|Identifier|           Name          |
+|------|----------|-------------------------|
+|  0x0 |  status  |csr.ethernet[0..3].status|
 
 ### status register
 
@@ -598,9 +598,9 @@ Don't override. Generated from: wireguard
 
 <p>Ethernet Status Register</p>
 
-|Bits|Identifier|Access|Reset|               Name              |
-|----|----------|------|-----|---------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet<i>.status.speed[1:0]|
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
