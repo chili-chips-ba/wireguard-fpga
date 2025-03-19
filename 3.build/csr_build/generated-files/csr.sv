@@ -7,7 +7,7 @@ module csr (
 
         input wire s_cpuif_req,
         input wire s_cpuif_req_is_wr,
-        input wire [9:0] s_cpuif_addr,
+        input wire [6:0] s_cpuif_addr,
         input wire [31:0] s_cpuif_wr_data,
         input wire [31:0] s_cpuif_wr_biten,
         output wire s_cpuif_req_stall_wr,
@@ -16,20 +16,18 @@ module csr (
         output wire s_cpuif_rd_err,
         output wire [31:0] s_cpuif_rd_data,
         output wire s_cpuif_wr_ack,
-        output wire s_cpuif_wr_err
+        output wire s_cpuif_wr_err,
 
-        //input csr_pkg::csr__in_t hwif_in,
-        //output csr_pkg::csr__out_t hwif_out
+        input csr_pkg::csr__in_t hwif_in,
+        output csr_pkg::csr__out_t hwif_out
     );
 
-    wire csr_pkg::csr__in_t hwif_in;
-    wire csr_pkg::csr__out_t hwif_out;
     //--------------------------------------------------------------------------
     // CPU Bus interface logic
     //--------------------------------------------------------------------------
     logic cpuif_req;
     logic cpuif_req_is_wr;
-    logic [9:0] cpuif_addr;
+    logic [6:0] cpuif_addr;
     logic [31:0] cpuif_wr_data;
     logic [31:0] cpuif_wr_biten;
     logic cpuif_req_stall_wr;
@@ -70,12 +68,37 @@ module csr (
     typedef struct {
         struct {
             struct {
-                logic [1:0] allowed_ip[2];
-                logic public_key;
-                logic [1:0] endpoint;
-            } table_[16];
-            logic control;
-        } ip_lookup_engine;
+                logic data_31_0;
+                logic data_63_32;
+                logic data_95_64;
+                logic data_127_96;
+                logic control;
+                logic trigger;
+                logic status;
+            } rx;
+            struct {
+                logic data_31_0;
+                logic data_63_32;
+                logic data_95_64;
+                logic data_127_96;
+                logic control;
+                logic trigger;
+                logic status;
+            } tx;
+        } cpu_fifo;
+        struct {
+            logic rx;
+            logic rx_trigger;
+            logic tx;
+            logic tx_trigger;
+        } uart;
+        logic gpio;
+        struct {
+            logic status;
+        } ethernet[4];
+        struct {
+            logic fcr;
+        } dpe;
     } decoded_reg_strb_t;
     decoded_reg_strb_t decoded_reg_strb;
     logic decoded_req;
@@ -84,16 +107,29 @@ module csr (
     logic [31:0] decoded_wr_biten;
 
     always_comb begin
-        for(int i0=0; i0<16; i0++) begin
-            for(int i1=0; i1<2; i1++) begin
-                decoded_reg_strb.ip_lookup_engine.table_[i0].allowed_ip[i1][0] = cpuif_req_masked & (cpuif_addr == 10'h0 + i0*10'h20 + i1*10'h8);
-                decoded_reg_strb.ip_lookup_engine.table_[i0].allowed_ip[i1][1] = cpuif_req_masked & (cpuif_addr == 10'h4 + i0*10'h20 + i1*10'h8);
-            end
-            decoded_reg_strb.ip_lookup_engine.table_[i0].public_key = cpuif_req_masked & (cpuif_addr == 10'h10 + i0*10'h20);
-            decoded_reg_strb.ip_lookup_engine.table_[i0].endpoint[0] = cpuif_req_masked & (cpuif_addr == 10'h18 + i0*10'h20);
-            decoded_reg_strb.ip_lookup_engine.table_[i0].endpoint[1] = cpuif_req_masked & (cpuif_addr == 10'h1c + i0*10'h20);
+        decoded_reg_strb.cpu_fifo.rx.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h0);
+        decoded_reg_strb.cpu_fifo.rx.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h4);
+        decoded_reg_strb.cpu_fifo.rx.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h8);
+        decoded_reg_strb.cpu_fifo.rx.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'hc);
+        decoded_reg_strb.cpu_fifo.rx.control = cpuif_req_masked & (cpuif_addr == 7'h10);
+        decoded_reg_strb.cpu_fifo.rx.trigger = cpuif_req_masked & (cpuif_addr == 7'h14);
+        decoded_reg_strb.cpu_fifo.rx.status = cpuif_req_masked & (cpuif_addr == 7'h18);
+        decoded_reg_strb.cpu_fifo.tx.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h20);
+        decoded_reg_strb.cpu_fifo.tx.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h24);
+        decoded_reg_strb.cpu_fifo.tx.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h28);
+        decoded_reg_strb.cpu_fifo.tx.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'h2c);
+        decoded_reg_strb.cpu_fifo.tx.control = cpuif_req_masked & (cpuif_addr == 7'h30);
+        decoded_reg_strb.cpu_fifo.tx.trigger = cpuif_req_masked & (cpuif_addr == 7'h34);
+        decoded_reg_strb.cpu_fifo.tx.status = cpuif_req_masked & (cpuif_addr == 7'h38);
+        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 7'h40);
+        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 7'h44);
+        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 7'h48);
+        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 7'h4c);
+        decoded_reg_strb.gpio = cpuif_req_masked & (cpuif_addr == 7'h50);
+        for(int i0=0; i0<4; i0++) begin
+            decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 7'h54 + (7)'(i0) * 7'h4);
         end
-        decoded_reg_strb.ip_lookup_engine.control = cpuif_req_masked & (cpuif_addr == 10'h200);
+        decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 7'h64);
     end
 
     // Pass down signals to next stage
@@ -102,101 +138,6 @@ module csr (
     assign decoded_wr_data = cpuif_wr_data;
     assign decoded_wr_biten = cpuif_wr_biten;
 
-
-    //--------------------------------------------------------------------------
-    // Write double-buffers
-    //--------------------------------------------------------------------------
-    typedef struct {
-        struct {
-            struct {
-                struct {
-                    logic [63:0] data;
-                    logic [63:0] biten;
-                    logic pending;
-                } allowed_ip[2];
-                struct {
-                    logic [31:0] data;
-                    logic [31:0] biten;
-                    logic pending;
-                } public_key;
-                struct {
-                    logic [63:0] data;
-                    logic [63:0] biten;
-                    logic pending;
-                } endpoint;
-            } table_[16];
-        } ip_lookup_engine;
-    } wbuf_storage_t;
-    wbuf_storage_t wbuf_storage;
-
-    for(genvar i0=0; i0<16; i0++) begin
-        for(genvar i1=0; i1<2; i1++) begin
-            always_ff @(posedge clk) begin
-                if(rst) begin
-                    wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].pending <= '0;
-                    wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data <= '0;
-                    wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten <= '0;
-                end else begin
-                    if(decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].pending <= '0;
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data <= '0;
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten <= '0;
-                    end
-                    if(decoded_reg_strb.ip_lookup_engine.table_[i0].allowed_ip[i1][0] && decoded_req_is_wr) begin
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].pending <= '1;
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data[31:0] <= (wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data[31:0] & ~decoded_wr_biten) | (decoded_wr_data & decoded_wr_biten);
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[31:0] <= wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[31:0] | decoded_wr_biten;
-                    end
-                    if(decoded_reg_strb.ip_lookup_engine.table_[i0].allowed_ip[i1][1] && decoded_req_is_wr) begin
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].pending <= '1;
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data[63:32] <= (wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data[63:32] & ~decoded_wr_biten) | (decoded_wr_data & decoded_wr_biten);
-                        wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[63:32] <= wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[63:32] | decoded_wr_biten;
-                    end
-                end
-            end
-        end
-        always_ff @(posedge clk) begin
-            if(rst) begin
-                wbuf_storage.ip_lookup_engine.table_[i0].public_key.pending <= '0;
-                wbuf_storage.ip_lookup_engine.table_[i0].public_key.data <= '0;
-                wbuf_storage.ip_lookup_engine.table_[i0].public_key.biten <= '0;
-            end else begin
-                if(decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin
-                    wbuf_storage.ip_lookup_engine.table_[i0].public_key.pending <= '0;
-                    wbuf_storage.ip_lookup_engine.table_[i0].public_key.data <= '0;
-                    wbuf_storage.ip_lookup_engine.table_[i0].public_key.biten <= '0;
-                end
-                if(decoded_reg_strb.ip_lookup_engine.table_[i0].public_key && decoded_req_is_wr) begin
-                    wbuf_storage.ip_lookup_engine.table_[i0].public_key.pending <= '1;
-                    wbuf_storage.ip_lookup_engine.table_[i0].public_key.data <= (wbuf_storage.ip_lookup_engine.table_[i0].public_key.data & ~decoded_wr_biten) | (decoded_wr_data & decoded_wr_biten);
-                    wbuf_storage.ip_lookup_engine.table_[i0].public_key.biten <= wbuf_storage.ip_lookup_engine.table_[i0].public_key.biten | decoded_wr_biten;
-                end
-            end
-        end
-        always_ff @(posedge clk) begin
-            if(rst) begin
-                wbuf_storage.ip_lookup_engine.table_[i0].endpoint.pending <= '0;
-                wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data <= '0;
-                wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten <= '0;
-            end else begin
-                if(decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.pending <= '0;
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data <= '0;
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten <= '0;
-                end
-                if(decoded_reg_strb.ip_lookup_engine.table_[i0].endpoint[0] && decoded_req_is_wr) begin
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.pending <= '1;
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data[31:0] <= (wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data[31:0] & ~decoded_wr_biten) | (decoded_wr_data & decoded_wr_biten);
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[31:0] <= wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[31:0] | decoded_wr_biten;
-                end
-                if(decoded_reg_strb.ip_lookup_engine.table_[i0].endpoint[1] && decoded_req_is_wr) begin
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.pending <= '1;
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data[63:32] <= (wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data[63:32] & ~decoded_wr_biten) | (decoded_wr_data & decoded_wr_biten);
-                    wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[63:32] <= wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[63:32] | decoded_wr_biten;
-                end
-            end
-        end
-    end
     //--------------------------------------------------------------------------
     // Field logic
     //--------------------------------------------------------------------------
@@ -207,40 +148,106 @@ module csr (
                     struct {
                         logic [31:0] next;
                         logic load_next;
-                    } address;
-                    struct {
-                        logic [31:0] next;
-                        logic load_next;
-                    } mask;
-                } allowed_ip[2];
+                    } tdata;
+                } data_31_0;
                 struct {
                     struct {
                         logic [31:0] next;
                         logic load_next;
-                    } key;
-                } public_key;
+                    } tdata;
+                } data_63_32;
                 struct {
                     struct {
                         logic [31:0] next;
                         logic load_next;
-                    } address;
+                    } tdata;
+                } data_95_64;
+                struct {
                     struct {
-                        logic [15:0] next;
+                        logic [31:0] next;
                         logic load_next;
-                    } port;
+                    } tdata;
+                } data_127_96;
+                struct {
                     struct {
                         logic [2:0] next;
                         logic load_next;
-                    } interface_;
-                } endpoint;
-            } table_[16];
+                    } tuser_dst;
+                    struct {
+                        logic [2:0] next;
+                        logic load_next;
+                    } tuser_src;
+                    struct {
+                        logic next;
+                        logic load_next;
+                    } tuser_bypass_stage;
+                    struct {
+                        logic next;
+                        logic load_next;
+                    } tuser_bypass_all;
+                    struct {
+                        logic next;
+                        logic load_next;
+                    } tlast;
+                    struct {
+                        logic [15:0] next;
+                        logic load_next;
+                    } tkeep;
+                } control;
+                struct {
+                    struct {
+                        logic next;
+                        logic load_next;
+                    } tvalid;
+                } trigger;
+            } rx;
+            struct {
+                struct {
+                    struct {
+                        logic next;
+                        logic load_next;
+                    } tready;
+                } trigger;
+            } tx;
+        } cpu_fifo;
+        struct {
             struct {
                 struct {
                     logic next;
                     logic load_next;
-                } update;
-            } control;
-        } ip_lookup_engine;
+                } read;
+            } rx_trigger;
+            struct {
+                struct {
+                    logic [7:0] next;
+                    logic load_next;
+                } data;
+            } tx;
+            struct {
+                struct {
+                    logic next;
+                    logic load_next;
+                } write;
+            } tx_trigger;
+        } uart;
+        struct {
+            struct {
+                logic next;
+                logic load_next;
+            } led1;
+            struct {
+                logic next;
+                logic load_next;
+            } led2;
+        } gpio;
+        struct {
+            struct {
+                struct {
+                    logic next;
+                    logic load_next;
+                } pause;
+            } fcr;
+        } dpe;
     } field_combo_t;
     field_combo_t field_combo;
 
@@ -250,194 +257,520 @@ module csr (
                 struct {
                     struct {
                         logic [31:0] value;
-                    } address;
-                    struct {
-                        logic [31:0] value;
-                    } mask;
-                } allowed_ip[2];
+                    } tdata;
+                } data_31_0;
                 struct {
                     struct {
                         logic [31:0] value;
-                    } key;
-                } public_key;
+                    } tdata;
+                } data_63_32;
                 struct {
                     struct {
                         logic [31:0] value;
-                    } address;
+                    } tdata;
+                } data_95_64;
+                struct {
                     struct {
-                        logic [15:0] value;
-                    } port;
+                        logic [31:0] value;
+                    } tdata;
+                } data_127_96;
+                struct {
                     struct {
                         logic [2:0] value;
-                    } interface_;
-                } endpoint;
-            } table_[16];
+                    } tuser_dst;
+                    struct {
+                        logic [2:0] value;
+                    } tuser_src;
+                    struct {
+                        logic value;
+                    } tuser_bypass_stage;
+                    struct {
+                        logic value;
+                    } tuser_bypass_all;
+                    struct {
+                        logic value;
+                    } tlast;
+                    struct {
+                        logic [15:0] value;
+                    } tkeep;
+                } control;
+                struct {
+                    struct {
+                        logic value;
+                    } tvalid;
+                } trigger;
+            } rx;
+            struct {
+                struct {
+                    struct {
+                        logic value;
+                    } tready;
+                } trigger;
+            } tx;
+        } cpu_fifo;
+        struct {
             struct {
                 struct {
                     logic value;
-                } update;
-            } control;
-        } ip_lookup_engine;
+                } read;
+            } rx_trigger;
+            struct {
+                struct {
+                    logic [7:0] value;
+                } data;
+            } tx;
+            struct {
+                struct {
+                    logic value;
+                } write;
+            } tx_trigger;
+        } uart;
+        struct {
+            struct {
+                logic value;
+            } led1;
+            struct {
+                logic value;
+            } led2;
+        } gpio;
+        struct {
+            struct {
+                struct {
+                    logic value;
+                } pause;
+            } fcr;
+        } dpe;
     } field_storage_t;
     field_storage_t field_storage;
 
-    for(genvar i0=0; i0<16; i0++) begin
-        for(genvar i1=0; i1<2; i1++) begin
-            // Field: csr.ip_lookup_engine.table[].allowed_ip[].address
-            always_comb begin
-                automatic logic [31:0] next_c;
-                automatic logic load_next_c;
-                next_c = field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].address.value;
-                load_next_c = '0;
-                if(wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].pending && decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin // SW write
-                    next_c = (field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].address.value & ~wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[31:0]) | (wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data[31:0] & wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[31:0]);
-                    load_next_c = '1;
-                end
-                field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].address.next = next_c;
-                field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].address.load_next = load_next_c;
-            end
-
-            always_ff @(posedge clk) begin
-                if(field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].address.load_next) begin
-                    field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].address.value <= field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].address.next;
-                end
-            end
-            assign hwif_out.ip_lookup_engine.table_[i0].allowed_ip[i1].address.value = field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].address.value;
-            // Field: csr.ip_lookup_engine.table[].allowed_ip[].mask
-            always_comb begin
-                automatic logic [31:0] next_c;
-                automatic logic load_next_c;
-                next_c = field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.value;
-                load_next_c = '0;
-                if(wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].pending && decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin // SW write
-                    next_c = (field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.value & ~wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[63:32]) | (wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].data[63:32] & wbuf_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].biten[63:32]);
-                    load_next_c = '1;
-                end
-                field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.next = next_c;
-                field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.load_next = load_next_c;
-            end
-
-            always_ff @(posedge clk) begin
-                if(field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.load_next) begin
-                    field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.value <= field_combo.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.next;
-                end
-            end
-            assign hwif_out.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.value = field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.value;
+    // Field: csr.cpu_fifo.rx.data_31_0.tdata
+    always_comb begin
+        automatic logic [31:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.data_31_0.tdata.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.data_31_0 && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.data_31_0.tdata.value & ~decoded_wr_biten[31:0]) | (decoded_wr_data[31:0] & decoded_wr_biten[31:0]);
+            load_next_c = '1;
         end
-        // Field: csr.ip_lookup_engine.table[].public_key.key
-        always_comb begin
-            automatic logic [31:0] next_c;
-            automatic logic load_next_c;
-            next_c = field_storage.ip_lookup_engine.table_[i0].public_key.key.value;
-            load_next_c = '0;
-            if(wbuf_storage.ip_lookup_engine.table_[i0].public_key.pending && decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin // SW write
-                next_c = (field_storage.ip_lookup_engine.table_[i0].public_key.key.value & ~wbuf_storage.ip_lookup_engine.table_[i0].public_key.biten[31:0]) | (wbuf_storage.ip_lookup_engine.table_[i0].public_key.data[31:0] & wbuf_storage.ip_lookup_engine.table_[i0].public_key.biten[31:0]);
-                load_next_c = '1;
-            end
-            field_combo.ip_lookup_engine.table_[i0].public_key.key.next = next_c;
-            field_combo.ip_lookup_engine.table_[i0].public_key.key.load_next = load_next_c;
-        end
-
-        always_ff @(posedge clk) begin
-            if(field_combo.ip_lookup_engine.table_[i0].public_key.key.load_next) begin
-                field_storage.ip_lookup_engine.table_[i0].public_key.key.value <= field_combo.ip_lookup_engine.table_[i0].public_key.key.next;
-            end
-        end
-        assign hwif_out.ip_lookup_engine.table_[i0].public_key.key.value = field_storage.ip_lookup_engine.table_[i0].public_key.key.value;
-        // Field: csr.ip_lookup_engine.table[].endpoint.address
-        always_comb begin
-            automatic logic [31:0] next_c;
-            automatic logic load_next_c;
-            next_c = field_storage.ip_lookup_engine.table_[i0].endpoint.address.value;
-            load_next_c = '0;
-            if(wbuf_storage.ip_lookup_engine.table_[i0].endpoint.pending && decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin // SW write
-                next_c = (field_storage.ip_lookup_engine.table_[i0].endpoint.address.value & ~wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[31:0]) | (wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data[31:0] & wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[31:0]);
-                load_next_c = '1;
-            end else if(hwif_in.ip_lookup_engine.table_[i0].endpoint.address.we) begin // HW Write - we
-                next_c = hwif_in.ip_lookup_engine.table_[i0].endpoint.address.next;
-                load_next_c = '1;
-            end
-            field_combo.ip_lookup_engine.table_[i0].endpoint.address.next = next_c;
-            field_combo.ip_lookup_engine.table_[i0].endpoint.address.load_next = load_next_c;
-        end
-
-        always_ff @(posedge clk) begin
-            if(field_combo.ip_lookup_engine.table_[i0].endpoint.address.load_next) begin
-                field_storage.ip_lookup_engine.table_[i0].endpoint.address.value <= field_combo.ip_lookup_engine.table_[i0].endpoint.address.next;
-            end
-        end
-        assign hwif_out.ip_lookup_engine.table_[i0].endpoint.address.value = field_storage.ip_lookup_engine.table_[i0].endpoint.address.value;
-        // Field: csr.ip_lookup_engine.table[].endpoint.port
-        always_comb begin
-            automatic logic [15:0] next_c;
-            automatic logic load_next_c;
-            next_c = field_storage.ip_lookup_engine.table_[i0].endpoint.port.value;
-            load_next_c = '0;
-            if(wbuf_storage.ip_lookup_engine.table_[i0].endpoint.pending && decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin // SW write
-                next_c = (field_storage.ip_lookup_engine.table_[i0].endpoint.port.value & ~wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[47:32]) | (wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data[47:32] & wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[47:32]);
-                load_next_c = '1;
-            end else if(hwif_in.ip_lookup_engine.table_[i0].endpoint.port.we) begin // HW Write - we
-                next_c = hwif_in.ip_lookup_engine.table_[i0].endpoint.port.next;
-                load_next_c = '1;
-            end
-            field_combo.ip_lookup_engine.table_[i0].endpoint.port.next = next_c;
-            field_combo.ip_lookup_engine.table_[i0].endpoint.port.load_next = load_next_c;
-        end
-
-        always_ff @(posedge clk) begin
-            if(field_combo.ip_lookup_engine.table_[i0].endpoint.port.load_next) begin
-                field_storage.ip_lookup_engine.table_[i0].endpoint.port.value <= field_combo.ip_lookup_engine.table_[i0].endpoint.port.next;
-            end
-        end
-        assign hwif_out.ip_lookup_engine.table_[i0].endpoint.port.value = field_storage.ip_lookup_engine.table_[i0].endpoint.port.value;
-        // Field: csr.ip_lookup_engine.table[].endpoint.interface
-        always_comb begin
-            automatic logic [2:0] next_c;
-            automatic logic load_next_c;
-            next_c = field_storage.ip_lookup_engine.table_[i0].endpoint.interface_.value;
-            load_next_c = '0;
-            if(wbuf_storage.ip_lookup_engine.table_[i0].endpoint.pending && decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin // SW write
-                next_c = (field_storage.ip_lookup_engine.table_[i0].endpoint.interface_.value & ~wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[50:48]) | (wbuf_storage.ip_lookup_engine.table_[i0].endpoint.data[50:48] & wbuf_storage.ip_lookup_engine.table_[i0].endpoint.biten[50:48]);
-                load_next_c = '1;
-            end else if(hwif_in.ip_lookup_engine.table_[i0].endpoint.interface_.we) begin // HW Write - we
-                next_c = hwif_in.ip_lookup_engine.table_[i0].endpoint.interface_.next;
-                load_next_c = '1;
-            end
-            field_combo.ip_lookup_engine.table_[i0].endpoint.interface_.next = next_c;
-            field_combo.ip_lookup_engine.table_[i0].endpoint.interface_.load_next = load_next_c;
-        end
-
-        always_ff @(posedge clk) begin
-            if(field_combo.ip_lookup_engine.table_[i0].endpoint.interface_.load_next) begin
-                field_storage.ip_lookup_engine.table_[i0].endpoint.interface_.value <= field_combo.ip_lookup_engine.table_[i0].endpoint.interface_.next;
-            end
-        end
-        assign hwif_out.ip_lookup_engine.table_[i0].endpoint.interface_.value = field_storage.ip_lookup_engine.table_[i0].endpoint.interface_.value;
+        field_combo.cpu_fifo.rx.data_31_0.tdata.next = next_c;
+        field_combo.cpu_fifo.rx.data_31_0.tdata.load_next = load_next_c;
     end
-    // Field: csr.ip_lookup_engine.control.update
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.data_31_0.tdata.value <= 32'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.data_31_0.tdata.load_next) begin
+                field_storage.cpu_fifo.rx.data_31_0.tdata.value <= field_combo.cpu_fifo.rx.data_31_0.tdata.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.data_31_0.tdata.value = field_storage.cpu_fifo.rx.data_31_0.tdata.value;
+    // Field: csr.cpu_fifo.rx.data_63_32.tdata
+    always_comb begin
+        automatic logic [31:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.data_63_32.tdata.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.data_63_32 && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.data_63_32.tdata.value & ~decoded_wr_biten[31:0]) | (decoded_wr_data[31:0] & decoded_wr_biten[31:0]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.data_63_32.tdata.next = next_c;
+        field_combo.cpu_fifo.rx.data_63_32.tdata.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.data_63_32.tdata.value <= 32'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.data_63_32.tdata.load_next) begin
+                field_storage.cpu_fifo.rx.data_63_32.tdata.value <= field_combo.cpu_fifo.rx.data_63_32.tdata.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.data_63_32.tdata.value = field_storage.cpu_fifo.rx.data_63_32.tdata.value;
+    // Field: csr.cpu_fifo.rx.data_95_64.tdata
+    always_comb begin
+        automatic logic [31:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.data_95_64.tdata.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.data_95_64 && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.data_95_64.tdata.value & ~decoded_wr_biten[31:0]) | (decoded_wr_data[31:0] & decoded_wr_biten[31:0]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.data_95_64.tdata.next = next_c;
+        field_combo.cpu_fifo.rx.data_95_64.tdata.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.data_95_64.tdata.value <= 32'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.data_95_64.tdata.load_next) begin
+                field_storage.cpu_fifo.rx.data_95_64.tdata.value <= field_combo.cpu_fifo.rx.data_95_64.tdata.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.data_95_64.tdata.value = field_storage.cpu_fifo.rx.data_95_64.tdata.value;
+    // Field: csr.cpu_fifo.rx.data_127_96.tdata
+    always_comb begin
+        automatic logic [31:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.data_127_96.tdata.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.data_127_96 && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.data_127_96.tdata.value & ~decoded_wr_biten[31:0]) | (decoded_wr_data[31:0] & decoded_wr_biten[31:0]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.data_127_96.tdata.next = next_c;
+        field_combo.cpu_fifo.rx.data_127_96.tdata.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.data_127_96.tdata.value <= 32'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.data_127_96.tdata.load_next) begin
+                field_storage.cpu_fifo.rx.data_127_96.tdata.value <= field_combo.cpu_fifo.rx.data_127_96.tdata.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.data_127_96.tdata.value = field_storage.cpu_fifo.rx.data_127_96.tdata.value;
+    // Field: csr.cpu_fifo.rx.control.tuser_dst
+    always_comb begin
+        automatic logic [2:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.control.tuser_dst.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.control && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.control.tuser_dst.value & ~decoded_wr_biten[2:0]) | (decoded_wr_data[2:0] & decoded_wr_biten[2:0]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.control.tuser_dst.next = next_c;
+        field_combo.cpu_fifo.rx.control.tuser_dst.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.control.tuser_dst.value <= 3'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.control.tuser_dst.load_next) begin
+                field_storage.cpu_fifo.rx.control.tuser_dst.value <= field_combo.cpu_fifo.rx.control.tuser_dst.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.control.tuser_dst.value = field_storage.cpu_fifo.rx.control.tuser_dst.value;
+    // Field: csr.cpu_fifo.rx.control.tuser_src
+    always_comb begin
+        automatic logic [2:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.control.tuser_src.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.control && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.control.tuser_src.value & ~decoded_wr_biten[5:3]) | (decoded_wr_data[5:3] & decoded_wr_biten[5:3]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.control.tuser_src.next = next_c;
+        field_combo.cpu_fifo.rx.control.tuser_src.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.control.tuser_src.value <= 3'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.control.tuser_src.load_next) begin
+                field_storage.cpu_fifo.rx.control.tuser_src.value <= field_combo.cpu_fifo.rx.control.tuser_src.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.control.tuser_src.value = field_storage.cpu_fifo.rx.control.tuser_src.value;
+    // Field: csr.cpu_fifo.rx.control.tuser_bypass_stage
     always_comb begin
         automatic logic [0:0] next_c;
         automatic logic load_next_c;
-        next_c = field_storage.ip_lookup_engine.control.update.value;
+        next_c = field_storage.cpu_fifo.rx.control.tuser_bypass_stage.value;
         load_next_c = '0;
-        if(decoded_reg_strb.ip_lookup_engine.control && decoded_req_is_wr) begin // SW write
-            next_c = (field_storage.ip_lookup_engine.control.update.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
+        if(decoded_reg_strb.cpu_fifo.rx.control && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.control.tuser_bypass_stage.value & ~decoded_wr_biten[6:6]) | (decoded_wr_data[6:6] & decoded_wr_biten[6:6]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.control.tuser_bypass_stage.next = next_c;
+        field_combo.cpu_fifo.rx.control.tuser_bypass_stage.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.control.tuser_bypass_stage.value <= 1'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.control.tuser_bypass_stage.load_next) begin
+                field_storage.cpu_fifo.rx.control.tuser_bypass_stage.value <= field_combo.cpu_fifo.rx.control.tuser_bypass_stage.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.control.tuser_bypass_stage.value = field_storage.cpu_fifo.rx.control.tuser_bypass_stage.value;
+    // Field: csr.cpu_fifo.rx.control.tuser_bypass_all
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.control.tuser_bypass_all.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.control && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.control.tuser_bypass_all.value & ~decoded_wr_biten[7:7]) | (decoded_wr_data[7:7] & decoded_wr_biten[7:7]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.control.tuser_bypass_all.next = next_c;
+        field_combo.cpu_fifo.rx.control.tuser_bypass_all.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.control.tuser_bypass_all.value <= 1'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.control.tuser_bypass_all.load_next) begin
+                field_storage.cpu_fifo.rx.control.tuser_bypass_all.value <= field_combo.cpu_fifo.rx.control.tuser_bypass_all.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.control.tuser_bypass_all.value = field_storage.cpu_fifo.rx.control.tuser_bypass_all.value;
+    // Field: csr.cpu_fifo.rx.control.tlast
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.control.tlast.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.control && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.control.tlast.value & ~decoded_wr_biten[15:15]) | (decoded_wr_data[15:15] & decoded_wr_biten[15:15]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.control.tlast.next = next_c;
+        field_combo.cpu_fifo.rx.control.tlast.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.control.tlast.value <= 1'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.control.tlast.load_next) begin
+                field_storage.cpu_fifo.rx.control.tlast.value <= field_combo.cpu_fifo.rx.control.tlast.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.control.tlast.value = field_storage.cpu_fifo.rx.control.tlast.value;
+    // Field: csr.cpu_fifo.rx.control.tkeep
+    always_comb begin
+        automatic logic [15:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.control.tkeep.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.control && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.control.tkeep.value & ~decoded_wr_biten[31:16]) | (decoded_wr_data[31:16] & decoded_wr_biten[31:16]);
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.rx.control.tkeep.next = next_c;
+        field_combo.cpu_fifo.rx.control.tkeep.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.rx.control.tkeep.value <= 16'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.control.tkeep.load_next) begin
+                field_storage.cpu_fifo.rx.control.tkeep.value <= field_combo.cpu_fifo.rx.control.tkeep.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.rx.control.tkeep.value = field_storage.cpu_fifo.rx.control.tkeep.value;
+    // Field: csr.cpu_fifo.rx.trigger.tvalid
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.rx.trigger.tvalid.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.rx.trigger && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.rx.trigger.tvalid.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
             load_next_c = '1;
         end else begin // singlepulse clears back to 0
             next_c = '0;
             load_next_c = '1;
         end
-        field_combo.ip_lookup_engine.control.update.next = next_c;
-        field_combo.ip_lookup_engine.control.update.load_next = load_next_c;
+        field_combo.cpu_fifo.rx.trigger.tvalid.next = next_c;
+        field_combo.cpu_fifo.rx.trigger.tvalid.load_next = load_next_c;
     end
     always_ff @(posedge clk) begin
         if(rst) begin
-            field_storage.ip_lookup_engine.control.update.value <= 1'h0;
-        end else if(field_combo.ip_lookup_engine.control.update.load_next) begin
-            field_storage.ip_lookup_engine.control.update.value <= field_combo.ip_lookup_engine.control.update.next;
+            field_storage.cpu_fifo.rx.trigger.tvalid.value <= 1'h0;
+        end else begin
+            if(field_combo.cpu_fifo.rx.trigger.tvalid.load_next) begin
+                field_storage.cpu_fifo.rx.trigger.tvalid.value <= field_combo.cpu_fifo.rx.trigger.tvalid.next;
+            end
         end
     end
-    assign hwif_out.ip_lookup_engine.control.update.value = field_storage.ip_lookup_engine.control.update.value;
+    assign hwif_out.cpu_fifo.rx.trigger.tvalid.value = field_storage.cpu_fifo.rx.trigger.tvalid.value;
+    // Field: csr.cpu_fifo.tx.trigger.tready
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.cpu_fifo.tx.trigger.tready.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.cpu_fifo.tx.trigger && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.cpu_fifo.tx.trigger.tready.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
+            load_next_c = '1;
+        end else begin // singlepulse clears back to 0
+            next_c = '0;
+            load_next_c = '1;
+        end
+        field_combo.cpu_fifo.tx.trigger.tready.next = next_c;
+        field_combo.cpu_fifo.tx.trigger.tready.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.cpu_fifo.tx.trigger.tready.value <= 1'h0;
+        end else begin
+            if(field_combo.cpu_fifo.tx.trigger.tready.load_next) begin
+                field_storage.cpu_fifo.tx.trigger.tready.value <= field_combo.cpu_fifo.tx.trigger.tready.next;
+            end
+        end
+    end
+    assign hwif_out.cpu_fifo.tx.trigger.tready.value = field_storage.cpu_fifo.tx.trigger.tready.value;
+    assign hwif_out.uart.rx.data.swacc = decoded_reg_strb.uart.rx;
+    // Field: csr.uart.rx_trigger.read
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.uart.rx_trigger.read.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.uart.rx_trigger && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.uart.rx_trigger.read.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
+            load_next_c = '1;
+        end else begin // HW Write
+            next_c = decoded_reg_strb.uart.rx;
+            load_next_c = '1;
+        end
+        field_combo.uart.rx_trigger.read.next = next_c;
+        field_combo.uart.rx_trigger.read.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.uart.rx_trigger.read.value <= 1'h0;
+        end else begin
+            if(field_combo.uart.rx_trigger.read.load_next) begin
+                field_storage.uart.rx_trigger.read.value <= field_combo.uart.rx_trigger.read.next;
+            end
+        end
+    end
+    assign hwif_out.uart.rx_trigger.read.value = field_storage.uart.rx_trigger.read.value;
+    // Field: csr.uart.tx.data
+    always_comb begin
+        automatic logic [7:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.uart.tx.data.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.uart.tx && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.uart.tx.data.value & ~decoded_wr_biten[7:0]) | (decoded_wr_data[7:0] & decoded_wr_biten[7:0]);
+            load_next_c = '1;
+        end
+        field_combo.uart.tx.data.next = next_c;
+        field_combo.uart.tx.data.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.uart.tx.data.value <= 8'h0;
+        end else begin
+            if(field_combo.uart.tx.data.load_next) begin
+                field_storage.uart.tx.data.value <= field_combo.uart.tx.data.next;
+            end
+        end
+    end
+    assign hwif_out.uart.tx.data.value = field_storage.uart.tx.data.value;
+    assign hwif_out.uart.tx.data.swmod = decoded_reg_strb.uart.tx && decoded_req_is_wr;
+    // Field: csr.uart.tx_trigger.write
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.uart.tx_trigger.write.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.uart.tx_trigger && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.uart.tx_trigger.write.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
+            load_next_c = '1;
+        end else begin // HW Write
+            next_c = decoded_reg_strb.uart.tx && decoded_req_is_wr;
+            load_next_c = '1;
+        end
+        field_combo.uart.tx_trigger.write.next = next_c;
+        field_combo.uart.tx_trigger.write.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.uart.tx_trigger.write.value <= 1'h0;
+        end else begin
+            if(field_combo.uart.tx_trigger.write.load_next) begin
+                field_storage.uart.tx_trigger.write.value <= field_combo.uart.tx_trigger.write.next;
+            end
+        end
+    end
+    assign hwif_out.uart.tx_trigger.write.value = field_storage.uart.tx_trigger.write.value;
+    // Field: csr.gpio.led1
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.gpio.led1.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.gpio && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.gpio.led1.value & ~decoded_wr_biten[8:8]) | (decoded_wr_data[8:8] & decoded_wr_biten[8:8]);
+            load_next_c = '1;
+        end
+        field_combo.gpio.led1.next = next_c;
+        field_combo.gpio.led1.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.gpio.led1.value <= 1'h0;
+        end else begin
+            if(field_combo.gpio.led1.load_next) begin
+                field_storage.gpio.led1.value <= field_combo.gpio.led1.next;
+            end
+        end
+    end
+    assign hwif_out.gpio.led1.value = field_storage.gpio.led1.value;
+    // Field: csr.gpio.led2
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.gpio.led2.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.gpio && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.gpio.led2.value & ~decoded_wr_biten[9:9]) | (decoded_wr_data[9:9] & decoded_wr_biten[9:9]);
+            load_next_c = '1;
+        end
+        field_combo.gpio.led2.next = next_c;
+        field_combo.gpio.led2.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.gpio.led2.value <= 1'h0;
+        end else begin
+            if(field_combo.gpio.led2.load_next) begin
+                field_storage.gpio.led2.value <= field_combo.gpio.led2.next;
+            end
+        end
+    end
+    assign hwif_out.gpio.led2.value = field_storage.gpio.led2.value;
+    // Field: csr.dpe.fcr.pause
+    always_comb begin
+        automatic logic [0:0] next_c;
+        automatic logic load_next_c;
+        next_c = field_storage.dpe.fcr.pause.value;
+        load_next_c = '0;
+        if(decoded_reg_strb.dpe.fcr && decoded_req_is_wr) begin // SW write
+            next_c = (field_storage.dpe.fcr.pause.value & ~decoded_wr_biten[31:31]) | (decoded_wr_data[31:31] & decoded_wr_biten[31:31]);
+            load_next_c = '1;
+        end
+        field_combo.dpe.fcr.pause.next = next_c;
+        field_combo.dpe.fcr.pause.load_next = load_next_c;
+    end
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            field_storage.dpe.fcr.pause.value <= 1'h0;
+        end else begin
+            if(field_combo.dpe.fcr.pause.load_next) begin
+                field_storage.dpe.fcr.pause.value <= field_combo.dpe.fcr.pause.next;
+            end
+        end
+    end
+    assign hwif_out.dpe.fcr.pause.value = field_storage.dpe.fcr.pause.value;
 
     //--------------------------------------------------------------------------
     // Write response
@@ -455,20 +788,61 @@ module csr (
     logic [31:0] readback_data;
 
     // Assign readback values to a flattened array
-    logic [31:0] readback_array[113];
-    for(genvar i0=0; i0<16; i0++) begin
-        for(genvar i1=0; i1<2; i1++) begin
-            assign readback_array[i0*7 + i1*2 + 0][31:0] = (decoded_reg_strb.ip_lookup_engine.table_[i0].allowed_ip[i1][0] && !decoded_req_is_wr) ? field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].address.value : '0;
-            assign readback_array[i0*7 + i1*2 + 1][31:0] = (decoded_reg_strb.ip_lookup_engine.table_[i0].allowed_ip[i1][1] && !decoded_req_is_wr) ? field_storage.ip_lookup_engine.table_[i0].allowed_ip[i1].mask.value : '0;
-        end
-        assign readback_array[i0*7 + 4][31:0] = (decoded_reg_strb.ip_lookup_engine.table_[i0].public_key && !decoded_req_is_wr) ? field_storage.ip_lookup_engine.table_[i0].public_key.key.value : '0;
-        assign readback_array[i0*7 + 5][31:0] = (decoded_reg_strb.ip_lookup_engine.table_[i0].endpoint[0] && !decoded_req_is_wr) ? field_storage.ip_lookup_engine.table_[i0].endpoint.address.value : '0;
-        assign readback_array[i0*7 + 6][15:0] = (decoded_reg_strb.ip_lookup_engine.table_[i0].endpoint[1] && !decoded_req_is_wr) ? field_storage.ip_lookup_engine.table_[i0].endpoint.port.value : '0;
-        assign readback_array[i0*7 + 6][18:16] = (decoded_reg_strb.ip_lookup_engine.table_[i0].endpoint[1] && !decoded_req_is_wr) ? field_storage.ip_lookup_engine.table_[i0].endpoint.interface_.value : '0;
-        assign readback_array[i0*7 + 6][31:19] = '0;
+    logic [31:0] readback_array[24];
+    assign readback_array[0][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_31_0 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_31_0.tdata.value : '0;
+    assign readback_array[1][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_63_32 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_63_32.tdata.value : '0;
+    assign readback_array[2][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_95_64 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_95_64.tdata.value : '0;
+    assign readback_array[3][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_127_96 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_127_96.tdata.value : '0;
+    assign readback_array[4][2:0] = (decoded_reg_strb.cpu_fifo.rx.control && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.control.tuser_dst.value : '0;
+    assign readback_array[4][5:3] = (decoded_reg_strb.cpu_fifo.rx.control && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.control.tuser_src.value : '0;
+    assign readback_array[4][6:6] = (decoded_reg_strb.cpu_fifo.rx.control && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.control.tuser_bypass_stage.value : '0;
+    assign readback_array[4][7:7] = (decoded_reg_strb.cpu_fifo.rx.control && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.control.tuser_bypass_all.value : '0;
+    assign readback_array[4][14:8] = '0;
+    assign readback_array[4][15:15] = (decoded_reg_strb.cpu_fifo.rx.control && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.control.tlast.value : '0;
+    assign readback_array[4][31:16] = (decoded_reg_strb.cpu_fifo.rx.control && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.control.tkeep.value : '0;
+    assign readback_array[5][0:0] = (decoded_reg_strb.cpu_fifo.rx.trigger && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.trigger.tvalid.value : '0;
+    assign readback_array[5][31:1] = '0;
+    assign readback_array[6][0:0] = (decoded_reg_strb.cpu_fifo.rx.status && !decoded_req_is_wr) ? hwif_in.cpu_fifo.rx.status.tready.next : '0;
+    assign readback_array[6][31:1] = '0;
+    assign readback_array[7][31:0] = (decoded_reg_strb.cpu_fifo.tx.data_31_0 && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.data_31_0.tdata.next : '0;
+    assign readback_array[8][31:0] = (decoded_reg_strb.cpu_fifo.tx.data_63_32 && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.data_63_32.tdata.next : '0;
+    assign readback_array[9][31:0] = (decoded_reg_strb.cpu_fifo.tx.data_95_64 && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.data_95_64.tdata.next : '0;
+    assign readback_array[10][31:0] = (decoded_reg_strb.cpu_fifo.tx.data_127_96 && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.data_127_96.tdata.next : '0;
+    assign readback_array[11][2:0] = (decoded_reg_strb.cpu_fifo.tx.control && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.control.tuser_dst.next : '0;
+    assign readback_array[11][5:3] = (decoded_reg_strb.cpu_fifo.tx.control && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.control.tuser_src.next : '0;
+    assign readback_array[11][6:6] = (decoded_reg_strb.cpu_fifo.tx.control && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.control.tuser_bypass_stage.next : '0;
+    assign readback_array[11][7:7] = (decoded_reg_strb.cpu_fifo.tx.control && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.control.tuser_bypass_all.next : '0;
+    assign readback_array[11][14:8] = '0;
+    assign readback_array[11][15:15] = (decoded_reg_strb.cpu_fifo.tx.control && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.control.tlast.next : '0;
+    assign readback_array[11][31:16] = (decoded_reg_strb.cpu_fifo.tx.control && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.control.tkeep.next : '0;
+    assign readback_array[12][0:0] = (decoded_reg_strb.cpu_fifo.tx.trigger && !decoded_req_is_wr) ? field_storage.cpu_fifo.tx.trigger.tready.value : '0;
+    assign readback_array[12][31:1] = '0;
+    assign readback_array[13][0:0] = (decoded_reg_strb.cpu_fifo.tx.status && !decoded_req_is_wr) ? hwif_in.cpu_fifo.tx.status.tvalid.next : '0;
+    assign readback_array[13][31:1] = '0;
+    assign readback_array[14][7:0] = (decoded_reg_strb.uart.rx && !decoded_req_is_wr) ? hwif_in.uart.rx.data.next : '0;
+    assign readback_array[14][29:8] = '0;
+    assign readback_array[14][30:30] = (decoded_reg_strb.uart.rx && !decoded_req_is_wr) ? hwif_in.uart.rx.oflow.next : '0;
+    assign readback_array[14][31:31] = (decoded_reg_strb.uart.rx && !decoded_req_is_wr) ? hwif_in.uart.rx.valid.next : '0;
+    assign readback_array[15][0:0] = (decoded_reg_strb.uart.rx_trigger && !decoded_req_is_wr) ? field_storage.uart.rx_trigger.read.value : '0;
+    assign readback_array[15][31:1] = '0;
+    assign readback_array[16][7:0] = (decoded_reg_strb.uart.tx && !decoded_req_is_wr) ? field_storage.uart.tx.data.value : '0;
+    assign readback_array[16][30:8] = '0;
+    assign readback_array[16][31:31] = (decoded_reg_strb.uart.tx && !decoded_req_is_wr) ? hwif_in.uart.tx.busy.next : '0;
+    assign readback_array[17][0:0] = (decoded_reg_strb.uart.tx_trigger && !decoded_req_is_wr) ? field_storage.uart.tx_trigger.write.value : '0;
+    assign readback_array[17][31:1] = '0;
+    assign readback_array[18][0:0] = (decoded_reg_strb.gpio && !decoded_req_is_wr) ? hwif_in.gpio.key1.next : '0;
+    assign readback_array[18][1:1] = (decoded_reg_strb.gpio && !decoded_req_is_wr) ? hwif_in.gpio.key2.next : '0;
+    assign readback_array[18][7:2] = '0;
+    assign readback_array[18][8:8] = (decoded_reg_strb.gpio && !decoded_req_is_wr) ? field_storage.gpio.led1.value : '0;
+    assign readback_array[18][9:9] = (decoded_reg_strb.gpio && !decoded_req_is_wr) ? field_storage.gpio.led2.value : '0;
+    assign readback_array[18][31:10] = '0;
+    for(genvar i0=0; i0<4; i0++) begin
+        assign readback_array[i0 * 1 + 19][1:0] = (decoded_reg_strb.ethernet[i0].status && !decoded_req_is_wr) ? hwif_in.ethernet[i0].status.speed.next : '0;
+        assign readback_array[i0 * 1 + 19][31:2] = '0;
     end
-    assign readback_array[112][0:0] = (decoded_reg_strb.ip_lookup_engine.control && !decoded_req_is_wr) ? field_storage.ip_lookup_engine.control.update.value : '0;
-    assign readback_array[112][31:1] = '0;
+    assign readback_array[23][0:0] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? hwif_in.dpe.fcr.idle.next : '0;
+    assign readback_array[23][30:1] = '0;
+    assign readback_array[23][31:31] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? field_storage.dpe.fcr.pause.value : '0;
 
     // Reduce the array
     always_comb begin
@@ -476,7 +850,7 @@ module csr (
         readback_done = decoded_req & ~decoded_req_is_wr;
         readback_err = '0;
         readback_data_var = '0;
-        for(int i=0; i<113; i++) readback_data_var |= readback_array[i];
+        for(int i=0; i<24; i++) readback_data_var |= readback_array[i];
         readback_data = readback_data_var;
     end
 
