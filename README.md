@@ -170,7 +170,7 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 
 # Design Blueprint (WIP)
 ## HW/SW Partitioning
-Since the Wireguard node essentially functions as an IP router with Wireguard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the Wireguard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully realized in RTL on an FPGA.
+Since the Wireguard node essentially functions as an IP router with Wireguard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the Wireguard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully implemented in RTL on an FPGA.
 
 ![HWSWPartitioning](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
 
@@ -183,7 +183,7 @@ The hardware architecture essentially follows the HW/SW partitioning and consist
 
 The soft CPU is equipped with a Boot ROM and a DDR3 SDRAM controller for interfacing with off-chip memory. External memory is exclusively used for control plane processes and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
 
-The data plane consists of several IP cores, which are listed and explained in the direction of network traffic propagation:
+The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation:
 - _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)
 - _1G MAC_ - execution of the 1G Ethernet protocol (framing, flow control, FCS, etc.)
 - _Rx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
@@ -218,6 +218,8 @@ The conceptual class diagram provides an overview of the components in the softw
 - ICMP - implementing basic ICMP protocol functions (echo request/reply, TTL exceeded, etc.)
 - CLI - a USB/UART-based command-line interface for configuring the Wireguard node (setting the local IP address, remote peer IP addresses, network addresses, keys, etc.)
 - HAL/CSR Driver - a CSR-based abstraction for data plane components with an interface for reading/writing the corresponding registers
+
+The details of software architecture can be found in the [README.md](./1.sw/README.md) in the `1.sw/` directory.
 
 ## HW/SW Working Together as a Coherent System
 To illustrate the operation of the system as a whole, we have prepared a step-by-step analysis of packets processing based on the capture of real WireGuard traffic. The experimental topology consists of four nodes:
