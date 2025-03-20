@@ -1,7 +1,27 @@
-## Hardware Data Flow
-### HW Flow Chart, Throughputs and Pushbacks
-![HWArchitecture](../0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
+## Hardware Architecture and Theory of Operation
+![HWArchitecture](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
 
+The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
+
+The soft CPU is equipped with a Boot ROM and a DDR3 SDRAM controller for interfacing with off-chip memory. External memory is exclusively used for control plane processes and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
+
+The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation:
+- _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)
+- _1G MAC_ - execution of the 1G Ethernet protocol (framing, flow control, FCS, etc.)
+- _Rx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
+- _Per-Packet Round Robin Multiplexer_ - servicing Rx FIFOs on a per-packet basis using a round-robin algorithm
+- _Header Parser_ - extraction of Wireguard-related information from packet headers (IP addresses, UDP ports, Wireguard message type, peer ID, etc.)
+- _Wireguard/UDP Packet Disassembler_ - decapsulation of the payload from the Wireguard data packet for decryption of tunneled traffic
+- _ChaCha20-Poly1305 Decryptor_ - decryption and authentication of tunneled traffic
+- _IP Lookup Engine_ - routing/forwarding table lookup, mapping packets to the appropriate Wireguard peer, and making packet accept/reject decisions
+- _ChaCha20-Poly1305 Encryptor_ - encryption and authentication of traffic to be tunneled
+- _Wireguard/UDP Packet Assembler_ - encapsulation of the encrypted packet into a Wireguard data packet for tunneling to the remote peer
+- _Per-Packet Demultiplexer_ - forwarding packets to Tx FIFOs based on packet type and destination
+- _Tx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
+
+_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
+
+## Hardware Data Flow
 The hardware architecture features three clock signal domains:
 - 125 MHz domain with an 8-bit bus for interfacing data plane with 1G MAC cores (marked in blue)
 - 80 MHz domain with a 32-bit bus for interfacing data plane with the CPU (marked in red)
@@ -13,6 +33,7 @@ The red domain encompasses the entire CSR with all peripherals. The clock signal
 
 Although the Data Plane Engine (green domain) transfers packets at approximately 10 Gbps, the cores in the DPE pipeline are not expected to process packets at such a rate. Given that we have 4 x 1Gbps Ethernet interfaces, the cryptographic cores must process packets at a rate of at least 4 Gbps to ensure the system works at wire speed. For some components, such as the _IP Lookup Engine_, packet rate is more critical than data rate because their processing focuses on the packet headers rather than the payload. Assuming that, in the worst-case scenario, the smallest packets (64 bytes) arrive via the 1 Gbps Ethernet interface, the packet rate for each Ethernet interface would be 1,488,096 packets per second (pps). Therefore, in the worst-case scenario, such components must process packets at approximately 6 Mpps rate (e.g. 6 million IP table lookups per second).
 
+### HW Flow Chart, Throughputs and Pushbacks
 ![ExampleToplogy](../0.doc/Wireguard/wireguard-fpga-muxed-Interfaces.webp)
 
 The cores within the DPE transmit packets via the AXI4-Stream interface with standard signals (TREADY, TVALID, TDATA, TKEEP, TLAST, TUSER, and TID). Although data transfer on the TDATA bus is organized as little-endian, it is important to note that the internal organization of fields within the headers of Ethernet, IP, and UDP protocols follows big-endian format (also known as network byte order). On the other hand, the fields within the headers of the Wireguard protocol are transmitted in little-endian format. In this setup, TUSER is used to carry instructions for internal packet routing:
@@ -24,27 +45,6 @@ The cores within the DPE transmit packets via the AXI4-Stream interface with sta
 TID\[7:0\] will be used internally within the DPE to carry the peer index (a result of the peer table lookup).
 
 ![ExampleToplogy](../0.doc/Wireguard/hw_st_if_packet_data.png)
-
-## Software Control Flow
-
-### SW Flow Chart, Messages and HW Intercepts
-
-During the initial Wireguard handshake and subsequent periodic key rotations,  the control plane must update the cryptokey routing table implemented in register memory within the CSR. Since the CSR manages the operation of the DPE, such changes must be made atomically to prevent unpredictable behavior in the DPE.
-One way to achieve this is by using [write-buffered registers](https://peakrdl-regblock.readthedocs.io/en/latest/udps/write_buffering.html) (WBR). However, implementing 1 bit of WBR  memory requires three flip-flops: one to store the current value, one to hold the future value, and one for the write-enable signal. Therefore, we consider an alternative mechanism for atomic CSR updates based on flow control between the CPU and the DPE. Suppose the CPU needs to update the contents of a routing table implemented using many registers. Before starting the update, the CPU must pause packet processing within the DPE. However, such a pause cannot be implemented using the inherent stall mechanism supported by the AXI protocol (by deactivating the TREADY signal at the end of the pipeline), as a packet that has already entered the DPE must be processed according to the rules in effect at the time of its entry. We introduce a graceful flow control mechanism coordinated through a dedicated Flow Control Register (FCR) to address this.
-
-![ExampleToplogy](../0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control.webp)
-
-The atomic CSR update mechanism works as follows:
-1. When the CPU needs to update the routing table, it activates the PAUSE signal by writing to the FCR.P register.
-2. The active FCR.P signal instructs the input multiplexer to transition into the PAUSED state after completing the servicing of the current queue. The CPU periodically checks the ready bits in the FCR register.
-3. Once the first component finishes processing its packet and clears its datapath, it deactivates the TVALID signal and transitions to the IDLE state. The CPU continues to check the ready bits in the FCR register.
-4. The processing of remaining packets and datapath clearing continues until all components transition to the IDLE state. The CPU monitors the ready bits in the FCR register, which now indicates that the DPE has been successfully paused.
-5. The CPU updates the necessary registers (e.g., the routing table) over multiple cycles.
-6. Upon completing the updates, the CPU deactivates the PAUSE signal (FCR.P).
-7. The multiplexer returns to its default operation mode and begins accepting packets from the next queue in a round-robin fashion.
-8. As packets start arriving, all components within the DPE gradually transition back to their active states.
-
-![ExampleToplogy](../0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control-Animated.gif)
 
 ## HW/SW Working Together as a Coherent System
 The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
