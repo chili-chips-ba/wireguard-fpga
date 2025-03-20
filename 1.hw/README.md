@@ -37,12 +37,12 @@ Although the DPE (green domain) transfers packets at approximately 10 Gbps, the 
 ![ExampleToplogy](../0.doc/Wireguard/wireguard-fpga-muxed-Interfaces.webp)
 
 The cores within the DPE transmit packets via the AXI4-Stream interface with standard signals (`TREADY`, `TVALID`, `TDATA`, `TKEEP`, `TLAST`, `TUSER`, and `TID`). Although data transfer on the `TDATA` bus is organized as little-endian, it is important to note that the internal organization of fields within the headers of Ethernet, IP, and UDP protocols follows big-endian format (also known as network byte order). On the other hand, the fields within the headers of the WireGuard protocol are transmitted in little-endian format. In this setup, `TUSER` is used to carry instructions for internal packet routing:
-- `TUSER\[7:7\] = bypass_all` – Instructs that the packet should not be routed through the DPE but sent directly to the ETH interface or the CPU (and vice versa).
-- `TUSER\[6:6\] = bypass_stage` – Instructs the packet to skip the next stage within the DPE (used internally within the DPE).
-- `TUSER\[5:3\] = src` – Internal source address of the packet (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4).
-- `TUSER\[2:0\] = dst` – Internal destination address of the packet (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast).
+- `TUSER[7:7] = bypass_all` – Instructs that the packet should not be routed through the DPE but sent directly to the ETH interface or the CPU (and vice versa).
+- `TUSER[6:6] = bypass_stage` – Instructs the packet to skip the next stage within the DPE (used internally within the DPE).
+- `TUSER[5:3] = src` – Internal source address of the packet (0 - _CPU_, 1 - _eth1_, 2 - _eth2_, 3 - _eth3_, 4 - _eth4_).
+- `TUSER[2:0] = dst` – Internal destination address of the packet (0 - _CPU_, 1 - _eth1_, 2 - _eth2_, 3 - _eth3_, 4 - _eth4_, 7 - _broadcast_).
 
-`TID\[7:0\]` will be used internally within the DPE to carry the peer index (a result of the peer table lookup).
+`TID[7:0]` will be used internally within the DPE to carry the peer index (a result of the peer table lookup).
 
 ![ExampleToplogy](../0.doc/Wireguard/hw_st_if_packet_data.png)
 

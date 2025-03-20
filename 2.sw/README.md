@@ -23,7 +23,7 @@ The DPE and CPU are connected through Rx and Tx FIFOs. Here, the Tx and Rx label
 It is important to note that triggering a data transfer cycle on the AXIS interface is achieved using [single-pulse](https://peakrdl-regblock.readthedocs.io/en/latest/props/field.html#singlepulse) TVALID/TREADY signals. This frees the CPU from the requirement to synchronize the AXIS clock cycle with its instruction cycle. 
 
 Here is the process of sending a packet from the CPU to the ETH interface. The packet is divided into 16-byte segments, and for each segment:
-1. The CPU reads `csr.cpu_fifo.rx.status.tready`; if it equals 1, it proceeds (since the FIFO is set to drop-on-full mode, tready will always be 1).
+1. The CPU reads `csr.cpu_fifo.rx.status.tready`; if it equals 1, it proceeds (since the FIFO is set to _drop-on-full_ mode, tready will always be 1).
 2. The CPU writes `csr.cpu_fifo.rx.data_31_0.tdata`.
 3. The CPU writes `csr.cpu_fifo.rx.data_63_32.tdata`.
 4. The CPU writes `csr.cpu_fifo.rx.data_95_64.tdata`.
@@ -36,7 +36,7 @@ Here is the process of sending a packet from the CPU to the ETH interface. The p
 11. If `tlast == 0`, return to step (1).
 
 A similar process applies to receiving packets from the ETH interface. The CPU prepares a buffer and starts reading 16-byte segments from the Tx FIFO:
-1. The CPU reads `csr.cpu_fifo.tx.status.tvalid`; if it equals 1, it proceeds (if it is 0, it stops since the FIFO is set to store-and-forward mode).
+1. The CPU reads `csr.cpu_fifo.tx.status.tvalid`; if it equals 1, it proceeds (if it is 0, it stops since the FIFO is set to _store-and-forward_ mode).
 2. The CPU reads `csr.cpu_fifo.tx.data_31_0.tdata`.
 3. The CPU reads `csr.cpu_fifo.tx.data_63_32.tdata`.
 4. The CPU reads `csr.cpu_fifo.tx.data_95_64.tdata`.
