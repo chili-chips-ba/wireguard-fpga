@@ -411,5 +411,19 @@ addrmap csr {
 };
 
 addrmap wireguard {
+   external mem imem {
+      name = "imem";
+      desc = "CPU Program Memory";
+      mementries = 8192;
+      memwidth = 32;
+   } imem @ 0x0000_0000;
+     
+   external mem dmem {
+      name = "dmem";
+      desc = "CPU Data Memory";
+      mementries = 8192;
+      memwidth = 32;
+   } dmem @ 0x1000_0000;
+   
    csr csr @ 0x2000_0000;
 };
