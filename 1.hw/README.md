@@ -1,5 +1,5 @@
 ## Hardware Architecture and Theory of Operation
-![HWArchitecture](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
+![HWArchitecture](../0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
 
 The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
 
