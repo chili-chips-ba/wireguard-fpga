@@ -219,7 +219,7 @@ The conceptual class diagram provides an overview of the components in the softw
 - CLI - a USB/UART-based command-line interface for configuring the Wireguard node (setting the local IP address, remote peer IP addresses, network addresses, keys, etc.)
 - HAL/CSR Driver - a CSR-based abstraction for data plane components with an interface for reading/writing the corresponding registers
 
-The details of software architecture can be found in the [README.md](./1.sw/README.md) in the `1.sw/` directory.
+The details of software architecture can be found in the [README.md](./2.sw/README.md) in the `2.sw/` directory.
 
 ## HW/SW Working Together as a Coherent System
 To illustrate the operation of the system as a whole, we have prepared a step-by-step analysis of packets processing based on the capture of real WireGuard traffic. The experimental topology consists of four nodes:

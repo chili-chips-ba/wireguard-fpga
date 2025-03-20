@@ -17,7 +17,7 @@ The conceptual class diagram provides an overview of the components in the softw
 - HAL/CSR Driver - a CSR-based abstraction for DPE components with an interface for reading/writing the corresponding registers
 
 ## Software Control Flow
-
+### Sending and receiving packets
 The DPE and CPU are connected through Rx and Tx FIFOs. Here, the Tx and Rx labels are relative to the DPE, not the CPU, meaning CPU → Rx FIFO → DPE and DPE → Tx FIFO → CPU. To ensure efficient communication, we maintained the same data bus width (128 bits) on both sides of the FIFO. The Rx and Tx FIFOs are mapped to the CPU by directly mapping AXIS signals to CSR. Since the CPU operates on a 32-bit data bus, all CSR registers had to be organized as 32-bit registers. Additionally, to prevent the CPU from entering Read-Modify-Write (RMW) cycles, which would reduce the interface throughput, all register fields had to be [aligned to 8 bits](https://github.com/chili-chips-ba/wireguard-fpga/issues/9).
 
 It is important to note that triggering a data transfer cycle on the AXIS interface is achieved using [single-pulse](https://peakrdl-regblock.readthedocs.io/en/latest/props/field.html#singlepulse) TVALID/TREADY signals. This frees the CPU from the requirement to synchronize the AXIS clock cycle with its instruction cycle. 
@@ -48,3 +48,20 @@ A similar process applies to receiving packets from the ETH interface. The CPU p
 10. If tlast == 0, return to step (1).
 
 If we assume that each step takes 1-2 instructions on average (1.5 on average) and that each instruction requires 4 clock cycles, we can estimate the throughput: 80 MHz × 128 bits ÷ (10 steps × 1.5 instructions × 4 cycles per instruction) = 170 Mbps. Clearly, this CSR-based FIFO interface cannot be used to implement a 1G datapath through the CPU, but since the CPU will only process WireGuard handshake messages, this will be more than sufficient.
+
+### Updating DPE registers and tables
+During the initial Wireguard handshake and subsequent periodic key rotations,  the control plane must update the cryptokey routing table implemented in register memory within the CSR. Since the CSR manages the operation of the DPE, such changes must be made atomically to prevent unpredictable behavior in the DPE. One way to achieve this is by using [Write-Buffered Registers](https://peakrdl-regblock.readthedocs.io/en/latest/udps/write_buffering.html) (WBR). However, implementing 1 bit of WBR  memory requires three flip-flops: one to store the current value, one to hold the future value, and one for the write-enable signal. Therefore, we consider an alternative mechanism for atomic CSR updates based on flow control between the CPU and the DPE. Suppose the CPU needs to update the contents of a routing table implemented using many registers. Before starting the update, the CPU must pause packet processing within the DPE. However, such a pause cannot be implemented using the inherent stall mechanism supported by the AXI protocol (by deactivating the TREADY signal at the end of the pipeline), as a packet that has already entered the DPE must be processed according to the rules in effect at the time of its entry. We introduce a graceful flow control mechanism coordinated through a dedicated Flow Control Register (FCR) to address this.
+
+![ExampleToplogy](../0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control.webp)
+
+The atomic CSR update mechanism works as follows:
+1. When the CPU needs to update the routing table, it asserts the PAUSE signal by writing to the FCR register (i.e. csr.dpe.fcr.pause = 1).
+2. The active csr.dpe.fcr.pause signal instructs the input multiplexer to transition into the PAUSED state after completing the servicing of the current queue. The CPU periodically checks the ready bits in the FCR register.
+3. Once the first component finishes processing its packet and clears its datapath, it deactivates the TVALID signal and transitions to the IDLE state. The CPU continues to check the ready bits in the FCR register.
+4. The processing of remaining packets and datapath clearing continues until all components transition to the IDLE state. The CPU monitors the ready bits in the FCR register, which now indicates that the DPE has been successfully paused (i.e. csr.dpe.fcr.idle == 1).
+5. The CPU updates the necessary registers (e.g., the routing table) over multiple cycles.
+6. Upon completing the updates, the CPU deactivates the PAUSE signal (i.e. csr.dpe.fcr.pause = 0).
+7. The multiplexer returns to its default operation mode and begins accepting packets from the next queue in a round-robin fashion.
+8. As packets start arriving, all components within the DPE gradually transition back to their active states.
+
+![ExampleToplogy](../0.doc/Wireguard/wireguard-fpga-muxed-CSR-Flow-Control-Animated.gif)
