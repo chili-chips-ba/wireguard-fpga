@@ -14,6 +14,26 @@
 #define WGMAIN          main
 
 // -----------------------------------------------------
+class imem_vp_t {
+public:
+
+    imem_vp_t(uint32_t* base_addr = (uint32_t*)0x0)
+    {
+    };
+
+} ;
+
+// -----------------------------------------------------
+class dmem_vp_t {
+public:
+
+    dmem_vp_t(uint32_t* base_addr = (uint32_t*)0x10000000)
+    {
+    };
+
+} ;
+
+// -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__data_31_0_vp_t {
 public:
@@ -595,6 +615,30 @@ public:
 } ;
 
 // -----------------------------------------------------
+//
+class csr__hwid_vp_t {
+public:
+    csr__hwid_vp_t (uint32_t* reg_addr = 0) : reg((csr__hwid_t*)reg_addr) {};
+
+    inline void     full(const uint64_t data) {reg->w = data;};
+    inline uint64_t full()                    {return reg->w;};
+
+    inline void     RELEASE(const uint64_t data) {reg->f.RELEASE = data;};
+    inline uint64_t RELEASE()                    {return reg->f.RELEASE;};
+    inline void     VERSION(const uint64_t data) {reg->f.VERSION = data;};
+    inline uint64_t VERSION()                    {return reg->f.VERSION;};
+    inline void     PID(const uint64_t data) {reg->f.PID = data;};
+    inline uint64_t PID()                    {return reg->f.PID;};
+    inline void     VID(const uint64_t data) {reg->f.VID = data;};
+    inline uint64_t VID()                    {return reg->f.VID;};
+
+    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+private:
+    csr__hwid_t* reg;
+};
+
+// -----------------------------------------------------
 class csr_vp_t {
 public:
 
@@ -623,6 +667,13 @@ public:
                                                                                    sizeof(csr__gpio_t)/4 + 
                                                                                    4*sizeof(csr__ethernet_t)/4
                                                                                     );
+        hwid = new csr__hwid_vp_t (base_addr +
+                                                                                   sizeof(csr__cpu_fifo_t)/4 + 
+                                                                                   sizeof(csr__uart_t)/4 + 
+                                                                                   sizeof(csr__gpio_t)/4 + 
+                                                                                   4*sizeof(csr__ethernet_t)/4 + 
+                                                                                   sizeof(csr__dpe_t)/4
+                                                                                    );
     };
 
     csr__cpu_fifo_vp_t* cpu_fifo;
@@ -630,6 +681,7 @@ public:
     csr__gpio_vp_t* gpio;
     csr__ethernet_vp_t* ethernet[4];
     csr__dpe_vp_t* dpe;
+    csr__hwid_vp_t* hwid;
 } ;
 
 

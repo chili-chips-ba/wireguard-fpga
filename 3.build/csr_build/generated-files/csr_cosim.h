@@ -34,6 +34,26 @@ extern "C" {
 #endif
 
 // -----------------------------------------------------
+class imem_vp_t {
+public:
+
+    imem_vp_t(uint32_t* base_addr = (uint32_t*)0x0)
+    {
+    };
+
+} ;
+
+// -----------------------------------------------------
+class dmem_vp_t {
+public:
+
+    dmem_vp_t(uint32_t* base_addr = (uint32_t*)0x10000000)
+    {
+    };
+
+} ;
+
+// -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__data_31_0_vp_t {
 public:
@@ -1378,6 +1398,100 @@ public:
 } ;
 
 // -----------------------------------------------------
+//
+class csr__hwid_vp_t {
+public:
+    csr__hwid_vp_t (uint32_t* reg_addr = 0) : reg((uint64_t)reg_addr) {};
+
+    inline void     full (const uint64_t data) {
+                        VWrite(reg, (uint32_t)(data & 0xffffffff), NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VWrite(reg + 4, (uint32_t)((data >> 32) & 0xffffffff), NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+                    };
+
+    inline uint64_t full() {
+                        uint64_t val;
+                        uint32_t rdata;
+
+                        VRead(reg, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE); val = rdata;
+                        VRead(reg + 4, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE); val |= (uint64_t)rdata << 32;
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+
+                        return val;
+                    };
+
+    inline void     RELEASE (const uint64_t data) {
+                        uint32_t wdata = (uint32_t)(data & 0xffffffff);
+
+                        VWriteBE(reg + 0, wdata << 0, 0x3, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+                    };
+
+    inline uint64_t RELEASE () {
+                        uint32_t rdata;
+
+                        VRead(reg + 0, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+
+                        return (((uint64_t)rdata << 0) & CSR__HWID__RELEASE_bm) >> CSR__HWID__RELEASE_bp;
+                    };
+
+    inline void     VERSION (const uint64_t data) {
+                        uint32_t wdata = (uint32_t)(data & 0xffffffff);
+
+                        VWriteBE(reg + 0, wdata << 16, 0xc, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+                    };
+
+    inline uint64_t VERSION () {
+                        uint32_t rdata;
+
+                        VRead(reg + 0, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+
+                        return (((uint64_t)rdata << 0) & CSR__HWID__VERSION_bm) >> CSR__HWID__VERSION_bp;
+                    };
+
+    inline void     PID (const uint64_t data) {
+                        uint32_t wdata = (uint32_t)(data & 0xffffffff);
+
+                        VWriteBE(reg + 4, wdata << 0, 0x3, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+                    };
+
+    inline uint64_t PID () {
+                        uint32_t rdata;
+
+                        VRead(reg + 4, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+
+                        return (((uint64_t)rdata << 32) & CSR__HWID__PID_bm) >> CSR__HWID__PID_bp;
+                    };
+
+    inline void     VID (const uint64_t data) {
+                        uint32_t wdata = (uint32_t)(data & 0xffffffff);
+
+                        VWriteBE(reg + 4, wdata << 16, 0xc, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+                    };
+
+    inline uint64_t VID () {
+                        uint32_t rdata;
+
+                        VRead(reg + 4, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+
+                        return (((uint64_t)rdata << 32) & CSR__HWID__VID_bm) >> CSR__HWID__VID_bp;
+                    };
+
+
+    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+private:
+    uint32_t reg;
+};
+
+// -----------------------------------------------------
 class csr_vp_t {
 public:
 
@@ -1406,6 +1520,13 @@ public:
                                                                                    sizeof(csr__gpio_t)/4 + 
                                                                                    4*sizeof(csr__ethernet_t)/4
                                                                                     );
+        hwid = new csr__hwid_vp_t (base_addr +
+                                                                                   sizeof(csr__cpu_fifo_t)/4 + 
+                                                                                   sizeof(csr__uart_t)/4 + 
+                                                                                   sizeof(csr__gpio_t)/4 + 
+                                                                                   4*sizeof(csr__ethernet_t)/4 + 
+                                                                                   sizeof(csr__dpe_t)/4
+                                                                                    );
     };
 
     csr__cpu_fifo_vp_t* cpu_fifo;
@@ -1413,6 +1534,7 @@ public:
     csr__gpio_vp_t* gpio;
     csr__ethernet_vp_t* ethernet[4];
     csr__dpe_vp_t* dpe;
+    csr__hwid_vp_t* hwid;
 } ;
 
 

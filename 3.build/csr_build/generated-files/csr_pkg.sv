@@ -346,9 +346,33 @@ package csr_pkg;
     } csr__dpe__out_t;
 
     typedef struct {
+        logic [15:0] value;
+    } csr__hwid__RELEASE__out_t;
+
+    typedef struct {
+        logic [15:0] value;
+    } csr__hwid__VERSION__out_t;
+
+    typedef struct {
+        logic [15:0] value;
+    } csr__hwid__PID__out_t;
+
+    typedef struct {
+        logic [15:0] value;
+    } csr__hwid__VID__out_t;
+
+    typedef struct {
+        csr__hwid__RELEASE__out_t RELEASE;
+        csr__hwid__VERSION__out_t VERSION;
+        csr__hwid__PID__out_t PID;
+        csr__hwid__VID__out_t VID;
+    } csr__hwid__out_t;
+
+    typedef struct {
         csr__cpu_fifo__out_t cpu_fifo;
         csr__uart__out_t uart;
         csr__gpio__out_t gpio;
         csr__dpe__out_t dpe;
+        csr__hwid__out_t hwid;
     } csr__out_t;
 endpackage
