@@ -131,7 +131,7 @@ addrmap csr {
                desc = "Indicates that the Rx FIFO can accept a transfer";
                sw = r;
                hw = w;
-            } tready;
+            } tready = 0;
          } status;
       } rx;
       
@@ -148,7 +148,7 @@ addrmap csr {
                desc = "1st 4-byte segment of TDATA, i.e. TDATA[31:0]";
                sw = r;
                hw = w;
-            } tdata[32];
+            } tdata[32] = 0;
          } data_31_0;
          
          reg {
@@ -160,7 +160,7 @@ addrmap csr {
                desc = "2nd 4-byte segment of TDATA, i.e. TDATA[63:32]";
                sw = r;
                hw = w;
-            } tdata[32];
+            } tdata[32] = 0;
          } data_63_32;
          
          reg {
@@ -172,7 +172,7 @@ addrmap csr {
                desc = "3rd 4-byte segment of TDATA, i.e. TDATA[95:64]";
                sw = r;
                hw = w;
-            } tdata[32];
+            } tdata[32] = 0;
          } data_95_64;
          
          reg {
@@ -184,7 +184,7 @@ addrmap csr {
                desc = "4th 4-byte segment of TDATA, i.e. TDATA[127:96]";
                sw = r;
                hw = w;
-            } tdata[32];
+            } tdata[32] = 0;
          } data_127_96;
          
          reg {
@@ -196,42 +196,42 @@ addrmap csr {
                desc = "Byte-enable for TDATA (e.g. TKEEP[15] corresponds to TDATA[127:119])";
                sw = r;
                hw = w;
-            } tkeep[31:16];
+            } tkeep[31:16] = 0;
             
             field {
                name = "csr.cpu_fifo.tx.control.tlast";
                desc = "Indicates boundary of a packet, i.e. active on last transfer";
                sw = r;
                hw = w;
-            } tlast[15:15];
+            } tlast[15:15] = 0;
             
             field {
                name = "csr.cpu_fifo.tx.control.tuser_bypass_all";
                desc = "If active, DPE was bypassed";
                sw = r;
                hw = w;
-            } tuser_bypass_all[7:7];
+            } tuser_bypass_all[7:7] = 0;
             
             field {
                name = "csr.cpu_fifo.tx.control.tuser_bypass_stage";
                desc = "If active, last stage of the DPE was bypassed";
                sw = r;
                hw = w;
-            } tuser_bypass_stage[6:6];
+            } tuser_bypass_stage[6:6] = 0;
             
             field {
                name = "csr.cpu_fifo.tx.control.tuser_src[2:0]";
                desc = "Internal source address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4)";
                sw = r;
                hw = w;
-            } tuser_src[5:3];
+            } tuser_src[5:3] = 0;
             
             field {
                name = "csr.cpu_fifo.tx.control.tuser_dst[2:0]";
                desc = "Internal destination address (0 - CPU, 1 - eth1, 2 - eth2, 3 - eth3, 4 - eth4, 7 - broadcast)";
                sw = r;
                hw = w;
-            } tuser_dst[2:0];
+            } tuser_dst[2:0] = 0;
          } control;
          
          reg {
@@ -256,7 +256,7 @@ addrmap csr {
                desc = "Indicates valid transfer from the Tx FIFO to the CPU";
                sw = r;
                hw = w;
-            } tvalid;
+            } tvalid = 0;
          } status;
       } tx;
    } cpu_fifo;
@@ -274,14 +274,14 @@ addrmap csr {
             desc = "Indicates valid data transfer from the UART to the CPU";
             sw = r;
             hw = w;
-         } valid[31:31];
+         } valid[31:31] = 0;
          
          field {
             name = "csr.uart.rx.oflow";
             desc = "Indicates that some data bytes are lost";
             sw = r;
             hw = w;
-         } oflow[30:30];
+         } oflow[30:30] = 0;
          
          field {
             name = "csr.uart.rx.data[7:0]";
@@ -289,7 +289,7 @@ addrmap csr {
             sw = r;
             hw = w;
             swacc = true;
-         } data[7:0];
+         } data[7:0] = 0;
       } rx;
       
       reg {
@@ -313,7 +313,7 @@ addrmap csr {
             desc = "Indicates that UART cannot accept next data transfer";
             sw = r;
             hw = w;
-         } busy[31:31];
+         } busy[31:31] = 0;
          
          field {
             name = "csr.uart.tx.data[7:0]";
@@ -360,14 +360,14 @@ addrmap csr {
          desc = "Input from KEY2 (0 - not pressed, 1 - pressed)";
          sw = r;
          hw = w;
-      } key2[1:1];
+      } key2[1:1] = 0;
          
       field {
          name = "csr.gpio.key1";
          desc = "Input from KEY1 (0 - not pressed, 1 - pressed)";
          sw = r;
          hw = w;
-      } key1[0:0];
+      } key1[0:0] = 0;
    } gpio;
    
    regfile ethernet {
@@ -377,12 +377,13 @@ addrmap csr {
       reg {
          name = "csr.ethernet[0..3].status";
          desc = "Ethernet Status Register";
+         
          field {
             name = "csr.ethernet[0..3].status.speed[1:0]";
             desc = "Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)";
             sw = r;
             hw = w;
-         } speed[1:0];
+         } speed[1:0] = 0;
       } status;
    } ethernet[4];
    
@@ -393,6 +394,7 @@ addrmap csr {
       reg {
          name = "csr.dpe.fcr";
          desc = "DPE Flow Control Register";
+         
          field {
             name = "csr.dpe.fcr.pause";
             desc = "Pauses DPE";
@@ -405,9 +407,44 @@ addrmap csr {
             desc = "Indicates that all stages of DPE have been succesfully paused";
             sw = r;
             hw = w;
-         } idle[0:0];
+         } idle[0:0] = 0;
       } fcr;
    } dpe;
+   
+   reg {
+      regwidth = 64;
+      
+      name = "csr.hwid";
+      desc = "Hardware IDs";
+      
+      field {
+         name = "csr.hwid.VID";
+         desc = "Vendor ID";
+         sw = r;
+         hw = r;
+      } VID[63:48] = 0xCCAE;
+      
+      field {
+         name = "csr.hwid.PID";
+         desc = "Product ID";
+         sw = r;
+         hw = r;
+      } PID[47:32] = 0xCACA;
+      
+      field {
+         name = "csr.hwid.VERSION";
+         desc = "Product version";
+         sw = r;
+         hw = r;
+      } VERSION[31:16] = 0x0001;
+      
+      field {
+         name = "csr.hwid.RELEASE";
+         desc = "Product release";
+         sw = r;
+         hw = r;
+      } RELEASE[15:0] = 0x0001;
+   } hwid;
 };
 
 addrmap wireguard {

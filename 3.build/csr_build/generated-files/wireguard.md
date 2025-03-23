@@ -9,7 +9,7 @@ Don't override. Generated from: wireguard
 
 - Absolute Address: 0x0
 - Base Offset: 0x0
-- Size: 0x20000068
+- Size: 0x20000070
 
 |  Offset  |Identifier|Name|
 |----------|----------|----|
@@ -43,7 +43,7 @@ No supported members.
 
 - Absolute Address: 0x20000000
 - Base Offset: 0x20000000
-- Size: 0x68
+- Size: 0x70
 
 <p>WireGuard FPGA CSR</p>
 
@@ -57,6 +57,7 @@ No supported members.
 | 0x5C |ethernet[2]|csr.ethernet[0..3]|
 | 0x60 |ethernet[3]|csr.ethernet[0..3]|
 | 0x64 |    dpe    |      csr.dpe     |
+| 0x68 |    hwid   |     csr.hwid     |
 
 ## cpu_fifo register file
 
@@ -220,7 +221,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|             Name            |
 |----|----------|------|-----|-----------------------------|
-|  0 |  tready  |   r  |  —  |csr.cpu_fifo.rx.status.tready|
+|  0 |  tready  |   r  | 0x0 |csr.cpu_fifo.rx.status.tready|
 
 #### tready field
 
@@ -254,7 +255,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                 Name                |
 |----|----------|------|-----|-------------------------------------|
-|31:0|   tdata  |   r  |  —  |csr.cpu_fifo.tx.data_31_0.tdata[31:0]|
+|31:0|   tdata  |   r  | 0x0 |csr.cpu_fifo.tx.data_31_0.tdata[31:0]|
 
 #### tdata field
 
@@ -270,7 +271,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                 Name                 |
 |----|----------|------|-----|--------------------------------------|
-|31:0|   tdata  |   r  |  —  |csr.cpu_fifo.tx.data_63_32.tdata[31:0]|
+|31:0|   tdata  |   r  | 0x0 |csr.cpu_fifo.tx.data_63_32.tdata[31:0]|
 
 #### tdata field
 
@@ -286,7 +287,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                 Name                 |
 |----|----------|------|-----|--------------------------------------|
-|31:0|   tdata  |   r  |  —  |csr.cpu_fifo.tx.data_95_64.tdata[31:0]|
+|31:0|   tdata  |   r  | 0x0 |csr.cpu_fifo.tx.data_95_64.tdata[31:0]|
 
 #### tdata field
 
@@ -302,7 +303,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                  Name                 |
 |----|----------|------|-----|---------------------------------------|
-|31:0|   tdata  |   r  |  —  |csr.cpu_fifo.tx.data_127_96.tdata[31:0]|
+|31:0|   tdata  |   r  | 0x0 |csr.cpu_fifo.tx.data_127_96.tdata[31:0]|
 
 #### tdata field
 
@@ -318,12 +319,12 @@ No supported members.
 
 | Bits|    Identifier    |Access|Reset|                   Name                   |
 |-----|------------------|------|-----|------------------------------------------|
-| 2:0 |     tuser_dst    |   r  |  —  |  csr.cpu_fifo.tx.control.tuser_dst[2:0]  |
-| 5:3 |     tuser_src    |   r  |  —  |  csr.cpu_fifo.tx.control.tuser_src[2:0]  |
-|  6  |tuser_bypass_stage|   r  |  —  |csr.cpu_fifo.tx.control.tuser_bypass_stage|
-|  7  | tuser_bypass_all |   r  |  —  | csr.cpu_fifo.tx.control.tuser_bypass_all |
-|  15 |       tlast      |   r  |  —  |       csr.cpu_fifo.tx.control.tlast      |
-|31:16|       tkeep      |   r  |  —  |    csr.cpu_fifo.tx.control.tkeep[15:0]   |
+| 2:0 |     tuser_dst    |   r  | 0x0 |  csr.cpu_fifo.tx.control.tuser_dst[2:0]  |
+| 5:3 |     tuser_src    |   r  | 0x0 |  csr.cpu_fifo.tx.control.tuser_src[2:0]  |
+|  6  |tuser_bypass_stage|   r  | 0x0 |csr.cpu_fifo.tx.control.tuser_bypass_stage|
+|  7  | tuser_bypass_all |   r  | 0x0 | csr.cpu_fifo.tx.control.tuser_bypass_all |
+|  15 |       tlast      |   r  | 0x0 |       csr.cpu_fifo.tx.control.tlast      |
+|31:16|       tkeep      |   r  | 0x0 |    csr.cpu_fifo.tx.control.tkeep[15:0]   |
 
 #### tuser_dst field
 
@@ -375,7 +376,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|             Name            |
 |----|----------|------|-----|-----------------------------|
-|  0 |  tvalid  |   r  |  —  |csr.cpu_fifo.tx.status.tvalid|
+|  0 |  tvalid  |   r  | 0x0 |csr.cpu_fifo.tx.status.tvalid|
 
 #### tvalid field
 
@@ -406,9 +407,9 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|         Name        |
 |----|----------|------|-----|---------------------|
-| 7:0|   data   |   r  |  —  |csr.uart.rx.data[7:0]|
-| 30 |   oflow  |   r  |  —  |  csr.uart.rx.oflow  |
-| 31 |   valid  |   r  |  —  |  csr.uart.rx.valid  |
+| 7:0|   data   |   r  | 0x0 |csr.uart.rx.data[7:0]|
+| 30 |   oflow  |   r  | 0x0 |  csr.uart.rx.oflow  |
+| 31 |   valid  |   r  | 0x0 |  csr.uart.rx.valid  |
 
 #### data field
 
@@ -449,7 +450,7 @@ No supported members.
 |Bits|Identifier|Access|Reset|         Name        |
 |----|----------|------|-----|---------------------|
 | 7:0|   data   |  rw  | 0x0 |csr.uart.tx.data[7:0]|
-| 31 |   busy   |   r  |  —  |   csr.uart.tx.busy  |
+| 31 |   busy   |   r  | 0x0 |   csr.uart.tx.busy  |
 
 #### data field
 
@@ -485,8 +486,8 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|     Name    |
 |----|----------|------|-----|-------------|
-|  0 |   key1   |   r  |  —  |csr.gpio.key1|
-|  1 |   key2   |   r  |  —  |csr.gpio.key2|
+|  0 |   key1   |   r  | 0x0 |csr.gpio.key1|
+|  1 |   key2   |   r  | 0x0 |csr.gpio.key2|
 |  8 |   led1   |  rw  | 0x0 |csr.gpio.led1|
 |  9 |   led2   |  rw  | 0x0 |csr.gpio.led2|
 
@@ -531,7 +532,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                Name                |
 |----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
@@ -562,7 +563,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                Name                |
 |----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
@@ -593,7 +594,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                Name                |
 |----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
@@ -624,7 +625,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|                Name                |
 |----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  |  —  |csr.ethernet[0..3].status.speed[1:0]|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
 
 #### speed field
 
@@ -652,7 +653,7 @@ No supported members.
 
 |Bits|Identifier|Access|Reset|       Name      |
 |----|----------|------|-----|-----------------|
-|  0 |   idle   |   r  |  —  | csr.dpe.fcr.idle|
+|  0 |   idle   |   r  | 0x0 | csr.dpe.fcr.idle|
 | 31 |   pause  |  rw  | 0x0 |csr.dpe.fcr.pause|
 
 #### idle field
@@ -662,3 +663,34 @@ No supported members.
 #### pause field
 
 <p>Pauses DPE</p>
+
+### hwid register
+
+- Absolute Address: 0x20000068
+- Base Offset: 0x68
+- Size: 0x8
+
+<p>Hardware IDs</p>
+
+| Bits|Identifier|Access| Reset|      Name      |
+|-----|----------|------|------|----------------|
+| 15:0|  RELEASE |   r  |  0x1 |csr.hwid.RELEASE|
+|31:16|  VERSION |   r  |  0x1 |csr.hwid.VERSION|
+|47:32|    PID   |   r  |0xCACA|  csr.hwid.PID  |
+|63:48|    VID   |   r  |0xCCAE|  csr.hwid.VID  |
+
+#### RELEASE field
+
+<p>Product release</p>
+
+#### VERSION field
+
+<p>Product version</p>
+
+#### PID field
+
+<p>Product ID</p>
+
+#### VID field
+
+<p>Vendor ID</p>

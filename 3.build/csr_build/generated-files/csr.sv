@@ -99,6 +99,7 @@ module csr (
         struct {
             logic fcr;
         } dpe;
+        logic [1:0] hwid;
     } decoded_reg_strb_t;
     decoded_reg_strb_t decoded_reg_strb;
     logic decoded_req;
@@ -130,6 +131,8 @@ module csr (
             decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 7'h54 + (7)'(i0) * 7'h4);
         end
         decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 7'h64);
+        decoded_reg_strb.hwid[0] = cpuif_req_masked & (cpuif_addr == 7'h68);
+        decoded_reg_strb.hwid[1] = cpuif_req_masked & (cpuif_addr == 7'h6c);
     end
 
     // Pass down signals to next stage
@@ -771,6 +774,10 @@ module csr (
         end
     end
     assign hwif_out.dpe.fcr.pause.value = field_storage.dpe.fcr.pause.value;
+    assign hwif_out.hwid.RELEASE.value = 16'h1;
+    assign hwif_out.hwid.VERSION.value = 16'h1;
+    assign hwif_out.hwid.PID.value = 16'hcaca;
+    assign hwif_out.hwid.VID.value = 16'hccae;
 
     //--------------------------------------------------------------------------
     // Write response
@@ -788,7 +795,7 @@ module csr (
     logic [31:0] readback_data;
 
     // Assign readback values to a flattened array
-    logic [31:0] readback_array[24];
+    logic [31:0] readback_array[26];
     assign readback_array[0][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_31_0 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_31_0.tdata.value : '0;
     assign readback_array[1][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_63_32 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_63_32.tdata.value : '0;
     assign readback_array[2][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_95_64 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_95_64.tdata.value : '0;
@@ -843,6 +850,10 @@ module csr (
     assign readback_array[23][0:0] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? hwif_in.dpe.fcr.idle.next : '0;
     assign readback_array[23][30:1] = '0;
     assign readback_array[23][31:31] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? field_storage.dpe.fcr.pause.value : '0;
+    assign readback_array[24][15:0] = (decoded_reg_strb.hwid[0] && !decoded_req_is_wr) ? 16'h1 : '0;
+    assign readback_array[24][31:16] = (decoded_reg_strb.hwid[0] && !decoded_req_is_wr) ? 16'h1 : '0;
+    assign readback_array[25][15:0] = (decoded_reg_strb.hwid[1] && !decoded_req_is_wr) ? 16'hcaca : '0;
+    assign readback_array[25][31:16] = (decoded_reg_strb.hwid[1] && !decoded_req_is_wr) ? 16'hccae : '0;
 
     // Reduce the array
     always_comb begin
@@ -850,7 +861,7 @@ module csr (
         readback_done = decoded_req & ~decoded_req_is_wr;
         readback_err = '0;
         readback_data_var = '0;
-        for(int i=0; i<24; i++) readback_data_var |= readback_array[i];
+        for(int i=0; i<26; i++) readback_data_var |= readback_array[i];
         readback_data = readback_data_var;
     end
 

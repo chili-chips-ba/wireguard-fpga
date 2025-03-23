@@ -11,6 +11,16 @@ extern "C" {
 #include <stdint.h>
 #include <assert.h>
 
+// Mem - wireguard::imem
+typedef struct __attribute__ ((__packed__)) {
+    uint32_t mem[8192];
+} wireguard__imem_t;
+
+// Mem - wireguard::dmem
+typedef struct __attribute__ ((__packed__)) {
+    uint32_t mem[8192];
+} wireguard__dmem_t;
+
 // Reg - csr::cpu_fifo::rx::data_31_0
 #define CSR__CPU_FIFO__RX__DATA_31_0__TDATA_bm 0xffffffff
 #define CSR__CPU_FIFO__RX__DATA_31_0__TDATA_bp 0
@@ -114,6 +124,7 @@ typedef union {
 #define CSR__CPU_FIFO__RX__STATUS__TREADY_bm 0x1
 #define CSR__CPU_FIFO__RX__STATUS__TREADY_bp 0
 #define CSR__CPU_FIFO__RX__STATUS__TREADY_bw 1
+#define CSR__CPU_FIFO__RX__STATUS__TREADY_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t tready :1;
@@ -137,6 +148,7 @@ typedef struct __attribute__ ((__packed__)) {
 #define CSR__CPU_FIFO__TX__DATA_31_0__TDATA_bm 0xffffffff
 #define CSR__CPU_FIFO__TX__DATA_31_0__TDATA_bp 0
 #define CSR__CPU_FIFO__TX__DATA_31_0__TDATA_bw 32
+#define CSR__CPU_FIFO__TX__DATA_31_0__TDATA_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t tdata :32;
@@ -148,6 +160,7 @@ typedef union {
 #define CSR__CPU_FIFO__TX__DATA_63_32__TDATA_bm 0xffffffff
 #define CSR__CPU_FIFO__TX__DATA_63_32__TDATA_bp 0
 #define CSR__CPU_FIFO__TX__DATA_63_32__TDATA_bw 32
+#define CSR__CPU_FIFO__TX__DATA_63_32__TDATA_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t tdata :32;
@@ -159,6 +172,7 @@ typedef union {
 #define CSR__CPU_FIFO__TX__DATA_95_64__TDATA_bm 0xffffffff
 #define CSR__CPU_FIFO__TX__DATA_95_64__TDATA_bp 0
 #define CSR__CPU_FIFO__TX__DATA_95_64__TDATA_bw 32
+#define CSR__CPU_FIFO__TX__DATA_95_64__TDATA_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t tdata :32;
@@ -170,6 +184,7 @@ typedef union {
 #define CSR__CPU_FIFO__TX__DATA_127_96__TDATA_bm 0xffffffff
 #define CSR__CPU_FIFO__TX__DATA_127_96__TDATA_bp 0
 #define CSR__CPU_FIFO__TX__DATA_127_96__TDATA_bw 32
+#define CSR__CPU_FIFO__TX__DATA_127_96__TDATA_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t tdata :32;
@@ -181,21 +196,27 @@ typedef union {
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_DST_bm 0x7
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_DST_bp 0
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_DST_bw 3
+#define CSR__CPU_FIFO__TX__CONTROL__TUSER_DST_reset 0x0
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_SRC_bm 0x38
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_SRC_bp 3
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_SRC_bw 3
+#define CSR__CPU_FIFO__TX__CONTROL__TUSER_SRC_reset 0x0
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_STAGE_bm 0x40
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_STAGE_bp 6
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_STAGE_bw 1
+#define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_STAGE_reset 0x0
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_ALL_bm 0x80
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_ALL_bp 7
 #define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_ALL_bw 1
+#define CSR__CPU_FIFO__TX__CONTROL__TUSER_BYPASS_ALL_reset 0x0
 #define CSR__CPU_FIFO__TX__CONTROL__TLAST_bm 0x8000
 #define CSR__CPU_FIFO__TX__CONTROL__TLAST_bp 15
 #define CSR__CPU_FIFO__TX__CONTROL__TLAST_bw 1
+#define CSR__CPU_FIFO__TX__CONTROL__TLAST_reset 0x0
 #define CSR__CPU_FIFO__TX__CONTROL__TKEEP_bm 0xffff0000
 #define CSR__CPU_FIFO__TX__CONTROL__TKEEP_bp 16
 #define CSR__CPU_FIFO__TX__CONTROL__TKEEP_bw 16
+#define CSR__CPU_FIFO__TX__CONTROL__TKEEP_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t tuser_dst :3;
@@ -226,6 +247,7 @@ typedef union {
 #define CSR__CPU_FIFO__TX__STATUS__TVALID_bm 0x1
 #define CSR__CPU_FIFO__TX__STATUS__TVALID_bp 0
 #define CSR__CPU_FIFO__TX__STATUS__TVALID_bw 1
+#define CSR__CPU_FIFO__TX__STATUS__TVALID_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t tvalid :1;
@@ -256,12 +278,15 @@ typedef struct __attribute__ ((__packed__)) {
 #define CSR__UART__RX__DATA_bm 0xff
 #define CSR__UART__RX__DATA_bp 0
 #define CSR__UART__RX__DATA_bw 8
+#define CSR__UART__RX__DATA_reset 0x0
 #define CSR__UART__RX__OFLOW_bm 0x40000000
 #define CSR__UART__RX__OFLOW_bp 30
 #define CSR__UART__RX__OFLOW_bw 1
+#define CSR__UART__RX__OFLOW_reset 0x0
 #define CSR__UART__RX__VALID_bm 0x80000000
 #define CSR__UART__RX__VALID_bp 31
 #define CSR__UART__RX__VALID_bw 1
+#define CSR__UART__RX__VALID_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t data :8;
@@ -293,6 +318,7 @@ typedef union {
 #define CSR__UART__TX__BUSY_bm 0x80000000
 #define CSR__UART__TX__BUSY_bp 31
 #define CSR__UART__TX__BUSY_bw 1
+#define CSR__UART__TX__BUSY_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t data :8;
@@ -327,9 +353,11 @@ typedef struct __attribute__ ((__packed__)) {
 #define CSR__GPIO__KEY1_bm 0x1
 #define CSR__GPIO__KEY1_bp 0
 #define CSR__GPIO__KEY1_bw 1
+#define CSR__GPIO__KEY1_reset 0x0
 #define CSR__GPIO__KEY2_bm 0x2
 #define CSR__GPIO__KEY2_bp 1
 #define CSR__GPIO__KEY2_bw 1
+#define CSR__GPIO__KEY2_reset 0x0
 #define CSR__GPIO__LED1_bm 0x100
 #define CSR__GPIO__LED1_bp 8
 #define CSR__GPIO__LED1_bw 1
@@ -354,6 +382,7 @@ typedef union {
 #define CSR__ETHERNET__STATUS__SPEED_bm 0x3
 #define CSR__ETHERNET__STATUS__SPEED_bp 0
 #define CSR__ETHERNET__STATUS__SPEED_bw 2
+#define CSR__ETHERNET__STATUS__SPEED_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t speed :2;
@@ -371,6 +400,7 @@ typedef struct __attribute__ ((__packed__)) {
 #define CSR__DPE__FCR__IDLE_bm 0x1
 #define CSR__DPE__FCR__IDLE_bp 0
 #define CSR__DPE__FCR__IDLE_bw 1
+#define CSR__DPE__FCR__IDLE_reset 0x0
 #define CSR__DPE__FCR__PAUSE_bm 0x80000000
 #define CSR__DPE__FCR__PAUSE_bp 31
 #define CSR__DPE__FCR__PAUSE_bw 1
@@ -389,6 +419,33 @@ typedef struct __attribute__ ((__packed__)) {
     csr__dpe__fcr_t fcr;
 } csr__dpe_t;
 
+// Reg - csr::hwid
+#define CSR__HWID__RELEASE_bm 0xffff
+#define CSR__HWID__RELEASE_bp 0
+#define CSR__HWID__RELEASE_bw 16
+#define CSR__HWID__RELEASE_reset 0x1
+#define CSR__HWID__VERSION_bm 0xffff0000
+#define CSR__HWID__VERSION_bp 16
+#define CSR__HWID__VERSION_bw 16
+#define CSR__HWID__VERSION_reset 0x1
+#define CSR__HWID__PID_bm 0xffff00000000
+#define CSR__HWID__PID_bp 32
+#define CSR__HWID__PID_bw 16
+#define CSR__HWID__PID_reset 0xcaca
+#define CSR__HWID__VID_bm 0xffff000000000000
+#define CSR__HWID__VID_bp 48
+#define CSR__HWID__VID_bw 16
+#define CSR__HWID__VID_reset 0xccae
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint64_t RELEASE :16;
+        uint64_t VERSION :16;
+        uint64_t PID :16;
+        uint64_t VID :16;
+    } f;
+    uint64_t w;
+} csr__hwid_t;
+
 // Addrmap - csr
 typedef struct __attribute__ ((__packed__)) {
     csr__cpu_fifo_t cpu_fifo;
@@ -397,16 +454,20 @@ typedef struct __attribute__ ((__packed__)) {
     csr__gpio_t gpio;
     csr__ethernet_t ethernet[4];
     csr__dpe_t dpe;
+    csr__hwid_t hwid;
 } csr_t;
 
 // Addrmap - wireguard
 typedef struct __attribute__ ((__packed__)) {
-    uint8_t RESERVED_0_1fffffff[0x20000000];
+    wireguard__imem_t imem;
+    uint8_t RESERVED_8000_fffffff[0xfff8000];
+    wireguard__dmem_t dmem;
+    uint8_t RESERVED_10008000_1fffffff[0xfff8000];
     csr_t csr;
 } wireguard_t;
 
 
-static_assert(sizeof(wireguard_t) == 0x20000068, "Packing error");
+static_assert(sizeof(wireguard_t) == 0x20000070, "Packing error");
 
 #ifdef __cplusplus
 }
