@@ -36,12 +36,12 @@ addi x30, zero, 0
 addi x31, zero, 0
 
 # zero initialize entire scratchpad memory
-li a0, 0x00000000
-li a1, 0x00000000
-setmemloop:
-sw a1, 0(a0)
-addi a0, a0, 4
-blt a0, sp, setmemloop
+#li a0, 0x00000000
+#li a1, 0x00000000
+#setmemloop:
+#sw a1, 0(a0)
+#addi a0, a0, 4
+#blt a0, sp, setmemloop
 
 # copy data section
 la a0, _sidata
