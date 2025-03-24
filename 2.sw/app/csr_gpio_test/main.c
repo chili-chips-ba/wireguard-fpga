@@ -17,10 +17,10 @@ int main(void)
    
    while (1) {
       csr->gpio.f.led2 = 1;
-      csr->gpio.f.led1 = 0;
+      csr->gpio.f.led1 = csr->gpio.f.key1;
       delay(1000000);
       csr->gpio.f.led2 = 0;
-      csr->gpio.f.led1 = 1;
+      csr->gpio.f.led1 = csr->gpio.f.key1;
       delay(1000000);
    }
    

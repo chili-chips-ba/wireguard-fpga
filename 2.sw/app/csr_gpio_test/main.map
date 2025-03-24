@@ -11,11 +11,11 @@ RAM              0x00000000         0x00008000         xrw
 Linker script and memory map
 
 
-.text           0x00100000      0x178
+.text           0x00100000      0x1a8
                 0x00100000                        . = ALIGN (0x4)
  *(.text)
- .text          0x00100000       0xc0 /tmp/cc7R4cP6.o
- .text          0x001000c0       0xb8 /tmp/cc52xz3v.o
+ .text          0x00100000       0xc0 /tmp/ccnnBVNe.o
+ .text          0x001000c0       0xe8 /tmp/ccwKEsa6.o
                 0x001000c0                delay
                 0x00100104                main
  *(.text*)
@@ -23,33 +23,33 @@ Linker script and memory map
  *(.rodata*)
  *(.srodata)
  *(.srodata*)
-                0x00100178                        . = ALIGN (0x4)
-                0x00100178                        _etext = .
-                0x00100178                        _sidata = _etext
+                0x001001a8                        . = ALIGN (0x4)
+                0x001001a8                        _etext = .
+                0x001001a8                        _sidata = _etext
 
-.rela.dyn       0x00100178        0x0
- .rela.text     0x00100178        0x0 /tmp/cc7R4cP6.o
+.rela.dyn       0x001001a8        0x0
+ .rela.text     0x001001a8        0x0 /tmp/ccnnBVNe.o
 
-.data           0x00000000        0x0 load address 0x00100178
+.data           0x00000000        0x0 load address 0x001001a8
                 0x00000000                        . = ALIGN (0x4)
                 0x00000000                        _sdata = .
                 0x00000000                        _ram_start = .
                 0x00000000                        . = ALIGN (0x4)
  *(.data)
- .data          0x00000000        0x0 /tmp/cc7R4cP6.o
- .data          0x00000000        0x0 /tmp/cc52xz3v.o
+ .data          0x00000000        0x0 /tmp/ccnnBVNe.o
+ .data          0x00000000        0x0 /tmp/ccwKEsa6.o
  *(.data*)
  *(.sdata)
  *(.sdata*)
                 0x00000000                        . = ALIGN (0x4)
                 0x00000000                        _edata = .
 
-.bss            0x00000000        0x0 load address 0x00100178
+.bss            0x00000000        0x0 load address 0x001001a8
                 0x00000000                        . = ALIGN (0x4)
                 0x00000000                        _sbss = .
  *(.bss)
- .bss           0x00000000        0x0 /tmp/cc7R4cP6.o
- .bss           0x00000000        0x0 /tmp/cc52xz3v.o
+ .bss           0x00000000        0x0 /tmp/ccnnBVNe.o
+ .bss           0x00000000        0x0 /tmp/ccwKEsa6.o
  *(.bss*)
  *(.sbss)
  *(.sbss*)
@@ -60,17 +60,17 @@ Linker script and memory map
 .heap           0x00000000        0x0
                 0x00000000                        . = ALIGN (0x4)
                 0x00000000                        _heap_start = .
-LOAD /tmp/cc7R4cP6.o
-LOAD /tmp/cc52xz3v.o
+LOAD /tmp/ccnnBVNe.o
+LOAD /tmp/ccwKEsa6.o
 OUTPUT(/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/2.sw/app/csr_gpio_test/main.elf elf32-littleriscv)
 
 .riscv.attributes
                 0x00000000       0x2a
  .riscv.attributes
-                0x00000000       0x28 /tmp/cc7R4cP6.o
+                0x00000000       0x28 /tmp/ccnnBVNe.o
  .riscv.attributes
-                0x00000028       0x2a /tmp/cc52xz3v.o
+                0x00000028       0x2a /tmp/ccwKEsa6.o
 
 .comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/cc52xz3v.o
+ .comment       0x00000000       0x22 /tmp/ccwKEsa6.o
                                  0x23 (size before relaxing)
