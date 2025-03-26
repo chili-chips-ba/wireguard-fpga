@@ -9,7 +9,7 @@ import os
 import sys
 import struct
 
-inp_file = 'sw_build/main.bin'
+inp_file = 'main.bin'
 
 out_dir  = './'
 out_file = os.path.join(out_dir, 'imem.INIT.vh')
