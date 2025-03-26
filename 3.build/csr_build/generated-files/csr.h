@@ -270,7 +270,6 @@ typedef struct __attribute__ ((__packed__)) {
 // Regfile - csr::cpu_fifo
 typedef struct __attribute__ ((__packed__)) {
     csr__cpu_fifo__rx_t rx;
-    uint8_t RESERVED_1c_1f[0x4];
     csr__cpu_fifo__tx_t tx;
 } csr__cpu_fifo_t;
 
@@ -449,7 +448,6 @@ typedef union {
 // Addrmap - csr
 typedef struct __attribute__ ((__packed__)) {
     csr__cpu_fifo_t cpu_fifo;
-    uint8_t RESERVED_3c_3f[0x4];
     csr__uart_t uart;
     csr__gpio_t gpio;
     csr__ethernet_t ethernet[4];
@@ -467,7 +465,7 @@ typedef struct __attribute__ ((__packed__)) {
 } wireguard_t;
 
 
-static_assert(sizeof(wireguard_t) == 0x20000070, "Packing error");
+static_assert(sizeof(wireguard_t) == 0x20000068, "Packing error");
 
 #ifdef __cplusplus
 }

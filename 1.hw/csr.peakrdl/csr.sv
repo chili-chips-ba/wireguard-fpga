@@ -115,24 +115,24 @@ module csr (
         decoded_reg_strb.cpu_fifo.rx.control = cpuif_req_masked & (cpuif_addr == 7'h10);
         decoded_reg_strb.cpu_fifo.rx.trigger = cpuif_req_masked & (cpuif_addr == 7'h14);
         decoded_reg_strb.cpu_fifo.rx.status = cpuif_req_masked & (cpuif_addr == 7'h18);
-        decoded_reg_strb.cpu_fifo.tx.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h20);
-        decoded_reg_strb.cpu_fifo.tx.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h24);
-        decoded_reg_strb.cpu_fifo.tx.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h28);
-        decoded_reg_strb.cpu_fifo.tx.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'h2c);
-        decoded_reg_strb.cpu_fifo.tx.control = cpuif_req_masked & (cpuif_addr == 7'h30);
-        decoded_reg_strb.cpu_fifo.tx.trigger = cpuif_req_masked & (cpuif_addr == 7'h34);
-        decoded_reg_strb.cpu_fifo.tx.status = cpuif_req_masked & (cpuif_addr == 7'h38);
-        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 7'h40);
-        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 7'h44);
-        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 7'h48);
-        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 7'h4c);
-        decoded_reg_strb.gpio = cpuif_req_masked & (cpuif_addr == 7'h50);
+        decoded_reg_strb.cpu_fifo.tx.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h1c);
+        decoded_reg_strb.cpu_fifo.tx.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h20);
+        decoded_reg_strb.cpu_fifo.tx.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h24);
+        decoded_reg_strb.cpu_fifo.tx.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'h28);
+        decoded_reg_strb.cpu_fifo.tx.control = cpuif_req_masked & (cpuif_addr == 7'h2c);
+        decoded_reg_strb.cpu_fifo.tx.trigger = cpuif_req_masked & (cpuif_addr == 7'h30);
+        decoded_reg_strb.cpu_fifo.tx.status = cpuif_req_masked & (cpuif_addr == 7'h34);
+        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 7'h38);
+        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 7'h3c);
+        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 7'h40);
+        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 7'h44);
+        decoded_reg_strb.gpio = cpuif_req_masked & (cpuif_addr == 7'h48);
         for(int i0=0; i0<4; i0++) begin
-            decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 7'h54 + (7)'(i0) * 7'h4);
+            decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 7'h4c + (7)'(i0) * 7'h4);
         end
-        decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 7'h64);
-        decoded_reg_strb.hwid[0] = cpuif_req_masked & (cpuif_addr == 7'h68);
-        decoded_reg_strb.hwid[1] = cpuif_req_masked & (cpuif_addr == 7'h6c);
+        decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 7'h5c);
+        decoded_reg_strb.hwid[0] = cpuif_req_masked & (cpuif_addr == 7'h60);
+        decoded_reg_strb.hwid[1] = cpuif_req_masked & (cpuif_addr == 7'h64);
     end
 
     // Pass down signals to next stage

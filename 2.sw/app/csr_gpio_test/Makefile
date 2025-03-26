@@ -5,7 +5,7 @@
 # ** Ensure the required RISC-V GCC package is installed:
 # ** Command: apt install gcc-riscv64-unknown-elf
 CROSS = riscv64-unknown-elf-
-CFLAGS =
+CFLAGS = -DTCM=1 -DHARVARD=1
 
 # ** ----------------------------------------------------------------
 # ** WireGuard Firmware Build Configuration
@@ -20,23 +20,23 @@ hex_wireguard: $(WIREGUARD_DIR)/main.elf
 # ** Build target for creating firmware binary and generating program memory file
 firmware_wireguard: $(WIREGUARD_DIR)/main.elf
 	$(CROSS)objcopy -O binary $< $(WIREGUARD_DIR)/main.bin
-	python3 $(WIREGUARD_DIR)/progmem.py
+	python3 $(WIREGUARD_DIR)/imem.INIT.py
 	
 # ** Compile and link the main ELF executable from all source files and the linker script
-$(WIREGUARD_DIR)/main.elf: $(WIREGUARD_DIR)/main.lds  $(WIREGUARD_DIR)/start.s $(WIREGUARD_DIR)/main.c $(WIREGUARD_DIR)/csr.h
-	$(CROSS)gcc $(CFLAGS) -march=rv32im -mabi=ilp32 -Wl,--build-id=none,-Bstatic,-T,$(WIREGUARD_DIR)/main.lds,-Map,$(WIREGUARD_DIR)/main.map,--strip-debug -ffreestanding -nostdlib -static -o $@ $(WIREGUARD_DIR)/start.s $(WIREGUARD_DIR)/main.c
+$(WIREGUARD_DIR)/main.elf: $(WIREGUARD_DIR)/main.lds  $(WIREGUARD_DIR)/boot_crt.S $(WIREGUARD_DIR)/main.c $(WIREGUARD_DIR)/assert.h $(WIREGUARD_DIR)/csr.h
+	$(CROSS)gcc $(CFLAGS) -I$(WIREGUARD_DIR) -march=rv32im -mabi=ilp32 -Wl,--build-id=none,-Bstatic,-T,$(WIREGUARD_DIR)/main.lds,-Map,$(WIREGUARD_DIR)/main.map,--strip-debug -ffreestanding -nostdlib -static -o $@ $(WIREGUARD_DIR)/boot_crt.S $(WIREGUARD_DIR)/main.c
 
 # ** Preprocess the sections linker script using the C preprocessor
-$(WIREGUARD_DIR)/main.lds: $(WIREGUARD_DIR)/sections.lds
-	$(CROSS)cpp -P -o $@ $<
+$(WIREGUARD_DIR)/main.lds: $(WIREGUARD_DIR)/link_map.lds
+	$(CROSS)cpp $(CFLAGS) -P -o $@ $<
 
 # ** Declare phony targets for cleaning build artifacts
 .PHONY: clean
-clean_fw_chacha:
+clean:
 	rm -f $(WIREGUARD_DIR)/main.elf
 	rm -f $(WIREGUARD_DIR)/main.lds
 	rm -f $(WIREGUARD_DIR)/main.map
 	rm -f $(WIREGUARD_DIR)/main.bin
-	rm -f progmem.v
+	rm -f imem.INIT.vh
 	rm -f firmware.hex
 	rm -f $(WIREGUARD_DIR)/main.hex
