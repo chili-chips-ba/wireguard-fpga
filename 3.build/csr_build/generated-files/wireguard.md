@@ -9,7 +9,7 @@ Don't override. Generated from: wireguard
 
 - Absolute Address: 0x0
 - Base Offset: 0x0
-- Size: 0x20000070
+- Size: 0x20000068
 
 |  Offset  |Identifier|Name|
 |----------|----------|----|
@@ -43,34 +43,34 @@ No supported members.
 
 - Absolute Address: 0x20000000
 - Base Offset: 0x20000000
-- Size: 0x70
+- Size: 0x68
 
 <p>WireGuard FPGA CSR</p>
 
 |Offset| Identifier|       Name       |
 |------|-----------|------------------|
 | 0x00 |  cpu_fifo |   csr.cpu_fifo   |
-| 0x40 |    uart   |     csr.uart     |
-| 0x50 |    gpio   |     csr.gpio     |
-| 0x54 |ethernet[0]|csr.ethernet[0..3]|
-| 0x58 |ethernet[1]|csr.ethernet[0..3]|
-| 0x5C |ethernet[2]|csr.ethernet[0..3]|
-| 0x60 |ethernet[3]|csr.ethernet[0..3]|
-| 0x64 |    dpe    |      csr.dpe     |
-| 0x68 |    hwid   |     csr.hwid     |
+| 0x38 |    uart   |     csr.uart     |
+| 0x48 |    gpio   |     csr.gpio     |
+| 0x4C |ethernet[0]|csr.ethernet[0..3]|
+| 0x50 |ethernet[1]|csr.ethernet[0..3]|
+| 0x54 |ethernet[2]|csr.ethernet[0..3]|
+| 0x58 |ethernet[3]|csr.ethernet[0..3]|
+| 0x5C |    dpe    |      csr.dpe     |
+| 0x60 |    hwid   |     csr.hwid     |
 
 ## cpu_fifo register file
 
 - Absolute Address: 0x20000000
 - Base Offset: 0x0
-- Size: 0x3C
+- Size: 0x38
 
 <p>CPU FIFOs CSR</p>
 
 |Offset|Identifier|      Name     |
 |------|----------|---------------|
 | 0x00 |    rx    |csr.cpu_fifo.rx|
-| 0x20 |    tx    |csr.cpu_fifo.tx|
+| 0x1C |    tx    |csr.cpu_fifo.tx|
 
 ## rx register file
 
@@ -229,8 +229,8 @@ No supported members.
 
 ## tx register file
 
-- Absolute Address: 0x20000020
-- Base Offset: 0x20
+- Absolute Address: 0x2000001C
+- Base Offset: 0x1C
 - Size: 0x1C
 
 <p>Tx FIFO CSR (DPE --&gt; CPU)</p>
@@ -247,7 +247,7 @@ No supported members.
 
 ### data_31_0 register
 
-- Absolute Address: 0x20000020
+- Absolute Address: 0x2000001C
 - Base Offset: 0x0
 - Size: 0x4
 
@@ -263,7 +263,7 @@ No supported members.
 
 ### data_63_32 register
 
-- Absolute Address: 0x20000024
+- Absolute Address: 0x20000020
 - Base Offset: 0x4
 - Size: 0x4
 
@@ -279,7 +279,7 @@ No supported members.
 
 ### data_95_64 register
 
-- Absolute Address: 0x20000028
+- Absolute Address: 0x20000024
 - Base Offset: 0x8
 - Size: 0x4
 
@@ -295,7 +295,7 @@ No supported members.
 
 ### data_127_96 register
 
-- Absolute Address: 0x2000002C
+- Absolute Address: 0x20000028
 - Base Offset: 0xC
 - Size: 0x4
 
@@ -311,7 +311,7 @@ No supported members.
 
 ### control register
 
-- Absolute Address: 0x20000030
+- Absolute Address: 0x2000002C
 - Base Offset: 0x10
 - Size: 0x4
 
@@ -352,7 +352,7 @@ No supported members.
 
 ### trigger register
 
-- Absolute Address: 0x20000034
+- Absolute Address: 0x20000030
 - Base Offset: 0x14
 - Size: 0x4
 
@@ -368,7 +368,7 @@ No supported members.
 
 ### status register
 
-- Absolute Address: 0x20000038
+- Absolute Address: 0x20000034
 - Base Offset: 0x18
 - Size: 0x4
 
@@ -384,8 +384,8 @@ No supported members.
 
 ## uart register file
 
-- Absolute Address: 0x20000040
-- Base Offset: 0x40
+- Absolute Address: 0x20000038
+- Base Offset: 0x38
 - Size: 0x10
 
 <p>UART CSR</p>
@@ -399,7 +399,7 @@ No supported members.
 
 ### rx register
 
-- Absolute Address: 0x20000040
+- Absolute Address: 0x20000038
 - Base Offset: 0x0
 - Size: 0x4
 
@@ -425,7 +425,7 @@ No supported members.
 
 ### rx_trigger register
 
-- Absolute Address: 0x20000044
+- Absolute Address: 0x2000003C
 - Base Offset: 0x4
 - Size: 0x4
 
@@ -441,7 +441,7 @@ No supported members.
 
 ### tx register
 
-- Absolute Address: 0x20000048
+- Absolute Address: 0x20000040
 - Base Offset: 0x8
 - Size: 0x4
 
@@ -462,7 +462,7 @@ No supported members.
 
 ### tx_trigger register
 
-- Absolute Address: 0x2000004C
+- Absolute Address: 0x20000044
 - Base Offset: 0xC
 - Size: 0x4
 
@@ -478,8 +478,8 @@ No supported members.
 
 ### gpio register
 
-- Absolute Address: 0x20000050
-- Base Offset: 0x50
+- Absolute Address: 0x20000048
+- Base Offset: 0x48
 - Size: 0x4
 
 <p>GPIO Register</p>
@@ -509,8 +509,70 @@ No supported members.
 
 ## ethernet register file
 
+- Absolute Address: 0x2000004C
+- Base Offset: 0x4C
+- Size: 0x4
+- Array Dimensions: [4]
+- Array Stride: 0x4
+- Total Size: 0x10
+
+<p>Ethernet CSR</p>
+
+|Offset|Identifier|           Name          |
+|------|----------|-------------------------|
+|  0x0 |  status  |csr.ethernet[0..3].status|
+
+### status register
+
+- Absolute Address: 0x2000004C
+- Base Offset: 0x0
+- Size: 0x4
+
+<p>Ethernet Status Register</p>
+
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
+
+#### speed field
+
+<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
+
+## ethernet register file
+
+- Absolute Address: 0x20000050
+- Base Offset: 0x4C
+- Size: 0x4
+- Array Dimensions: [4]
+- Array Stride: 0x4
+- Total Size: 0x10
+
+<p>Ethernet CSR</p>
+
+|Offset|Identifier|           Name          |
+|------|----------|-------------------------|
+|  0x0 |  status  |csr.ethernet[0..3].status|
+
+### status register
+
+- Absolute Address: 0x20000050
+- Base Offset: 0x0
+- Size: 0x4
+
+<p>Ethernet Status Register</p>
+
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
+
+#### speed field
+
+<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
+
+## ethernet register file
+
 - Absolute Address: 0x20000054
-- Base Offset: 0x54
+- Base Offset: 0x4C
 - Size: 0x4
 - Array Dimensions: [4]
 - Array Stride: 0x4
@@ -541,7 +603,7 @@ No supported members.
 ## ethernet register file
 
 - Absolute Address: 0x20000058
-- Base Offset: 0x54
+- Base Offset: 0x4C
 - Size: 0x4
 - Array Dimensions: [4]
 - Array Stride: 0x4
@@ -556,68 +618,6 @@ No supported members.
 ### status register
 
 - Absolute Address: 0x20000058
-- Base Offset: 0x0
-- Size: 0x4
-
-<p>Ethernet Status Register</p>
-
-|Bits|Identifier|Access|Reset|                Name                |
-|----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
-
-#### speed field
-
-<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
-
-## ethernet register file
-
-- Absolute Address: 0x2000005C
-- Base Offset: 0x54
-- Size: 0x4
-- Array Dimensions: [4]
-- Array Stride: 0x4
-- Total Size: 0x10
-
-<p>Ethernet CSR</p>
-
-|Offset|Identifier|           Name          |
-|------|----------|-------------------------|
-|  0x0 |  status  |csr.ethernet[0..3].status|
-
-### status register
-
-- Absolute Address: 0x2000005C
-- Base Offset: 0x0
-- Size: 0x4
-
-<p>Ethernet Status Register</p>
-
-|Bits|Identifier|Access|Reset|                Name                |
-|----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
-
-#### speed field
-
-<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
-
-## ethernet register file
-
-- Absolute Address: 0x20000060
-- Base Offset: 0x54
-- Size: 0x4
-- Array Dimensions: [4]
-- Array Stride: 0x4
-- Total Size: 0x10
-
-<p>Ethernet CSR</p>
-
-|Offset|Identifier|           Name          |
-|------|----------|-------------------------|
-|  0x0 |  status  |csr.ethernet[0..3].status|
-
-### status register
-
-- Absolute Address: 0x20000060
 - Base Offset: 0x0
 - Size: 0x4
 
@@ -633,8 +633,8 @@ No supported members.
 
 ## dpe register file
 
-- Absolute Address: 0x20000064
-- Base Offset: 0x64
+- Absolute Address: 0x2000005C
+- Base Offset: 0x5C
 - Size: 0x4
 
 <p>Data Plane Engine CSR</p>
@@ -645,7 +645,7 @@ No supported members.
 
 ### fcr register
 
-- Absolute Address: 0x20000064
+- Absolute Address: 0x2000005C
 - Base Offset: 0x0
 - Size: 0x4
 
@@ -666,8 +666,8 @@ No supported members.
 
 ### hwid register
 
-- Absolute Address: 0x20000068
-- Base Offset: 0x68
+- Absolute Address: 0x20000060
+- Base Offset: 0x60
 - Size: 0x8
 
 <p>Hardware IDs</p>
