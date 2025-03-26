@@ -18,34 +18,33 @@
 #ifndef _WIREGUARD_REGS_H_
 #define _WIREGUARD_REGS_H_
 
-static char heap_memory[2048];
-static int heap_memory_used = 0;
-
-void *malloc(int size)
-{
-   char *p = heap_memory + heap_memory_used;
-   heap_memory_used += size;
-   if (heap_memory_used > 2048)
-      asm volatile ("ebreak");
-   return p;
-}
-
-void *operator new(unsigned int size)
-{
-   void *const p = malloc(size);
-   return p;
-}
-
-void operator delete(void *p) // or delete(void *, std::size_t)
-{
-   return;
-}
-
 // Select appropriate auto-generated HAL header for the build type.
 // To build these headers, use "make -f MakefileCosim" in 3.build/ directory
 # ifdef VPROC
 #  include "csr_cosim.h"
 # else
+   static char heap_memory[2048];
+   static int heap_memory_used = 0;
+
+   void *malloc(int size)
+   {
+      char *p = heap_memory + heap_memory_used;
+      heap_memory_used += size;
+      if (heap_memory_used > 2048)
+         asm volatile ("ebreak");
+      return p;
+   }
+
+   void *operator new(unsigned int size)
+   {
+      void *const p = malloc(size);
+      return p;
+   }
+
+   void operator delete(void *p) // or delete(void *, std::size_t)
+   {
+      return;
+   }
 #  include "csr_hw.h"
 # endif
 
