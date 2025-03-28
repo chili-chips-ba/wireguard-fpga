@@ -9,7 +9,7 @@ TB_NAME := tb
 
 USER_TEST_BLD    := $(BLD_DIR)/sw_build/tests/rv32ui
 MACHINE_TEST_BLD := $(BLD_DIR)/sw_build/tests/rv32mi
-ARE_TESTS := 
+ARE_TESTS :=
 USER_TEST_HEX_FILES := $(wildcard $(USER_TEST_BLD)/*.hex)
 MACHINE_TEST_HEX_FILES := $(wildcard $(MACHINE_TEST_BLD)/*.hex)
 
@@ -43,7 +43,7 @@ clean:
 #   +define+CPU_FORMAL+CPU_DEBUG \
 #   +define+RISCV_FORMAL+RISCV_FORMAL_BLACKBOX_ALU \
 #   +define+RISCV_FORMAL_BLACKBOX_REGS+RISCV_FORMAL_ALTOPS \
-#    
+#
 #   +define+PICORV32_REGS \
 #
 #___SDRAM macros___
@@ -58,7 +58,7 @@ clean:
 #   +define+DAC_DEBUG+DAC_BFM_DEBUG+DAC_REVISED \
 #   +define+ADC_DEBUG+ADC_BFM_DEBUG \
 #-------------------------------------------------------------
-compile: 
+compile:
 	verilator \
 		--cc \
 		--timing \
@@ -85,7 +85,7 @@ compile:
 
 #		models/sdr_sdram/sdr.CHILI.sv \
 #		models/bfm_dac.sv \
-                
+
 #		-O1 \
 #		-O3 \
 #		-Wno-fatal \
@@ -124,15 +124,15 @@ wave: xml2stems
 		--dump    wave.fst &
 
 #		--wish \
-#		--save ../wave.gtkw 
+#		--save ../wave.gtkw
 
 #------------------------
-wave-alt: 
+wave-alt:
 	cd output; \
 	surfer.exe -s ../wave.surfer.ron wave.fst &
 
 #------------------------
-xml2stems: 
+xml2stems:
 	verilator \
 		--timing \
 		-xml-only \
@@ -151,7 +151,7 @@ xml2stems:
 
 #------------------------
 rtlbrowse: xml2stems
-	rtlbrowse tb.stems   
+	rtlbrowse tb.stems
 #------------------------
 utests: $(USER_TEST_HEX_FILES)
 	@for hex_file in $^; do \

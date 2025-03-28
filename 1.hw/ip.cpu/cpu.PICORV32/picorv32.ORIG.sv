@@ -1019,17 +1019,17 @@ module picorv32 #(
                                                                 decoded_rs1 <= 2;
                                                                 decoded_rs2 <= mem_rdata_latched[6:2];
                                                         end
-                                                  
+
                                                 endcase // case (mem_rdata_latched[15:13])
-                                        
+
                                         end // case: 2'b10
-                                  
+
                                 endcase // case (mem_rdata_latched[1:0])
-                           
+
                         end // if (COMPRESSED_ISA && mem_rdata_latched[1:0] != 2'b11)
-                   
+
                 end // if (mem_do_rinst && mem_done)
-           
+
 
                 if (decoder_trigger && !decoder_pseudo_trigger) begin
                         pcpi_insn <= WITH_PCPI ? mem_rdata_q : 'bx;

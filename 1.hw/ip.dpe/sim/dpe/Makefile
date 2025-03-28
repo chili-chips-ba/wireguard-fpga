@@ -7,7 +7,7 @@ BLD_DIR := $(CURDIR)/../../../../3.build
 HW_SRC  := $(CURDIR)/../../../.
 TB_NAME := tb
 
-ARE_TESTS := 
+ARE_TESTS :=
 
 COLOR_YELLOW=\033[1;33m
 COLOR_RESET=\033[0m

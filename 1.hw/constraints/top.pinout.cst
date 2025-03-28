@@ -10,10 +10,10 @@ IO_PORT "clk_27"         IO_TYPE=LVCMOS33;
 
 IO_LOC  "clk_fpll[0]"   10;
 IO_PORT "clk_fpll[0]"   IO_TYPE=LVCMOS33;
- 
+
 IO_LOC  "clk_fpll[1]"   11;
 IO_PORT "clk_fpll[1]"   IO_TYPE=LVCMOS33;
- 
+
 IO_LOC  "clk_fpll[2]"   13;
 IO_PORT "clk_fpll[2]"   IO_TYPE=LVCMOS33;
 
@@ -22,7 +22,7 @@ IO_PORT "clk_fpll[2]"   IO_TYPE=LVCMOS33;
 #---------------------------------------
 IO_LOC  "key[1]"   88;
 IO_PORT "key[1]"   IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
-                    
+
 IO_LOC  "key[2]"   87;
 IO_PORT "key[2]"   IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
@@ -31,7 +31,7 @@ IO_PORT "key[2]"   IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 #---------------------------------------
 #ADC_DOUT[1] | IO_LOC  "led_n[0]" 15;
 #ADC_DOUT[1] | IO_PORT "led_n[0]" IO_TYPE=LVCMOS33 DRIVE=8;
-#ADC_DOUT[1] |  
+#ADC_DOUT[1] |
 #ADC_DOUT[1] | IO_LOC  "led_n[1]" 16;
 #ADC_DOUT[1] | IO_PORT "led_n[1]" IO_TYPE=LVCMOS33 DRIVE=8;
 
@@ -43,7 +43,7 @@ IO_PORT "led_n[3]" IO_TYPE=LVCMOS33 DRIVE=8;
 
 #ADC_DOUT[2] | IO_LOC  "led_n[4]" 19;
 #ADC_DOUT[2] | IO_PORT "led_n[4]" IO_TYPE=LVCMOS33 DRIVE=8;
-#ADC_DOUT[2] |  
+#ADC_DOUT[2] |
 #ADC_DOUT[2] | IO_LOC  "led_n[5]" 20;
 #ADC_DOUT[2] | IO_PORT "led_n[5]" IO_TYPE=LVCMOS33 DRIVE=8;
 
@@ -52,7 +52,7 @@ IO_PORT "led_n[3]" IO_TYPE=LVCMOS33 DRIVE=8;
 #---------------------------------------
 IO_LOC  "uart_rx"   70;
 IO_LOC  "uart_tx"   69;
-                     
+
 IO_PORT "uart_rx"   IO_TYPE=LVCMOS33 PULL_MODE=UP;
 IO_PORT "uart_tx"   IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
 
@@ -61,7 +61,7 @@ IO_PORT "uart_tx"   IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
 #---------------------------------------
 #IO_LOC  "ser422_rx" 80;
 #IO_PORT "ser422_rx" IO_TYPE=LVCMOS33 PULL_MODE=UP;
-#                    
+#
 #IO_LOC  "ser422_tx" 76;
 #IO_PORT "ser422_tx" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8;
 
@@ -122,7 +122,7 @@ IO_LOC  "dac_data[9]"      51;
 
 IO_PORT "dac_pwd"          IO_TYPE=LVCMOS33;
 IO_PORT "dac_clk_out"      IO_TYPE=LVCMOS33;
-                            
+
 IO_PORT "dac_data[0]"      IO_TYPE=LVCMOS33;
 IO_PORT "dac_data[1]"      IO_TYPE=LVCMOS33;
 IO_PORT "dac_data[2]"      IO_TYPE=LVCMOS33;
@@ -139,7 +139,7 @@ IO_PORT "dac_data[9]"      IO_TYPE=LVCMOS33;
 #---------------------------------------
 #IO_LOC  "spare_diff_p"     17;
 #IO_LOC  "spare_diff_n"     18;
-# 
+#
 #IO_LOC  "spare[0]"         27;
 #IO_LOC  "spare[1]"         28;
 #IO_LOC  "spare[2]"         49;

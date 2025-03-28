@@ -10,18 +10,18 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
-//   CSR (aka GPIO) block for our SOC bus. Standardized template, then 
-//   customized to each particular SOC design. 
+// Description:
+//   CSR (aka GPIO) block for our SOC bus. Standardized template, then
+//   customized to each particular SOC design.
 //
 //   This is the CSR register block. While it does not need to be so, for
 //   simplicity, we try to keep only one CSR block for the entire SOC.
 //
 //   Our CSR accepts any-size writes: Byte, HalfWord, FullWord, treating
-//   them all as the full 32-bit access. That greatly simplifies register 
+//   them all as the full 32-bit access. That greatly simplifies register
 //   operations. With it, any variety of Store instruction that the compiler
-//   may put to use will still work. Similarly, this allows free register 
-//   layout, which now does not need to be aligned with any byte boundaries 
+//   may put to use will still work. Similarly, this allows free register
+//   layout, which now does not need to be aligned with any byte boundaries
 //   within 32-bit word.
 //
 //   The reads are always full 32-bit access anyway.
@@ -29,21 +29,21 @@
 //   See 'csr_pkg.sv for register map detail...
 //==========================================================================
 
-module soc_csr 
+module soc_csr
    import soc_pkg::*;
    import csr_pkg::*;
 (
    soc_if.SLV  bus,
    csr_if.MST  csr
 );
-   
+
 //-----------------------------------------
 // Access and address decoder
 //-----------------------------------------
    logic  any_write, write, read;
    sel_t  sel;
-   
-   always_comb begin 
+
+   always_comb begin
 
       // write of any of 4 bytes is treated as the full 32-bit access
       any_write = |bus.we;
@@ -52,7 +52,7 @@ module soc_csr
       read  = bus.vld & ~any_write;
 
       sel = '0;
-      
+
       unique case (bus.addr[CSR_ADDR_MSB:2])
          ADDR_UART_TX :  sel.uart_tx = HI;
          ADDR_UART_RX :  sel.uart_rx = HI;
@@ -71,12 +71,12 @@ module soc_csr
 
          ADDR_MISC    :  sel.misc    = HI;
 
-         default: begin end 
-      endcase  
+         default: begin end
+      endcase
    end
 
 //-----------------------------------------
-// WRITE register(s): 
+// WRITE register(s):
 //-----------------------------------------
    always_ff @(negedge bus.arst_n or posedge bus.clk) begin: wr_reg
       if (bus.arst_n == LO) begin
@@ -89,39 +89,39 @@ module soc_csr
          csr.dac2_sin_tune  <= INIT_DAC.sin_tune;
 
          csr.misc.error     <= INIT_MISC.error;
-      end 
+      end
 
      // Only full 32-bit writes are accepted
       else if (write == HI) begin
-         unique case (HI) 
+         unique case (HI)
             sel.gpo : begin
                       csr.gpo.led_off    <= bus.wdat[1:0];
                       end
 
                       // ignore DAC write for an active session
-            sel.dac1: if (csr.dac1_busy == 1'b0) begin 
+            sel.dac1: if (csr.dac1_busy == 1'b0) begin
                       csr.dac1_hann_step <= bus.wdat[25:16];
                       csr.dac1_sin_tune  <= bus.wdat[14:0];
-                      end 
+                      end
 
                       // ignore DAC write for an active session
             sel.dac2: if (csr.dac2_busy == 1'b0) begin
                       csr.dac2_hann_step <= bus.wdat[25:16];
                       csr.dac2_sin_tune  <= bus.wdat[14:0];
-                      end 
+                      end
 
             sel.misc: begin
                       csr.misc.error     <= bus.wdat[3:0];
                       end
 
-            default: begin end 
+            default: begin end
          endcase // unique case (HI)
       end
    end: wr_reg
 
 
 //-----------------------------------------
-// WR/RD Triggers 
+// WR/RD Triggers
 //  (*) not directly visible to SW, internally used by HW
 //-----------------------------------------
    always_comb begin: trig
@@ -151,7 +151,7 @@ module soc_csr
    always_comb begin: rd_mux
       bus.rdat = '0;
 
-      unique case (HI) 
+      unique case (HI)
 
         //___UART
          sel.uart_tx   : bus.rdat[31]   = csr.uart_tx_busy;
@@ -177,7 +177,7 @@ module soc_csr
          sel.dac1      : bus.rdat[31]   = csr.dac1_busy;
          sel.dac2      : bus.rdat[31]   = csr.dac2_busy;
 
-         default: begin end 
+         default: begin end
       endcase // unique case (HI)
    end: rd_mux
 
@@ -197,27 +197,27 @@ module soc_csr
 
   always @(posedge bus.clk) begin
      if ({bus.vld, bus.rdy} == 2'b11) begin
-        if (write == 1) begin  
-           $display("%t %m WRITE [%08x]<=%08x", $time, 
+        if (write == 1) begin
+           $display("%t %m WRITE [%08x]<=%08x", $time,
                     {bus.addr, 2'd0}, bus.wdat);
         end
-        if (read == 1) begin  
-           $display("%t %m READ [%08x]=>%08x", $time, 
+        if (read == 1) begin
+           $display("%t %m READ [%08x]=>%08x", $time,
                     {bus.addr, 2'd0}, bus.rdat);
         end
      end
   end
-   
+
 `endif
 `endif
-        
+
 endmodule: soc_csr
 
 /*
 -----------------------------------------------------------------------------
 Version History:
 -----------------------------------------------------------------------------
- 2024/1/2  JI: initial creation    
+ 2024/1/2  JI: initial creation
  2024/3/1  JI: added ADC1/2_RX, GPO and GPI registers
  2024/3/28 JI: added DAC1/2
  2024/4/88 JI: adapted for ADC DMA scheme

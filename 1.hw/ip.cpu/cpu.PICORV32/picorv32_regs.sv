@@ -9,7 +9,7 @@
 // the PicoRV32 configuration. (e.g. QREGS, etc)
 
 module picorv32_regs (
-   input  logic        clk, 
+   input  logic        clk,
    input  logic        wen,
    input  logic [5:0]  waddr,
    input  logic [5:0]  raddr1,

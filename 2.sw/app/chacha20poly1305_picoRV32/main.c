@@ -61,10 +61,10 @@ int main(void)
         auth_tag, aad, aad_len);
 
     if (ret == 0)
-    {    
+    {
         reg_gpio |= LED0; //encryption succesfull
     }
-	
+
 	/*
     // Verify
     decrypted[plaintext_len] = '\0'; // Null-terminate for printing

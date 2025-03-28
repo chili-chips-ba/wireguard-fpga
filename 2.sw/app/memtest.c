@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   - Test of external SDRAM / DMEM
 //--------------------------------------------------------------------------
 // This is a bare-metal (aka non-hosted / freestanding) program!
@@ -60,9 +60,9 @@ datum memTestDataBus(volatile datum *address) {
 /**********************************************************************
  * Function:    memTestDataMask()
  *
- * Description: Validate byte-level data masks by performing a walking 
+ * Description: Validate byte-level data masks by performing a walking
  *              1's on them for a given address, selected by the caller.
- *              Also activate HalfWord combinations 
+ *              Also activate HalfWord combinations
  *
  * Returns:     0 if test succeeds.
  *              A non-zero result is the first data mask bit that failed.
@@ -103,7 +103,7 @@ int memTestDataMask(volatile datum *address) {
    // 2) Perform Half-word tests
    pattern16 = 4321;
    address16 = (volatile datum16 *) address8;
-   
+
    for (i = 0; i < 8; i++) {
       // Write the test pattern
       *address16 = pattern16;
@@ -251,7 +251,7 @@ datum *memTestDevice(volatile datum *baseAddress, unsigned long nBytes){
  *               - test the RTL implementation of all relevant logic
  *               - test off-chip SDRAM component
  *               - illustrate the handshake between SW and HW
- *               - provide a foundation for development of "production" 
+ *               - provide a foundation for development of "production"
  *                 code for SDRAM resource
  *
  * Returns:     0 if test succeeds; -1 when it fails

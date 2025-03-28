@@ -6,7 +6,7 @@
 #=============================================================
 
 import textwrap
-import serial           
+import serial
 import struct
 import time
 
@@ -56,7 +56,7 @@ for li in str32:         #DATA
    i = i + 1
    outfile.write(li)
    outfile.write("\n")
-   
+
    ot= ComPort.write(struct.pack('B', int(li[6:8], 16)))
    checksum = checksum + int(li[6:8], 16)
    print(f'{i:4d}_0: {li[6:8]:2}')
@@ -90,7 +90,7 @@ ot= ComPort.write(struct.pack('B', 6))
 checksum = checksum + 6
 print(f'DATA4: ', hex(6))
 """
-   
+
 checksum = int(checksum&0xFF)
 ot= ComPort.write(struct.pack('B', checksum))  #CheckSum
 print(f'CS: ', hex(checksum))

@@ -15,10 +15,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 module fpga_obuf (
-   input  logic  i, // core input,  to be sent to OUT 
-   output logic  o  // core output, as received from INP 
+   input  logic  i, // core input,  to be sent to OUT
+   output logic  o  // core output, as received from INP
 );
-   
+
    OBUF u_obuf (.O(o), .I(i));
 
 endmodule: fpga_obuf
@@ -27,5 +27,5 @@ endmodule: fpga_obuf
 ------------------------------------------------------------------------------
 Version History:
 ------------------------------------------------------------------------------
- 2024/02/14 TI: initial creation    
+ 2024/02/14 TI: initial creation
 */

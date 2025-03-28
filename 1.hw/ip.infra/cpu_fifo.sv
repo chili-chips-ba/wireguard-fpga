@@ -10,13 +10,13 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   CPU FIFOs
 //==========================================================================
 
 module cpu_fifo
    import csr_pkg::*;
-(   
+(
    input  csr_pkg::csr__out_t from_csr,
    output csr_pkg::csr__in_t  to_csr,
    dpe_if.s_axis              to_cpu,
@@ -31,7 +31,7 @@ module cpu_fifo
    ) tx_fifo (
       .clk                    (to_cpu.clk),
       .rst                    (to_cpu.rst),
-    
+
       .s_axis_tdata           (to_cpu.tdata),
       .s_axis_tkeep           (to_cpu.tkeep),
       .s_axis_tvalid          (to_cpu.tvalid),
@@ -41,7 +41,7 @@ module cpu_fifo
                                 to_cpu.tuser_bypass_stage,
                                 to_cpu.tuser_src,
                                 to_cpu.tuser_dst}),
-    
+
       .m_axis_tdata           ({to_csr.cpu_fifo.tx.data_127_96.tdata.next,
                                 to_csr.cpu_fifo.tx.data_95_64.tdata.next,
                                 to_csr.cpu_fifo.tx.data_63_32.tdata.next,
@@ -55,7 +55,7 @@ module cpu_fifo
                                 to_csr.cpu_fifo.tx.control.tuser_src.next,
                                 to_csr.cpu_fifo.tx.control.tuser_dst.next})
    );
-   
+
    axis_fifo #(
       .DEPTH                  (4096),
       .DATA_WIDTH             (128),
@@ -65,7 +65,7 @@ module cpu_fifo
    ) rx_fifo (
       .clk                    (to_cpu.clk),
       .rst                    (to_cpu.rst),
-    
+
       .s_axis_tdata           ({from_csr.cpu_fifo.rx.data_127_96.tdata.value,
                                 from_csr.cpu_fifo.rx.data_95_64.tdata.value,
                                 from_csr.cpu_fifo.rx.data_63_32.tdata.value,
@@ -78,7 +78,7 @@ module cpu_fifo
                                 from_csr.cpu_fifo.rx.control.tuser_bypass_stage.value,
                                 from_csr.cpu_fifo.rx.control.tuser_src.value,
                                 from_csr.cpu_fifo.rx.control.tuser_dst.value}),
-    
+
       .m_axis_tdata           (from_cpu.tdata),
       .m_axis_tkeep           (from_cpu.tkeep),
       .m_axis_tvalid          (from_cpu.tvalid),

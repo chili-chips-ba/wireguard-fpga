@@ -14,7 +14,7 @@ void delay(uint32_t count) {
 int main(void)
 {
    volatile csr_t *csr = (volatile csr_t*)0x20000000;
-   
+
    while (1) {
       csr->gpio.f.led2 = 1;
       csr->gpio.f.led1 = csr->gpio.f.key1;
@@ -23,6 +23,6 @@ int main(void)
       csr->gpio.f.led1 = csr->gpio.f.key1;
       delay(1000000);
    }
-   
+
    return 0;
 }

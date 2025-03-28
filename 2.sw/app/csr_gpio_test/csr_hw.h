@@ -6,7 +6,7 @@
 //
 // ----------------------------------------------------------------------
 
-#ifndef _CSR_BUILD_GENERATED_FILES_CSR_HW_H_ 
+#ifndef _CSR_BUILD_GENERATED_FILES_CSR_HW_H_
 #define _CSR_BUILD_GENERATED_FILES_CSR_HW_H_
 
 #include "csr.h"
@@ -180,33 +180,33 @@ public:
                                                                                    sizeof(csr__cpu_fifo__rx__data_31_0_t)/4
                                                                                     );
         data_95_64 = new csr__cpu_fifo__rx__data_95_64_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__rx__data_63_32_t)/4
                                                                                     );
         data_127_96 = new csr__cpu_fifo__rx__data_127_96_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__rx__data_95_64_t)/4
                                                                                     );
         control = new csr__cpu_fifo__rx__control_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_95_64_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_95_64_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__rx__data_127_96_t)/4
                                                                                     );
         trigger = new csr__cpu_fifo__rx__trigger_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_95_64_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_127_96_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_95_64_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_127_96_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__rx__control_t)/4
                                                                                     );
         status = new csr__cpu_fifo__rx__status_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_95_64_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__data_127_96_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__rx__control_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__rx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_63_32_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_95_64_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__data_127_96_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__rx__control_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__rx__trigger_t)/4
                                                                                     );
     };
@@ -367,33 +367,33 @@ public:
                                                                                    sizeof(csr__cpu_fifo__tx__data_31_0_t)/4
                                                                                     );
         data_95_64 = new csr__cpu_fifo__tx__data_95_64_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__tx__data_63_32_t)/4
                                                                                     );
         data_127_96 = new csr__cpu_fifo__tx__data_127_96_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__tx__data_95_64_t)/4
                                                                                     );
         control = new csr__cpu_fifo__tx__control_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_95_64_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_95_64_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__tx__data_127_96_t)/4
                                                                                     );
         trigger = new csr__cpu_fifo__tx__trigger_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_95_64_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_127_96_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_95_64_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_127_96_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__tx__control_t)/4
                                                                                     );
         status = new csr__cpu_fifo__tx__status_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_95_64_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__data_127_96_t)/4 + 
-                                                                                   sizeof(csr__cpu_fifo__tx__control_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo__tx__data_31_0_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_63_32_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_95_64_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__data_127_96_t)/4 +
+                                                                                   sizeof(csr__cpu_fifo__tx__control_t)/4 +
                                                                                    sizeof(csr__cpu_fifo__tx__trigger_t)/4
                                                                                     );
     };
@@ -512,12 +512,12 @@ public:
                                                                                    sizeof(csr__uart__rx_t)/4
                                                                                     );
         tx = new csr__uart__tx_vp_t (base_addr +
-                                                                                   sizeof(csr__uart__rx_t)/4 + 
+                                                                                   sizeof(csr__uart__rx_t)/4 +
                                                                                    sizeof(csr__uart__rx_trigger_read_2925067f_t)/4
                                                                                     );
         tx_trigger = new csr__uart__tx_trigger_write_d2a2fe0e_vp_t (base_addr +
-                                                                                   sizeof(csr__uart__rx_t)/4 + 
-                                                                                   sizeof(csr__uart__rx_trigger_read_2925067f_t)/4 + 
+                                                                                   sizeof(csr__uart__rx_t)/4 +
+                                                                                   sizeof(csr__uart__rx_trigger_read_2925067f_t)/4 +
                                                                                    sizeof(csr__uart__tx_t)/4
                                                                                     );
     };
@@ -649,7 +649,7 @@ public:
                                                                                    sizeof(csr__cpu_fifo_t)/4
                                                                                     );
         gpio = new csr__gpio_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo_t)/4 +
                                                                                    sizeof(csr__uart_t)/4
                                                                                     );
         for(int idx = 0; idx < 4; idx++)
@@ -662,16 +662,16 @@ public:
         };
 
         dpe = new csr__dpe_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo_t)/4 + 
-                                                                                   sizeof(csr__uart_t)/4 + 
-                                                                                   sizeof(csr__gpio_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo_t)/4 +
+                                                                                   sizeof(csr__uart_t)/4 +
+                                                                                   sizeof(csr__gpio_t)/4 +
                                                                                    4*sizeof(csr__ethernet_t)/4
                                                                                     );
         hwid = new csr__hwid_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo_t)/4 + 
-                                                                                   sizeof(csr__uart_t)/4 + 
-                                                                                   sizeof(csr__gpio_t)/4 + 
-                                                                                   4*sizeof(csr__ethernet_t)/4 + 
+                                                                                   sizeof(csr__cpu_fifo_t)/4 +
+                                                                                   sizeof(csr__uart_t)/4 +
+                                                                                   sizeof(csr__gpio_t)/4 +
+                                                                                   4*sizeof(csr__ethernet_t)/4 +
                                                                                    sizeof(csr__dpe_t)/4
                                                                                     );
     };

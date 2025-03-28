@@ -129,7 +129,7 @@ module picorv32_wb #(
       .PROGADDR_RESET      (PROGADDR_RESET      ),
       .PROGADDR_IRQ        (PROGADDR_IRQ        ),
       .STACKADDR           (STACKADDR           )
-   ) 
+   )
    picorv32_core (
       .clk      (clk   ),
       .resetn   (resetn),
@@ -156,11 +156,11 @@ module picorv32_wb #(
       .eoi(eoi),
 
    // Look-Ahead Interface (Not-Used)
-      .mem_la_read   (), //o 
-      .mem_la_write  (), //o 
-      .mem_la_addr   (), //o[31:0] 
-      .mem_la_wdata  (), //o[31:0] 
-      .mem_la_wstrb  (), //o[3:0] 
+      .mem_la_read   (), //o
+      .mem_la_write  (), //o
+      .mem_la_addr   (), //o[31:0]
+      .mem_la_wdata  (), //o[31:0]
+      .mem_la_wstrb  (), //o[3:0]
 
 `ifdef RISCV_FORMAL
       .rvfi_valid    (rvfi_valid    ),
@@ -239,13 +239,13 @@ module picorv32_wb #(
                   wbm_we_o <= 1'b0;
                end
             end // case: WBSTART
-           
+
             WBEND: begin
                mem_ready <= 1'b0;
 
                state <= IDLE;
             end
-           
+
             default:
                state <= IDLE;
          endcase

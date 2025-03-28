@@ -10,11 +10,11 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   Dual-Port register file of 32 entries, each 32-bit wide.
 //
 //   This is behavioral description. The idea is replace it with technology
-//   specific DistributedRAM, or ShadowSRAM, so mimimizing area and maximizing 
+//   specific DistributedRAM, or ShadowSRAM, so mimimizing area and maximizing
 //   performance
 //==========================================================================
 
@@ -40,7 +40,7 @@ module dprf_32x32bit (
 `else // Gowin
    logic [31:0] rf [32] /* synthesis syn_ramstyle = "distributed_ram" */;
 `endif
-   
+
    always_ff @(posedge clk) begin
       if (wen == 1'b1) rf[waddr] <= wdata;
    end
@@ -54,5 +54,5 @@ endmodule: dprf_32x32bit
 -----------------------------------------------------------------------------
 Version History:
 -----------------------------------------------------------------------------
- 2024/1/4 JI: initial creation    
+ 2024/1/4 JI: initial creation
 */

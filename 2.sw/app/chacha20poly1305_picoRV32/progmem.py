@@ -31,7 +31,7 @@ try:
         for value in hex_values:
             progmem_text += f"    mem[\'h{addr:04X}] <= 32\'h{value:08X};\n"
             addr += 1
-    
+
 
         progmem_body = f"""
 module progmem (
@@ -41,7 +41,7 @@ module progmem (
 
     // PicoRV32 bus interface
     input  wire        valid,
-    output wire        ready,	
+    output wire        ready,
     input  wire [31:0] addr,
     output wire [31:0] rdata,
 	// Rewrite firmware
@@ -81,8 +81,8 @@ module progmem (
   assign rdata    = mem_data;
   assign mem_addr = addr[MEM_SIZE_BITS+1:2];
 
-  always @(posedge clk) begin    
-    if (wen) mem[waddr] <= wdata;				
+  always @(posedge clk) begin
+    if (wen) mem[waddr] <= wdata;
   end
 
 endmodule

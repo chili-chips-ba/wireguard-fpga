@@ -14,7 +14,7 @@ void delay(uint32_t count) {
 int main(void)
 {
    csr_vp_t* csr = new csr_vp_t();
-   
+
    while (1) {
       csr->gpio->led2(1);
       csr->gpio->led1(csr->gpio->key1());
@@ -23,6 +23,6 @@ int main(void)
       csr->gpio->led1(csr->gpio->key1());
       delay(1000000);
    }
-   
+
    return 0;
 }

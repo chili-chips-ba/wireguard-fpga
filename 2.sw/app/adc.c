@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   - ADC test code,
 //       serves primarily as a demo on how to operate ADCs from SW
 //
@@ -34,9 +34,9 @@
 /**********************************************************************
  * Function:    adc_start()
  *
- * Description: Starts the designated ADC with specified time_us 
- *              and test parameters. For time_us=0 setting, we are 
- *              purposely allowing to trigger one measurement, as 
+ * Description: Starts the designated ADC with specified time_us
+ *              and test parameters. For time_us=0 setting, we are
+ *              purposely allowing to trigger one measurement, as
  *              that's very convenient for tuning the ADC
  *
  * Returns:     None
@@ -56,18 +56,18 @@ void adc_start (volatile adc_tx_t *adc_ptr, uint32_t time_us, uint8_t test) {
 /**********************************************************************
  * Function:    adc_sdram2uart()
  *
- * Description: Transfers collected ADC samples from SDRAM to UART, 
+ * Description: Transfers collected ADC samples from SDRAM to UART,
  * using following format:
- *    $id,num_bytes,xxxxxxxxxx.........xxxxxx\r\n   
+ *    $id,num_bytes,xxxxxxxxxx.........xxxxxx\r\n
  *
- * where:    
+ * where:
  *  - <id> is 1 or 2, in binary (non-ASCII)
  *  - <num_bytes> is the number of bytes that follow, in binary/non-ASCII
- *  - <x> is one byte in binary format. 
+ *  - <x> is one byte in binary format.
  *      One ADC sample is comprised of 3 bytes, ordered from MSB to LSB
  *
- * As far as the recipient of this response is concerned, the number 
- * of bytes is arbitrary. For simplicity, we transfer the entire batch 
+ * As far as the recipient of this response is concerned, the number
+ * of bytes is arbitrary. For simplicity, we transfer the entire batch
  * of ADC measurement data in one shot, thus our <num_bytes> is always
  * divisible by 3
  *
@@ -89,7 +89,7 @@ void adc_sdram2uart (uint8_t id) {
        sdram_addr = SDRAM_ADC2_ADDRESS;
     }
     else return;
-    
+
     // retreive the number of received samples
     num_bytes.all = mul3(adc_rx.fld.sample_cnt);
 
@@ -135,7 +135,7 @@ void adc_sdram2uart (uint8_t id) {
       uart_send_hex (sample.all, 6); // sample[23:0]
 
       // this comma is not part of the spec, but can be added for easier debug
-      //uart_send_char(','); 
+      //uart_send_char(',');
 
       sdram_addr++;
     }
@@ -149,7 +149,7 @@ void adc_sdram2uart (uint8_t id) {
 /**********************************************************************
  * Function:    adc_test()
  *
- * Description: Test and demo of ADC operation. It consists of: 
+ * Description: Test and demo of ADC operation. It consists of:
  *              1) start the measurement of given duration
  *              2) wait for ADC to complete the measurement
  *              3) transfer samples from SDRAM to UART
@@ -161,18 +161,18 @@ void adc_sdram2uart (uint8_t id) {
  *               - be simple and straightforward
  *               - provide a foundation for development of "production"
  *                 code for ADC resource
- * 
+ *
  *              While easy to follow, this function is blocking for
  *              the CPU. In other words, the CPU is waiting for:
- *                - ADC to finish the measurement 
+ *                - ADC to finish the measurement
  *                     to start sending results to UART
  *                - then UART to finish the sending
  *
  *              That's a significant time that the CPU is essentially
- *              out of commission for any other task. See 'main.c' for 
+ *              out of commission for any other task. See 'main.c' for
  *              a 'real-world' implementation with multi-tasking.
  *
- *              We can say that ADC is a "Non-Posted" resource, i.e. 
+ *              We can say that ADC is a "Non-Posted" resource, i.e.
  *              one that needs additional handling after the kick-off.
  *
  * Returns:     None
@@ -189,7 +189,7 @@ void adc_test(void) {
     volatile uint32_t *adc2_sdram_addr = SDRAM_ADC2_ADDRESS;
 
     uint32_t adc1_sdram_rdat, adc2_sdram_rdat;
-    
+
     for (int i=1; i<11; i += 3) {
        // 1) Start both ADCs for measurement of given duration
        adc_start (&(CSR->adc1_tx), time_us, test);
@@ -199,7 +199,7 @@ void adc_test(void) {
 
        test = !test;
 
-       
+
        // The following code section creates CPU reads concurrently with
        // ADC DMA writes, which is for testing CPU-vs-ADC and ADC1-vs-ADC2
        // arbitration logic. While we don't need it in normal operation,
@@ -223,15 +223,15 @@ void adc_test(void) {
 
        // 3) Data is DMA'd to SDRAM at this point. Transfer it to UART.
        //    This also blocks CPU!
-       adc_sdram2uart (1); 
-       adc_sdram2uart (2); 
+       adc_sdram2uart (1);
+       adc_sdram2uart (2);
 
 
        /*
-       ---------------------------------------------------------------- 
-        OLD: CPU cannot keep up with both ADCs. 
+       ----------------------------------------------------------------
+        OLD: CPU cannot keep up with both ADCs.
              We now have hardware DMA for transfer of samples to SDRAM
-       ---------------------------------------------------------------- 
+       ----------------------------------------------------------------
        // Turn off both LEDs
        CSR -> gpo.fld.led_off = 0b11;
 
@@ -246,13 +246,13 @@ void adc_test(void) {
           //---ADC1
           if (!adc1_rx.fld.last) {
              adc1_rx.all = CSR->adc1_rx.all; // poll
-              
+
              // transfer data if this read contains valid sample
              if (adc1_rx.fld.valid) {
                 *adc1_sdram_addr = adc1_rx.all;
                  adc1_sdram_addr++;
              }
-              
+
              // indicate ADC1 overflow using lower LED
              if (adc1_rx.fld.oflow) CSR -> gpo.fld.led_off = 0b10;
           }
@@ -260,13 +260,13 @@ void adc_test(void) {
           //---ADC2
           if (!adc2_rx.fld.last) {
             adc2_rx.all = CSR->adc2_rx.all; // poll
-              
+
              // transfer data if this read contains valid sample
              if (adc2_rx.fld.valid) {
                 *adc2_sdram_addr = adc2_rx.all;
                  adc2_sdram_addr++;
              }
-              
+
              // indicate ADC2 overflow using upper LED
              if (adc2_rx.fld.oflow) CSR -> gpo.fld.led_off = 0b01;
           }

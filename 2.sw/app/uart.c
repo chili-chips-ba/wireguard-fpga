@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   - UART test code,
 //       serves primarily as a demo on how to operate UART resource from SW
 //
@@ -37,7 +37,7 @@
  **********************************************************************/
 void uart_send_char (char c) {
    // wait for HW "not busy", then send the byte/character
-   while (CSR -> uart_tx.fld.busy); 
+   while (CSR -> uart_tx.fld.busy);
    CSR -> uart_tx.fld.data = c;
 }
 
@@ -82,7 +82,7 @@ void uart_recv(char *s) {
   //  or allocated buffer is exhausted
   //  (UART_RXBUF_SIZE-1) opens space to append NULL
   for (int i=0; i<(UART_RXBUF_SIZE-1); i++) {
-    
+
       // wait for HW to collect one byte/character
       //  (*) due to Clear-on-Read nature of VALID and OFLOW flags,
       //      this MUST BE ONE SHOT READ. Otherwise, both data and
@@ -93,7 +93,7 @@ void uart_recv(char *s) {
       do {
          uart_rx = CSR->uart_rx.all;
       } while (!(uart_rx & UART_RX_VALID));
-    
+
       // store received data and print it back (echo function)
       *s = (char)(uart_rx & UART_RX_DATA);
       uart_send_char(*s);
@@ -143,7 +143,7 @@ void uart_test(void) {
           CSR -> gpo.fld.led_off = 0b10; // turn on first LED
           uart_send((char*)"\r\n\t| You hit it! :-)\r\n");
           break;
-       
+
       // mismatch
       } else {
           CSR -> gpo.fld.led_off = 0b11; // turn off all LEDs
@@ -156,7 +156,7 @@ void uart_test(void) {
           }
       }
    }
-   
+
    uart_send((char*)"\r\nDONE!\r\n");
 }
 #endif // UART_TEST
@@ -217,7 +217,7 @@ void uart_tests_info(int cmd) {
       *mes_ptr++ =  '\n';
       *mes_ptr++ =  '\0';
 
-      uart_send(message); 
+      uart_send(message);
    }
 }
 #endif // RISCV_TESTS

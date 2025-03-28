@@ -29,7 +29,7 @@ int main(int argc, char** argv, char**) {
    contextp->traceEverOn(true);
    contextp->commandArgs(argc, argv);
    VerilatedFstC *m_trace = new VerilatedFstC;
-   
+
    // Construct the Verilated model, from Vtop.h generated from Verilating
    const std::unique_ptr<Vtb> topp{new Vtb{contextp.get()}};
 
@@ -66,5 +66,5 @@ int main(int argc, char** argv, char**) {
 ------------------------------------------------------------------------------
 Version History:
 ------------------------------------------------------------------------------
- 2024/02/14 TI: initial creation    
+ 2024/02/14 TI: initial creation
 */

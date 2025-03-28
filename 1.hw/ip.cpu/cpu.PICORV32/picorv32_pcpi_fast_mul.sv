@@ -45,7 +45,7 @@ module picorv32_pcpi_fast_mul #(
             3'b001: instr_mulh = 1;
             3'b010: instr_mulhsu = 1;
             3'b011: instr_mulhu = 1;
-            default: begin end        
+            default: begin end
          endcase
       end
    end

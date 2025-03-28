@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //-----------------------------------------------------------------------------
 // Gowin ALU54D primitive wrapper: ADDER A-B
-// 1 cycle to output - outputs are flopped 
+// 1 cycle to output - outputs are flopped
 //==========================================================================
 
 module Gowin_ALU54minus (dout, caso, a, b, ce, clk, reset);
@@ -61,5 +61,5 @@ endmodule //Gowin_ALU54minus
 ------------------------------------------------------------------------------
 Version History:
 ------------------------------------------------------------------------------
- 2024/05/07 TI: initial creation    
+ 2024/05/07 TI: initial creation
 */

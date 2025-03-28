@@ -10,14 +10,14 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
-//   1) Optional standalone tests of external SDRAM/DMEM, UART, DAC and ADC 
+// Description:
+//   1) Optional standalone tests of external SDRAM/DMEM, UART, DAC and ADC
 //
 //   2) UART_RX Polling/Servicing with Command Parser
 //   3) Dispatch of ADC and DAC Commands
 //   4) Dispatch of ADC Responses
 //   5) ADC Response upload via UART_TX: Return of ADC measurement results
-// 
+//
 // The latter 4 are implemented in a non-blocking way, without forcing the
 // CPU to wait, essentially allowing multi-tasking even without an OS.
 //
@@ -48,12 +48,12 @@
 /**********************************************************************
  * Function:    cmd_recv()
  *
- * Description: This function is the central part of UART_RX servicing, 
+ * Description: This function is the central part of UART_RX servicing,
  *              and intended to be called periodically. For speed, it
  *              does not take any arguments, but instead operates
- *              directly with global variables. 
+ *              directly with global variables.
  *
- *              It char-by-char receives command from UART HW, dissects 
+ *              It char-by-char receives command from UART HW, dissects
  *              it on-the-fly, discarding following characters:
  *                 - Command-Start: '$'
  *                 - Separators   : ',' '\r'
@@ -66,18 +66,18 @@
  *              all in ASCII. Output is a parsed command, organized
  *              into a structure (see cmd_t in soc.h), all in binary.
  *
- *              This design is capable of receiving a new command while 
+ *              This design is capable of receiving a new command while
  *              earlier command is in the execution pipe. Should a 3rd
- *              command start arriving before the 2nd assembled command 
- *              can be dispatched for execution (such as if targeted HW 
- *              resource is still busy executing an earlier command), 
- *              the new command is discarded. The 'crx_flag.rdy' semaphore 
- *              is used for this determination. Implementations with 
+ *              command start arriving before the 2nd assembled command
+ *              can be dispatched for execution (such as if targeted HW
+ *              resource is still busy executing an earlier command),
+ *              the new command is discarded. The 'crx_flag.rdy' semaphore
+ *              is used for this determination. Implementations with
  *              command queue deeper than 1 are also possible.
  *
  *              This function is implemented using low-level RTL style.
- *              Such approach reduces storage needs and equalizes parser 
- *              workload across multiple polling cycles, so increasing 
+ *              Such approach reduces storage needs and equalizes parser
+ *              workload across multiple polling cycles, so increasing
  *              CPU availability for other tasks in the main polling loop.
  *
  * Returns:     None. All handshake is through global semaphores
@@ -142,12 +142,12 @@ static inline void cmd_recv() {
          crx.arg1    = 0;
          crx.arg2    = 0;
          crx.arg3    = 0;
-          
+
          CSR->misc.fld.error = 0x0;
       }
       return;
    }
-    
+
    // discard all characters that arrive prior to '$',
    // or after '$' that failed to start a new Command
    if (crx_flag.active == 0x00) {
@@ -162,39 +162,39 @@ static inline void cmd_recv() {
    //  - reception of any other character ABORTs command.
    //      That is, spaces and letters are not allowed
    switch (uart_rx.fld.data) {
-    
+
       //------
-      // convert multi-digit ASCII string that represents 
+      // convert multi-digit ASCII string that represents
       // decimal number (as opposed to Hex) into plain binary.
       // Only 4 command elements are allowed: ID + 3 Arguments
       case ',':
-      case '\r': 
+      case '\r':
         if (crx.anum < 4) {
            crx_bin = 0;
-            
+
            for (uint8_t i=0; i < crx_asc_idx; i++) {
               crx_bin = 10*crx_bin + (crx_asc[i] - '0');
            }
-            
+
            switch (crx.anum) {
               case 0: crx.id   = (uint8_t)crx_bin; break;
               case 1: crx.arg1 =          crx_bin; break;
               case 2: crx.arg2 =          crx_bin; break;
               case 3: crx.arg3 =          crx_bin;
            }
-            
+
            crx_asc_idx = 0;
            crx.anum++;
         }
-        break;    
-    
+        break;
+
       //------
       // Command-End. Discard it, updating flags
       case '\n':
         crx_flag.active = 0x00;
         crx_flag.rdy    = 0xFF; // command is now ready for execution
         break;
-    
+
       //------
       // store ASCII values from '0' to '9'. Reception of
       // any other character, or more characters than allowed,
@@ -206,7 +206,7 @@ static inline void cmd_recv() {
         {
            crx_flag.active = 0x00;
            CSR->misc.fld.error = 0x5; // ILLEGAL_CMD_CHAR
-        }   
+        }
         // save new data, then increment index
         else {
            crx_asc[crx_asc_idx++] = uart_rx.fld.data;
@@ -231,7 +231,7 @@ static inline void cmd_recv() {
  *                   arg2: 1 instructs ADC RTL to locally generate data
  *
  *                $2,time_us,test\r\n       -> same, only for ADC2
- *               
+ *
  *                $3,hann_step,sin_tune\r\n -> DAC1-StartPing
  *                $4,hann_step,sin_tune\r\n -> DAC2-StartPing
  *
@@ -239,7 +239,7 @@ static inline void cmd_recv() {
  **********************************************************************/
 
 // FUTURE: first step towards creating a CmdQueue
-//cmd_t  cmd;  
+//cmd_t  cmd;
 
 // ADC is a Non-Posted resource: It requires additional handling
 // after kicking-off a measurement
@@ -262,7 +262,7 @@ static inline void cmd_dispatch() {
    // right away, even if it ends up being discarded. The following
    // line is what's causing loss of command if it ends up not
    // started in the code that follows
-   crx_flag.rdy = 0x00;      
+   crx_flag.rdy = 0x00;
 
    if (crx.anum != 3) {
       CSR->misc.fld.error = 0x6; // INVALID_ANUM
@@ -270,7 +270,7 @@ static inline void cmd_dispatch() {
    }
 
    switch (crx.id) {
-    
+
       //--ADC commands are Non-Posted and include Return-Results.
       //  We DROP NEW ADC COMMAND IF THE EARLIER ONE IS STILL RUNNING!
       //
@@ -285,35 +285,35 @@ static inline void cmd_dispatch() {
         if (task.fld.adc1_started == 0xFF) {
            CSR->misc.fld.error = 0x7; // ADC1_CMD_DROPPED
         }
-        else {           
+        else {
            adc_tx.fld.time_us    = crx.arg1;
            adc_tx.fld.test       = crx.arg2;
            CSR->adc1_tx.all      = adc_tx.all; // this write starts ADC1
-            
+
            task.fld.adc1_started = 0xFF;
            CSR->gpo.fld.led_off  = 0x2; // VISUAL DEBUG: turn on 1st LED
         }
         break;
-       
+
       case 2:
         if (task.fld.adc2_started == 0xFF) {
            CSR->misc.fld.error = 0x8; // ADC2_CMD_DROPPED
         }
-        else {           
+        else {
            adc_tx.fld.time_us    = crx.arg1;
            adc_tx.fld.test       = crx.arg2;
            CSR->adc2_tx.all      = adc_tx.all; // this write starts ADC2
-            
+
            task.fld.adc2_started = 0xFF;
            CSR->gpo.fld.led_off  = 0x1; // VISUAL DEBUG: turn on 2nd LED
         }
         break;
-       
+
       //--DAC Commands are Kick-and-Forget (aka Posted): There
       //  is nothing else to do upon starting DAC operation
       //
       //  We DROP NEW DAC COMMAND IF THE EARLIER ONE IS STILL RUNNING!
-      case 3: 
+      case 3:
         if (CSR->dac1_tx.fld.busy) {
            CSR->misc.fld.error = 0x9; // DAC1_CMD_DROPPED
         }
@@ -321,12 +321,12 @@ static inline void cmd_dispatch() {
            dac_tx.fld.hann_step = crx.arg1;
            dac_tx.fld.sin_tune  = crx.arg2;
            CSR->dac1_tx.all     = dac_tx.all; // this write starts DAC1
-            
+
            CSR->gpo.fld.led_off = 0x0; // VISUAL DEBUG: turn on both LEDs
         }
         break;
-    
-      case 4: 
+
+      case 4:
         if (CSR->dac2_tx.fld.busy) {
            CSR->misc.fld.error = 0xA; // DAC2_CMD_DROPPED
         }
@@ -334,14 +334,14 @@ static inline void cmd_dispatch() {
            dac_tx.fld.hann_step = crx.arg1;
            dac_tx.fld.sin_tune  = crx.arg2;
            CSR->dac2_tx.all     = dac_tx.all; // this write starts DAC2
-            
+
            CSR->gpo.fld.led_off = 0x0; // VISUAL DEBUG: turn on both LEDs
         }
         break;
-    
+
       //------
       // unsupported command: Turn off all LEDs
-      default: 
+      default:
          CSR->misc.fld.error  = 0xB; // INVALID_CMD_ID
          CSR->gpo.fld.led_off = 0x3;
    }
@@ -361,7 +361,7 @@ static inline void cmd_dispatch() {
  *              allow both ADCs to be measuring at the same time (such
  *              as to sense two different angles of the "sonar echo"),
  *              this function is also responsible for allocation of the
- *              common UART_TX resource to these two concurrent users. 
+ *              common UART_TX resource to these two concurrent users.
  *
  *              The arbitration algorithm is simple:
  *                - first come, first served
@@ -384,7 +384,7 @@ static inline void rsp_dispatch() {
 //void rsp_dispatch() {
 
    //___when UART_TX is busy, there is no point in doing anything else
-   //  here, hence wait for it to free up 
+   //  here, hence wait for it to free up
    if (task.hal.adc_uarting != 0x0000) return;
 
    //___when ADC1 is started, first wait for it to finish the measurement
@@ -392,7 +392,7 @@ static inline void rsp_dispatch() {
 
       // retrieve 'sample_cnt' and prep for uploading ADC1 data. We
       // don't check for sample_cnt=0, as even time_us=0 yields 1 sample
-      adc_rx.all           = CSR->adc1_rx.all; 
+      adc_rx.all           = CSR->adc1_rx.all;
       adc_num_bytes.fld.b0 = 1; // temporarily used for ADC_ID
       adc_sdram_addr       = SDRAM_ADC1_ADDRESS;
 
@@ -422,16 +422,16 @@ static inline void rsp_dispatch() {
  *
  *   The format of ReturnResults is:
  *      $id,num_bytes,xxxxxxxxxx.........xxxxxx\r\n
- *    
- *   where:    
+ *
+ *   where:
  *    - <id> is 1 or 2, in binary (non-ASCII)
  *    - <num_bytes> is the number of bytes that follow, in binary/non-ASCII
- *    - <x> is one byte in binary format. 
+ *    - <x> is one byte in binary format.
  *        One ADC sample is made of 3 bytes, ordered from MSByte to LSByte
- *    
+ *
  *   To facilitate testing with ordinary terminals, pure ASCII format is
  *   also provided.
- *    
+ *
  *   As far as the recipient of this response is concerned, the number of
  *   bytes is arbitrary. For simplicity, we transfer the entire batch of
  *   ADC measurement data in one shot. Our <num_bytes> is therefore always
@@ -457,11 +457,11 @@ static inline void rsp_sdram2uart() {
    //  its conditions have to be short and efficient
   if (CSR->uart_tx.fld.busy || (task.hal.adc_uarting == 0x0000)) return;
 
-   // UART_TX has a 16-deep FIFO: 
+   // UART_TX has a 16-deep FIFO:
    //  Keep the FIFO full to maximize utilization of serial line
    // do {
      switch (adc_byte_cnt) {
-       
+
      //===header===
       case 0: // RSP_START
          CSR -> uart_tx.fld.data = '$'; // send '$' to UART_TX
@@ -492,7 +492,7 @@ static inline void rsp_sdram2uart() {
          CSR -> uart_tx.fld.data = ',';
          adc_sample_cnt = 0;
          break;
-       
+
      //===samples===
       case 7: // SAMPLE_BYTE[2]
          // retrieve 3-byte sample from SDRAM and send MSByte
@@ -504,14 +504,14 @@ static inline void rsp_sdram2uart() {
          break;
       case 9: // SAMPLE_BYTE[0]
          CSR -> uart_tx.fld.data = adc_sample.fld.b0;
-       
+
          // rinse-and-repeat, until all samples are sent
          adc_sample_cnt++;
          adc_sdram_addr++;
 
          if (adc_sample_cnt != adc_rx.fld.sample_cnt) {
             adc_byte_cnt = 6;
-         }  
+         }
          break;
 
      //- - - - - - - - - - - - - - -
@@ -526,7 +526,7 @@ static inline void rsp_sdram2uart() {
 
       case 3: // NUM_BYTES[2]
          adc_num_bytes.all = mul3(adc_rx.fld.sample_cnt);
-         uart_send_hex (adc_num_bytes.fld.b2, 2); 
+         uart_send_hex (adc_num_bytes.fld.b2, 2);
          break;
       case 4: // NUM_BYTES[1]
          uart_send_hex (adc_num_bytes.fld.b1, 2);
@@ -539,11 +539,11 @@ static inline void rsp_sdram2uart() {
          CSR -> uart_tx.fld.data = ',';
          adc_sample_cnt = 0;
          break;
-       
+
      //===samples===
       case 7: // SAMPLE_BYTE[2]
          // retrieve 3-byte sample from SDRAM and send MSByte
-         adc_sample.all = *adc_sdram_addr; 
+         adc_sample.all = *adc_sdram_addr;
          uart_send_hex (adc_sample.fld.b2, 2);
          break;
       case 8: // SAMPLE_BYTE[1]
@@ -551,16 +551,16 @@ static inline void rsp_sdram2uart() {
          break;
       case 9: // SAMPLE_BYTE[0]
          uart_send_hex (adc_sample.fld.b0, 2);
-       
+
          // rinse-and-repeat, until all samples are sent
          adc_sample_cnt++;
          adc_sdram_addr++;
-       
+
          if (adc_sample_cnt != adc_rx.fld.sample_cnt) {
             adc_byte_cnt = 6;
-         }  
+         }
          break;
-     #endif 
+     #endif
      //- - - - - - - - - - - - - - -
 
      //===footer===
@@ -576,7 +576,7 @@ static inline void rsp_sdram2uart() {
          if (task.fld.adc2_uarting == 0xFF) task.fld.adc2_started = 0x00;
 
          break;
-       
+
       case 11: // RSP_END[0]
          CSR -> uart_tx.fld.data = '\n';
 
@@ -591,20 +591,20 @@ static inline void rsp_sdram2uart() {
    //         && !CSR->uart_tx.fld.busy);
 }
 
-     
+
 /**********************************************************************
  * Main
  *---------------------------------------------------------------------
  * Despite not having an OS, we implemented a degree of concurrency and
  * rudimentary multi-tasking, allowing reception of new commands while
- * the earlier ones are still in execution. Provided new commands are 
+ * the earlier ones are still in execution. Provided new commands are
  * for different targets, in addition to supporting their reception, we
- * can also dispatch them w/o waiting for the completion of already 
- * dispatched tasks.However, should a target be busy when new command 
- * arrives for it, this program will not wait, i.e. it will not block 
+ * can also dispatch them w/o waiting for the completion of already
+ * dispatched tasks.However, should a target be busy when new command
+ * arrives for it, this program will not wait, i.e. it will not block
  * the CPU. Instead, it'll SILENTLY DISCARD the new command, and keep
  * going. It's worth noting here that HW does not allow interrupting a
- * command that has already started. 
+ * command that has already started.
  *
  * In follow on projects, we can consider:
  *  -implementing back channel for reporting discarded commands (Errors)
@@ -645,7 +645,7 @@ CSR->gpo.fld.led_off = 0x3;
    adc_test();
 #endif //ADC_TEST
 
-   
+
 //=======================
 // Master loop. This is the "production", non-blocking code
 //=======================

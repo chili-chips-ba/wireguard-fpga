@@ -352,7 +352,7 @@ always @* begin
     store_axis_int_to_output = 1'b0;
     store_axis_int_to_temp = 1'b0;
     store_axis_temp_to_output = 1'b0;
-    
+
     if (m_axis_tready_int_reg) begin
         // input is ready
         if (m_axis_tready || !m_axis_tvalid_reg) begin

@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   DPE AXI-Stream Interface
 //==========================================================================
 
@@ -30,7 +30,7 @@ interface dpe_if (
    logic [2:0]   tuser_dst;
    logic [7:0]   tid;
    // verilator lint_on UNUSED
-   
+
    modport m_axis (
       input     clk,
       input     rst,
@@ -45,7 +45,7 @@ interface dpe_if (
       output    tuser_dst,
       output    tid
    );
-    
+
    modport s_axis (
       input     clk,
       input     rst,

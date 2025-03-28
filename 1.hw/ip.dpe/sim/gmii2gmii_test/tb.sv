@@ -11,7 +11,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   GMII-to-GMII loopback testbench
 //==========================================================================
 
@@ -22,12 +22,12 @@ module tb;
    localparam CLK_PERIOD = 8_000;
 	localparam CLK25_PERIOD = 40_000;
    localparam DATA_WIDTH = 128;
-    
+
    // Clock and reset signals
    logic clk = 0;
 	logic clk25 = 0;
    logic rst;
-    
+
     // Interfaces
     dpe_if inp  (.clk(clk), .rst(rst));
     dpe_if outp (.clk(clk), .rst(rst));
@@ -41,13 +41,13 @@ module tb;
     logic [7:0] gmii_txd;
     logic       gmii_tx_en;
     logic       gmii_tx_er;
-    
+
     // Test data type and constants
     typedef logic [127:0] test_data_t [11];
     typedef test_data_t packet_data_t [4];
-    
+
     const packet_data_t packet_data = '{
-        '{128'h00050008F85ABFE5363A83B59434E6A2, 
+        '{128'h00050008F85ABFE5363A83B59434E6A2,
           128'h090A0100090A26631140000017039C00,
           128'hF40600000001AE1488006CCAC6A90200,
           128'hCF2C3786BC020000000000000002AB7D,
@@ -58,7 +58,7 @@ module tb;
           128'h70BBF2FAB15757F16B1983B4E1E38051,
           128'h3319107F4160B4F8E66A004C3BBE7331,
           128'h0000000000005430B61799C89613B7E3},
-        '{128'h00450008F85ABFE5363A83B59434E6A2, 
+        '{128'h00450008F85ABFE5363A83B59434E6A2,
           128'h090A0100090A26631140000017039C00,
           128'hF40600000004AE1488006CCAC6A90200,
           128'hCF2C3786BC020000000000000002AB7D,
@@ -69,7 +69,7 @@ module tb;
           128'h70BBF2FAB15757F16B1983B4E1E38051,
           128'h3319107F4160B4F8E66A004C3BBE7331,
           128'h0000000000005430B61799C89613B7E3},
-        '{128'h00450008F85ABFE5363A83B59434E6A2, 
+        '{128'h00450008F85ABFE5363A83B59434E6A2,
           128'h090A0100090A26631140000017039C00,
           128'hF40600000001AE1488006CCAC6A90200,
           128'hCF2C3786BC020000000000000002AB7D,
@@ -80,7 +80,7 @@ module tb;
           128'h70BBF2FAB15757F16B1983B4E1E38051,
           128'h3319107F4160B4F8E66A004C3BBE7331,
           128'h0000000000005430B61799C89613B7E3},
-        '{128'h00450008F85ABFE5363A83B59434E6A2, 
+        '{128'h00450008F85ABFE5363A83B59434E6A2,
           128'h090A0100090A275D1140000076093C00,
           128'hF406000000044E1428006CCAC6A90200,
           128'h1D65B6E256190000000000000003AB7D,
@@ -92,11 +92,11 @@ module tb;
           '0,
           '0}
     };
-    
+
    // Clock generation
    always #(CLK_PERIOD/2) clk = ~clk;
 	always #(CLK25_PERIOD/2) clk25 = ~clk25;
-    
+
     // DUT instantiation
     eth_mac_1g_gmii_fifo #(
         .TARGET("GENERIC"),
@@ -114,21 +114,21 @@ module tb;
         .gtx_rst(rst),
         .logic_clk(clk),
         .logic_rst(rst),
-        
+
         .tx_axis_tdata(inp.tdata),
         .tx_axis_tkeep(inp.tkeep),
         .tx_axis_tvalid(inp.tvalid),
         .tx_axis_tready(inp.tready),
         .tx_axis_tlast(inp.tlast),
         .tx_axis_tuser(0),
-        
+
         .rx_axis_tdata(outp.tdata),
         .rx_axis_tkeep(outp.tkeep),
         .rx_axis_tvalid(outp.tvalid),
         .rx_axis_tready(outp.tready),
         .rx_axis_tlast(outp.tlast),
         .rx_axis_tuser(),
-        
+
         .gmii_rx_clk(gmii_rx_clk),
         .gmii_rxd(gmii_rxd),
         .gmii_rx_dv(gmii_rx_dv),
@@ -138,7 +138,7 @@ module tb;
         .gmii_txd(gmii_txd),
         .gmii_tx_en(gmii_tx_en),
         .gmii_tx_er(gmii_tx_er),
-        
+
         .tx_error_underflow(),
         .tx_fifo_overflow(),
         .tx_fifo_bad_frame(),
@@ -154,12 +154,12 @@ module tb;
         .cfg_tx_enable(1'b1),
         .cfg_rx_enable(1'b1)
     );
-    
+
     assign gmii_rx_clk = clk25;
     assign gmii_rxd = gmii_txd;
     assign gmii_rx_dv = gmii_tx_en;
     assign gmii_rx_er = gmii_tx_er;
-    
+
     // Main stimulus process
     initial begin
         // Initialize input interface
@@ -171,7 +171,7 @@ module tb;
         inp.tuser_bypass_stage = 0;
         inp.tuser_src = '0;
         inp.tuser_dst = '0;
-               
+
         // Reset assertion
         rst = 1;
         #(CLK_PERIOD * 4);
@@ -179,7 +179,7 @@ module tb;
         #1ps;
         rst = 0;
         #(CLK_PERIOD * 50);
-        
+
         // Input stimulus
         begin
             @(posedge clk);
@@ -242,12 +242,12 @@ module tb;
             inp.tkeep = '0;
             inp.tdata = '0;*/
         end
-        
+
         #(CLK_PERIOD * 5000);
         $display("Stimulus completed successfully");
     $finish(2);
     end
-    
+
     // Output ready control process
     initial begin
         @(posedge clk);
@@ -263,15 +263,15 @@ module tb;
         outp.tready = 1;
         */
     end
-    
+
     // Monitor process
     int expected_data_count = 0;
-    
+
     always @(posedge clk) begin
         if (!rst) begin
             if (outp.tvalid && outp.tready) begin
                 expected_data_count++;
-                
+
                 if (outp.tlast) begin
                     $display("Packet received with %0d words", expected_data_count);
                     expected_data_count = 0;

@@ -10,17 +10,17 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   SOC top-level design.
 //
 //   Standardized template, then customized to each particular SOC design.
 //   We hereby instantiate all Master(s) and Slave(s), and connect to form
-//   the complete System On Chip. 
+//   the complete System On Chip.
 //
 //   Customized for Sipeed TangNano20K board
 //==========================================================================
 
-module top 
+module top
    import soc_pkg::*;
 (
 
@@ -29,12 +29,12 @@ module top
    input  logic [2:0]  clk_fpll,  // clock from onboard FractionalPLL (MS5351)
    input  logic [2:1]  key,       // active-HI, S1:UserFunction S2:Reset
    output logic [3:2]  led_n,     // active-LO onboard LEDs
-                        
-   input  logic        uart_rx,   // -\ UART towards BL616
-   output logic        uart_tx    // -/ 
 
- //input  logic        ser422_rx, //-\ UART towards RS422 
- //output logic        ser422_tx, //-/ 
+   input  logic        uart_rx,   // -\ UART towards BL616
+   output logic        uart_tx    // -/
+
+ //input  logic        ser422_rx, //-\ UART towards RS422
+ //output logic        ser422_tx, //-/
 );
 
 //=================================
@@ -42,16 +42,16 @@ module top
 //=================================
    logic       clk_54;
    logic       srst54_n;
-                
+
    logic       strobe_27;
    logic       tick_1us;
    logic       tick_cca15us;
    logic       key1_clean;
-   
+
    clk_rst_gen u_clk_rst (
       .clk_27    (clk_27),       //i
       .clk_fpll  (clk_fpll),     //i
-      .force_rst (key[2]),       //i            
+      .force_rst (key[2]),       //i
 
       .clk_54    (clk_54),       //o
       .srst54_n  (srst54_n),     //o
@@ -86,18 +86,18 @@ module top
    logic [31:2] imem_waddr;
    logic [31:0] imem_wdat;
 
-//---------------------------------   
+//---------------------------------
    soc_cpu #(
      .ADDR_RESET     (32'h 0000_0000),
      .NUM_WORDS_IMEM (NUM_WORDS_IMEM)
-   ) 
+   )
    u_cpu (
      .bus        (bus_cpu),    //MST
 
-     .imem_we    (imem_we),    //-\ access point for 
-     .imem_waddr (imem_waddr), // | reloading CPU 
-     .imem_wdat  (imem_wdat)   //-/ program memory 
-   ); 
+     .imem_we    (imem_we),    //-\ access point for
+     .imem_waddr (imem_waddr), // | reloading CPU
+     .imem_wdat  (imem_wdat)   //-/ program memory
+   );
 
 //---------------------------------
   soc_fabric u_fabric (
@@ -119,16 +119,16 @@ module top
      .bus (bus_csr), //SLV
      .csr (csr)      //MST
   );
-                   
+
 //---------------------------------
   uart u_uart (
-    .arst_n     (srst54_n),   //i 
-    .clk        (clk_54),     //i 
-    .tick_1us   (tick_1us),   //i 
-                               
-    .uart_rx    (uart_rx),    //i 
+    .arst_n     (srst54_n),   //i
+    .clk        (clk_54),     //i
+    .tick_1us   (tick_1us),   //i
+
+    .uart_rx    (uart_rx),    //i
     .uart_tx    (uart_tx),    //o
-                               
+
     .csr        (csr),        //SLV_UART
 
    // IMEM Write port, for live updates of CPU program
@@ -142,7 +142,7 @@ module top
 //=================================
    assign led_n[3:2]     = csr.gpo.led_off;
    assign csr.gpi.key_on = key1_clean;
-   
+
 endmodule: top
 
 /*

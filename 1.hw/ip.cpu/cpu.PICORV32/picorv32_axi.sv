@@ -110,7 +110,7 @@ module picorv32_axi #(
    picorv32_axi_adapter axi_adapter (
       .clk             (clk            ),
       .resetn          (resetn         ),
-                        
+
       .mem_axi_awvalid (mem_axi_awvalid),
       .mem_axi_awready (mem_axi_awready),
       .mem_axi_awaddr  (mem_axi_awaddr ),
@@ -128,7 +128,7 @@ module picorv32_axi #(
       .mem_axi_rvalid  (mem_axi_rvalid ),
       .mem_axi_rready  (mem_axi_rready ),
       .mem_axi_rdata   (mem_axi_rdata  ),
-                        
+
       .mem_valid       (mem_valid      ),
       .mem_instr       (mem_instr      ),
       .mem_ready       (mem_ready      ),
@@ -190,11 +190,11 @@ module picorv32_axi #(
       .eoi(eoi),
 
    // Look-Ahead Interface (Not-Used)
-      .mem_la_read   (), //o 
-      .mem_la_write  (), //o 
-      .mem_la_addr   (), //o[31:0] 
-      .mem_la_wdata  (), //o[31:0] 
-      .mem_la_wstrb  (), //o[3:0] 
+      .mem_la_read   (), //o
+      .mem_la_write  (), //o
+      .mem_la_addr   (), //o[31:0]
+      .mem_la_wdata  (), //o[31:0]
+      .mem_la_wstrb  (), //o[3:0]
 
 `ifdef RISCV_FORMAL
       .rvfi_valid    (rvfi_valid    ),

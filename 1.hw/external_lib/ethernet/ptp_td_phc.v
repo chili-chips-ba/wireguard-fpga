@@ -374,7 +374,7 @@ always @(posedge clk) begin
                     input_ts_tod_offset_ready_reg <= 1'b1;
                     ts_tod_updated_reg <= 1'b1;
                 end
-                
+
                 update_state_reg <= 7;
                 adder_busy_reg <= 1'b1;
             end
@@ -538,7 +538,7 @@ always @(posedge clk) begin
                 // msg 0 word 5: current ToD seconds 47:32
                 td_shift_reg[17*5+0 +: 1] <= 1'b0;
                 td_shift_reg[17*5+1 +: 16] <= ts_tod_s_reg[47:32];
-                
+
                 td_msg_i_reg <= 2'd1;
             end
             2'd1: begin
@@ -557,7 +557,7 @@ always @(posedge clk) begin
                 // msg 1 word 5: drift state
                 td_shift_reg[17*5+0 +: 1] <= 1'b0;
                 td_shift_reg[17*5+1 +: 16] <= drift_cnt_d1_reg;
-                
+
                 td_msg_i_reg <= 2'd2;
             end
             2'd2: begin
@@ -576,7 +576,7 @@ always @(posedge clk) begin
                 // msg 2 word 5: alternate ToD seconds 47:32
                 td_shift_reg[17*5+0 +: 1] <= 1'b0;
                 td_shift_reg[17*5+1 +: 16] <= ts_tod_alt_s_reg[47:32];
-                
+
                 td_msg_i_reg <= 2'd0;
             end
         endcase

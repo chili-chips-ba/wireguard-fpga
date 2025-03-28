@@ -282,7 +282,7 @@ always @* begin
     m_udp_payload_axis_tlast_int  = s_udp_payload_axis_tlast;
     m_udp_payload_axis_tid_int    = s_udp_payload_axis_tid;
     m_udp_payload_axis_tdest_int  = s_udp_payload_axis_tdest;
-    m_udp_payload_axis_tuser_int  = s_udp_payload_axis_tuser; 
+    m_udp_payload_axis_tuser_int  = s_udp_payload_axis_tuser;
 end
 
 always @(posedge clk) begin

@@ -10,8 +10,8 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
-//  Simple Bus Functional Model of ADS1675 ADC, assuming the following 
+// Description:
+//  Simple Bus Functional Model of ADS1675 ADC, assuming the following
 //  configuration:
 //
 //   - CS_N       = 0 => always selected
@@ -19,7 +19,7 @@
 //   - LVDS_N     = 0 => interface is LVDS-compatible
 //   - SCLK_SEL   = 0 => SCLK is internally generated (ADC PLL for 3 x CLK)
 //   - DRATE[2:0] = 5 => High-Speed LVDS Data Retrieval (Figure 1 in datasheet)
-//                         Board is weird: ADC is configured for high-speed 
+//                         Board is weird: ADC is configured for high-speed
 //                         LVDS timing, yet the SCLK is not routed to FPGA!?
 //                         DRDY is also not routed to FPGA!!
 //
@@ -36,16 +36,16 @@
 //                       Must be 1 for WideBandwidth mode. If 0, it overrides
 //                       FPATH setting and forces ADC to LowLatency filter
 //
-// For our WideBandwidth configuration with DRATE=101, DRDY settling time 
+// For our WideBandwidth configuration with DRATE=101, DRDY settling time
 // is 1324 SCLK cycles (13790ns@96MHz). See Table 6 and Figure 48 of ADC
 // datasheet: ADC.ads1675.pdf
 //==========================================================================
 
 `timescale 1ps/1ps
 
-module bfm_adc (    
+module bfm_adc (
    input  logic adc_pwdn_n,     // Active-0, ADC power-down control
-                                 
+
    input  logic adc_clk,        // Master clock. Drives x3 PLL within ADC
    input  logic adc_start,      // 1 to start conversion and when measurement is running
 
@@ -70,12 +70,12 @@ module bfm_adc (
  `else
    localparam tSETTLE_SCLK = 1324; // Number of clock for filter to "settle" upon start
  `endif                            // of measurement. Per ADC datasheet Table6 and Fig.48
-   
+
 //----------------------
 // PowerUp/Down delay
 //----------------------
    bit powered_up;
-   
+
    initial begin
       powered_up = 1'b1;
 
@@ -85,7 +85,7 @@ module bfm_adc (
             powered_up = 1'b0;
          end
          // enable with specified delay
-         else begin   
+         else begin
             #(tLPLLSTL_US * 1us);
             powered_up = 1'b1;
          end
@@ -100,14 +100,14 @@ module bfm_adc (
    //assign clk_period = clk_posedge[0] - clk_posedge[1];
 
    bit sclk, sclk_dseg[4], sclk_dly;
-   
+
    initial begin
       sclk = 1'b0;
 
       forever @(posedge adc_clk) begin
          //clk_posedge[0] <= $time;
          //clk_posedge[1] <= clk_posedge[0];
-          
+
          repeat (3) if (powered_up == 1'b1) begin
             sclk = 1'b1;
             #(tSCLK_HALF_PERIOD_NS * 1ns);
@@ -117,8 +117,8 @@ module bfm_adc (
       end // forever @(posedge adc_clk)
    end // initial begin
 
-   
-   // since this delay is too large, close to 1 SCLK period, 
+
+   // since this delay is too large, close to 1 SCLK period,
    // break it into multiple chunks
    always @(sclk)         sclk_dseg[0] = #(tLCLKSCLK_NS/4 * 1ns) sclk;
    always @(sclk_dseg[0]) sclk_dseg[1] = #(tLCLKSCLK_NS/4 * 1ns) sclk_dseg[0];
@@ -127,7 +127,7 @@ module bfm_adc (
 
    assign sclk_dly = sclk_dseg[3];
 
-   
+
 //----------------------
 // START and SETTLE delay
 //----------------------
@@ -146,7 +146,7 @@ module bfm_adc (
    always @(posedge sclk) begin
       if (powered_up == 1'b0) begin
          settle_cnt <= '1;
-      end   
+      end
       else if (start[1] == 1'b0) begin
          settle_cnt <= tSETTLE_SCLK-1;
       end
@@ -165,7 +165,7 @@ module bfm_adc (
    bit [23:0]   sample;
    int unsigned sample_cnt;
    int unsigned bit_cnt;
- 
+
    initial begin
       drdy       = 1'b0;
       sample     = 24'($random);
@@ -173,13 +173,13 @@ module bfm_adc (
       bit_cnt    = 0;
 
       dout       = 1'b0;
-      
+
       forever @(posedge sclk_dly) begin
          if (start[1] == 1'b0) begin
             drdy       = 1'b0;
             sample_cnt = 0;
             bit_cnt    = 0;
-             
+
             dout       = 1'b0;
          end
          else if (settled == 1'b1) begin
@@ -190,25 +190,25 @@ module bfm_adc (
             else begin
                bit_cnt--;
             end
-               
+
             if (bit_cnt == (23 - tLDRPW)) drdy = 1'b0;
 
             dout = sample[bit_cnt]; // MSB goes out first
-             
+
             if (bit_cnt == 0) begin
                sample_cnt++;
-             
+
             `ifdef ADC_BFM_DEBUG
-               $display("%t %m Sent sample#%0d \t%0h", 
+               $display("%t %m Sent sample#%0d \t%0h",
                         $time, sample_cnt, sample);
-            `endif   
+            `endif
 
                sample++;
             end
          end // if ({start[1], settled} == 2'b11)
       end // forever @(posedge sclk)
    end // initial begin
-                        
+
 
 //----------------------
 // Output delays
@@ -224,5 +224,5 @@ endmodule: bfm_adc
 -----------------------------------------------------------------------------
 Version History:
 -----------------------------------------------------------------------------
- 2024/4/15 JI: initial creation    
+ 2024/4/15 JI: initial creation
 */

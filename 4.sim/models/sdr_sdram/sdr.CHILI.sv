@@ -4,7 +4,7 @@
 
 /**************************************************************************
 *
-*    File Name:  sdr.sv  
+*    File Name:  sdr.sv
 *      Version:  2.2
 *         Date:  October 12th, 2010
 *        Model:  BUS Functional
@@ -21,12 +21,12 @@
 *
 *         Note:  - Set simulator resolution to "ps" accuracy
 
-*   Disclaimer:  THESE DESIGNS ARE PROVIDED "AS IS" WITH NO WARRANTY 
-*                WHATSOEVER AND MICRON SPECIFICALLY DISCLAIMS ANY 
+*   Disclaimer:  THESE DESIGNS ARE PROVIDED "AS IS" WITH NO WARRANTY
+*                WHATSOEVER AND MICRON SPECIFICALLY DISCLAIMS ANY
 *                IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR
 *                A PARTICULAR PURPOSE, OR AGAINST INFRINGEMENT.
 *
-*                Copyright © 2001 Micron Semiconductor Products, Inc.
+*                Copyright ï¿½ 2001 Micron Semiconductor Products, Inc.
 *                All rights researved
 *
 * Rev  Author          Date        Changes
@@ -50,7 +50,7 @@
 
 // verilator lint_off WIDTHTRUNC
 
-module sdr 
+module sdr
   import sdram_pkg::*;
 (
   input  logic        Clk,
@@ -115,16 +115,16 @@ module sdr
   sdram_col_t   Col_addr [0 : 3];   // Column Address Pipeline
   sdram_col_t   Col, Col_brst;
   sdram_col_t   Col_temp, Burst_counter;
-                 
+
   sdram_data_t  /*[JI] Dq_reg, Dq_dqm*/ Dq_in_data, Dq_out_data, mem_data;
-  sdram_data_t  Bank0[MEM_SIZES]; 
+  sdram_data_t  Bank0[MEM_SIZES];
   sdram_data_t  Bank1[MEM_SIZES];
   sdram_data_t  Bank2[MEM_SIZES];
   sdram_data_t  Bank3[MEM_SIZES];
 
   reg           Act_b0, Act_b1, Act_b2, Act_b3; // Bank Activate
   reg           Pc_b0, Pc_b1, Pc_b2, Pc_b3;     // Bank Precharge
-        
+
   reg   [1 : 0] Bank_precharge       [0 : 3];   // Precharge Command
   reg           A10_precharge        [0 : 3];   // Addr[10] = 1 (All banks)
   reg           Auto_precharge       [0 : 3];   // RW Auto Precharge (Bank)
@@ -135,7 +135,7 @@ module sdr
   reg   [1 : 0] RW_interrupt_bank;              // RW Interrupt Bank
   int           RW_interrupt_counter [0 : 3];   // RW Interrupt Counter
   int           Count_precharge      [0 : 3];   // RW Auto Precharge Counter
-        
+
   reg   [1 : 0] Bank, Prev_bank;
 
   //------------------------------------------------------
@@ -160,7 +160,7 @@ module sdr
 
   // Write Burst Mode
   wire  Write_burst_mode = Mode_reg[9];
-    
+
   // DQ I/O buffer
   logic       Data_in_enable, Data_out_enable;
   sdram_dqm_t Data_out_enable2; //[JI]
@@ -171,19 +171,19 @@ module sdr
                              : 8'bz;
   end
 
-   
+
   // Commands Operation
   typedef enum logic [3:0]{
-     ACT   = 4'd0, 
-     NOP   = 4'd1, 
-     READ  = 4'd2, 
-     WRITE = 4'd3, 
-     PRECH = 4'd4, 
-     A_REF = 4'd5, 
-     BST   = 4'd6, 
+     ACT   = 4'd0,
+     NOP   = 4'd1,
+     READ  = 4'd2,
+     WRITE = 4'd3,
+     PRECH = 4'd4,
+     A_REF = 4'd5,
+     BST   = 4'd6,
      LMR   = 4'd7
   } cmd_t;
-  
+
   // These timing dynamically adjust based on CAS Latency
   realtime  tAC, tHZ;
 
@@ -201,21 +201,21 @@ module sdr
  //------------------------------------------------------
   initial begin: _init
      //Dq_reg = {DATA_WIDTH{1'bz}}; //[JI]
-     Data_in_enable   = 1'b0; 
+     Data_in_enable   = 1'b0;
      Data_out_enable  = 1'b0;
      Data_out_enable2 = '0; //[JI]
 
      Act_b0 = 1; Act_b1 = 1; Act_b2 = 1; Act_b3 = 1;
      Pc_b0  = 0; Pc_b1  = 0; Pc_b2  = 0; Pc_b3  = 0;
 
-     RW_interrupt_read [0] = 0; 
-     RW_interrupt_read [1] = 0; 
-     RW_interrupt_read [2] = 0; 
+     RW_interrupt_read [0] = 0;
+     RW_interrupt_read [1] = 0;
+     RW_interrupt_read [2] = 0;
      RW_interrupt_read [3] = 0;
 
-     RW_interrupt_write[0] = 0; 
-     RW_interrupt_write[1] = 0; 
-     RW_interrupt_write[2] = 0; 
+     RW_interrupt_write[0] = 0;
+     RW_interrupt_write[1] = 0;
+     RW_interrupt_write[2] = 0;
      RW_interrupt_write[3] = 0;
 
   `ifdef SDRAM_TIMINGCHK
@@ -230,7 +230,7 @@ module sdr
     //$timeformat (-9, 1, "ns", 12); //[JI]
     $timeformat (-9, 0, "ns", 12);
   end: _init
-  
+
   //------------------------------------------------------
   // Internal system clock generator
   reg   CkeZ, Sys_clk;
@@ -238,7 +238,7 @@ module sdr
 `ifdef SDRAM_TIMINGCHK
   wire  Dq_chk = Sys_clk & Data_in_enable; // Check setup/hold time for DQ_In
 `endif
-   
+
   always begin
       @ (posedge Clk) begin
           Sys_clk = CkeZ;
@@ -271,12 +271,12 @@ module sdr
       Command[1]        = Command[2];
       Command[2]        = Command[3];
       Command[3]        = NOP;
-                         
+
       Col_addr[0]       = Col_addr[1];
       Col_addr[1]       = Col_addr[2];
       Col_addr[2]       = Col_addr[3];
       Col_addr[3]       = '0;
-                         
+
       Bank_addr[0]      = Bank_addr[1];
       Bank_addr[1]      = Bank_addr[2];
       Bank_addr[2]      = Bank_addr[3];
@@ -330,7 +330,7 @@ module sdr
  `ifdef SDRAM_TIMINGCHK
       MRD_chk = MRD_chk + 1;
  `endif
- 
+
       //------------------------------------------------------
       // Auto Refresh
       if (Aref_enable === 1'b1) begin
@@ -351,9 +351,9 @@ module sdr
           end
 
           // Precharge to Auto Refresh
-          if (    ($time - RP_chk0 < tRP) 
-               || ($time - RP_chk1 < tRP) 
-               || ($time - RP_chk2 < tRP) 
+          if (    ($time - RP_chk0 < tRP)
+               || ($time - RP_chk1 < tRP)
+               || ($time - RP_chk2 < tRP)
                || ($time - RP_chk3 < tRP)
           ) begin
               $display ("%m : at time %t ERROR: tRP violation during Auto Refresh", $time);
@@ -368,7 +368,7 @@ module sdr
           RFC_chk = $time;
         `endif // SDRAM_TIMINGCHK
       end
-      
+
       //------------------------------------------------------
       // Load Mode Register
       if (Mode_reg_enable === 1'b1) begin
@@ -383,10 +383,10 @@ module sdr
              3'b010  : $display ("\t\tCAS Latency = 2");
              3'b011  : $display ("\t\tCAS Latency = 3");
              default : $display ("\t\tCAS Latency = Reserved");
-          endcase                                   
-                                                    
-          // Burst Length                           
-          case (Addr[2:0])                        
+          endcase
+
+          // Burst Length
+          case (Addr[2:0])
              3'b000  : $display ("\t\tBurst Length = 1");
              3'b001  : $display ("\t\tBurst Length = 2");
              3'b010  : $display ("\t\tBurst Length = 4");
@@ -398,10 +398,10 @@ module sdr
           // Burst Type
           if (Addr[3] === 1'b0) begin
              $display ("\t\tBurst Type = Sequential");
-          end 
+          end
           else if (Addr[3] === 1'b1) begin
              $display ("\t\tBurst Type = Interleaved");
-          end 
+          end
           else begin
              $display ("\t\tBurst Type = Reserved");
           end
@@ -409,14 +409,14 @@ module sdr
           // Write Burst Mode
           if (Addr[9] === 1'b0) begin
              $display ("\t\tWrite Burst Mode = Programmed Burst Length");
-          end 
+          end
           else if (Addr[9] === 1'b1) begin
              $display ("\t\tWrite Burst Mode = Single Location Access");
-          end 
+          end
           else begin
              $display ("\t\tWrite Burst Mode = Reserved");
           end
-         
+
           // Precharge to Load Mode Register
           if ({Pc_b0, Pc_b1, Pc_b2, Pc_b3} === 4'b0000) begin
               $display ("%m : at time %t ERROR: all banks must be Precharge before Load Mode Register", $time);
@@ -424,9 +424,9 @@ module sdr
 
        `ifdef SDRAM_TIMINGCHK
           // Precharge to Load Mode Register
-          if (    ($time - RP_chk0 < tRP) 
-               || ($time - RP_chk1 < tRP) 
-               || ($time - RP_chk2 < tRP) 
+          if (    ($time - RP_chk0 < tRP)
+               || ($time - RP_chk1 < tRP)
+               || ($time - RP_chk2 < tRP)
                || ($time - RP_chk3 < tRP)
           ) begin
               $display ("%m : at time %t ERROR: tRP violation during Load Mode Register", $time);
@@ -446,7 +446,7 @@ module sdr
           MRD_chk = 0;
        `endif
       end
-      
+
       //------------------------------------------------------
       // Active Block (Latch Bank Address and Row Address)
       if (Active_enable === 1'b1) begin
@@ -559,7 +559,7 @@ module sdr
               RCD_chk3    = $time;
              `endif
               RAS_chk3    = $time;
-           
+
               Act_b3      = 1'b1;
               Pc_b3       = 1'b0;
               B3_row_addr = Addr [ROW_WIDTH - 1 : 0];
@@ -587,7 +587,7 @@ module sdr
 
           Prev_bank = Ba;
       end
-      
+
       //------------------------------------------------------
       // Precharge Block
       if (Prech_enable == 1'b1) begin
@@ -696,7 +696,7 @@ module sdr
           Bank_precharge[Cas_latency - 1] = Ba;
           A10_precharge [Cas_latency - 1] = Addr[10];
       end
-      
+
       //------------------------------------------------------
       // Burst terminate
       if (Burst_term === 1'b1) begin
@@ -712,7 +712,7 @@ module sdr
              $display ("%t %m BST  : Burst Terminate",$time);
          `endif
       end
-      
+
       //------------------------------------------------------
       // Read, Write, Column Latch
       if (Read_enable === 1'b1) begin
@@ -765,7 +765,7 @@ module sdr
       // Write Command
       if (Write_enable == 1'b1) begin
           // Activate to Write
-          if (    (Ba == 2'b00 && Pc_b0 == 1'b1) || (Ba == 2'b01 && Pc_b1 == 1'b1) 
+          if (    (Ba == 2'b00 && Pc_b0 == 1'b1) || (Ba == 2'b01 && Pc_b1 == 1'b1)
                || (Ba == 2'b10 && Pc_b2 == 1'b1) || (Ba == 2'b11 && Pc_b3 == 1'b1)
           ) begin
               $display("%m : at time %t ERROR: Bank is not Activated for Write", $time);
@@ -792,7 +792,7 @@ module sdr
               Data_in_enable = 1'b0;
 
               // Interrupting a Write with Autoprecharge
-              if (    (Auto_precharge [RW_interrupt_bank] == 1'b1) 
+              if (    (Auto_precharge [RW_interrupt_bank] == 1'b1)
                    && (Write_precharge[RW_interrupt_bank] == 1'b1)
                  ) begin
                   RW_interrupt_write[RW_interrupt_bank] = 1'b1;
@@ -805,7 +805,7 @@ module sdr
           // Write interrupt Read (terminate Read immediately)
           if (Data_out_enable == 1'b1) begin
               Data_out_enable = 1'b0;
-              
+
               // Interrupting a Read with Autoprecharge
               if (  (Auto_precharge[RW_interrupt_bank] == 1'b1)
                   &&(Read_precharge[RW_interrupt_bank] == 1'b1)
@@ -851,7 +851,7 @@ module sdr
                 `ifdef SDRAM_TIMINGCHK
                   RP_chk0               = $time + tWRa;
                 `endif
- 
+
                 `ifdef SDRAM_DEBUGNOTE
                     $display ("%t %m NOTE : Start Internal Auto Precharge for Bank 0", $time);
                 `endif
@@ -893,7 +893,7 @@ module sdr
                 `ifdef SDRAM_TIMINGCHK
                   RP_chk2 = $time + tWRa;
                 `endif
- 
+
                 `ifdef SDRAM_DEBUGNOTE
                     $display ("%t %m NOTE : Start Internal Auto Precharge for Bank 2", $time);
                 `endif
@@ -928,10 +928,10 @@ module sdr
       //      and 2.  CAS Latency - 1 cycles before last burst
       //       or 3.  Interrupt by a Read or Write (with or without AutoPrecharge)
       if ((Auto_precharge[0] == 1'b1) && (Read_precharge[0] == 1'b1)) begin
-          if (( ($time - RAS_chk0 >= tRAS) && 
-               (    (Burst_length_1 == 1'b1 && Count_precharge[0] >= 1) 
-                 || (Burst_length_2 == 1'b1 && Count_precharge[0] >= 2) 
-                 || (Burst_length_4 == 1'b1 && Count_precharge[0] >= 4) 
+          if (( ($time - RAS_chk0 >= tRAS) &&
+               (    (Burst_length_1 == 1'b1 && Count_precharge[0] >= 1)
+                 || (Burst_length_2 == 1'b1 && Count_precharge[0] >= 2)
+                 || (Burst_length_4 == 1'b1 && Count_precharge[0] >= 4)
                  || (Burst_length_8 == 1'b1 && Count_precharge[0] >= 8)
                )
              ) || (RW_interrupt_read[0] == 1'b1)
@@ -952,9 +952,9 @@ module sdr
       end
       if ((Auto_precharge[1] == 1'b1) && (Read_precharge[1] == 1'b1)) begin
           if ((($time - RAS_chk1 >= tRAS) &&
-              (    (Burst_length_1 == 1'b1 && Count_precharge[1] >= 1)   
-                || (Burst_length_2 == 1'b1 && Count_precharge[1] >= 2)   
-                || (Burst_length_4 == 1'b1 && Count_precharge[1] >= 4)   
+              (    (Burst_length_1 == 1'b1 && Count_precharge[1] >= 1)
+                || (Burst_length_2 == 1'b1 && Count_precharge[1] >= 2)
+                || (Burst_length_4 == 1'b1 && Count_precharge[1] >= 4)
                 || (Burst_length_8 == 1'b1 && Count_precharge[1] >= 8)
               )
               ) || (RW_interrupt_read[1] == 1'b1)
@@ -975,9 +975,9 @@ module sdr
       end
       if ((Auto_precharge[2] == 1'b1) && (Read_precharge[2] == 1'b1)) begin
           if ((($time - RAS_chk2 >= tRAS) &&
-              (    (Burst_length_1 == 1'b1 && Count_precharge[2] >= 1)   
-                || (Burst_length_2 == 1'b1 && Count_precharge[2] >= 2)   
-                || (Burst_length_4 == 1'b1 && Count_precharge[2] >= 4)   
+              (    (Burst_length_1 == 1'b1 && Count_precharge[2] >= 1)
+                || (Burst_length_2 == 1'b1 && Count_precharge[2] >= 2)
+                || (Burst_length_4 == 1'b1 && Count_precharge[2] >= 4)
                 || (Burst_length_8 == 1'b1 && Count_precharge[2] >= 8)
               )
               ) || (RW_interrupt_read[2] == 1'b1)
@@ -998,9 +998,9 @@ module sdr
       end
       if ((Auto_precharge[3] == 1'b1) && (Read_precharge[3] == 1'b1)) begin
           if ((($time - RAS_chk3 >= tRAS) &&
-              (    (Burst_length_1 == 1'b1 && Count_precharge[3] >= 1) 
-                || (Burst_length_2 == 1'b1 && Count_precharge[3] >= 2) 
-                || (Burst_length_4 == 1'b1 && Count_precharge[3] >= 4) 
+              (    (Burst_length_1 == 1'b1 && Count_precharge[3] >= 1)
+                || (Burst_length_2 == 1'b1 && Count_precharge[3] >= 2)
+                || (Burst_length_4 == 1'b1 && Count_precharge[3] >= 4)
                 || (Burst_length_8 == 1'b1 && Count_precharge[3] >= 8)
               )
               ) || (RW_interrupt_read[3] == 1'b1)
@@ -1013,7 +1013,7 @@ module sdr
              `ifdef SDRAM_TIMINGCHK
               RP_chk3              = $time;
              `endif
- 
+
              `ifdef SDRAM_DEBUGNOTE
                  $display("%t %m NOTE : Start Internal Auto Precharge for Bank 3", $time);
              `endif
@@ -1028,7 +1028,7 @@ module sdr
                   Data_out_enable = 1'b0;
               end
           end
-      end 
+      end
       else if (Command[0] == BST) begin // BST terminate a read to current bank
           if (Data_out_enable == 1'b1) begin
               Data_out_enable = 1'b0;
@@ -1081,7 +1081,7 @@ module sdr
      //-------------------------------------------------------
      // DQ Receiver: WRITE'ing Data to Memory
      //-------------------------------------------------------
-      if (Data_in_enable == 1'b1) begin 
+      if (Data_in_enable == 1'b1) begin
           // 1) First retrieve the currently stored value, to apply mask
           case (Bank)
               2'b00 : mem_data = Bank0 [{Row, Col}];
@@ -1097,10 +1097,10 @@ module sdr
           //                        : Dq_in   [i*8 +: 8];
           //end
 
-          Dq_in_data[ 7: 0] = (Dqm[0] == 1'b1) ? mem_data[ 7: 0] : Dq_in[ 7: 0]; 
-          Dq_in_data[15: 8] = (Dqm[1] == 1'b1) ? mem_data[15: 8] : Dq_in[15: 8]; 
-          Dq_in_data[23:16] = (Dqm[2] == 1'b1) ? mem_data[23:16] : Dq_in[23:16]; 
-          Dq_in_data[31:24] = (Dqm[3] == 1'b1) ? mem_data[31:24] : Dq_in[31:24]; 
+          Dq_in_data[ 7: 0] = (Dqm[0] == 1'b1) ? mem_data[ 7: 0] : Dq_in[ 7: 0];
+          Dq_in_data[15: 8] = (Dqm[1] == 1'b1) ? mem_data[15: 8] : Dq_in[15: 8];
+          Dq_in_data[23:16] = (Dqm[2] == 1'b1) ? mem_data[23:16] : Dq_in[23:16];
+          Dq_in_data[31:24] = (Dqm[3] == 1'b1) ? mem_data[31:24] : Dq_in[31:24];
 
           //`ifdef x4
           //   if (Dqm[0] == 1'b0) begin
@@ -1126,14 +1126,14 @@ module sdr
               2'b10 : Bank2 [{Row, Col}] = Dq_in_data;
               2'b11 : Bank3 [{Row, Col}] = Dq_in_data;
           endcase
-         
+
           // 4) Display debug message
           if (Dqm === '1) begin
              `ifdef SDRAM_DEBUG
                  $display("%t %m WRITE [%08x]<=NONE since DQM='1 (Bank=%0d Row=%0d Col=%0d)",
                            $time, {Bank, Row, Col}, Bank, Row, Col);
              `endif
-          end 
+          end
           else begin
               // Record tWR for manual precharge
              `ifdef SDRAM_TIMINGCHK
@@ -1147,7 +1147,7 @@ module sdr
           end
 
           // 5) Advance burst counter subroutine
-          //#tHZ Burst_decode; 
+          //#tHZ Burst_decode;
          #tHZ;         //[JI]
          Burst_decode; //[JI]
       end // if (Data_in_enable == 1'b1)
@@ -1156,7 +1156,7 @@ module sdr
       //-------------------------------------------------------
       // DQ Driver: READ'ing Data from Memory
       //-------------------------------------------------------
-      else if (Data_out_enable == 1'b1) begin         
+      else if (Data_out_enable == 1'b1) begin
           // 1) First retrieve the currently stored value
           case (Bank)
               2'b00 : mem_data = Bank0[{Row, Col}];
@@ -1195,7 +1195,7 @@ module sdr
           #tAC;
           Data_out_enable2 = ~Dqm_pipe2; // we apply masking here, like actual HW does it
           Dq_out_data      = mem_data;
-         
+
          `ifdef SDRAM_DEBUG
              $display("%t %m READ  [%08x]=>%08x (Dqm=%b)", $time,
                        {Bank, Row, Col, 2'd0}, Dq_out_data, Dqm_pipe2);
@@ -1219,7 +1219,7 @@ module sdr
           // Burst Type
           if (Mode_reg[3] == 1'b0) begin      // Sequential Burst
              Col_temp = Col + 1;
-          end 
+          end
           else if (Mode_reg[3] == 1'b1) begin // Interleaved Burst
              Col_temp[2] = Burst_counter[2] ^ Col_brst[2];
              Col_temp[1] = Burst_counter[1] ^ Col_brst[1];
@@ -1229,18 +1229,18 @@ module sdr
           // Burst Length
           if (Burst_length_2) begin      // Burst Length = 2
              Col [0]     = Col_temp [0];
-          end 
+          end
           else if (Burst_length_4) begin // Burst Length = 4
              Col [1 : 0] = Col_temp [1 : 0];
-          end 
+          end
           else if (Burst_length_8) begin // Burst Length = 8
              Col [2 : 0] = Col_temp [2 : 0];
-          end 
+          end
           else begin                     // Burst Length = FULL
              Col         = Col_temp;
           end
 
-          // Burst Read Single Write            
+          // Burst Read Single Write
           if (Write_burst_mode == 1'b1) begin
              Data_in_enable = 1'b0;
           end
@@ -1251,19 +1251,19 @@ module sdr
                  Data_in_enable  = 1'b0;
                  Data_out_enable = 1'b0;
              end
-          end 
+          end
           else if (Burst_length_2 == 1'b1) begin
              if (Burst_counter >= 2) begin
                  Data_in_enable  = 1'b0;
                  Data_out_enable = 1'b0;
              end
-          end 
+          end
           else if (Burst_length_4 == 1'b1) begin
              if (Burst_counter >= 4) begin
                  Data_in_enable  = 1'b0;
                  Data_out_enable = 1'b0;
              end
-          end 
+          end
           else if (Burst_length_8 == 1'b1) begin
              if (Burst_counter >= 8) begin
                  Data_in_enable  = 1'b0;

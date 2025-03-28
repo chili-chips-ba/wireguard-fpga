@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   Minimal UART, with all serial parameters fixed in hardware:
 //     - 115.2kbps (i.e. one bit period is 8.68usec)
 //     - 8 Data bits
@@ -19,10 +19,10 @@
 //
 //   It is designed for the minimal expenditure in hardware resources,
 //   yet also with minimal burden for the CPU. It therefore contains
-//   16-deep FIFO in each direction. Handshake with SW is based on 
+//   16-deep FIFO in each direction. Handshake with SW is based on
 //   'tx.busy' and 'rx.valid+overflow' flags:
 //     - New Tx data is accepted from SW when tx.busy=0/TxFIFO not full
-//     - New Rx data is loaded into RxFIFO only when RxFIFO is not full. 
+//     - New Rx data is loaded into RxFIFO only when RxFIFO is not full.
 //       Otherwise, 'rx.overflow' is raised
 //
 //   Both Rx flags are Clear-on-Read -- Zero value on them tells HW that
@@ -36,10 +36,10 @@ module uart (
    input  logic    arst_n,
    input  logic    clk,
    input  logic    tick_1us,
-                    
+
    input  logic    uart_rx,
    output logic    uart_tx,
-                  
+
    csr_if.SLV_UART csr,
 
  // IMEM Write port, for live updates of CPU program
@@ -47,7 +47,7 @@ module uart (
    output logic [31:2] imem_waddr,
    output logic [31:0] imem_wdat
 );
-   
+
 //--------------------------------------
 // Common
 //--------------------------------------
@@ -58,14 +58,14 @@ module uart (
       START = 4'd15, // skipped altogether in RxFSM
 
       D0    = 4'd0,  // LSB first
-      D1    = 4'd1,  //  | 
-      D2    = 4'd2,  //  | 
-      D3    = 4'd3,  //  | 
-      D4    = 4'd4,  //  | 
-      D5    = 4'd5,  //  | 
-      D6    = 4'd6,  //  V 
+      D1    = 4'd1,  //  |
+      D2    = 4'd2,  //  |
+      D3    = 4'd3,  //  |
+      D4    = 4'd4,  //  |
+      D5    = 4'd5,  //  |
+      D6    = 4'd6,  //  V
       D7    = 4'd7,  // MSB last
-                      
+
       STOP  = 4'd8   // only one Stop bit
 
       // Zero Parity bit
@@ -73,15 +73,15 @@ module uart (
 
    typedef logic [3:0] cnt1us_t;
 
-   
+
 //--------------------------------------
 // Rx
 //--------------------------------------
 // To save resources, SOC-level 1us tick is used as time base for
 // Rx sampling. Since one bit period is 8.68us, upon detecting START,
-// the FSM first waits 9+4=13us to skip the START bit and get close to 
-// the middle of D0, where it samples it. It then waits 8us or 9us for 
-// subsequent data bits. This keep the sampling sufficiently centered, 
+// the FSM first waits 9+4=13us to skip the START bit and get close to
+// the middle of D0, where it samples it. It then waits 8us or 9us for
+// subsequent data bits. This keep the sampling sufficiently centered,
 // despite 'tick_1us' being completely asynchronous to incoming data:
 //
 // - START+D0center=8.68us+4.34us=13.02us is the ideal D0 sampling point.
@@ -113,7 +113,7 @@ module uart (
 //   Actual is (73..74)+9=(82..83)us: Max error: +0.54us
 //
 // In other words, sampling error is within +/-1us from the center
-// of +/-4.34us window, thus leaving more than sufficient margin 
+// of +/-4.34us window, thus leaving more than sufficient margin
 // for reliable data reception.
 //--------------------------------------
 
@@ -126,18 +126,18 @@ module uart (
    localparam bit[3:0] RX_WAIT_D6   = 4'd8;
    localparam bit[3:0] RX_WAIT_D7   = 4'd7;
    localparam bit[3:0] RX_WAIT_STOP = 4'd8;
-   
+
    state_t     rx_state;
-                
+
    cnt1us_t    rx_cnt1us; // counts 1us ticks
    logic       rx_cnt1us_is0;
-                
+
    logic       rx_nextbit;
 
    logic [7:0] rx_shift;
    logic       rx_fifo_we, rx_fifo_full, rx_oflow;
    logic       rx_fifo_empty;
-   
+
    always_comb begin
       rx_cnt1us_is0     = (rx_cnt1us == '0);
       rx_nextbit        = tick_1us & rx_cnt1us_is0;
@@ -155,7 +155,7 @@ module uart (
          rx_shift  <= '0;
 
          rx_oflow  <= 1'b0;
-      end 
+      end
       else begin
 
         // when not in IDLE, count 1us ticks
@@ -164,10 +164,10 @@ module uart (
          end
 
         // latch overflow condition
-         if ({rx_fifo_we, rx_fifo_full} == 2'b11) begin  
+         if ({rx_fifo_we, rx_fifo_full} == 2'b11) begin
             rx_oflow <= 1'b1;
          end
-        // SW Clear-on-Read is async to UART traffic 
+        // SW Clear-on-Read is async to UART traffic
         //  and with lower priority to HW Set
          else if (csr.uart_rx_read == 1'b1) begin
             rx_oflow <= 1'b0;
@@ -195,7 +195,7 @@ module uart (
 
             `ifdef UART_DEBUG
                $display("%t %m RX'd %0h (%s)", $time, rx_shift, string'(rx_shift));
-            `endif 
+            `endif
             end
 
            //---Wait the prescribed amount of time to position sampling
@@ -207,35 +207,35 @@ module uart (
                   D0: begin
                          rx_cnt1us <= RX_WAIT_D1;
                          rx_state  <= D1;
-                      end 
+                      end
                   D1: begin
                          rx_cnt1us <= RX_WAIT_D2;
                          rx_state  <= D2;
-                      end 
+                      end
                   D2: begin
                          rx_cnt1us <= RX_WAIT_D3;
                          rx_state  <= D3;
-                      end 
+                      end
                   D3: begin
                          rx_cnt1us <= RX_WAIT_D4;
                          rx_state  <= D4;
-                      end 
+                      end
                   D4: begin
                          rx_cnt1us <= RX_WAIT_D5;
                          rx_state  <= D5;
-                      end 
+                      end
                   D5: begin
                          rx_cnt1us <= RX_WAIT_D6;
                          rx_state  <= D6;
-                      end 
+                      end
                   D6: begin
                          rx_cnt1us <= RX_WAIT_D7;
                          rx_state  <= D7;
-                      end 
+                      end
                   D7: begin
                          rx_cnt1us <= RX_WAIT_STOP;
                          rx_state  <= STOP;
-                      end 
+                      end
                  default: begin end
                endcase // unique case (rx_state)
             end
@@ -243,28 +243,28 @@ module uart (
 
       end
    end
-   
+
 
 // synchronous RxFIFO absorbs the variability of CPU reads
    sync_fifo_ram #(
       .DWIDTH    (8),
       .AWIDTH    (4) // 16 entries
    ) u_rx_fifo (
- 
-     // Inputs 
+
+     // Inputs
       .arst_n    (arst_n),
-      .clk       (clk), 
-                  
+      .clk       (clk),
+
       .din       (rx_shift),
-      .we        (rx_fifo_we),  
+      .we        (rx_fifo_we),
       .re        (csr.uart_rx_read), // FIFO internal logic prevents underflow
-                  
-     // Outputs   
+
+     // Outputs
       .dcount    (),
       .empty     (rx_fifo_empty),
       .full      (rx_fifo_full),
-                  
-      .dout_comb (csr.uart_rx.data), 
+
+      .dout_comb (csr.uart_rx.data),
                   // fall-through: Data is available w/o read
 
       .dout      ()
@@ -289,7 +289,7 @@ module uart (
 // - STOP  ideal end:10*8.68us=86.80us. Actual:87(+9). Error: +0.20us
 //
 // In other words, edge placement error is within +/-0.44us for 8.68us
-// period, i.e. +/-5%, thus leaving sufficient margin for reliable 
+// period, i.e. +/-5%, thus leaving sufficient margin for reliable
 // data reception on the other end.
 //--------------------------------------
 
@@ -307,9 +307,9 @@ module uart (
    state_t     tx_state;
    cnt1us_t    tx_cnt1us; // counts 1us ticks
    logic       tx_cnt1us_is0;
-                
+
    logic       tx_nextbit;
- 
+
    logic [7:0] tx_data;
    logic       tx_fifo_re, tx_fifo_empty;
 
@@ -326,7 +326,7 @@ module uart (
          tx_cnt1us <= '0;
 
          uart_tx   <= 1'b1; //STOP
-      end 
+      end
       else begin
 
         // when not in IDLE, count 1us ticks
@@ -335,7 +335,7 @@ module uart (
          end
 
         // FSM runs on main clock, with most states gated by 'tx_cnt1us_is0'
-         unique case (tx_state) 
+         unique case (tx_state)
 
            //---Keep sending as long as TxFIFO is not empty
            //   to store SW data that needs to be sent
@@ -347,13 +347,13 @@ module uart (
                   tx_state <= START;
                end
             end
-           
+
            //---Wait for next 1us tick to start driving 0 (i.e. sync TX to
-           //   the tick), then wait the prescribed amount of time to move on 
+           //   the tick), then wait the prescribed amount of time to move on
            START: if (tick_1us == 1'b1) begin
               uart_tx <= 1'b0; //START
 
-              if (tx_cnt1us_is0 == 1'b1) begin 
+              if (tx_cnt1us_is0 == 1'b1) begin
                  uart_tx   <= tx_data[0]; //LSB goes out first
                  tx_cnt1us <= TX_WAIT_D0;
                  tx_state  <= D0;
@@ -402,9 +402,9 @@ module uart (
               tx_state  <= STOP;
 
             `ifdef UART_DEBUG
-               $display("%t %m TX'd \t\t%0h (%s)", $time, 
+               $display("%t %m TX'd \t\t%0h (%s)", $time,
                          tx_data, string'(tx_data));
-            `endif 
+            `endif
            end
 
            //---Wait the prescribed amount of time while driving STOP bit
@@ -417,27 +417,27 @@ module uart (
       end
    end
 
-   
+
 // synchronous TxFIFO offloads CPU write operations
    sync_fifo_ram #(
       .DWIDTH    (8),
       .AWIDTH    (4) // 16 entries
    ) u_tx_fifo (
- 
-     // Inputs 
+
+     // Inputs
       .arst_n    (arst_n),
-      .clk       (clk), 
-                  
+      .clk       (clk),
+
       .din       (csr.uart_tx_data),
       .we        (csr.uart_tx_write),
       .re        (tx_fifo_re),
-                  
-     // Outputs   
+
+     // Outputs
       .dcount    (),
       .empty     (tx_fifo_empty),
       .full      (csr.uart_tx_busy), // SW write is ignored when FIFO is full
-                  
-      .dout_comb (tx_data), 
+
+      .dout_comb (tx_data),
                   // fall-through: Data is available w/o read
 
       .dout      ()
@@ -464,57 +464,57 @@ module uart (
    parameter [3:0] T_STATES_EOP = 9;
    parameter [3:0] T_STATES_ERROR = 10;
    parameter [3:0] T_STATES_FINISH = 11;
-   
+
    // command protocol constants:
    parameter [7:0]  C_SOP = 8'h23;
    parameter [7:0]  C_EOP = 8'h0d;
-   
+
    // commands:
    parameter [7:0]  C_REGISTER_RD = 8'h08;
    parameter [7:0]  C_REGISTER_WR = 8'h07;
-   
+
    wire             rx_busy, tx_busy, converted, data_valid;
    reg [15:0]       data_length, data_cnt;
-   reg [7:0]        command;  
+   reg [7:0]        command;
 
     // Local control logic variables
-    // FSM state        
+    // FSM state
     reg [3:0] state;
 
     // This variable is super critical in preventing wrong FSM state changes
-    reg allow_next;     // Local signal to prevent race conditions 
-    
+    reg allow_next;     // Local signal to prevent race conditions
+
     // IO related variables
     reg flush_ctrl;     // Flush the RX data after reading
     reg tx_enable_ctrl; // Allow tranmission of output, after data is settled
 
-    wire [7:0]  uart_data;   // The actual RX UART data         
-    reg  [7:0]  out_data;     // The data that will be sent over TX    
-                
-        reg             ram_wen;        
+    wire [7:0]  uart_data;   // The actual RX UART data
+    reg  [7:0]  out_data;     // The data that will be sent over TX
+
+        reg             ram_wen;
         reg [31:0]      ram_data, ram_addr;
     reg [15:0]  display_data;
-    reg [7:0]   checksum;       
+    reg [7:0]   checksum;
         reg [8:0]       leds;
 
     // UART clock related variables
-    reg                 clk_uart;           // (100MHz) / (BAUD_RATE*OVERSAMPLING*2) 
-    reg [4:0]   counter;        
+    reg                 clk_uart;           // (100MHz) / (BAUD_RATE*OVERSAMPLING*2)
+    reg [4:0]   counter;
 
 
     // Divided clock for UART @ 115200 baud
-        always @(posedge clk_bufg) 
-        begin           
+        always @(posedge clk_bufg)
+        begin
                 if(sw[15]) begin
                         counter <= counter + 1;
-                        if(counter == 5'd27) begin 
+                        if(counter == 5'd27) begin
                                 counter <= 0;
                                 clk_uart <= ~clk_uart;
                         end
                 end else begin
                         counter         <= 0;
-                        clk_uart        <= 0;                   
-                end             
+                        clk_uart        <= 0;
+                end
         end
 
         always @(posedge clk_uart)
@@ -523,19 +523,19 @@ module uart (
                         leds = 0;
                         display_data = 16'd1234;
                         state = T_STATES_WAIT_SOP;
-                        ram_wen = 0;                    
+                        ram_wen = 0;
                         ram_data = 0;
                         ram_addr = 32'hFFFFFFFF;
                 end else begin
                         case (state)
                                 T_STATES_WAIT_SOP : begin
-                                        tx_enable_ctrl <= 0;                                    
+                                        tx_enable_ctrl <= 0;
                                         leds = 0;
-                                        command <= 0;                                   
+                                        command <= 0;
                                         data_cnt <= 0;
                                         if(converted) begin
                                                 if (uart_data == C_SOP) begin
-                                                        leds[0] = 1;                                                    
+                                                        leds[0] = 1;
                                                         checksum = 8'b0;
                                                         data_length = 0;
                                                         flush_ctrl <= 1;        // Flush UART RX registers
@@ -547,11 +547,11 @@ module uart (
                                 T_STATES_CMD : begin
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
-                                                
+
                                                 command  <= uart_data;
                                                 state = T_STATES_LEN_LB;
                                         end else
@@ -561,25 +561,25 @@ module uart (
                                 T_STATES_LEN_LB : begin
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
-                                                
+
                                                 data_length <= {8'b0, uart_data};
                                                 state = T_STATES_LEN_HB;
                                         end else
                                                 flush_ctrl <= 0;
                                 end
-                                        
+
                                 T_STATES_LEN_HB : begin
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
-                                                
+
                                                 data_length <= { uart_data, data_length[7:0]};
                                                 state = T_STATES_DATA0;
                                         end else
@@ -590,11 +590,11 @@ module uart (
                                         ram_wen <= 0;
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
-                                                
+
                                                 ram_data[7:0] <= uart_data;
                                                 checksum <= checksum + uart_data;
                                                 state = T_STATES_DATA1;
@@ -605,11 +605,11 @@ module uart (
                                 T_STATES_DATA1 : begin
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
-                                                
+
                                                 ram_data[15:8] <= uart_data;
                                                 checksum <= checksum + uart_data;
                                                 state = T_STATES_DATA2;
@@ -620,35 +620,35 @@ module uart (
                                 T_STATES_DATA2 : begin
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
-                                                
+
                                                 ram_data[23:16] <= uart_data;
                                                 checksum <= checksum + uart_data;
                                                 state = T_STATES_DATA3;
                                         end else
                                                 flush_ctrl <= 0;
                                 end
-                                        
+
                                 T_STATES_DATA3 : begin
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
-                                        if(converted && ~flush_ctrl && allow_next) begin        
+
+                                        if(converted && ~flush_ctrl && allow_next) begin
                                                 leds[1] = 1;
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
 
                                                 data_cnt <= data_cnt + 1;
                                                 display_data <= data_cnt + 1;
-                                                
+
                                                 ram_data[31:24] <= uart_data;
-                                                checksum <= checksum + uart_data;                                               
+                                                checksum <= checksum + uart_data;
                                                 ram_addr <= {16'd0, data_cnt};
-                                                ram_wen <= 1;                                           
-                                                
+                                                ram_wen <= 1;
+
                                                 if (data_cnt == (data_length - 16'd1)) begin
                                                         state  = T_STATES_CS;
                                                 end else
@@ -656,12 +656,12 @@ module uart (
                                         end else
                                                 flush_ctrl <= 0;
                                 end
-                                        
+
                                 T_STATES_CS : begin
                                         ram_wen <= 0;
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 leds[2] = 1;
                                                 flush_ctrl <= 1;        // Data read, flush RX register
@@ -670,24 +670,24 @@ module uart (
                                         end else
                                                 flush_ctrl <= 0;
                                 end
-                                        
-                                T_STATES_EOP : begin                                    
+
+                                T_STATES_EOP : begin
                                         // Once RX module has produced the final output(converted)
                                         // and registers are cleared(converted is set low), go ahead
                                         if(~flush_ctrl && ~converted)
                                                 allow_next <= 1;        // Allow RX after registers cleared
-                                                        
+
                                         if(converted && ~flush_ctrl && allow_next) begin
                                                 leds[3] = 1;
                                                 flush_ctrl <= 1;        // Data read, flush RX register
                                                 allow_next <= 0;
-                                                
+
                                                 state = (uart_data == C_EOP) ? T_STATES_FINISH : T_STATES_ERROR;
                                         end else
                                                 flush_ctrl <= 0;
                                 end
-                                        
-                                T_STATES_ERROR : begin  
+
+                                T_STATES_ERROR : begin
                                         leds[4] = 1;
                                         out_data <= checksum[7:0];
                                         // Once TX is complete, allow going to next state
@@ -729,17 +729,17 @@ module uart (
                         endcase
                 end
         end
-        
+
         reg progmem_wen;
         reg ram_wen_dl1, ram_wen_dl2;
-    always @(posedge clk)  
-    begin       
-                if(sw[15]) begin        
-                        ram_wen_dl1 <= ram_wen; 
+    always @(posedge clk)
+    begin
+                if(sw[15]) begin
+                        ram_wen_dl1 <= ram_wen;
                         ram_wen_dl2 <= ram_wen_dl1;
                         if(ram_wen_dl2 == 1'b0 && ram_wen == 1'b1)
                                 progmem_wen <= 1'b1;
-                        else 
+                        else
                                 progmem_wen <= 1'b0;
                 end else begin
                         progmem_wen <= 1'b0;

@@ -21,7 +21,7 @@ hex_wireguard: $(WIREGUARD_DIR)/main.elf
 firmware_wireguard: $(WIREGUARD_DIR)/main.elf
 	$(CROSS)objcopy -O binary $< $(WIREGUARD_DIR)/main.bin
 	python3 $(WIREGUARD_DIR)/imem.INIT.py
-	
+
 # ** Compile and link the main ELF executable from all source files and the linker script
 $(WIREGUARD_DIR)/main.elf: $(WIREGUARD_DIR)/main.lds  $(WIREGUARD_DIR)/boot_crt.S $(WIREGUARD_DIR)/main.c $(WIREGUARD_DIR)/assert.h $(WIREGUARD_DIR)/csr.h
 	$(CROSS)gcc $(CFLAGS) -I$(WIREGUARD_DIR) -march=rv32im -mabi=ilp32 -Wl,--build-id=none,-Bstatic,-T,$(WIREGUARD_DIR)/main.lds,-Map,$(WIREGUARD_DIR)/main.map,--strip-debug -ffreestanding -nostdlib -static -o $@ $(WIREGUARD_DIR)/boot_crt.S $(WIREGUARD_DIR)/main.c

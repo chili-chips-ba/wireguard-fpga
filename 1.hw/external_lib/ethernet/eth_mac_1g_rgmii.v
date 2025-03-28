@@ -150,7 +150,7 @@ always @(posedge gtx_clk) begin
         mii_select_reg <= 1'b0;
     end else begin
         rx_speed_count_1 <= rx_speed_count_1 + 1;
-        
+
         if (rx_prescale_sync[1] ^ rx_prescale_sync[2]) begin
             rx_speed_count_2 <= rx_speed_count_2 + 1;
         end

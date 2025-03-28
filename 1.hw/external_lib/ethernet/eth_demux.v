@@ -180,7 +180,7 @@ always @* begin
     m_eth_payload_axis_tlast_int  = s_eth_payload_axis_tlast;
     m_eth_payload_axis_tid_int    = s_eth_payload_axis_tid;
     m_eth_payload_axis_tdest_int  = s_eth_payload_axis_tdest;
-    m_eth_payload_axis_tuser_int  = s_eth_payload_axis_tuser; 
+    m_eth_payload_axis_tuser_int  = s_eth_payload_axis_tuser;
 end
 
 always @(posedge clk) begin

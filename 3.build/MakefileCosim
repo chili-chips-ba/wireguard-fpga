@@ -16,7 +16,7 @@ all: $(COSIMHDR) $(HWHDR)
 
 $(COSIMHDR): $(COSIMRDL) $(PKRDLHDR)
 	@python3 sysrdl_cosim.py -c -r $< -o $@
-        
+
 $(HWHDR): $(COSIMRDL) $(PKRDLHDR)
 	@python3 sysrdl_cosim.py -r $< -o $@
 
