@@ -13,6 +13,7 @@ ${HW_SRC}/external_lib/axis/axis_async_fifo_adapter.v
 ${HW_SRC}/external_lib/axis/axis_adapter.v
 ${HW_SRC}/external_lib/axis/axis_async_fifo.v
 ${HW_SRC}/external_lib/axis/sync_reset.v
+${HW_SRC}/external_lib/axis/axis_fifo.v
 
 #---External Ethernet library
 ${HW_SRC}/external_lib/ethernet/eth_mac_1g_gmii_fifo.v
@@ -32,6 +33,8 @@ ${HW_SRC}/ip.infra/soc_if.sv
 ${HW_SRC}/ip.infra/dpe_pkg.sv
 ${HW_SRC}/ip.infra/dpe_if.sv
 ${HW_SRC}/ip.infra/gmii_if.sv
+${HW_SRC}/ip.infra/ethernet_mac.sv
+${HW_SRC}/ip.infra/ethernet_phy.sv
 
 #---PeakRDL-generated CSR + SOC CSR wrapper
 ${HW_SRC}/csr.peakrdl/csr_pkg.sv
