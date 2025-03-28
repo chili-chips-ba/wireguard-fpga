@@ -10,11 +10,11 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   Shallow synchronous FIFO made with technology-specific shift registers.
 //
 //   Compared to implementation with standard dual-port RAM based FIFO storage,
-//   this design is smaller in size, as it does not need to maintain explicit 
+//   this design is smaller in size, as it does not need to maintain explicit
 //   WritePointer. Its ReadPointer can also serve as occupancy counter, which
 //   further reduces flop and logic utilization.
 //
@@ -27,12 +27,12 @@ module sync_fifo_srl #(
 )(
    input  logic              arst_n,
    input  logic              clk,
-                                         
+
                                         //-------------------------------------------------
    input  logic [DWIDTH-1:0] din,       // input data into FIFO
-   input  logic              we,        // FIFO write enable 
+   input  logic              we,        // FIFO write enable
    input  logic              re,        // FIFO read enable
-                                         
+
                                         //----------------------------------------------
    output logic [AWIDTH:0]   dcount,    // fullness (occupancy) of FIFO in DWIDTH words
    output logic              empty,     // 1 when FIFO is empty
@@ -41,7 +41,7 @@ module sync_fifo_srl #(
    output logic [DWIDTH-1:0] dout_comb, // "look-ahead" output data from FIFO
    output logic [DWIDTH-1:0] dout       // standard, one clock latency output from FIFO
 );
-   
+
    logic we_protected, re_protected;
 
    typedef logic [AWIDTH-1:0] addr_t;
@@ -55,39 +55,39 @@ module sync_fifo_srl #(
    assign we_protected = we & ~full;  //-\ logic for prevention of overflow
    assign re_protected = re & ~empty; //-/  and underflow
 
-   
+
    always_ff @(negedge arst_n or posedge clk) begin: _fifo_ctrl
 
-      if (arst_n == 1'b0) begin  
+      if (arst_n == 1'b0) begin
          rd_addr <= '1;
          empty   <= 1'b1;
-      end  
-      else begin 
+      end
+      else begin
          unique case ({we_protected, re_protected})
 
             // reading without writing: Decrement data occupancy count
             //  (*) we can to this only when 'empty=0'
-            2'b01: begin 
+            2'b01: begin
                {empty, rd_addr} <= {empty, rd_addr} - dcount_t'(1);
             end
-             
+
             // writing without reading: Increment data occupancy count
             //  (*) we can to this only when 'full=0'
             2'b10: begin
                {empty, rd_addr} <= {empty, rd_addr} + dcount_t'(1);
             end
-             
-            // leave alone if (neither reading nor writing) 
+
+            // leave alone if (neither reading nor writing)
             //  or (simultaneously reading and writing)
             default: begin end
          endcase
 
       end
-      
+
       if (re_protected == 1'b1) begin
          dout <= dout_comb;
       end
-      
+
    end: _fifo_ctrl
 
 
@@ -97,10 +97,10 @@ module sync_fifo_srl #(
    fpga_srl #(
       .DWIDTH     (DWIDTH),
       .AWIDTH     (AWIDTH)
-   ) u_srl (         
+   ) u_srl (
       .dout_comb  (dout_comb),
-    
-      .din        (din),       
+
+      .din        (din),
       .addr       (rd_addr),
       .we         (we_protected),
       .clk        (clk)
@@ -122,12 +122,12 @@ module sync_fifo_srl #(
          $display ("\n%m - SRL16 may not be the best choice for AWIDTH > 8. Consider using RAM!\n");
          $stop;
       end
- 
+
       dout = DWIDTH'($random);
    end
 `endif
 // synthesis translate_on
-       
+
 endmodule: sync_fifo_srl
 
 /*

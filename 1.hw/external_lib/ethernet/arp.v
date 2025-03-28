@@ -319,7 +319,7 @@ always @* begin
                     outgoing_arp_oper_next = ARP_OPER_INARP_REPLY;
                     outgoing_arp_tha_next = incoming_arp_sha;
                     outgoing_arp_tpa_next = incoming_arp_spa;
-                end 
+                end
             end
         end
     end

@@ -142,27 +142,27 @@ module dpe_demultiplexer (
       .inp(from_dpe),
       .outp(from_dpe_sbuff)
    );
-   
+
    dpe_if_skid_buffer skid_buffer_to_cpu (
       .inp(to_cpu_sbuff),
       .outp(to_cpu)
    );
-   
+
    dpe_if_skid_buffer skid_buffer_to_eth_1 (
       .inp(to_eth_1_sbuff),
       .outp(to_eth_1)
    );
-   
+
    dpe_if_skid_buffer skid_buffer_to_eth_2 (
       .inp(to_eth_2_sbuff),
       .outp(to_eth_2)
    );
-   
+
    dpe_if_skid_buffer skid_buffer_to_eth_3 (
       .inp(to_eth_3_sbuff),
       .outp(to_eth_3)
    );
-   
+
    dpe_if_skid_buffer skid_buffer_to_eth_4 (
       .inp(to_eth_4_sbuff),
       .outp(to_eth_4)

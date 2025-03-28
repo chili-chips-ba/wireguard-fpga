@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //  This is our standard SOC bus interface.
 //    - Synchronous bus interface based on Valid/Ready handshake
 //    - It supports single-cycle and multi-cycle transactions
@@ -26,23 +26,23 @@
 //==========================================================================
 
 interface soc_if (
-   input  logic arst_n, // asynchronous, active-low reset  
+   input  logic arst_n, // asynchronous, active-low reset
    input  logic clk     // bus clock
 );
 
    import soc_pkg::*;
-   
+
    logic        vld;    // 1 for access REQuest     -\ transacion is performed
    logic        rdy;    // 1 for access ACKnowledge -/ when both vld&rdy are 1
 
-   soc_addr_t   addr; 
+   soc_addr_t   addr;
    soc_we_t     we;     // access is WRITE for (vld & |we). READ for (vld & ~|we)
    soc_data_t   wdat;
    soc_data_t   rdat;
 
-  //---------------------------------------- 
+  //----------------------------------------
   // master/CPU side
-  //---------------------------------------- 
+  //----------------------------------------
    modport MST (
      output vld,
             addr,
@@ -53,9 +53,9 @@ interface soc_if (
             rdat
    );
 
-  //---------------------------------------- 
+  //----------------------------------------
   // Slave/Peripheral side
-  //---------------------------------------- 
+  //----------------------------------------
    modport SLV (
      input  arst_n, clk,
             vld,
@@ -72,5 +72,5 @@ endinterface: soc_if
 -----------------------------------------------------------------------------
 Version History:
 -----------------------------------------------------------------------------
- 2023/12/20 JI: initial creation    
+ 2023/12/20 JI: initial creation
 */

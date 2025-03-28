@@ -251,7 +251,7 @@ end
 generate
 
 if (PTP_TS_ENABLE) begin : tx_ptp
-    
+
     ptp_clock_cdc #(
         .TS_WIDTH(PTP_TS_WIDTH),
         .NS_WIDTH(6)

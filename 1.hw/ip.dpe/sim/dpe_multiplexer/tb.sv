@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   DPE multiplexer testbench
 //==========================================================================
 
@@ -19,13 +19,13 @@
 module tb;
     // Constants
     localparam CLK_PERIOD = 12_500;
-    
+
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
     logic pause = 0;
     logic is_idle;
-    
+
     // Interfaces
     dpe_if from_cpu(.clk(clk), .rst(rst));
     dpe_if from_eth_1(.clk(clk), .rst(rst));
@@ -33,11 +33,11 @@ module tb;
     dpe_if from_eth_3(.clk(clk), .rst(rst));
     dpe_if from_eth_4(.clk(clk), .rst(rst));
     dpe_if to_dpe(.clk(clk), .rst(rst));
-    
+
     // Test data type and constants
     typedef logic [7:0] test_data_t [6];
     typedef test_data_t packet_data_t [5];
-    
+
     const packet_data_t packet_data = '{
         '{8'h01, 8'h02, 8'h03, 8'h04, 8'h05, 8'h06},  // Input 0
         '{8'h0B, 8'h0C, 8'h0D, 8'h0E, 8'h00, 8'h00},  // Input 1
@@ -45,10 +45,10 @@ module tb;
         '{8'h1F, 8'h20, 8'h21, 8'h22, 8'h00, 8'h00},  // Input 3
         '{8'h29, 8'h2A, 8'h2B, 8'h2C, 8'h00, 8'h00}   // Input 4
     };
-    
+
     // Clock generation
     always #(CLK_PERIOD/2) clk = ~clk;
-    
+
     // DUT instantiation
     dpe_multiplexer DUT (
         .pause(pause),
@@ -60,7 +60,7 @@ module tb;
         .from_eth_4(from_eth_4),
         .to_dpe(to_dpe)
     );
-    
+
     // Main stimulus process
     initial begin
         // Initialize all input interfaces
@@ -68,34 +68,34 @@ module tb;
         from_cpu.tlast = 0;
         from_cpu.tkeep = '0;
         from_cpu.tdata = '0;
-        
+
         from_eth_1.tvalid = 0;
         from_eth_1.tlast = 0;
         from_eth_1.tkeep = '0;
         from_eth_1.tdata = '0;
-        
+
         from_eth_2.tvalid = 0;
         from_eth_2.tlast = 0;
         from_eth_2.tkeep = '0;
         from_eth_2.tdata = '0;
-        
+
         from_eth_3.tvalid = 0;
         from_eth_3.tlast = 0;
         from_eth_3.tkeep = '0;
         from_eth_3.tdata = '0;
-        
+
         from_eth_4.tvalid = 0;
         from_eth_4.tlast = 0;
         from_eth_4.tkeep = '0;
         from_eth_4.tdata = '0;
-        
+
         // Reset assertion
         #(CLK_PERIOD * 4);
         @(posedge clk);
         #1ps;
         rst = 0;
         #(CLK_PERIOD);
-        
+
         // Start all stimulus processes in parallel
         fork
             // Input 0 stimulus
@@ -115,7 +115,7 @@ module tb;
                 from_cpu.tvalid = 0;
                 from_cpu.tlast = 0;
             end
-            
+
             // Input 1 stimulus
             begin
                 @(posedge clk);
@@ -126,14 +126,14 @@ module tb;
                     from_eth_1.tdata[7:0] = packet_data[1][i];
                     from_eth_1.tkeep = '1;
                     from_eth_1.tlast = (i == 3);
-                    @(posedge clk);                    
+                    @(posedge clk);
                     while (!from_eth_1.tready) @(posedge clk);
                     #1ps;
                 end
                 from_eth_1.tvalid = 0;
                 from_eth_1.tlast = 0;
             end
-            
+
             // Input 2 stimulus
             begin
                 @(posedge clk);
@@ -151,7 +151,7 @@ module tb;
                 from_eth_2.tvalid = 0;
                 from_eth_2.tlast = 0;
             end
-            
+
             // Input 3 stimulus
             begin
                 @(posedge clk);
@@ -169,7 +169,7 @@ module tb;
                 from_eth_3.tvalid = 0;
                 from_eth_3.tlast = 0;
             end
-            
+
             // Input 4 stimulus
             begin
                 @(posedge clk);
@@ -188,12 +188,12 @@ module tb;
                 from_eth_4.tlast = 0;
             end
         join
-        
+
         #(CLK_PERIOD * 7);
         $display("Stimulus completed successfully");
     $finish(2);
     end
-    
+
     // Output ready control process
     initial begin
         @(posedge clk);
@@ -218,15 +218,15 @@ module tb;
         to_dpe.tready = 1;
         pause = 0;
     end
-    
+
     // Monitor process
     int expected_data_count = 0;
-    
+
     always @(posedge clk) begin
         if (!rst) begin
             if (to_dpe.tvalid && to_dpe.tready) begin
                 expected_data_count++;
-                
+
                 if (to_dpe.tlast) begin
                     $display("Packet received with %0d words", expected_data_count);
                     expected_data_count = 0;

@@ -10,8 +10,8 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
-//   Generic inferred memory for our SOC. Syncronous RAM that's Plug-and-Play 
+// Description:
+//   Generic inferred memory for our SOC. Syncronous RAM that's Plug-and-Play
 //   compatible with our infrastructure
 //==========================================================================
 
@@ -31,13 +31,13 @@ module soc_ram #(
    logic [ADDR_MSB:SOC_ADDRL] addr;
    soc_we_t                   we;
    logic                      write;
-   
+
    always_comb begin
       addr  = bus.addr[ADDR_MSB:SOC_ADDRL];
       we    = bus.vld ? bus.we : '0; // write only when accessed
 
       write = |bus.we;
-   end   
+   end
 
 //------------------------------------------------------------
 // storage element
@@ -59,7 +59,7 @@ module soc_ram #(
    end
 
 //------------------------------------------------------------
-// handshake: 
+// handshake:
 //  - write is RDY right away
 //  - read  is RDY one cycle after VLD (since RAM is synchronous)
 //------------------------------------------------------------
@@ -68,7 +68,7 @@ module soc_ram #(
    always_ff @(negedge bus.arst_n or posedge bus.clk) begin
       if (bus.arst_n == 1'b0) begin
          rdy_rd <= '0;
-      end   
+      end
       else begin
          rdy_rd <= bus.vld & ~write & ~bus.rdy;
       end
@@ -85,17 +85,17 @@ module soc_ram #(
 
   always @(posedge bus.clk) begin
      if ({bus.vld, bus.rdy} == 2'b11) begin
-        if (write == 1) begin  
+        if (write == 1) begin
            $display("%t %m WRITE [%08x]<=%08x (we=%b)", $time,
                     {bus.addr, 2'd0}, bus.wdat, bus.we);
         end
-        else begin  
+        else begin
            $display("%t %m READ  [%08x]=>%08x (we=%b)", $time,
                     {bus.addr, 2'd0}, bus.rdat, bus.we);
         end
      end
   end
-   
+
 `endif
 `endif
 

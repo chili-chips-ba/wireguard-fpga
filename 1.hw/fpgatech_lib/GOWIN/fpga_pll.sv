@@ -60,7 +60,7 @@ module fpga_pll (
       .CLKOUTP  (),
       .CLKOUTD  (),
       .CLKOUTD3 (),
-       
+
       .RESET    (1'b0),
       .RESET_P  (1'b0),
       .CLKIN    (clk_27),
@@ -95,12 +95,12 @@ module fpga_pll (
    assign final_rst = force_rst | ~pll_lock;
 
 
-   always_ff @(posedge final_rst or posedge clk_54) begin  
+   always_ff @(posedge final_rst or posedge clk_54) begin
       if (final_rst == 1'b1) begin
          srst_n_pipe <= 1'b0;
          srst_n      <= 1'b0;
       end
-      else begin   
+      else begin
          srst_n_pipe <= 1'b1;
          srst_n      <= srst_n_pipe;
       end
@@ -112,5 +112,5 @@ endmodule: fpga_pll
 ------------------------------------------------------------------------------
 Version History:
 ------------------------------------------------------------------------------
- 2024/1/4 JI: initial creation    
+ 2024/1/4 JI: initial creation
 */

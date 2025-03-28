@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   DPE top-level module testbench
 //==========================================================================
 
@@ -21,11 +21,11 @@ module tb;
     localparam CLK_PERIOD = 12_500;
     import dpe_pkg::*;
     import csr_pkg::*;
-    
+
     // Clock and reset signals
     logic clk = 0;
     logic rst = 1;
-    
+
     // Interfaces
     csr_pkg::csr__out_t from_csr;
     //csr_pkg::csr__in_t to_csr;
@@ -39,11 +39,11 @@ module tb;
     dpe_if to_eth_2(.clk(clk), .rst(rst));
     dpe_if to_eth_3(.clk(clk), .rst(rst));
     dpe_if to_eth_4(.clk(clk), .rst(rst));
-    
+
     // Test data type and constants
     typedef logic [7:0] test_data_t [6];
     typedef test_data_t packet_data_t [5];
-    
+
     const packet_data_t packet_data = '{
         '{8'h01, 8'h02, 8'h03, 8'h04, 8'h05, 8'h06},  // Input 0
         '{8'h0B, 8'h0C, 8'h0D, 8'h0E, 8'h00, 8'h00},  // Input 1
@@ -51,10 +51,10 @@ module tb;
         '{8'h1F, 8'h20, 8'h21, 8'h22, 8'h00, 8'h00},  // Input 3
         '{8'h29, 8'h2A, 8'h2B, 8'h2C, 8'h00, 8'h00}   // Input 4
     };
-    
+
     // Clock generation
     always #(CLK_PERIOD/2) clk <= ~clk;
-    
+
     // DUT instantiation
     dpe DUT (
         .from_csr(from_csr),
@@ -70,7 +70,7 @@ module tb;
         .to_eth_3(to_eth_3),
         .to_eth_4(to_eth_4)
     );
-    
+
     // Main stimulus process
     initial begin
         from_csr.dpe.fcr.pause.value = 0;
@@ -84,7 +84,7 @@ module tb;
         from_cpu.tuser_bypass_stage = 0;
         from_cpu.tuser_src = '0;
         from_cpu.tuser_dst = '0;
-        
+
         from_eth_1.tvalid = 0;
         from_eth_1.tlast = 0;
         from_eth_1.tkeep = '0;
@@ -93,7 +93,7 @@ module tb;
         from_eth_1.tuser_bypass_stage = 0;
         from_eth_1.tuser_src = '0;
         from_eth_1.tuser_dst = '0;
-        
+
         from_eth_2.tvalid = 0;
         from_eth_2.tlast = 0;
         from_eth_2.tkeep = '0;
@@ -102,7 +102,7 @@ module tb;
         from_eth_2.tuser_bypass_stage = 0;
         from_eth_2.tuser_src = '0;
         from_eth_2.tuser_dst = '0;
-        
+
         from_eth_3.tvalid = 0;
         from_eth_3.tlast = 0;
         from_eth_3.tkeep = '0;
@@ -111,7 +111,7 @@ module tb;
         from_eth_3.tuser_bypass_stage = 0;
         from_eth_3.tuser_src = '0;
         from_eth_3.tuser_dst = '0;
-        
+
         from_eth_4.tvalid = 0;
         from_eth_4.tlast = 0;
         from_eth_4.tkeep = '0;
@@ -120,14 +120,14 @@ module tb;
         from_eth_4.tuser_bypass_stage = 0;
         from_eth_4.tuser_src = '0;
         from_eth_4.tuser_dst = '0;
-        
+
         // Reset assertion
         #(CLK_PERIOD * 4);
         @(posedge clk);
         #1ps;
         rst = 0;
         #(CLK_PERIOD);
-        
+
         // Start all stimulus processes in parallel
         fork
             // Input 0 stimulus
@@ -147,7 +147,7 @@ module tb;
                 from_cpu.tvalid = 0;
                 from_cpu.tlast = 0;
             end
-            
+
             // Input 1 stimulus
             begin
                 @(posedge clk);
@@ -158,14 +158,14 @@ module tb;
                 for (int i = 0; i < 4; i++) begin
                     from_eth_1.tdata[7:0] = packet_data[1][i];
                     from_eth_1.tlast = (i == 3);
-                    @(posedge clk);                    
+                    @(posedge clk);
                     while (!from_eth_1.tready) @(posedge clk);
                     #1ps;
                 end
                 from_eth_1.tvalid = 0;
                 from_eth_1.tlast = 0;
             end
-            
+
             // Input 2 stimulus
             begin
                 @(posedge clk);
@@ -183,7 +183,7 @@ module tb;
                 from_eth_2.tvalid = 0;
                 from_eth_2.tlast = 0;
             end
-            
+
             // Input 3 stimulus
             begin
                 @(posedge clk);
@@ -201,7 +201,7 @@ module tb;
                 from_eth_3.tvalid = 0;
                 from_eth_3.tlast = 0;
             end
-            
+
             // Input 4 stimulus
             begin
                 @(posedge clk);
@@ -220,12 +220,12 @@ module tb;
                 from_eth_4.tlast = 0;
             end
         join
-        
+
         #(CLK_PERIOD * 7);
         $display("Stimulus completed successfully");
     $finish(2);
     end
-    
+
     // Outputs ready control process
     initial begin
         @(posedge clk);
@@ -284,19 +284,19 @@ module tb;
         to_eth_3.tready = 1;
         to_eth_4.tready = 1;
     end
-    
+
     // Monitor process
     int expected_data_count0 = 0;
     int expected_data_count1 = 0;
     int expected_data_count2 = 0;
     int expected_data_count3 = 0;
     int expected_data_count4 = 0;
-    
+
     always @(posedge clk) begin
         if (!rst) begin
             if (to_cpu.tvalid && to_cpu.tready) begin
                 expected_data_count0 <= expected_data_count0 + 1;
-                
+
                 if (to_cpu.tlast) begin
                     $display("Packet received with %0d words at port 0", expected_data_count0);
                     expected_data_count0 <= 0;
@@ -304,7 +304,7 @@ module tb;
             end
             if (to_eth_1.tvalid && to_eth_1.tready) begin
                 expected_data_count1 <= expected_data_count1 + 1;
-                
+
                 if (to_eth_1.tlast) begin
                     $display("Packet received with %0d words at port 1", expected_data_count1);
                     expected_data_count1 <= 0;
@@ -312,7 +312,7 @@ module tb;
             end
             if (to_eth_2.tvalid && to_eth_2.tready) begin
                 expected_data_count2 <= expected_data_count2 + 1;
-                
+
                 if (to_eth_2.tlast) begin
                     $display("Packet received with %0d words at port 2", expected_data_count2);
                     expected_data_count2 <= 0;
@@ -320,7 +320,7 @@ module tb;
             end
             if (to_eth_3.tvalid && to_eth_3.tready) begin
                 expected_data_count3 <= expected_data_count3 + 1;
-                
+
                 if (to_eth_3.tlast) begin
                     $display("Packet received with %0d words at port 3", expected_data_count3);
                     expected_data_count3 <= 0;
@@ -328,7 +328,7 @@ module tb;
             end
             if (to_eth_4.tvalid && to_eth_4.tready) begin
                 expected_data_count4 <= expected_data_count4 + 1;
-                
+
                 if (to_eth_4.tlast) begin
                     $display("Packet received with %0d words at port 4", expected_data_count4);
                     expected_data_count4 <= 0;

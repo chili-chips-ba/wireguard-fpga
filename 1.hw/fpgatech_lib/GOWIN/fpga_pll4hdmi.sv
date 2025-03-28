@@ -20,7 +20,7 @@
 // 2) for rendering on a 1920x1080P@60Hz screen
 //      742.5MHz 5x serial pixel clock
 //      148.5MHz pixel clock
-//    However, GoWin max is 600MHz. 
+//    However, GoWin max is 600MHz.
 //
 // Also see: https://github.com/hdl-util/hdmi
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ module fpga_pll (
       .CLKOUTP  (),
       .CLKOUTD  (),
       .CLKOUTD3 (),
-       
+
       .RESET    (1'b0),
       .RESET_P  (1'b0),
       .CLKIN    (clk_ext),
@@ -138,12 +138,12 @@ module fpga_pll (
 // Reset synchronizer
 //--------------------------------------------------
 
-  always_ff @(negedge pll_lock or posedge clk_pix) begin  
+  always_ff @(negedge pll_lock or posedge clk_pix) begin
      if (pll_lock == 1'b0) begin
         srst_n_pipe <= 1'b0;
         srst_n      <= 1'b0;
      end
-     else begin   
+     else begin
         srst_n_pipe <= 1'b1;
         srst_n      <= srst_n_pipe;
      end
@@ -155,6 +155,6 @@ endmodule: fpga_pll
 ------------------------------------------------------------------------------
 Version History:
 ------------------------------------------------------------------------------
- 2022/10/9 JI: initial creation    
+ 2022/10/9 JI: initial creation
 */
-                         
+

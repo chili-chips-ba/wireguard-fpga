@@ -180,7 +180,7 @@ always @* begin
     m_axis_tlast_int  = s_axis_tlast;
     m_axis_tid_int    = s_axis_tid;
     m_axis_tdest_int  = s_axis_tdest;
-    m_axis_tuser_int  = s_axis_tuser; 
+    m_axis_tuser_int  = s_axis_tuser;
 end
 
 always @(posedge clk) begin

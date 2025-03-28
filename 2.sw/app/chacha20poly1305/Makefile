@@ -2,7 +2,7 @@
 
 CC = gcc
 CFLAGS = -Wall -Wextra -O2 -std=c99
-LDFLAGS = 
+LDFLAGS =
 OBJDUMP = objdump  # Use objdump to generate hex files
 BUILD_DIR = build_output
 

@@ -258,7 +258,7 @@ always @* begin
     m_ip_payload_axis_tlast_int  = s_ip_payload_axis_tlast;
     m_ip_payload_axis_tid_int    = s_ip_payload_axis_tid;
     m_ip_payload_axis_tdest_int  = s_ip_payload_axis_tdest;
-    m_ip_payload_axis_tuser_int  = s_ip_payload_axis_tuser; 
+    m_ip_payload_axis_tuser_int  = s_ip_payload_axis_tuser;
 end
 
 always @(posedge clk) begin

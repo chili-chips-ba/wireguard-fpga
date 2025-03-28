@@ -14,7 +14,7 @@
 // SDRAM regions used to store ADC1 and 2 samples
 // Total SDRAM capacity is 8MB
 #define SDRAM_ADC1_ADDRESS (volatile uint32_t *) 0x40000000 // lower 4MB
-#define SDRAM_ADC2_ADDRESS (volatile uint32_t *) 0x40400000 // upper 4MB 
+#define SDRAM_ADC2_ADDRESS (volatile uint32_t *) 0x40400000 // upper 4MB
 
 //-----------------------------------------------------------------------
 // Standard functions
@@ -34,11 +34,11 @@ uint32_t mul3 (uint32_t i);
 //--------------UART_TX
 typedef union {
    uint32_t all;                //[31:0]
-                           
-   struct {                
-      uint32_t data       : 8;  //[ 7:0] 
-      uint32_t rsvd_8_30  : 23; //[30:8] 
-      uint32_t busy       : 1;  //[31] 
+
+   struct {
+      uint32_t data       : 8;  //[ 7:0]
+      uint32_t rsvd_8_30  : 23; //[30:8]
+      uint32_t busy       : 1;  //[31]
    } fld;
 } uart_tx_t;
 
@@ -49,11 +49,11 @@ typedef union {
    uint32_t all;                //[31:0]
 
    struct {
-      uint32_t data       :  8; //[ 7:0] 
-      uint32_t rsvd_8_29  : 22; //[29:8] 
-      uint32_t oflow      :  1; //[30] 
-      uint32_t valid      :  1; //[31] 
-   } fld;                  
+      uint32_t data       :  8; //[ 7:0]
+      uint32_t rsvd_8_29  : 22; //[29:8]
+      uint32_t oflow      :  1; //[30]
+      uint32_t valid      :  1; //[31]
+   } fld;
 
    // if (!uart_rx.fld.valid) return;
    //    lui       a5,0x10000
@@ -66,13 +66,13 @@ typedef union {
 
   /*
    struct {
-      uint8_t data;       //[ 7:0] 
-      uint8_t rsvd_1;     //[15:8] 
-      uint8_t rsvd_2;     //[23:16] 
-      uint8_t rsvd_3 : 6; //[29:24] 
-      uint8_t oflow  : 1; //[30] 
-      uint8_t valid  : 1; //[31] 
-   } fld;                  
+      uint8_t data;       //[ 7:0]
+      uint8_t rsvd_1;     //[15:8]
+      uint8_t rsvd_2;     //[23:16]
+      uint8_t rsvd_3 : 6; //[29:24]
+      uint8_t oflow  : 1; //[30]
+      uint8_t valid  : 1; //[31]
+   } fld;
 
    if (!uart_rx.fld.valid) return;
        lui      a5,0x10000
@@ -85,21 +85,21 @@ typedef union {
        beqz     a3,1e0 <main+0x78>
   */
 
-} uart_rx_t;               
+} uart_rx_t;
 
 #define UART_RX_VALID  0x80000000
 #define UART_RX_OFLOW  0x40000000
 #define UART_RX_DATA   0x000000FF
-                           
+
 //--------------ADC_TX
-typedef union {            
+typedef union {
    uint32_t all;                //[31:0]
-                           
-   struct {                
-      uint32_t time_us    : 15; //[14:0] 
-      uint32_t test       :  1; //[15] 
-      uint32_t rsvd_16_30 : 15; //[30:16] 
-      uint32_t busy       :  1; //[31] 
+
+   struct {
+      uint32_t time_us    : 15; //[14:0]
+      uint32_t test       :  1; //[15]
+      uint32_t rsvd_16_30 : 15; //[30:16]
+      uint32_t busy       :  1; //[31]
    } fld;
 } adc_tx_t;
 
@@ -111,14 +111,14 @@ typedef union {
    uint32_t all;                //[31:0]
 
    struct {
-      uint32_t data       : 24; //[23:0] 
-      uint32_t rsvd_24_28 :  5; //[28:24] 
-      uint32_t last       :  1; //[29] 
-      uint32_t oflow      :  1; //[30] 
-      uint32_t valid      :  1; //[31] 
-   } fld;                  
-} adc_rx_t;                
-                           
+      uint32_t data       : 24; //[23:0]
+      uint32_t rsvd_24_28 :  5; //[28:24]
+      uint32_t last       :  1; //[29]
+      uint32_t oflow      :  1; //[30]
+      uint32_t valid      :  1; //[31]
+   } fld;
+} adc_rx_t;
+
 #define ADC_RX_VALID  0x80000000
 #define ADC_RX_OFLOW  0x40000000
 #define ADC_RX_DATA   0x00FFFFFF
@@ -128,44 +128,44 @@ typedef union {
    uint32_t all;                //[31:0]
 
    struct {
-      uint32_t sample_cnt : 17; //[16:0] 
-      uint32_t rsvd_31_18 : 15; //[31:17] 
-   } fld;                  
-} adc_rx_t;                
-                           
+      uint32_t sample_cnt : 17; //[16:0]
+      uint32_t rsvd_31_18 : 15; //[31:17]
+   } fld;
+} adc_rx_t;
+
 #define ADC_RX_SAMPLE_CNT 0x0001FFFF
 
 
 //--------------GPO
-typedef union {            
+typedef union {
    uint32_t all;                //[31:0]
-                           
-   struct {                
+
+   struct {
       uint32_t led_off    :  8; //[7:0] Only bit[1]=LED4 and bit[0]=LED3 are used
-      uint32_t rsvd_8_31  : 24; //[31:8] 
+      uint32_t rsvd_8_31  : 24; //[31:8]
    } fld;
 } gpo_t;
 
 //--------------GPI
-typedef union {            
+typedef union {
    uint32_t all;                //[31:0]
-                           
-   struct {                
+
+   struct {
       uint32_t key_on     :  8; //[7:0] Only bit[0] is used
-      uint32_t rsvd_8_31  : 24; //[31:8] 
+      uint32_t rsvd_8_31  : 24; //[31:8]
    } fld;
 } gpi_t;
 
 //--------------DAC_TX
-typedef union {            
+typedef union {
    uint32_t all;                //[31:0]
-                           
-   struct {                
-      uint32_t sin_tune   : 15; //[14:0] 
+
+   struct {
+      uint32_t sin_tune   : 15; //[14:0]
       uint32_t rsvd_15_15 :  1; //[15:15]
-      uint32_t hann_step  : 10; //[25:16] 
-      uint32_t rsvd_26_30 :  5; //[30:26] 
-      uint32_t busy       :  1; //[31] 
+      uint32_t hann_step  : 10; //[25:16]
+      uint32_t rsvd_26_30 :  5; //[30:26]
+      uint32_t busy       :  1; //[31]
    } fld;
 } dac_tx_t;
 
@@ -173,12 +173,12 @@ typedef union {
 
 
 //--------------MISC
-typedef union {            
+typedef union {
    uint32_t all;                //[31:0]
-                           
-   struct {                
+
+   struct {
       uint32_t error      :  8; //[7:0] Only bit[3:0] are used
-      uint32_t rsvd_8_31  : 24; //[31:8] 
+      uint32_t rsvd_8_31  : 24; //[31:8]
    } fld;
 } misc_t;
 
@@ -196,7 +196,7 @@ typedef struct {     // Offset:
 
   gpo_t     gpo;     //  0x6 * 4  0x2000_0018
   gpi_t     gpi;     //  0x7 * 4  0x2000_001C
-  
+
   dac_tx_t  dac1_tx; //  0x8 * 4  0x2000_0020
   dac_tx_t  dac2_tx; //  0x9 * 4  0x2000_0024
 
@@ -237,13 +237,13 @@ typedef struct {
 
 typedef union {
    uint32_t all;                  //[31:0]
-                           
-   //struct {                
+
+   //struct {
    //   uint32_t adc1_started :  1; //[0]
    //   uint32_t adc2_started :  1; //[1]
    //   uint32_t adc1_uarting :  1; //[2]
    //   uint32_t adc1_uarting :  1; //[3]
-   // 
+   //
    //   uint32_t rsvd_4_31    : 28; //[31:4]
    //} fld;
 
@@ -255,7 +255,7 @@ typedef union {
      uint16_t adc_uarting;  //[31:16]
    } hal;
 
-   struct {                
+   struct {
       uint8_t adc1_started; //[7:0]
       uint8_t adc2_started; //[15:8]
       uint8_t adc1_uarting; //[23:16]
@@ -268,7 +268,7 @@ typedef union {
 // for ease of access to individual bytes of a 32-bit word
 typedef union {
    uint32_t all;       //[31:0]
-                           
+
    struct {
       uint32_t b0 : 8; //[7:0]
       uint32_t b1 : 8; //[15:0]

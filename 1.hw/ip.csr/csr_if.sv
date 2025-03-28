@@ -10,14 +10,14 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //  - SOC-specific interface for Config and Status Registers (CSR)
 //  - Provides structured CSR I/O
 //==========================================================================
 
 interface csr_if ();
    import old_csr_pkg::*;
-   
+
 // UART_TX
    logic        uart_tx_write;
    logic        uart_tx_busy;
@@ -26,25 +26,25 @@ interface csr_if ();
 // UART_RX
    logic        uart_rx_read;
    uart_rx_t    uart_rx;
-                
+
 // ADC1_TX
    logic        adc1_tx_write;
    logic        adc1_tx_busy;
    logic        adc1_tx_test;
    logic [14:0] adc1_tx_time_us;
-   
+
 // ADC1_RX
    adc_rx_t     adc1_rx;
-                
+
 // ADC2_TX
    logic        adc2_tx_write;
    logic        adc2_tx_busy;
    logic        adc2_tx_test;
    logic [14:0] adc2_tx_time_us;
-   
+
 // ADC2_RX
    adc_rx_t     adc2_rx;
-                
+
 // DAC1
    logic        dac1_write;
    logic        dac1_busy;
@@ -60,14 +60,14 @@ interface csr_if ();
 // GPIO
    gpo_t        gpo;
    gpi_t        gpi;
-   
+
 // MISC
    misc_t       misc;
 
 
-  //---------------------------------------- 
+  //----------------------------------------
   // master/CPU side
-  //---------------------------------------- 
+  //----------------------------------------
    modport MST (
      output uart_tx_write,
             uart_tx_data,
@@ -107,9 +107,9 @@ interface csr_if ();
             gpi
    );
 
-  //---------------------------------------- 
+  //----------------------------------------
   // Slave/Peripheral side
-  //---------------------------------------- 
+  //----------------------------------------
    modport SLV_UART (
      input  uart_tx_write,
             uart_tx_data,
@@ -154,7 +154,7 @@ endinterface: csr_if
 -----------------------------------------------------------------------------
 Version History:
 -----------------------------------------------------------------------------
- 2024/1/2  JI: initial creation    
+ 2024/1/2  JI: initial creation
  2024/3/1  JI: added ADC1/2_RX, GPO and GPI I/O
  2024/3/28 JI: added DAC1/2
  2024/4/22 JI: added MISC

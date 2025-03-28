@@ -25,11 +25,11 @@ all:    sw_all hw_all
 #-------------------------------------------------------------
 # You must have gcc installed to build software:
 #   sudo apt install gcc-riscv64-unknown-elf
-#   For more, see: 0.doc/1.README.Tool-Installs.txt  
+#   For more, see: 0.doc/1.README.Tool-Installs.txt
 #=============================================================
 CROSS  = riscv64-unknown-elf-
 
-#Use this to test DMEM 
+#Use this to test DMEM
 #CFLAGS = -DTCM=0 -DHARVARD=1
 
 #Use this to test SDRAM
@@ -38,10 +38,10 @@ CROSS  = riscv64-unknown-elf-
 #Use this for standard programs
 CFLAGS = -DTCM=1  -DHARVARD=1
 
-# Uncomment to bring in optional tests, as needed 
-#CFLAGS += -DRISCV_TEST 
+# Uncomment to bring in optional tests, as needed
+#CFLAGS += -DRISCV_TEST
 #CFLAGS += -DMEMTEST
-#CFLAGS += -DUART_TEST 
+#CFLAGS += -DUART_TEST
 #CFLAGS += -DDAC_TEST
 #CFLAGS += -DADC_TEST
 #CFLAGS += -DADC_SDRAM2UART_BINARY
@@ -120,9 +120,9 @@ $(SW_APP)/main.c
 #       -mfdiv          Use hw floating-point divide and square root instructions
 #       -mrelax         Use linker relaxations to reduce the number of instructions
 #       -mstrict-align  Do not generate unaligned memory accesses
-#       -nostartfiles 
-#	-fno-builtin 
-#       -mbig-endian    Generate big-endian code. This is the default when GCC is 
+#       -nostartfiles
+#	-fno-builtin
+#       -mbig-endian    Generate big-endian code. This is the default when GCC is
 #                       configured for a ‘riscv64be-*-*’ or ‘riscv32be-*-*’ target.
 #       -mlittle-endian Generate little-endian code. This is the default when GCC is
 #                       configured for a ‘riscv64-*-*’ or ‘riscv32-*-*’, but not a
@@ -174,7 +174,7 @@ sw_out: sw_elf
 
 # Test dirs, User and Machine mode
 
-$(SW_BLD)/tests: 
+$(SW_BLD)/tests:
 	mkdir ./sw_build/tests
 
 $(SW_BLD)/tests/rv32ui: $(SW_BLD)/tests
@@ -187,7 +187,7 @@ $(SW_BLD)/tests/rv32mi: $(SW_BLD)/tests
 # Compile one user test
 $(SW_BLD)/tests/rv32ui/%.elf: $(SW_TEST)/rv32ui/%.S $(SW_BLD)/tests/rv32ui sw_map
 	@echo $(USER_COUNTER)
-	$(eval USER_COUNTER=$(shell expr $(USER_COUNTER) + 1)) 
+	$(eval USER_COUNTER=$(shell expr $(USER_COUNTER) + 1))
 	$(CROSS)gcc \
 	$(CFLAGS) \
 	-DTESTCODE=$(USER_COUNTER) \
@@ -243,7 +243,7 @@ utests: $(USER_ELF_FILES) $(USER_HEX_FILES) $(USER_BIN_FILES) $(USER_DUMP_FILES)
 
 $(SW_BLD)/tests/rv32mi/%.elf: $(SW_TEST)/rv32mi/%.S $(SW_BLD)/tests/rv32mi sw_map
 	@echo $(MACHINE_COUNTER)
-	$(eval MACHINE_COUNTER=$(shell expr $(MACHINE_COUNTER) + 1)) 
+	$(eval MACHINE_COUNTER=$(shell expr $(MACHINE_COUNTER) + 1))
 	$(CROSS)gcc \
 	$(CFLAGS) \
 	-DTESTCODE=$(MACHINE_COUNTER) \
@@ -284,7 +284,7 @@ $(SW_BLD)/tests/rv32mi/%.bin: $(SW_BLD)/tests/rv32mi/%.elf
 
 $(SW_BLD)/tests/rv32mi/%.dump: $(SW_BLD)/tests/rv32mi/%.elf
 	$(CROSS)objdump -drwC $< > $@
-	
+
 mtests: $(MACHINE_ELF_FILES) $(MACHINE_HEX_FILES) $(MACHINE_BIN_FILES) $(MACHINE_DUMP_FILES)
 
 #=============================================================
@@ -299,15 +299,15 @@ mtests: $(MACHINE_ELF_FILES) $(MACHINE_HEX_FILES) $(MACHINE_BIN_FILES) $(MACHINE
 #     https://www.chili-chips.xyz:2078/Gowin_V1.9.9.01_x64_win.zip
 #       UserID: student@chili-chips.xyz
 #       Pass  : fpga123
-#   
+#
 #  2) Unzip and install. The license is free, but you have to register on:
 #       https://www.gowinsemi.com/en/support/license
-#   
+#
 #  3) Add Gowin Windows install to your Linux $PATH, such as (for 'tcsh'):
 #       setenv GOWIN_ROOT '/mnt/c/Gowin/Gowin_V1.9.9.01_x64/IDE/bin'
 #       setenv PATH       "${WIN_ROOT}:${PATH}"
 #
-#   For more, see: 0.doc/1.README.Tool-Installs.txt  
+#   For more, see: 0.doc/1.README.Tool-Installs.txt
 #=============================================================
 
 #------------------------

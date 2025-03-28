@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   WireGuard FPGA top-level module
 //==========================================================================
 
@@ -19,22 +19,22 @@ module top #(
    parameter TARGET = "XILINX"
 ) (
    input        clk_p,        //board clock positive
-   input        clk_n,        //board clock negative 
+   input        clk_n,        //board clock negative
    input        rst_n,        //reset, low active
-   
+
 // Ethernet 1
    output       e1_reset,     //phy reset
    output       e1_mdc,       //phy emdio clock
    inout        e1_mdio,      //phy emdio data
    input        e1_rxc,       //125Mhz ethernet gmii rx clock
    input        e1_rxdv,      //GMII recieving data valid
-   input        e1_rxer,      //GMII recieving data error                    
-   input  [7:0] e1_rxd,       //GMII recieving data          
-   input        e1_txc,       //25Mhz ethernet mii tx clock      
-   output       e1_gtxc,      //125Mhz ethernet gmii tx clock  
-   output       e1_txen,      //GMII sending data valid    
-   output       e1_txer,      //GMII sending data error                   
-   output [7:0] e1_txd,       //GMII sending data 
+   input        e1_rxer,      //GMII recieving data error
+   input  [7:0] e1_rxd,       //GMII recieving data
+   input        e1_txc,       //25Mhz ethernet mii tx clock
+   output       e1_gtxc,      //125Mhz ethernet gmii tx clock
+   output       e1_txen,      //GMII sending data valid
+   output       e1_txer,      //GMII sending data error
+   output [7:0] e1_txd,       //GMII sending data
 
 // Ethernet 2
    output       e2_reset,     //phy reset
@@ -42,13 +42,13 @@ module top #(
    inout        e2_mdio,      //phy emdio data
    input        e2_rxc,       //125Mhz ethernet gmii rx clock
    input        e2_rxdv,      //GMII recieving data valid
-   input        e2_rxer,      //GMII recieving data error                    
-   input  [7:0] e2_rxd,       //GMII recieving data          
-   input        e2_txc,       //25Mhz ethernet mii tx clock         
-   output       e2_gtxc,      //125Mhz ethernet gmii tx clock  
-   output       e2_txen,      //GMII sending data valid    
-   output       e2_txer,      //GMII sending data error                   
-   output [7:0] e2_txd,       //GMII sending data 
+   input        e2_rxer,      //GMII recieving data error
+   input  [7:0] e2_rxd,       //GMII recieving data
+   input        e2_txc,       //25Mhz ethernet mii tx clock
+   output       e2_gtxc,      //125Mhz ethernet gmii tx clock
+   output       e2_txen,      //GMII sending data valid
+   output       e2_txer,      //GMII sending data error
+   output [7:0] e2_txd,       //GMII sending data
 
 // Ethernet 3
    output       e3_reset,     //phy reset
@@ -56,13 +56,13 @@ module top #(
    inout        e3_mdio,      //phy emdio data
    input        e3_rxc,       //125Mhz ethernet gmii rx clock
    input        e3_rxdv,      //GMII recieving data valid
-   input        e3_rxer,      //GMII recieving data error                    
-   input  [7:0] e3_rxd,       //GMII recieving data          
-   input        e3_txc,       //25Mhz ethernet mii tx clock         
-   output       e3_gtxc,      //125Mhz ethernet gmii tx clock  
-   output       e3_txen,      //GMII sending data valid    
-   output       e3_txer,      //GMII sending data error                   
-   output [7:0] e3_txd,       //GMII sending data 
+   input        e3_rxer,      //GMII recieving data error
+   input  [7:0] e3_rxd,       //GMII recieving data
+   input        e3_txc,       //25Mhz ethernet mii tx clock
+   output       e3_gtxc,      //125Mhz ethernet gmii tx clock
+   output       e3_txen,      //GMII sending data valid
+   output       e3_txer,      //GMII sending data error
+   output [7:0] e3_txd,       //GMII sending data
 
 // Ethernet 4
    output       e4_reset,     //phy reset
@@ -70,27 +70,27 @@ module top #(
    inout        e4_mdio,      //phy emdio data
    input        e4_rxc,       //125Mhz ethernet gmii rx clock
    input        e4_rxdv,      //GMII recieving data valid
-   input        e4_rxer,      //GMII recieving data error                    
+   input        e4_rxer,      //GMII recieving data error
    input  [7:0] e4_rxd,       //GMII recieving data
-   input        e4_txc,       //25Mhz ethernet mii tx clock         
-   output       e4_gtxc,      //125Mhz ethernet gmii tx clock  
-   output       e4_txen,      //GMII sending data valid    
-   output       e4_txer,      //GMII sending data error                   
+   input        e4_txc,       //25Mhz ethernet mii tx clock
+   output       e4_gtxc,      //125Mhz ethernet gmii tx clock
+   output       e4_txen,      //GMII sending data valid
+   output       e4_txer,      //GMII sending data error
    output [7:0] e4_txd,       //GMII sending data
-    
+
 // UART
    input        uart_rx,
    output       uart_tx,
-    
+
 // Keys
    input [1:0]  key_in,
 
-// LEDs   
+// LEDs
    output [1:0] led
 );
    import csr_pkg::*;
    import soc_pkg::*;
-   
+
 //==========================================================================
 // Clock and reset generation
 //==========================================================================
@@ -99,7 +99,7 @@ module top #(
    logic               sys_rst_n;
    logic               eth_gtx_clk;
    logic               eth_gtx_rst;
-   
+
    clk_rst_gen u_clk_rst_gen (
       .clk_p           (clk_p),
       .clk_n           (clk_n),
@@ -126,7 +126,7 @@ module top #(
    dpe_if              to_eth_4      (.clk(sys_clk), .rst(sys_rst));
    csr_pkg::csr__in_t  to_csr;
    csr_pkg::csr__out_t from_csr;
- 
+
 //=================================
 // CPU Subsystem
 //=================================
@@ -141,17 +141,17 @@ module top #(
    logic [31:2]        imem_waddr;
    logic [31:0]        imem_wdat;
 
-//---------------------------------   
+//---------------------------------
    soc_cpu #(
       .ADDR_RESET      (32'h 0000_0000),
       .NUM_WORDS_IMEM  (NUM_WORDS_IMEM)
    ) u_cpu (
       .bus             (bus_cpu),    //MST
 
-      .imem_we         (imem_we),    //-\ access point for 
-      .imem_waddr      (imem_waddr), // | reloading CPU 
-      .imem_wdat       (imem_wdat)   //-/ program memory 
-   ); 
+      .imem_we         (imem_we),    //-\ access point for
+      .imem_waddr      (imem_waddr), // | reloading CPU
+      .imem_wdat       (imem_wdat)   //-/ program memory
+   );
 
 //---------------------------------
    soc_fabric u_fabric (
@@ -174,15 +174,15 @@ module top #(
       .hwif_in         (to_csr),     //i
       .hwif_out        (from_csr)    //o
    );
-                   
+
 //---------------------------------
    uart u_uart (
-      .arst_n          (sys_rst_n),  //i 
-      .clk             (sys_clk),    //i 
-                               
-      .uart_rx         (uart_rx),    //i 
+      .arst_n          (sys_rst_n),  //i
+      .clk             (sys_clk),    //i
+
+      .uart_rx         (uart_rx),    //i
       .uart_tx         (uart_tx),    //o
-                               
+
       .from_csr        (from_csr),   //i
       .to_csr          (to_csr),     //o
 
@@ -199,10 +199,10 @@ module top #(
       .to_cpu          (to_cpu),     //SLV
       .from_cpu        (from_cpu)    //MST
    );
-   
+
 //==========================================================================
 // GPIO
-//==========================================================================  
+//==========================================================================
    assign led[1] = ~from_csr.gpio.led2.value;
    assign led[0] = ~from_csr.gpio.led1.value;
    assign to_csr.gpio.key2.next = ~key_in[1];  //TODO: Add debounce
@@ -210,7 +210,7 @@ module top #(
 
 //==========================================================================
 // DPE
-//==========================================================================  
+//==========================================================================
    dpe u_dpe (
       .from_csr        (from_csr),   //i
       .to_csr          (to_csr),     //o
@@ -259,7 +259,7 @@ module top #(
       .gmii_rxd        (e1_rxd),
       .gmii_rx_dv      (e1_rxdv),
       .gmii_rx_er      (e1_rxer),
-      .mii_tx_clk      (e1_txc), 
+      .mii_tx_clk      (e1_txc),
       .gmii_tx_clk     (e1_gtxc),
       .gmii_txd        (e1_txd),
       .gmii_tx_en      (e1_txen),
@@ -268,7 +268,7 @@ module top #(
       .rx_fifo         (from_eth_1),
       .tx_fifo         (to_eth_1)
    );
-    
+
 //--------------------------------------------------------------------------
    ethernet_mac #(
       .TARGET          (TARGET)
@@ -279,7 +279,7 @@ module top #(
       .gmii_rxd        (e2_rxd),
       .gmii_rx_dv      (e2_rxdv),
       .gmii_rx_er      (e2_rxer),
-      .mii_tx_clk      (e2_txc), 
+      .mii_tx_clk      (e2_txc),
       .gmii_tx_clk     (e2_gtxc),
       .gmii_txd        (e2_txd),
       .gmii_tx_en      (e2_txen),
@@ -288,8 +288,8 @@ module top #(
       .rx_fifo         (from_eth_2),
       .tx_fifo         (to_eth_2)
    );
-    
-//--------------------------------------------------------------------------    
+
+//--------------------------------------------------------------------------
    ethernet_mac #(
       .TARGET          (TARGET)
    ) u_eth_3 (
@@ -299,7 +299,7 @@ module top #(
       .gmii_rxd        (e3_rxd),
       .gmii_rx_dv      (e3_rxdv),
       .gmii_rx_er      (e3_rxer),
-      .mii_tx_clk      (e3_txc), 
+      .mii_tx_clk      (e3_txc),
       .gmii_tx_clk     (e3_gtxc),
       .gmii_txd        (e3_txd),
       .gmii_tx_en      (e3_txen),
@@ -308,7 +308,7 @@ module top #(
       .rx_fifo         (from_eth_3),
       .tx_fifo         (to_eth_3)
    );
-    
+
 //--------------------------------------------------------------------------
    ethernet_mac #(
       .TARGET          (TARGET)
@@ -319,7 +319,7 @@ module top #(
       .gmii_rxd        (e4_rxd),
       .gmii_rx_dv      (e4_rxdv),
       .gmii_rx_er      (e4_rxer),
-      .mii_tx_clk      (e4_txc), 
+      .mii_tx_clk      (e4_txc),
       .gmii_tx_clk     (e4_gtxc),
       .gmii_txd        (e4_txd),
       .gmii_tx_en      (e4_txen),
@@ -328,7 +328,7 @@ module top #(
       .rx_fifo         (from_eth_4),
       .tx_fifo         (to_eth_4)
    );
- 
+
 //--------------------------------------------------------------------------
    ethernet_phy u_phy (
       .e1_reset        (e1_reset),

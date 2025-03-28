@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   DPE WireGuard Disassembler
 //
 //  ---------------------. .--------------------------------------->
@@ -33,23 +33,23 @@
 
 module dpe_wg_disassembler (
    output logic        fcr_idle,
-   
+
    output logic [31:0] wg_rcv,
    input  logic [6:0]  wg_idx,
    input  logic        wg_idx_match,
-    
+
    dpe_if.s_axis       inp,
    dpe_if.m_axis       outp
 );
    localparam TDATA_WIDTH = 128;
    localparam INP_TUSER_WIDTH = 5;
    localparam OUTP_TUSER_WIDTH = 128;
-    
+
    localparam PROT_IP = 16'h0008;
    localparam PROT_IPv4 = 4'h4;
    localparam PROT_UDP = 8'h11;
    localparam PROT_WG = 32'h00000004;
-    
+
    typedef enum logic [3:0] {
       IDLE,
       HEADER_1,
@@ -63,17 +63,17 @@ module dpe_wg_disassembler (
       PAYLOAD_4,
       PAYLOAD_5
    } state_t;
-    
+
 // Internal states
    state_t state_reg, state_next;
    logic [31:0] wg_rcv_reg, wg_rcv_next;
    logic [63:0] wg_cnt_reg, wg_cnt_next;
    logic [47:0] wg_enp_reg, wg_enp_next;
-    
+
 // Internal wires
    dpe_if piped (.clk(inp.clk), .rst(inp.rst));
    dpe_if muxed (.clk(inp.clk), .rst(inp.rst));
-    
+
 // FSM registers
    always_ff @(posedge inp.clk) begin
       if (inp.rst) begin
@@ -88,14 +88,14 @@ module dpe_wg_disassembler (
          wg_enp_reg <= wg_enp_next;
       end
    end
-    
+
 // FSM transition logic
    always_comb begin
       state_next = state_reg;
       wg_rcv_next = wg_rcv_reg;
       wg_cnt_next = wg_cnt_reg;
       wg_enp_next = wg_enp_reg;
-        
+
       case (state)
          IDLE: begin
             if (inp.tvalid && inp.tready && (inp.tdata[111:96] == PROT_IP) && (inp.tdata[119:116] == PROT_IPv4)) begin
@@ -104,7 +104,7 @@ module dpe_wg_disassembler (
                state_next = BYPASS_1;
             end
          end
-            
+
          HEADER_1: begin
             if (inp.tvalid && inp.tready && (inp.tdata[63:56] == PROT_UDP)) begin
                state_next = HEADER_2;
@@ -112,7 +112,7 @@ module dpe_wg_disassembler (
                state_next = BYPASS_2;
             end
          end
-            
+
          HEADER_2: begin
             if (inp.tvalid && inp.tready && (inp.tdata[111:80] == PROT_WG)) begin
                state_next = PAYLOAD_1;
@@ -121,25 +121,25 @@ module dpe_wg_disassembler (
                state_next = BYPASS_3;
             end
          end
-            
+
          BYPASS_1: begin
             if (inp.tvalid && inp.tready) begin
                state_next = BYPASS_2;
             end
          end
-            
+
          BYPASS_2: begin
             if (inp.tvalid && inp.tready) begin
                state_next = BYPASS_3;
             end
          end
-            
+
          BYPASS_3: begin
             if (inp.tvalid && inp.tready && inp.tlast) begin
                state_next = IDLE;
             end
          end
-            
+
          PAYLOAD_1: begin
             if (inp.tvalid && inp.tready) begin
                state_next = PAYLOAD_2;
@@ -147,19 +147,19 @@ module dpe_wg_disassembler (
                wg_cnt_next = inp.tdata[79:16];
             end
          end
-            
+
          PAYLOAD_2: begin
             if (inp.tvalid && inp.tready) begin
                state_next = PAYLOAD_3;
             end
          end
-            
+
          PAYLOAD_3: begin
             if (piped.tvalid && piped.tready) begin
                state_next = PAYLOAD_4;
             end
          end
-            
+
          PAYLOAD_4: begin
             if (piped.tvalid && piped.tready && piped.tlast) begin
                state_next = IDLE;
@@ -169,7 +169,7 @@ module dpe_wg_disassembler (
                wg_enp_next = piped.tdata[127:80];
             end
          end
-            
+
          PAYLOAD_5: begin
             if (piped.tvalid && piped.tready && piped.tlast) begin
                state_next = IDLE;
@@ -178,7 +178,7 @@ module dpe_wg_disassembler (
                wg_enp_next = piped.tdata[127:80];
             end
          end
-            
+
          default: begin
             state_next = state_reg;
             wg_rcv_next = wg_rcv_reg;
@@ -187,7 +187,7 @@ module dpe_wg_disassembler (
          end
       endcase
    end
-    
+
    // Outputs logic
    always_comb begin
       muxed.tvalid = 0;
@@ -215,7 +215,7 @@ module dpe_wg_disassembler (
             muxed.tuser[5] = 1;
             muxed.tuser[4:0] = piped.tuser;
          end
-            
+
          default: begin
             muxed.tvalid = 0;
             muxed.tdata = '0;
@@ -227,7 +227,7 @@ module dpe_wg_disassembler (
    end
    assign piped.tready = muxed.tready;
    assign fcr_idle = (state == IDLE) & !outp.tvalid;
-    
+
 // Packet pipeline
    axis_pipeline_register #(
       .DATA_WIDTH(TDATA_WIDTH),
@@ -254,7 +254,7 @@ module dpe_wg_disassembler (
       .m_axis_tid(),
       .m_axis_tdest()
    );
-    
+
 // Skid buffers
    axis_register #(
       .DATA_WIDTH(TDATA_WIDTH),

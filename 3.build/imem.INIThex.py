@@ -46,7 +46,7 @@ imem_values = extract_mem_bytes(file_path)
 
 addr = 0
 # Writing to the output file
-try: 
+try:
     with open(out_file, 'w') as imem_SW_file:
 
         for i in range(0, len(imem_values), 4):

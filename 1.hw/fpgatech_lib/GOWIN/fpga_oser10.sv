@@ -29,7 +29,7 @@ module fpga_oser10 (
    )
    u_oser10 (
      .Q     (q),
-    
+
      .D0    (d[0]),
      .D1    (d[1]),
      .D2    (d[2]),
@@ -40,7 +40,7 @@ module fpga_oser10 (
      .D7    (d[7]),
      .D8    (d[8]),
      .D9    (d[9]),
-    
+
      .PCLK  (clk_par),
      .FCLK  (clk_ser),
      .RESET (arst)
@@ -52,5 +52,5 @@ endmodule: fpga_oser10
 ------------------------------------------------------------------------------
 Version History:
 ------------------------------------------------------------------------------
- 2022/10/9 JI: initial creation    
+ 2022/10/9 JI: initial creation
 */

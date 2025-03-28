@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   Simple debouncer of board push-buttons and switches
 //==========================================================================
 
@@ -42,7 +42,7 @@ module debounce #(
         out  <= (pipe == {3{ACTIVE}});
      end
    end
-   
+
 endmodule: debounce
 
 /*

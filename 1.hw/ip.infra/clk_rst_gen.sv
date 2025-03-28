@@ -10,11 +10,11 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   Clock and reset generation
 //==========================================================================
 
-module clk_rst_gen 
+module clk_rst_gen
 (
    input  clk_p,
    input  clk_n,
@@ -29,8 +29,8 @@ module clk_rst_gen
 //==========================================================================
 // Generate single end clock from differential input clock
 //==========================================================================
-   wire clk; 
-   
+   wire clk;
+
    IBUFGDS sys_clk_ibufgds
    (
       .O(clk),
@@ -44,14 +44,14 @@ module clk_rst_gen
    wire sys_pll_locked;
    wire sys_pll_clk;
    wire sys_reset;
-   
+
    fpga_pll_80M u_sys_pll (
       .clk(clk),
       .rst_n(rst_n),
       .sys_pll_clk(sys_pll_clk),
       .sys_pll_locked(sys_pll_locked)
    );
-   
+
    sync_reset #(
       .N(4)
    ) sys_sync_reset_inst (
@@ -59,7 +59,7 @@ module clk_rst_gen
       .rst(~sys_pll_locked),
       .out(sys_reset)
    );
-   
+
    assign sys_rst = sys_reset;
    assign sys_rst_n = ~sys_reset;
    assign sys_clk = sys_pll_clk;
@@ -69,14 +69,14 @@ module clk_rst_gen
 //==========================================================================
    wire eth_pll_locked;
    wire eth_pll_clk;
-   
+
    fpga_pll_125M u_eth_pll (
       .clk(clk),
       .rst_n(rst_n),
       .eth_pll_clk(eth_pll_clk),
       .eth_pll_locked(eth_pll_locked)
    );
-   
+
    sync_reset #(
       .N(4)
    ) eth_sync_reset_inst (
@@ -84,8 +84,8 @@ module clk_rst_gen
       .rst(~eth_pll_locked),
       .out(eth_gtx_rst)
    );
-   
+
    assign eth_gtx_clk = eth_pll_clk;
-   
+
 endmodule: clk_rst_gen
 

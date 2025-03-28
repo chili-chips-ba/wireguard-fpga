@@ -10,11 +10,11 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   CSR wrapper for PeakRDL-generated CSR
 //==========================================================================
 
-module soc_csr 
+module soc_csr
    import soc_pkg::*;
    import csr_pkg::*;
 (
@@ -27,16 +27,16 @@ module soc_csr
    logic                    cpuif_rd_ack;
    logic                    cpuif_wr_ack;*/
    logic [31:0]             s_cpuif_wr_biten;
-   
-   /*assign bus.rdy =         (!cpuif_req_stall_wr & cpuif_wr_ack) | 
+
+   /*assign bus.rdy =         (!cpuif_req_stall_wr & cpuif_wr_ack) |
                             (!cpuif_req_stall_rd & cpuif_rd_ack);*/
    assign bus.rdy = 1'b1;
-   
+
    assign s_cpuif_wr_biten[31:24] = bus.we[3] ? '1 : '0;
    assign s_cpuif_wr_biten[23:16] = bus.we[2] ? '1 : '0;
    assign s_cpuif_wr_biten[15:8]  = bus.we[1] ? '1 : '0;
    assign s_cpuif_wr_biten[7:0]   = bus.we[0] ? '1 : '0;
-   
+
    csr csr_inst (
       .clk                  (bus.clk),
       .rst                  (~bus.arst_n),
@@ -57,7 +57,7 @@ module soc_csr
       .hwif_in              (hwif_in),
       .hwif_out             (hwif_out)
    );
-   
+
 //=========================================
 // Sim-only
 //=========================================
@@ -66,18 +66,18 @@ module soc_csr
 
    always @(posedge bus.clk) begin
       if ({bus.vld, bus.rdy} == 2'b11) begin
-         if (|bus.we == 1) begin  
-            $display("%t %m WRITE [%08x]<=%08x", $time, 
+         if (|bus.we == 1) begin
+            $display("%t %m WRITE [%08x]<=%08x", $time,
                      {bus.addr, 2'd0}, bus.wdat);
          end
-         if (|bus.we == 0) begin  
-            $display("%t %m READ [%08x]=>%08x", $time, 
+         if (|bus.we == 0) begin
+            $display("%t %m READ [%08x]=>%08x", $time,
                      {bus.addr, 2'd0}, bus.rdat);
          end
       end
    end
-   
+
 `endif
 `endif
-        
+
 endmodule: soc_csr

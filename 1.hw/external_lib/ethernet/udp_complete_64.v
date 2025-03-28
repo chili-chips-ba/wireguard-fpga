@@ -43,7 +43,7 @@ module udp_complete_64 #(
 (
     input  wire        clk,
     input  wire        rst,
-    
+
     /*
      * Ethernet frame input
      */
@@ -58,7 +58,7 @@ module udp_complete_64 #(
     output wire        s_eth_payload_axis_tready,
     input  wire        s_eth_payload_axis_tlast,
     input  wire        s_eth_payload_axis_tuser,
-    
+
     /*
      * Ethernet frame output
      */
@@ -73,7 +73,7 @@ module udp_complete_64 #(
     input  wire        m_eth_payload_axis_tready,
     output wire        m_eth_payload_axis_tlast,
     output wire        m_eth_payload_axis_tuser,
-    
+
     /*
      * IP input
      */
@@ -92,7 +92,7 @@ module udp_complete_64 #(
     output wire        s_ip_payload_axis_tready,
     input  wire        s_ip_payload_axis_tlast,
     input  wire        s_ip_payload_axis_tuser,
-    
+
     /*
      * IP output
      */
@@ -120,7 +120,7 @@ module udp_complete_64 #(
     input  wire        m_ip_payload_axis_tready,
     output wire        m_ip_payload_axis_tlast,
     output wire        m_ip_payload_axis_tuser,
-    
+
     /*
      * UDP input
      */
@@ -141,7 +141,7 @@ module udp_complete_64 #(
     output wire        s_udp_payload_axis_tready,
     input  wire        s_udp_payload_axis_tlast,
     input  wire        s_udp_payload_axis_tuser,
-    
+
     /*
      * UDP output
      */

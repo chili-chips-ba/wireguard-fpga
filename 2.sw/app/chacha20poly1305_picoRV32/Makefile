@@ -1,5 +1,5 @@
 # ** ----------------------------------------------------------------
-# ** This Makefile builds the crypto functions for picoRV32 
+# ** This Makefile builds the crypto functions for picoRV32
 # ** ----------------------------------------------------------------
 
 # ** Ensure the required RISC-V GCC package is installed:
@@ -21,7 +21,7 @@ hex_chacha: $(CHACHA_DIR)/main.elf
 firmware_chacha: $(CHACHA_DIR)/main.elf
 	$(CROSS)objcopy -O binary $< $(CHACHA_DIR)/main.bin
 	python $(CHACHA_DIR)/progmem.py
-	
+
 # ** Compile and link the main ELF executable from all source files and the linker script
 $(CHACHA_DIR)/main.elf: $(CHACHA_DIR)/main.lds  $(CHACHA_DIR)/start.s $(CHACHA_DIR)/main.c $(CHACHA_DIR)/chacha20.c $(CHACHA_DIR)/chacha20.h $(CHACHA_DIR)/chacha20poly1305.c $(CHACHA_DIR)/chacha20poly1305.h $(CHACHA_DIR)/poly1305.c $(CHACHA_DIR)/poly1305.h $(CHACHA_DIR)/wireguard.h $(CHACHA_DIR)/string_bare.c $(CHACHA_DIR)/string_bare.h
 	$(CROSS)gcc $(CFLAGS) -march=rv32im -mabi=ilp32 -Wl,--build-id=none,-Bstatic,-T,$(CHACHA_DIR)/main.lds,-Map,$(CHACHA_DIR)/main.map,--strip-debug -ffreestanding -nostdlib -o $@ $(CHACHA_DIR)/start.s $(CHACHA_DIR)/main.c $(CHACHA_DIR)/chacha20.c $(CHACHA_DIR)/chacha20poly1305.c $(CHACHA_DIR)/poly1305.c $(CHACHA_DIR)/string_bare.c

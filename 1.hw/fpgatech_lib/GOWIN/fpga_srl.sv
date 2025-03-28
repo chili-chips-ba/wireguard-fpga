@@ -26,7 +26,7 @@ module fpga_srl #(
                                   //  bit. It should be specified in increments of 16 and not
                                   //  exceed the range specified by AWIDTH
    output logic [DWIDTH-1:0] dout_comb,
- 
+
    input  logic [DWIDTH-1:0] din,
    input  logic [AWIDTH-1:0] addr,
    input  logic              we,
@@ -34,11 +34,11 @@ module fpga_srl #(
 );
 
    localparam DEPTH = 2**AWIDTH - DEPTH_REDUCTOR;
-    
+
 //`ifdef XILINX
 //   (* shreg_extract="yes" *) (* srl_style = "srl" *)
 //   logic [DWIDTH-1:0] shift_reg[DEPTH];
-// 
+//
 //`else // Gowin
 //  // BSRAM target: syn_srlstyle = "block_ram"
 //  // SSRAM target: syn_srlstyle = "distributed_ram"
@@ -53,7 +53,7 @@ module fpga_srl #(
    always_ff @(posedge clk) begin: _shift_reg
       if (we == 1'b1) begin
          shift_reg[0]    <= din;
-          
+
          for (int i=1; i<DEPTH; i++) begin
             shift_reg[i] <= shift_reg[i-1];
          end
@@ -62,9 +62,9 @@ module fpga_srl #(
 
    always_comb begin
       dout_comb = shift_reg[addr];
-   end 
+   end
 
-   
+
 //--------------------------------------------
 // initialize SHIFT_REGISTER with random values for sim
 //--------------------------------------------

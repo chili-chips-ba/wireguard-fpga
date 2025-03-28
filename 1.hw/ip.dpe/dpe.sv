@@ -10,7 +10,7 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //   Data Plane Engine
 //==========================================================================
 
@@ -18,7 +18,7 @@ module dpe
    import csr_pkg::*;
 (
    input  csr_pkg::csr__out_t from_csr,
-   output csr_pkg::csr__in_t  to_csr,  
+   output csr_pkg::csr__in_t  to_csr,
    dpe_if.s_axis              from_cpu,
    dpe_if.s_axis              from_eth_1,
    dpe_if.s_axis              from_eth_2,
@@ -31,10 +31,10 @@ module dpe
    dpe_if.m_axis              to_eth_4
 );
    import dpe_pkg::*;
-   
+
    dpe_if                     muxed_1 (.clk(from_cpu.clk), .rst(from_cpu.rst));
    dpe_if                     muxed_2 (.clk(from_cpu.clk), .rst(from_cpu.rst));
-    
+
 // DPE multiplexer
    dpe_multiplexer mux (
       .pause                 (from_csr.dpe.fcr.pause.value),
@@ -52,7 +52,7 @@ module dpe
       .inp                   (muxed_1),
       .outp                  (muxed_2)
    );
-    
+
 // DPE demultiplexer
    dpe_demultiplexer demux (
       .from_dpe              (muxed_2),

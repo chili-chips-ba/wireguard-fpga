@@ -97,7 +97,7 @@ if (TARGET == "XILINX") begin
             .CE(1'b1),
             .CLR(1'b0)
         );
-        
+
     end else if (CLOCK_INPUT_STYLE == "BUFIO") begin
 
         assign clk_int = input_clk;

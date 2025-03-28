@@ -10,26 +10,26 @@
 // dissemination to all third parties; and (3) shall use the same for operation
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
-// Description: 
+// Description:
 //  GMII interface
 //==========================================================================
 
 interface gmii_if (
-   input  logic arst_n, // asynchronous, active-low reset  
+   input  logic arst_n, // asynchronous, active-low reset
    input  logic clk     // bus clock
 );
 
    logic [7:0]     txd;
    logic           txen;
    logic           txer;
-   
+
    logic [7:0]     rxd;
    logic           rxdv;
    logic           rxer;
 
-  //---------------------------------------- 
+  //----------------------------------------
   // master side
-  //---------------------------------------- 
+  //----------------------------------------
    modport MST (
      output txd,
             txen,
@@ -41,9 +41,9 @@ interface gmii_if (
             rxer
    );
 
-  //---------------------------------------- 
+  //----------------------------------------
   // Slave side
-  //---------------------------------------- 
+  //----------------------------------------
    modport SLV (
      input  arst_n, clk,
             txd,

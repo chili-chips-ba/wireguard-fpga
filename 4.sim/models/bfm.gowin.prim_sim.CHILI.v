@@ -3,7 +3,7 @@
 //--------------------------------------------------------------------------
 // Description: Shortened version of gowin.prim_sim.v
 //              Contains only used primitives and IPs
-//  Copied from: 
+//  Copied from:
 //    D:<GOWIN-INSTALL>/IDE/simlib/gw2a/prim_sim.v
 //==========================================================================
 
@@ -24,19 +24,19 @@ endmodule: GSR
 module OBUF (O, I);
 input  I;
 output O;
-buf OB (O, I);   
+buf OB (O, I);
 endmodule: OBUF
 
 //--------------------------
 module rPLL (CLKOUT, CLKOUTP, CLKOUTD, CLKOUTD3, LOCK, CLKIN, CLKFB, FBDSEL, IDSEL, ODSEL, DUTYDA, PSDA, FDLY, RESET, RESET_P);
 input CLKIN;
 input CLKFB;
-input RESET; 
-input RESET_P; 
-input [5:0] FBDSEL; 
+input RESET;
+input RESET_P;
+input [5:0] FBDSEL;
 input [5:0] IDSEL;
 input [5:0] ODSEL;
-input [3:0] PSDA,FDLY; 
+input [3:0] PSDA,FDLY;
 input [3:0] DUTYDA;
 
 output CLKOUT;
@@ -52,11 +52,11 @@ parameter string DYN_FBDIV_SEL    = "false"; //true:FBDSEL; false:FBDIV_SEL
 parameter int    FBDIV_SEL        = 0;       // 0:1,1:2...63:64. 1~64
 parameter string DYN_ODIV_SEL     = "false"; //true:ODSEL; false:ODIV_SEL
 parameter int    ODIV_SEL         = 8;       // 2/4/8/16/32/48/64/80/96/112/128
-                                   
+
 parameter string PSDA_SEL         = "0000";  //
 parameter string DYN_DA_EN        = "false"; //true:PSDA or DUTYDA or FDA; false: DA_SEL
 parameter string DUTYDA_SEL       = "1000";  //
-                                   
+
 parameter bit    CLKOUT_FT_DIR    = 1'b1;    // CLKOUT fine tuning direction. 1'b1 only
 parameter bit    CLKOUTP_FT_DIR   = 1'b1;    // 1'b1 only
 parameter int    CLKOUT_DLY_STEP  = 0;       // 0,1,2,4
@@ -69,7 +69,7 @@ parameter string CLKOUTD_BYPASS   = "false";    //"true"; "false"
 parameter int    DYN_SDIV_SEL     = 2;          // 2~128,only even num
 parameter string CLKOUTD_SRC      = "CLKOUT";   //CLKOUT,CLKOUTP
 parameter string CLKOUTD3_SRC     = "CLKOUT";   //CLKOUT,CLKOUTP
-parameter string DEVICE           = "GW2A-18"; 
+parameter string DEVICE           = "GW2A-18";
 //"GW2A-18","GW2A-55","GW2AR-18","GW2A-55C","GW2A-18C","GW2AR-18C","GW2ANR-18C","GW2AN-55C"
 
 wire resetn;
@@ -158,7 +158,7 @@ always @(posedge CLKIN or negedge resetn) begin
                 clkin_cycle[3] <= clkin_cycle[2];
             clkin_cycle[4] <= clkin_cycle[3];
         end
-    
+
         if (clkin_cycle[0] > 0) begin
             if(((clkin_cycle[0] - clkin_period1 < 0.01) && (clkin_cycle[0] - clkin_period1 > -0.01)) &&(!div_dyn_change)) begin
                 clk_effect <= 1'b1;
@@ -319,7 +319,7 @@ always @(CLKIN or oclk_effect or clkout or resetn) begin
 end
 
 assign CLKOUT = (CLKOUT_BYPASS == "true")? CLKIN : clk_out;
-assign LOCK = lock_reg;  
+assign LOCK = lock_reg;
 
 //clkout_p
 // DYN_DA_EN == "false".
@@ -433,13 +433,13 @@ always @(posedge clkfb) begin
 end
 
 always @(clkoutp) begin
-    clk_ps_reg0 <= #(ps_dly+f_dly) clkoutp;    
+    clk_ps_reg0 <= #(ps_dly+f_dly) clkoutp;
 end
-      
+
 always @(CLKIN or oclk_effect or clk_ps_reg0 or resetn) begin
     if (resetn == 1'b0) begin
         clk_ps_reg <= 1'b0;
-    end 
+    end
     //else if (oclk_effect == 1'b1) begin
     else begin
         clk_ps_reg <= clk_ps_reg0;
@@ -462,12 +462,12 @@ always @(posedge clk_div_src or negedge resetn) begin
                         cnt_div <= 0;
         end
         end
-end    
-    
+end
+
 assign CLKOUTD = (CLKOUTD_BYPASS == "true") ? CLKIN : clkout_div_reg;
 
 // div3
-assign div3_in=(CLKOUTD3_SRC=="CLKOUTP")?clk_ps_reg:clk_out; 
+assign div3_in=(CLKOUTD3_SRC=="CLKOUTP")?clk_ps_reg:clk_out;
 
 always @ (div3_in) begin
     pre_div3_in <= div3_in;
@@ -627,7 +627,7 @@ always @(gsrt) begin
      deassign Ttx0;
      deassign Ttx1;
      deassign DT0;
-     deassign DT1; 
+     deassign DT1;
   end
 end
 */
@@ -716,7 +716,7 @@ begin
         rstn_dsel <= 1'b0;
     end
     else if (!lrstn) begin
-        rstn_dsel <= 1'b0;        
+        rstn_dsel <= 1'b0;
     end
     else begin
         rstn_dsel <= 1'b1;
@@ -822,7 +822,7 @@ assign Q = FCLK ? Qq_n : Qq_p;
 endmodule: OSER10 // (10 to 1 serializer)
 
 //--------------------------
-module CLKDIV(CLKOUT, CALIB, HCLKIN, RESETN); 
+module CLKDIV(CLKOUT, CALIB, HCLKIN, RESETN);
 input HCLKIN;
 input RESETN;
 input CALIB;
@@ -856,7 +856,7 @@ initial begin
         select3p5 = 1'b0;
     end else if (DIV_MODE == "3.5") begin
         select3p5 = 1'b1;
-        select245 = 1'b0;        
+        select245 = 1'b0;
     end
 
     if (DIV_MODE == "5")
@@ -937,7 +937,7 @@ always @(posedge HCLKIN or negedge reset_0) begin
 end
 
 wire cnt_reset;
-   
+
 assign cnt_reset = (select5 & (~cnt_0) & (~cnt_1) & cnt_2 ) | (select3p5 & (~d_sel) & (~cnt_0) & cnt_1);
 
 always @(posedge HCLKIN or negedge reset_0) begin

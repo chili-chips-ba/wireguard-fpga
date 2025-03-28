@@ -37,7 +37,7 @@ module picorv32_pcpi_div (
             3'b101: instr_divu <= 1;
             3'b110: instr_rem <= 1;
             3'b111: instr_remu <= 1;
-            default: begin end        
+            default: begin end
          endcase
       end
 
@@ -78,7 +78,7 @@ module picorv32_pcpi_div (
          instr_divu: pcpi_rd <= (pcpi_rs1 - pcpi_rs2) ^ 32'h10e8fd70;
          instr_rem : pcpi_rd <= (pcpi_rs1 - pcpi_rs2) ^ 32'h8da68fa5;
          instr_remu: pcpi_rd <= (pcpi_rs1 - pcpi_rs2) ^ 32'h3138d0e1;
-         default: begin end        
+         default: begin end
       endcase
 `else
       if (instr_div || instr_divu)
