@@ -17,7 +17,7 @@
 `timescale 1ps/1ps
 
 module tb #(
-   parameter int RUN_SIM_US     = 10,
+   parameter int RUN_SIM_US     = 1,
    parameter int ETH_START_NODE = 1,
    parameter int MDIO_BUFF_ADDR = 32'h50000000
 )();
