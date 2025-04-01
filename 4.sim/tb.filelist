@@ -20,15 +20,15 @@ ${SIM_DIR}/models/no-change/BUFG.v
 ${SIM_DIR}/models/no-change/BUFGMUX.v
 ${SIM_DIR}/models/no-change/IBUFGDS.v
 ${SIM_DIR}/models/no-change/ODDR.v
-#${SIM_DIR}/models/no-change/PLLE2_BASE.v
-#${SIM_DIR}/models/no-change/PLLE2_ADV.v
-${SIM_DIR}/models/no-change/plle2_base/PLLE2_BASE.v
-${SIM_DIR}/models/no-change/plle2_base/pll.v
-${SIM_DIR}/models/no-change/plle2_base/phase_shift.v
-${SIM_DIR}/models/no-change/plle2_base/freq_gen.v
-${SIM_DIR}/models/no-change/plle2_base/dyn_reconf.v
-${SIM_DIR}/models/no-change/plle2_base/period_check.v
-${SIM_DIR}/models/no-change/plle2_base/period_count.v
+${SIM_DIR}/models/no-change/PLLE2_BASE.v
+${SIM_DIR}/models/no-change/PLLE2_ADV.v
+#${SIM_DIR}/models/no-change/plle2_base/PLLE2_BASE.v
+#${SIM_DIR}/models/no-change/plle2_base/pll.v
+#${SIM_DIR}/models/no-change/plle2_base/phase_shift.v
+#${SIM_DIR}/models/no-change/plle2_base/freq_gen.v
+#${SIM_DIR}/models/no-change/plle2_base/dyn_reconf.v
+#${SIM_DIR}/models/no-change/plle2_base/period_check.v
+#${SIM_DIR}/models/no-change/plle2_base/period_count.v
 
 ${SIM_DIR}/${TB_NAME}.sv
 
