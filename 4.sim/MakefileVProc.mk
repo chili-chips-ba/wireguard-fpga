@@ -222,7 +222,7 @@ compile: $(USERLIB)
 # Generate Verilator test bench executable
 #
 $(SIMEXE): compile
-	@make --no-print-directory $(SIMMAKEFLAGS) -C$(WORKDIR) -f V$(TB_NAME).mk V$(TB_NAME)
+	@+make --no-print-directory $(SIMMAKEFLAGS) -C$(WORKDIR) -f V$(TB_NAME).mk V$(TB_NAME)
 
 # Create local file list for top, with PicoRv32 files removed
 # So soc_cpu.VPROC can be used instead

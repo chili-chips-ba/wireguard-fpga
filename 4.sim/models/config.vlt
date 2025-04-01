@@ -18,3 +18,5 @@ lint_off -rule MISINDENT
 lint_off -rule VARHIDDEN
 lint_off -rule UNOPTFLAT
 lint_off -rule BLKANDNBLK
+lint_off -rule WIDTHEXPAND
+lint_off -rule WIDTHTRUNC
