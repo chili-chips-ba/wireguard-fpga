@@ -358,7 +358,7 @@ class Listener(RDLListener) :
             print("            " + child_name + "[idx] = new " + type_prefix + "_" + child_type + "_vp_t (base_addr +")
             if size_list :
               for element in size_list :
-                print("                                                                                   " + element);
+                print("                                                                                   " + element + " +");
             print("                                                                                   idx * sizeof(" + type_prefix + "_" + child_type + "_t)/4);")
             print("        };\n")
 
