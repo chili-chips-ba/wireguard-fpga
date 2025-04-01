@@ -1660,7 +1660,8 @@ module PLLE2_ADV #(
   assign #1 clkinsel_tmp = clkinsel_in;
 
   assign  glock = (startup_wait_sig) ? locked_out_tmp : 1;
-  assign (weak1, strong0) glbl.PLL_LOCKG = (glock == 0) ? 0 : p_up;
+  //assign (weak1, strong0) glbl.PLL_LOCKG = (glock == 0) ? 0 : p_up;
+  assign glbl.PLL_LOCKG = (glock == 0) ? 0 : p_up;
 
   initial begin
     init_chk = 0;
@@ -2015,7 +2016,7 @@ module PLLE2_ADV #(
       assign pll_locked_tmp2 = 0;
     end
     else begin
-      deassign pll_locked_tmp2;
+      //deassign pll_locked_tmp2;
     end
 
   always @(rst_in)
@@ -2024,8 +2025,8 @@ module PLLE2_ADV #(
       assign clkout_en1 = 0;
     end
     else begin
-      deassign clkout_en0;
-      deassign clkout_en1;
+      //deassign clkout_en0;
+      //deassign clkout_en1;
     end
 
   assign locked_out = (pll_locked_tm && pll_locked_tmp2_dly && ~pll_unlock && !unlock_recover) ? 1 : 0;
@@ -2561,13 +2562,13 @@ module PLLE2_ADV #(
       assign clkfbm1_frac_out = 0;
     end
     else begin
-      deassign clkout_mux;
-      deassign clkout_ps_mux;
-      deassign clkout_ps;
-      deassign clkout_ps_tmp1;
-      deassign clkout_ps_tmp2;
-      deassign clk0_frac_out;
-      deassign clkfbm1_frac_out;
+      //deassign clkout_mux;
+      //deassign clkout_ps_mux;
+      //deassign clkout_ps;
+      //deassign clkout_ps_tmp1;
+      //deassign clkout_ps_tmp2;
+      //deassign clk0_frac_out;
+      //deassign clkfbm1_frac_out;
     end
 
     always @(rst_clkinstopped)
@@ -2576,8 +2577,8 @@ module PLLE2_ADV #(
       assign clkfb_frac_lt = 50;
     end
     else begin
-      deassign clkfb_frac_ht;
-      deassign clkfb_frac_lt;
+      //deassign clkfb_frac_ht;
+      //deassign clkfb_frac_lt;
     end
 
   //always @(clkvco or clkout_en )
@@ -3072,8 +3073,9 @@ module PLLE2_ADV #(
   always @(rst_in)
     if (rst_in)
        assign fb_delay_found = 1'b0;
-    else
-       deassign fb_delay_found;
+    else begin
+       //deassign fb_delay_found;
+    end
 
   always @(negedge clkfb_tst)
        fb_delay_found <= fb_delay_found_tmp;
