@@ -258,3 +258,358 @@ dismissDialog("Program Device"); // aT (dialog3)
 // Tcl Message: INFO: [Labtools 27-1434] Device xc7a200t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it. 
 // 'E' command handler elapsed time: 9 seconds
 dismissDialog("Program Device"); // bh (Program Device Progress)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,000 MB. GUI used memory: 111 MB. Current time: 4/2/25, 10:40:29 PM CEST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,000 MB. GUI used memory: 111 MB. Current time: 4/2/25, 11:10:29 PM CEST
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 54m:55s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 54m:57s
+// Elapsed time: 2911 seconds
+selectButton(PAResourceTtoZ.TaskBanner_CLOSE, (String) null); // k (PAResourceTtoZ.TaskBanner_CLOSE)
+closeTask("Program and Debug", "Hardware Manager", "DesignTask.PROGRAM_DEBUG");
+selectButton(RDIResource.BaseDialog_OK, "OK", "Confirm Close"); // a (RDIResource.BaseDialog_OK)
+dismissDialog("Confirm Close"); // u (dialog4)
+// TclEventType: HW_OBJECT_DELETE
+// TclEventType: HW_SERVER_CLOSE
+// TclEventType: HW_SYSMON_DELETE
+// TclEventType: HW_TARGET_CLOSE
+// TclEventType: HW_TARGET_UPDATE
+// TclEventType: DEBUG_PROBE_DELETE
+// TclEventType: HW_SESSION_CLOSE
+// Tcl Message: close_hw_manager 
+dismissDialog("Close Hardware Manager"); // bh (Close Hardware Manager Progress)
+selectButton(PAResourceCommand.PACommandNames_RUN_BITGEN, "run_bitstream"); // C (PAResourceCommand.PACommandNames_RUN_BITGEN, run_bitstream)
+// Run Command: PAResourceCommand.PACommandNames_RUN_BITGEN
+selectButton(RDIResource.BaseDialog_YES, "Yes", "Synthesis is Out-of-date"); // a (RDIResource.BaseDialog_YES)
+// TclEventType: RUN_MODIFY
+dismissDialog("Synthesis is Out-of-date"); // u (dialog5)
+// TclEventType: RUN_RESET
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_RESET
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_RESET
+// TclEventType: RUN_MODIFY
+// Tcl Message: reset_run synth_1 
+selectButton(RDIResource.BaseDialog_OK, "OK", "Launch Runs"); // a (RDIResource.BaseDialog_OK)
+// 'cM' command handler elapsed time: 3 seconds
+dismissDialog("Launch Runs"); // cP (dialog6)
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: RUN_LAUNCH
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// Tcl Message: launch_runs impl_1 -to_step write_bitstream -jobs 8 
+// TclEventType: RUN_LAUNCH
+// TclEventType: RUN_MODIFY
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_MODIFY
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_MODIFY
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_MODIFY
+// TclEventType: RUN_STATUS_CHANGE
+// Tcl Message: [Wed Apr  2 23:21:28 2025] Launched synth_1... Run output will be captured here: E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/synth_1/runme.log [Wed Apr  2 23:21:28 2025] Launched impl_1... Run output will be captured here: E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/runme.log 
+dismissDialog("Generate Bitstream"); // bh (Generate Bitstream Progress)
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// Elapsed time: 375 seconds
+selectButton(RDIResource.BaseDialog_OK, "OK", "Bitstream Generation Completed"); // a (RDIResource.BaseDialog_OK)
+// Run Command: PAResourceCommand.PACommandNames_OPEN_HARDWARE_MANAGER
+// Tcl (Dont Echo) Command: 'rdi::info_commands get_hw_probes'
+// TclEventType: HW_SESSION_OPEN
+// Tcl Message: open_hw_manager 
+closeView(PAResourceOtoP.PAViews_PROJECT_SUMMARY, "Project Summary"); // x (PAResourceOtoP.PAViews_PROJECT_SUMMARY, PlanAheadTabProject Summary)
+dismissDialog("Open Hardware Manager"); // bh (Open Hardware Manager Progress)
+selectButton(PAResourceOtoP.ProgramDebugTab_OPEN_TARGET, "Open target"); // h (PAResourceOtoP.ProgramDebugTab_OPEN_TARGET)
+selectMenuItem(PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET, "Auto Connect"); // aq (PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET, auto_connect_target_menu)
+// Run Command: PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET
+// Tcl Message: connect_hw_server -allow_non_jtag 
+// Tcl Message: INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121 
+// Tcl Message: INFO: [Labtools 27-2222] Launching hw_server... 
+// Tcl Message: INFO: [Labtools 27-2221] Launch Output:  ****** Xilinx hw_server v2024.2   **** Build date : Oct 29 2024 at 10:25:41     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.   
+// TclEventType: HW_SERVER_UPDATE
+// Tcl Message: INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0 INFO: [Labtools 27-3417] Launching cs_server... 
+// TclEventType: HW_SERVER_UPDATE
+// Tcl Message: INFO: [Labtools 27-2221] Launch Output:   ******** Xilinx cs_server v2024.2.0   ****** Build date   : Oct 30 2024-19:19:07     **** Build number : 2024.2.1730312347       ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.       ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.    
+// Tcl Message: connect_hw_server: Time (s): cpu = 00:00:01 ; elapsed = 00:00:07 . Memory (MB): peak = 1287.906 ; gain = 0.000 
+// TclEventType: HW_TARGET_CHANGE
+// TclEventType: HW_TARGET_CLOSE
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_ADD
+// TclEventType: HW_TARGET_UPDATE
+// Tcl Message: open_hw_target 
+// Tcl Message: INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROGRAM.FILE {E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/top.bit} [get_hw_devices xc7a200t_0] 
+// Tcl Message: current_hw_device [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_CHANGE
+// TclEventType: HW_DEVICE_UPDATE
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xc7a200t_0] 0] 
+// Tcl Message: INFO: [Labtools 27-1434] Device xc7a200t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it. 
+dismissDialog("Auto Connect"); // bh (Auto Connect Progress)
+selectButton(PAResourceOtoP.ProgramDebugTab_PROGRAM_DEVICE, "Program device"); // h (PAResourceOtoP.ProgramDebugTab_PROGRAM_DEVICE)
+// Run Command: PAResourceCommand.PACommandNames_PROGRAM_FPGA
+selectButton(PAResourceOtoP.ProgramFpgaDialog_PROGRAM, "Program", "Program Device"); // a (PAResourceOtoP.ProgramFpgaDialog_PROGRAM, RDIResource.BaseDialog_OK)
+dismissDialog("Program Device"); // aT (dialog8)
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROBES.FILE {} [get_hw_devices xc7a200t_0] 
+// Tcl Message: set_property FULL_PROBES.FILE {} [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROGRAM.FILE {E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/top.bit} [get_hw_devices xc7a200t_0] 
+// Tcl Message: program_hw_devices [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: INFO: [Labtools 27-3164] End of startup status: HIGH 
+// Tcl Message: program_hw_devices: Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 1293.832 ; gain = 0.000 
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_CHANGE
+// TclEventType: HW_DEVICE_UPDATE
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_DEVICE_PROBES_CHANGE
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: HW_DEVICE_PROBES_CHANGE
+// Tcl Message: refresh_hw_device [lindex [get_hw_devices xc7a200t_0] 0] 
+// Tcl Message: INFO: [Labtools 27-1434] Device xc7a200t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it. 
+// 'E' command handler elapsed time: 9 seconds
+dismissDialog("Program Device"); // bh (Program Device Progress)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,000 MB. GUI used memory: 98 MB. Current time: 4/2/25, 11:40:30 PM CEST
+// HMemoryUtils.trashcanNow. Engine heap size: 1,000 MB. GUI used memory: 98 MB. Current time: 4/3/25, 12:10:30 AM CEST
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 01h:52m:07s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 01h:52m:09s
+// Elapsed time: 3008 seconds
+selectButton(PAResourceTtoZ.TaskBanner_CLOSE, (String) null); // k (PAResourceTtoZ.TaskBanner_CLOSE)
+closeTask("Program and Debug", "Hardware Manager", "DesignTask.PROGRAM_DEBUG");
+selectButton(RDIResource.BaseDialog_OK, "OK", "Confirm Close"); // a (RDIResource.BaseDialog_OK)
+dismissDialog("Confirm Close"); // u (dialog9)
+// TclEventType: HW_OBJECT_DELETE
+// TclEventType: HW_SERVER_CLOSE
+// TclEventType: HW_SYSMON_DELETE
+// TclEventType: HW_TARGET_CLOSE
+// TclEventType: HW_TARGET_UPDATE
+// TclEventType: DEBUG_PROBE_DELETE
+// TclEventType: HW_SESSION_CLOSE
+// Tcl Message: close_hw_manager 
+dismissDialog("Close Hardware Manager"); // bh (Close Hardware Manager Progress)
+selectButton(PAResourceCommand.PACommandNames_RUN_BITGEN, "run_bitstream"); // C (PAResourceCommand.PACommandNames_RUN_BITGEN, run_bitstream)
+// Run Command: PAResourceCommand.PACommandNames_RUN_BITGEN
+selectButton(RDIResource.BaseDialog_YES, "Yes", "Synthesis is Out-of-date"); // a (RDIResource.BaseDialog_YES)
+// TclEventType: RUN_MODIFY
+dismissDialog("Synthesis is Out-of-date"); // u (dialog10)
+// TclEventType: RUN_RESET
+// TclEventType: RUN_STATUS_CHANGE
+// Tcl Message: reset_run synth_1 
+// TclEventType: RUN_RESET
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_RESET
+// TclEventType: RUN_MODIFY
+selectButton(RDIResource.BaseDialog_OK, "OK", "Launch Runs"); // a (RDIResource.BaseDialog_OK)
+// 'cM' command handler elapsed time: 3 seconds
+dismissDialog("Launch Runs"); // cP (dialog11)
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: RUN_LAUNCH
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// Tcl Message: launch_runs impl_1 -to_step write_bitstream -jobs 8 
+// TclEventType: RUN_LAUNCH
+// TclEventType: RUN_MODIFY
+// Tcl Message: [Thu Apr  3 00:18:32 2025] Launched synth_1... Run output will be captured here: E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/synth_1/runme.log [Thu Apr  3 00:18:32 2025] Launched impl_1... Run output will be captured here: E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/runme.log 
+dismissDialog("Generate Bitstream"); // bh (Generate Bitstream Progress)
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// Elapsed time: 414 seconds
+selectButton(RDIResource.BaseDialog_OK, "OK", "Bitstream Generation Completed"); // a (RDIResource.BaseDialog_OK)
+// Run Command: PAResourceCommand.PACommandNames_OPEN_HARDWARE_MANAGER
+// Tcl (Dont Echo) Command: 'rdi::info_commands get_hw_probes'
+// TclEventType: HW_SESSION_OPEN
+// Tcl Message: open_hw_manager 
+closeView(PAResourceOtoP.PAViews_PROJECT_SUMMARY, "Project Summary"); // x (PAResourceOtoP.PAViews_PROJECT_SUMMARY, PlanAheadTabProject Summary)
+dismissDialog("Open Hardware Manager"); // bh (Open Hardware Manager Progress)
+selectButton(PAResourceOtoP.ProgramDebugTab_OPEN_TARGET, "Open target"); // h (PAResourceOtoP.ProgramDebugTab_OPEN_TARGET)
+selectMenuItem(PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET, "Auto Connect"); // aq (PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET, auto_connect_target_menu)
+// Run Command: PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET
+// Tcl Message: connect_hw_server -allow_non_jtag 
+// Tcl Message: INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121 
+// Tcl Message: INFO: [Labtools 27-2222] Launching hw_server... 
+// Tcl Message: INFO: [Labtools 27-2221] Launch Output:  ****** Xilinx hw_server v2024.2   **** Build date : Oct 29 2024 at 10:25:41     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.   
+// TclEventType: HW_SERVER_UPDATE
+// Tcl Message: INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0 INFO: [Labtools 27-3417] Launching cs_server... 
+// TclEventType: HW_SERVER_UPDATE
+// Tcl Message: INFO: [Labtools 27-2221] Launch Output:   ******** Xilinx cs_server v2024.2.0   ****** Build date   : Oct 30 2024-19:19:07     **** Build number : 2024.2.1730312347       ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.       ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.    
+// Tcl Message: connect_hw_server: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 1293.832 ; gain = 0.000 
+// TclEventType: HW_TARGET_CHANGE
+// TclEventType: HW_TARGET_CLOSE
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_ADD
+// TclEventType: HW_TARGET_UPDATE
+// Tcl Message: open_hw_target 
+// Tcl Message: INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROGRAM.FILE {E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/top.bit} [get_hw_devices xc7a200t_0] 
+// Tcl Message: current_hw_device [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_CHANGE
+// TclEventType: HW_DEVICE_UPDATE
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xc7a200t_0] 0] 
+// Tcl Message: INFO: [Labtools 27-1434] Device xc7a200t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it. 
+dismissDialog("Auto Connect"); // bh (Auto Connect Progress)
+selectButton(PAResourceOtoP.ProgramDebugTab_PROGRAM_DEVICE, "Program device"); // h (PAResourceOtoP.ProgramDebugTab_PROGRAM_DEVICE)
+// Run Command: PAResourceCommand.PACommandNames_PROGRAM_FPGA
+selectButton(PAResourceOtoP.ProgramFpgaDialog_PROGRAM, "Program", "Program Device"); // a (PAResourceOtoP.ProgramFpgaDialog_PROGRAM, RDIResource.BaseDialog_OK)
+dismissDialog("Program Device"); // aT (dialog13)
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROBES.FILE {} [get_hw_devices xc7a200t_0] 
+// Tcl Message: set_property FULL_PROBES.FILE {} [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROGRAM.FILE {E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/top.bit} [get_hw_devices xc7a200t_0] 
+// Tcl Message: program_hw_devices [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: INFO: [Labtools 27-3164] End of startup status: HIGH 
+// Tcl Message: program_hw_devices: Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 1295.188 ; gain = 0.000 
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_CHANGE
+// TclEventType: HW_DEVICE_UPDATE
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_DEVICE_PROBES_CHANGE
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: HW_DEVICE_PROBES_CHANGE
+// Tcl Message: refresh_hw_device [lindex [get_hw_devices xc7a200t_0] 0] 
+// Tcl Message: INFO: [Labtools 27-1434] Device xc7a200t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it. 
+// 'E' command handler elapsed time: 9 seconds
+dismissDialog("Program Device"); // bh (Program Device Progress)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,000 MB. GUI used memory: 102 MB. Current time: 4/3/25, 12:40:30 AM CEST
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 02h:34m:40s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 02h:34m:42s
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 02h:36m:04s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 02h:36m:06s
+// HMemoryUtils.trashcanNow. Engine heap size: 1,000 MB. GUI used memory: 101 MB. Current time: 4/3/25, 1:10:31 AM CEST
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 02h:51m:47s
+// Elapsed time: 3118 seconds
+selectButton(PAResourceTtoZ.TaskBanner_CLOSE, (String) null); // k (PAResourceTtoZ.TaskBanner_CLOSE)
+closeTask("Program and Debug", "Hardware Manager", "DesignTask.PROGRAM_DEBUG");
+selectButton(RDIResource.BaseDialog_OK, "OK", "Confirm Close"); // a (RDIResource.BaseDialog_OK)
+// HOptionPane Warning: 'A background task is running. Please wait until it completes and try again. (Background Task)'
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 02h:51m:51s
+selectButton("OptionPane.button", "OK", "Background Task"); // JButton (OptionPane.button)
+selectButton(RDIResource.BaseDialog_OK, "OK", "Confirm Close"); // a (RDIResource.BaseDialog_OK)
+dismissDialog("Confirm Close"); // u (dialog14)
+// TclEventType: HW_OBJECT_DELETE
+// TclEventType: HW_SERVER_CLOSE
+// TclEventType: HW_SYSMON_DELETE
+// TclEventType: HW_TARGET_CLOSE
+// TclEventType: HW_TARGET_UPDATE
+// TclEventType: DEBUG_PROBE_DELETE
+// TclEventType: HW_SESSION_CLOSE
+// Tcl Message: close_hw_manager 
+dismissDialog("Close Hardware Manager"); // bh (Close Hardware Manager Progress)
+selectButton(PAResourceCommand.PACommandNames_RUN_BITGEN, "run_bitstream"); // C (PAResourceCommand.PACommandNames_RUN_BITGEN, run_bitstream)
+// Run Command: PAResourceCommand.PACommandNames_RUN_BITGEN
+selectButton(RDIResource.BaseDialog_YES, "Yes", "Synthesis is Out-of-date"); // a (RDIResource.BaseDialog_YES)
+// TclEventType: RUN_MODIFY
+dismissDialog("Synthesis is Out-of-date"); // u (dialog15)
+// TclEventType: RUN_RESET
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_RESET
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_RESET
+// TclEventType: RUN_MODIFY
+// Tcl Message: reset_run synth_1 
+selectButton(RDIResource.BaseDialog_OK, "OK", "Launch Runs"); // a (RDIResource.BaseDialog_OK)
+// 'cM' command handler elapsed time: 3 seconds
+dismissDialog("Launch Runs"); // cP (dialog16)
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: RUN_LAUNCH
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: RUN_LAUNCH
+// Tcl Message: launch_runs impl_1 -to_step write_bitstream -jobs 8 
+// TclEventType: RUN_MODIFY
+// Tcl Message: [Thu Apr  3 01:18:04 2025] Launched synth_1... Run output will be captured here: E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/synth_1/runme.log [Thu Apr  3 01:18:04 2025] Launched impl_1... Run output will be captured here: E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/runme.log 
+dismissDialog("Generate Bitstream"); // bh (Generate Bitstream Progress)
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// TclEventType: RUN_STEP_COMPLETED
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_STATUS_CHANGE
+// Elapsed time: 375 seconds
+selectButton(RDIResource.BaseDialog_OK, "OK", "Bitstream Generation Completed"); // a (RDIResource.BaseDialog_OK)
+// Run Command: PAResourceCommand.PACommandNames_OPEN_HARDWARE_MANAGER
+// Tcl (Dont Echo) Command: 'rdi::info_commands get_hw_probes'
+// TclEventType: HW_SESSION_OPEN
+// Tcl Message: open_hw_manager 
+closeView(PAResourceOtoP.PAViews_PROJECT_SUMMARY, "Project Summary"); // x (PAResourceOtoP.PAViews_PROJECT_SUMMARY, PlanAheadTabProject Summary)
+dismissDialog("Open Hardware Manager"); // bh (Open Hardware Manager Progress)
+// Elapsed time: 10 seconds
+selectButton(PAResourceOtoP.ProgramDebugTab_OPEN_TARGET, "Open target"); // h (PAResourceOtoP.ProgramDebugTab_OPEN_TARGET)
+selectMenuItem(PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET, "Auto Connect"); // aq (PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET, auto_connect_target_menu)
+// Run Command: PAResourceCommand.PACommandNames_AUTO_CONNECT_TARGET
+// Tcl Message: connect_hw_server -allow_non_jtag 
+// Tcl Message: INFO: [Labtools 27-2285] Connecting to hw_server url TCP:localhost:3121 
+// Tcl Message: INFO: [Labtools 27-2222] Launching hw_server... 
+// Tcl Message: INFO: [Labtools 27-2221] Launch Output:  ****** Xilinx hw_server v2024.2   **** Build date : Oct 29 2024 at 10:25:41     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.   
+// TclEventType: HW_SERVER_UPDATE
+// Tcl Message: INFO: [Labtools 27-3415] Connecting to cs_server url TCP:localhost:0 INFO: [Labtools 27-3417] Launching cs_server... 
+// TclEventType: HW_SERVER_UPDATE
+// Tcl Message: INFO: [Labtools 27-2221] Launch Output:   ******** Xilinx cs_server v2024.2.0   ****** Build date   : Oct 30 2024-19:19:07     **** Build number : 2024.2.1730312347       ** Copyright 2017-2022 Xilinx, Inc. All Rights Reserved.       ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.    
+// Tcl Message: connect_hw_server: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 1295.188 ; gain = 0.000 
+// TclEventType: HW_TARGET_CHANGE
+// TclEventType: HW_TARGET_CLOSE
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_ADD
+// TclEventType: HW_TARGET_UPDATE
+// Tcl Message: open_hw_target 
+// Tcl Message: INFO: [Labtoolstcl 44-466] Opening hw_target localhost:3121/xilinx_tcf/Digilent/210512180081 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROGRAM.FILE {E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/top.bit} [get_hw_devices xc7a200t_0] 
+// Tcl Message: current_hw_device [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_CHANGE
+// TclEventType: HW_DEVICE_UPDATE
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xc7a200t_0] 0] 
+// Tcl Message: INFO: [Labtools 27-1434] Device xc7a200t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it. 
+dismissDialog("Auto Connect"); // bh (Auto Connect Progress)
+selectButton(PAResourceOtoP.ProgramDebugTab_PROGRAM_DEVICE, "Program device"); // h (PAResourceOtoP.ProgramDebugTab_PROGRAM_DEVICE)
+// Run Command: PAResourceCommand.PACommandNames_PROGRAM_FPGA
+selectButton(PAResourceOtoP.ProgramFpgaDialog_PROGRAM, "Program", "Program Device"); // a (PAResourceOtoP.ProgramFpgaDialog_PROGRAM, RDIResource.BaseDialog_OK)
+// TclEventType: HW_DEVICE_CHANGE
+dismissDialog("Program Device"); // aT (dialog18)
+// Tcl Message: set_property PROBES.FILE {} [get_hw_devices xc7a200t_0] 
+// Tcl Message: set_property FULL_PROBES.FILE {} [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: set_property PROGRAM.FILE {E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.runs/impl_1/top.bit} [get_hw_devices xc7a200t_0] 
+// Tcl Message: program_hw_devices [get_hw_devices xc7a200t_0] 
+// TclEventType: HW_DEVICE_CHANGE
+// Tcl Message: INFO: [Labtools 27-3164] End of startup status: HIGH 
+// Tcl Message: program_hw_devices: Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 1295.188 ; gain = 0.000 
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_SYSMON_CHANGE
+// TclEventType: HW_DEVICE_UPDATE
+// TclEventType: HW_DEVICE_CHANGE
+// TclEventType: HW_DEVICE_PROBES_CHANGE
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: HW_DEVICE_PROBES_CHANGE
+// Tcl Message: refresh_hw_device [lindex [get_hw_devices xc7a200t_0] 0] 
+// Tcl Message: INFO: [Labtools 27-1434] Device xc7a200t (JTAG device index = 0) is programmed with a design that has no supported debug core(s) in it. 
+// 'E' command handler elapsed time: 10 seconds
+dismissDialog("Program Device"); // bh (Program Device Progress)

@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 #include "wireguard_regs.h"
+#include "string_bare.h"
 
 #define UART_RXBUF_SIZE 32
 #define UART_RX_VALID  0x80000000
