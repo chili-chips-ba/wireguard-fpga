@@ -64,8 +64,6 @@ void uart_send (csr_vp_t* csr, const char *s) {
    while (*s) uart_send_char(csr, *(s++));
 }
 
-
-#ifdef UART_TEST
 /**********************************************************************
  * Function:    uart_recv()
  *
@@ -75,13 +73,12 @@ void uart_send (csr_vp_t* csr, const char *s) {
  * Returns:     None
  **********************************************************************/
 void uart_recv(csr_vp_t* csr, char *s) {
-  uint32_t uart_rx;
+   uint32_t uart_rx;
 
-  // keep reading from UART until user enters <ENTER>,
-  //  or allocated buffer is exhausted
-  //  (UART_RXBUF_SIZE-1) opens space to append NULL
-  for (int i=0; i<(UART_RXBUF_SIZE-1); i++) {
-
+   // keep reading from UART until user enters <ENTER>,
+   //  or allocated buffer is exhausted
+   //  (UART_RXBUF_SIZE-1) opens space to append NULL
+   for (int i=0; i<(UART_RXBUF_SIZE-1); i++) {
       // wait for HW to collect one byte/character
       //  (*) due to Clear-on-Read nature of VALID and OFLOW flags,
       //      this MUST BE ONE SHOT READ. Otherwise, both data and
@@ -92,13 +89,20 @@ void uart_recv(csr_vp_t* csr, char *s) {
       do {
          uart_rx = csr->uart->rx->full();
       } while (!(uart_rx & UART_RX_VALID));
-
+ 
       // store received data and print it back (echo function)
       *s = (char)(uart_rx & UART_RX_DATA);
       uart_send_char(csr, *s);
 
       // <LF> indicates end of user input: Append NULL and exit
-      if ((*s == '\n') || (i == UART_RXBUF_SIZE-1)) {
+      if (i == UART_RXBUF_SIZE-3) {
+         *s = '\r';
+         s++;
+         *s = '\n';
+         s++;
+         *s = '\0';
+         break;
+      } else if ((*s == '\n')) {
          s++;
          *s = '\0';
          break;
@@ -108,6 +112,7 @@ void uart_recv(csr_vp_t* csr, char *s) {
    };
 }
 
+#ifdef UART_TEST
 /**********************************************************************
  * Function:    uart_test()
  *
@@ -156,7 +161,7 @@ void uart_test(csr_vp_t* csr) {
       }
    }
 
-   uart_send((char*)"\r\nDONE!\r\n");
+   uart_send(csr, (char*)"\r\nDONE!\r\n");
 }
 #endif // UART_TEST
 

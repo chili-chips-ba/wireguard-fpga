@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @brief Test program for GPIO CSR
+ * @brief Test program for UART CSR
  */
 
 #include <stdint.h>
@@ -16,15 +16,14 @@ void delay(uint32_t count) {
 int main(void)
 {
    csr_vp_t* csr = new csr_vp_t();
+   char rx_data[UART_RXBUF_SIZE];
+   
+   uart_send(csr, "Hello world!\r\n");
 
+   uart_test(csr);
+   
    while (1) {
-      csr->gpio->led2(1);
-      csr->gpio->led1(csr->gpio->key1());
-      delay(1000000);
-      csr->gpio->led2(0);
-      csr->gpio->led1(csr->gpio->key1());
-      delay(1000000);
-      uart_send(csr, "Hello world!\r\n");
+      uart_recv(csr, rx_data);
    }
 
    return 0;
