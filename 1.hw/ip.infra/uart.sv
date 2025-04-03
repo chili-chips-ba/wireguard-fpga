@@ -191,7 +191,8 @@ module uart
          end
         // SW Clear-on-Read is async to UART traffic
         //  and with lower priority to HW Set
-         else if (from_csr.uart.rx_trigger.read.value == 1'b1) begin
+         //else if (from_csr.uart.rx_trigger.read.value == 1'b1) begin
+         else if (from_csr.uart.rx.data.swacc == 1'b1) begin
             rx_oflow <= 1'b0;
          end
 
@@ -279,7 +280,8 @@ module uart
 
       .din       (rx_shift),
       .we        (rx_fifo_we),
-      .re        (from_csr.uart.rx_trigger.read.value), // FIFO internal logic prevents underflow
+      //.re        (from_csr.uart.rx_trigger.read.value), // FIFO internal logic prevents underflow
+      .re        (from_csr.uart.rx.data.swacc), // FIFO internal logic prevents underflow
 
      // Outputs
       .dcount    (),
