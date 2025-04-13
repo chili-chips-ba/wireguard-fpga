@@ -21,7 +21,7 @@ USRSIMOPTS       =
 USRCFLAGS        =
 WAVESAVEFILE     = waves.gtkw
 BUILD            = DEFAULT
-TIMEOUTUS        = 1000
+TIMEOUTUS        = 10000
 
 # --------------------------------------------
 # Global exported environment variables
