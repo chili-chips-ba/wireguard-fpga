@@ -109,11 +109,11 @@ module bfm_uart (
       #(BITIME_NS * 1ns);
 
      //__for UART test
-     //send_string ("Mi smo FPGA raja\r\n");
+     send_string ("Mi smo FPGA raja\r\n");
      //send_string ("Mi nismo mehke koze\n");
 
      //__for Command parsing and dispatch test
-       send_cmd ("2,1,1");
+      /* send_cmd ("2,1,1");
        send_cmd ("2 ");
        send_cmd ("2,1,0");
        send_cmd ("2");
@@ -131,7 +131,7 @@ module bfm_uart (
        //send_cmd ("4,3,11");   // DAC#2
        //
        send_cmd ("1,3,1");    // ADC#1
-       send_cmd ("2,11,1");   // ADC#2
+       send_cmd ("2,11,1");   // ADC#2*/
    end
 
 

@@ -655,9 +655,9 @@ public:
         for(int idx = 0; idx < 4; idx++)
         {
             ethernet[idx] = new csr__ethernet_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo_t)/4
-                                                                                   sizeof(csr__uart_t)/4
-                                                                                   sizeof(csr__gpio_t)/4
+                                                                                   sizeof(csr__cpu_fifo_t)/4 +
+                                                                                   sizeof(csr__uart_t)/4 +
+                                                                                   sizeof(csr__gpio_t)/4 +
                                                                                    idx * sizeof(csr__ethernet_t)/4);
         };
 
