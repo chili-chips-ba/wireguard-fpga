@@ -89,7 +89,7 @@ void uart_recv(csr_vp_t* csr, char *s) {
       do {
          uart_rx = csr->uart->rx->full();
       } while (!(uart_rx & UART_RX_VALID));
- 
+
       // store received data and print it back (echo function)
       *s = (char)(uart_rx & UART_RX_DATA);
       uart_send_char(csr, *s);
