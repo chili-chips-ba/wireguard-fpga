@@ -23,8 +23,7 @@ int main(void)
    //uart_test(csr);
 
    while (1) {
-      //uart_recv(csr, rx_data);
-      uart_send(csr, "Hello world!\r\n");
+      uart_recv(csr, rx_data);
    }
 
    return 0;

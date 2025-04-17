@@ -1,13 +1,13 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Sun Apr 13 20:28:38 2025
+[*] Mon Apr 14 20:43:03 2025
 [*]
 [dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.fst"
-[dumpfile_mtime] "Sun Apr 13 20:26:47 2025"
+[dumpfile_mtime] "Mon Apr 14 20:10:34 2025"
 [dumpfile_size] 13243080
 [savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.CSR_UART_TEST.gtkw"
 [timestart] 0
-[size] 1920 1200
+[size] 1920 1128
 [pos] -409 -134
 *-28.088099 178081250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
@@ -15,18 +15,22 @@
 [treeopen] TOP.tb.dut.
 [treeopen] TOP.tb.dut.from_csr.
 [treeopen] TOP.tb.dut.from_csr.uart.
+[treeopen] TOP.tb.dut.from_csr.uart.rx.
+[treeopen] TOP.tb.dut.from_csr.uart.rx_trigger.
 [treeopen] TOP.tb.dut.from_csr.uart.tx.
+[treeopen] TOP.tb.dut.from_csr.uart.tx.data.
 [treeopen] TOP.tb.dut.from_csr.uart.tx_trigger.
 [treeopen] TOP.tb.dut.to_csr.
 [treeopen] TOP.tb.dut.to_csr.uart.
 [treeopen] TOP.tb.dut.to_csr.uart.rx.
+[treeopen] TOP.tb.dut.to_csr.uart.rx.data.
 [treeopen] TOP.tb.dut.to_csr.uart.tx.
 [treeopen] TOP.tb.dut.u_fabric.
 [treeopen] TOP.tb.dut.u_uart.
 [sst_width] 276
 [signals_width] 288
 [sst_expanded] 1
-[sst_vpaned_height] 796
+[sst_vpaned_height] 741
 @200
 -BUS
 @28
@@ -74,7 +78,12 @@ TOP.tb.dut.u_uart.u_rx_fifo.re_protected
 @820
 TOP.tb.dut.u_uart.u_rx_fifo.dout_comb[7:0]
 @200
--CSR
+-
+-FROM_CSR
+-from_csr/uart/rx/data
+@28
+TOP.tb.dut.from_csr.uart.rx.data.swacc
+@200
 -from_csr/uart/tx/data
 @820
 TOP.tb.dut.from_csr.uart.tx.data.value[7:0]
@@ -83,9 +92,19 @@ TOP.tb.dut.from_csr.uart.tx.data.value[7:0]
 @28
 TOP.tb.dut.from_csr.uart.tx_trigger.write.value
 @200
+-
+-TO_CSR
 -to_csr/uart/rx/data
 @820
 TOP.tb.dut.to_csr.uart.rx.data.next[7:0]
+@200
+-to_csr/uart/rx/oflow
+@28
+TOP.tb.dut.to_csr.uart.rx.oflow.next
+@200
+-to_csr/uart/rx/valid
+@28
+TOP.tb.dut.to_csr.uart.rx.valid.next
 @200
 -to_csr/uart/tx/busy
 @28
