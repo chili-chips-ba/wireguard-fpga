@@ -26,8 +26,7 @@ The UART FIFO has a **16‑byte** buffer. If `uart_recv()` is not called frequen
 
 Below is an example waveform screenshot confirming correct reception (green trace shows the string *“Mi smo FPGA raja\r\n”* arriving byte‑by‑byte):
 
-![UART RX waveform](./doc/img/uart_rx_ok.png)
-
+![image](https://github.com/user-attachments/assets/ad248d4e-de57-423d-b88f-8cc1a7c7debf)
 
 ## Quick Tips
 
