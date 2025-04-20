@@ -26,7 +26,8 @@ SECTIONS {
       *(.sdata .sdata.*)
       . = ALIGN(4);
       _data_end = .;
-  } > DMEM
+  }
+      > DMEM
    .bss : {
       _bss_start = .;
       *(.bss .bss.*)

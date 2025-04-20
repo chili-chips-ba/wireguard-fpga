@@ -1,12 +1,13 @@
 # Wireguard FPGA Build
 
-## Cosimulation Compilation
+The build process for the WireGuard project consists of three steps:
+- Compilation of WireGuard control and status registers (CSR) from RDL specification into RTL for hardware design and harware abstraction layer (HAL) for software application
+- Compilation of the software application for the RISC-V hardware target
+- Compilation of SystemVerilog designs into bitstream for the hardware target
 
-TODO
+## CSR HAL Compilation
 
-## Co-simulation HAL
-
-The WireGuard control and status register harware abstraction layer (HAL) software is auto-generated, as is the CSR RTL, using `peakrdl`. For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using `systemrdl-compiler` that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The platform targetted header uses the `peakrdl c-header` output directly and unmodified. The `peakrdl` output is produced using the following command:
+The WireGuard CSR HAL is auto-generated, as is the CSR RTL, using `peakrdl`. For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using `systemrdl-compiler` that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The platform targetted header uses the `peakrdl c-header` output directly and unmodified. The `peakrdl` output is produced using the following command:
 
 ```
     peakrdl c-header csr_cosim.rdl -b ltoh -o csr.h
@@ -36,11 +37,13 @@ options:
                         Specify the VProc soc_cpu clock period in ps (cosim only)
 ```
 
-The main options used are to specify the RDL file (`-r` or `--rd_file`) and to specify the output file (`-o` or `-output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used. Finally the *VProc* test bench `soc_cpu` module's clock period in picoseconds can be specified for use in co-simulation abstraction of delay and timing functions. It defaults to 18518 to match the `tb.sv` `HALF_PERIOD_PS` definition for the base 27MHz clock that's doubled to 54MHz for the internal logic.
+The main options used are to specify the RDL file (`-r` or `--rd_file`) and to specify the output file (`-o` or `-output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used. Finally the *VProc* test bench `soc_cpu` module's clock period in picoseconds can be specified for use in co-simulation abstraction of delay and timing functions. It defaults to 12500 to match the `tb.sv` `HALF_PERIOD_PS` definition for the base 80MHz clock used by internal logic.
 
-To generate all the required HAL headers a make file is provided as `3.build/MakefileCosim` to wrap app the script calls. Running this make file (`make -f MakefileCosim`) produces the following files in `3.build/csr_build/generated-files`:
+To generate all the required HAL headers and RTL a make file is provided as `3.build/MakefileCSR` to wrap app the script calls. Running this make file (`make -f MakefileCSR`) produces the following files in `3.build/csr_build/generated-files`:
 
   * `csr_cosim.rdl` : The intermediate filtered RDL specification
+  * `csr.sv`        : The RTL for hardware target
+  * `csr_pkg.sv`    : The structured RTL interface for hardware target
   * `csr.h`         : The `peakrdl c-header` output file used by the target header
   * `csr_hw.h`      : The HAL for the RISC-V hardware target (and for the *rv32* ISS), which uses `csr.h`
   * `csr_cosim.h`   : The HAL for the *VProc* based WireGuard logic simulation test bench
@@ -55,6 +58,24 @@ ifdef VPROC
 #endif
 ```
 This has been done in the `wireguard_regs.h` header in the `3.build/csr_build/generated-files/` directory, and including this header in the application code makes available the register HAL.
+
+## SW Compilation
+
+To generate binaries (elf, bin, hex) and instruction memory (IMEM) Verilog configuration file (imem.INIT.vh) a make file is provided as `3.build/MakefileSW`. Running this make file (`make -f MakefileSW`) produces the following files in `3.build/sw_build`:
+
+  * `main.lds`      : The compiled Linker/MemoryMapper script
+  * `main.map`      : The memory map for debugging
+  * `main.elf`      : The ELF file for RISC-V hardware target
+  * `main.hex`      : The HEX programming file for RISC-V hardware target
+  * `main.bin`      : The raw binary file
+  * `main.dump`     : The disassembly of the ELF file
+  * `imem.INIT.vh`  : The IMEM Verilog configuration file
+
+## HW Compilation
+
+TODO
+
+## Co-simulation HAL
 
 ### Using the HAL
 
@@ -100,4 +121,4 @@ void WGMAIN (void)
 }
 ```
 
-The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 54MHz that the test bench uses for the `soc_cpu`. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `sysrdl_cosim.py`. 
+The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 80MHz that the test bench uses for the `soc_cpu`. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `sysrdl_cosim.py`. 

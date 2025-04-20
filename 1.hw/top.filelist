@@ -13,6 +13,7 @@ ${HW_SRC}/external_lib/axis/axis_async_fifo_adapter.v
 ${HW_SRC}/external_lib/axis/axis_adapter.v
 ${HW_SRC}/external_lib/axis/axis_async_fifo.v
 ${HW_SRC}/external_lib/axis/sync_reset.v
+${HW_SRC}/external_lib/axis/axis_fifo.v
 
 #---External Ethernet library
 ${HW_SRC}/external_lib/ethernet/eth_mac_1g_gmii_fifo.v
@@ -34,16 +35,13 @@ ${HW_SRC}/ip.infra/dpe_if.sv
 ${HW_SRC}/ip.infra/gmii_if.sv
 
 #---PeakRDL-generated CSR + SOC CSR wrapper
-${HW_SRC}/csr.peakrdl/csr_pkg.sv
-${HW_SRC}/csr.peakrdl/csr.sv
+${BLD_DIR}/csr_build/generated-files/csr_pkg.sv
+${BLD_DIR}/csr_build/generated-files/csr.sv
 ${HW_SRC}/ip.infra/soc_csr.sv
 
-#---old CSR
-#${HW_SRC}/ip.csr/old_csr_pkg.sv
-#${HW_SRC}/ip.csr/csr_if.sv
-#${HW_SRC}/ip.csr/soc_csr.sv
-
 #---Common infrastructure components
+${HW_SRC}/ip.infra/ethernet_mac.sv
+${HW_SRC}/ip.infra/ethernet_phy.sv
 ${HW_SRC}/ip.infra/soc_ram.sv
 ${HW_SRC}/ip.infra/soc_fabric.sv
 ${HW_SRC}/ip.infra/clk_rst_gen.sv
@@ -55,7 +53,7 @@ ${HW_SRC}/ip.infra/sync_fifo_ram.sv
 ${HW_SRC}/ip.infra/dpe_if_skid_buffer.sv
 
 #---CPU
-+incdir+${BLD_DIR}
++incdir+${BLD_DIR}/sw_build
 ${HW_SRC}/ip.cpu/imem.sv
 
 # PicoRV32

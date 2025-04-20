@@ -1,0 +1,84 @@
+#=============================================================
+# Copyright (C) 2025 Chili.CHIPS*ba
+#=============================================================
+
+BLD_DIR := $(CURDIR)
+
+SW_SRC  := $(BLD_DIR)/../2.sw
+SW_APP  := $(SW_SRC)/app
+SW_MAIN := $(SW_APP)
+#SW_MAIN := $(SW_APP)/csr_uart_test
+#SW_MAIN := $(SW_APP)/csr_gpio_test
+
+CSR_BLD := $(BLD_DIR)/csr_build/generated-files
+SW_BLD  := $(BLD_DIR)/sw_build
+
+#=============================================================
+# SW Build
+#-------------------------------------------------------------
+# You must have gcc installed to build software:
+#   sudo apt install gcc-riscv64-unknown-elf
+#   For more, see: 0.doc/1.README.Tool-Installs.txt
+#=============================================================
+CROSS = riscv64-unknown-elf-
+CFLAGS = -std=c++11 -DTCM=1 -DHARVARD=1 -DUART_TEST
+
+#------------------------
+.PHONY: sw_all
+sw_all: sw_clean sw_out
+
+#------------------------
+# Remove all output files created from SW build process
+sw_clean:
+	rm -rf $(SW_BLD)/imem.INIT.vh
+	rm -rf $(SW_BLD)/main.lds
+	rm -rf $(SW_BLD)/main.map
+	rm -rf $(SW_BLD)/main.elf
+	rm -rf $(SW_BLD)/main.bin
+	rm -rf $(SW_BLD)/main.hex
+	rm -rf $(SW_BLD)/main.dump
+
+#------------------------
+# Compile the Linker/MemoryMapper script
+sw_map: $(SW_SRC)/link_map.lds
+	$(CROSS)cpp \
+	$(CFLAGS) \
+	-P -o $(SW_BLD)/main.lds $<
+
+#------------------------
+# Compile and link Boot and App code
+sw_elf: sw_map $(SW_SRC)/boot_crt.S \
+$(SW_APP)/assert.h \
+$(CSR_BLD)/wireguard_regs.h \
+$(CSR_BLD)/csr_hw.h \
+$(CSR_BLD)/csr.h \
+$(SW_APP)/uart.h           $(SW_APP)/uart.c \
+$(SW_APP)/string_bare.h    $(SW_APP)/string_bare.c \
+$(SW_APP)/wireguard_libs.h $(SW_APP)/wireguard_libs.cpp \
+$(SW_MAIN)/main.cpp
+	$(CROSS)g++ \
+   $(CFLAGS) \
+   -I$(CSR_BLD) -I$(SW_APP) \
+   -march=rv32im \
+   -mabi=ilp32 \
+   -Wl,--build-id=none,-Bstatic,-T,$(SW_BLD)/main.lds,-Map,$(SW_BLD)/main.map \
+   -ffreestanding \
+   -nostdlib \
+   -static \
+   -fomit-frame-pointer \
+   -fno-exceptions \
+   -fno-asynchronous-unwind-tables \
+   -fno-unwind-tables -o $(SW_BLD)/main.elf \
+   $(SW_SRC)/boot_crt.S \
+   $(SW_APP)/uart.c \
+   $(SW_APP)/string_bare.c \
+   $(SW_APP)/wireguard_libs.cpp \
+   $(SW_MAIN)/main.cpp
+   
+#------------------------
+# Create all necessary other file format from the compiled ELF
+sw_out: sw_elf
+	$(CROSS)objcopy -O verilog $(SW_BLD)/main.elf   $(SW_BLD)/main.hex
+	$(CROSS)objcopy -O binary  $(SW_BLD)/main.elf   $(SW_BLD)/main.bin
+	$(CROSS)objdump -drwC -S   $(SW_BLD)/main.elf > $(SW_BLD)/main.dump
+	python3 imem.INIT.py

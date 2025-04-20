@@ -5,20 +5,20 @@ addrmap csr {
    littleendian;
    default accesswidth = 32;
    default regwidth = 32;
-   alignment = 4;
+   default alignment = 4;
    addressing = compact;
    
    regfile cpu_fifo {
       name = "csr.cpu_fifo";
       desc = "CPU FIFOs CSR";
       
-      alignment = 4;
+      //alignment = 4;
       
       regfile rx {
          name = "csr.cpu_fifo.rx";
          desc = "Rx FIFO CSR (CPU --> DPE)";
          
-         alignment = 4;
+         //alignment = 4;
          
          reg {
             name = "csr.cpu_fifo.rx.data_31_0";
@@ -145,7 +145,7 @@ addrmap csr {
          name = "csr.cpu_fifo.tx";
          desc = "Tx FIFO CSR (DPE --> CPU)";
          
-         alignment = 4;
+         //alignment = 4;
          
          reg {
             name = "csr.cpu_fifo.tx.data_31_0";
@@ -273,7 +273,7 @@ addrmap csr {
       name = "csr.uart";
       desc = "UART CSR";
       
-      alignment = 4;
+      //alignment = 4;
          
       reg {
          name = "csr.uart.rx";
@@ -384,7 +384,7 @@ addrmap csr {
       name = "csr.ethernet[0..3]";
       desc = "Ethernet CSR";
       
-      alignment = 4;
+      //alignment = 4;
       
       reg {
          name = "csr.ethernet[0..3].status";
@@ -403,7 +403,7 @@ addrmap csr {
       name = "csr.dpe";
       desc = "Data Plane Engine CSR";
       
-      alignment = 4;
+      //alignment = 4;
       
       reg {
          name = "csr.dpe.fcr";
@@ -465,7 +465,7 @@ addrmap wireguard {
    littleendian;
    default accesswidth = 32;
    default regwidth = 32;
-   alignment = 4;
+   default alignment = 4;
    addressing = compact;
    
    external mem imem {

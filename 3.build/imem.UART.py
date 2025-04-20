@@ -17,8 +17,8 @@ ComPort.bytesize = serial.EIGHTBITS    # Number of data bits = 8
 ComPort.parity   = serial.PARITY_NONE   # No parity
 ComPort.stopbits = serial.STOPBITS_ONE  # Number of Stop bits = 1
 
-infile  =open('sw_build/main.hex','r')
-outfile =open('code.hex','w')
+infile  =open('./sw_build/main.hex','r')
+outfile =open('./sw_build/code.hex','w')
 length  = 0
 str32   = []
 

@@ -2,6 +2,8 @@
 # Copyright (C) 2025 Chili.CHIPS*ba
 #=============================================================
 
+RDLCSRTOP = csr
+RDLWGTOP  = wireguard
 RDLPREFIX = csr
 RDLDIR    = csr_build
 GENDIR    = $(RDLDIR)/generated-files
@@ -11,8 +13,11 @@ COSIMRDL  = $(GENDIR)/$(RDLPREFIX)_cosim.rdl
 COSIMHDR  = $(GENDIR)/$(RDLPREFIX)_cosim.h
 PKRDLHDR  = $(GENDIR)/$(RDLPREFIX).h
 HWHDR     = $(GENDIR)/$(RDLPREFIX)_hw.h
+PKRDLRTL  = $(GENDIR)/
+PKRDLHTML = $(GENDIR)/html/
+PKRDLMD   = $(GENDIR)/$(RDLWGTOP).md
 
-all: $(COSIMHDR) $(HWHDR)
+all: $(COSIMHDR) $(HWHDR) rtl $(PKRDLHTML) $(PKRDLMD)
 
 $(COSIMHDR): $(COSIMRDL) $(PKRDLHDR)
 	@python3 sysrdl_cosim.py -c -r $< -o $@
@@ -26,6 +31,14 @@ $(COSIMRDL): $(RDLSRC)
 $(PKRDLHDR): $(COSIMRDL)
 	@peakrdl c-header $^ -b ltoh -o $@
 
-clean:
-	@rm -rf $(COSIMRDL) $(COSIMHDR) $(HWHDR) $(PKRDLHDR)
+rtl: $(RDLSRC)
+	@peakrdl regblock $^ -o $(GENDIR)/ --cpuif passthrough --top $(RDLCSRTOP)
 
+$(PKRDLHTML): $(RDLSRC)
+	@peakrdl html $^ -o $@ --top $(RDLWGTOP)
+
+$(PKRDLMD): $(RDLSRC)
+	@peakrdl markdown $^ -o $@ --top $(RDLWGTOP)
+
+clean:
+	@rm -rf $(COSIMRDL) $(COSIMHDR) $(HWHDR) $(PKRDLHDR) $(GENDIR)/*.sv $(PKRDLHTML) $(PKRDLMD)

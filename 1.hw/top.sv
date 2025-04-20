@@ -137,6 +137,7 @@ module top #(
    soc_if              bus_dmem      (.arst_n(sys_rst_n), .clk(sys_clk));
    soc_if              bus_csr       (.arst_n(sys_rst_n), .clk(sys_clk));
 
+   logic               imem_cpu_rstn;
    logic               imem_we;
    logic [31:2]        imem_waddr;
    logic [31:0]        imem_wdat;
@@ -146,11 +147,12 @@ module top #(
       .ADDR_RESET      (32'h 0000_0000),
       .NUM_WORDS_IMEM  (NUM_WORDS_IMEM)
    ) u_cpu (
-      .bus             (bus_cpu),    //MST
+      .bus             (bus_cpu),        //MST
 
-      .imem_we         (imem_we),    //-\ access point for
-      .imem_waddr      (imem_waddr), // | reloading CPU
-      .imem_wdat       (imem_wdat)   //-/ program memory
+      .imem_cpu_rstn   (imem_cpu_rstn),  //-\ access point
+      .imem_we         (imem_we),        //-| for
+      .imem_waddr      (imem_waddr),     // | reloading CPU
+      .imem_wdat       (imem_wdat)       //-/ program memory
    );
 
 //---------------------------------
@@ -187,9 +189,10 @@ module top #(
       .to_csr          (to_csr),     //o
 
    // IMEM Write port, for live updates of CPU program
-      .imem_we         (imem_we),    //o
-      .imem_waddr      (imem_waddr), //o[31:2]
-      .imem_wdat       (imem_wdat)   //o[31:0]
+      .imem_cpu_rstn   (imem_cpu_rstn), //o
+      .imem_we         (imem_we),       //o
+      .imem_waddr      (imem_waddr),    //o[31:2]
+      .imem_wdat       (imem_wdat)      //o[31:0]
    );
 
 //---------------------------------
