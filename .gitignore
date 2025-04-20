@@ -33,3 +33,8 @@
 *.ip_user_files
 *.runs
 *.gen
+0.doc/Alinx/AX7201_examples/08_HDMI/image--music-files/PICTURE/VGA/Thumbs.db
+*.obj
+*.dll
+*.lib
+*.exe
