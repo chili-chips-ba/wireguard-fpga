@@ -33,7 +33,7 @@ class Listener(RDLListener) :
   # -----------------------------------------
   # Constructor
   # -----------------------------------------
-  def __init__(self, outfile, cosim = False, delay = 32, clkperiod = 18518, vpnode = 0):
+  def __init__(self, outfile, cosim = False, delay = 32, clkperiod = 12500, vpnode = 0):
     self.level      = 0
     self.hier_list = []
     self.new_reg   = True

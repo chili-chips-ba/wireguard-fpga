@@ -2,7 +2,7 @@
 Markdown description for SystemRDL register map.
 
 Don't override. Generated from: wireguard
-  - csr.rdl
+  - csr_build/csr.rdl
 -->
 
 ## wireguard address map

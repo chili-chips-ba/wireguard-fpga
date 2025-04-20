@@ -13,12 +13,11 @@ import os
 import sys
 import struct
 
-inp_file = 'sw_build/main.hex'
-out_dir  = './'
+inp_file = './sw_build/main.hex'
+out_dir  = './sw_build/'
 
 if len(sys.argv) == 2:
     inp_file = sys.argv[1]
-    out_dir = '../3.build/'
     print("Loading file: "+ sys.argv[1])
 
 

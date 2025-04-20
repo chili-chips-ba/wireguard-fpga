@@ -42,6 +42,7 @@ module uart
    output csr_pkg::csr__in_t  to_csr,
 
 // IMEM Write port, for live updates of CPU program
+   output logic               imem_cpu_rstn,
    output logic               imem_we,
    output logic [31:2]        imem_waddr,
    output logic [31:0]        imem_wdat
