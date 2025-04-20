@@ -11,19 +11,30 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description:
-//   WireGuard software top level CSR definition header
+//   WireGuard C++ standard library
 //
 //==========================================================================
 
-#ifndef _WIREGUARD_REGS_H_
-#define _WIREGUARD_REGS_H_
+#ifndef _WIREGUARD_LIBS_H_
+#define _WIREGUARD_LIBS_H_
 
-// Select appropriate auto-generated HAL header for the build type.
-// To build these headers, use "make -f MakefileCosim" in 3.build/ directory
-# ifdef VPROC
-#  include "csr_cosim.h"
-# else
-#  include "csr_hw.h"
-# endif
+#ifndef VPROC
 
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+extern char heap_memory[2048];
+extern int heap_memory_used;
+
+void* malloc(int size);
+
+#ifdef __cplusplus
+}
+void* operator new(unsigned int size);
+void operator delete(void* p);
+#endif
+
+#endif  // VPROC
+
+#endif  // _WIREGUARD_LIBS_H_

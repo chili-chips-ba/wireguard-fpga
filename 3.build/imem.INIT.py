@@ -9,9 +9,9 @@ import os
 import sys
 import struct
 
-inp_file = 'sw_build/main.bin'
+inp_file = './sw_build/main.bin'
 
-out_dir  = './'
+out_dir  = './sw_build/'
 out_file = os.path.join(out_dir, 'imem.INIT.vh')
 
 imem_text = ''
