@@ -4,6 +4,7 @@
  */
 
 #include <stdint.h>
+#include "wireguard_libs.h"
 #include "wireguard_regs.h"
 
 void delay(uint32_t count) {

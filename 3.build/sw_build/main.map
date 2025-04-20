@@ -1,216 +1,296 @@
 
+Discarded input sections
+
+ .group         0x00000000        0x8 /tmp/ccExgx09.o
+ .group         0x00000000        0x8 /tmp/ccExgx09.o
+ .group         0x00000000        0x8 /tmp/ccExgx09.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0xc /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0xc /tmp/ccCfBBFO.o
+ .group         0x00000000        0xc /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0xc /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0xc /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0xc /tmp/ccCfBBFO.o
+ .group         0x00000000        0x8 /tmp/ccCfBBFO.o
+ .group         0x00000000        0xc /tmp/ccCfBBFO.o
+
 Memory Configuration
 
 Name             Origin             Length             Attributes
-IMEM             0x0000000000000000 0x0000000000008000 xr !w
-DMEM             0x0000000010000000 0x0000000000008000 rw !x
-*default*        0x0000000000000000 0xffffffffffffffff
+IMEM             0x00000000         0x00008000         xr!w
+DMEM             0x10000000         0x00008000         rw!x
+*default*        0x00000000         0xffffffff
 
 Linker script and memory map
 
-                0x0000000000000400                _HEAP_SIZE = 0x400
-                0x0000000000000200                _STACK_SIZE = 0x200
-                0x0000000000000000                . = ORIGIN (IMEM)
+                0x00000400                        _HEAP_SIZE = 0x400
+                0x00000200                        _STACK_SIZE = 0x200
+                0x00000000                        . = ORIGIN (IMEM)
 
-.text           0x0000000000000000      0x780
-                0x0000000000000000                _text_start = .
+.text           0x00000000     0x12bc
+                0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x0000000000000000       0x70 /tmp/cckOFk6S.o
-                0x0000000000000000                _boot_crt
- .text          0x0000000000000070       0x54 /tmp/ccqumefP.o
-                0x0000000000000070                memcpy
-                0x0000000000000094                strcmp
-                0x00000000000000b8                mul3
- .text          0x00000000000000c4        0x0 /tmp/cchm4cTL.o
- .text          0x00000000000000c4       0xa4 /tmp/ccWpXd6A.o
-                0x00000000000000c4                uart_send_char
-                0x00000000000000d8                uart_send_hex
-                0x0000000000000134                uart_send
- .text          0x0000000000000168        0x0 /tmp/ccX6pQRy.o
- .text          0x0000000000000168        0x0 /tmp/cc4GiuKv.o
- .text          0x0000000000000168      0x5ac /tmp/ccIz7zKt.o
-                0x0000000000000168                cmd_recv
-                0x0000000000000324                cmd_dispatch
-                0x00000000000004e0                rsp_dispatch
-                0x0000000000000570                rsp_sdram2uart
- .text.startup  0x0000000000000714       0x28 /tmp/ccIz7zKt.o
-                0x0000000000000714                main
+ .text          0x00000000       0x70 /tmp/cc1lbAg3.o
+                0x00000000                _boot_crt
+ .text          0x00000070      0x364 /tmp/ccExgx09.o
+                0x00000070                uart_send_char
+                0x000000d8                uart_send_hex
+                0x00000154                uart_send
+                0x000001a4                uart_recv
+                0x000002a8                uart_test
+ .text._ZN18csr__uart__rx_vp_t4fullEv
+                0x000003d4       0x20 /tmp/ccExgx09.o
+                0x000003d4                csr__uart__rx_vp_t::full()
+ .text._ZN18csr__uart__tx_vp_t4dataEm
+                0x000003f4       0x2c /tmp/ccExgx09.o
+                0x000003f4                csr__uart__tx_vp_t::data(unsigned long)
+ .text._ZN18csr__uart__tx_vp_t4busyEv
+                0x00000420       0x28 /tmp/ccExgx09.o
+                0x00000420                csr__uart__tx_vp_t::busy()
+ .text          0x00000448      0x1f4 /tmp/cc2rXk5i.o
+                0x00000448                memset
+                0x000004ac                memcpy
+                0x0000051c                memcmp
+                0x000005bc                strlen
+                0x000005fc                strcmp
+ .text          0x0000063c       0x94 /tmp/cc8yK6yx.o
+                0x0000063c                malloc
+                0x00000690                operator new(unsigned int)
+                0x000006bc                operator delete(void*)
+ .text          0x000006d0      0x128 /tmp/ccCfBBFO.o
+                0x000006d0                delay(unsigned long)
+                0x00000710                main
+ .text._ZN33csr__cpu_fifo__rx__data_31_0_vp_tC2EPm
+                0x000007f8       0x24 /tmp/ccCfBBFO.o
+                0x000007f8                csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)
+                0x000007f8                csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)
+ .text._ZN34csr__cpu_fifo__rx__data_63_32_vp_tC2EPm
+                0x0000081c       0x24 /tmp/ccCfBBFO.o
+                0x0000081c                csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)
+                0x0000081c                csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)
+ .text._ZN34csr__cpu_fifo__rx__data_95_64_vp_tC2EPm
+                0x00000840       0x24 /tmp/ccCfBBFO.o
+                0x00000840                csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)
+                0x00000840                csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)
+ .text._ZN35csr__cpu_fifo__rx__data_127_96_vp_tC2EPm
+                0x00000864       0x24 /tmp/ccCfBBFO.o
+                0x00000864                csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)
+                0x00000864                csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)
+ .text._ZN31csr__cpu_fifo__rx__control_vp_tC2EPm
+                0x00000888       0x24 /tmp/ccCfBBFO.o
+                0x00000888                csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)
+                0x00000888                csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)
+ .text._ZN31csr__cpu_fifo__rx__trigger_vp_tC2EPm
+                0x000008ac       0x24 /tmp/ccCfBBFO.o
+                0x000008ac                csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)
+                0x000008ac                csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)
+ .text._ZN30csr__cpu_fifo__rx__status_vp_tC2EPm
+                0x000008d0       0x24 /tmp/ccCfBBFO.o
+                0x000008d0                csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)
+                0x000008d0                csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)
+ .text._ZN22csr__cpu_fifo__rx_vp_tC2EPm
+                0x000008f4      0x154 /tmp/ccCfBBFO.o
+                0x000008f4                csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)
+                0x000008f4                csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)
+ .text._ZN33csr__cpu_fifo__tx__data_31_0_vp_tC2EPm
+                0x00000a48       0x24 /tmp/ccCfBBFO.o
+                0x00000a48                csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)
+                0x00000a48                csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)
+ .text._ZN34csr__cpu_fifo__tx__data_63_32_vp_tC2EPm
+                0x00000a6c       0x24 /tmp/ccCfBBFO.o
+                0x00000a6c                csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)
+                0x00000a6c                csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)
+ .text._ZN34csr__cpu_fifo__tx__data_95_64_vp_tC2EPm
+                0x00000a90       0x24 /tmp/ccCfBBFO.o
+                0x00000a90                csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)
+                0x00000a90                csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)
+ .text._ZN35csr__cpu_fifo__tx__data_127_96_vp_tC2EPm
+                0x00000ab4       0x24 /tmp/ccCfBBFO.o
+                0x00000ab4                csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)
+                0x00000ab4                csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)
+ .text._ZN31csr__cpu_fifo__tx__control_vp_tC2EPm
+                0x00000ad8       0x24 /tmp/ccCfBBFO.o
+                0x00000ad8                csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)
+                0x00000ad8                csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)
+ .text._ZN31csr__cpu_fifo__tx__trigger_vp_tC2EPm
+                0x00000afc       0x24 /tmp/ccCfBBFO.o
+                0x00000afc                csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)
+                0x00000afc                csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)
+ .text._ZN30csr__cpu_fifo__tx__status_vp_tC2EPm
+                0x00000b20       0x24 /tmp/ccCfBBFO.o
+                0x00000b20                csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)
+                0x00000b20                csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)
+ .text._ZN22csr__cpu_fifo__tx_vp_tC2EPm
+                0x00000b44      0x154 /tmp/ccCfBBFO.o
+                0x00000b44                csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)
+                0x00000b44                csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)
+ .text._ZN18csr__cpu_fifo_vp_tC2EPm
+                0x00000c98       0x78 /tmp/ccCfBBFO.o
+                0x00000c98                csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)
+                0x00000c98                csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)
+ .text._ZN18csr__uart__rx_vp_tC2EPm
+                0x00000d10       0x24 /tmp/ccCfBBFO.o
+                0x00000d10                csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)
+                0x00000d10                csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)
+ .text._ZN40csr__uart__rx_trigger_read_2925067f_vp_tC2EPm
+                0x00000d34       0x24 /tmp/ccCfBBFO.o
+                0x00000d34                csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)
+                0x00000d34                csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)
+ .text._ZN18csr__uart__tx_vp_tC2EPm
+                0x00000d58       0x24 /tmp/ccCfBBFO.o
+                0x00000d58                csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)
+                0x00000d58                csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)
+ .text._ZN41csr__uart__tx_trigger_write_d2a2fe0e_vp_tC2EPm
+                0x00000d7c       0x24 /tmp/ccCfBBFO.o
+                0x00000d7c                csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)
+                0x00000d7c                csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)
+ .text._ZN14csr__uart_vp_tC2EPm
+                0x00000da0       0xd0 /tmp/ccCfBBFO.o
+                0x00000da0                csr__uart_vp_t::csr__uart_vp_t(unsigned long*)
+                0x00000da0                csr__uart_vp_t::csr__uart_vp_t(unsigned long*)
+ .text._ZN14csr__gpio_vp_tC2EPm
+                0x00000e70       0x24 /tmp/ccCfBBFO.o
+                0x00000e70                csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)
+                0x00000e70                csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)
+ .text._ZN14csr__gpio_vp_t4key1Ev
+                0x00000e94       0x28 /tmp/ccCfBBFO.o
+                0x00000e94                csr__gpio_vp_t::key1()
+ .text._ZN14csr__gpio_vp_t4led1Em
+                0x00000ebc       0x44 /tmp/ccCfBBFO.o
+                0x00000ebc                csr__gpio_vp_t::led1(unsigned long)
+ .text._ZN14csr__gpio_vp_t4led2Em
+                0x00000f00       0x44 /tmp/ccCfBBFO.o
+                0x00000f00                csr__gpio_vp_t::led2(unsigned long)
+ .text._ZN26csr__ethernet__status_vp_tC2EPm
+                0x00000f44       0x24 /tmp/ccCfBBFO.o
+                0x00000f44                csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)
+                0x00000f44                csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)
+ .text._ZN18csr__ethernet_vp_tC2EPm
+                0x00000f68       0x4c /tmp/ccCfBBFO.o
+                0x00000f68                csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)
+                0x00000f68                csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)
+ .text._ZN18csr__dpe__fcr_vp_tC2EPm
+                0x00000fb4       0x24 /tmp/ccCfBBFO.o
+                0x00000fb4                csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)
+                0x00000fb4                csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)
+ .text._ZN13csr__dpe_vp_tC2EPm
+                0x00000fd8       0x4c /tmp/ccCfBBFO.o
+                0x00000fd8                csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)
+                0x00000fd8                csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)
+ .text._ZN14csr__hwid_vp_tC2EPm
+                0x00001024       0x24 /tmp/ccCfBBFO.o
+                0x00001024                csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)
+                0x00001024                csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)
+ .text._ZN8csr_vp_tC2EPm
+                0x00001048      0x160 /tmp/ccCfBBFO.o
+                0x00001048                csr_vp_t::csr_vp_t(unsigned long*)
+                0x00001048                csr_vp_t::csr_vp_t(unsigned long*)
  *(.rodata .rodata.*)
- .rodata.str1.4
-                0x000000000000073c       0x11 /tmp/ccWpXd6A.o
- *fill*         0x000000000000074d        0x3 
- .rodata        0x0000000000000750       0x30 /tmp/ccIz7zKt.o
+ .rodata        0x000011a8      0x102 /tmp/ccExgx09.o
+ *fill*         0x000012aa        0x2 
+ .rodata        0x000012ac        0xf /tmp/ccCfBBFO.o
  *(.srodata .srodata.*)
-                0x0000000000000780                . = ALIGN (0x4)
-                0x0000000000000780                _text_end = .
-                0x0000000000000780                _idata_start = _text_end
+                0x000012bc                        . = ALIGN (0x4)
+ *fill*         0x000012bb        0x1 
+                0x000012bc                        _text_end = .
+                0x000012bc                        _idata_start = _text_end
 
-.rela.dyn       0x0000000000000000        0x0
- .rela.text     0x0000000000000000        0x0 /tmp/cckOFk6S.o
+.rela.dyn       0x00000000        0x0
+ .rela.text     0x00000000        0x0 /tmp/cc1lbAg3.o
 
-.data           0x0000000010000000        0x0 load address 0x0000000000000780
-                0x0000000010000000                _data_start = .
+.data           0x10000000        0x0 load address 0x000012bc
+                0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x0000000010000000        0x0 /tmp/cckOFk6S.o
- .data          0x0000000010000000        0x0 /tmp/ccqumefP.o
- .data          0x0000000010000000        0x0 /tmp/cchm4cTL.o
- .data          0x0000000010000000        0x0 /tmp/ccWpXd6A.o
- .data          0x0000000010000000        0x0 /tmp/ccX6pQRy.o
- .data          0x0000000010000000        0x0 /tmp/cc4GiuKv.o
- .data          0x0000000010000000        0x0 /tmp/ccIz7zKt.o
-                0x0000000010000000                . = ALIGN (0x8)
-                0x0000000010000800                PROVIDE (__global_pointer$ = (. + 0x800))
+ .data          0x10000000        0x0 /tmp/cc1lbAg3.o
+ .data          0x10000000        0x0 /tmp/ccExgx09.o
+ .data          0x10000000        0x0 /tmp/cc2rXk5i.o
+ .data          0x10000000        0x0 /tmp/cc8yK6yx.o
+ .data          0x10000000        0x0 /tmp/ccCfBBFO.o
+                0x10000000                        . = ALIGN (0x8)
+                0x10000800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.sdata .sdata.*)
-                0x0000000010000000                . = ALIGN (0x4)
-                0x0000000010000000                _data_end = .
+                0x10000000                        . = ALIGN (0x4)
+                0x10000000                        _data_end = .
 
-.bss            0x0000000010000000       0x48 load address 0x0000000000000780
-                0x0000000010000000                _bss_start = .
+.bss            0x10000000      0x804 load address 0x000012bc
+                0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x0000000010000000        0x0 /tmp/cckOFk6S.o
- .bss           0x0000000010000000        0x0 /tmp/ccqumefP.o
- .bss           0x0000000010000000        0x0 /tmp/cchm4cTL.o
- .bss           0x0000000010000000        0x0 /tmp/ccWpXd6A.o
- .bss           0x0000000010000000        0x0 /tmp/ccX6pQRy.o
- .bss           0x0000000010000000        0x0 /tmp/cc4GiuKv.o
- .bss           0x0000000010000000       0x10 /tmp/ccIz7zKt.o
-                0x0000000010000000                crx
+ .bss           0x10000000        0x0 /tmp/cc1lbAg3.o
+ .bss           0x10000000        0x0 /tmp/ccExgx09.o
+ .bss           0x10000000        0x0 /tmp/cc2rXk5i.o
+ .bss           0x10000000      0x800 /tmp/cc8yK6yx.o
+                0x10000000                heap_memory
+ .bss           0x10000800        0x0 /tmp/ccCfBBFO.o
  *(.sbss .sbss.*)
- .sbss          0x0000000010000010       0x38 /tmp/ccIz7zKt.o
-                0x0000000010000010                adc_sample_cnt
-                0x0000000010000014                adc_sample
-                0x0000000010000018                adc_sdram_addr
-                0x000000001000001c                adc_byte_cnt
-                0x0000000010000020                adc_num_bytes
-                0x0000000010000024                adc_rx
-                0x0000000010000028                task
-                0x000000001000002c                dac_tx
-                0x0000000010000030                adc_tx
-                0x0000000010000034                crx_flag
-                0x0000000010000038                crx_bin
-                0x000000001000003c                crx_asc_idx
-                0x0000000010000040                crx_asc
+ .sbss          0x10000800        0x4 /tmp/cc8yK6yx.o
+                0x10000800                heap_memory_used
  *(COMMON)
-                0x0000000010000048                . = ALIGN (0x4)
-                0x0000000010000048                _bss_end = .
-                0x0000000010000050                . = ALIGN (0x10)
+                0x10000804                        . = ALIGN (0x4)
+                0x10000804                        _bss_end = .
+                0x10000810                        . = ALIGN (0x10)
 
-.heap           0x0000000010000048      0x408 load address 0x00000000000007c8
-                0x0000000010000048                _heap_start = .
-                0x0000000010000448                . = (. + _HEAP_SIZE)
- *fill*         0x0000000010000048      0x400 
-                0x0000000010000450                . = ALIGN (0x10)
- *fill*         0x0000000010000448        0x8 
-                0x0000000010000450                _heap_end = .
-                0x0000000010000450                . = ALIGN (0x8)
+.heap           0x10000804      0x40c load address 0x00001ac0
+                0x10000804                        _heap_start = .
+                0x10000c04                        . = (. + _HEAP_SIZE)
+ *fill*         0x10000804      0x400 
+                0x10000c10                        . = ALIGN (0x10)
+ *fill*         0x10000c04        0xc 
+                0x10000c10                        _heap_end = .
+                0x10000c10                        . = ALIGN (0x8)
                 [!provide]                        PROVIDE (_end = .)
                 [!provide]                        PROVIDE (end = .)
-                0x0000000010008000                PROVIDE (_stack_start = (ORIGIN (DMEM) + LENGTH (DMEM)))
+                0x10008000                        PROVIDE (_stack_start = (ORIGIN (DMEM) + LENGTH (DMEM)))
 
-.stack          0x0000000010007e00      0x200
-                0x0000000010008000                . = (. + _STACK_SIZE)
- *fill*         0x0000000010007e00      0x200 
-                0x0000000010007e00                _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/cckOFk6S.o
-LOAD /tmp/ccqumefP.o
-LOAD /tmp/cchm4cTL.o
-LOAD /tmp/ccWpXd6A.o
-LOAD /tmp/ccX6pQRy.o
-LOAD /tmp/cc4GiuKv.o
-LOAD /tmp/ccIz7zKt.o
-OUTPUT(/mnt/d/Projects/GitHub-repo/eduSOC/3.build/sw_build/main.elf elf32-littleriscv)
+.stack          0x10007e00      0x200
+                0x10008000                        . = (. + _STACK_SIZE)
+ *fill*         0x10007e00      0x200 
+                0x10007e00                        _stack_end = (_stack_start - SIZEOF (.stack))
+LOAD /tmp/cc1lbAg3.o
+LOAD /tmp/ccExgx09.o
+LOAD /tmp/cc2rXk5i.o
+LOAD /tmp/cc8yK6yx.o
+LOAD /tmp/ccCfBBFO.o
+OUTPUT(/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
 
 .riscv.attributes
-                0x0000000000000000       0x1c
+                0x00000000       0x2a
  .riscv.attributes
-                0x0000000000000000       0x1a /tmp/cckOFk6S.o
+                0x00000000       0x28 /tmp/cc1lbAg3.o
  .riscv.attributes
-                0x000000000000001a       0x1c /tmp/ccqumefP.o
+                0x00000028       0x2a /tmp/ccExgx09.o
  .riscv.attributes
-                0x0000000000000036       0x1c /tmp/cchm4cTL.o
+                0x00000052       0x2a /tmp/cc2rXk5i.o
  .riscv.attributes
-                0x0000000000000052       0x1c /tmp/ccWpXd6A.o
+                0x0000007c       0x2a /tmp/cc8yK6yx.o
  .riscv.attributes
-                0x000000000000006e       0x1c /tmp/ccX6pQRy.o
- .riscv.attributes
-                0x000000000000008a       0x1c /tmp/cc4GiuKv.o
- .riscv.attributes
-                0x00000000000000a6       0x1c /tmp/ccIz7zKt.o
+                0x000000a6       0x2a /tmp/ccCfBBFO.o
 
-.comment        0x0000000000000000        0xf
- .comment       0x0000000000000000        0xf /tmp/ccqumefP.o
-                                         0x10 (size before relaxing)
- .comment       0x000000000000000f       0x10 /tmp/cchm4cTL.o
- .comment       0x000000000000000f       0x10 /tmp/ccWpXd6A.o
- .comment       0x000000000000000f       0x10 /tmp/ccX6pQRy.o
- .comment       0x000000000000000f       0x10 /tmp/cc4GiuKv.o
- .comment       0x000000000000000f       0x10 /tmp/ccIz7zKt.o
-
-.debug_line     0x0000000000000000     0x1051
- .debug_line    0x0000000000000000       0xed /tmp/cckOFk6S.o
- .debug_line    0x00000000000000ed      0x1e4 /tmp/ccqumefP.o
- .debug_line    0x00000000000002d1        0x0 /tmp/cchm4cTL.o
- .debug_line    0x00000000000002d1      0x242 /tmp/ccWpXd6A.o
- .debug_line    0x0000000000000513       0x1d /tmp/ccX6pQRy.o
- .debug_line    0x0000000000000530       0x1d /tmp/cc4GiuKv.o
- .debug_line    0x000000000000054d      0xb04 /tmp/ccIz7zKt.o
-
-.debug_info     0x0000000000000000     0x1028
- .debug_info    0x0000000000000000       0x26 /tmp/cckOFk6S.o
- .debug_info    0x0000000000000026      0x15c /tmp/ccqumefP.o
- .debug_info    0x0000000000000182      0x517 /tmp/ccWpXd6A.o
- .debug_info    0x0000000000000699       0x6b /tmp/ccX6pQRy.o
- .debug_info    0x0000000000000704       0x6b /tmp/cc4GiuKv.o
- .debug_info    0x000000000000076f      0x8b9 /tmp/ccIz7zKt.o
-
-.debug_abbrev   0x0000000000000000      0x4b1
- .debug_abbrev  0x0000000000000000       0x14 /tmp/cckOFk6S.o
- .debug_abbrev  0x0000000000000014       0xb9 /tmp/ccqumefP.o
- .debug_abbrev  0x00000000000000cd      0x13b /tmp/ccWpXd6A.o
- .debug_abbrev  0x0000000000000208       0x26 /tmp/ccX6pQRy.o
- .debug_abbrev  0x000000000000022e       0x26 /tmp/cc4GiuKv.o
- .debug_abbrev  0x0000000000000254      0x25d /tmp/ccIz7zKt.o
-
-.debug_aranges  0x0000000000000000       0xb8
- .debug_aranges
-                0x0000000000000000       0x20 /tmp/cckOFk6S.o
- .debug_aranges
-                0x0000000000000020       0x20 /tmp/ccqumefP.o
- .debug_aranges
-                0x0000000000000040       0x20 /tmp/ccWpXd6A.o
- .debug_aranges
-                0x0000000000000060       0x18 /tmp/ccX6pQRy.o
- .debug_aranges
-                0x0000000000000078       0x18 /tmp/cc4GiuKv.o
- .debug_aranges
-                0x0000000000000090       0x28 /tmp/ccIz7zKt.o
-
-.debug_str      0x0000000000000000      0x58a
- .debug_str     0x0000000000000000       0x77 /tmp/cckOFk6S.o
- .debug_str     0x0000000000000077      0x135 /tmp/ccqumefP.o
-                                        0x199 (size before relaxing)
- .debug_str     0x00000000000001ac       0x41 /tmp/cchm4cTL.o
-                                         0xe7 (size before relaxing)
- .debug_str     0x00000000000001ed      0x18e /tmp/ccWpXd6A.o
-                                        0x2dd (size before relaxing)
- .debug_str     0x000000000000037b       0x3d /tmp/ccX6pQRy.o
-                                        0x173 (size before relaxing)
- .debug_str     0x00000000000003b8       0x3d /tmp/cc4GiuKv.o
-                                        0x173 (size before relaxing)
- .debug_str     0x00000000000003f5      0x195 /tmp/ccIz7zKt.o
-                                        0x421 (size before relaxing)
-
-.debug_loc      0x0000000000000000      0x1d3
- .debug_loc     0x0000000000000000       0xe5 /tmp/ccqumefP.o
- .debug_loc     0x00000000000000e5       0xb7 /tmp/ccWpXd6A.o
- .debug_loc     0x000000000000019c       0x37 /tmp/ccIz7zKt.o
-
-.debug_ranges   0x0000000000000000       0xc8
- .debug_ranges  0x0000000000000000       0x18 /tmp/ccqumefP.o
- .debug_ranges  0x0000000000000018       0x28 /tmp/ccWpXd6A.o
- .debug_ranges  0x0000000000000040       0x88 /tmp/ccIz7zKt.o
-
-.debug_frame    0x0000000000000000      0x134
- .debug_frame   0x0000000000000000       0x40 /tmp/ccqumefP.o
- .debug_frame   0x0000000000000040       0x70 /tmp/ccWpXd6A.o
- .debug_frame   0x00000000000000b0       0x84 /tmp/ccIz7zKt.o
+.comment        0x00000000       0x22
+ .comment       0x00000000       0x22 /tmp/ccExgx09.o
+                                 0x23 (size before relaxing)
+ .comment       0x00000022       0x23 /tmp/cc2rXk5i.o
+ .comment       0x00000022       0x23 /tmp/cc8yK6yx.o
+ .comment       0x00000022       0x23 /tmp/ccCfBBFO.o

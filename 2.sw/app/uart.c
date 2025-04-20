@@ -25,7 +25,6 @@
 //   such as FreeRTOS
 //==========================================================================
 
-#include "soc.h"
 #include "uart.h"
 
 /**********************************************************************
@@ -35,10 +34,10 @@
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_char (char c) {
+void uart_send_char (csr_vp_t* csr, char c) {
    // wait for HW "not busy", then send the byte/character
-   while (CSR -> uart_tx.fld.busy);
-   CSR -> uart_tx.fld.data = c;
+   while (csr->uart->tx->busy());
+   csr->uart->tx->data(c);
 }
 
 /**********************************************************************
@@ -49,9 +48,9 @@ void uart_send_char (char c) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex (unsigned int val, int digits) {
+void uart_send_hex (csr_vp_t* csr, unsigned int val, int digits) {
    for (int i = (4*digits) - 4; i >= 0; i -= 4)
-      uart_send_char("0123456789ABCDEF"[(val >> i) % 16]);
+      uart_send_char(csr, "0123456789ABCDEF"[(val >> i) % 16]);
 }
 
 /**********************************************************************
@@ -61,12 +60,10 @@ void uart_send_hex (unsigned int val, int digits) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send (const char *s) {
-   while (*s) uart_send_char(*(s++));
+void uart_send (csr_vp_t* csr, const char *s) {
+   while (*s) uart_send_char(csr, *(s++));
 }
 
-
-#ifdef UART_TEST
 /**********************************************************************
  * Function:    uart_recv()
  *
@@ -75,14 +72,13 @@ void uart_send (const char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_recv(char *s) {
-  uint32_t uart_rx;
+void uart_recv(csr_vp_t* csr, char *s) {
+   uint32_t uart_rx;
 
-  // keep reading from UART until user enters <ENTER>,
-  //  or allocated buffer is exhausted
-  //  (UART_RXBUF_SIZE-1) opens space to append NULL
-  for (int i=0; i<(UART_RXBUF_SIZE-1); i++) {
-
+   // keep reading from UART until user enters <ENTER>,
+   //  or allocated buffer is exhausted
+   //  (UART_RXBUF_SIZE-1) opens space to append NULL
+   for (int i=0; i<(UART_RXBUF_SIZE-1); i++) {
       // wait for HW to collect one byte/character
       //  (*) due to Clear-on-Read nature of VALID and OFLOW flags,
       //      this MUST BE ONE SHOT READ. Otherwise, both data and
@@ -91,15 +87,22 @@ void uart_recv(char *s) {
       // (**) since this is a tight loop, we in this case
       //      don't need to look at 'uart_rx.fld.oflow'
       do {
-         uart_rx = CSR->uart_rx.all;
+         uart_rx = csr->uart->rx->full();
       } while (!(uart_rx & UART_RX_VALID));
-
+ 
       // store received data and print it back (echo function)
       *s = (char)(uart_rx & UART_RX_DATA);
-      uart_send_char(*s);
+      uart_send_char(csr, *s);
 
       // <LF> indicates end of user input: Append NULL and exit
-      if ((*s == '\n') || (i == UART_RXBUF_SIZE-1)) {
+      if (i == UART_RXBUF_SIZE-3) {
+         *s = '\r';
+         s++;
+         *s = '\n';
+         s++;
+         *s = '\0';
+         break;
+      } else if ((*s == '\n')) {
          s++;
          *s = '\0';
          break;
@@ -109,6 +112,7 @@ void uart_recv(char *s) {
    };
 }
 
+#ifdef UART_TEST
 /**********************************************************************
  * Function:    uart_test()
  *
@@ -121,43 +125,43 @@ void uart_recv(char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_test(void) {
+void uart_test(csr_vp_t* csr) {
    const char *rx_expd = "Mi smo FPGA raja\r\n";
    char        rx_data[UART_RXBUF_SIZE];
    char       *rx_data_ptr;
    int         result;
 
-   uart_send((char*)"\r\n\nSelam eduSOC Hackers!\r\n");
-   uart_send((char*)"Try guessing 3 times what I'm thinking, then press <ENTER>.\r\n");
+   uart_send(csr, (char*)"\r\n\nSelam eduSOC Hackers!\r\n");
+   uart_send(csr, (char*)"Try guessing 3 times what I'm thinking, then press <ENTER>.\r\n");
 
    for (int i=3; i>0; i--) {
       //take input from UART and store it into allocated buffer
       rx_data_ptr = &rx_data[0];
-      uart_recv(rx_data_ptr);
+      uart_recv(csr, rx_data_ptr);
 
-      uart_send((char*)"\r\n\n\tYou entered: ");
-      uart_send(rx_data_ptr);
+      uart_send(csr, (char*)"\r\n\n\tYou entered: ");
+      uart_send(csr, rx_data_ptr);
 
       // check received data
       if (strcmp(rx_expd, rx_data_ptr) == 0) {
-          CSR -> gpo.fld.led_off = 0b10; // turn on first LED
-          uart_send((char*)"\r\n\t| You hit it! :-)\r\n");
+          //CSR -> gpo.fld.led_off = 0b10; // turn on first LED
+          uart_send(csr, (char*)"\r\n\t| You hit it! :-)\r\n");
           break;
 
       // mismatch
       } else {
-          CSR -> gpo.fld.led_off = 0b11; // turn off all LEDs
-          uart_send((char*)"\r\n\t| Sorry, you missed it.");
+          //CSR -> gpo.fld.led_off = 0b11; // turn off all LEDs
+          uart_send(csr, (char*)"\r\n\t| Sorry, you missed it.");
 
           if (i>1) {
-            uart_send((char*)"\r\n\t| ...Try again. Credit left: ");
-            uart_send_hex(i-1, 1);
-            uart_send((char*)"\r\n\n\n");
+            uart_send(csr, (char*)"\r\n\t| ...Try again. Credit left: ");
+            uart_send_hex(csr, i-1, 1);
+            uart_send(csr, (char*)"\r\n\n\n");
           }
       }
    }
 
-   uart_send((char*)"\r\nDONE!\r\n");
+   uart_send(csr, (char*)"\r\nDONE!\r\n");
 }
 #endif // UART_TEST
 
@@ -170,7 +174,7 @@ void uart_test(void) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_tests_info(int cmd) {
+void uart_tests_info(csr_vp_t* csr, int cmd) {
 
    char *tests_list[] = {
     "OK!\r\n\r\n",
@@ -194,7 +198,7 @@ void uart_tests_info(int cmd) {
 
    // UART signalizes test start and result
    if (cmd == 0 || cmd == 1) {
-      uart_send(tests_list[cmd]);
+      uart_send(csr, tests_list[cmd]);
    }
    else {
       char message [32];
@@ -217,7 +221,7 @@ void uart_tests_info(int cmd) {
       *mes_ptr++ =  '\n';
       *mes_ptr++ =  '\0';
 
-      uart_send(message);
+      uart_send(csr, message);
    }
 }
 #endif // RISCV_TESTS

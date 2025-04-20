@@ -15,30 +15,30 @@
 //
 //==========================================================================
 
-#ifndef _WIREGUARD_LIBS_H_
-#define _WIREGUARD_LIBS_H_
+#include "wireguard_libs.h"
 
-static char heap_memory[2048];
-static int heap_memory_used = 0;
+#ifndef VPROC
 
-void *malloc(int size)
+char heap_memory[2048];
+int heap_memory_used = 0;
+
+void* malloc(int size)
 {
-   char *p = heap_memory + heap_memory_used;
+   char* p = heap_memory + heap_memory_used;
    heap_memory_used += size;
    if (heap_memory_used > 2048)
       asm volatile ("ebreak");
    return p;
 }
 
-void *operator new(unsigned int size)
+void* operator new(unsigned int size)
 {
-   void *const p = malloc(size);
-   return p;
+   return malloc(size);
 }
 
-void operator delete(void *p) // or delete(void *, std::size_t)
+void operator delete(void* p)
 {
-   return;
+   // Dummy delete
 }
 
-#endif
+#endif  // VPROC
