@@ -6,9 +6,9 @@ BLD_DIR := $(CURDIR)
 
 SW_SRC  := $(BLD_DIR)/../2.sw
 SW_APP  := $(SW_SRC)/app
-SW_MAIN := $(SW_APP)
+#SW_MAIN := $(SW_APP)
 #SW_MAIN := $(SW_APP)/csr_uart_test
-#SW_MAIN := $(SW_APP)/csr_gpio_test
+SW_MAIN := $(SW_APP)/csr_gpio_test
 
 CSR_BLD := $(BLD_DIR)/csr_build/generated-files
 SW_BLD  := $(BLD_DIR)/sw_build
@@ -74,7 +74,7 @@ $(SW_MAIN)/main.cpp
    $(SW_APP)/string_bare.c \
    $(SW_APP)/wireguard_libs.cpp \
    $(SW_MAIN)/main.cpp
-   
+
 #------------------------
 # Create all necessary other file format from the compiled ELF
 sw_out: sw_elf

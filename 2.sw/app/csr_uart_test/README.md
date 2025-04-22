@@ -1,34 +1,34 @@
-# csr_uart_test Simulation
+# csr_uart_test Simulation
 
-This test follows the same procedure and commands as [csr_gpio_test](../csr_gpio_test/README.md), but it is located in the `2.sw/app/csr_uart_test` folder.
+> **Note:** Repository layout was cleaned up.
+> All build steps now start from the top‑level **`3.build/`** folder—except the
+> final co‑simulation launch, which is run inside **`4.sim/`**.
 
-The UART FIFO has a **16‑byte** buffer. If `uart_recv()` is not called frequently enough, the FIFO will overflow, which is clearly visible in the waveform. I made sure to observe the overflow flag and the stored characters in the `wave.CSR_UART_TEST.gtkw` file after opening it in **GTKWave**.
-
----
-
-## Steps I Followed
-
-| Step | Command / File | What It Does |
-|------|----------------|--------------|
-| **1. Refresh CSR headers** | ```make -f MakefileCosim clean && make -f MakefileCosim ``` | Keeps software and hardware CSR definitions in sync. |
-| **2. Build the UART test firmware** <br>(inside `2.sw/app/csr_uart_test`) | ```make -f MakefileCpp clean && make -f MakefileCpp ``` | Generates `main.elf` that continuously calls `uart_recv()`. |
-| **3. Adjust the simulation CFG** <br>(inside `4.sim`) | In **`vusermain.cfg`** replace the line with: <br>``` text vusermain0 -r -H -R -c -x 0x10000000 -X 0x3FFFFFFF -t ../2.sw/app/csr_uart_test/main.elf ``` | **⚠️  Important:** the wider range `0x1000_0000 – 0x3FFF_FFFF` includes **DMEM**. The narrower range used in the GPIO test (`0x2000_0000 – 0x2000_FFFF`) **skips DMEM** and the program will never run correctly. |
-| **4. Build & run the co‑simulation** | ```make -f MakefileVProc.mk clean make -f MakefileVProc.mk BUILD=ISS run ``` | Produces `wave.fst` with all DUT signals. |
-| **5. View the results** | ```gtkwave wave.fst ``` <br>then load **`wave.CSR_UART_TEST.gtkw`** | Inspect RX/TX activity and watch the `oflow` flag when FIFO fills. |
+The functional test is simple:
+`bfm_uart.sv` transmits **“Mi smo FPGA raja\r\n”**, the firmware calls
+`uart_recv()`, and we watch the 16‑byte RX FIFO fill/overflow.
+The address map must span **`0x1000_0000 – 0x3FFF_FFFF`** so that **DMEM**
+is visible.
 
 ---
 
-## What You Should See
+## Build / run procedure
 
-* **`from_csr/uart/tx/data`** – characters generated in `bfm_uart.sv`, e.g. **M i  s m o  F P G A …**
-* **`to_csr/uart/rx/data`** – the same characters as they are read by `uart_recv()`
-* **`to_csr/uart/rx/valid`** – one‑cycle pulse for every received byte
+| Phase | Command | Run from | Notes |
+|-------|---------|----------|-------|
+| **1. Generate RTL + CSR headers** | `make -f MakefileCSR clean && make -f MakefileCSR` | **`3.build/`** | Produces RTL *.sv* and CSR headers in `csr_build/generated-files/`. |
+| **2. Build firmware** | `make -f MakefileSW` | **`3.build/`** | `MakefileSW` compiles `main.cpp` chosen via `SW_MAIN := $(SW_APP)/csr_uart_test`. |
+| **3. Configure simulation** | Edit **`4.sim/vusermain.cfg`** →<br>```text vusermain0 -r -H -R -c -x 0x10000000 -X 0x3FFFFFFF -t ../3.build/sw_build/main.elf ``` | **`4.sim/`** | Full range is mandatory; the old GPIO span cuts off DMEM. |
+| **4. Run co‑simulation** | `make -f MakefileVProc.mk clean && make -f MakefileVProc.mk BUILD=ISS run` | **`4.sim/`** | Generates `wave.fst`. |
+| **5. View results** | `gtkwave wave.fst` → **File → Read Save File →** `wave.CSR_UART_TEST.gtkw` | anywhere | Inspect RX data and `oflow`. |
 
-Below is an example waveform screenshot confirming correct reception (green trace shows the string *“Mi smo FPGA raja\r\n”* arriving byte‑by‑byte):
+---
 
-![image](https://github.com/user-attachments/assets/ad248d4e-de57-423d-b88f-8cc1a7c7debf)
+## What you should see
 
-## Quick Tips
+* **`from_csr/uart/tx/data`** — bytes sent by BFM: **M i s m o F P G A …**
+* **`to_csr/uart/rx/data`** — same bytes as firmware reads
+* **`to_csr/uart/rx/valid`** — pulse per byte
+* **`to_csr/uart/rx/oflow`** — asserts if `uart_recv()` lags behind (FIFO = 16 B)
 
-* Want to replay a different string? Edit `send_string()` in `bfm_uart.sv`.
-* To stress‑test overflow, comment out `uart_recv()` in `main.cpp` and watch `oflow` assert after 16 bytes.
+![UART RX waveform](https://github.com/user-attachments/assets/ad248d4e-de57-423d-b88f-8cc1a7c7debf)

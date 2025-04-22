@@ -33,8 +33,6 @@ ${HW_SRC}/ip.infra/soc_if.sv
 ${HW_SRC}/ip.infra/dpe_pkg.sv
 ${HW_SRC}/ip.infra/dpe_if.sv
 ${HW_SRC}/ip.infra/gmii_if.sv
-${HW_SRC}/ip.infra/ethernet_mac.sv
-${HW_SRC}/ip.infra/ethernet_phy.sv
 
 #---PeakRDL-generated CSR + SOC CSR wrapper
 ${BLD_DIR}/csr_build/generated-files/csr_pkg.sv
