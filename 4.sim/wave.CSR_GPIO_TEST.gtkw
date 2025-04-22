@@ -1,33 +1,66 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Wed Apr  9 10:38:50 2025
+[*] Tue Apr 22 21:39:06 2025
 [*]
 [dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.fst"
-[dumpfile_mtime] "Wed Apr  9 10:36:37 2025"
-[dumpfile_size] 1352744
+[dumpfile_mtime] "Tue Apr 22 21:26:03 2025"
+[dumpfile_size] 13161650
 [savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.CSR_GPIO_TEST.gtkw"
 [timestart] 0
-[size] 1000 600
-[pos] -1 -1
-*-26.969456 72200000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1920 1128
+[pos] -325 -272
+*-30.468674 201893750 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
-[treeopen] TOP.tb.
-[treeopen] TOP.tb.dut.
+[treeopen] TOP.tb.dut.from_csr.
+[treeopen] TOP.tb.dut.from_csr.gpio.
+[treeopen] TOP.tb.dut.from_csr.uart.
+[treeopen] TOP.tb.dut.from_csr.uart.rx.
+[treeopen] TOP.tb.dut.from_csr.uart.rx_trigger.
+[treeopen] TOP.tb.dut.from_csr.uart.tx.
+[treeopen] TOP.tb.dut.from_csr.uart.tx.data.
+[treeopen] TOP.tb.dut.from_csr.uart.tx_trigger.
 [treeopen] TOP.tb.dut.to_csr.
 [treeopen] TOP.tb.dut.to_csr.gpio.
+[treeopen] TOP.tb.dut.to_csr.uart.
+[treeopen] TOP.tb.dut.to_csr.uart.rx.
+[treeopen] TOP.tb.dut.to_csr.uart.rx.data.
+[treeopen] TOP.tb.dut.to_csr.uart.tx.
+[treeopen] TOP.tb.dut.u_fabric.
 [treeopen] TOP.tb.dut.u_soc_csr.
+[treeopen] TOP.tb.dut.u_uart.
 [sst_width] 276
-[signals_width] 158
+[signals_width] 270
 [sst_expanded] 1
-[sst_vpaned_height] 342
-@c00028
-TOP.tb.dut.led[1:0]
+[sst_vpaned_height] 741
+@200
+-BUS
 @28
-(0)TOP.tb.dut.led[1:0]
-(1)TOP.tb.dut.led[1:0]
-@1401200
--group_end
-@29
-TOP.tb.dut.key_in[1:0]
+TOP.tb.dut.u_cpu.bus.vld
+TOP.tb.dut.u_cpu.bus.rdy
+TOP.tb.dut.u_cpu.bus.we[3:0]
+@22
+TOP.tb.dut.u_cpu.bus.addr[31:2]
+TOP.tb.dut.u_cpu.bus.rdat[31:0]
+TOP.tb.dut.u_cpu.bus.wdat[31:0]
+@200
+-
+-FROM_CSR
+-from_csr/gpio/led1
+@28
+TOP.tb.dut.from_csr.gpio.led1.value
+@200
+-from_csr/gpio/led2
+@28
+TOP.tb.dut.from_csr.gpio.led2.value
+@200
+-
+-TO_CSR
+-to_csr/gpio/key1
+@28
+TOP.tb.dut.to_csr.gpio.key1.next
+@200
+-to_csr/gpio/key2
+@28
+TOP.tb.dut.to_csr.gpio.key2.next
 [pattern_trace] 1
 [pattern_trace] 0
