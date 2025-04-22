@@ -49,4 +49,5 @@ gtkwave wave.fst
 ```
 I then opened the wave.CSR_GPIO_TEST.gtkw file, where I observed the results as shown in the attached image.
 
-![image](https://github.com/user-attachments/assets/68a684ec-c9f9-4d63-b71d-a870720543a0)
+![image](https://github.com/user-attachments/assets/4b380128-accc-4ce3-94f1-cf5f1e63fc3a)
+
