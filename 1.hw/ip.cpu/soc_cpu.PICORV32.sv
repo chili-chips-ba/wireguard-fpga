@@ -155,7 +155,7 @@ module soc_cpu #(
       .REGS_INIT_ZERO       (0)
    ) u_cpu (
       .clk          (bus.clk),     //i
-      .resetn       (bus.arst_n | imem_cpu_rstn),  //i
+      .resetn       (bus.arst_n & imem_cpu_rstn),  //i
 
       .trap         (), //o
 
