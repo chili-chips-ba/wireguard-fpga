@@ -12,8 +12,6 @@ ${SIM_DIR}/models/soc_cpu.VPROC.sv
 ${SIM_DIR}/models/bfm_uart.sv
 ${SIM_DIR}/models/bfm_adc.sv
 ${SIM_DIR}/models/bfm_phy_mdio.sv
-${SIM_DIR}/models/bfm_pll_80M.sv
-${SIM_DIR}/models/bfm_pll_125M.sv
 
 #---Xilinx primitives
 ${SIM_DIR}/models/no-change/glbl.v
