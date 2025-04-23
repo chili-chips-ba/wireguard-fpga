@@ -3,8 +3,8 @@
 #==========================================================================
 
 #---Target-specific components
-#${HW_SRC}/fpgatech_lib/XILINX/fpga_pll_80M.sv
-#${HW_SRC}/fpgatech_lib/XILINX/fpga_pll_125M.sv
+${HW_SRC}/fpgatech_lib/XILINX/fpga_pll_80M.sv
+${HW_SRC}/fpgatech_lib/XILINX/fpga_pll_125M.sv
 
 #---External AXIS library
 ${HW_SRC}/external_lib/axis/axis_register.v
