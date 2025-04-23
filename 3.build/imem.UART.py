@@ -10,8 +10,8 @@ import serial
 import struct
 import time
 
-#ComPort = serial.Serial('/dev/ttyUSB1') # open COM24
-ComPort = serial.Serial('COM5')
+#ComPort = serial.Serial('/dev/ttyS3')
+ComPort = serial.Serial('COM3')
 ComPort.baudrate = 115200 # set Baud rate to 115200, fixed on FPGA side
 ComPort.bytesize = serial.EIGHTBITS    # Number of data bits = 8
 ComPort.parity   = serial.PARITY_NONE   # No parity
@@ -36,9 +36,9 @@ for lineno,line in enumerate(infile):
       length = length + 1
 
 print("length: ", length)
-ot= ComPort.write(struct.pack('B', int(0x23)))        #Start Of Packet
+ot= ComPort.write(struct.pack('B', int(0x12)))        #Start Of Packet (DC2)
 
-print("SOP: ", hex(0x23))
+print("SOP: ", hex(0x12))
 ot= ComPort.write(struct.pack('B', int(0x07)))        #CMD 0x07 write to register, 0x08 read from register
 
 print("CMD: ", hex(0x07))
@@ -95,8 +95,8 @@ checksum = int(checksum&0xFF)
 ot= ComPort.write(struct.pack('B', checksum))  #CheckSum
 print(f'CS: ', hex(checksum))
 
-ot= ComPort.write(struct.pack('B', int(0x0D))) #End Of Packet
-print("EOP: ", hex(0x0D))
+ot= ComPort.write(struct.pack('B', int(0x14))) #End Of Packet (DC4)
+print("EOP: ", hex(0x14))
 
 it1=(ComPort.read(1))                          #for receiving data from FPGA
 print(f"END: {hex(int.from_bytes(it1, byteorder='big'))}")
