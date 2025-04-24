@@ -20,15 +20,7 @@ foreach e [array names ::env] {
 #  each separated by underscore, except that optional DESCription is separated by hyphen. 
 #
 #  E.g
-#      NN397_NN375_U21 –> test of NN375 Peripheral Card (USB2/3 PHY), mounted to NN397 Carrier, connected to U21 FPGA
-#  or: usb2-NN397_NN375_U21
-#
-#      emac-NN397_PE273_U11
-#
-#      NN397_PE270_U41
-#      NN392_PE270_U11
-#      NN397_ddr_U21   -> test of soldered-down DDR4 memory on NN397 Carrier Card (there is no Peripheral Card for it)  
-#      NN397_clk_U21   -> test of on-board Clocks 
+#      usb3_ZC706_U2 –> USB3 part on the ZC706 card, connected to U2 FPGA
 #------------------------------------------------------------
 
 set FPGA_PART    UNSUPPORTED
@@ -65,39 +57,9 @@ proc decode_fpga {} {
           set ::FPGA_FAMILY  virtexuplus
           set ::FPGA_PART    xcvu9p-flga2104-2L-e-es1
        }
-
-       "NN371" {
-          # Rumi4 Zynq-Ultrascale+ MDC
-          set ::FPGA_FAMILY  virtexuplus
-          set ::FPGA_PART    xczu9cg-ffvb1156-2-e
-       }
-
-       "NN374" {
-          # Rumi4.5 Zynq-Ultrascale+ MDC (Rev.2 of NN371)
-          set ::FPGA_FAMILY  virtexuplus
-          set ::FPGA_PART    xczu19eg-ffvd1760-2L-e
-       }
-
-       "NN392"   {
-          # Rumi4.0 Tile
-          set ::FPGA_FAMILY  virtex7
-          set ::FPGA_PART    xc7v2000t-flg1925-1
-       }
-
-       "NN397" {
-          # Rumi4.5 Tile
-          set ::FPGA_FAMILY  virtexu
-          set ::FPGA_PART    xcvu440-flga2892-1-c
-       }
-
-       "NN399" {
-          # Rumi5.0 Tile
-          set ::FPGA_FAMILY  virtexu
-          set ::FPGA_PART    xcvu440-flga2892-2-e
-       }
    }
 
-   puts "\nQRDF MSG: HW_PLATFORM is '$::HW_PLATFORM' ($::FPGA_FAMILY $::FPGA_PART)\n"
+   puts "\nMSG: HW_PLATFORM is '$::HW_PLATFORM' ($::FPGA_FAMILY $::FPGA_PART)\n"
 }
 
 
