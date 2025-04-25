@@ -82,3 +82,7 @@ sw_out: sw_elf
 	$(CROSS)objcopy -O binary  $(SW_BLD)/main.elf   $(SW_BLD)/main.bin
 	$(CROSS)objdump -drwC -S   $(SW_BLD)/main.elf > $(SW_BLD)/main.dump
 	python3 imem.INIT.py
+
+#------------------------
+program: sw_all
+	python3 imem.UART.py
