@@ -16,7 +16,6 @@ ComPort.baudrate = 115200               # set Baud rate to 115200, fixed on FPGA
 ComPort.bytesize = serial.EIGHTBITS     # Number of data bits = 8
 ComPort.parity   = serial.PARITY_NONE   # No parity
 ComPort.stopbits = serial.STOPBITS_ONE  # Number of Stop bits = 1
-ComPort.timeout  = 1
 
 infile  = open('./sw_build/main.hex','r')
 outfile = open('./sw_build/code.hex','w')
@@ -37,17 +36,17 @@ for lineno,line in enumerate(infile):
       length = length + 1
 
 print("Length:", length)
-
 ot = ComPort.write(struct.pack('B', int(0x12)))          #Start Of Packet (DC2)
+
 print("SOP:   ", hex(0x12))
+ot = ComPort.write(struct.pack('B', int(0x07)))          #CMD 0x07 write to register, 0x08 read from register
 
-ot = ComPort.write(struct.pack('B', int(0x05)))          #CMD 0x05 enter IMEM programming mode
-print("CMD:   ", hex(0x05))
-
+print("CMD:   ", hex(0x07))
 ot = ComPort.write(struct.pack('B', int(length & 0xFF))) #LowByte Length of DATA
-print("LEN1:  ", hex(length & 0xFF))
 
+print("LEN1:  ", hex(length & 0xFF))
 ot = ComPort.write(struct.pack('B', int(length >> 8)))   #HighByte Length of DATA
+
 print("LEN2:  ", hex(length >> 8))
 
 checksum = 0
@@ -58,29 +57,34 @@ for li in str32:         #DATA
    outfile.write(li)
    outfile.write("\n")
 
-   checksum = checksum + int(li[6:8], 16)
    ot = ComPort.write(struct.pack('B', int(li[6:8], 16)))
+   time.sleep(0.001)
+   checksum = checksum + int(li[6:8], 16)
    print(f'{i:4d}_0: {li[6:8]:2}')
-   
-   checksum = checksum + int(li[4:6], 16)
+
    ot = ComPort.write(struct.pack('B', int(li[4:6], 16)))
+   time.sleep(0.001)
+   checksum = checksum + int(li[4:6], 16)
    print(f'{i:4d}_1: {li[4:6]:2}')
-   
-   checksum = checksum + int(li[2:4], 16)
+
    ot = ComPort.write(struct.pack('B', int(li[2:4], 16)))
+   time.sleep(0.001)
+   checksum = checksum + int(li[2:4], 16)
    print(f'{i:4d}_2: {li[2:4]:2}')
-   
-   checksum = checksum + int(li[0:2], 16)
+
    ot = ComPort.write(struct.pack('B', int(li[0:2], 16)))
+   time.sleep(0.001)
+   checksum = checksum + int(li[0:2], 16)
    print(f'{i:4d}_3: {li[0:2]:2}')
-   
+
 checksum = int(checksum & 0xFF)
+ot = ComPort.write(struct.pack('B', checksum))  #CheckSum
 print("CS:    ", hex(checksum))
 
 ot = ComPort.write(struct.pack('B', int(0x14))) #End Of Packet (DC4)
 print("EOP:   ", hex(0x14))
 
-it1 = (ComPort.read(1))                         #for receiving checksum from FPGA
+it1 = (ComPort.read(1))                         #for receiving data from FPGA
 print(f"END:    {hex(int.from_bytes(it1, byteorder='big'))}")
 
 infile.close()
