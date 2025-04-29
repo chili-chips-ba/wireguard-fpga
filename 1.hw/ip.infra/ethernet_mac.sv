@@ -14,10 +14,7 @@
 //   Triple-Speed Ethernet Wrapper
 //==========================================================================
 
-module ethernet_mac #(
-   // target ("SIM", "GENERIC", "XILINX")
-   parameter TARGET = "GENERIC"
-) (
+module ethernet_mac (
    input  logic       gtx_clk,
    input  logic       gtx_rst,
    input  logic       gmii_rx_clk,
