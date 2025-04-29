@@ -73,15 +73,16 @@ for li in str32:         #DATA
    checksum = checksum + int(li[0:2], 16)
    ot = ComPort.write(struct.pack('B', int(li[0:2], 16)))
    print(f'{i:4d}_3: {li[0:2]:2}')
+
    
 checksum = int(checksum & 0xFF)
-print("CS:    ", hex(checksum))
+print("ECS:   ", hex(checksum))
+
+it1 = (ComPort.read(1))                         #for receiving checksum from FPGA
+print(f"RCS:    {hex(int.from_bytes(it1, byteorder='big'))}")
 
 ot = ComPort.write(struct.pack('B', int(0x14))) #End Of Packet (DC4)
 print("EOP:   ", hex(0x14))
-
-it1 = (ComPort.read(1))                         #for receiving checksum from FPGA
-print(f"END:    {hex(int.from_bytes(it1, byteorder='big'))}")
 
 infile.close()
 outfile.close()
