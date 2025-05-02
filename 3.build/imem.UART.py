@@ -50,7 +50,8 @@ print("LEN1:  ", hex(length & 0xFF))
 ot = ComPort.write(struct.pack('B', int(length >> 8)))   #HighByte Length of DATA
 print("LEN2:  ", hex(length >> 8))
 
-checksum = 0
+#checksum = 0
+checksum = int(length & 0xFF) + int((length >> 8) & 0xFF)
 
 i = 0
 for li in str32:         #DATA
@@ -74,7 +75,7 @@ for li in str32:         #DATA
    ot = ComPort.write(struct.pack('B', int(li[0:2], 16)))
    print(f'{i:4d}_3: {li[0:2]:2}')
 
-   
+
 checksum = int(checksum & 0xFF)
 print("ECS:   ", hex(checksum))
 
