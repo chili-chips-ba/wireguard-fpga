@@ -1,41 +1,41 @@
 
 Discarded input sections
 
- .group         0x00000000        0x8 /tmp/cc6FRwlE.o
- .group         0x00000000        0x8 /tmp/cc6FRwlE.o
- .group         0x00000000        0x8 /tmp/cc6FRwlE.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0xc /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0xc /tmp/cc0rFYHe.o
- .group         0x00000000        0xc /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0xc /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0xc /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0xc /tmp/cc0rFYHe.o
- .group         0x00000000        0x8 /tmp/cc0rFYHe.o
- .group         0x00000000        0xc /tmp/cc0rFYHe.o
+ .group         0x00000000        0x8 /tmp/ccNjxJ82.o
+ .group         0x00000000        0x8 /tmp/ccNjxJ82.o
+ .group         0x00000000        0x8 /tmp/ccNjxJ82.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0xc /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0xc /tmp/ccd4OqmV.o
+ .group         0x00000000        0xc /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0xc /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0xc /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0xc /tmp/ccd4OqmV.o
+ .group         0x00000000        0x8 /tmp/ccd4OqmV.o
+ .group         0x00000000        0xc /tmp/ccd4OqmV.o
 
 Memory Configuration
 
@@ -53,163 +53,163 @@ Linker script and memory map
 .text           0x00000000     0x1284
                 0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x00000000       0x70 /tmp/ccHwRQej.o
+ .text          0x00000000       0x70 /tmp/cc2Nt4Bg.o
                 0x00000000                _boot_crt
- .text          0x00000070      0x364 /tmp/cc6FRwlE.o
+ .text          0x00000070      0x364 /tmp/ccNjxJ82.o
                 0x00000070                uart_send_char
                 0x000000d8                uart_send_hex
                 0x00000154                uart_send
                 0x000001a4                uart_recv
                 0x000002a8                uart_test
  .text._ZN18csr__uart__rx_vp_t4fullEv
-                0x000003d4       0x20 /tmp/cc6FRwlE.o
+                0x000003d4       0x20 /tmp/ccNjxJ82.o
                 0x000003d4                csr__uart__rx_vp_t::full()
  .text._ZN18csr__uart__tx_vp_t4dataEm
-                0x000003f4       0x2c /tmp/cc6FRwlE.o
+                0x000003f4       0x2c /tmp/ccNjxJ82.o
                 0x000003f4                csr__uart__tx_vp_t::data(unsigned long)
  .text._ZN18csr__uart__tx_vp_t4busyEv
-                0x00000420       0x28 /tmp/cc6FRwlE.o
+                0x00000420       0x28 /tmp/ccNjxJ82.o
                 0x00000420                csr__uart__tx_vp_t::busy()
- .text          0x00000448      0x1f4 /tmp/ccMOvnk6.o
+ .text          0x00000448      0x1f4 /tmp/ccRhHFhC.o
                 0x00000448                memset
                 0x000004ac                memcpy
                 0x0000051c                memcmp
                 0x000005bc                strlen
                 0x000005fc                strcmp
- .text          0x0000063c       0x94 /tmp/ccYfOXbE.o
+ .text          0x0000063c       0x94 /tmp/cclfwNHj.o
                 0x0000063c                malloc
                 0x00000690                operator new(unsigned int)
                 0x000006bc                operator delete(void*)
- .text          0x000006d0      0x100 /tmp/cc0rFYHe.o
+ .text          0x000006d0      0x100 /tmp/ccd4OqmV.o
                 0x000006d0                delay(unsigned long)
                 0x00000710                main
  .text._ZN33csr__cpu_fifo__rx__data_31_0_vp_tC2EPm
-                0x000007d0       0x24 /tmp/cc0rFYHe.o
+                0x000007d0       0x24 /tmp/ccd4OqmV.o
                 0x000007d0                csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)
                 0x000007d0                csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)
  .text._ZN34csr__cpu_fifo__rx__data_63_32_vp_tC2EPm
-                0x000007f4       0x24 /tmp/cc0rFYHe.o
+                0x000007f4       0x24 /tmp/ccd4OqmV.o
                 0x000007f4                csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)
                 0x000007f4                csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)
  .text._ZN34csr__cpu_fifo__rx__data_95_64_vp_tC2EPm
-                0x00000818       0x24 /tmp/cc0rFYHe.o
+                0x00000818       0x24 /tmp/ccd4OqmV.o
                 0x00000818                csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)
                 0x00000818                csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)
  .text._ZN35csr__cpu_fifo__rx__data_127_96_vp_tC2EPm
-                0x0000083c       0x24 /tmp/cc0rFYHe.o
+                0x0000083c       0x24 /tmp/ccd4OqmV.o
                 0x0000083c                csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)
                 0x0000083c                csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)
  .text._ZN31csr__cpu_fifo__rx__control_vp_tC2EPm
-                0x00000860       0x24 /tmp/cc0rFYHe.o
+                0x00000860       0x24 /tmp/ccd4OqmV.o
                 0x00000860                csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)
                 0x00000860                csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)
  .text._ZN31csr__cpu_fifo__rx__trigger_vp_tC2EPm
-                0x00000884       0x24 /tmp/cc0rFYHe.o
+                0x00000884       0x24 /tmp/ccd4OqmV.o
                 0x00000884                csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)
                 0x00000884                csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)
  .text._ZN30csr__cpu_fifo__rx__status_vp_tC2EPm
-                0x000008a8       0x24 /tmp/cc0rFYHe.o
+                0x000008a8       0x24 /tmp/ccd4OqmV.o
                 0x000008a8                csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)
                 0x000008a8                csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)
  .text._ZN22csr__cpu_fifo__rx_vp_tC2EPm
-                0x000008cc      0x154 /tmp/cc0rFYHe.o
+                0x000008cc      0x154 /tmp/ccd4OqmV.o
                 0x000008cc                csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)
                 0x000008cc                csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)
  .text._ZN33csr__cpu_fifo__tx__data_31_0_vp_tC2EPm
-                0x00000a20       0x24 /tmp/cc0rFYHe.o
+                0x00000a20       0x24 /tmp/ccd4OqmV.o
                 0x00000a20                csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)
                 0x00000a20                csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)
  .text._ZN34csr__cpu_fifo__tx__data_63_32_vp_tC2EPm
-                0x00000a44       0x24 /tmp/cc0rFYHe.o
+                0x00000a44       0x24 /tmp/ccd4OqmV.o
                 0x00000a44                csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)
                 0x00000a44                csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)
  .text._ZN34csr__cpu_fifo__tx__data_95_64_vp_tC2EPm
-                0x00000a68       0x24 /tmp/cc0rFYHe.o
+                0x00000a68       0x24 /tmp/ccd4OqmV.o
                 0x00000a68                csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)
                 0x00000a68                csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)
  .text._ZN35csr__cpu_fifo__tx__data_127_96_vp_tC2EPm
-                0x00000a8c       0x24 /tmp/cc0rFYHe.o
+                0x00000a8c       0x24 /tmp/ccd4OqmV.o
                 0x00000a8c                csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)
                 0x00000a8c                csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)
  .text._ZN31csr__cpu_fifo__tx__control_vp_tC2EPm
-                0x00000ab0       0x24 /tmp/cc0rFYHe.o
+                0x00000ab0       0x24 /tmp/ccd4OqmV.o
                 0x00000ab0                csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)
                 0x00000ab0                csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)
  .text._ZN31csr__cpu_fifo__tx__trigger_vp_tC2EPm
-                0x00000ad4       0x24 /tmp/cc0rFYHe.o
+                0x00000ad4       0x24 /tmp/ccd4OqmV.o
                 0x00000ad4                csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)
                 0x00000ad4                csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)
  .text._ZN30csr__cpu_fifo__tx__status_vp_tC2EPm
-                0x00000af8       0x24 /tmp/cc0rFYHe.o
+                0x00000af8       0x24 /tmp/ccd4OqmV.o
                 0x00000af8                csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)
                 0x00000af8                csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)
  .text._ZN22csr__cpu_fifo__tx_vp_tC2EPm
-                0x00000b1c      0x154 /tmp/cc0rFYHe.o
+                0x00000b1c      0x154 /tmp/ccd4OqmV.o
                 0x00000b1c                csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)
                 0x00000b1c                csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)
  .text._ZN18csr__cpu_fifo_vp_tC2EPm
-                0x00000c70       0x78 /tmp/cc0rFYHe.o
+                0x00000c70       0x78 /tmp/ccd4OqmV.o
                 0x00000c70                csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)
                 0x00000c70                csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)
  .text._ZN18csr__uart__rx_vp_tC2EPm
-                0x00000ce8       0x24 /tmp/cc0rFYHe.o
+                0x00000ce8       0x24 /tmp/ccd4OqmV.o
                 0x00000ce8                csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)
                 0x00000ce8                csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)
  .text._ZN40csr__uart__rx_trigger_read_2925067f_vp_tC2EPm
-                0x00000d0c       0x24 /tmp/cc0rFYHe.o
+                0x00000d0c       0x24 /tmp/ccd4OqmV.o
                 0x00000d0c                csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)
                 0x00000d0c                csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)
  .text._ZN18csr__uart__tx_vp_tC2EPm
-                0x00000d30       0x24 /tmp/cc0rFYHe.o
+                0x00000d30       0x24 /tmp/ccd4OqmV.o
                 0x00000d30                csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)
                 0x00000d30                csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)
  .text._ZN41csr__uart__tx_trigger_write_d2a2fe0e_vp_tC2EPm
-                0x00000d54       0x24 /tmp/cc0rFYHe.o
+                0x00000d54       0x24 /tmp/ccd4OqmV.o
                 0x00000d54                csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)
                 0x00000d54                csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)
  .text._ZN14csr__uart_vp_tC2EPm
-                0x00000d78       0xd0 /tmp/cc0rFYHe.o
+                0x00000d78       0xd0 /tmp/ccd4OqmV.o
                 0x00000d78                csr__uart_vp_t::csr__uart_vp_t(unsigned long*)
                 0x00000d78                csr__uart_vp_t::csr__uart_vp_t(unsigned long*)
  .text._ZN14csr__gpio_vp_tC2EPm
-                0x00000e48       0x24 /tmp/cc0rFYHe.o
+                0x00000e48       0x24 /tmp/ccd4OqmV.o
                 0x00000e48                csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)
                 0x00000e48                csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)
  .text._ZN14csr__gpio_vp_t4key1Ev
-                0x00000e6c       0x28 /tmp/cc0rFYHe.o
+                0x00000e6c       0x28 /tmp/ccd4OqmV.o
                 0x00000e6c                csr__gpio_vp_t::key1()
  .text._ZN14csr__gpio_vp_t4led1Em
-                0x00000e94       0x44 /tmp/cc0rFYHe.o
+                0x00000e94       0x44 /tmp/ccd4OqmV.o
                 0x00000e94                csr__gpio_vp_t::led1(unsigned long)
  .text._ZN14csr__gpio_vp_t4led2Em
-                0x00000ed8       0x44 /tmp/cc0rFYHe.o
+                0x00000ed8       0x44 /tmp/ccd4OqmV.o
                 0x00000ed8                csr__gpio_vp_t::led2(unsigned long)
  .text._ZN26csr__ethernet__status_vp_tC2EPm
-                0x00000f1c       0x24 /tmp/cc0rFYHe.o
+                0x00000f1c       0x24 /tmp/ccd4OqmV.o
                 0x00000f1c                csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)
                 0x00000f1c                csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)
  .text._ZN18csr__ethernet_vp_tC2EPm
-                0x00000f40       0x4c /tmp/cc0rFYHe.o
+                0x00000f40       0x4c /tmp/ccd4OqmV.o
                 0x00000f40                csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)
                 0x00000f40                csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)
  .text._ZN18csr__dpe__fcr_vp_tC2EPm
-                0x00000f8c       0x24 /tmp/cc0rFYHe.o
+                0x00000f8c       0x24 /tmp/ccd4OqmV.o
                 0x00000f8c                csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)
                 0x00000f8c                csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)
  .text._ZN13csr__dpe_vp_tC2EPm
-                0x00000fb0       0x4c /tmp/cc0rFYHe.o
+                0x00000fb0       0x4c /tmp/ccd4OqmV.o
                 0x00000fb0                csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)
                 0x00000fb0                csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)
  .text._ZN14csr__hwid_vp_tC2EPm
-                0x00000ffc       0x24 /tmp/cc0rFYHe.o
+                0x00000ffc       0x24 /tmp/ccd4OqmV.o
                 0x00000ffc                csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)
                 0x00000ffc                csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)
  .text._ZN8csr_vp_tC2EPm
-                0x00001020      0x160 /tmp/cc0rFYHe.o
+                0x00001020      0x160 /tmp/ccd4OqmV.o
                 0x00001020                csr_vp_t::csr_vp_t(unsigned long*)
                 0x00001020                csr_vp_t::csr_vp_t(unsigned long*)
  *(.rodata .rodata.*)
- .rodata        0x00001180      0x102 /tmp/cc6FRwlE.o
+ .rodata        0x00001180      0x102 /tmp/ccNjxJ82.o
  *(.srodata .srodata.*)
                 0x00001284                        . = ALIGN (0x4)
  *fill*         0x00001282        0x2 
@@ -217,16 +217,16 @@ Linker script and memory map
                 0x00001284                        _idata_start = _text_end
 
 .rela.dyn       0x00000000        0x0
- .rela.text     0x00000000        0x0 /tmp/ccHwRQej.o
+ .rela.text     0x00000000        0x0 /tmp/cc2Nt4Bg.o
 
 .data           0x10000000        0x0 load address 0x00001284
                 0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x10000000        0x0 /tmp/ccHwRQej.o
- .data          0x10000000        0x0 /tmp/cc6FRwlE.o
- .data          0x10000000        0x0 /tmp/ccMOvnk6.o
- .data          0x10000000        0x0 /tmp/ccYfOXbE.o
- .data          0x10000000        0x0 /tmp/cc0rFYHe.o
+ .data          0x10000000        0x0 /tmp/cc2Nt4Bg.o
+ .data          0x10000000        0x0 /tmp/ccNjxJ82.o
+ .data          0x10000000        0x0 /tmp/ccRhHFhC.o
+ .data          0x10000000        0x0 /tmp/cclfwNHj.o
+ .data          0x10000000        0x0 /tmp/ccd4OqmV.o
                 0x10000000                        . = ALIGN (0x8)
                 0x10000800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.sdata .sdata.*)
@@ -236,14 +236,14 @@ Linker script and memory map
 .bss            0x10000000      0x804 load address 0x00001284
                 0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x10000000        0x0 /tmp/ccHwRQej.o
- .bss           0x10000000        0x0 /tmp/cc6FRwlE.o
- .bss           0x10000000        0x0 /tmp/ccMOvnk6.o
- .bss           0x10000000      0x800 /tmp/ccYfOXbE.o
+ .bss           0x10000000        0x0 /tmp/cc2Nt4Bg.o
+ .bss           0x10000000        0x0 /tmp/ccNjxJ82.o
+ .bss           0x10000000        0x0 /tmp/ccRhHFhC.o
+ .bss           0x10000000      0x800 /tmp/cclfwNHj.o
                 0x10000000                heap_memory
- .bss           0x10000800        0x0 /tmp/cc0rFYHe.o
+ .bss           0x10000800        0x0 /tmp/ccd4OqmV.o
  *(.sbss .sbss.*)
- .sbss          0x10000800        0x4 /tmp/ccYfOXbE.o
+ .sbss          0x10000800        0x4 /tmp/cclfwNHj.o
                 0x10000800                heap_memory_used
  *(COMMON)
                 0x10000804                        . = ALIGN (0x4)
@@ -266,29 +266,29 @@ Linker script and memory map
                 0x10008000                        . = (. + _STACK_SIZE)
  *fill*         0x10007e00      0x200 
                 0x10007e00                        _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/ccHwRQej.o
-LOAD /tmp/cc6FRwlE.o
-LOAD /tmp/ccMOvnk6.o
-LOAD /tmp/ccYfOXbE.o
-LOAD /tmp/cc0rFYHe.o
+LOAD /tmp/cc2Nt4Bg.o
+LOAD /tmp/ccNjxJ82.o
+LOAD /tmp/ccRhHFhC.o
+LOAD /tmp/cclfwNHj.o
+LOAD /tmp/ccd4OqmV.o
 OUTPUT(/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
 
 .riscv.attributes
                 0x00000000       0x2a
  .riscv.attributes
-                0x00000000       0x28 /tmp/ccHwRQej.o
+                0x00000000       0x28 /tmp/cc2Nt4Bg.o
  .riscv.attributes
-                0x00000028       0x2a /tmp/cc6FRwlE.o
+                0x00000028       0x2a /tmp/ccNjxJ82.o
  .riscv.attributes
-                0x00000052       0x2a /tmp/ccMOvnk6.o
+                0x00000052       0x2a /tmp/ccRhHFhC.o
  .riscv.attributes
-                0x0000007c       0x2a /tmp/ccYfOXbE.o
+                0x0000007c       0x2a /tmp/cclfwNHj.o
  .riscv.attributes
-                0x000000a6       0x2a /tmp/cc0rFYHe.o
+                0x000000a6       0x2a /tmp/ccd4OqmV.o
 
 .comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/cc6FRwlE.o
+ .comment       0x00000000       0x22 /tmp/ccNjxJ82.o
                                  0x23 (size before relaxing)
- .comment       0x00000022       0x23 /tmp/ccMOvnk6.o
- .comment       0x00000022       0x23 /tmp/ccYfOXbE.o
- .comment       0x00000022       0x23 /tmp/cc0rFYHe.o
+ .comment       0x00000022       0x23 /tmp/ccRhHFhC.o
+ .comment       0x00000022       0x23 /tmp/cclfwNHj.o
+ .comment       0x00000022       0x23 /tmp/ccd4OqmV.o
