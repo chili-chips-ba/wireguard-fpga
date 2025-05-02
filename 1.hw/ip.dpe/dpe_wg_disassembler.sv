@@ -96,7 +96,7 @@ module dpe_wg_disassembler (
       wg_cnt_next = wg_cnt_reg;
       wg_enp_next = wg_enp_reg;
 
-      case (state)
+      case (state_reg)
          IDLE: begin
             if (inp.tvalid && inp.tready && (inp.tdata[111:96] == PROT_IP) && (inp.tdata[119:116] == PROT_IPv4)) begin
                state_next = HEADER_1;
