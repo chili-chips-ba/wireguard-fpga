@@ -14,10 +14,7 @@
 //   WireGuard FPGA top-level module
 //==========================================================================
 
-module top #(
-   // target ("SIM", "GENERIC", "XILINX")
-   parameter TARGET = "XILINX"
-) (
+module top (
    input        clk_p,        //board clock positive
    input        clk_n,        //board clock negative
    input        rst_n,        //reset, low active
@@ -134,6 +131,7 @@ module top #(
    localparam          NUM_WORDS_DMEM = 8192; //=> 32kB DataRAM
 
    soc_if              bus_cpu       (.arst_n(sys_rst_n), .clk(sys_clk));
+   soc_if              bus_uart      (.arst_n(sys_rst_n), .clk(sys_clk));
    soc_if              bus_dmem      (.arst_n(sys_rst_n), .clk(sys_clk));
    soc_if              bus_csr       (.arst_n(sys_rst_n), .clk(sys_clk));
 
@@ -147,60 +145,62 @@ module top #(
       .ADDR_RESET      (32'h 0000_0000),
       .NUM_WORDS_IMEM  (NUM_WORDS_IMEM)
    ) u_cpu (
-      .bus             (bus_cpu),        //MST
+      .bus             (bus_cpu),       //MST
 
-      .imem_cpu_rstn   (imem_cpu_rstn),  //-\ access point
-      .imem_we         (imem_we),        //-| for
-      .imem_waddr      (imem_waddr),     // | reloading CPU
-      .imem_wdat       (imem_wdat)       //-/ program memory
+      .imem_cpu_rstn   (imem_cpu_rstn), //-\ access point
+      .imem_we         (imem_we),       //-| for
+      .imem_waddr      (imem_waddr),    // | reloading CPU
+      .imem_wdat       (imem_wdat)      //-/ program memory
    );
 
 //---------------------------------
    soc_fabric u_fabric (
-      .cpu             (bus_cpu),    //SLV
+      .cpu             (bus_cpu),       //SLV
+      .uart            (bus_uart),      //SLV
 
-      .dmem            (bus_dmem),   //MST
-      .csr             (bus_csr)     //MST
+      .dmem            (bus_dmem),      //MST
+      .csr             (bus_csr)        //MST
    );
 
 //---------------------------------
    soc_ram #(
       .NUM_WORDS       (NUM_WORDS_DMEM)
    ) u_dmem (
-      .bus             (bus_dmem)    //SLV
+      .bus             (bus_dmem)       //SLV
    );
 
 //---------------------------------
    soc_csr u_soc_csr (
-      .bus             (bus_csr),    //SLV
-      .hwif_in         (to_csr),     //i
-      .hwif_out        (from_csr)    //o
+      .bus             (bus_csr),       //SLV
+      .hwif_in         (to_csr),        //i
+      .hwif_out        (from_csr)       //o
    );
 
 //---------------------------------
    uart u_uart (
-      .arst_n          (sys_rst_n),  //i
-      .clk             (sys_clk),    //i
+      .arst_n          (sys_rst_n),     //i
+      .clk             (sys_clk),       //i
 
-      .uart_rx         (uart_rx),    //i
-      .uart_tx         (uart_tx),    //o
+      .uart_rx         (uart_rx),       //i
+      .uart_tx         (uart_tx),       //o
 
-      .from_csr        (from_csr),   //i
-      .to_csr          (to_csr),     //o
+      .from_csr        (from_csr),      //i
+      .to_csr          (to_csr),        //o
 
-   // IMEM Write port, for live updates of CPU program
       .imem_cpu_rstn   (imem_cpu_rstn), //o
       .imem_we         (imem_we),       //o
       .imem_waddr      (imem_waddr),    //o[31:2]
-      .imem_wdat       (imem_wdat)      //o[31:0]
+      .imem_wdat       (imem_wdat),     //o[31:0]
+      
+      .bus             (bus_uart)       //MST
    );
 
 //---------------------------------
    cpu_fifo u_cpu_fifo (
-      .from_csr        (from_csr),   //i
-      .to_csr          (to_csr),     //o
-      .to_cpu          (to_cpu),     //SLV
-      .from_cpu        (from_cpu)    //MST
+      .from_csr        (from_csr),      //i
+      .to_csr          (to_csr),        //o
+      .to_cpu          (to_cpu),        //SLV
+      .from_cpu        (from_cpu)       //MST
    );
 
 //==========================================================================
@@ -215,47 +215,24 @@ module top #(
 // DPE
 //==========================================================================
    dpe u_dpe (
-      .from_csr        (from_csr),   //i
-      .to_csr          (to_csr),     //o
-      .from_cpu        (from_cpu),   //SLV
-      .from_eth_1      (from_eth_1), //SLV
-      .from_eth_2      (from_eth_2), //SLV
-      .from_eth_3      (from_eth_3), //SLV
-      .from_eth_4      (from_eth_4), //SLV
-      .to_cpu          (to_cpu),     //MST
-      .to_eth_1        (to_eth_1),   //MST
-      .to_eth_2        (to_eth_2),   //MST
-      .to_eth_3        (to_eth_3),   //MST
-      .to_eth_4        (to_eth_4)    //MST
+      .from_csr        (from_csr),      //i
+      .to_csr          (to_csr),        //o
+      .from_cpu        (from_cpu),      //SLV
+      .from_eth_1      (from_eth_1),    //SLV
+      .from_eth_2      (from_eth_2),    //SLV
+      .from_eth_3      (from_eth_3),    //SLV
+      .from_eth_4      (from_eth_4),    //SLV
+      .to_cpu          (to_cpu),        //MST
+      .to_eth_1        (to_eth_1),      //MST
+      .to_eth_2        (to_eth_2),      //MST
+      .to_eth_3        (to_eth_3),      //MST
+      .to_eth_4        (to_eth_4)       //MST
    );
-
-//==========================================================================
-// ILA
-//==========================================================================
-`ifdef VIVADO_GUI_BUILD
-   ila_0 u_ila_0 (
-      .clk             (sys_clk),
-      .probe0          (from_eth_1.tdata),
-      .probe1          (from_eth_1.tkeep),
-      .probe2          (from_eth_1.tvalid),
-      .probe3          (from_eth_1.tready),
-      .probe4          (from_eth_1.tlast),
-      .probe5          ('0),
-      .probe6          (to_eth_1.tdata),
-      .probe7          (to_eth_1.tkeep),
-      .probe8          (to_eth_1.tvalid),
-      .probe9          (to_eth_1.tready),
-      .probe10         (to_eth_1.tlast),
-      .probe11         ('0)
-   );
-`endif
 
 //==========================================================================
 // Ethernet subsystems
 //==========================================================================
-   ethernet_mac #(
-      .TARGET          (TARGET)
-   ) u_eth_1 (
+   ethernet_mac u_eth_1 (
       .gtx_clk         (eth_gtx_clk),
       .gtx_rst         (eth_gtx_rst),
       .gmii_rx_clk     (e1_rxc),
@@ -273,9 +250,7 @@ module top #(
    );
 
 //--------------------------------------------------------------------------
-   ethernet_mac #(
-      .TARGET          (TARGET)
-   ) u_eth_2 (
+   ethernet_mac u_eth_2 (
       .gtx_clk         (eth_gtx_clk),
       .gtx_rst         (eth_gtx_rst),
       .gmii_rx_clk     (e2_rxc),
@@ -293,9 +268,7 @@ module top #(
    );
 
 //--------------------------------------------------------------------------
-   ethernet_mac #(
-      .TARGET          (TARGET)
-   ) u_eth_3 (
+   ethernet_mac u_eth_3 (
       .gtx_clk         (eth_gtx_clk),
       .gtx_rst         (eth_gtx_rst),
       .gmii_rx_clk     (e3_rxc),
@@ -313,9 +286,7 @@ module top #(
    );
 
 //--------------------------------------------------------------------------
-   ethernet_mac #(
-      .TARGET          (TARGET)
-   ) u_eth_4 (
+   ethernet_mac u_eth_4 (
       .gtx_clk         (eth_gtx_clk),
       .gtx_rst         (eth_gtx_rst),
       .gmii_rx_clk     (e4_rxc),
