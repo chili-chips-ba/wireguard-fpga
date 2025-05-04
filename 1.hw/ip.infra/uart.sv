@@ -45,37 +45,71 @@ module uart
    output logic               imem_cpu_rstn,
    output logic               imem_we,
    output logic [31:2]        imem_waddr,
-   output logic [31:0]        imem_wdat
+   output logic [31:0]        imem_wdat,
+   
+// DMEM/CSR bus mastering interface
+   soc_if.MST                 bus
 );
    import soc_pkg::*;
 
 //--------------------------------------
 // Common
 //--------------------------------------
-   parameter [3:0] T_STATES_WAIT_SOP = 0;
-   parameter [3:0] T_STATES_CMD = 1;
-   parameter [3:0] T_STATES_LEN_LB = 2;
-   parameter [3:0] T_STATES_LEN_HB = 3;
-   parameter [3:0] T_STATES_DATA0 = 4;
-   parameter [3:0] T_STATES_DATA1 = 5;
-   parameter [3:0] T_STATES_DATA2 = 6;
-   parameter [3:0] T_STATES_DATA3 = 7;
-   parameter [3:0] T_STATES_CS = 8;
-   parameter [3:0] T_STATES_EOP = 9;
-   parameter [3:0] T_STATES_ERROR = 10;
-   parameter [3:0] T_STATES_FINISH = 11;
+ 
+// IMEM/BUS FSM states
+   typedef enum logic[5:0] {
+      T_STATES_WAIT_SOP,
+      T_STATES_WAIT_CMD,
+      T_STATES_IMPR_WAIT_LEN_LB,
+      T_STATES_IMPR_WAIT_LEN_HB,
+      T_STATES_IMPR_WAIT_DATA0,
+      T_STATES_IMPR_WAIT_DATA1,
+      T_STATES_IMPR_WAIT_DATA2,
+      T_STATES_IMPR_WAIT_DATA3,
+      T_STATES_IMPR_CHECKSUM,
+      T_STATES_IMPR_DONE,
+      T_STATES_BUSW_WAIT_ADDR0,
+      T_STATES_BUSW_WAIT_ADDR1,
+      T_STATES_BUSW_WAIT_ADDR2,
+      T_STATES_BUSW_WAIT_ADDR3,
+      T_STATES_BUSW_WAIT_DATA0,
+      T_STATES_BUSW_WAIT_DATA1,
+      T_STATES_BUSW_WAIT_DATA2,
+      T_STATES_BUSW_WAIT_DATA3,
+      T_STATES_BUSW_WAIT_WE,
+      T_STATES_BUSW_CHECKSUM,
+      T_STATES_BUSW_DONE,
+      T_STATES_BUSR_WAIT_ADDR0,
+      T_STATES_BUSR_WAIT_ADDR1,
+      T_STATES_BUSR_WAIT_ADDR2,
+      T_STATES_BUSR_WAIT_ADDR3,
+      T_STATES_BUSR_WAIT_DATA,
+      T_STATES_BUSR_DATA0,
+      T_STATES_BUSR_DATA1,
+      T_STATES_BUSR_DATA2,
+      T_STATES_BUSR_DATA3,
+      T_STATES_BUSR_CHECKSUM,
+      T_STATES_BUSR_DONE,
+      T_STATES_IMWR_WAIT_ADDR0,
+      T_STATES_IMWR_WAIT_ADDR1,
+      T_STATES_IMWR_WAIT_DATA0,
+      T_STATES_IMWR_WAIT_DATA1,
+      T_STATES_IMWR_WAIT_DATA2,
+      T_STATES_IMWR_WAIT_DATA3,
+      T_STATES_IMWR_CHECKSUM,
+      T_STATES_IMWR_DONE
+   } spec_state_t;
 
-   // command protocol constants:
-   parameter [7:0] C_SOP = 8'h12;  // Device Control 2 (DC2)
-   parameter [7:0] C_EOP = 8'h14;  // Device Control 4 (DC4)
-
-   // commands:
-   parameter [7:0] C_REGISTER_RD = 8'h08;
-   parameter [7:0] C_REGISTER_WR = 8'h07;
+   spec_state_t state, state_next;
    
-   // IMEM FSM state
-   reg [3:0] state;
-
+// IMEM/BUS command protocol constants:
+   localparam [7:0] C_SOP  = 8'h12;  // Enter special mode
+   localparam [7:0] C_EOP  = 8'h14;  // Exit special mode
+   localparam [7:0] C_IMPR = 8'h05;  // Enter IMEM programming mode
+   localparam [7:0] C_BUSW = 8'h06;  // Enter DMEM/CSR write data mode
+   localparam [7:0] C_BUSR = 8'h07;  // Enter DMEM/CSR read data mode
+   localparam [7:0] C_IMWR = 8'h08;  // Enter IMEM write-single-instruction mode
+      
    typedef enum logic[3:0] {
       IDLE  = 4'd14,
 
@@ -93,7 +127,7 @@ module uart
       STOP  = 4'd8   // only one Stop bit
 
       // Zero Parity bit
-   } state_t;
+   } uart_state_t;
 
    typedef logic [3:0] cnt1us_t;
 
@@ -102,8 +136,8 @@ module uart
 
    always_ff @(negedge arst_n or posedge clk) begin
       if (arst_n == 1'b0) begin
-         tick_1us  <= 1'b0;
-         cnt_1us   <= '0;
+         tick_1us <= 1'b0;
+         cnt_1us  <= '0;
       end
       else begin
          // number of clocks for 1us time-tick pulse depends
@@ -173,25 +207,25 @@ module uart
    localparam bit[3:0] RX_WAIT_STOP = 4'd8;
 
    (* fsm_encoding = "none" *)
-   state_t     rx_state;
+   uart_state_t rx_state;
 
-   cnt1us_t    rx_cnt1us; // counts 1us ticks
-   logic       rx_cnt1us_is0;
+   cnt1us_t     rx_cnt1us; // counts 1us ticks
+   logic        rx_cnt1us_is0;
 
-   logic       rx_nextbit;
+   logic        rx_nextbit;
 
-   logic [7:0] rx_shift;
-   logic       rx_fifo_we, rx_fifo_full, rx_oflow;
-   logic       rx_fifo_empty;
+   logic [7:0]  rx_shift;
+   logic        rx_fifo_we, rx_fifo_full, rx_oflow;
+   logic        rx_fifo_empty;
 
    always_comb begin
-      rx_cnt1us_is0     = (rx_cnt1us == '0);
-      rx_nextbit        = tick_1us & rx_cnt1us_is0;
+      rx_cnt1us_is0             = (rx_cnt1us == '0);
+      rx_nextbit                = tick_1us & rx_cnt1us_is0;
 
       to_csr.uart.rx.oflow.next = rx_oflow;
       to_csr.uart.rx.valid.next = ~rx_fifo_empty;
 
-      rx_fifo_we        = rx_nextbit & (rx_state == STOP);
+      rx_fifo_we                = rx_nextbit & (rx_state == STOP);
    end
 
    always_ff @(negedge arst_n or posedge clk) begin
@@ -293,10 +327,6 @@ module uart
 
 
 // synchronous RxFIFO absorbs the variability of CPU reads
-   wire [7:0]  uart_data;
-   reg         flush_ctrl;     // Flush the RX data after reading (from IMEM FSM)
-   assign      to_csr.uart.rx.data.next = uart_data;
-   
    sync_fifo_ram #(
       .DWIDTH    (8),
       .AWIDTH    (4) // 16 entries
@@ -307,16 +337,17 @@ module uart
       .clk       (clk),
 
       .din       (rx_shift),
-      .we        (rx_fifo_we),
+      //.we        ((state == T_STATES_WAIT_SOP) ? rx_fifo_we : 1'b0),
+      .we        (~bus_vld & rx_fifo_we),
       //.re        (from_csr.uart.rx_trigger.read.value), // FIFO internal logic prevents underflow
-      .re        ((state == T_STATES_WAIT_SOP) ? from_csr.uart.rx.data.swacc : flush_ctrl), // FIFO internal logic prevents underflow
+      .re        (from_csr.uart.rx.data.swacc), // FIFO internal logic prevents underflow
 
    // Outputs
       .dcount    (),
       .empty     (rx_fifo_empty),
       .full      (rx_fifo_full),
 
-      .dout_comb (uart_data), // fall-through: Data is available w/o read
+      .dout_comb (to_csr.uart.rx.data.next), // fall-through: Data is available w/o read
 
       .dout      ()
    );
@@ -356,14 +387,14 @@ module uart
    localparam bit[3:0] TX_WAIT_STOP  = 4'd8;
 
    (* fsm_encoding = "none" *)
-   state_t     tx_state;
-   cnt1us_t    tx_cnt1us; // counts 1us ticks
-   logic       tx_cnt1us_is0;
+   uart_state_t tx_state;
+   cnt1us_t     tx_cnt1us; // counts 1us ticks
+   logic        tx_cnt1us_is0;
 
-   logic       tx_nextbit;
+   logic        tx_nextbit;
 
-   logic [7:0] tx_data;
-   logic       tx_fifo_re, tx_fifo_empty;
+   logic [7:0]  tx_data;
+   logic        tx_fifo_re, tx_fifo_empty;
 
    always_comb begin
       tx_cnt1us_is0 = (tx_cnt1us == '0);
@@ -471,10 +502,10 @@ module uart
 
 
 // synchronous TxFIFO offloads CPU write operations
-   wire        tx_busy;
-   reg         tx_enable_ctrl; // Allow tranmission of output, after data is settled (from IMEM FSM)
-   reg  [7:0]  out_data;       // The data that will be sent over TX (from IMEM FSM)
-   assign      to_csr.uart.tx.busy.next = tx_busy;
+   logic        uart_tx_busy;
+   logic        uart_tx_valid, uart_tx_valid_next;      // Allow tranmission of output, after data is settled (from IMEM FSM)
+   logic [7:0]  uart_tx_data, uart_tx_data_next;       // The data that will be sent over TX (from IMEM FSM)
+   assign       to_csr.uart.tx.busy.next = uart_tx_busy;
    
    sync_fifo_ram #(
       .DWIDTH    (8),
@@ -485,14 +516,16 @@ module uart
       .arst_n    (arst_n),
       .clk       (clk),
 
-      .din       ((state == T_STATES_WAIT_SOP) ? from_csr.uart.tx.data.value : out_data),
-      .we        ((state == T_STATES_WAIT_SOP) ? from_csr.uart.tx_trigger.write.value : tx_enable_ctrl),
+      //.din       ((state == T_STATES_WAIT_SOP) ? from_csr.uart.tx.data.value : uart_tx_data),
+      .din       (bus_vld ? uart_tx_data : from_csr.uart.tx.data.value),
+      //.we        ((state == T_STATES_WAIT_SOP) ? from_csr.uart.tx_trigger.write.value : uart_tx_valid),
+      .we        (bus_vld ? uart_tx_valid : from_csr.uart.tx_trigger.write.value),
       .re        (tx_fifo_re),
 
    // Outputs
       .dcount    (),
       .empty     (tx_fifo_empty),
-      .full      (tx_busy), // SW write is ignored when FIFO is full
+      .full      (uart_tx_busy), // SW write is ignored when FIFO is full
 
       .dout_comb (tx_data), // fall-through: Data is available w/o read
 
@@ -501,222 +534,439 @@ module uart
 
 
 //=========================================
-// FSM for loading IMEM via UART
+// FSM for loading IMEM via UART and
+// DMEM/CSR bus mastering via UART
 //=========================================
-   reg [15:0]       data_length, data_cnt;
-   reg [7:0]        command;
-
-   // This variable is super critical in preventing wrong FSM state changes
-   reg allow_next;     // Local signal to prevent race conditions
-
-   reg         ram_wen;
-   reg [31:0]  ram_data, ram_addr;
-   reg [7:0]   checksum;
-
-   always @(posedge clk) begin
-      if(!arst_n) begin
-         state = T_STATES_WAIT_SOP;
-         ram_wen = 0;
-         ram_data = 0;
-         ram_addr = 32'hFFFFFFFF;
+   logic [7:0]  uart_rx_data, uart_rx_data_m;
+   logic        uart_rx_valid, uart_rx_valid_m;
+   
+   always_ff @(negedge arst_n or posedge clk) begin
+      if (arst_n == 1'b0) begin
+         uart_rx_data_m <= '0;
+         uart_rx_data <= '0;
+         uart_rx_valid_m <= 1'b0;
+         uart_rx_valid <= 1'b0;
       end else begin
-         case (state)
-            T_STATES_WAIT_SOP : begin
-               tx_enable_ctrl <= 0;
-               command <= 0;
-               data_cnt <= 0;
-               if(~rx_fifo_empty) begin
-                  if (uart_data == C_SOP) begin
-                     checksum = 8'b0;
-                     data_length = 0;
-                     flush_ctrl <= 1;        // Flush UART RX registers
-                     state = T_STATES_CMD;
-                  end
-               end
-            end
-            
-            T_STATES_CMD : begin
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  command  <= uart_data;
-                  state = T_STATES_LEN_LB;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_LEN_LB : begin
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  data_length <= {8'b0, uart_data};
-                  state = T_STATES_LEN_HB;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_LEN_HB : begin
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  data_length <= { uart_data, data_length[7:0]};
-                  state = T_STATES_DATA0;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_DATA0 : begin
-               ram_wen <= 0;
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  ram_data[7:0] <= uart_data;
-                  checksum <= checksum + uart_data;
-                  state = T_STATES_DATA1;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_DATA1 : begin
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  ram_data[15:8] <= uart_data;
-                  checksum <= checksum + uart_data;
-                  state = T_STATES_DATA2;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_DATA2 : begin
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  ram_data[23:16] <= uart_data;
-                  checksum <= checksum + uart_data;
-                  state = T_STATES_DATA3;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_DATA3 : begin
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  data_cnt <= data_cnt + 1;
-
-                  ram_data[31:24] <= uart_data;
-                  checksum <= checksum + uart_data;
-                  ram_addr <= {16'd0, data_cnt};
-                  ram_wen <= 1;
-
-                  if (data_cnt == (data_length - 16'd1)) begin
-                     state  = T_STATES_CS;
-                  end else
-                     state  = T_STATES_DATA0;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_CS : begin
-               ram_wen <= 0;
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-                  state = (uart_data == checksum[7:0]) ? T_STATES_EOP : T_STATES_ERROR;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_EOP : begin
-               // Once RX module has produced the final output(rx_fifo_empty is set to low)
-               // and registers are cleared(rx_fifo_empty is set high), go ahead
-               if(~flush_ctrl && rx_fifo_empty)
-                  allow_next <= 1;        // Allow RX after registers cleared
-
-               if(~rx_fifo_empty && ~flush_ctrl && allow_next) begin
-                  flush_ctrl <= 1;        // Data read, flush RX register
-                  allow_next <= 0;
-
-                  state = (uart_data == C_EOP) ? T_STATES_FINISH : T_STATES_ERROR;
-               end else
-                  flush_ctrl <= 0;
-            end
-
-            T_STATES_ERROR : begin
-               out_data <= checksum[7:0];
-               // Once TX is complete, allow going to next state
-               if(~tx_busy && ~allow_next)
-                  tx_enable_ctrl <= 1;
-               else begin
-                  allow_next <= 1;
-                  flush_ctrl <= 0;
-                  tx_enable_ctrl <= 0;
-               end
-               // TX complete, go to next state
-               if(~tx_busy && allow_next) begin
-                  allow_next <= 0;
-                  state = T_STATES_WAIT_SOP;
-               end
-            end
-
-            T_STATES_FINISH : begin
-               out_data <= 8'h55;
-               // Once TX is complete, allow going to next state
-               if(~tx_busy && ~allow_next)
-                  tx_enable_ctrl <= 1;
-               else begin
-                  allow_next <= 1;
-                  flush_ctrl <= 0;
-                  tx_enable_ctrl <= 0;
-               end
-               // TX complete, go to next state
-               if(~tx_busy && allow_next) begin
-                  allow_next <= 0;
-                  state = T_STATES_WAIT_SOP;
-               end
-            end
-
-            default:begin
-               state = T_STATES_WAIT_SOP;
-            end
-         endcase
+         uart_rx_data_m <= rx_shift;
+         uart_rx_data <= uart_rx_data_m;
+         uart_rx_valid_m <= rx_fifo_we;
+         uart_rx_valid <= uart_rx_valid_m;
       end
    end
+   
+   logic        cpu_rstn, cpu_rstn_next;
+   logic [15:0] data_length, data_length_next;
+   logic [15:0] data_cnt, data_cnt_next;
+   logic        ram_wen, ram_wen_next;
+   logic [31:0] ram_data, ram_data_next;
+   logic [31:0] ram_addr, ram_addr_next;
+   logic        bus_vld, bus_vld_next;
+   logic [3:0]  bus_we, bus_we_next;
+   logic [31:0] bus_addr, bus_addr_next;
+   logic [31:0] bus_rdat, bus_rdat_next;
+   logic [31:0] bus_wdat, bus_wdat_next;
+   logic [7:0]  checksum, checksum_next;
 
-   assign imem_cpu_rstn = (state == T_STATES_WAIT_SOP) ? 1'b1 : 1'b0;
-   assign imem_we       = ram_wen;
-   assign imem_waddr    = ram_addr;
-   assign imem_wdat     = ram_data;
+   always_ff @(negedge arst_n or posedge clk) begin
+      if (arst_n == 1'b0) begin
+         state <= T_STATES_WAIT_SOP;
+         cpu_rstn <= 1'b1;
+         data_length <= '0;
+         data_cnt <= '0;
+         ram_wen <= 1'b0;
+         ram_addr <= '0;
+         ram_data <= '0;
+         bus_vld <= 1'b0;
+         bus_we <= '0;
+         bus_addr <= '0;
+         bus_rdat <= '0;
+         bus_wdat <= '0;
+         checksum <= '0;
+         uart_tx_valid <= 1'b0;
+         uart_tx_data <= '0;
+      end else begin
+         state <= state_next;
+         cpu_rstn <= cpu_rstn_next;
+         data_length <= data_length_next;
+         data_cnt <= data_cnt_next;
+         ram_wen <= ram_wen_next;
+         ram_addr <= ram_addr_next;
+         ram_data <= ram_data_next;
+         bus_vld <= bus_vld_next;
+         bus_we <= bus_we_next;
+         bus_addr <= bus_addr_next;
+         bus_rdat <= bus_rdat_next;
+         bus_wdat <= bus_wdat_next;
+         checksum <= checksum_next;
+         uart_tx_valid <= uart_tx_valid_next;
+         uart_tx_data <= uart_tx_data_next;
+      end
+   end
+   
+   always_comb begin
+      state_next = state;
+      cpu_rstn_next = cpu_rstn;
+      data_length_next = data_length;
+      data_cnt_next = data_cnt;
+      ram_wen_next = ram_wen;
+      ram_addr_next = ram_addr;
+      ram_data_next = ram_data;
+      bus_vld_next = bus_vld;
+      bus_we_next = bus_we;
+      bus_addr_next = bus_addr;
+      bus_rdat_next = bus_rdat;
+      bus_wdat_next = bus_wdat;
+      checksum_next = checksum;
+      uart_tx_valid_next = uart_tx_valid;
+      uart_tx_data_next = uart_tx_data;
+         
+      unique case (state)
+         T_STATES_WAIT_SOP: begin
+            if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_SOP)) begin
+               bus_vld_next = 1'b1;
+               state_next = T_STATES_WAIT_CMD;
+            end
+         end
+            
+         T_STATES_WAIT_CMD: begin
+            if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_IMPR)) begin
+               cpu_rstn_next = 1'b0;
+               data_cnt_next = '0;
+               checksum_next = '0;
+               state_next = T_STATES_IMPR_WAIT_LEN_LB;
+            end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_BUSW)) begin
+               checksum_next = '0;
+               state_next = T_STATES_BUSW_WAIT_ADDR0;
+            end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_BUSR)) begin
+               checksum_next = '0;
+               state_next = T_STATES_BUSR_WAIT_ADDR0;
+            end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_IMWR)) begin
+               checksum_next = '0;
+               state_next = T_STATES_IMWR_WAIT_ADDR0;
+            end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_EOP)) begin
+               bus_vld_next = 1'b0;
+               state_next = T_STATES_WAIT_SOP;
+            end
+         end
+
+         T_STATES_IMPR_WAIT_LEN_LB: begin
+            if (uart_rx_valid == 1'b1) begin
+               data_length_next[7:0] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMPR_WAIT_LEN_HB;
+            end
+         end
+
+         T_STATES_IMPR_WAIT_LEN_HB: begin
+            if (uart_rx_valid == 1'b1) begin
+               data_length_next[15:8] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMPR_WAIT_DATA0;
+            end
+         end
+
+         T_STATES_IMPR_WAIT_DATA0: begin
+            //ram_wen_next = 1'b0;
+            if (uart_rx_valid == 1'b1) begin
+               ram_data_next[7:0] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMPR_WAIT_DATA1;
+            end
+         end
+
+         T_STATES_IMPR_WAIT_DATA1: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_data_next[15:8] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMPR_WAIT_DATA2;
+            end
+         end
+
+         T_STATES_IMPR_WAIT_DATA2: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_data_next[23:16] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMPR_WAIT_DATA3;
+            end
+         end
+
+         T_STATES_IMPR_WAIT_DATA3: begin
+            if (uart_rx_valid == 1'b1) begin
+               data_cnt_next = data_cnt + 1;
+               ram_data_next[31:24] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               ram_addr_next = {14'd0, data_cnt, 2'd0};
+               ram_wen_next = 1'b1;
+               state_next = T_STATES_IMPR_CHECKSUM;
+            end
+         end
+
+         T_STATES_IMPR_CHECKSUM: begin
+            if (data_cnt == data_length) begin
+               ram_wen_next = 1'b0;
+               uart_tx_data_next = checksum;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_IMPR_DONE;
+            end else begin
+               ram_wen_next = 1'b0;
+               state_next = T_STATES_IMPR_WAIT_DATA0;
+            end
+         end
+            
+         T_STATES_IMPR_DONE: begin
+            cpu_rstn_next = 1'b1;
+            uart_tx_valid_next = 1'b0;
+            state_next = T_STATES_WAIT_CMD;
+         end
+            
+         T_STATES_BUSW_WAIT_ADDR0: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[7:0] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_ADDR1;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_ADDR1: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[15:8] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_ADDR2;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_ADDR2: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[23:16] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_ADDR3;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_ADDR3: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[31:24] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_DATA0;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_DATA0: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_wdat_next[7:0] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_DATA1;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_DATA1: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_wdat_next[15:8] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_DATA2;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_DATA2: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_wdat_next[23:16] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_DATA3;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_DATA3: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_wdat_next[31:24] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_WAIT_WE;
+            end
+         end
+            
+         T_STATES_BUSW_WAIT_WE: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_we_next = uart_rx_data[3:0];
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSW_CHECKSUM;
+            end
+         end
+            
+         T_STATES_BUSW_CHECKSUM: begin
+            bus_we_next = '0;
+            uart_tx_data_next = checksum;
+            uart_tx_valid_next = 1'b1;
+            state_next = T_STATES_BUSW_DONE;
+         end
+            
+         T_STATES_BUSW_DONE: begin
+            uart_tx_valid_next = 1'b0;
+            state_next = T_STATES_WAIT_CMD;
+         end
+            
+         T_STATES_BUSR_WAIT_ADDR0: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[7:0] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSR_WAIT_ADDR1;
+            end
+         end
+            
+         T_STATES_BUSR_WAIT_ADDR1: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[15:8] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSR_WAIT_ADDR2;
+            end
+         end
+            
+         T_STATES_BUSR_WAIT_ADDR2: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[23:16] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSR_WAIT_ADDR3;
+            end
+         end
+            
+         T_STATES_BUSR_WAIT_ADDR3: begin
+            if (uart_rx_valid == 1'b1) begin
+               bus_addr_next[31:24] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_BUSR_WAIT_DATA;
+            end
+         end
+            
+         T_STATES_BUSR_WAIT_DATA: begin
+            bus_rdat_next = bus.rdat;
+            state_next = T_STATES_BUSR_DATA0;
+         end
+            
+         T_STATES_BUSR_DATA0: begin
+            uart_tx_data_next = bus_rdat[7:0];
+            checksum_next = checksum + bus_rdat[7:0];
+            uart_tx_valid_next = 1'b1;
+            state_next = T_STATES_BUSR_DATA1;
+         end
+            
+         T_STATES_BUSR_DATA1: begin
+            uart_tx_data_next = bus_rdat[15:8];
+            checksum_next = checksum + bus_rdat[15:8];
+            uart_tx_valid_next = 1'b1;
+            state_next = T_STATES_BUSR_DATA2;
+         end
+            
+         T_STATES_BUSR_DATA2: begin
+            uart_tx_data_next = bus_rdat[23:16];
+            checksum_next = checksum + bus_rdat[23:16];
+            uart_tx_valid_next = 1'b1;
+            state_next = T_STATES_BUSR_DATA3;
+         end
+            
+         T_STATES_BUSR_DATA3: begin
+            uart_tx_data_next = bus_rdat[31:24];
+            checksum_next = checksum + bus_rdat[31:24];
+            uart_tx_valid_next = 1'b1;
+            state_next = T_STATES_BUSR_CHECKSUM;
+         end
+            
+         T_STATES_BUSR_CHECKSUM: begin
+            uart_tx_data_next = checksum;
+            uart_tx_valid_next = 1'b1;
+            state_next = T_STATES_BUSR_DONE;
+         end
+            
+         T_STATES_BUSR_DONE: begin
+            uart_tx_valid_next = 1'b0;
+            state_next = T_STATES_WAIT_CMD;
+         end
+            
+         T_STATES_IMWR_WAIT_ADDR0: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_addr_next[7:0] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMWR_WAIT_ADDR1;
+            end
+         end
+            
+         T_STATES_IMWR_WAIT_ADDR1: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_addr_next[15:8] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMWR_WAIT_DATA0;
+            end
+         end
+            
+         T_STATES_IMWR_WAIT_DATA0: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_data_next[7:0] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMWR_WAIT_DATA1;
+            end
+         end
+            
+         T_STATES_IMWR_WAIT_DATA1: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_data_next[15:8] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMWR_WAIT_DATA2;
+            end
+         end
+            
+         T_STATES_IMWR_WAIT_DATA2: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_data_next[23:16] = uart_rx_data;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMWR_WAIT_DATA3;
+            end
+         end
+            
+         T_STATES_IMWR_WAIT_DATA3: begin
+            if (uart_rx_valid == 1'b1) begin
+               ram_data_next[31:24] = uart_rx_data;
+               ram_wen_next = 1'b1;
+               checksum_next = checksum + uart_rx_data;
+               state_next = T_STATES_IMWR_CHECKSUM;
+            end
+         end
+            
+         T_STATES_IMWR_CHECKSUM: begin
+            ram_wen_next = 1'b0;
+            uart_tx_data_next = checksum;
+            uart_tx_valid_next = 1'b1;
+            state_next = T_STATES_IMWR_DONE;
+         end
+            
+         T_STATES_IMWR_DONE: begin
+            uart_tx_valid_next = 1'b0;
+            state_next = T_STATES_WAIT_CMD;
+         end
+            
+         default: begin
+            state_next = state;
+            cpu_rstn_next = cpu_rstn;
+            data_length_next = data_length;
+            data_cnt_next = data_cnt;
+            ram_wen_next = ram_wen;
+            ram_addr_next = ram_addr;
+            ram_data_next = ram_data;
+            bus_vld_next = bus_vld;
+            bus_we_next = bus_we;
+            bus_addr_next = bus_addr;
+            bus_rdat_next = bus_rdat;
+            bus_wdat_next = bus_wdat;
+            checksum_next = checksum;
+            uart_tx_valid_next = uart_tx_valid;
+            uart_tx_data_next = uart_tx_data;
+         end
+      endcase
+   end
+   
+   assign imem_cpu_rstn    = cpu_rstn;
+   assign imem_we          = ram_wen;
+   assign imem_waddr[31:2] = ram_addr[31:2];
+   assign imem_wdat        = ram_data;
+
+   assign bus.vld          = bus_vld;
+   assign bus.we           = bus_we;
+   assign bus.addr[31:2]   = bus_addr[31:2];
+   assign bus.wdat         = bus_wdat;
 endmodule: uart
