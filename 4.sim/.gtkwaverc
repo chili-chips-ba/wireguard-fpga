@@ -1,21 +1,27 @@
 [*]
-[*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Sat Apr 20 07:43:13 2024
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Tue May  6 19:48:00 2025
 [*]
-[dumpfile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/output/wave.fst"
-[dumpfile_mtime] "Sat Apr 20 06:25:58 2024"
-[dumpfile_size] 31441595
-[savefile] "/mnt/d/Projects/GitHub-repo/eduSOC/4.sim/.gtkwaverc"
-[timestart] 2
+[dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/output/wave.fst"
+[dumpfile_mtime] "Tue May  6 19:47:25 2025"
+[dumpfile_size] 989945
+[savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/.gtkwaverc"
+[timestart] 4998008900
 [size] 1380 793
 [pos] -1 -1
-*0.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.298987 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
-[treeopen] TOP.tb.
-[treeopen] TOP.tb.dut.
-[sst_width] 214
+[sst_width] 276
 [signals_width] 319
 [sst_expanded] 1
 [sst_vpaned_height] 220
+@28
+TOP.simple_tb.clk_80
+TOP.simple_tb.clk_n
+TOP.simple_tb.clk_p
+@29
+TOP.simple_tb.clk_80
+TOP.simple_tb.clk_n
+TOP.simple_tb.clk_p
 [pattern_trace] 1
 [pattern_trace] 0

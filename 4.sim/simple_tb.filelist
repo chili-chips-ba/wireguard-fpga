@@ -1,0 +1,18 @@
+#==========================================================================
+# List of file to make 'tb.sv' test bench module witth Makefile, not MakefileVProc.mk
+#==========================================================================
+
+${SIM_DIR}/models/bfm_uart.sv
+
+#---Xilinx primitives
+${SIM_DIR}/models/no-change/glbl.v
+${SIM_DIR}/models/no-change/BUFG.v
+${SIM_DIR}/models/no-change/BUFGMUX.v
+${SIM_DIR}/models/no-change/IBUFGDS.v
+${SIM_DIR}/models/no-change/ODDR.v
+
+${SIM_DIR}/${TB_NAME}.sv
+
+#==========================================================================
+# End-of-File
+#==========================================================================
