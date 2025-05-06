@@ -1,12 +1,12 @@
 
-/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf:     file format elf32-littleriscv
+/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/3.build/sw_build/main.elf:     file format elf32-littleriscv
 
 
 Disassembly of section .text:
 
 00000000 <_boot_crt>:
        0:	00001517          	auipc	a0,0x1
-       4:	28450513          	addi	a0,a0,644 # 1284 <_idata_start>
+       4:	27c50513          	addi	a0,a0,636 # 127c <_idata_start>
        8:	10000597          	auipc	a1,0x10000
        c:	ff858593          	addi	a1,a1,-8 # 10000000 <heap_memory>
       10:	10000617          	auipc	a2,0x10000
@@ -88,7 +88,7 @@ Disassembly of section .text:
      108:	00f757b3          	srl	a5,a4,a5
      10c:	00f7f793          	andi	a5,a5,15
      110:	00001737          	lui	a4,0x1
-     114:	18070713          	addi	a4,a4,384 # 1180 <csr_vp_t::csr_vp_t(unsigned long*)+0x160>
+     114:	17870713          	addi	a4,a4,376 # 1178 <csr_vp_t::csr_vp_t(unsigned long*)+0x160>
      118:	00f707b3          	add	a5,a4,a5
      11c:	0007c783          	lbu	a5,0(a5)
      120:	00078593          	mv	a1,a5
@@ -199,14 +199,14 @@ Disassembly of section .text:
      2ac:	04112623          	sw	ra,76(sp)
      2b0:	00a12623          	sw	a0,12(sp)
      2b4:	000017b7          	lui	a5,0x1
-     2b8:	19478793          	addi	a5,a5,404 # 1194 <csr_vp_t::csr_vp_t(unsigned long*)+0x174>
+     2b8:	18c78793          	addi	a5,a5,396 # 118c <csr_vp_t::csr_vp_t(unsigned long*)+0x174>
      2bc:	02f12c23          	sw	a5,56(sp)
      2c0:	000017b7          	lui	a5,0x1
-     2c4:	1a878593          	addi	a1,a5,424 # 11a8 <csr_vp_t::csr_vp_t(unsigned long*)+0x188>
+     2c4:	1a078593          	addi	a1,a5,416 # 11a0 <csr_vp_t::csr_vp_t(unsigned long*)+0x188>
      2c8:	00c12503          	lw	a0,12(sp)
      2cc:	e89ff0ef          	jal	154 <uart_send>
      2d0:	000017b7          	lui	a5,0x1
-     2d4:	1c478593          	addi	a1,a5,452 # 11c4 <csr_vp_t::csr_vp_t(unsigned long*)+0x1a4>
+     2d4:	1bc78593          	addi	a1,a5,444 # 11bc <csr_vp_t::csr_vp_t(unsigned long*)+0x1a4>
      2d8:	00c12503          	lw	a0,12(sp)
      2dc:	e79ff0ef          	jal	154 <uart_send>
      2e0:	00300793          	li	a5,3
@@ -218,7 +218,7 @@ Disassembly of section .text:
      2f8:	00c12503          	lw	a0,12(sp)
      2fc:	ea9ff0ef          	jal	1a4 <uart_recv>
      300:	000017b7          	lui	a5,0x1
-     304:	20478593          	addi	a1,a5,516 # 1204 <csr_vp_t::csr_vp_t(unsigned long*)+0x1e4>
+     304:	1fc78593          	addi	a1,a5,508 # 11fc <csr_vp_t::csr_vp_t(unsigned long*)+0x1e4>
      308:	00c12503          	lw	a0,12(sp)
      30c:	e49ff0ef          	jal	154 <uart_send>
      310:	03412583          	lw	a1,52(sp)
@@ -232,19 +232,19 @@ Disassembly of section .text:
      330:	0ff7f793          	zext.b	a5,a5
      334:	00078c63          	beqz	a5,34c <uart_test+0xa4>
      338:	000017b7          	lui	a5,0x1
-     33c:	21878593          	addi	a1,a5,536 # 1218 <csr_vp_t::csr_vp_t(unsigned long*)+0x1f8>
+     33c:	21078593          	addi	a1,a5,528 # 1210 <csr_vp_t::csr_vp_t(unsigned long*)+0x1f8>
      340:	00c12503          	lw	a0,12(sp)
      344:	e11ff0ef          	jal	154 <uart_send>
      348:	06c0006f          	j	3b4 <uart_test+0x10c>
      34c:	000017b7          	lui	a5,0x1
-     350:	23078593          	addi	a1,a5,560 # 1230 <csr_vp_t::csr_vp_t(unsigned long*)+0x210>
+     350:	22878593          	addi	a1,a5,552 # 1228 <csr_vp_t::csr_vp_t(unsigned long*)+0x210>
      354:	00c12503          	lw	a0,12(sp)
      358:	dfdff0ef          	jal	154 <uart_send>
      35c:	03c12703          	lw	a4,60(sp)
      360:	00100793          	li	a5,1
      364:	02e7de63          	bge	a5,a4,3a0 <uart_test+0xf8>
      368:	000017b7          	lui	a5,0x1
-     36c:	24c78593          	addi	a1,a5,588 # 124c <csr_vp_t::csr_vp_t(unsigned long*)+0x22c>
+     36c:	24478593          	addi	a1,a5,580 # 1244 <csr_vp_t::csr_vp_t(unsigned long*)+0x22c>
      370:	00c12503          	lw	a0,12(sp)
      374:	de1ff0ef          	jal	154 <uart_send>
      378:	03c12783          	lw	a5,60(sp)
@@ -254,7 +254,7 @@ Disassembly of section .text:
      388:	00c12503          	lw	a0,12(sp)
      38c:	d4dff0ef          	jal	d8 <uart_send_hex>
      390:	000017b7          	lui	a5,0x1
-     394:	27078593          	addi	a1,a5,624 # 1270 <csr_vp_t::csr_vp_t(unsigned long*)+0x250>
+     394:	26878593          	addi	a1,a5,616 # 1268 <csr_vp_t::csr_vp_t(unsigned long*)+0x250>
      398:	00c12503          	lw	a0,12(sp)
      39c:	db9ff0ef          	jal	154 <uart_send>
      3a0:	03c12783          	lw	a5,60(sp)
@@ -263,7 +263,7 @@ Disassembly of section .text:
      3ac:	03c12783          	lw	a5,60(sp)
      3b0:	f2f04ee3          	bgtz	a5,2ec <uart_test+0x44>
      3b4:	000017b7          	lui	a5,0x1
-     3b8:	27878593          	addi	a1,a5,632 # 1278 <csr_vp_t::csr_vp_t(unsigned long*)+0x258>
+     3b8:	27078593          	addi	a1,a5,624 # 1270 <csr_vp_t::csr_vp_t(unsigned long*)+0x258>
      3bc:	00c12503          	lw	a0,12(sp)
      3c0:	d95ff0ef          	jal	154 <uart_send>
      3c4:	00000013          	nop
@@ -456,7 +456,7 @@ Disassembly of section .text:
      668:	00e1a023          	sw	a4,0(gp) # 10000800 <heap_memory_used>
      66c:	0001a703          	lw	a4,0(gp) # 10000800 <heap_memory_used>
      670:	000017b7          	lui	a5,0x1
-     674:	80078793          	addi	a5,a5,-2048 # 800 <csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)+0xc>
+     674:	80078793          	addi	a5,a5,-2048 # 800 <csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)+0x14>
      678:	00e7d463          	bge	a5,a4,680 <malloc+0x44>
      67c:	00100073          	ebreak
      680:	01c12783          	lw	a5,28(sp)
@@ -512,845 +512,843 @@ Disassembly of section .text:
      728:	00078413          	mv	s0,a5
      72c:	200005b7          	lui	a1,0x20000
      730:	00040513          	mv	a0,s0
-     734:	0ed000ef          	jal	1020 <csr_vp_t::csr_vp_t(unsigned long*)>
+     734:	0e5000ef          	jal	1018 <csr_vp_t::csr_vp_t(unsigned long*)>
      738:	00812623          	sw	s0,12(sp)
      73c:	00c12783          	lw	a5,12(sp)
      740:	0087a783          	lw	a5,8(a5)
      744:	00100593          	li	a1,1
      748:	00078513          	mv	a0,a5
-     74c:	78c000ef          	jal	ed8 <csr__gpio_vp_t::led2(unsigned long)>
+     74c:	784000ef          	jal	ed0 <csr__gpio_vp_t::led2(unsigned long)>
      750:	00c12783          	lw	a5,12(sp)
      754:	0087a403          	lw	s0,8(a5)
      758:	00c12783          	lw	a5,12(sp)
      75c:	0087a783          	lw	a5,8(a5)
      760:	00078513          	mv	a0,a5
-     764:	708000ef          	jal	e6c <csr__gpio_vp_t::key1()>
+     764:	700000ef          	jal	e64 <csr__gpio_vp_t::key1()>
      768:	00050793          	mv	a5,a0
      76c:	00078593          	mv	a1,a5
      770:	00040513          	mv	a0,s0
-     774:	720000ef          	jal	e94 <csr__gpio_vp_t::led1(unsigned long)>
-     778:	000f47b7          	lui	a5,0xf4
-     77c:	24078513          	addi	a0,a5,576 # f4240 <_idata_start+0xf2fbc>
-     780:	f51ff0ef          	jal	6d0 <delay(unsigned long)>
-     784:	00c12783          	lw	a5,12(sp)
-     788:	0087a783          	lw	a5,8(a5)
-     78c:	00000593          	li	a1,0
-     790:	00078513          	mv	a0,a5
-     794:	744000ef          	jal	ed8 <csr__gpio_vp_t::led2(unsigned long)>
-     798:	00c12783          	lw	a5,12(sp)
-     79c:	0087a403          	lw	s0,8(a5)
-     7a0:	00c12783          	lw	a5,12(sp)
-     7a4:	0087a783          	lw	a5,8(a5)
-     7a8:	00078513          	mv	a0,a5
-     7ac:	6c0000ef          	jal	e6c <csr__gpio_vp_t::key1()>
-     7b0:	00050793          	mv	a5,a0
-     7b4:	00078593          	mv	a1,a5
-     7b8:	00040513          	mv	a0,s0
-     7bc:	6d8000ef          	jal	e94 <csr__gpio_vp_t::led1(unsigned long)>
-     7c0:	000f47b7          	lui	a5,0xf4
-     7c4:	24078513          	addi	a0,a5,576 # f4240 <_idata_start+0xf2fbc>
-     7c8:	f09ff0ef          	jal	6d0 <delay(unsigned long)>
-     7cc:	f71ff06f          	j	73c <main+0x2c>
+     774:	718000ef          	jal	e8c <csr__gpio_vp_t::led1(unsigned long)>
+     778:	00a00513          	li	a0,10
+     77c:	f55ff0ef          	jal	6d0 <delay(unsigned long)>
+     780:	00c12783          	lw	a5,12(sp)
+     784:	0087a783          	lw	a5,8(a5)
+     788:	00000593          	li	a1,0
+     78c:	00078513          	mv	a0,a5
+     790:	740000ef          	jal	ed0 <csr__gpio_vp_t::led2(unsigned long)>
+     794:	00c12783          	lw	a5,12(sp)
+     798:	0087a403          	lw	s0,8(a5)
+     79c:	00c12783          	lw	a5,12(sp)
+     7a0:	0087a783          	lw	a5,8(a5)
+     7a4:	00078513          	mv	a0,a5
+     7a8:	6bc000ef          	jal	e64 <csr__gpio_vp_t::key1()>
+     7ac:	00050793          	mv	a5,a0
+     7b0:	00078593          	mv	a1,a5
+     7b4:	00040513          	mv	a0,s0
+     7b8:	6d4000ef          	jal	e8c <csr__gpio_vp_t::led1(unsigned long)>
+     7bc:	00a00513          	li	a0,10
+     7c0:	f11ff0ef          	jal	6d0 <delay(unsigned long)>
+     7c4:	f79ff06f          	j	73c <main+0x2c>
 
-000007d0 <csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)>:
-     7d0:	ff010113          	addi	sp,sp,-16
-     7d4:	00a12623          	sw	a0,12(sp)
-     7d8:	00b12423          	sw	a1,8(sp)
-     7dc:	00c12783          	lw	a5,12(sp)
-     7e0:	00812703          	lw	a4,8(sp)
-     7e4:	00e7a023          	sw	a4,0(a5)
-     7e8:	00000013          	nop
-     7ec:	01010113          	addi	sp,sp,16
-     7f0:	00008067          	ret
+000007c8 <csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)>:
+     7c8:	ff010113          	addi	sp,sp,-16
+     7cc:	00a12623          	sw	a0,12(sp)
+     7d0:	00b12423          	sw	a1,8(sp)
+     7d4:	00c12783          	lw	a5,12(sp)
+     7d8:	00812703          	lw	a4,8(sp)
+     7dc:	00e7a023          	sw	a4,0(a5)
+     7e0:	00000013          	nop
+     7e4:	01010113          	addi	sp,sp,16
+     7e8:	00008067          	ret
 
-000007f4 <csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)>:
-     7f4:	ff010113          	addi	sp,sp,-16
-     7f8:	00a12623          	sw	a0,12(sp)
-     7fc:	00b12423          	sw	a1,8(sp)
-     800:	00c12783          	lw	a5,12(sp)
-     804:	00812703          	lw	a4,8(sp)
-     808:	00e7a023          	sw	a4,0(a5)
-     80c:	00000013          	nop
-     810:	01010113          	addi	sp,sp,16
-     814:	00008067          	ret
+000007ec <csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)>:
+     7ec:	ff010113          	addi	sp,sp,-16
+     7f0:	00a12623          	sw	a0,12(sp)
+     7f4:	00b12423          	sw	a1,8(sp)
+     7f8:	00c12783          	lw	a5,12(sp)
+     7fc:	00812703          	lw	a4,8(sp)
+     800:	00e7a023          	sw	a4,0(a5)
+     804:	00000013          	nop
+     808:	01010113          	addi	sp,sp,16
+     80c:	00008067          	ret
 
-00000818 <csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)>:
-     818:	ff010113          	addi	sp,sp,-16
-     81c:	00a12623          	sw	a0,12(sp)
-     820:	00b12423          	sw	a1,8(sp)
-     824:	00c12783          	lw	a5,12(sp)
-     828:	00812703          	lw	a4,8(sp)
-     82c:	00e7a023          	sw	a4,0(a5)
-     830:	00000013          	nop
-     834:	01010113          	addi	sp,sp,16
-     838:	00008067          	ret
+00000810 <csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)>:
+     810:	ff010113          	addi	sp,sp,-16
+     814:	00a12623          	sw	a0,12(sp)
+     818:	00b12423          	sw	a1,8(sp)
+     81c:	00c12783          	lw	a5,12(sp)
+     820:	00812703          	lw	a4,8(sp)
+     824:	00e7a023          	sw	a4,0(a5)
+     828:	00000013          	nop
+     82c:	01010113          	addi	sp,sp,16
+     830:	00008067          	ret
 
-0000083c <csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)>:
-     83c:	ff010113          	addi	sp,sp,-16
-     840:	00a12623          	sw	a0,12(sp)
-     844:	00b12423          	sw	a1,8(sp)
-     848:	00c12783          	lw	a5,12(sp)
-     84c:	00812703          	lw	a4,8(sp)
-     850:	00e7a023          	sw	a4,0(a5)
-     854:	00000013          	nop
-     858:	01010113          	addi	sp,sp,16
-     85c:	00008067          	ret
+00000834 <csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)>:
+     834:	ff010113          	addi	sp,sp,-16
+     838:	00a12623          	sw	a0,12(sp)
+     83c:	00b12423          	sw	a1,8(sp)
+     840:	00c12783          	lw	a5,12(sp)
+     844:	00812703          	lw	a4,8(sp)
+     848:	00e7a023          	sw	a4,0(a5)
+     84c:	00000013          	nop
+     850:	01010113          	addi	sp,sp,16
+     854:	00008067          	ret
 
-00000860 <csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)>:
-     860:	ff010113          	addi	sp,sp,-16
-     864:	00a12623          	sw	a0,12(sp)
-     868:	00b12423          	sw	a1,8(sp)
-     86c:	00c12783          	lw	a5,12(sp)
-     870:	00812703          	lw	a4,8(sp)
-     874:	00e7a023          	sw	a4,0(a5)
-     878:	00000013          	nop
-     87c:	01010113          	addi	sp,sp,16
-     880:	00008067          	ret
+00000858 <csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)>:
+     858:	ff010113          	addi	sp,sp,-16
+     85c:	00a12623          	sw	a0,12(sp)
+     860:	00b12423          	sw	a1,8(sp)
+     864:	00c12783          	lw	a5,12(sp)
+     868:	00812703          	lw	a4,8(sp)
+     86c:	00e7a023          	sw	a4,0(a5)
+     870:	00000013          	nop
+     874:	01010113          	addi	sp,sp,16
+     878:	00008067          	ret
 
-00000884 <csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)>:
-     884:	ff010113          	addi	sp,sp,-16
-     888:	00a12623          	sw	a0,12(sp)
-     88c:	00b12423          	sw	a1,8(sp)
-     890:	00c12783          	lw	a5,12(sp)
-     894:	00812703          	lw	a4,8(sp)
-     898:	00e7a023          	sw	a4,0(a5)
-     89c:	00000013          	nop
-     8a0:	01010113          	addi	sp,sp,16
-     8a4:	00008067          	ret
+0000087c <csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)>:
+     87c:	ff010113          	addi	sp,sp,-16
+     880:	00a12623          	sw	a0,12(sp)
+     884:	00b12423          	sw	a1,8(sp)
+     888:	00c12783          	lw	a5,12(sp)
+     88c:	00812703          	lw	a4,8(sp)
+     890:	00e7a023          	sw	a4,0(a5)
+     894:	00000013          	nop
+     898:	01010113          	addi	sp,sp,16
+     89c:	00008067          	ret
 
-000008a8 <csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)>:
-     8a8:	ff010113          	addi	sp,sp,-16
-     8ac:	00a12623          	sw	a0,12(sp)
-     8b0:	00b12423          	sw	a1,8(sp)
-     8b4:	00c12783          	lw	a5,12(sp)
-     8b8:	00812703          	lw	a4,8(sp)
-     8bc:	00e7a023          	sw	a4,0(a5)
-     8c0:	00000013          	nop
-     8c4:	01010113          	addi	sp,sp,16
-     8c8:	00008067          	ret
+000008a0 <csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)>:
+     8a0:	ff010113          	addi	sp,sp,-16
+     8a4:	00a12623          	sw	a0,12(sp)
+     8a8:	00b12423          	sw	a1,8(sp)
+     8ac:	00c12783          	lw	a5,12(sp)
+     8b0:	00812703          	lw	a4,8(sp)
+     8b4:	00e7a023          	sw	a4,0(a5)
+     8b8:	00000013          	nop
+     8bc:	01010113          	addi	sp,sp,16
+     8c0:	00008067          	ret
 
-000008cc <csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)>:
-     8cc:	fe010113          	addi	sp,sp,-32
-     8d0:	00112e23          	sw	ra,28(sp)
-     8d4:	00812c23          	sw	s0,24(sp)
-     8d8:	00a12623          	sw	a0,12(sp)
-     8dc:	00b12423          	sw	a1,8(sp)
-     8e0:	00400513          	li	a0,4
-     8e4:	dadff0ef          	jal	690 <operator new(unsigned int)>
-     8e8:	00050793          	mv	a5,a0
-     8ec:	00078413          	mv	s0,a5
-     8f0:	00812583          	lw	a1,8(sp)
-     8f4:	00040513          	mv	a0,s0
-     8f8:	ed9ff0ef          	jal	7d0 <csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)>
-     8fc:	00c12783          	lw	a5,12(sp)
-     900:	0087a023          	sw	s0,0(a5)
-     904:	00400513          	li	a0,4
-     908:	d89ff0ef          	jal	690 <operator new(unsigned int)>
-     90c:	00050793          	mv	a5,a0
-     910:	00078413          	mv	s0,a5
-     914:	00812783          	lw	a5,8(sp)
-     918:	00478793          	addi	a5,a5,4
-     91c:	00078593          	mv	a1,a5
-     920:	00040513          	mv	a0,s0
-     924:	ed1ff0ef          	jal	7f4 <csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)>
-     928:	00c12783          	lw	a5,12(sp)
-     92c:	0087a223          	sw	s0,4(a5)
-     930:	00400513          	li	a0,4
-     934:	d5dff0ef          	jal	690 <operator new(unsigned int)>
-     938:	00050793          	mv	a5,a0
-     93c:	00078413          	mv	s0,a5
-     940:	00812783          	lw	a5,8(sp)
-     944:	00878793          	addi	a5,a5,8
-     948:	00078593          	mv	a1,a5
-     94c:	00040513          	mv	a0,s0
-     950:	ec9ff0ef          	jal	818 <csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)>
-     954:	00c12783          	lw	a5,12(sp)
-     958:	0087a423          	sw	s0,8(a5)
-     95c:	00400513          	li	a0,4
-     960:	d31ff0ef          	jal	690 <operator new(unsigned int)>
-     964:	00050793          	mv	a5,a0
-     968:	00078413          	mv	s0,a5
-     96c:	00812783          	lw	a5,8(sp)
-     970:	00c78793          	addi	a5,a5,12
-     974:	00078593          	mv	a1,a5
-     978:	00040513          	mv	a0,s0
-     97c:	ec1ff0ef          	jal	83c <csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)>
-     980:	00c12783          	lw	a5,12(sp)
-     984:	0087a623          	sw	s0,12(a5)
-     988:	00400513          	li	a0,4
-     98c:	d05ff0ef          	jal	690 <operator new(unsigned int)>
-     990:	00050793          	mv	a5,a0
-     994:	00078413          	mv	s0,a5
-     998:	00812783          	lw	a5,8(sp)
-     99c:	01078793          	addi	a5,a5,16
-     9a0:	00078593          	mv	a1,a5
-     9a4:	00040513          	mv	a0,s0
-     9a8:	eb9ff0ef          	jal	860 <csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)>
-     9ac:	00c12783          	lw	a5,12(sp)
-     9b0:	0087a823          	sw	s0,16(a5)
-     9b4:	00400513          	li	a0,4
-     9b8:	cd9ff0ef          	jal	690 <operator new(unsigned int)>
-     9bc:	00050793          	mv	a5,a0
-     9c0:	00078413          	mv	s0,a5
-     9c4:	00812783          	lw	a5,8(sp)
-     9c8:	01478793          	addi	a5,a5,20
-     9cc:	00078593          	mv	a1,a5
-     9d0:	00040513          	mv	a0,s0
-     9d4:	eb1ff0ef          	jal	884 <csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)>
-     9d8:	00c12783          	lw	a5,12(sp)
-     9dc:	0087aa23          	sw	s0,20(a5)
-     9e0:	00400513          	li	a0,4
-     9e4:	cadff0ef          	jal	690 <operator new(unsigned int)>
-     9e8:	00050793          	mv	a5,a0
-     9ec:	00078413          	mv	s0,a5
-     9f0:	00812783          	lw	a5,8(sp)
-     9f4:	01878793          	addi	a5,a5,24
-     9f8:	00078593          	mv	a1,a5
-     9fc:	00040513          	mv	a0,s0
-     a00:	ea9ff0ef          	jal	8a8 <csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)>
-     a04:	00c12783          	lw	a5,12(sp)
-     a08:	0087ac23          	sw	s0,24(a5)
-     a0c:	00000013          	nop
-     a10:	01c12083          	lw	ra,28(sp)
-     a14:	01812403          	lw	s0,24(sp)
-     a18:	02010113          	addi	sp,sp,32
-     a1c:	00008067          	ret
+000008c4 <csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)>:
+     8c4:	fe010113          	addi	sp,sp,-32
+     8c8:	00112e23          	sw	ra,28(sp)
+     8cc:	00812c23          	sw	s0,24(sp)
+     8d0:	00a12623          	sw	a0,12(sp)
+     8d4:	00b12423          	sw	a1,8(sp)
+     8d8:	00400513          	li	a0,4
+     8dc:	db5ff0ef          	jal	690 <operator new(unsigned int)>
+     8e0:	00050793          	mv	a5,a0
+     8e4:	00078413          	mv	s0,a5
+     8e8:	00812583          	lw	a1,8(sp)
+     8ec:	00040513          	mv	a0,s0
+     8f0:	ed9ff0ef          	jal	7c8 <csr__cpu_fifo__rx__data_31_0_vp_t::csr__cpu_fifo__rx__data_31_0_vp_t(unsigned long*)>
+     8f4:	00c12783          	lw	a5,12(sp)
+     8f8:	0087a023          	sw	s0,0(a5)
+     8fc:	00400513          	li	a0,4
+     900:	d91ff0ef          	jal	690 <operator new(unsigned int)>
+     904:	00050793          	mv	a5,a0
+     908:	00078413          	mv	s0,a5
+     90c:	00812783          	lw	a5,8(sp)
+     910:	00478793          	addi	a5,a5,4
+     914:	00078593          	mv	a1,a5
+     918:	00040513          	mv	a0,s0
+     91c:	ed1ff0ef          	jal	7ec <csr__cpu_fifo__rx__data_63_32_vp_t::csr__cpu_fifo__rx__data_63_32_vp_t(unsigned long*)>
+     920:	00c12783          	lw	a5,12(sp)
+     924:	0087a223          	sw	s0,4(a5)
+     928:	00400513          	li	a0,4
+     92c:	d65ff0ef          	jal	690 <operator new(unsigned int)>
+     930:	00050793          	mv	a5,a0
+     934:	00078413          	mv	s0,a5
+     938:	00812783          	lw	a5,8(sp)
+     93c:	00878793          	addi	a5,a5,8
+     940:	00078593          	mv	a1,a5
+     944:	00040513          	mv	a0,s0
+     948:	ec9ff0ef          	jal	810 <csr__cpu_fifo__rx__data_95_64_vp_t::csr__cpu_fifo__rx__data_95_64_vp_t(unsigned long*)>
+     94c:	00c12783          	lw	a5,12(sp)
+     950:	0087a423          	sw	s0,8(a5)
+     954:	00400513          	li	a0,4
+     958:	d39ff0ef          	jal	690 <operator new(unsigned int)>
+     95c:	00050793          	mv	a5,a0
+     960:	00078413          	mv	s0,a5
+     964:	00812783          	lw	a5,8(sp)
+     968:	00c78793          	addi	a5,a5,12
+     96c:	00078593          	mv	a1,a5
+     970:	00040513          	mv	a0,s0
+     974:	ec1ff0ef          	jal	834 <csr__cpu_fifo__rx__data_127_96_vp_t::csr__cpu_fifo__rx__data_127_96_vp_t(unsigned long*)>
+     978:	00c12783          	lw	a5,12(sp)
+     97c:	0087a623          	sw	s0,12(a5)
+     980:	00400513          	li	a0,4
+     984:	d0dff0ef          	jal	690 <operator new(unsigned int)>
+     988:	00050793          	mv	a5,a0
+     98c:	00078413          	mv	s0,a5
+     990:	00812783          	lw	a5,8(sp)
+     994:	01078793          	addi	a5,a5,16
+     998:	00078593          	mv	a1,a5
+     99c:	00040513          	mv	a0,s0
+     9a0:	eb9ff0ef          	jal	858 <csr__cpu_fifo__rx__control_vp_t::csr__cpu_fifo__rx__control_vp_t(unsigned long*)>
+     9a4:	00c12783          	lw	a5,12(sp)
+     9a8:	0087a823          	sw	s0,16(a5)
+     9ac:	00400513          	li	a0,4
+     9b0:	ce1ff0ef          	jal	690 <operator new(unsigned int)>
+     9b4:	00050793          	mv	a5,a0
+     9b8:	00078413          	mv	s0,a5
+     9bc:	00812783          	lw	a5,8(sp)
+     9c0:	01478793          	addi	a5,a5,20
+     9c4:	00078593          	mv	a1,a5
+     9c8:	00040513          	mv	a0,s0
+     9cc:	eb1ff0ef          	jal	87c <csr__cpu_fifo__rx__trigger_vp_t::csr__cpu_fifo__rx__trigger_vp_t(unsigned long*)>
+     9d0:	00c12783          	lw	a5,12(sp)
+     9d4:	0087aa23          	sw	s0,20(a5)
+     9d8:	00400513          	li	a0,4
+     9dc:	cb5ff0ef          	jal	690 <operator new(unsigned int)>
+     9e0:	00050793          	mv	a5,a0
+     9e4:	00078413          	mv	s0,a5
+     9e8:	00812783          	lw	a5,8(sp)
+     9ec:	01878793          	addi	a5,a5,24
+     9f0:	00078593          	mv	a1,a5
+     9f4:	00040513          	mv	a0,s0
+     9f8:	ea9ff0ef          	jal	8a0 <csr__cpu_fifo__rx__status_vp_t::csr__cpu_fifo__rx__status_vp_t(unsigned long*)>
+     9fc:	00c12783          	lw	a5,12(sp)
+     a00:	0087ac23          	sw	s0,24(a5)
+     a04:	00000013          	nop
+     a08:	01c12083          	lw	ra,28(sp)
+     a0c:	01812403          	lw	s0,24(sp)
+     a10:	02010113          	addi	sp,sp,32
+     a14:	00008067          	ret
 
-00000a20 <csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)>:
-     a20:	ff010113          	addi	sp,sp,-16
-     a24:	00a12623          	sw	a0,12(sp)
-     a28:	00b12423          	sw	a1,8(sp)
-     a2c:	00c12783          	lw	a5,12(sp)
-     a30:	00812703          	lw	a4,8(sp)
-     a34:	00e7a023          	sw	a4,0(a5)
-     a38:	00000013          	nop
-     a3c:	01010113          	addi	sp,sp,16
-     a40:	00008067          	ret
+00000a18 <csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)>:
+     a18:	ff010113          	addi	sp,sp,-16
+     a1c:	00a12623          	sw	a0,12(sp)
+     a20:	00b12423          	sw	a1,8(sp)
+     a24:	00c12783          	lw	a5,12(sp)
+     a28:	00812703          	lw	a4,8(sp)
+     a2c:	00e7a023          	sw	a4,0(a5)
+     a30:	00000013          	nop
+     a34:	01010113          	addi	sp,sp,16
+     a38:	00008067          	ret
 
-00000a44 <csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)>:
-     a44:	ff010113          	addi	sp,sp,-16
-     a48:	00a12623          	sw	a0,12(sp)
-     a4c:	00b12423          	sw	a1,8(sp)
-     a50:	00c12783          	lw	a5,12(sp)
-     a54:	00812703          	lw	a4,8(sp)
-     a58:	00e7a023          	sw	a4,0(a5)
-     a5c:	00000013          	nop
-     a60:	01010113          	addi	sp,sp,16
-     a64:	00008067          	ret
+00000a3c <csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)>:
+     a3c:	ff010113          	addi	sp,sp,-16
+     a40:	00a12623          	sw	a0,12(sp)
+     a44:	00b12423          	sw	a1,8(sp)
+     a48:	00c12783          	lw	a5,12(sp)
+     a4c:	00812703          	lw	a4,8(sp)
+     a50:	00e7a023          	sw	a4,0(a5)
+     a54:	00000013          	nop
+     a58:	01010113          	addi	sp,sp,16
+     a5c:	00008067          	ret
 
-00000a68 <csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)>:
-     a68:	ff010113          	addi	sp,sp,-16
-     a6c:	00a12623          	sw	a0,12(sp)
-     a70:	00b12423          	sw	a1,8(sp)
-     a74:	00c12783          	lw	a5,12(sp)
-     a78:	00812703          	lw	a4,8(sp)
-     a7c:	00e7a023          	sw	a4,0(a5)
-     a80:	00000013          	nop
-     a84:	01010113          	addi	sp,sp,16
-     a88:	00008067          	ret
+00000a60 <csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)>:
+     a60:	ff010113          	addi	sp,sp,-16
+     a64:	00a12623          	sw	a0,12(sp)
+     a68:	00b12423          	sw	a1,8(sp)
+     a6c:	00c12783          	lw	a5,12(sp)
+     a70:	00812703          	lw	a4,8(sp)
+     a74:	00e7a023          	sw	a4,0(a5)
+     a78:	00000013          	nop
+     a7c:	01010113          	addi	sp,sp,16
+     a80:	00008067          	ret
 
-00000a8c <csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)>:
-     a8c:	ff010113          	addi	sp,sp,-16
-     a90:	00a12623          	sw	a0,12(sp)
-     a94:	00b12423          	sw	a1,8(sp)
-     a98:	00c12783          	lw	a5,12(sp)
-     a9c:	00812703          	lw	a4,8(sp)
-     aa0:	00e7a023          	sw	a4,0(a5)
-     aa4:	00000013          	nop
-     aa8:	01010113          	addi	sp,sp,16
-     aac:	00008067          	ret
+00000a84 <csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)>:
+     a84:	ff010113          	addi	sp,sp,-16
+     a88:	00a12623          	sw	a0,12(sp)
+     a8c:	00b12423          	sw	a1,8(sp)
+     a90:	00c12783          	lw	a5,12(sp)
+     a94:	00812703          	lw	a4,8(sp)
+     a98:	00e7a023          	sw	a4,0(a5)
+     a9c:	00000013          	nop
+     aa0:	01010113          	addi	sp,sp,16
+     aa4:	00008067          	ret
 
-00000ab0 <csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)>:
-     ab0:	ff010113          	addi	sp,sp,-16
-     ab4:	00a12623          	sw	a0,12(sp)
-     ab8:	00b12423          	sw	a1,8(sp)
-     abc:	00c12783          	lw	a5,12(sp)
-     ac0:	00812703          	lw	a4,8(sp)
-     ac4:	00e7a023          	sw	a4,0(a5)
-     ac8:	00000013          	nop
-     acc:	01010113          	addi	sp,sp,16
-     ad0:	00008067          	ret
+00000aa8 <csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)>:
+     aa8:	ff010113          	addi	sp,sp,-16
+     aac:	00a12623          	sw	a0,12(sp)
+     ab0:	00b12423          	sw	a1,8(sp)
+     ab4:	00c12783          	lw	a5,12(sp)
+     ab8:	00812703          	lw	a4,8(sp)
+     abc:	00e7a023          	sw	a4,0(a5)
+     ac0:	00000013          	nop
+     ac4:	01010113          	addi	sp,sp,16
+     ac8:	00008067          	ret
 
-00000ad4 <csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)>:
-     ad4:	ff010113          	addi	sp,sp,-16
-     ad8:	00a12623          	sw	a0,12(sp)
-     adc:	00b12423          	sw	a1,8(sp)
-     ae0:	00c12783          	lw	a5,12(sp)
-     ae4:	00812703          	lw	a4,8(sp)
-     ae8:	00e7a023          	sw	a4,0(a5)
-     aec:	00000013          	nop
-     af0:	01010113          	addi	sp,sp,16
-     af4:	00008067          	ret
+00000acc <csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)>:
+     acc:	ff010113          	addi	sp,sp,-16
+     ad0:	00a12623          	sw	a0,12(sp)
+     ad4:	00b12423          	sw	a1,8(sp)
+     ad8:	00c12783          	lw	a5,12(sp)
+     adc:	00812703          	lw	a4,8(sp)
+     ae0:	00e7a023          	sw	a4,0(a5)
+     ae4:	00000013          	nop
+     ae8:	01010113          	addi	sp,sp,16
+     aec:	00008067          	ret
 
-00000af8 <csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)>:
-     af8:	ff010113          	addi	sp,sp,-16
-     afc:	00a12623          	sw	a0,12(sp)
-     b00:	00b12423          	sw	a1,8(sp)
-     b04:	00c12783          	lw	a5,12(sp)
-     b08:	00812703          	lw	a4,8(sp)
-     b0c:	00e7a023          	sw	a4,0(a5)
-     b10:	00000013          	nop
-     b14:	01010113          	addi	sp,sp,16
-     b18:	00008067          	ret
+00000af0 <csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)>:
+     af0:	ff010113          	addi	sp,sp,-16
+     af4:	00a12623          	sw	a0,12(sp)
+     af8:	00b12423          	sw	a1,8(sp)
+     afc:	00c12783          	lw	a5,12(sp)
+     b00:	00812703          	lw	a4,8(sp)
+     b04:	00e7a023          	sw	a4,0(a5)
+     b08:	00000013          	nop
+     b0c:	01010113          	addi	sp,sp,16
+     b10:	00008067          	ret
 
-00000b1c <csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)>:
-     b1c:	fe010113          	addi	sp,sp,-32
-     b20:	00112e23          	sw	ra,28(sp)
-     b24:	00812c23          	sw	s0,24(sp)
-     b28:	00a12623          	sw	a0,12(sp)
-     b2c:	00b12423          	sw	a1,8(sp)
-     b30:	00400513          	li	a0,4
-     b34:	b5dff0ef          	jal	690 <operator new(unsigned int)>
-     b38:	00050793          	mv	a5,a0
-     b3c:	00078413          	mv	s0,a5
-     b40:	00812583          	lw	a1,8(sp)
-     b44:	00040513          	mv	a0,s0
-     b48:	ed9ff0ef          	jal	a20 <csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)>
-     b4c:	00c12783          	lw	a5,12(sp)
-     b50:	0087a023          	sw	s0,0(a5)
-     b54:	00400513          	li	a0,4
-     b58:	b39ff0ef          	jal	690 <operator new(unsigned int)>
-     b5c:	00050793          	mv	a5,a0
-     b60:	00078413          	mv	s0,a5
-     b64:	00812783          	lw	a5,8(sp)
-     b68:	00478793          	addi	a5,a5,4
-     b6c:	00078593          	mv	a1,a5
-     b70:	00040513          	mv	a0,s0
-     b74:	ed1ff0ef          	jal	a44 <csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)>
-     b78:	00c12783          	lw	a5,12(sp)
-     b7c:	0087a223          	sw	s0,4(a5)
-     b80:	00400513          	li	a0,4
-     b84:	b0dff0ef          	jal	690 <operator new(unsigned int)>
-     b88:	00050793          	mv	a5,a0
-     b8c:	00078413          	mv	s0,a5
-     b90:	00812783          	lw	a5,8(sp)
-     b94:	00878793          	addi	a5,a5,8
-     b98:	00078593          	mv	a1,a5
-     b9c:	00040513          	mv	a0,s0
-     ba0:	ec9ff0ef          	jal	a68 <csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)>
-     ba4:	00c12783          	lw	a5,12(sp)
-     ba8:	0087a423          	sw	s0,8(a5)
-     bac:	00400513          	li	a0,4
-     bb0:	ae1ff0ef          	jal	690 <operator new(unsigned int)>
-     bb4:	00050793          	mv	a5,a0
-     bb8:	00078413          	mv	s0,a5
-     bbc:	00812783          	lw	a5,8(sp)
-     bc0:	00c78793          	addi	a5,a5,12
-     bc4:	00078593          	mv	a1,a5
-     bc8:	00040513          	mv	a0,s0
-     bcc:	ec1ff0ef          	jal	a8c <csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)>
-     bd0:	00c12783          	lw	a5,12(sp)
-     bd4:	0087a623          	sw	s0,12(a5)
-     bd8:	00400513          	li	a0,4
-     bdc:	ab5ff0ef          	jal	690 <operator new(unsigned int)>
-     be0:	00050793          	mv	a5,a0
-     be4:	00078413          	mv	s0,a5
-     be8:	00812783          	lw	a5,8(sp)
-     bec:	01078793          	addi	a5,a5,16
-     bf0:	00078593          	mv	a1,a5
-     bf4:	00040513          	mv	a0,s0
-     bf8:	eb9ff0ef          	jal	ab0 <csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)>
-     bfc:	00c12783          	lw	a5,12(sp)
-     c00:	0087a823          	sw	s0,16(a5)
-     c04:	00400513          	li	a0,4
-     c08:	a89ff0ef          	jal	690 <operator new(unsigned int)>
-     c0c:	00050793          	mv	a5,a0
-     c10:	00078413          	mv	s0,a5
-     c14:	00812783          	lw	a5,8(sp)
-     c18:	01478793          	addi	a5,a5,20
-     c1c:	00078593          	mv	a1,a5
-     c20:	00040513          	mv	a0,s0
-     c24:	eb1ff0ef          	jal	ad4 <csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)>
-     c28:	00c12783          	lw	a5,12(sp)
-     c2c:	0087aa23          	sw	s0,20(a5)
-     c30:	00400513          	li	a0,4
-     c34:	a5dff0ef          	jal	690 <operator new(unsigned int)>
-     c38:	00050793          	mv	a5,a0
-     c3c:	00078413          	mv	s0,a5
-     c40:	00812783          	lw	a5,8(sp)
-     c44:	01878793          	addi	a5,a5,24
-     c48:	00078593          	mv	a1,a5
-     c4c:	00040513          	mv	a0,s0
-     c50:	ea9ff0ef          	jal	af8 <csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)>
-     c54:	00c12783          	lw	a5,12(sp)
-     c58:	0087ac23          	sw	s0,24(a5)
-     c5c:	00000013          	nop
-     c60:	01c12083          	lw	ra,28(sp)
-     c64:	01812403          	lw	s0,24(sp)
-     c68:	02010113          	addi	sp,sp,32
-     c6c:	00008067          	ret
+00000b14 <csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)>:
+     b14:	fe010113          	addi	sp,sp,-32
+     b18:	00112e23          	sw	ra,28(sp)
+     b1c:	00812c23          	sw	s0,24(sp)
+     b20:	00a12623          	sw	a0,12(sp)
+     b24:	00b12423          	sw	a1,8(sp)
+     b28:	00400513          	li	a0,4
+     b2c:	b65ff0ef          	jal	690 <operator new(unsigned int)>
+     b30:	00050793          	mv	a5,a0
+     b34:	00078413          	mv	s0,a5
+     b38:	00812583          	lw	a1,8(sp)
+     b3c:	00040513          	mv	a0,s0
+     b40:	ed9ff0ef          	jal	a18 <csr__cpu_fifo__tx__data_31_0_vp_t::csr__cpu_fifo__tx__data_31_0_vp_t(unsigned long*)>
+     b44:	00c12783          	lw	a5,12(sp)
+     b48:	0087a023          	sw	s0,0(a5)
+     b4c:	00400513          	li	a0,4
+     b50:	b41ff0ef          	jal	690 <operator new(unsigned int)>
+     b54:	00050793          	mv	a5,a0
+     b58:	00078413          	mv	s0,a5
+     b5c:	00812783          	lw	a5,8(sp)
+     b60:	00478793          	addi	a5,a5,4
+     b64:	00078593          	mv	a1,a5
+     b68:	00040513          	mv	a0,s0
+     b6c:	ed1ff0ef          	jal	a3c <csr__cpu_fifo__tx__data_63_32_vp_t::csr__cpu_fifo__tx__data_63_32_vp_t(unsigned long*)>
+     b70:	00c12783          	lw	a5,12(sp)
+     b74:	0087a223          	sw	s0,4(a5)
+     b78:	00400513          	li	a0,4
+     b7c:	b15ff0ef          	jal	690 <operator new(unsigned int)>
+     b80:	00050793          	mv	a5,a0
+     b84:	00078413          	mv	s0,a5
+     b88:	00812783          	lw	a5,8(sp)
+     b8c:	00878793          	addi	a5,a5,8
+     b90:	00078593          	mv	a1,a5
+     b94:	00040513          	mv	a0,s0
+     b98:	ec9ff0ef          	jal	a60 <csr__cpu_fifo__tx__data_95_64_vp_t::csr__cpu_fifo__tx__data_95_64_vp_t(unsigned long*)>
+     b9c:	00c12783          	lw	a5,12(sp)
+     ba0:	0087a423          	sw	s0,8(a5)
+     ba4:	00400513          	li	a0,4
+     ba8:	ae9ff0ef          	jal	690 <operator new(unsigned int)>
+     bac:	00050793          	mv	a5,a0
+     bb0:	00078413          	mv	s0,a5
+     bb4:	00812783          	lw	a5,8(sp)
+     bb8:	00c78793          	addi	a5,a5,12
+     bbc:	00078593          	mv	a1,a5
+     bc0:	00040513          	mv	a0,s0
+     bc4:	ec1ff0ef          	jal	a84 <csr__cpu_fifo__tx__data_127_96_vp_t::csr__cpu_fifo__tx__data_127_96_vp_t(unsigned long*)>
+     bc8:	00c12783          	lw	a5,12(sp)
+     bcc:	0087a623          	sw	s0,12(a5)
+     bd0:	00400513          	li	a0,4
+     bd4:	abdff0ef          	jal	690 <operator new(unsigned int)>
+     bd8:	00050793          	mv	a5,a0
+     bdc:	00078413          	mv	s0,a5
+     be0:	00812783          	lw	a5,8(sp)
+     be4:	01078793          	addi	a5,a5,16
+     be8:	00078593          	mv	a1,a5
+     bec:	00040513          	mv	a0,s0
+     bf0:	eb9ff0ef          	jal	aa8 <csr__cpu_fifo__tx__control_vp_t::csr__cpu_fifo__tx__control_vp_t(unsigned long*)>
+     bf4:	00c12783          	lw	a5,12(sp)
+     bf8:	0087a823          	sw	s0,16(a5)
+     bfc:	00400513          	li	a0,4
+     c00:	a91ff0ef          	jal	690 <operator new(unsigned int)>
+     c04:	00050793          	mv	a5,a0
+     c08:	00078413          	mv	s0,a5
+     c0c:	00812783          	lw	a5,8(sp)
+     c10:	01478793          	addi	a5,a5,20
+     c14:	00078593          	mv	a1,a5
+     c18:	00040513          	mv	a0,s0
+     c1c:	eb1ff0ef          	jal	acc <csr__cpu_fifo__tx__trigger_vp_t::csr__cpu_fifo__tx__trigger_vp_t(unsigned long*)>
+     c20:	00c12783          	lw	a5,12(sp)
+     c24:	0087aa23          	sw	s0,20(a5)
+     c28:	00400513          	li	a0,4
+     c2c:	a65ff0ef          	jal	690 <operator new(unsigned int)>
+     c30:	00050793          	mv	a5,a0
+     c34:	00078413          	mv	s0,a5
+     c38:	00812783          	lw	a5,8(sp)
+     c3c:	01878793          	addi	a5,a5,24
+     c40:	00078593          	mv	a1,a5
+     c44:	00040513          	mv	a0,s0
+     c48:	ea9ff0ef          	jal	af0 <csr__cpu_fifo__tx__status_vp_t::csr__cpu_fifo__tx__status_vp_t(unsigned long*)>
+     c4c:	00c12783          	lw	a5,12(sp)
+     c50:	0087ac23          	sw	s0,24(a5)
+     c54:	00000013          	nop
+     c58:	01c12083          	lw	ra,28(sp)
+     c5c:	01812403          	lw	s0,24(sp)
+     c60:	02010113          	addi	sp,sp,32
+     c64:	00008067          	ret
 
-00000c70 <csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)>:
-     c70:	fe010113          	addi	sp,sp,-32
-     c74:	00112e23          	sw	ra,28(sp)
-     c78:	00812c23          	sw	s0,24(sp)
-     c7c:	00a12623          	sw	a0,12(sp)
-     c80:	00b12423          	sw	a1,8(sp)
-     c84:	01c00513          	li	a0,28
-     c88:	a09ff0ef          	jal	690 <operator new(unsigned int)>
-     c8c:	00050793          	mv	a5,a0
-     c90:	00078413          	mv	s0,a5
-     c94:	00812583          	lw	a1,8(sp)
-     c98:	00040513          	mv	a0,s0
-     c9c:	c31ff0ef          	jal	8cc <csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)>
-     ca0:	00c12783          	lw	a5,12(sp)
-     ca4:	0087a023          	sw	s0,0(a5)
-     ca8:	01c00513          	li	a0,28
-     cac:	9e5ff0ef          	jal	690 <operator new(unsigned int)>
-     cb0:	00050793          	mv	a5,a0
-     cb4:	00078413          	mv	s0,a5
-     cb8:	00812783          	lw	a5,8(sp)
-     cbc:	01c78793          	addi	a5,a5,28
-     cc0:	00078593          	mv	a1,a5
-     cc4:	00040513          	mv	a0,s0
-     cc8:	e55ff0ef          	jal	b1c <csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)>
-     ccc:	00c12783          	lw	a5,12(sp)
-     cd0:	0087a223          	sw	s0,4(a5)
-     cd4:	00000013          	nop
-     cd8:	01c12083          	lw	ra,28(sp)
-     cdc:	01812403          	lw	s0,24(sp)
-     ce0:	02010113          	addi	sp,sp,32
-     ce4:	00008067          	ret
+00000c68 <csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)>:
+     c68:	fe010113          	addi	sp,sp,-32
+     c6c:	00112e23          	sw	ra,28(sp)
+     c70:	00812c23          	sw	s0,24(sp)
+     c74:	00a12623          	sw	a0,12(sp)
+     c78:	00b12423          	sw	a1,8(sp)
+     c7c:	01c00513          	li	a0,28
+     c80:	a11ff0ef          	jal	690 <operator new(unsigned int)>
+     c84:	00050793          	mv	a5,a0
+     c88:	00078413          	mv	s0,a5
+     c8c:	00812583          	lw	a1,8(sp)
+     c90:	00040513          	mv	a0,s0
+     c94:	c31ff0ef          	jal	8c4 <csr__cpu_fifo__rx_vp_t::csr__cpu_fifo__rx_vp_t(unsigned long*)>
+     c98:	00c12783          	lw	a5,12(sp)
+     c9c:	0087a023          	sw	s0,0(a5)
+     ca0:	01c00513          	li	a0,28
+     ca4:	9edff0ef          	jal	690 <operator new(unsigned int)>
+     ca8:	00050793          	mv	a5,a0
+     cac:	00078413          	mv	s0,a5
+     cb0:	00812783          	lw	a5,8(sp)
+     cb4:	01c78793          	addi	a5,a5,28
+     cb8:	00078593          	mv	a1,a5
+     cbc:	00040513          	mv	a0,s0
+     cc0:	e55ff0ef          	jal	b14 <csr__cpu_fifo__tx_vp_t::csr__cpu_fifo__tx_vp_t(unsigned long*)>
+     cc4:	00c12783          	lw	a5,12(sp)
+     cc8:	0087a223          	sw	s0,4(a5)
+     ccc:	00000013          	nop
+     cd0:	01c12083          	lw	ra,28(sp)
+     cd4:	01812403          	lw	s0,24(sp)
+     cd8:	02010113          	addi	sp,sp,32
+     cdc:	00008067          	ret
 
-00000ce8 <csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)>:
-     ce8:	ff010113          	addi	sp,sp,-16
-     cec:	00a12623          	sw	a0,12(sp)
-     cf0:	00b12423          	sw	a1,8(sp)
-     cf4:	00c12783          	lw	a5,12(sp)
-     cf8:	00812703          	lw	a4,8(sp)
-     cfc:	00e7a023          	sw	a4,0(a5)
-     d00:	00000013          	nop
-     d04:	01010113          	addi	sp,sp,16
-     d08:	00008067          	ret
+00000ce0 <csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)>:
+     ce0:	ff010113          	addi	sp,sp,-16
+     ce4:	00a12623          	sw	a0,12(sp)
+     ce8:	00b12423          	sw	a1,8(sp)
+     cec:	00c12783          	lw	a5,12(sp)
+     cf0:	00812703          	lw	a4,8(sp)
+     cf4:	00e7a023          	sw	a4,0(a5)
+     cf8:	00000013          	nop
+     cfc:	01010113          	addi	sp,sp,16
+     d00:	00008067          	ret
 
-00000d0c <csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)>:
-     d0c:	ff010113          	addi	sp,sp,-16
-     d10:	00a12623          	sw	a0,12(sp)
-     d14:	00b12423          	sw	a1,8(sp)
-     d18:	00c12783          	lw	a5,12(sp)
-     d1c:	00812703          	lw	a4,8(sp)
-     d20:	00e7a023          	sw	a4,0(a5)
-     d24:	00000013          	nop
-     d28:	01010113          	addi	sp,sp,16
-     d2c:	00008067          	ret
+00000d04 <csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)>:
+     d04:	ff010113          	addi	sp,sp,-16
+     d08:	00a12623          	sw	a0,12(sp)
+     d0c:	00b12423          	sw	a1,8(sp)
+     d10:	00c12783          	lw	a5,12(sp)
+     d14:	00812703          	lw	a4,8(sp)
+     d18:	00e7a023          	sw	a4,0(a5)
+     d1c:	00000013          	nop
+     d20:	01010113          	addi	sp,sp,16
+     d24:	00008067          	ret
 
-00000d30 <csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)>:
-     d30:	ff010113          	addi	sp,sp,-16
-     d34:	00a12623          	sw	a0,12(sp)
-     d38:	00b12423          	sw	a1,8(sp)
-     d3c:	00c12783          	lw	a5,12(sp)
-     d40:	00812703          	lw	a4,8(sp)
-     d44:	00e7a023          	sw	a4,0(a5)
-     d48:	00000013          	nop
-     d4c:	01010113          	addi	sp,sp,16
-     d50:	00008067          	ret
+00000d28 <csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)>:
+     d28:	ff010113          	addi	sp,sp,-16
+     d2c:	00a12623          	sw	a0,12(sp)
+     d30:	00b12423          	sw	a1,8(sp)
+     d34:	00c12783          	lw	a5,12(sp)
+     d38:	00812703          	lw	a4,8(sp)
+     d3c:	00e7a023          	sw	a4,0(a5)
+     d40:	00000013          	nop
+     d44:	01010113          	addi	sp,sp,16
+     d48:	00008067          	ret
 
-00000d54 <csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)>:
-     d54:	ff010113          	addi	sp,sp,-16
-     d58:	00a12623          	sw	a0,12(sp)
-     d5c:	00b12423          	sw	a1,8(sp)
-     d60:	00c12783          	lw	a5,12(sp)
-     d64:	00812703          	lw	a4,8(sp)
-     d68:	00e7a023          	sw	a4,0(a5)
-     d6c:	00000013          	nop
-     d70:	01010113          	addi	sp,sp,16
-     d74:	00008067          	ret
+00000d4c <csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)>:
+     d4c:	ff010113          	addi	sp,sp,-16
+     d50:	00a12623          	sw	a0,12(sp)
+     d54:	00b12423          	sw	a1,8(sp)
+     d58:	00c12783          	lw	a5,12(sp)
+     d5c:	00812703          	lw	a4,8(sp)
+     d60:	00e7a023          	sw	a4,0(a5)
+     d64:	00000013          	nop
+     d68:	01010113          	addi	sp,sp,16
+     d6c:	00008067          	ret
 
-00000d78 <csr__uart_vp_t::csr__uart_vp_t(unsigned long*)>:
-     d78:	fe010113          	addi	sp,sp,-32
-     d7c:	00112e23          	sw	ra,28(sp)
-     d80:	00812c23          	sw	s0,24(sp)
-     d84:	00a12623          	sw	a0,12(sp)
-     d88:	00b12423          	sw	a1,8(sp)
-     d8c:	00400513          	li	a0,4
-     d90:	901ff0ef          	jal	690 <operator new(unsigned int)>
-     d94:	00050793          	mv	a5,a0
-     d98:	00078413          	mv	s0,a5
-     d9c:	00812583          	lw	a1,8(sp)
-     da0:	00040513          	mv	a0,s0
-     da4:	f45ff0ef          	jal	ce8 <csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)>
-     da8:	00c12783          	lw	a5,12(sp)
-     dac:	0087a023          	sw	s0,0(a5)
-     db0:	00400513          	li	a0,4
-     db4:	8ddff0ef          	jal	690 <operator new(unsigned int)>
-     db8:	00050793          	mv	a5,a0
-     dbc:	00078413          	mv	s0,a5
-     dc0:	00812783          	lw	a5,8(sp)
-     dc4:	00478793          	addi	a5,a5,4
-     dc8:	00078593          	mv	a1,a5
-     dcc:	00040513          	mv	a0,s0
-     dd0:	f3dff0ef          	jal	d0c <csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)>
-     dd4:	00c12783          	lw	a5,12(sp)
-     dd8:	0087a223          	sw	s0,4(a5)
-     ddc:	00400513          	li	a0,4
-     de0:	8b1ff0ef          	jal	690 <operator new(unsigned int)>
-     de4:	00050793          	mv	a5,a0
-     de8:	00078413          	mv	s0,a5
-     dec:	00812783          	lw	a5,8(sp)
-     df0:	00878793          	addi	a5,a5,8
-     df4:	00078593          	mv	a1,a5
-     df8:	00040513          	mv	a0,s0
-     dfc:	f35ff0ef          	jal	d30 <csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)>
-     e00:	00c12783          	lw	a5,12(sp)
-     e04:	0087a423          	sw	s0,8(a5)
-     e08:	00400513          	li	a0,4
-     e0c:	885ff0ef          	jal	690 <operator new(unsigned int)>
-     e10:	00050793          	mv	a5,a0
-     e14:	00078413          	mv	s0,a5
-     e18:	00812783          	lw	a5,8(sp)
-     e1c:	00c78793          	addi	a5,a5,12
-     e20:	00078593          	mv	a1,a5
-     e24:	00040513          	mv	a0,s0
-     e28:	f2dff0ef          	jal	d54 <csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)>
-     e2c:	00c12783          	lw	a5,12(sp)
-     e30:	0087a623          	sw	s0,12(a5)
-     e34:	00000013          	nop
-     e38:	01c12083          	lw	ra,28(sp)
-     e3c:	01812403          	lw	s0,24(sp)
-     e40:	02010113          	addi	sp,sp,32
-     e44:	00008067          	ret
+00000d70 <csr__uart_vp_t::csr__uart_vp_t(unsigned long*)>:
+     d70:	fe010113          	addi	sp,sp,-32
+     d74:	00112e23          	sw	ra,28(sp)
+     d78:	00812c23          	sw	s0,24(sp)
+     d7c:	00a12623          	sw	a0,12(sp)
+     d80:	00b12423          	sw	a1,8(sp)
+     d84:	00400513          	li	a0,4
+     d88:	909ff0ef          	jal	690 <operator new(unsigned int)>
+     d8c:	00050793          	mv	a5,a0
+     d90:	00078413          	mv	s0,a5
+     d94:	00812583          	lw	a1,8(sp)
+     d98:	00040513          	mv	a0,s0
+     d9c:	f45ff0ef          	jal	ce0 <csr__uart__rx_vp_t::csr__uart__rx_vp_t(unsigned long*)>
+     da0:	00c12783          	lw	a5,12(sp)
+     da4:	0087a023          	sw	s0,0(a5)
+     da8:	00400513          	li	a0,4
+     dac:	8e5ff0ef          	jal	690 <operator new(unsigned int)>
+     db0:	00050793          	mv	a5,a0
+     db4:	00078413          	mv	s0,a5
+     db8:	00812783          	lw	a5,8(sp)
+     dbc:	00478793          	addi	a5,a5,4
+     dc0:	00078593          	mv	a1,a5
+     dc4:	00040513          	mv	a0,s0
+     dc8:	f3dff0ef          	jal	d04 <csr__uart__rx_trigger_read_2925067f_vp_t::csr__uart__rx_trigger_read_2925067f_vp_t(unsigned long*)>
+     dcc:	00c12783          	lw	a5,12(sp)
+     dd0:	0087a223          	sw	s0,4(a5)
+     dd4:	00400513          	li	a0,4
+     dd8:	8b9ff0ef          	jal	690 <operator new(unsigned int)>
+     ddc:	00050793          	mv	a5,a0
+     de0:	00078413          	mv	s0,a5
+     de4:	00812783          	lw	a5,8(sp)
+     de8:	00878793          	addi	a5,a5,8
+     dec:	00078593          	mv	a1,a5
+     df0:	00040513          	mv	a0,s0
+     df4:	f35ff0ef          	jal	d28 <csr__uart__tx_vp_t::csr__uart__tx_vp_t(unsigned long*)>
+     df8:	00c12783          	lw	a5,12(sp)
+     dfc:	0087a423          	sw	s0,8(a5)
+     e00:	00400513          	li	a0,4
+     e04:	88dff0ef          	jal	690 <operator new(unsigned int)>
+     e08:	00050793          	mv	a5,a0
+     e0c:	00078413          	mv	s0,a5
+     e10:	00812783          	lw	a5,8(sp)
+     e14:	00c78793          	addi	a5,a5,12
+     e18:	00078593          	mv	a1,a5
+     e1c:	00040513          	mv	a0,s0
+     e20:	f2dff0ef          	jal	d4c <csr__uart__tx_trigger_write_d2a2fe0e_vp_t::csr__uart__tx_trigger_write_d2a2fe0e_vp_t(unsigned long*)>
+     e24:	00c12783          	lw	a5,12(sp)
+     e28:	0087a623          	sw	s0,12(a5)
+     e2c:	00000013          	nop
+     e30:	01c12083          	lw	ra,28(sp)
+     e34:	01812403          	lw	s0,24(sp)
+     e38:	02010113          	addi	sp,sp,32
+     e3c:	00008067          	ret
 
-00000e48 <csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)>:
-     e48:	ff010113          	addi	sp,sp,-16
-     e4c:	00a12623          	sw	a0,12(sp)
-     e50:	00b12423          	sw	a1,8(sp)
-     e54:	00c12783          	lw	a5,12(sp)
-     e58:	00812703          	lw	a4,8(sp)
-     e5c:	00e7a023          	sw	a4,0(a5)
-     e60:	00000013          	nop
-     e64:	01010113          	addi	sp,sp,16
-     e68:	00008067          	ret
+00000e40 <csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)>:
+     e40:	ff010113          	addi	sp,sp,-16
+     e44:	00a12623          	sw	a0,12(sp)
+     e48:	00b12423          	sw	a1,8(sp)
+     e4c:	00c12783          	lw	a5,12(sp)
+     e50:	00812703          	lw	a4,8(sp)
+     e54:	00e7a023          	sw	a4,0(a5)
+     e58:	00000013          	nop
+     e5c:	01010113          	addi	sp,sp,16
+     e60:	00008067          	ret
 
-00000e6c <csr__gpio_vp_t::key1()>:
-     e6c:	ff010113          	addi	sp,sp,-16
-     e70:	00a12623          	sw	a0,12(sp)
-     e74:	00c12783          	lw	a5,12(sp)
-     e78:	0007a783          	lw	a5,0(a5)
-     e7c:	0007a783          	lw	a5,0(a5)
-     e80:	0017f793          	andi	a5,a5,1
-     e84:	0ff7f793          	zext.b	a5,a5
-     e88:	00078513          	mv	a0,a5
-     e8c:	01010113          	addi	sp,sp,16
-     e90:	00008067          	ret
+00000e64 <csr__gpio_vp_t::key1()>:
+     e64:	ff010113          	addi	sp,sp,-16
+     e68:	00a12623          	sw	a0,12(sp)
+     e6c:	00c12783          	lw	a5,12(sp)
+     e70:	0007a783          	lw	a5,0(a5)
+     e74:	0007a783          	lw	a5,0(a5)
+     e78:	0017f793          	andi	a5,a5,1
+     e7c:	0ff7f793          	zext.b	a5,a5
+     e80:	00078513          	mv	a0,a5
+     e84:	01010113          	addi	sp,sp,16
+     e88:	00008067          	ret
 
-00000e94 <csr__gpio_vp_t::led1(unsigned long)>:
-     e94:	ff010113          	addi	sp,sp,-16
-     e98:	00a12623          	sw	a0,12(sp)
-     e9c:	00b12423          	sw	a1,8(sp)
-     ea0:	00c12783          	lw	a5,12(sp)
-     ea4:	0007a783          	lw	a5,0(a5)
-     ea8:	00812703          	lw	a4,8(sp)
+00000e8c <csr__gpio_vp_t::led1(unsigned long)>:
+     e8c:	ff010113          	addi	sp,sp,-16
+     e90:	00a12623          	sw	a0,12(sp)
+     e94:	00b12423          	sw	a1,8(sp)
+     e98:	00c12783          	lw	a5,12(sp)
+     e9c:	0007a783          	lw	a5,0(a5)
+     ea0:	00812703          	lw	a4,8(sp)
+     ea4:	00177713          	andi	a4,a4,1
+     ea8:	0ff77713          	zext.b	a4,a4
      eac:	00177713          	andi	a4,a4,1
-     eb0:	0ff77713          	zext.b	a4,a4
-     eb4:	00177713          	andi	a4,a4,1
-     eb8:	00871713          	slli	a4,a4,0x8
-     ebc:	0007a683          	lw	a3,0(a5)
-     ec0:	eff6f693          	andi	a3,a3,-257
-     ec4:	00e6e733          	or	a4,a3,a4
-     ec8:	00e7a023          	sw	a4,0(a5)
-     ecc:	00000013          	nop
-     ed0:	01010113          	addi	sp,sp,16
-     ed4:	00008067          	ret
+     eb0:	00871713          	slli	a4,a4,0x8
+     eb4:	0007a683          	lw	a3,0(a5)
+     eb8:	eff6f693          	andi	a3,a3,-257
+     ebc:	00e6e733          	or	a4,a3,a4
+     ec0:	00e7a023          	sw	a4,0(a5)
+     ec4:	00000013          	nop
+     ec8:	01010113          	addi	sp,sp,16
+     ecc:	00008067          	ret
 
-00000ed8 <csr__gpio_vp_t::led2(unsigned long)>:
-     ed8:	ff010113          	addi	sp,sp,-16
-     edc:	00a12623          	sw	a0,12(sp)
-     ee0:	00b12423          	sw	a1,8(sp)
-     ee4:	00c12783          	lw	a5,12(sp)
-     ee8:	0007a783          	lw	a5,0(a5)
-     eec:	00812703          	lw	a4,8(sp)
+00000ed0 <csr__gpio_vp_t::led2(unsigned long)>:
+     ed0:	ff010113          	addi	sp,sp,-16
+     ed4:	00a12623          	sw	a0,12(sp)
+     ed8:	00b12423          	sw	a1,8(sp)
+     edc:	00c12783          	lw	a5,12(sp)
+     ee0:	0007a783          	lw	a5,0(a5)
+     ee4:	00812703          	lw	a4,8(sp)
+     ee8:	00177713          	andi	a4,a4,1
+     eec:	0ff77713          	zext.b	a4,a4
      ef0:	00177713          	andi	a4,a4,1
-     ef4:	0ff77713          	zext.b	a4,a4
-     ef8:	00177713          	andi	a4,a4,1
-     efc:	00971713          	slli	a4,a4,0x9
-     f00:	0007a683          	lw	a3,0(a5)
-     f04:	dff6f693          	andi	a3,a3,-513
-     f08:	00e6e733          	or	a4,a3,a4
-     f0c:	00e7a023          	sw	a4,0(a5)
-     f10:	00000013          	nop
-     f14:	01010113          	addi	sp,sp,16
-     f18:	00008067          	ret
+     ef4:	00971713          	slli	a4,a4,0x9
+     ef8:	0007a683          	lw	a3,0(a5)
+     efc:	dff6f693          	andi	a3,a3,-513
+     f00:	00e6e733          	or	a4,a3,a4
+     f04:	00e7a023          	sw	a4,0(a5)
+     f08:	00000013          	nop
+     f0c:	01010113          	addi	sp,sp,16
+     f10:	00008067          	ret
 
-00000f1c <csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)>:
-     f1c:	ff010113          	addi	sp,sp,-16
-     f20:	00a12623          	sw	a0,12(sp)
-     f24:	00b12423          	sw	a1,8(sp)
-     f28:	00c12783          	lw	a5,12(sp)
-     f2c:	00812703          	lw	a4,8(sp)
-     f30:	00e7a023          	sw	a4,0(a5)
-     f34:	00000013          	nop
-     f38:	01010113          	addi	sp,sp,16
-     f3c:	00008067          	ret
+00000f14 <csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)>:
+     f14:	ff010113          	addi	sp,sp,-16
+     f18:	00a12623          	sw	a0,12(sp)
+     f1c:	00b12423          	sw	a1,8(sp)
+     f20:	00c12783          	lw	a5,12(sp)
+     f24:	00812703          	lw	a4,8(sp)
+     f28:	00e7a023          	sw	a4,0(a5)
+     f2c:	00000013          	nop
+     f30:	01010113          	addi	sp,sp,16
+     f34:	00008067          	ret
 
-00000f40 <csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)>:
-     f40:	fe010113          	addi	sp,sp,-32
-     f44:	00112e23          	sw	ra,28(sp)
-     f48:	00812c23          	sw	s0,24(sp)
-     f4c:	00a12623          	sw	a0,12(sp)
-     f50:	00b12423          	sw	a1,8(sp)
-     f54:	00400513          	li	a0,4
-     f58:	f38ff0ef          	jal	690 <operator new(unsigned int)>
-     f5c:	00050793          	mv	a5,a0
-     f60:	00078413          	mv	s0,a5
-     f64:	00812583          	lw	a1,8(sp)
-     f68:	00040513          	mv	a0,s0
-     f6c:	fb1ff0ef          	jal	f1c <csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)>
-     f70:	00c12783          	lw	a5,12(sp)
-     f74:	0087a023          	sw	s0,0(a5)
-     f78:	00000013          	nop
-     f7c:	01c12083          	lw	ra,28(sp)
-     f80:	01812403          	lw	s0,24(sp)
-     f84:	02010113          	addi	sp,sp,32
-     f88:	00008067          	ret
+00000f38 <csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)>:
+     f38:	fe010113          	addi	sp,sp,-32
+     f3c:	00112e23          	sw	ra,28(sp)
+     f40:	00812c23          	sw	s0,24(sp)
+     f44:	00a12623          	sw	a0,12(sp)
+     f48:	00b12423          	sw	a1,8(sp)
+     f4c:	00400513          	li	a0,4
+     f50:	f40ff0ef          	jal	690 <operator new(unsigned int)>
+     f54:	00050793          	mv	a5,a0
+     f58:	00078413          	mv	s0,a5
+     f5c:	00812583          	lw	a1,8(sp)
+     f60:	00040513          	mv	a0,s0
+     f64:	fb1ff0ef          	jal	f14 <csr__ethernet__status_vp_t::csr__ethernet__status_vp_t(unsigned long*)>
+     f68:	00c12783          	lw	a5,12(sp)
+     f6c:	0087a023          	sw	s0,0(a5)
+     f70:	00000013          	nop
+     f74:	01c12083          	lw	ra,28(sp)
+     f78:	01812403          	lw	s0,24(sp)
+     f7c:	02010113          	addi	sp,sp,32
+     f80:	00008067          	ret
 
-00000f8c <csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)>:
-     f8c:	ff010113          	addi	sp,sp,-16
-     f90:	00a12623          	sw	a0,12(sp)
-     f94:	00b12423          	sw	a1,8(sp)
-     f98:	00c12783          	lw	a5,12(sp)
-     f9c:	00812703          	lw	a4,8(sp)
-     fa0:	00e7a023          	sw	a4,0(a5)
-     fa4:	00000013          	nop
-     fa8:	01010113          	addi	sp,sp,16
-     fac:	00008067          	ret
+00000f84 <csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)>:
+     f84:	ff010113          	addi	sp,sp,-16
+     f88:	00a12623          	sw	a0,12(sp)
+     f8c:	00b12423          	sw	a1,8(sp)
+     f90:	00c12783          	lw	a5,12(sp)
+     f94:	00812703          	lw	a4,8(sp)
+     f98:	00e7a023          	sw	a4,0(a5)
+     f9c:	00000013          	nop
+     fa0:	01010113          	addi	sp,sp,16
+     fa4:	00008067          	ret
 
-00000fb0 <csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)>:
-     fb0:	fe010113          	addi	sp,sp,-32
-     fb4:	00112e23          	sw	ra,28(sp)
-     fb8:	00812c23          	sw	s0,24(sp)
-     fbc:	00a12623          	sw	a0,12(sp)
-     fc0:	00b12423          	sw	a1,8(sp)
-     fc4:	00400513          	li	a0,4
-     fc8:	ec8ff0ef          	jal	690 <operator new(unsigned int)>
-     fcc:	00050793          	mv	a5,a0
-     fd0:	00078413          	mv	s0,a5
-     fd4:	00812583          	lw	a1,8(sp)
-     fd8:	00040513          	mv	a0,s0
-     fdc:	fb1ff0ef          	jal	f8c <csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)>
-     fe0:	00c12783          	lw	a5,12(sp)
-     fe4:	0087a023          	sw	s0,0(a5)
-     fe8:	00000013          	nop
-     fec:	01c12083          	lw	ra,28(sp)
-     ff0:	01812403          	lw	s0,24(sp)
-     ff4:	02010113          	addi	sp,sp,32
-     ff8:	00008067          	ret
+00000fa8 <csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)>:
+     fa8:	fe010113          	addi	sp,sp,-32
+     fac:	00112e23          	sw	ra,28(sp)
+     fb0:	00812c23          	sw	s0,24(sp)
+     fb4:	00a12623          	sw	a0,12(sp)
+     fb8:	00b12423          	sw	a1,8(sp)
+     fbc:	00400513          	li	a0,4
+     fc0:	ed0ff0ef          	jal	690 <operator new(unsigned int)>
+     fc4:	00050793          	mv	a5,a0
+     fc8:	00078413          	mv	s0,a5
+     fcc:	00812583          	lw	a1,8(sp)
+     fd0:	00040513          	mv	a0,s0
+     fd4:	fb1ff0ef          	jal	f84 <csr__dpe__fcr_vp_t::csr__dpe__fcr_vp_t(unsigned long*)>
+     fd8:	00c12783          	lw	a5,12(sp)
+     fdc:	0087a023          	sw	s0,0(a5)
+     fe0:	00000013          	nop
+     fe4:	01c12083          	lw	ra,28(sp)
+     fe8:	01812403          	lw	s0,24(sp)
+     fec:	02010113          	addi	sp,sp,32
+     ff0:	00008067          	ret
 
-00000ffc <csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)>:
-     ffc:	ff010113          	addi	sp,sp,-16
-    1000:	00a12623          	sw	a0,12(sp)
-    1004:	00b12423          	sw	a1,8(sp)
-    1008:	00c12783          	lw	a5,12(sp)
-    100c:	00812703          	lw	a4,8(sp)
-    1010:	00e7a023          	sw	a4,0(a5)
-    1014:	00000013          	nop
-    1018:	01010113          	addi	sp,sp,16
-    101c:	00008067          	ret
+00000ff4 <csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)>:
+     ff4:	ff010113          	addi	sp,sp,-16
+     ff8:	00a12623          	sw	a0,12(sp)
+     ffc:	00b12423          	sw	a1,8(sp)
+    1000:	00c12783          	lw	a5,12(sp)
+    1004:	00812703          	lw	a4,8(sp)
+    1008:	00e7a023          	sw	a4,0(a5)
+    100c:	00000013          	nop
+    1010:	01010113          	addi	sp,sp,16
+    1014:	00008067          	ret
 
-00001020 <csr_vp_t::csr_vp_t(unsigned long*)>:
-    1020:	fd010113          	addi	sp,sp,-48
-    1024:	02112623          	sw	ra,44(sp)
-    1028:	02812423          	sw	s0,40(sp)
-    102c:	00a12623          	sw	a0,12(sp)
-    1030:	00b12423          	sw	a1,8(sp)
-    1034:	00800513          	li	a0,8
-    1038:	e58ff0ef          	jal	690 <operator new(unsigned int)>
-    103c:	00050793          	mv	a5,a0
-    1040:	00078413          	mv	s0,a5
-    1044:	00812583          	lw	a1,8(sp)
-    1048:	00040513          	mv	a0,s0
-    104c:	c25ff0ef          	jal	c70 <csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)>
-    1050:	00c12783          	lw	a5,12(sp)
-    1054:	0087a023          	sw	s0,0(a5)
-    1058:	01000513          	li	a0,16
-    105c:	e34ff0ef          	jal	690 <operator new(unsigned int)>
-    1060:	00050793          	mv	a5,a0
-    1064:	00078413          	mv	s0,a5
-    1068:	00812783          	lw	a5,8(sp)
-    106c:	03878793          	addi	a5,a5,56
-    1070:	00078593          	mv	a1,a5
-    1074:	00040513          	mv	a0,s0
-    1078:	d01ff0ef          	jal	d78 <csr__uart_vp_t::csr__uart_vp_t(unsigned long*)>
-    107c:	00c12783          	lw	a5,12(sp)
-    1080:	0087a223          	sw	s0,4(a5)
-    1084:	00400513          	li	a0,4
-    1088:	e08ff0ef          	jal	690 <operator new(unsigned int)>
-    108c:	00050793          	mv	a5,a0
-    1090:	00078413          	mv	s0,a5
-    1094:	00812783          	lw	a5,8(sp)
-    1098:	04878793          	addi	a5,a5,72
-    109c:	00078593          	mv	a1,a5
-    10a0:	00040513          	mv	a0,s0
-    10a4:	da5ff0ef          	jal	e48 <csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)>
-    10a8:	00c12783          	lw	a5,12(sp)
-    10ac:	0087a423          	sw	s0,8(a5)
-    10b0:	00012e23          	sw	zero,28(sp)
-    10b4:	0540006f          	j	1108 <csr_vp_t::csr_vp_t(unsigned long*)+0xe8>
-    10b8:	00400513          	li	a0,4
-    10bc:	dd4ff0ef          	jal	690 <operator new(unsigned int)>
-    10c0:	00050793          	mv	a5,a0
-    10c4:	00078413          	mv	s0,a5
-    10c8:	01c12783          	lw	a5,28(sp)
-    10cc:	01378793          	addi	a5,a5,19
-    10d0:	00279793          	slli	a5,a5,0x2
-    10d4:	00812703          	lw	a4,8(sp)
-    10d8:	00f707b3          	add	a5,a4,a5
-    10dc:	00078593          	mv	a1,a5
-    10e0:	00040513          	mv	a0,s0
-    10e4:	e5dff0ef          	jal	f40 <csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)>
-    10e8:	00c12703          	lw	a4,12(sp)
-    10ec:	01c12783          	lw	a5,28(sp)
-    10f0:	00279793          	slli	a5,a5,0x2
-    10f4:	00f707b3          	add	a5,a4,a5
-    10f8:	0087a623          	sw	s0,12(a5)
-    10fc:	01c12783          	lw	a5,28(sp)
-    1100:	00178793          	addi	a5,a5,1
-    1104:	00f12e23          	sw	a5,28(sp)
-    1108:	01c12703          	lw	a4,28(sp)
-    110c:	00300793          	li	a5,3
-    1110:	fae7d4e3          	bge	a5,a4,10b8 <csr_vp_t::csr_vp_t(unsigned long*)+0x98>
-    1114:	00400513          	li	a0,4
-    1118:	d78ff0ef          	jal	690 <operator new(unsigned int)>
-    111c:	00050793          	mv	a5,a0
-    1120:	00078413          	mv	s0,a5
-    1124:	00812783          	lw	a5,8(sp)
-    1128:	05c78793          	addi	a5,a5,92
-    112c:	00078593          	mv	a1,a5
-    1130:	00040513          	mv	a0,s0
-    1134:	e7dff0ef          	jal	fb0 <csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)>
-    1138:	00c12783          	lw	a5,12(sp)
-    113c:	0087ae23          	sw	s0,28(a5)
-    1140:	00400513          	li	a0,4
-    1144:	d4cff0ef          	jal	690 <operator new(unsigned int)>
-    1148:	00050793          	mv	a5,a0
-    114c:	00078413          	mv	s0,a5
-    1150:	00812783          	lw	a5,8(sp)
-    1154:	06078793          	addi	a5,a5,96
-    1158:	00078593          	mv	a1,a5
-    115c:	00040513          	mv	a0,s0
-    1160:	e9dff0ef          	jal	ffc <csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)>
-    1164:	00c12783          	lw	a5,12(sp)
-    1168:	0287a023          	sw	s0,32(a5)
-    116c:	00000013          	nop
-    1170:	02c12083          	lw	ra,44(sp)
-    1174:	02812403          	lw	s0,40(sp)
-    1178:	03010113          	addi	sp,sp,48
-    117c:	00008067          	ret
-    1180:	3130                	.insn	2, 0x3130
-    1182:	3332                	.insn	2, 0x3332
-    1184:	3534                	.insn	2, 0x3534
-    1186:	3736                	.insn	2, 0x3736
-    1188:	3938                	.insn	2, 0x3938
-    118a:	4241                	.insn	2, 0x4241
-    118c:	46454443          	.insn	4, 0x46454443
-    1190:	0000                	.insn	2, 0x
-    1192:	0000                	.insn	2, 0x
-    1194:	694d                	.insn	2, 0x694d
-    1196:	7320                	.insn	2, 0x7320
-    1198:	6f6d                	.insn	2, 0x6f6d
-    119a:	4620                	.insn	2, 0x4620
-    119c:	4750                	.insn	2, 0x4750
-    119e:	2041                	.insn	2, 0x2041
-    11a0:	6172                	.insn	2, 0x6172
-    11a2:	616a                	.insn	2, 0x616a
-    11a4:	0a0d                	.insn	2, 0x0a0d
-    11a6:	0000                	.insn	2, 0x
-    11a8:	0a0d                	.insn	2, 0x0a0d
-    11aa:	530a                	.insn	2, 0x530a
-    11ac:	6c65                	.insn	2, 0x6c65
-    11ae:	6d61                	.insn	2, 0x6d61
-    11b0:	6520                	.insn	2, 0x6520
-    11b2:	7564                	.insn	2, 0x7564
-    11b4:	20434f53          	.insn	4, 0x20434f53
-    11b8:	6148                	.insn	2, 0x6148
-    11ba:	72656b63          	bltu	a0,t1,18f0 <_idata_start+0x66c>
-    11be:	0a0d2173          	.insn	4, 0x0a0d2173
-    11c2:	0000                	.insn	2, 0x
-    11c4:	7254                	.insn	2, 0x7254
-    11c6:	2079                	.insn	2, 0x2079
-    11c8:	73657567          	.insn	4, 0x73657567
-    11cc:	676e6973          	.insn	4, 0x676e6973
-    11d0:	3320                	.insn	2, 0x3320
-    11d2:	7420                	.insn	2, 0x7420
-    11d4:	6d69                	.insn	2, 0x6d69
-    11d6:	7365                	.insn	2, 0x7365
-    11d8:	7720                	.insn	2, 0x7720
-    11da:	6168                	.insn	2, 0x6168
-    11dc:	2074                	.insn	2, 0x2074
-    11de:	2749                	.insn	2, 0x2749
-    11e0:	206d                	.insn	2, 0x206d
-    11e2:	6874                	.insn	2, 0x6874
-    11e4:	6e69                	.insn	2, 0x6e69
-    11e6:	676e696b          	.insn	4, 0x676e696b
-    11ea:	202c                	.insn	2, 0x202c
-    11ec:	6874                	.insn	2, 0x6874
-    11ee:	6e65                	.insn	2, 0x6e65
-    11f0:	7020                	.insn	2, 0x7020
-    11f2:	6572                	.insn	2, 0x6572
-    11f4:	3c207373          	.insn	4, 0x3c207373
-    11f8:	4e45                	.insn	2, 0x4e45
-    11fa:	4554                	.insn	2, 0x4554
-    11fc:	3e52                	.insn	2, 0x3e52
-    11fe:	0d2e                	.insn	2, 0x0d2e
-    1200:	000a                	.insn	2, 0x000a
-    1202:	0000                	.insn	2, 0x
-    1204:	0a0d                	.insn	2, 0x0a0d
-    1206:	090a                	.insn	2, 0x090a
-    1208:	6f59                	.insn	2, 0x6f59
-    120a:	2075                	.insn	2, 0x2075
-    120c:	6e65                	.insn	2, 0x6e65
-    120e:	6574                	.insn	2, 0x6574
-    1210:	6572                	.insn	2, 0x6572
-    1212:	3a64                	.insn	2, 0x3a64
-    1214:	0020                	.insn	2, 0x0020
-    1216:	0000                	.insn	2, 0x
-    1218:	0a0d                	.insn	2, 0x0a0d
-    121a:	7c09                	.insn	2, 0x7c09
-    121c:	5920                	.insn	2, 0x5920
-    121e:	6820756f          	jal	a0,88a0 <_idata_start+0x761c>
-    1222:	7469                	.insn	2, 0x7469
-    1224:	6920                	.insn	2, 0x6920
-    1226:	2174                	.insn	2, 0x2174
-    1228:	3a20                	.insn	2, 0x3a20
-    122a:	292d                	.insn	2, 0x292d
-    122c:	0a0d                	.insn	2, 0x0a0d
-    122e:	0000                	.insn	2, 0x
-    1230:	0a0d                	.insn	2, 0x0a0d
-    1232:	7c09                	.insn	2, 0x7c09
-    1234:	5320                	.insn	2, 0x5320
-    1236:	7972726f          	jal	tp,291cc <_idata_start+0x27f48>
-    123a:	202c                	.insn	2, 0x202c
-    123c:	6f79                	.insn	2, 0x6f79
-    123e:	2075                	.insn	2, 0x2075
-    1240:	696d                	.insn	2, 0x696d
-    1242:	64657373          	.insn	4, 0x64657373
-    1246:	6920                	.insn	2, 0x6920
-    1248:	2e74                	.insn	2, 0x2e74
-    124a:	0000                	.insn	2, 0x
-    124c:	0a0d                	.insn	2, 0x0a0d
-    124e:	7c09                	.insn	2, 0x7c09
-    1250:	2e20                	.insn	2, 0x2e20
-    1252:	2e2e                	.insn	2, 0x2e2e
-    1254:	7254                	.insn	2, 0x7254
-    1256:	2079                	.insn	2, 0x2079
-    1258:	6761                	.insn	2, 0x6761
-    125a:	6961                	.insn	2, 0x6961
-    125c:	2e6e                	.insn	2, 0x2e6e
-    125e:	4320                	.insn	2, 0x4320
-    1260:	6572                	.insn	2, 0x6572
-    1262:	6964                	.insn	2, 0x6964
-    1264:	2074                	.insn	2, 0x2074
-    1266:	656c                	.insn	2, 0x656c
-    1268:	7466                	.insn	2, 0x7466
-    126a:	203a                	.insn	2, 0x203a
+00001018 <csr_vp_t::csr_vp_t(unsigned long*)>:
+    1018:	fd010113          	addi	sp,sp,-48
+    101c:	02112623          	sw	ra,44(sp)
+    1020:	02812423          	sw	s0,40(sp)
+    1024:	00a12623          	sw	a0,12(sp)
+    1028:	00b12423          	sw	a1,8(sp)
+    102c:	00800513          	li	a0,8
+    1030:	e60ff0ef          	jal	690 <operator new(unsigned int)>
+    1034:	00050793          	mv	a5,a0
+    1038:	00078413          	mv	s0,a5
+    103c:	00812583          	lw	a1,8(sp)
+    1040:	00040513          	mv	a0,s0
+    1044:	c25ff0ef          	jal	c68 <csr__cpu_fifo_vp_t::csr__cpu_fifo_vp_t(unsigned long*)>
+    1048:	00c12783          	lw	a5,12(sp)
+    104c:	0087a023          	sw	s0,0(a5)
+    1050:	01000513          	li	a0,16
+    1054:	e3cff0ef          	jal	690 <operator new(unsigned int)>
+    1058:	00050793          	mv	a5,a0
+    105c:	00078413          	mv	s0,a5
+    1060:	00812783          	lw	a5,8(sp)
+    1064:	03878793          	addi	a5,a5,56
+    1068:	00078593          	mv	a1,a5
+    106c:	00040513          	mv	a0,s0
+    1070:	d01ff0ef          	jal	d70 <csr__uart_vp_t::csr__uart_vp_t(unsigned long*)>
+    1074:	00c12783          	lw	a5,12(sp)
+    1078:	0087a223          	sw	s0,4(a5)
+    107c:	00400513          	li	a0,4
+    1080:	e10ff0ef          	jal	690 <operator new(unsigned int)>
+    1084:	00050793          	mv	a5,a0
+    1088:	00078413          	mv	s0,a5
+    108c:	00812783          	lw	a5,8(sp)
+    1090:	04878793          	addi	a5,a5,72
+    1094:	00078593          	mv	a1,a5
+    1098:	00040513          	mv	a0,s0
+    109c:	da5ff0ef          	jal	e40 <csr__gpio_vp_t::csr__gpio_vp_t(unsigned long*)>
+    10a0:	00c12783          	lw	a5,12(sp)
+    10a4:	0087a423          	sw	s0,8(a5)
+    10a8:	00012e23          	sw	zero,28(sp)
+    10ac:	0540006f          	j	1100 <csr_vp_t::csr_vp_t(unsigned long*)+0xe8>
+    10b0:	00400513          	li	a0,4
+    10b4:	ddcff0ef          	jal	690 <operator new(unsigned int)>
+    10b8:	00050793          	mv	a5,a0
+    10bc:	00078413          	mv	s0,a5
+    10c0:	01c12783          	lw	a5,28(sp)
+    10c4:	01378793          	addi	a5,a5,19
+    10c8:	00279793          	slli	a5,a5,0x2
+    10cc:	00812703          	lw	a4,8(sp)
+    10d0:	00f707b3          	add	a5,a4,a5
+    10d4:	00078593          	mv	a1,a5
+    10d8:	00040513          	mv	a0,s0
+    10dc:	e5dff0ef          	jal	f38 <csr__ethernet_vp_t::csr__ethernet_vp_t(unsigned long*)>
+    10e0:	00c12703          	lw	a4,12(sp)
+    10e4:	01c12783          	lw	a5,28(sp)
+    10e8:	00279793          	slli	a5,a5,0x2
+    10ec:	00f707b3          	add	a5,a4,a5
+    10f0:	0087a623          	sw	s0,12(a5)
+    10f4:	01c12783          	lw	a5,28(sp)
+    10f8:	00178793          	addi	a5,a5,1
+    10fc:	00f12e23          	sw	a5,28(sp)
+    1100:	01c12703          	lw	a4,28(sp)
+    1104:	00300793          	li	a5,3
+    1108:	fae7d4e3          	bge	a5,a4,10b0 <csr_vp_t::csr_vp_t(unsigned long*)+0x98>
+    110c:	00400513          	li	a0,4
+    1110:	d80ff0ef          	jal	690 <operator new(unsigned int)>
+    1114:	00050793          	mv	a5,a0
+    1118:	00078413          	mv	s0,a5
+    111c:	00812783          	lw	a5,8(sp)
+    1120:	05c78793          	addi	a5,a5,92
+    1124:	00078593          	mv	a1,a5
+    1128:	00040513          	mv	a0,s0
+    112c:	e7dff0ef          	jal	fa8 <csr__dpe_vp_t::csr__dpe_vp_t(unsigned long*)>
+    1130:	00c12783          	lw	a5,12(sp)
+    1134:	0087ae23          	sw	s0,28(a5)
+    1138:	00400513          	li	a0,4
+    113c:	d54ff0ef          	jal	690 <operator new(unsigned int)>
+    1140:	00050793          	mv	a5,a0
+    1144:	00078413          	mv	s0,a5
+    1148:	00812783          	lw	a5,8(sp)
+    114c:	06078793          	addi	a5,a5,96
+    1150:	00078593          	mv	a1,a5
+    1154:	00040513          	mv	a0,s0
+    1158:	e9dff0ef          	jal	ff4 <csr__hwid_vp_t::csr__hwid_vp_t(unsigned long*)>
+    115c:	00c12783          	lw	a5,12(sp)
+    1160:	0287a023          	sw	s0,32(a5)
+    1164:	00000013          	nop
+    1168:	02c12083          	lw	ra,44(sp)
+    116c:	02812403          	lw	s0,40(sp)
+    1170:	03010113          	addi	sp,sp,48
+    1174:	00008067          	ret
+    1178:	3130                	.insn	2, 0x3130
+    117a:	3332                	.insn	2, 0x3332
+    117c:	3534                	.insn	2, 0x3534
+    117e:	3736                	.insn	2, 0x3736
+    1180:	3938                	.insn	2, 0x3938
+    1182:	4241                	.insn	2, 0x4241
+    1184:	46454443          	.insn	4, 0x46454443
+    1188:	0000                	.insn	2, 0x
+    118a:	0000                	.insn	2, 0x
+    118c:	694d                	.insn	2, 0x694d
+    118e:	7320                	.insn	2, 0x7320
+    1190:	6f6d                	.insn	2, 0x6f6d
+    1192:	4620                	.insn	2, 0x4620
+    1194:	4750                	.insn	2, 0x4750
+    1196:	2041                	.insn	2, 0x2041
+    1198:	6172                	.insn	2, 0x6172
+    119a:	616a                	.insn	2, 0x616a
+    119c:	0a0d                	.insn	2, 0x0a0d
+    119e:	0000                	.insn	2, 0x
+    11a0:	0a0d                	.insn	2, 0x0a0d
+    11a2:	530a                	.insn	2, 0x530a
+    11a4:	6c65                	.insn	2, 0x6c65
+    11a6:	6d61                	.insn	2, 0x6d61
+    11a8:	6520                	.insn	2, 0x6520
+    11aa:	7564                	.insn	2, 0x7564
+    11ac:	20434f53          	.insn	4, 0x20434f53
+    11b0:	6148                	.insn	2, 0x6148
+    11b2:	72656b63          	bltu	a0,t1,18e8 <_idata_start+0x66c>
+    11b6:	0a0d2173          	.insn	4, 0x0a0d2173
+    11ba:	0000                	.insn	2, 0x
+    11bc:	7254                	.insn	2, 0x7254
+    11be:	2079                	.insn	2, 0x2079
+    11c0:	73657567          	.insn	4, 0x73657567
+    11c4:	676e6973          	.insn	4, 0x676e6973
+    11c8:	3320                	.insn	2, 0x3320
+    11ca:	7420                	.insn	2, 0x7420
+    11cc:	6d69                	.insn	2, 0x6d69
+    11ce:	7365                	.insn	2, 0x7365
+    11d0:	7720                	.insn	2, 0x7720
+    11d2:	6168                	.insn	2, 0x6168
+    11d4:	2074                	.insn	2, 0x2074
+    11d6:	2749                	.insn	2, 0x2749
+    11d8:	206d                	.insn	2, 0x206d
+    11da:	6874                	.insn	2, 0x6874
+    11dc:	6e69                	.insn	2, 0x6e69
+    11de:	676e696b          	.insn	4, 0x676e696b
+    11e2:	202c                	.insn	2, 0x202c
+    11e4:	6874                	.insn	2, 0x6874
+    11e6:	6e65                	.insn	2, 0x6e65
+    11e8:	7020                	.insn	2, 0x7020
+    11ea:	6572                	.insn	2, 0x6572
+    11ec:	3c207373          	.insn	4, 0x3c207373
+    11f0:	4e45                	.insn	2, 0x4e45
+    11f2:	4554                	.insn	2, 0x4554
+    11f4:	3e52                	.insn	2, 0x3e52
+    11f6:	0d2e                	.insn	2, 0x0d2e
+    11f8:	000a                	.insn	2, 0x000a
+    11fa:	0000                	.insn	2, 0x
+    11fc:	0a0d                	.insn	2, 0x0a0d
+    11fe:	090a                	.insn	2, 0x090a
+    1200:	6f59                	.insn	2, 0x6f59
+    1202:	2075                	.insn	2, 0x2075
+    1204:	6e65                	.insn	2, 0x6e65
+    1206:	6574                	.insn	2, 0x6574
+    1208:	6572                	.insn	2, 0x6572
+    120a:	3a64                	.insn	2, 0x3a64
+    120c:	0020                	.insn	2, 0x0020
+    120e:	0000                	.insn	2, 0x
+    1210:	0a0d                	.insn	2, 0x0a0d
+    1212:	7c09                	.insn	2, 0x7c09
+    1214:	5920                	.insn	2, 0x5920
+    1216:	6820756f          	jal	a0,8898 <_idata_start+0x761c>
+    121a:	7469                	.insn	2, 0x7469
+    121c:	6920                	.insn	2, 0x6920
+    121e:	2174                	.insn	2, 0x2174
+    1220:	3a20                	.insn	2, 0x3a20
+    1222:	292d                	.insn	2, 0x292d
+    1224:	0a0d                	.insn	2, 0x0a0d
+    1226:	0000                	.insn	2, 0x
+    1228:	0a0d                	.insn	2, 0x0a0d
+    122a:	7c09                	.insn	2, 0x7c09
+    122c:	5320                	.insn	2, 0x5320
+    122e:	7972726f          	jal	tp,291c4 <_idata_start+0x27f48>
+    1232:	202c                	.insn	2, 0x202c
+    1234:	6f79                	.insn	2, 0x6f79
+    1236:	2075                	.insn	2, 0x2075
+    1238:	696d                	.insn	2, 0x696d
+    123a:	64657373          	.insn	4, 0x64657373
+    123e:	6920                	.insn	2, 0x6920
+    1240:	2e74                	.insn	2, 0x2e74
+    1242:	0000                	.insn	2, 0x
+    1244:	0a0d                	.insn	2, 0x0a0d
+    1246:	7c09                	.insn	2, 0x7c09
+    1248:	2e20                	.insn	2, 0x2e20
+    124a:	2e2e                	.insn	2, 0x2e2e
+    124c:	7254                	.insn	2, 0x7254
+    124e:	2079                	.insn	2, 0x2079
+    1250:	6761                	.insn	2, 0x6761
+    1252:	6961                	.insn	2, 0x6961
+    1254:	2e6e                	.insn	2, 0x2e6e
+    1256:	4320                	.insn	2, 0x4320
+    1258:	6572                	.insn	2, 0x6572
+    125a:	6964                	.insn	2, 0x6964
+    125c:	2074                	.insn	2, 0x2074
+    125e:	656c                	.insn	2, 0x656c
+    1260:	7466                	.insn	2, 0x7466
+    1262:	203a                	.insn	2, 0x203a
+    1264:	0000                	.insn	2, 0x
+    1266:	0000                	.insn	2, 0x
+    1268:	0a0d                	.insn	2, 0x0a0d
+    126a:	0a0a                	.insn	2, 0x0a0a
     126c:	0000                	.insn	2, 0x
     126e:	0000                	.insn	2, 0x
     1270:	0a0d                	.insn	2, 0x0a0d
-    1272:	0a0a                	.insn	2, 0x0a0a
-    1274:	0000                	.insn	2, 0x
-    1276:	0000                	.insn	2, 0x
-    1278:	0a0d                	.insn	2, 0x0a0d
-    127a:	4f44                	.insn	2, 0x4f44
-    127c:	454e                	.insn	2, 0x454e
-    127e:	0d21                	.insn	2, 0x0d21
-    1280:	000a                	.insn	2, 0x000a
+    1272:	4f44                	.insn	2, 0x4f44
+    1274:	454e                	.insn	2, 0x454e
+    1276:	0d21                	.insn	2, 0x0d21
+    1278:	000a                	.insn	2, 0x000a
 	...
