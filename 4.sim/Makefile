@@ -15,10 +15,6 @@ export BLD_DIR SIM_DIR HW_SRC TB_NAME
 .PHONY: all
 all: clean sim wave
 
-#------------------------
-clean:
-	rm -rf output
-
 compile:
 	verilator \
 		--cc \
@@ -31,7 +27,9 @@ compile:
 		\
 		-Wall models/config.vlt \
 		-f ${HW_SRC}/top.filelist \
-		-f ${SIM_DIR}/tb.filelist \
+		-f ${SIM_DIR}/simple_tb.filelist \
+		+define+SIM_ONLY \
+		+define+SIMPLE_TB \
 		\
 		--top-module ${TB_NAME}
 
@@ -68,7 +66,9 @@ xml2stems:
 		--timescale 1ps/1ps \
 		-Wall models/config.vlt \
 		-f ${HW_SRC}/top.filelist \
-		-f ${SIM_DIR}/tb.filelist \
+		-f ${SIM_DIR}/simple_tb.filelist \
+		+define+SIM_ONLY \
+		+define+SIMPLE_TB \
 		--top-module ${TB_NAME}
 	xml2stems tb.xml tb.stems
 
