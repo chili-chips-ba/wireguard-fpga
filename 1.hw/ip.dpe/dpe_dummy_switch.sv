@@ -17,17 +17,17 @@
 // (can be overridden by assertion of tuser_bypass_all or tuser_bypass_stage)
 //
 //   .----------.                             .----------.
-//   | From CPU |                             |  To CPU  |
-//   |   FIFO   |------------.   .----------->|   FIFO   |
-//   '----------'             \ /             '----------'
-//                             X
-//   .----------.             / \             .----------.
-//   |From ETH_1|------------'   '----------->| To ETH_1 |
-//   |   FIFO   |                             |   FIFO   |
-//   '----------'                             '----------'
-//
-//   .----------.                             .----------.
-//   |From ETH_2|---------------------------->| To ETH_2 |
+//   | From CPU |                 .---------->|  To CPU  |
+//   |   FIFO   |------------.   /  .-------->|   FIFO   |
+//   '----------'             \ /  /          '----------'
+//                             X  /
+//   .----------.             / \/            .----------.
+//   |From ETH_1|------------'  /\            | To ETH_1 |
+//   |   FIFO   |              /  '---------->|   FIFO   |
+//   '----------'             /               '----------'
+//                           /
+//   .----------.           /                 .----------.
+//   |From ETH_2|----------'             0--->| To ETH_2 |
 //   |   FIFO   |                             |   FIFO   |
 //   '----------'                             '----------'
 //
@@ -72,7 +72,7 @@ module dpe_dummy_switch (
                outp_sbuff.tuser_dst = DPE_ADDR_CPU;
             end
             DPE_ADDR_ETH_2: begin
-               outp_sbuff.tuser_dst = DPE_ADDR_ETH_2;
+               outp_sbuff.tuser_dst = DPE_ADDR_CPU;
             end
             DPE_ADDR_ETH_3: begin
                outp_sbuff.tuser_dst = DPE_ADDR_ETH_4;
