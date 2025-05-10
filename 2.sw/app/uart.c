@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024 Chili.CHIPS*ba
+// Copyright (C) 2024-2025 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -11,18 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description:
-//   - UART test code,
-//       serves primarily as a demo on how to operate UART resource from SW
-//
-//--------------------------------------------------------------------------
-// This is a bare-metal (aka non-hosted / freestanding) program!
-//  For more, see:
-//    - http://cs107e.github.io/guides/gcc
-//    - https://godbolt.org/z/4hzWrcqW6
-//    - https://popovicu.com/posts/bare-metal-programming-risc-v
-//
-//  Reach out to us if you desire to upgrade this project to a hosted env,
-//   such as FreeRTOS
+//   - UART library
 //==========================================================================
 
 #include "uart.h"
