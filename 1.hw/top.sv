@@ -181,7 +181,7 @@ module top (
       .arst_n          (sys_rst_n),     //i
       .clk             (sys_clk),       //i
 
-      .uart_rx         (uart_rx),       //i
+      .uart_rx         (uart_rx),   //i
       .uart_tx         (uart_tx),       //o
 
       .from_csr        (from_csr),      //i
