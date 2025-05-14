@@ -38,16 +38,16 @@ module soc_fabric (
 //-----------------------------------------------------------
 // propagate/replicate common controls from Master to all Peripherals
 //-----------------------------------------------------------
-   logic cpu_ack;    // 1 as soon as CPU gets the bus
-   logic uart_busy;  // 1 when UART is already using the bus
+   logic uart_ack;   // 1 as soon as UART gets the bus
+   logic cpu_busy;   // 1 when CPU is already using the bus
    
-   assign dmem.addr  = cpu_ack ? cpu.addr : uart.addr;
-   assign dmem.we    = cpu_ack ? cpu.we   : uart.we;
-   assign dmem.wdat  = cpu_ack ? cpu.wdat : uart.wdat;
+   assign dmem.addr  = uart_ack ? uart.addr : cpu.addr;
+   assign dmem.we    = uart_ack ? uart.we   : cpu.we;
+   assign dmem.wdat  = uart_ack ? uart.wdat : cpu.wdat;
 
-   assign csr.addr   = cpu_ack ? cpu.addr : uart.addr;
-   assign csr.we     = cpu_ack ? cpu.we   : uart.we;
-   assign csr.wdat   = cpu_ack ? cpu.wdat : uart.wdat;
+   assign csr.addr   = uart_ack ? uart.addr : cpu.addr;
+   assign csr.we     = uart_ack ? uart.we   : cpu.we;
+   assign csr.wdat   = uart_ack ? uart.wdat : cpu.wdat;
 
 //-----------------------------------------------------------
 // assign peripheral Point-to-Point controls per Memory Map
@@ -56,26 +56,26 @@ module soc_fabric (
    logic dmem_sel, csr_sel;
 
 //address decode: All selects must be mutually exclusive!
-   assign dmem_sel  = cpu_ack ? (cpu.addr[31:28] == 4'd1) : (uart.addr[31:28] == 4'd1); //0x1000_0000 - 0x1FFF_FFFF
-   assign csr_sel   = cpu_ack ? (cpu.addr[31:29] == 3'd1) : (uart.addr[31:29] == 3'd1); //0x2000_0000 - 0x3FFF_FFFF
+   assign dmem_sel  = uart_ack ? (uart.addr[31:28] == 4'd1) : (cpu.addr[31:28] == 4'd1); //0x1000_0000 - 0x1FFF_FFFF
+   assign csr_sel   = uart_ack ? (uart.addr[31:29] == 3'd1) : (cpu.addr[31:29] == 3'd1); //0x2000_0000 - 0x3FFF_FFFF
 
 //peripheral access is when peripheral is SELected and UART/CPU VLD
    assign dmem.vld      = (uart.vld | cpu.vld) & dmem_sel;
    assign csr.vld       = (uart.vld | cpu.vld) & csr_sel;
 
 //return RDY+RDAT to UART from the selected peripheral
-   assign uart.rdy  = dmem_sel ? dmem.rdy & uart_busy
-                    : csr_sel  ? csr.rdy & uart_busy
-                               : uart_busy;
+   assign uart.rdy  = dmem_sel ? dmem.rdy & ~cpu_busy
+                    : csr_sel  ? csr.rdy & ~cpu_busy
+                               : ~cpu_busy;
 
    assign uart.rdat = dmem_sel ? dmem.rdat
                     : csr_sel  ? csr.rdat
                                : '0;
                                
 //return RDY+RDAT to CPU from the selected peripheral
-   assign cpu.rdy   = dmem_sel ? dmem.rdy & ~uart_busy
-                    : csr_sel  ? csr.rdy & ~uart_busy
-                               : ~uart_busy;
+   assign cpu.rdy   = dmem_sel ? dmem.rdy & cpu_busy
+                    : csr_sel  ? csr.rdy & cpu_busy
+                               : cpu_busy;
 
    assign cpu.rdat  = dmem_sel ? dmem.rdat
                     : csr_sel  ? csr.rdat
@@ -89,25 +89,25 @@ module soc_fabric (
 //  -DMEM/CSR captures ADDR+WE on the cycle it sees VLD=1
 //  -and ACK is used for ADDR+WE selection
 //
-// CPU gets the bus if UART is not on it, or they both request it
-// at the same time. If UART is already using the bus, CPU has to
-// wait till UART is done. UART has to wait if CPU is already 
+// UART gets the bus if CPU is not on it, or they both request it
+// at the same time. If CPU is already using the bus, UART has to
+// wait till CPU is done. CPU has to wait if UART is already 
 // using the bus, or wants it at the same time as CPU
 //-----------------------------------------------------------   
-   always_ff @(negedge cpu.arst_n or posedge cpu.clk) begin
-      if (cpu.arst_n == 1'b0) begin
-         uart_busy <= 1'b0;
+   always_ff @(negedge uart.arst_n or posedge uart.clk) begin
+      if (uart.arst_n == 1'b0) begin
+         cpu_busy <= 1'b0;
       end
       else begin
-         uart_busy <= uart_busy
-         // once started, UART keeps the bus until transaction is over
-                    ? uart.vld
+         cpu_busy <= cpu_busy
+         //once started, CPU keeps the bus until transaction is over
+          ? ~(dmem.rdy & csr.rdy)
 
-         // UART gets bus if CPU doesn't want it at that very moment
-                    : ({cpu.vld, uart.vld} == 2'b01);
+         //CPU gets bus if UART doesn't want it at that very moment
+          : ({uart.vld, cpu.vld} == 2'b01);
       end
    end
 
-   // CPU cannot interrupt an ongoing UART transaction
-   assign cpu_ack = cpu.vld & ~uart_busy;
+   // UART cannot interrupt an ongoing CPU transaction
+   assign uart_ack = uart.vld & ~cpu_busy;
 endmodule: soc_fabric

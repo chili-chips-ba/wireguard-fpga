@@ -14,7 +14,7 @@ void delay(uint32_t count) {
 
 int main(void)
 {
-   csr_vp_t* csr = new csr_vp_t();
+   volatile csr_vp_t* csr = new csr_vp_t();
 
    while (1) {
       csr->gpio->led2(1);
