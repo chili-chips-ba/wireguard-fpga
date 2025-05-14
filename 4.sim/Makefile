@@ -1,83 +1,96 @@
-#=============================================================
-# Copyright (C) 2024 Chili.CHIPS*ba
-#=============================================================
-SHELL   := /bin/bash
+###################################################################
+# Makefile for picoRV32 RTL simulation with Verilator
+###################################################################
 
+SHELL    := /bin/bash
+
+# --------------------------------------------
+# Directory layout
+# --------------------------------------------
 HW_SRC  := $(CURDIR)/../1.hw
 BLD_DIR := $(CURDIR)/../3.build
 SIM_DIR := $(CURDIR)/../4.sim
 TB_NAME := tb
+WORKDIR := output
 
-export BLD_DIR SIM_DIR HW_SRC TB_NAME
+export HW_SRC BLD_DIR SIM_DIR TB_NAME
 
+# --------------------------------------------
+# Co-simulation libraries
+# --------------------------------------------
+COSIMDIR := $(SIM_DIR)/models/cosim
+UDPDIR   := $(SIM_DIR)/models/udpIpPg
 
-#------------------------
-.PHONY: all
+COSIM_LDFLAGS := -L$(COSIMDIR)/lib -lcosimlnx
+UDP_LDFLAGS   := -L$(UDPDIR)/lib   -ludplnx
+
+# --------------------------------------------
+# User code
+# --------------------------------------------
+UDPCODEDIR   := $(SIM_DIR)/usercode
+USER_SOURCES := $(wildcard $(UDPCODEDIR)/*.cpp)
+
+# --------------------------------------------
+# Include paths for DPI / usercode
+# --------------------------------------------
+SIM_INCLUDES := \
+	-I$(UDPCODEDIR)         \
+	-I$(COSIMDIR)/include   \
+	-I$(UDPDIR)
+
+# --------------------------------------------
+# File lists for Verilator
+# --------------------------------------------
+TOP_FILELIST := $(HW_SRC)/top.filelist
+TB_FILELIST  := $(SIM_DIR)/simple_tb.filelist
+
+# -----------------------------------------------------------------------------
+.PHONY: all clean compile sim wave
+# -----------------------------------------------------------------------------
+
 all: clean sim wave
 
+clean:
+	@rm -rf $(WORKDIR) tb.xml tb.stems
+
+# -----------------------------------------------------------------------------
+# Generate C++ simulation sources and build into $(WORKDIR)
+# -----------------------------------------------------------------------------
 compile:
 	verilator \
 		--cc \
+		-sv \
 		--timing \
 		--trace-fst \
 		--trace-structs \
 		--timescale-override 1ps/1ps \
-		--exe versimSV.cpp \
-		--Mdir ./output \
-		\
 		-Wall models/config.vlt \
-		-f ${HW_SRC}/top.filelist \
-		-f ${SIM_DIR}/simple_tb.filelist \
+		+incdir+$(COSIMDIR) \
 		+define+SIM_ONLY \
-		+define+SIMPLE_TB \
-		\
-		--top-module ${TB_NAME}
+		+define+VPROC_SV \
+		-f $(TOP_FILELIST) \
+		-f $(TB_FILELIST) \
+		--top-module $(TB_NAME) \
+		--exe versimSV.cpp usercode/VUserMainUdp.cpp $(USER_SOURCES) \
+		-CFLAGS "-I$(COSIMDIR)/include -I$(UDPCODEDIR) -DVERILATOR -DVPROC_SV -DVPROC" \
+		-LDFLAGS "\
+			-rdynamic \
+			$(COSIM_LDFLAGS) \
+			$(UDP_LDFLAGS)" \
+		-Mdir $(WORKDIR)
 
-#------------------------
+# -----------------------------------------------------------------------------
+# Build & run simulation
+# -----------------------------------------------------------------------------
 sim: compile
-	cd output; \
-	make -f V${TB_NAME}.mk  V${TB_NAME}; \
-	./V${TB_NAME} | tee sim.log
+	$(MAKE) -C $(WORKDIR) -f V$(TB_NAME).mk V$(TB_NAME)
+	@echo "==== START SIMULATION ===="
+	./$(WORKDIR)/V$(TB_NAME) | tee sim.log
 
-#------------------------
-wave: xml2stems
-	cd output; \
-	gtkwave --saveonexit \
-		--slider-zoom \
-		--stems   ../tb.stems \
-		--logfile sim.log \
-		-rc       ../.gtkwaverc \
-		--dump    wave.fst &
+# -----------------------------------------------------------------------------
+# View waveform (GTKWave)
+# -----------------------------------------------------------------------------
+wave:
+	@echo "==== LAUNCHING GTKWave ===="
+	cd $(SIM_DIR) && gtkwave wave.fst
 
-#		--wish \
-#		--save ../wave.gtkw
-
-#------------------------
-wave-alt:
-	cd output; \
-	surfer.exe -s ../wave.surfer.ron wave.fst &
-
-#------------------------
-xml2stems:
-	verilator \
-		--timing \
-		-xml-only \
-		-xml-output tb.xml \
-		--timescale 1ps/1ps \
-		-Wall models/config.vlt \
-		-f ${HW_SRC}/top.filelist \
-		-f ${SIM_DIR}/simple_tb.filelist \
-		+define+SIM_ONLY \
-		+define+SIMPLE_TB \
-		--top-module ${TB_NAME}
-	xml2stems tb.xml tb.stems
-
-#		models/sdr_sdram/sdr.CHILI.sv \
-
-#------------------------
-rtlbrowse: xml2stems
-	rtlbrowse tb.stems
-
-#=============================================================
-# End-of-File
-#=============================================================

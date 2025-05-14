@@ -2,7 +2,14 @@
 # List of file to make 'tb.sv' test bench module witth Makefile, not MakefileVProc.mk
 #==========================================================================
 
+${SIM_DIR}/models/cosim/mem_model.sv
+${SIM_DIR}/models/cosim/f_VProc.sv
+${SIM_DIR}/models/udpIpPg/gmii_rgmii_conv.v
+${SIM_DIR}/models/udpIpPg/udp_ip_pg.v
+${SIM_DIR}/models/udpIpPg/bfm_ethernet.sv
+
 ${SIM_DIR}/models/bfm_uart.sv
+${SIM_DIR}/models/bfm_phy_mdio.sv
 
 #---Xilinx primitives
 ${SIM_DIR}/models/no-change/glbl.v

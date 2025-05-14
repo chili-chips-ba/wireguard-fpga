@@ -243,7 +243,6 @@ module tb #(
 //--------------------------------------------------------------
 // Ethernet UDP/IPv4 BFM
 //--------------------------------------------------------------
-`ifndef SIMPLE_TB
 
 gmii_if                                   gmii [NUM_ETH_PORTS] (gmiiclk, gmiiarst_n) ;
 wire    [NUM_ETH_PORTS-1:0]               mdio;
@@ -296,7 +295,6 @@ endgenerate
      .halt_req                            ()
    );
 // verilator lint_on PINCONNECTEMPTY
-`endif
 
 //--------------------------------------------------------------
 // model of external UART
