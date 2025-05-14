@@ -8,7 +8,8 @@ SW_SRC  := $(BLD_DIR)/../2.sw
 SW_APP  := $(SW_SRC)/app
 #SW_MAIN := $(SW_APP)
 #SW_MAIN := $(SW_APP)/csr_uart_test
-SW_MAIN := $(SW_APP)/csr_gpio_test
+#SW_MAIN := $(SW_APP)/csr_gpio_test
+SW_MAIN := $(SW_APP)/csr_ethernet_test
 
 CSR_BLD := $(BLD_DIR)/csr_build/generated-files
 SW_BLD  := $(BLD_DIR)/sw_build
@@ -53,6 +54,7 @@ $(CSR_BLD)/wireguard_regs.h \
 $(CSR_BLD)/csr_hw.h \
 $(CSR_BLD)/csr.h \
 $(SW_APP)/uart.h           $(SW_APP)/uart.c \
+$(SW_APP)/ethernet.h       $(SW_APP)/ethernet.c \
 $(SW_APP)/string_bare.h    $(SW_APP)/string_bare.c \
 $(SW_APP)/wireguard_libs.h $(SW_APP)/wireguard_libs.cpp \
 $(SW_MAIN)/main.cpp
@@ -65,12 +67,15 @@ $(SW_MAIN)/main.cpp
    -ffreestanding \
    -nostdlib \
    -static \
+   -fvar-tracking-assignments \
+   -fno-inline \
    -fomit-frame-pointer \
    -fno-exceptions \
    -fno-asynchronous-unwind-tables \
    -fno-unwind-tables -o $(SW_BLD)/main.elf \
    $(SW_SRC)/boot_crt.S \
    $(SW_APP)/uart.c \
+   $(SW_APP)/ethernet.c \
    $(SW_APP)/string_bare.c \
    $(SW_APP)/wireguard_libs.cpp \
    $(SW_MAIN)/main.cpp
