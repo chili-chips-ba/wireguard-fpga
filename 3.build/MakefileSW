@@ -22,7 +22,7 @@ SW_BLD  := $(BLD_DIR)/sw_build
 #   For more, see: 0.doc/1.README.Tool-Installs.txt
 #=============================================================
 CROSS = riscv64-unknown-elf-
-CFLAGS = -std=c++11 -DTCM=1 -DHARVARD=1 -DUART_TEST
+CFLAGS = -Os -std=c++11 -DTCM=1 -DHARVARD=1 -DUART_TEST
 
 #------------------------
 .PHONY: sw_all
@@ -67,12 +67,12 @@ $(SW_MAIN)/main.cpp
    -ffreestanding \
    -nostdlib \
    -static \
-   -fvar-tracking-assignments \
-   -fno-inline \
    -fomit-frame-pointer \
    -fno-exceptions \
    -fno-asynchronous-unwind-tables \
-   -fno-unwind-tables -o $(SW_BLD)/main.elf \
+   -fno-unwind-tables \
+   -flto \
+   -o $(SW_BLD)/main.elf \
    $(SW_SRC)/boot_crt.S \
    $(SW_APP)/uart.c \
    $(SW_APP)/ethernet.c \
@@ -89,5 +89,6 @@ sw_out: sw_elf
 	python3 imem.INIT.py
 
 #------------------------
+.PHONY: program
 program: sw_all
 	python3 imem.UART.py

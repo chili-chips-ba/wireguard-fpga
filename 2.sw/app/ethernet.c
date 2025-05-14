@@ -23,7 +23,7 @@
  *
  * Returns:     Length of the sent packet
  **********************************************************************/
-uint32_t eth_send_packet (csr_vp_t* csr, eth_raw_packet_t* packet) {
+uint32_t eth_send_packet (volatile csr_vp_t* csr, eth_raw_packet_t* packet) {
    uint32_t i;
    uint32_t empty;
    if (csr->cpu_fifo->rx->status->tready()) {
@@ -43,7 +43,7 @@ uint32_t eth_send_packet (csr_vp_t* csr, eth_raw_packet_t* packet) {
          i += 16;
          
          if (i < packet->len) {
-            csr->cpu_fifo->rx->control->tkeep(0b1111111111111111);
+            csr->cpu_fifo->rx->control->tkeep(0xFFFF);
             csr->cpu_fifo->rx->control->tlast(0);
             csr->cpu_fifo->rx->trigger->tvalid(1);
          } else {
@@ -66,7 +66,7 @@ uint32_t eth_send_packet (csr_vp_t* csr, eth_raw_packet_t* packet) {
  *
  * Returns:     Length of the received packet
  **********************************************************************/
-uint32_t eth_receive_packet (csr_vp_t* csr, eth_raw_packet_t* packet) {
+uint32_t eth_receive_packet (volatile csr_vp_t* csr, eth_raw_packet_t* packet) {
    uint32_t len = 0;
    uint16_t keep;
    packet->dst = 0;
