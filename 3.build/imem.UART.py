@@ -74,6 +74,11 @@ for li in str32:         #DATA
    checksum = checksum + int(li[0:2], 16)
    ot = ComPort.write(struct.pack('B', int(li[0:2], 16)))
    print(f'{i:4d}_3: {li[0:2]:2}')
+   
+   it1 = (ComPort.read(1))
+   print(f"ACK:    {hex(int.from_bytes(it1, byteorder='big'))}")
+   if (int.from_bytes(it1, byteorder='big') != 0x06):
+      break
 
 
 checksum = int(checksum & 0xFF)

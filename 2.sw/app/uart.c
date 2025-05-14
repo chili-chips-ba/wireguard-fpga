@@ -23,7 +23,7 @@
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_char (csr_vp_t* csr, char c) {
+void uart_send_char (volatile csr_vp_t* csr, char c) {
    // wait for HW "not busy", then send the byte/character
    while (csr->uart->tx->busy());
    csr->uart->tx->data(c);
@@ -37,7 +37,7 @@ void uart_send_char (csr_vp_t* csr, char c) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex (csr_vp_t* csr, unsigned int val, int digits) {
+void uart_send_hex (volatile csr_vp_t* csr, unsigned int val, int digits) {
    for (int i = (4*digits) - 4; i >= 0; i -= 4)
       uart_send_char(csr, "0123456789ABCDEF"[(val >> i) % 16]);
 }
@@ -49,7 +49,7 @@ void uart_send_hex (csr_vp_t* csr, unsigned int val, int digits) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send (csr_vp_t* csr, const char *s) {
+void uart_send (volatile csr_vp_t* csr, const char *s) {
    while (*s) uart_send_char(csr, *(s++));
 }
 
@@ -61,7 +61,7 @@ void uart_send (csr_vp_t* csr, const char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_recv(csr_vp_t* csr, char *s) {
+void uart_recv(volatile csr_vp_t* csr, char *s) {
    uint32_t uart_rx;
 
    // keep reading from UART until user enters <ENTER>,
@@ -114,7 +114,7 @@ void uart_recv(csr_vp_t* csr, char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_test(csr_vp_t* csr) {
+void uart_test(volatile csr_vp_t* csr) {
    const char *rx_expd = "Mi smo FPGA raja\r\n";
    char        rx_data[UART_RXBUF_SIZE];
    char       *rx_data_ptr;
@@ -163,7 +163,7 @@ void uart_test(csr_vp_t* csr) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_tests_info(csr_vp_t* csr, int cmd) {
+void uart_tests_info(volatile csr_vp_t* csr, int cmd) {
 
    char *tests_list[] = {
     "OK!\r\n\r\n",

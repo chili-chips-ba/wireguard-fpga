@@ -136,7 +136,8 @@ module sync_fifo_ram #(
 //  endgenerate
 //`endif
 
-   logic [DWIDTH-1:0] mem [2**AWIDTH] /* synthesis syn_ramstyle = "distributed_ram" */;
+   (* ram_style = "block" *)
+   logic [DWIDTH-1:0] mem [2**AWIDTH];
 
    always_comb begin
       dout_comb = mem[rd_addr];

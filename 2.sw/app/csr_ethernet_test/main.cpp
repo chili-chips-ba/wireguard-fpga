@@ -12,11 +12,11 @@ eth_raw_packet_t packet;
 
 int main(void)
 {
-   csr_vp_t* csr = new csr_vp_t();
+   volatile csr_vp_t* csr = new csr_vp_t();
    
    while (1) {
       if (eth_receive_packet(csr, &packet)) {
-         //csr->gpio->led2(1);
+         csr->gpio->led2(1);
          if (packet.src == 1) {
             packet.dst = 2;
             packet.bypass_all = 1;
@@ -27,7 +27,7 @@ int main(void)
             eth_send_packet(csr, &packet);
          }
       } else {
-         //csr->gpio->led2(0);
+         csr->gpio->led2(0);
       }
    }
 

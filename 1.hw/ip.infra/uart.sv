@@ -106,9 +106,10 @@ module uart
    localparam [7:0] C_SOP  = 8'h12;  // Enter special mode
    localparam [7:0] C_EOP  = 8'h14;  // Exit special mode
    localparam [7:0] C_IMPR = 8'h05;  // Enter IMEM programming mode
-   localparam [7:0] C_BUSW = 8'h06;  // Enter DMEM/CSR write data mode
-   localparam [7:0] C_BUSR = 8'h07;  // Enter DMEM/CSR read data mode
-   localparam [7:0] C_IMWR = 8'h08;  // Enter IMEM write-single-instruction mode
+   localparam [7:0] C_ACK  = 8'h06;  // ACK for IMEM programming mode
+   localparam [7:0] C_BUSW = 8'h07;  // Enter DMEM/CSR write data mode
+   localparam [7:0] C_BUSR = 8'h08;  // Enter DMEM/CSR read data mode
+   localparam [7:0] C_IMWR = 8'h09;  // Enter IMEM write-single-instruction mode
       
    typedef enum logic[3:0] {
       IDLE  = 4'd14,
@@ -142,6 +143,7 @@ module uart
       else begin
          // number of clocks for 1us time-tick pulse depends
          //   on board, i.e. the period of available clocks
+         // (-1 because we count from 0)
          tick_1us  <= (cnt_1us == cnt_1us_t'(NUM_1US_CLKS-1));
 
          if (tick_1us == 1'b1) begin
@@ -337,7 +339,6 @@ module uart
       .clk       (clk),
 
       .din       (rx_shift),
-      //.we        ((state == T_STATES_WAIT_SOP) ? rx_fifo_we : 1'b0),
       .we        (~bus_vld & rx_fifo_we),
       //.re        (from_csr.uart.rx_trigger.read.value), // FIFO internal logic prevents underflow
       .re        (from_csr.uart.rx.data.swacc), // FIFO internal logic prevents underflow
@@ -516,10 +517,10 @@ module uart
       .arst_n    (arst_n),
       .clk       (clk),
 
-      //.din       ((state == T_STATES_WAIT_SOP) ? from_csr.uart.tx.data.value : uart_tx_data),
       .din       (bus_vld ? uart_tx_data : from_csr.uart.tx.data.value),
-      //.we        ((state == T_STATES_WAIT_SOP) ? from_csr.uart.tx_trigger.write.value : uart_tx_valid),
+      //.din       (uart_rx_data),  // loopback test
       .we        (bus_vld ? uart_tx_valid : from_csr.uart.tx_trigger.write.value),
+      //.we        (uart_rx_valid), // loopback test
       .re        (tx_fifo_re),
 
    // Outputs
@@ -537,22 +538,11 @@ module uart
 // FSM for loading IMEM via UART and
 // DMEM/CSR bus mastering via UART
 //=========================================
-   logic [7:0]  uart_rx_data, uart_rx_data_m;
-   logic        uart_rx_valid, uart_rx_valid_m;
-   
-   always_ff @(negedge arst_n or posedge clk) begin
-      if (arst_n == 1'b0) begin
-         uart_rx_data_m <= '0;
-         uart_rx_data <= '0;
-         uart_rx_valid_m <= 1'b0;
-         uart_rx_valid <= 1'b0;
-      end else begin
-         uart_rx_data_m <= rx_shift;
-         uart_rx_data <= uart_rx_data_m;
-         uart_rx_valid_m <= rx_fifo_we;
-         uart_rx_valid <= uart_rx_valid_m;
-      end
-   end
+   logic [7:0]  uart_rx_data;
+   logic        uart_rx_valid;
+
+   assign       uart_rx_data = rx_shift;
+   assign       uart_rx_valid = rx_fifo_we;
    
    logic        cpu_rstn, cpu_rstn_next;
    logic [15:0] data_length, data_length_next;
@@ -666,7 +656,6 @@ module uart
          end
 
          T_STATES_IMPR_WAIT_DATA0: begin
-            //ram_wen_next = 1'b0;
             if (uart_rx_valid == 1'b1) begin
                ram_data_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
@@ -697,7 +686,9 @@ module uart
                checksum_next = checksum + uart_rx_data;
                ram_addr_next = {14'd0, data_cnt, 2'd0};
                ram_wen_next = 1'b1;
-               state_next = T_STATES_IMPR_CHECKSUM;
+               uart_tx_data_next = C_ACK;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_IMPR_CHECKSUM;               
             end
          end
 
@@ -709,6 +700,7 @@ module uart
                state_next = T_STATES_IMPR_DONE;
             end else begin
                ram_wen_next = 1'b0;
+               uart_tx_valid_next = 1'b0;
                state_next = T_STATES_IMPR_WAIT_DATA0;
             end
          end

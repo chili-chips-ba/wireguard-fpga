@@ -15,11 +15,10 @@ void delay(uint32_t count) {
 
 int main(void)
 {
-   csr_vp_t* csr = new csr_vp_t();
+   volatile csr_vp_t* csr = new csr_vp_t();
    char rx_data[UART_RXBUF_SIZE];
    
    uart_send(csr, "Hello world!\r\n");
-
    uart_test(csr);
    
    while (1) {
