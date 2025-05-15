@@ -40,6 +40,7 @@ module soc_fabric (
 //-----------------------------------------------------------
    logic cpu_ack;    // 1 as soon as CPU gets the bus
    logic uart_busy;  // 1 when UART is already using the bus
+   logic uart_done;  // 1 when UART is done with using bus
    
    assign dmem.addr  = cpu_ack ? cpu.addr : uart.addr;
    assign dmem.we    = cpu_ack ? cpu.we   : uart.we;
@@ -66,7 +67,7 @@ module soc_fabric (
 //return RDY+RDAT to UART from the selected peripheral
    assign uart.rdy  = dmem_sel ? dmem.rdy & uart_busy
                     : csr_sel  ? csr.rdy & uart_busy
-                               : uart_busy;
+                               : 1'b0;
 
    assign uart.rdat = dmem_sel ? dmem.rdat
                     : csr_sel  ? csr.rdat
@@ -75,7 +76,7 @@ module soc_fabric (
 //return RDY+RDAT to CPU from the selected peripheral
    assign cpu.rdy   = dmem_sel ? dmem.rdy & ~uart_busy
                     : csr_sel  ? csr.rdy & ~uart_busy
-                               : ~uart_busy;
+                               : 1'b0;
 
    assign cpu.rdat  = dmem_sel ? dmem.rdat
                     : csr_sel  ? csr.rdat
@@ -101,13 +102,18 @@ module soc_fabric (
       else begin
          uart_busy <= uart_busy
          // once started, UART keeps the bus until transaction is over
-                    ? uart.vld
+                    //? uart.vld
+                    //? ~(dmem.rdy & csr.rdy) | uart.vld
+                    ? ~uart_done | uart.vld
 
          // UART gets bus if CPU doesn't want it at that very moment
                     : ({cpu.vld, uart.vld} == 2'b01);
       end
    end
-
+   
+   // UART is done with using bus
+   assign uart_done = (dmem_sel & dmem.rdy) | (csr_sel & csr.rdy);
+   
    // CPU cannot interrupt an ongoing UART transaction
    assign cpu_ack = cpu.vld & ~uart_busy;
 endmodule: soc_fabric

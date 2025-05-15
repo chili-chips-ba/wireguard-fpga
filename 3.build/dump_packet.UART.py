@@ -26,7 +26,7 @@ ComPort.parity   = serial.PARITY_NONE   # No parity
 ComPort.stopbits = serial.STOPBITS_ONE  # Number of Stop bits = 1
 ComPort.timeout  = 1
 
-address = 0x10000800
+address = 0x10000000
 
 #------------------------------
 # Begin communication
@@ -39,8 +39,8 @@ print(f">> SOP: {0x12:#0{4}x}")
 # Dump DPE routing info
 #------------------------------
 
-ot = ComPort.write(struct.pack('B', int(0x07)))                                  #CMD 0x07 to enter DMEM/CSR read data mode
-print(f">> CMD: {0x07:#0{4}x}", end = "  ")
+ot = ComPort.write(struct.pack('B', int(0x08)))                                  #CMD 0x08 to enter DMEM/CSR read data mode
+print(f">> CMD: {0x08:#0{4}x}", end = "  ")
 
 ot = ComPort.write(struct.pack('<I', int(address)))                              #ADDR in DMEM to packet
 print(f"ADDR: {address:#0{10}x}", end = "  ")
@@ -65,8 +65,8 @@ print(f"packet.bypass_all:   {packet_bypass_all}")
 # Dump packet length
 #------------------------------
 
-ot = ComPort.write(struct.pack('B', int(0x07)))                                  #CMD 0x07 to enter DMEM/CSR read data mode
-print(f">> CMD: {0x07:#0{4}x}", end = "  ")
+ot = ComPort.write(struct.pack('B', int(0x08)))                                  #CMD 0x08 to enter DMEM/CSR read data mode
+print(f">> CMD: {0x08:#0{4}x}", end = "  ")
 
 ot = ComPort.write(struct.pack('<I', int(address + 4)))                          #ADDR in DMEM to packet.len
 print(f"ADDR: {(address + 4):#0{10}x}", end = "  ")
@@ -88,8 +88,8 @@ print(f"packet.len:          {packet_len}")
 packet_payload = bytearray()
 
 for i in range(0, packet_len, 4):
-   ot = ComPort.write(struct.pack('B', int(0x07)))                               #CMD 0x07 to enter DMEM/CSR read data mode
-   print(f">> CMD: {0x07:#0{4}x}", end = "  ")
+   ot = ComPort.write(struct.pack('B', int(0x08)))                               #CMD 0x08 to enter DMEM/CSR read data mode
+   print(f">> CMD: {0x08:#0{4}x}", end = "  ")
    
    ot = ComPort.write(struct.pack('<I', int(address + 8 + i)))                   #ADDR in DMEM to packet.payload
    print(f"ADDR: {(address + 8 + i):#0{10}x}", end = "  ")

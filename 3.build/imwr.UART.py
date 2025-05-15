@@ -20,8 +20,8 @@ ComPort.timeout  = 1
 ot = ComPort.write(struct.pack('B', int(0x12)))          #Start Of Packet (DC2)
 print("SOP:   ", hex(0x12))
 
-ot = ComPort.write(struct.pack('B', int(0x08)))          #CMD 0x08 enter IMEM write-single-instruction data mode
-print("CMD:   ", hex(0x08))
+ot = ComPort.write(struct.pack('B', int(0x09)))          #CMD 0x09 enter IMEM write-single-instruction data mode
+print("CMD:   ", hex(0x09))
 
 #change 000f47b7 -> 0000f7b7 @ 07c0
 
