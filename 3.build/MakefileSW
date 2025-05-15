@@ -9,7 +9,8 @@ SW_APP  := $(SW_SRC)/app
 #SW_MAIN := $(SW_APP)
 #SW_MAIN := $(SW_APP)/csr_uart_test
 #SW_MAIN := $(SW_APP)/csr_gpio_test
-SW_MAIN := $(SW_APP)/csr_ethernet_test
+#SW_MAIN := $(SW_APP)/csr_ethernet_test
+SW_MAIN := $(SW_APP)/csr_test
 
 CSR_BLD := $(BLD_DIR)/csr_build/generated-files
 SW_BLD  := $(BLD_DIR)/sw_build

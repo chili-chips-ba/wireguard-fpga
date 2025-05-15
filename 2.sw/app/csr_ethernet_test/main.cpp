@@ -13,7 +13,7 @@ eth_raw_packet_t packet;
 int main(void)
 {
    volatile csr_vp_t* csr = new csr_vp_t();
-   
+
    while (1) {
       if (eth_receive_packet(csr, &packet)) {
          csr->gpio->led2(1);
