@@ -568,7 +568,7 @@ module uart
          ram_data <= '0;
          bus_vld <= 1'b0;
          bus_we <= '0;
-         bus_addr <= '0;
+         bus_addr <= 32'h10000000;
          bus_rdat <= '0;
          bus_wdat <= '0;
          checksum <= '0;

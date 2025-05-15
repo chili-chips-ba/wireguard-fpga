@@ -20,8 +20,8 @@ ComPort.timeout  = 1
 ot = ComPort.write(struct.pack('B', int(0x12)))          #Start Of Packet (DC2)
 print("SOP:   ", hex(0x12))
 
-ot = ComPort.write(struct.pack('B', int(0x06)))          #CMD 0x06 enter DMEM/CSR write data mode
-print("CMD:   ", hex(0x06))
+ot = ComPort.write(struct.pack('B', int(0x07)))          #CMD 0x07 enter DMEM/CSR write data mode
+print("CMD:   ", hex(0x07))
 
 ot = ComPort.write(struct.pack('B', int(0x48)))          #ADDR0
 print("ADDR0: ", hex(0x48))
