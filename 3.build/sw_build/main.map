@@ -14,57 +14,54 @@ Linker script and memory map
                 0x00000200                        _STACK_SIZE = 0x200
                 0x00000000                        . = ORIGIN (IMEM)
 
-.text           0x00000000      0x818
+.text           0x00000000      0x3fc
                 0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x00000000       0x70 /tmp/cc1BemRD.o
+ .text          0x00000000       0x70 /tmp/ccCyeqK7.o
                 0x00000000                _boot_crt
- .text          0x00000070      0x254 /tmp/ccTiXurh.ltrans0.ltrans.o
- .text.startup  0x000002c4      0x544 /tmp/ccTiXurh.ltrans0.ltrans.o
-                0x000002c4                main
+ .text          0x00000070       0x30 /tmp/cc0NWAON.ltrans0.ltrans.o
+ .text.startup  0x000000a0      0x35c /tmp/cc0NWAON.ltrans0.ltrans.o
+                0x000000a0                main
  *(.rodata .rodata.*)
- .rodata.str1.4
-                0x00000808        0xf /tmp/ccTiXurh.ltrans0.ltrans.o
  *(.srodata .srodata.*)
-                0x00000818                        . = ALIGN (0x4)
- *fill*         0x00000817        0x1 
-                0x00000818                        _text_end = .
-                0x00000818                        _idata_start = _text_end
+                0x000003fc                        . = ALIGN (0x4)
+                0x000003fc                        _text_end = .
+                0x000003fc                        _idata_start = _text_end
 
-.rela.dyn       0x00000000        0x0
- .rela.text     0x00000000        0x0 /tmp/cc1BemRD.o
+.rela.dyn       0x000003fc        0x0
+ .rela.text     0x000003fc        0x0 /tmp/ccCyeqK7.o
 
-.data           0x10000000        0x0 load address 0x00000818
+.data           0x10000000        0x0 load address 0x000003fc
                 0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x10000000        0x0 /tmp/cc1BemRD.o
- .data          0x10000000        0x0 /tmp/ccTiXurh.ltrans0.ltrans.o
+ .data          0x10000000        0x0 /tmp/ccCyeqK7.o
+ .data          0x10000000        0x0 /tmp/cc0NWAON.ltrans0.ltrans.o
                 0x10000000                        . = ALIGN (0x8)
                 0x10000800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.sdata .sdata.*)
                 0x10000000                        . = ALIGN (0x4)
                 0x10000000                        _data_end = .
 
-.bss            0x10000000      0xe0c load address 0x00000818
+.bss            0x10000000      0x804 load address 0x000003fc
                 0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x10000000        0x0 /tmp/cc1BemRD.o
- .bss           0x10000000      0xe08 /tmp/ccTiXurh.ltrans0.ltrans.o
+ .bss           0x10000000        0x0 /tmp/ccCyeqK7.o
+ .bss           0x10000000      0x800 /tmp/cc0NWAON.ltrans0.ltrans.o
  *(.sbss .sbss.*)
- .sbss          0x10000e08        0x4 /tmp/ccTiXurh.ltrans0.ltrans.o
+ .sbss          0x10000800        0x4 /tmp/cc0NWAON.ltrans0.ltrans.o
  *(COMMON)
-                0x10000e0c                        . = ALIGN (0x4)
-                0x10000e0c                        _bss_end = .
-                0x10000e10                        . = ALIGN (0x10)
+                0x10000804                        . = ALIGN (0x4)
+                0x10000804                        _bss_end = .
+                0x10000810                        . = ALIGN (0x10)
 
-.heap           0x10000e0c      0x404 load address 0x00001624
-                0x10000e0c                        _heap_start = .
-                0x1000120c                        . = (. + _HEAP_SIZE)
- *fill*         0x10000e0c      0x400 
-                0x10001210                        . = ALIGN (0x10)
- *fill*         0x1000120c        0x4 
-                0x10001210                        _heap_end = .
-                0x10001210                        . = ALIGN (0x8)
+.heap           0x10000804      0x40c load address 0x00000c00
+                0x10000804                        _heap_start = .
+                0x10000c04                        . = (. + _HEAP_SIZE)
+ *fill*         0x10000804      0x400 
+                0x10000c10                        . = ALIGN (0x10)
+ *fill*         0x10000c04        0xc 
+                0x10000c10                        _heap_end = .
+                0x10000c10                        . = ALIGN (0x8)
                 [!provide]                        PROVIDE (_end = .)
                 [!provide]                        PROVIDE (end = .)
                 0x10008000                        PROVIDE (_stack_start = (ORIGIN (DMEM) + LENGTH (DMEM)))
@@ -73,22 +70,24 @@ Linker script and memory map
                 0x10008000                        . = (. + _STACK_SIZE)
  *fill*         0x10007e00      0x200 
                 0x10007e00                        _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/cc1BemRD.o
-LOAD /tmp/ccaBVVKt.o
-LOAD /tmp/ccTiXurh.ltrans0.ltrans.o
-LOAD /tmp/ccEUhknu.o
-LOAD /tmp/cc01Fd4g.o
-LOAD /tmp/ccmmcnyv.o
-LOAD /tmp/ccu3aEY8.o
+LOAD /tmp/ccCyeqK7.o
+LOAD /tmp/ccLNFQB4.o
+LOAD /tmp/cc0NWAON.ltrans0.ltrans.o
+LOAD /tmp/ccfUalHm.o
+LOAD /tmp/ccLeC4mi.o
+LOAD /tmp/ccTcNy98.o
+LOAD /tmp/ccpTD3uH.o
+LOAD /tmp/ccH2apgv.o
+LOAD /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a
 OUTPUT(/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
 
 .riscv.attributes
-                0x00000000       0x2a
+                0x00000000       0x1c
  .riscv.attributes
-                0x00000000       0x28 /tmp/cc1BemRD.o
+                0x00000000       0x1a /tmp/ccCyeqK7.o
  .riscv.attributes
-                0x00000028       0x2a /tmp/ccTiXurh.ltrans0.ltrans.o
+                0x0000001a       0x1c /tmp/cc0NWAON.ltrans0.ltrans.o
 
 .comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/ccTiXurh.ltrans0.ltrans.o
+ .comment       0x00000000       0x22 /tmp/cc0NWAON.ltrans0.ltrans.o
                                  0x23 (size before relaxing)

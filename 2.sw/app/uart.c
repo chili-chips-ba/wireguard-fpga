@@ -43,6 +43,59 @@ void uart_send_hex (volatile csr_vp_t* csr, unsigned int val, int digits) {
 }
 
 /**********************************************************************
+ * Function:    uart_send_dec()
+ *
+ * Description: Converts 0-255 decimal value to a string of
+ *              ASCII characters and sends them to UART
+ *
+ * Returns:     None
+ **********************************************************************/
+void uart_send_dec(volatile csr_vp_t* csr, uint8_t val) {
+   /*uint8_t digit;
+   int leading_zero = 1;
+
+   digit = 0;
+   while (val >= 100) {
+      val -= 100;
+      digit++;
+   }
+   if (digit > 0) {
+      uart_send_char(csr, digit + '0');
+      leading_zero = 0;
+   }
+
+   digit = 0;
+   while (val >= 10) {
+      val -= 10;
+      digit++;
+   }
+   if (!leading_zero || digit > 0) {
+      uart_send_char(csr, digit + '0');
+      leading_zero = 0;
+   }
+
+   uart_send_char(csr, val + '0');*/
+   if (val == 0) {
+        uart_send_char(csr, '0');
+        return;
+    }
+
+    unsigned int divisor = 1;
+
+    while (divisor <= val / 10) {
+        divisor *= 10;
+    }
+
+    // Ispiši cifre
+    while (divisor > 0) {
+        unsigned int digit = val / divisor;
+        uart_send_char(csr, digit + '0');
+        val -= digit * divisor;
+        divisor /= 10;
+    }
+}
+
+/**********************************************************************
  * Function:    uart_send()
  *
  * Description: Sends a string of characters to UART
@@ -54,51 +107,116 @@ void uart_send (volatile csr_vp_t* csr, const char *s) {
 }
 
 /**********************************************************************
- * Function:    uart_recv()
+ * Function:    uart_send_ip()
  *
- * Description: Receive data from UART HW until CR arrives,
- *              printing echo
+ * Description: Sends IP address (xxx.xxx.xxx.xxx) to UART
  *
  * Returns:     None
  **********************************************************************/
-void uart_recv(volatile csr_vp_t* csr, char *s) {
+void uart_send_ip(volatile csr_vp_t* csr, const uint8_t *ip) {
+   uart_send_dec(csr, ip[0]);
+   uart_send_char(csr, '.');
+   uart_send_dec(csr, ip[1]);
+   uart_send_char(csr, '.');
+   uart_send_dec(csr, ip[2]);
+   uart_send_char(csr, '.');
+   uart_send_dec(csr, ip[3]);
+}
+
+/**********************************************************************
+ * Function:    uart_send_ip()
+ *
+ * Description: Sends MAC address (xx:xx:xx:xx:xx:xx) to UART
+ *
+ * Returns:     None
+ **********************************************************************/
+void uart_send_mac(volatile csr_vp_t* csr, const uint8_t *mac) {
+   uart_send_hex(csr, mac[0], 2);
+   uart_send_char(csr, ':');
+   uart_send_hex(csr, mac[1], 2);
+   uart_send_char(csr, ':');
+   uart_send_hex(csr, mac[2], 2);
+   uart_send_char(csr, ':');
+   uart_send_hex(csr, mac[3], 2);
+   uart_send_char(csr, ':');
+   uart_send_hex(csr, mac[4], 2);
+   uart_send_char(csr, ':');
+   uart_send_hex(csr, mac[5], 2);
+}
+
+/**********************************************************************
+ * Function:    uart_recv()
+ *
+ * Description: Receive data from UART HW until <CR> or <CR><LF>
+ *              arrives, printing echo
+ *
+ * Returns:     None
+ **********************************************************************/
+uint8_t uart_recv(volatile csr_vp_t* csr, char *s) {
    uint32_t uart_rx;
 
-   // keep reading from UART until user enters <ENTER>,
-   //  or allocated buffer is exhausted
-   //  (UART_RXBUF_SIZE-1) opens space to append NULL
-   for (int i=0; i<(UART_RXBUF_SIZE-1); i++) {
-      // wait for HW to collect one byte/character
-      //  (*) due to Clear-on-Read nature of VALID and OFLOW flags,
-      //      this MUST BE ONE SHOT READ. Otherwise, both data and
-      //      flags could be lost
-      //
-      // (**) since this is a tight loop, we in this case
-      //      don't need to look at 'uart_rx.fld.oflow'
-      do {
-         uart_rx = csr->uart->rx->full();
-      } while (!(uart_rx & UART_RX_VALID));
- 
-      // store received data and print it back (echo function)
-      *s = (char)(uart_rx & UART_RX_DATA);
-      uart_send_char(csr, *s);
+   // Check for available data:
+   uart_rx = csr->uart->rx->full();
+   if (uart_rx & UART_RX_VALID) {
+      // if SOP received, ignore RX;
+      if ((uart_rx & UART_RX_DATA) == UART_SOP)
+         return 0;
+      
+      // otherwise, keep reading from UART until user enters <ENTER>,
+      //  or allocated buffer is exhausted
+      //  (UART_RXBUF_SIZE-1) opens space to append NULL
+      int i = 0;
+      while (i < UART_RXBUF_SIZE-1) {
+         // Store received character
+         *s = (char)(uart_rx & UART_RX_DATA);
+         
+         // <CR> or <CR><LF> indicates end of user input
+         // Ignore <LF> and exit
+         if (*s == '\n') {
+            break;
+         // On <CR> echo back <CR><LF> and exit
+         } else if (*s == '\r') {
+            uart_send_char(csr, '\r');
+            uart_send_char(csr, '\n');
+            break;
+         } else {
+            // On <BS> or <DEL> remove previously received
+            //  character and echo back <BS><SPACE><BS>;
+            if (*s == '\b' || *s == UART_DEL) {
+               if (i > 0) {
+                  s--;
+                  i--;
+                  uart_send_char(csr, '\b');
+                  uart_send_char(csr, ' ');
+                  uart_send_char(csr, '\b');
+               }               
+            // otherwise, echo back and append received character
+            } else {
+               uart_send_char(csr, *s);
+               s++;
+               i++;
+            }            
+         }
 
-      // <LF> indicates end of user input: Append NULL and exit
-      if (i == UART_RXBUF_SIZE-3) {
-         *s = '\r';
-         s++;
-         *s = '\n';
-         s++;
-         *s = '\0';
-         break;
-      } else if ((*s == '\n')) {
-         s++;
-         *s = '\0';
-         break;
-      }
-
-      s++;
-   };
+         // wait for HW to collect one byte/character
+         //  (*) due to Clear-on-Read nature of VALID and OFLOW flags,
+         //      this MUST BE ONE SHOT READ. Otherwise, both data and
+         //      flags could be lost
+         //
+         // (**) since this is a tight loop, we in this case
+         //      don't need to look at 'uart_rx.fld.oflow'
+         do {
+            uart_rx = csr->uart->rx->full();
+         } while (!(uart_rx & UART_RX_VALID));
+      };
+      
+      // Append NULL
+      *s = '\0';
+      
+      return i;
+   } else {
+      return 0;
+   }
 }
 
 #ifdef UART_TEST
@@ -115,7 +233,7 @@ void uart_recv(volatile csr_vp_t* csr, char *s) {
  * Returns:     None
  **********************************************************************/
 void uart_test(volatile csr_vp_t* csr) {
-   const char *rx_expd = "Mi smo FPGA raja\r\n";
+   const char *rx_expd = "Mi smo FPGA raja";
    char        rx_data[UART_RXBUF_SIZE];
    char       *rx_data_ptr;
    int         result;
@@ -126,7 +244,7 @@ void uart_test(volatile csr_vp_t* csr) {
    for (int i=3; i>0; i--) {
       //take input from UART and store it into allocated buffer
       rx_data_ptr = &rx_data[0];
-      uart_recv(csr, rx_data_ptr);
+      while(!uart_recv(csr, rx_data_ptr));
 
       uart_send(csr, (char*)"\r\n\n\tYou entered: ");
       uart_send(csr, rx_data_ptr);
