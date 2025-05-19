@@ -8,11 +8,6 @@
 #include "wireguard_regs.h"
 #include "uart.h"
 
-void delay(uint32_t count) {
-   volatile uint32_t i;
-   for (i = 0; i < count; i++);
-}
-
 int main(void)
 {
    volatile csr_vp_t* csr = new csr_vp_t();
