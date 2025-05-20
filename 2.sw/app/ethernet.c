@@ -75,10 +75,12 @@ uint32_t eth_receive_packet (volatile csr_vp_t* csr, eth_raw_packet_t* packet) {
    if (csr->cpu_fifo->tx->status->tvalid()) {
       packet->src = csr->cpu_fifo->tx->control->tuser_src();
       while (1) {
-         *((uint32_t*)(packet->payload + len)) = csr->cpu_fifo->tx->data_31_0->tdata();
-         *((uint32_t*)(packet->payload + len + 4)) = csr->cpu_fifo->tx->data_63_32->tdata();
-         *((uint32_t*)(packet->payload + len + 8)) = csr->cpu_fifo->tx->data_95_64->tdata();
-         *((uint32_t*)(packet->payload + len + 12)) = csr->cpu_fifo->tx->data_127_96->tdata();
+         if (len <= ETH_MAX_FRAME_LENGTH - 16) {
+            *((uint32_t*)(packet->payload + len)) = csr->cpu_fifo->tx->data_31_0->tdata();
+            *((uint32_t*)(packet->payload + len + 4)) = csr->cpu_fifo->tx->data_63_32->tdata();
+            *((uint32_t*)(packet->payload + len + 8)) = csr->cpu_fifo->tx->data_95_64->tdata();
+            *((uint32_t*)(packet->payload + len + 12)) = csr->cpu_fifo->tx->data_127_96->tdata();
+         }
          
          if (csr->cpu_fifo->tx->control->tlast()) {
             keep = csr->cpu_fifo->tx->control->tkeep();
@@ -86,9 +88,9 @@ uint32_t eth_receive_packet (volatile csr_vp_t* csr, eth_raw_packet_t* packet) {
                 len++;
                 keep >>= 1;
             }
-            packet->len = len;
+            packet->len = (len < ETH_MAX_FRAME_LENGTH) ? len : ETH_MAX_FRAME_LENGTH;
             csr->cpu_fifo->tx->trigger->tready(1);
-            return len;
+            return packet->len;
          } else {
             len += 16;
             csr->cpu_fifo->tx->trigger->tready(1);
