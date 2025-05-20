@@ -50,49 +50,24 @@ void uart_send_hex (volatile csr_vp_t* csr, unsigned int val, int digits) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_dec(volatile csr_vp_t* csr, uint8_t val) {
-   /*uint8_t digit;
-   int leading_zero = 1;
-
-   digit = 0;
-   while (val >= 100) {
-      val -= 100;
-      digit++;
-   }
-   if (digit > 0) {
-      uart_send_char(csr, digit + '0');
-      leading_zero = 0;
-   }
-
-   digit = 0;
-   while (val >= 10) {
-      val -= 10;
-      digit++;
-   }
-   if (!leading_zero || digit > 0) {
-      uart_send_char(csr, digit + '0');
-      leading_zero = 0;
-   }
-
-   uart_send_char(csr, val + '0');*/
+void uart_send_dec(volatile csr_vp_t* csr, uint16_t val) {
    if (val == 0) {
-        uart_send_char(csr, '0');
-        return;
-    }
+      uart_send_char(csr, '0');
+      return;
+   }
 
-    unsigned int divisor = 1;
+   uint16_t divisor = 1;
 
-    while (divisor <= val / 10) {
-        divisor *= 10;
-    }
+   while (divisor <= val / 10) {
+      divisor *= 10;
+   }
 
-    // Ispiši cifre
-    while (divisor > 0) {
-        unsigned int digit = val / divisor;
-        uart_send_char(csr, digit + '0');
-        val -= digit * divisor;
-        divisor /= 10;
-    }
+   while (divisor > 0) {
+      uint16_t digit = val / divisor;
+      uart_send_char(csr, digit + '0');
+      val -= digit * divisor;
+      divisor /= 10;
+   }
 }
 
 /**********************************************************************

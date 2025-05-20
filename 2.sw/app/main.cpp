@@ -70,9 +70,15 @@ int main(void)
                }
                break;
             case NET_PROTO_ICMP:
-               uart_send(csr, "NET_PROTO_ICMP: ");
-               uart_send_hex(csr, eth_packet_rx.len, 4);
+               uart_send(csr, "<< NET_PROTO_ICMP: ");
+               uart_send_dec(csr, eth_packet_rx.len);
                uart_send(csr, "\r\n");
+               if (net_process_icmp(&net_config, &eth_packet_rx, &eth_packet_tx)) {
+                  eth_send_packet(csr, &eth_packet_tx);
+                  uart_send(csr, ">> NET_PROTO_ICMP: ");
+                  uart_send_dec(csr, eth_packet_rx.len);
+                  uart_send(csr, "\r\n");
+               }
                break;
             case NET_PROTO_UDP:
                /*uart_send(csr, "NET_PROTO_UDP: ");
