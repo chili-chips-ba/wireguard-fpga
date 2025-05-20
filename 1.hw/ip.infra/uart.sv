@@ -53,10 +53,8 @@ module uart
    import soc_pkg::*;
 
 //--------------------------------------
-// Common
-//--------------------------------------
- 
 // IMEM/BUS FSM states
+//--------------------------------------
    typedef enum logic[5:0] {
       T_STATES_WAIT_SOP,
       T_STATES_WAIT_CMD,
@@ -97,20 +95,27 @@ module uart
       T_STATES_IMWR_WAIT_DATA2,
       T_STATES_IMWR_WAIT_DATA3,
       T_STATES_IMWR_CHECKSUM,
-      T_STATES_IMWR_DONE
+      T_STATES_IMWR_DONE,
+      T_STATES_TIMEOUT
    } spec_state_t;
 
    spec_state_t state, state_next;
-   
-// IMEM/BUS command protocol constants:
+
+//--------------------------------------   
+// IMEM/BUS commands/responses
+//--------------------------------------
    localparam [7:0] C_SOP  = 8'h12;  // Enter special mode
    localparam [7:0] C_EOP  = 8'h14;  // Exit special mode
    localparam [7:0] C_IMPR = 8'h05;  // Enter IMEM programming mode
    localparam [7:0] C_ACK  = 8'h06;  // ACK for IMEM programming mode
-   localparam [7:0] C_BUSW = 8'h07;  // Enter DMEM/CSR write data mode
-   localparam [7:0] C_BUSR = 8'h08;  // Enter DMEM/CSR read data mode
-   localparam [7:0] C_IMWR = 8'h09;  // Enter IMEM write-single-instruction mode
+   localparam [7:0] C_TOUT = 8'h07;  // Timeout in IMEM programming mode
+   localparam [7:0] C_BUSW = 8'h0E;  // Enter DMEM/CSR write data mode
+   localparam [7:0] C_BUSR = 8'h0F;  // Enter DMEM/CSR read data mode
+   localparam [7:0] C_IMWR = 8'h1A;  // Enter IMEM write-single-instruction mode
       
+//--------------------------------------
+// UART FSM states
+//--------------------------------------
    typedef enum logic[3:0] {
       IDLE  = 4'd14,
 
@@ -130,6 +135,9 @@ module uart
       // Zero Parity bit
    } uart_state_t;
 
+//--------------------------------------
+// 1us tick generator
+//--------------------------------------
    typedef logic [3:0] cnt1us_t;
 
    logic       tick_1us;
@@ -556,6 +564,7 @@ module uart
    logic [31:0] bus_rdat, bus_rdat_next;
    logic [31:0] bus_wdat, bus_wdat_next;
    logic [7:0]  checksum, checksum_next;
+   logic [21:0] timeout, timeout_next;
 
    always_ff @(negedge arst_n or posedge clk) begin
       if (arst_n == 1'b0) begin
@@ -568,10 +577,11 @@ module uart
          ram_data <= '0;
          bus_vld <= 1'b0;
          bus_we <= '0;
-         bus_addr <= '0;
+         bus_addr <= 32'h10000000;
          bus_rdat <= '0;
          bus_wdat <= '0;
          checksum <= '0;
+         timeout <= '0;
          uart_tx_valid <= 1'b0;
          uart_tx_data <= '0;
       end else begin
@@ -588,6 +598,7 @@ module uart
          bus_rdat <= bus_rdat_next;
          bus_wdat <= bus_wdat_next;
          checksum <= checksum_next;
+         timeout <= timeout_next;
          uart_tx_valid <= uart_tx_valid_next;
          uart_tx_data <= uart_tx_data_next;
       end
@@ -607,6 +618,7 @@ module uart
       bus_rdat_next = bus_rdat;
       bus_wdat_next = bus_wdat;
       checksum_next = checksum;
+      timeout_next = timeout;
       uart_tx_valid_next = uart_tx_valid;
       uart_tx_data_next = uart_tx_data;
          
@@ -623,15 +635,19 @@ module uart
                cpu_rstn_next = 1'b0;
                data_cnt_next = '0;
                checksum_next = '0;
+               timeout_next = '0;
                state_next = T_STATES_IMPR_WAIT_LEN_LB;
             end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_BUSW)) begin
                checksum_next = '0;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_ADDR0;
             end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_BUSR)) begin
                checksum_next = '0;
+               timeout_next = '0;
                state_next = T_STATES_BUSR_WAIT_ADDR0;
             end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_IMWR)) begin
                checksum_next = '0;
+               timeout_next = '0;
                state_next = T_STATES_IMWR_WAIT_ADDR0;
             end else if ((uart_rx_valid == 1'b1) && (uart_rx_data == C_EOP)) begin
                bus_vld_next = 1'b0;
@@ -643,7 +659,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                data_length_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMPR_WAIT_LEN_HB;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
 
@@ -651,7 +674,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                data_length_next[15:8] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMPR_WAIT_DATA0;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
 
@@ -659,7 +689,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_data_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMPR_WAIT_DATA1;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
 
@@ -667,7 +704,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_data_next[15:8] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMPR_WAIT_DATA2;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
 
@@ -675,7 +719,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_data_next[23:16] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMPR_WAIT_DATA3;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
 
@@ -689,6 +740,12 @@ module uart
                uart_tx_data_next = C_ACK;
                uart_tx_valid_next = 1'b1;
                state_next = T_STATES_IMPR_CHECKSUM;               
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
 
@@ -701,6 +758,7 @@ module uart
             end else begin
                ram_wen_next = 1'b0;
                uart_tx_valid_next = 1'b0;
+               timeout_next = '0;
                state_next = T_STATES_IMPR_WAIT_DATA0;
             end
          end
@@ -715,7 +773,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_ADDR1;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -723,7 +788,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[15:8] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_ADDR2;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -731,7 +803,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[23:16] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_ADDR3;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -739,7 +818,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[31:24] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_DATA0;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -747,7 +833,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_wdat_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_DATA1;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -755,7 +848,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_wdat_next[15:8] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_DATA2;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -763,7 +863,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_wdat_next[23:16] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_DATA3;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -771,7 +878,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_wdat_next[31:24] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_WAIT_WE;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -779,7 +893,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_we_next = uart_rx_data[3:0];
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSW_CHECKSUM;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -799,7 +920,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSR_WAIT_ADDR1;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -807,7 +935,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[15:8] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSR_WAIT_ADDR2;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -815,7 +950,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[23:16] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSR_WAIT_ADDR3;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -823,13 +965,29 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                bus_addr_next[31:24] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_BUSR_WAIT_DATA;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
          T_STATES_BUSR_WAIT_DATA: begin
-            bus_rdat_next = bus.rdat;
-            state_next = T_STATES_BUSR_DATA0;
+            if (bus.rdy == 1'b1) begin
+               bus_rdat_next = bus.rdat;
+               timeout_next = '0;
+               state_next = T_STATES_BUSR_DATA0;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
+            end
          end
             
          T_STATES_BUSR_DATA0: begin
@@ -875,7 +1033,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_addr_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMWR_WAIT_ADDR1;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -883,7 +1048,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_addr_next[15:8] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMWR_WAIT_DATA0;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -891,7 +1063,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_data_next[7:0] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMWR_WAIT_DATA1;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -899,7 +1078,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_data_next[15:8] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMWR_WAIT_DATA2;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -907,7 +1093,14 @@ module uart
             if (uart_rx_valid == 1'b1) begin
                ram_data_next[23:16] = uart_rx_data;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMWR_WAIT_DATA3;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -916,7 +1109,14 @@ module uart
                ram_data_next[31:24] = uart_rx_data;
                ram_wen_next = 1'b1;
                checksum_next = checksum + uart_rx_data;
+               timeout_next = '0;
                state_next = T_STATES_IMWR_CHECKSUM;
+            end else if (timeout[21:21] == 1'b1) begin
+               uart_tx_data_next = C_TOUT;
+               uart_tx_valid_next = 1'b1;
+               state_next = T_STATES_TIMEOUT;
+            end else if (tick_1us == 1'b1) begin
+               timeout_next = timeout + 22'd1;
             end
          end
             
@@ -930,6 +1130,14 @@ module uart
          T_STATES_IMWR_DONE: begin
             uart_tx_valid_next = 1'b0;
             state_next = T_STATES_WAIT_CMD;
+         end
+         
+         T_STATES_TIMEOUT: begin
+            uart_tx_valid_next = 1'b0;
+            ram_wen_next = 1'b0;
+            cpu_rstn_next = 1'b1;
+            bus_vld_next = 1'b0;
+            state_next = T_STATES_WAIT_SOP;
          end
             
          default: begin
@@ -946,6 +1154,7 @@ module uart
             bus_rdat_next = bus_rdat;
             bus_wdat_next = bus_wdat;
             checksum_next = checksum;
+            timeout_next = timeout;
             uart_tx_valid_next = uart_tx_valid;
             uart_tx_data_next = uart_tx_data;
          end
