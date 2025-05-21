@@ -6,11 +6,11 @@ BLD_DIR := $(CURDIR)
 
 SW_SRC  := $(BLD_DIR)/../2.sw
 SW_APP  := $(SW_SRC)/app
-SW_MAIN := $(SW_APP)
+#SW_MAIN := $(SW_APP)
 #SW_MAIN := $(SW_APP)/csr_uart_test
 #SW_MAIN := $(SW_APP)/csr_gpio_test
 #SW_MAIN := $(SW_APP)/csr_ethernet_test
-#SW_MAIN := $(SW_APP)/csr_test
+SW_MAIN := $(SW_APP)/csr_test
 
 CSR_BLD := $(BLD_DIR)/csr_build/generated-files
 SW_BLD  := $(BLD_DIR)/sw_build
@@ -23,7 +23,7 @@ SW_BLD  := $(BLD_DIR)/sw_build
 #   For more, see: 0.doc/1.README.Tool-Installs.txt
 #=============================================================
 CROSS = riscv64-unknown-elf-
-CFLAGS = -Os -std=c++11 -DTCM=1 -DHARVARD=1 -DUART_TEST
+CFLAGS = -std=c++11 -DTCM=1 -DHARVARD=1 -DUART_TEST
 
 #------------------------
 .PHONY: sw_all

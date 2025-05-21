@@ -11,6 +11,7 @@
 * [Building and Running Code](#building-and-running-code)
   * [Configuring ISS timing model](#configuring-iss-timing-model)
   * [Running ISS code](#running-iss-code)
+* [PicoRV32 RTL-Only Simulation Makefile](#picorv32-rtl-only-simulation-makefile)
 * [Debugging Code](#debugging-code)
   * [Natively Compiled Code](#natively-compiled-code)
   * [ISS Software](#iss-software)
@@ -68,24 +69,24 @@ extern "C" {
 static const int node    = 0;
 
 extern "C" void VUserMain0(void)
-{   
+{
     // Create VProc access object for this node
     VProc* vp0 = new VProc(node);
-    
+
     // Wait a bit
     vp0->tick(100);
-    
+
     uint32_t addr  = 0x10001000;
     uint32_t wdata = 0x900dc0de;
-    
+
     vp0->write(addr, wdata);
     VPrint("Written   0x%08x  to  addr 0x%08x\n", wdata, addr);
-    
+
     vp0->tick(3);
-    
+
     uint32_t rdata;
     vp0->read(addr, &rdata);
-    
+
     if (rdata == wdata)
     {
         VPrint("Read back 0x%08x from addr 0x%08x\n", rdata, addr);
@@ -120,9 +121,9 @@ uint32_t ReadRamByte   (const uint64_t addr, const uint32_t node);
 uint32_t ReadRamHWord  (const uint64_t addr, const int little_endian, const uint32_t node);
 uint32_t ReadRamWord   (const uint64_t addr, const int little_endian, const uint32_t node);
 ```
- 
-Note that, as C functions, there are no default parameters and the <tt>little_endian</tt> and <tt>node</tt> arguments must be passed in, even though they are constant. The <tt>little_endian</tt> argument is non-zero for little endian and zero for big endian. The <tt>node</tt> argument is **not** the same as for VProc, but allows multiple separate memory spaces to be modelled, just as for VProc multiple virtual processor instantiations. For Wireguard, this is always 0. All instantiated <tt>mem_model</tt> components in the HDL have (through the DPI) access to the same memory space model as the API, and so data can be exchanged from the simulation and the running code, such as the RISC-V programs over the IMEM write interface. 
- 
+
+Note that, as C functions, there are no default parameters and the <tt>little_endian</tt> and <tt>node</tt> arguments must be passed in, even though they are constant. The <tt>little_endian</tt> argument is non-zero for little endian and zero for big endian. The <tt>node</tt> argument is **not** the same as for VProc, but allows multiple separate memory spaces to be modelled, just as for VProc multiple virtual processor instantiations. For Wireguard, this is always 0. All instantiated <tt>mem_model</tt> components in the HDL have (through the DPI) access to the same memory space model as the API, and so data can be exchanged from the simulation and the running code, such as the RISC-V programs over the IMEM write interface.
+
 Compiling co-designed application code, either compiled for the native host machine, or to run on the <tt>rv32</tt> RISC-V ISS will need further layers on top of these APIs, which will be virtualised away by that point ([see the sections below](#co-simulation-hal)). The diagram below summarises the software layers that make up a program running on the VProc HDL component. The "native test code" use case, shown at the top left, is for the case just described above  that use the APIs directly.
 
 <p align="center">
@@ -232,7 +233,7 @@ Command line configurable variables:
 
 By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed in batch mode. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files of previous compilations.
 
-The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the make file compiles the supplied source code for the ISS. 
+The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the make file compiles the supplied source code for the ISS.
 
 The <tt>USER_C</tt> and <tt>USERCODEDIR</tt> make file variable allows different (and multiple) user source file names to override the defaults, and to change the location of where the user code is located (if not the ISS build). This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The Wireguard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
 
@@ -301,20 +302,20 @@ VInit(0): initialising DPI-C interface
 0000001c: 0x00004505'   addi      a0, zero, 1
 0000001e: 0x00004501'   addi      a0, zero, 0
 00000020: 0x05d00893    addi      a7, zero, 93
-00000024: 0x00009002'   ebreak   
+00000024: 0x00009002'   ebreak
     *
 
 Register state:
 
-  zero = 0x00000000   ra = 0x00000000   sp = 0x900dc0de   gp = 0x00001000 
-    tp = 0x10001000   t0 = 0x900dc0de   t1 = 0x00000000   t2 = 0x00000000 
-    s0 = 0x00000000   s1 = 0x00000000   a0 = 0x00000000   a1 = 0x00000000 
-    a2 = 0x00000000   a3 = 0x00000000   a4 = 0x00000000   a5 = 0x00000000 
-    a6 = 0x00000000   a7 = 0x0000005d   s2 = 0x00000000   s3 = 0x00000000 
-    s4 = 0x00000000   s5 = 0x00000000   s6 = 0x00000000   s7 = 0x00000000 
-    s8 = 0x00000000   s9 = 0x00000000  s10 = 0x00000000  s11 = 0x00000000 
-    t3 = 0x00000000   t4 = 0x00000000   t5 = 0x00000000   t6 = 0x00000000 
-  
+  zero = 0x00000000   ra = 0x00000000   sp = 0x900dc0de   gp = 0x00001000
+    tp = 0x10001000   t0 = 0x900dc0de   t1 = 0x00000000   t2 = 0x00000000
+    s0 = 0x00000000   s1 = 0x00000000   a0 = 0x00000000   a1 = 0x00000000
+    a2 = 0x00000000   a3 = 0x00000000   a4 = 0x00000000   a5 = 0x00000000
+    a6 = 0x00000000   a7 = 0x0000005d   s2 = 0x00000000   s3 = 0x00000000
+    s4 = 0x00000000   s5 = 0x00000000   s6 = 0x00000000   s7 = 0x00000000
+    s8 = 0x00000000   s9 = 0x00000000  s10 = 0x00000000  s11 = 0x00000000
+    t3 = 0x00000000   t4 = 0x00000000   t5 = 0x00000000   t6 = 0x00000000
+
 CSR state:
 
   mstatus    = 0x00003800
@@ -333,6 +334,26 @@ Exited running ./models/rv32/riscvtest/main.bin
 - /mnt/hgfs/winhome/simon/git/Wireguard-fpga/4.sim/tb.sv:44: Verilog $finish
 ```
 Note that the disassembled output is a mixture of 32-bit and compressed 16-bit instructions, with the compressed instruction hexadecimal values shown followed by a <tt>'</tt> character and the instruction heximadecimal value in the lower 16-bits. Unlike for the native compiled code use cases, unless the HDL has changed, the test bench does not need to be re-built when the RISC-V source code is changed or a different binary is to be run, just the RISC-V code is re-compiled or the <tt>vusermain.cfg</tt> updated to point to a different binary file.
+
+### PicoRV32 RTL-Only Simulation Makefile
+
+A standalone Makefile (located in `4.sim/`) for cycle-accurate Verilator simulation using the real picoRV32 RTL core.
+It:
+
+- Drives the UDP/IPv4 BFMs (nodes 1–4) via `usercode/VUserMainUdp.cpp`, using VProc’s DPI-C engine for the Ethernet VIP.
+- Generates C++ sources with:
+  - `--cc -sv --timing --trace-fst --trace-structs`
+  - `+define+SIM_ONLY` and `+define+VPROC_SV`
+  - File lists `top.filelist` & `simple_tb.filelist` to pull in picoRV32 RTL.
+- Compiles into `output/` and links against:
+  - `libcosimlnx.a` (co-simulation)
+  - `libudplnx.a` (UDP/IP VIP)
+  - DPI headers in `models/cosim/include` and `models/udpIpPg/include`.
+- Provides standard targets:
+  - `compile` → generate & build
+  - `sim`     → run `./output/Vtb` (logs to `sim.log`)
+  - `wave`    → open `wave.fst` in GTKWave
+  - `clean`   → remove `output/`, `tb.xml`, `tb.stems`
 
 ## Debugging Code
 
@@ -391,7 +412,7 @@ public:
 
     // Method to generate a UDP/IPv4 packet
     uint32_t       genUdpIpPkt         (udpConfig_t &cfg, uint32_t* frm_buf, uint32_t* payload, uint32_t payload_len);
-    
+
     // Method to send a pre-prepared (raw) ethernet frame
     uint32_t       UdpVpSendRawEthFrame(uint32_t* frame, uint32_t len);
 
@@ -440,7 +461,7 @@ A pointer to a buffer with a payload followed by the length of the payload make 
 
 Once the packet has been constructed it is sent over the GMII interface in the logic simulation, via _VProc_, with a call to the `UdpVpSendRawEthFrame`, which is provided with the frame buffer pointer and the length returned by `genUdpIpPkt`. When no packet is to be transmitted, the interface must send idle symbols, and the `UdpVpSendIdle` method does just this, specifying the number of clock cycles. This is comparable to the `tick` method for the `soc_cpu.VPROC` [software](#vproc-software).
 
-Finally, the 
+Finally, the
 
 ## References:
 - [VProc](https://github.com/wyvernSemi/vproc)

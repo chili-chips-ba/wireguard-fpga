@@ -12,16 +12,37 @@
 //--------------------------------------------------------------------------
 // Description:
 //   Ethernet clock domain PLL (f_in = 200 MHz, f_out = 125 MHz)
+//     • Synthesizable variant:
+//         - Xilinx PLLE2_BASE
+//     • Simulation-only variant (`SIM_ONLY`):
+//         - Simple behavioural 125 MHz model
 //==========================================================================
+
+`ifdef SIM_ONLY
+   `timescale 1ps/1ps
+`endif
 
 module fpga_pll_125M
 (
-   input  clk,
-   input  rst_n,
-   output eth_pll_clk,
-   output eth_pll_locked
+   input  logic clk,
+   input  logic rst_n,
+   output logic eth_pll_clk,
+   output logic eth_pll_locked
 );
 
+`ifdef SIM_ONLY
+   initial begin
+      eth_pll_clk    = 1'b0;
+      eth_pll_locked = 1'b0;
+      #25_000;
+      eth_pll_locked = 1'b1;
+   end
+
+   always begin
+      #4_000 eth_pll_clk = ~eth_pll_clk;
+   end
+
+`else
    wire eth_pll_rst = ~rst_n;
    wire eth_pll_clkfb;
    wire eth_pll_out;
@@ -76,4 +97,6 @@ module fpga_pll_125M
       .I(eth_pll_out),
       .O(eth_pll_clk)
    );
+
+`endif  // SIM_ONLY
 endmodule

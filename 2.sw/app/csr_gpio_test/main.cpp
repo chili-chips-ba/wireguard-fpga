@@ -19,10 +19,10 @@ int main(void)
    while (1) {
       csr->gpio->led2(1);
       csr->gpio->led1(csr->gpio->key1());
-      delay(1000000);
+      delay(10);
       csr->gpio->led2(0);
       csr->gpio->led1(csr->gpio->key1());
-      delay(1000000);
+      delay(10);
    }
 
    return 0;
