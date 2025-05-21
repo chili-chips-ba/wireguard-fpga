@@ -21,8 +21,20 @@ int main(void)
    // Set LED1 to the value of KEY1
    csr->gpio->led1(csr->gpio->key1());
 
-   // Send Hello world to UART
-   uart_send(csr, "Hello world!\r\n");
+   // Send Hello world to UART (both ISS and RTL model of CPU work)
+
+   char msg[] = "Hello world!\r\n";
+   char* s = msg;
+   while (*s) uart_send_char(csr, *(s++));
+
+/*
+   // Send Hello world to UART (RTL model of CPU works, ISS doesn't)
+   const char* s = "Hello world!\r\n";
+   for (int i = 0; i < 14; i++) {
+      uart_send_char(csr, s[i]);
+   }
+*/
+/*
    // Receive (and echo) the text terminated with CRLF
    uart_recv(csr, rx_data);
 
@@ -40,6 +52,6 @@ int main(void)
          eth_send_packet(csr, &packet);
       }
    }
-
+*/
    return 0;
 }

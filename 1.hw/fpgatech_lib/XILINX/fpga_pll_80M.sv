@@ -12,16 +12,37 @@
 //--------------------------------------------------------------------------
 // Description:
 //   System clock domain PLL (f_in = 200 MHz, f_out = 80 MHz)
+//     • Synthesizable variant:
+//         - Xilinx PLLE2_BASE
+//     • Simulation-only variant (`SIM_ONLY`):
+//         - Simple behavioural 80 MHz model
 //==========================================================================
+
+`ifdef SIM_ONLY
+   `timescale 1ps/1ps
+`endif
 
 module fpga_pll_80M
 (
-   input  clk,
-   input  rst_n,
-   output sys_pll_clk,
-   output sys_pll_locked
+   input  logic clk,
+   input  logic rst_n,
+   output logic sys_pll_clk,
+   output logic sys_pll_locked
 );
 
+`ifdef SIM_ONLY
+   initial begin
+      sys_pll_clk    = 1'b0;
+      sys_pll_locked = 1'b0;
+      #40_000;
+      sys_pll_locked = 1'b1;
+   end
+
+   always begin
+      #6_250 sys_pll_clk = ~sys_pll_clk;
+   end
+
+`else
    wire sys_pll_rst = ~rst_n;
    wire sys_pll_clkfb;
    wire sys_pll_out;
@@ -76,4 +97,6 @@ module fpga_pll_80M
       .I(sys_pll_out),
       .O(sys_pll_clk)
    );
+
+`endif  // SIM_ONLY
 endmodule

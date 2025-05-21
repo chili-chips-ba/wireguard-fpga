@@ -66,6 +66,7 @@ module soc_cpu #(
    soc_if.MST         bus,
 
 // access point for reloading CPU program memory
+   input logic        imem_cpu_rstn,
    input logic        imem_we,
    input logic [31:2] imem_waddr,
    input logic [31:0] imem_wdat
