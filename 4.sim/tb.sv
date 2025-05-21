@@ -165,7 +165,7 @@ module tb #(
 
    logic        uart_rx, uart_tx;
 // verilator lint_off UNUSEDSIGNAL
-   logic [3:2]  led_n;
+   logic [3:2]  led;
 // verilator lint_off UNUSEDSIGNAL
 
    top dut (
