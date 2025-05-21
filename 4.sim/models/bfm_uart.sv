@@ -109,7 +109,7 @@ module bfm_uart (
       #(BITIME_NS * 1ns);
 
      //__for UART test
-     send_string ("Mi smo FPGA raja\r\n");
+     send_string ("FPGA raja\r\n");
      //send_string ("Mi nismo mehke koze\n");
 
      //__for Command parsing and dispatch test
