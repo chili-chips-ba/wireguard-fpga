@@ -174,7 +174,7 @@ int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const r
     const int       read_data_wait_cycle  = 1;
     const int       read_instr_wait_cycle = 1;
     bool            access_sim            = false;
-    int             processed;
+    int             processed             = RV32I_EXT_MEM_NOT_PROCESSED;
     uint64_t        curr_cycles;
     uint32_t        cycle_diff;
     static uint64_t last_cycles           = 0;

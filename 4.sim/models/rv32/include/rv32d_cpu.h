@@ -50,10 +50,10 @@ private:
     rv32i_decode_table_t  fd_tbl        [RV32I_NUM_TERTIARY_OPCODES];
 
     // Quarternary table (decoded on funct3 via decode_exception method)
-    rv32i_decode_table_t  fsgnjd_tbl    [RV32I_NUM_SECONDARY_OPCODES];
-    rv32i_decode_table_t  fminmaxd_tbl  [RV32I_NUM_SECONDARY_OPCODES];
-    rv32i_decode_table_t  fcmpd_tbl     [RV32I_NUM_SECONDARY_OPCODES];
-    rv32i_decode_table_t  fclassd_tbl   [RV32I_NUM_SECONDARY_OPCODES];
+    rv32i_decode_table_t  fsgnjd_tbl    [RV32I_NUM_QUARTERNARY_OPCODES];
+    rv32i_decode_table_t  fminmaxd_tbl  [RV32I_NUM_QUARTERNARY_OPCODES];
+    rv32i_decode_table_t  fcmpd_tbl     [RV32I_NUM_QUARTERNARY_OPCODES];
+    rv32i_decode_table_t  fclassd_tbl   [RV32I_NUM_QUARTERNARY_OPCODES];
 
     // ------------------------------------------------
     // Private member variables
@@ -103,19 +103,6 @@ private:
 
     // Handles flotaing point exceptions
     void handle_fexceptions();
-
-    void decode_exception(rv32i_decode_table_t*& p_entry, rv32i_decode_t& d)
-    {
-        // Have the possibility of a fourth level decode on funct3
-        if (p_entry->sub_table)
-        {
-            p_entry = &p_entry->ref.p_entry[d.funct3];
-        }
-        else
-        {
-            p_entry = NULL;
-        }
-    }
 
     double map_uint_to_double(uint64_t& num)
     {
