@@ -102,12 +102,12 @@ USERLIB          = libuser.a
 ifeq ("$(OSTYPE)", "Linux")
   COSIMLDOPT     = -lcosimlnx
   UDPLDOPT       = -ludplnx
-  WARNOPTS       = -Wall models/config.vlt
 else
   COSIMLDOPT     = -lcosimwin
   UDPLDOPT       = -ludpwin
-  WARNOPTS       =
 endif
+
+WARNOPTS       = -Wall models/config.vlt
 
 # --------------------------------------------
 # Simulation variables
@@ -229,15 +229,16 @@ $(SIMEXE): compile
 $(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST)
 	@sed -e "/$(SOCCPUMATCH)/d" $< > $@
 
-xml2stems:
+xml2stems: $(TOPFILELIST)
 	@verilator                                            \
+            $(WARNOPTS)                                   \
 	        --timing                                      \
 	        -xml-only                                     \
 	        -xml-output tb.xml                            \
 	        --timescale 1ps/1ps                           \
 	        $(SIMINCLPATHS) $(SIMDEFS)                    \
-	        -f $(TOPFILELIST)                             \
-	        $(TBFILELIST)                                 \
+	        -F $(TOPFILELIST)                             \
+	        -F $(TBFILELIST)                              \
 	        -MAKEFLAGS "$(SIMMAKEFLAGS)"                  \
 	        -Wno-WIDTH                                    \
 	        --top-module $(TB_NAME)

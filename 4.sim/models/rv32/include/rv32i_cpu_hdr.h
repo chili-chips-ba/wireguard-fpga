@@ -198,6 +198,7 @@ public:
     static const int32_t  RV32I_INSTR_FMT_U                            = 0x04;
     static const int32_t  RV32I_INSTR_FMT_J                            = 0x05;
     static const int32_t  RV32I_INSTR_FMT_R4                           = 0x06;
+    static const int32_t  RV32I_INSTR_FMT_ZBB                          = 0x07;
 
     static const uint32_t RV32C_INSTR_FMT_R                            = 0x10;
     static const uint32_t RV32C_INSTR_FMT_I                            = 0x11;
@@ -249,6 +250,7 @@ public:
     static const uint32_t RV32I_NUM_PRIMARY_OPCODES                    = 32;
     static const uint32_t RV32I_NUM_SECONDARY_OPCODES                  = 8;
     static const uint32_t RV32I_NUM_TERTIARY_OPCODES                   = 128;
+    static const uint32_t RV32I_NUM_QUARTERNARY_OPCODES                = 32;
     static const uint32_t RV32I_NUM_SYSTEM_OPCODES                     = 32;
     static const uint32_t RV32I_INT_MEM_BYTES                          = (1024*1024);
 
@@ -280,10 +282,41 @@ public:
     static const uint32_t RV32I_NV                                     = 0x10;
 
     static const uint64_t RV32I_QNANF                                  = 0xffffffff7fc00000UL;
-    static const uint64_t RV32I_SNANF                                  = 0xffffffff7f800001UL;
+    static const uint64_t RV32I_SNANF                                  = 0xffffffff7fbfffffUL;
     static const uint64_t RV32I_QNAND                                  = 0x7ff8000000000000UL;
-    static const uint64_t RV32I_SNAND                                  = 0x7ff0000000000001UL;
+    static const uint64_t RV32I_SNAND                                  = 0x7ff7ffffffffffffUL;
 
+    static const uint32_t RV32I_OPCODE_LOAD                            = (0x00 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_LOAD_FP                         = (0x01 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_CUST0                           = (0x02 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_MISC_MEM                        = (0x03 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_OP_IMM                          = (0x04 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_AUIPC                           = (0x05 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_OP_IMM_32                       = (0x06 << 2) | 0x03;
+
+    static const uint32_t RV32I_OPCODE_STORE                           = (0x08 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_STORE_FP                        = (0x09 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_CUST1                           = (0x0a << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_AMO                             = (0x0b << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_OP                              = (0x0c << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_LUI                             = (0x0d << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_OP_32                           = (0x0e << 2) | 0x03;
+
+    static const uint32_t RV32I_OPCODE_MADD                            = (0x10 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_MSUB                            = (0x11 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_NMSUB                           = (0x12 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_NMADD                           = (0x13 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_OP_FP                           = (0x14 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_RESVD0                          = (0x15 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_CUST2                           = (0x16 << 2) | 0x03;
+
+    static const uint32_t RV32I_OPCODE_BRANCH                          = (0x18 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_JALR                            = (0x19 << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_RESVD1                          = (0x1a << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_JAL                             = (0x1b << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_SYSTEM                          = (0x1c << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_RESVD2                          = (0x1d << 2) | 0x03;
+    static const uint32_t RV32I_OPCODE_CUST3                           = (0x1e << 2) | 0x03;
 };
 
 // -------------------------------------------------------------------------
@@ -455,6 +488,12 @@ public:
                                                             _str, rmap(_rd),  _imm_u >> 12);                                             \
 }
 
+#define RV32I_DISASSEM_ZBB_TYPE(_instr,_str,_rd,_rs1)     {                                                                              \
+    if (disassemble || rt_disassem)                                                                                                      \
+        fprintf(dasm_fp, "%08x: 0x%08x%c   %s %s %s\n",  (uint32_t)state.hart[curr_hart].pc, _instr, cmp_instr ? '\'':' ',               \
+                                                            _str,rmap(_rd),abi_en ? rmap_str[_rs1] : xmap_str[_rs1]);                    \
+}
+
 #define RV32I_DISASSEM_SYS_TYPE(_instr,_str)                 {                                                                           \
     if (disassemble || rt_disassem)                                                                                                      \
         fprintf(dasm_fp, "%08x: 0x%08x%c   %s\n",           (uint32_t)state.hart[curr_hart].pc, _instr, cmp_instr?'\'':' ',_str);        \
@@ -476,7 +515,7 @@ public:
 typedef struct
 {
     const char*                                        instr_name;     // Instruction name string for disassembly
-    int                                                instr_fmt;      // Instruction format
+    int                                                instr_fmt;      // Instruction format (debug only)
 } rv32i_table_entry_t;
 
 // Forward reference the decode table structure type

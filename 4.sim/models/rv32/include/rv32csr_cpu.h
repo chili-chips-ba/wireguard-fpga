@@ -43,7 +43,7 @@ public:
     LIBRISCV32_API int           run(rv32i_cfg_s& cfg)
     {
         // Call base run method
-        int rstatus =  rv32i_cpu::run(cfg);
+        int rstatus =  RV32_ZICSR_INHERITANCE_CLASS::run(cfg);
 
         // Ensure cycle and instruction retired CSR counts are up to date
         // before returning in case the CSR registers are dumped.

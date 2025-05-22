@@ -265,7 +265,6 @@ protected:
     // Internal constant definitions
     // ------------------------------------------------
 
-
     // String constants for instruction disassembly
     const char reserved_str[DISASSEM_STR_SIZE] = "reserved ";
     const char lb_str      [DISASSEM_STR_SIZE] = "lb       ";
@@ -365,6 +364,7 @@ protected:
     rv32i_decode_table_t  sri_tbl        [RV32I_NUM_TERTIARY_OPCODES];
     rv32i_decode_table_t  srr_tbl        [RV32I_NUM_TERTIARY_OPCODES];
     rv32i_decode_table_t  sll_tbl        [RV32I_NUM_TERTIARY_OPCODES];
+    rv32i_decode_table_t  slli_tbl       [RV32I_NUM_TERTIARY_OPCODES];
     rv32i_decode_table_t  slt_tbl        [RV32I_NUM_TERTIARY_OPCODES];
     rv32i_decode_table_t  sltu_tbl       [RV32I_NUM_TERTIARY_OPCODES];
     rv32i_decode_table_t  xor_tbl        [RV32I_NUM_TERTIARY_OPCODES];
@@ -425,10 +425,6 @@ protected:
     {
         state.hart[curr_hart].pc = (uint32_t)(state.hart[curr_hart].pc + 4);
     }
-
-    // Place holder virtual methods for overloading with CSR access functionality
-    virtual uint32_t access_csr(const unsigned funct3, const uint32_t addr, const uint32_t rd, const uint32_t value) { return 1;}
-    virtual uint32_t csr_wr_mask(const uint32_t addr, bool& unimp) { unimp = true; return 0;}
 
     // Fetch next instruction. For RV32I, always a simple 32 bit read.
     // Can be overridden to support compressed instructions (RV32C),

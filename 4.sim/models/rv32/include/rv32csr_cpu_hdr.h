@@ -247,7 +247,7 @@ public:
     static const uint32_t RV32CSR_MIE_WR_MASK                          = 0x00000888;
     static const uint32_t RV32CSR_MTVEC_WR_MASK                        = 0xffffffff;
     static const uint32_t RV32CSR_MCYCLE_WR_MASK                       = 0xffffffff;
-    static const uint32_t RV32CSR_MINSTRET_WR_MASK                     = 0x00000000;
+    static const uint32_t RV32CSR_MINSTRET_WR_MASK                     = 0xffffffff;
     static const uint32_t RV32CSR_MHPMCOUNTERX_WR_MASK                 = 0x00000000; /* Reg implemented, counter not. */
     static const uint32_t RV32CSR_MHPMEVENTX_WR_MASK                   = 0x00000000; /* Reg implemented, hardwired 0 */
     static const uint32_t RV32CSR_MCOUNTEREN_WR_MASK                   = 0x00000000;
