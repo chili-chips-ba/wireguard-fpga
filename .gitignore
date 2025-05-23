@@ -10,6 +10,7 @@
 
 *output*
 /4.sim/obj/*
+*.fst
 
 #*impl*
 *gwsynthesis*
