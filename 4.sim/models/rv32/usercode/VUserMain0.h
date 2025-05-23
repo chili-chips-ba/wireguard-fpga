@@ -88,6 +88,9 @@ typedef struct vusermain_cfg_s {
     
     unsigned    penalty_slow_mem;
     
+    bool        load_binary;
+    uint32_t    bin_load_addr;
+    
     rv32_timing_config::risc_v_core_e riscv_core;
 
     vusermain_cfg_s()
@@ -103,6 +106,9 @@ typedef struct vusermain_cfg_s {
         icache_top_addr      = RV32_CACHE_DEFAULT_ILIMIT;
         
         penalty_slow_mem     = RV32_SLOW_MEM_PENALTY;
+        
+        load_binary          = false;
+        bin_load_addr        = 0;
         
         riscv_core           = rv32_timing_config::risc_v_core_e::DEFAULT;
     }

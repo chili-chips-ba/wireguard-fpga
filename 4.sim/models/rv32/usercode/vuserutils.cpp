@@ -103,13 +103,19 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
     // Parse the command line arguments and/or configuration file
     // Process the command line options *only* for the INI filename, as we
     // want the command line options to override the INI options
-    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:RcIl:w:s:j:J:P:V:")) != EOF)
+    while ((c = getopt(argc, argv, "t:n:bA:rdHTeED:gp:S:Cahx:X:RcIl:w:s:j:J:P:V:BL:")) != EOF)
     {
         switch (c)
         {
         case 't':
             cfg.exec_fname = optarg;
             cfg.user_fname = true;
+            break;
+        case 'B':
+            vcfg.load_binary = true;
+            break;
+        case 'L':
+            vcfg.bin_load_addr = strtol(optarg, NULL, 0);
             break;
         case 'n':
             cfg.num_instr = atoi(optarg);
@@ -222,7 +228,9 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
             fprintf(stderr, "      [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]\n");
             fprintf(stderr, "      [-l <line bytes>][-w <ways>][-s <sets>][-j <imem base addr>][-J <imem top addr>]\n");
             fprintf(stderr, "      [-P <cycles>][-x <base addr>][-X <top addr>][-V <core>]\n");
-            fprintf(stderr, "   -t specify test executable (default test.exe)\n");
+            fprintf(stderr, "   -t specify test executable/binary file (default test.exe)\n");
+            fprintf(stderr, "   -B specify to load a raw binary file (default load ELF executable)\n");
+            fprintf(stderr, "   -L specify address to load binary, if -B specified (default 0x00000000)\n");
             fprintf(stderr, "   -n specify number of instructions to run (default 0, i.e. run until unimp)\n");
             fprintf(stderr, "   -d Enable disassemble mode (default off)\n");
             fprintf(stderr, "   -r Enable run-time disassemble mode (default off. Overridden by -d)\n");

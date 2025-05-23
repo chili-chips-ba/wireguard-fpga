@@ -292,6 +292,52 @@ int vproc_irq_callback(int val)
 }
 
 // ---------------------------------------------
+// Load binary file to memory
+// ---------------------------------------------
+
+static int read_binary(const char *exec_fname, uint32_t load_addr)
+{
+    int         error = 0;
+    FILE*       bin_fp;
+    char        buf[4];
+    int         c;
+    uint32_t*   word = (uint32_t*)buf;
+    bool        fault;
+
+    // Open program file ready for loading
+    if ((bin_fp = fopen(exec_fname, "rb")) == NULL)
+    {
+        fprintf(stderr, "*** read_binary(): Unable to open file %s for reading\n", exec_fname); 
+        return 1;
+    }
+    
+    for (int idx = 0; 1; idx++)
+    {
+        if ((c = fgetc(bin_fp)) != EOF)
+        {
+            buf[idx & 0x3] = c;
+            if ((idx & 0x3) == 3)
+            {
+                pCpu->write_mem(load_addr + (idx & ~0x3U), *word, MEM_WR_ACCESS_INSTR, fault);
+            }
+        }
+        else
+        {
+            // Flush partial words
+            if (idx & 0x3)
+            {
+                pCpu->write_mem(load_addr + (idx & ~0x3U), *word & ((1 << (load_addr & 0x3)*8)-1), MEM_WR_ACCESS_INSTR, fault);
+            }
+            
+            // Exit loop
+            break;
+        }
+    }
+
+    return 0;
+}
+
+// ---------------------------------------------
 // ISS interrupt callback function
 // ---------------------------------------------
 
@@ -316,6 +362,7 @@ uint32_t iss_int_callback(const rv32i_time_t time, rv32i_time_t *wakeup_time)
 extern "C" void VUserMain0()
 {
     rv32i_cfg_s   cfg;
+    int error = 0;
 
     VPrint("\n  ******************************\n");
     VPrint(  "  *   Wyvern Semiconductors    *\n");
@@ -343,17 +390,27 @@ extern "C" void VUserMain0()
         // If GDB mode selected, pass execution to the remote GDB interface
         if (cfg.gdb_mode)
         {
-            int error = 0;
-            
+
             // Set to halt on ebreak when in gdb mode
             cfg.hlt_on_ebreak = true;
 
             // Load an executable if specified on the command line
             if (cfg.user_fname)
             {
-                if (pCpu->read_elf(cfg.exec_fname))
+                if (!vcfg.load_binary)
                 {
-                    error++;
+                    if (pCpu->read_elf(cfg.exec_fname))
+                    {
+                        error++;
+                    }
+                }
+                else
+                {
+                    // Load the specified binary to memory
+                    if (read_binary(cfg.exec_fname, vcfg.bin_load_addr))
+                    {
+                        error++;
+                    }
                 }
             }
 
@@ -370,8 +427,24 @@ extern "C" void VUserMain0()
         // Normal execution mode (not gdb debugging)
         else
         {
-            // Load the specified executable to memory
-            if (!pCpu->read_elf(cfg.exec_fname))
+            if (!vcfg.load_binary)
+            {
+                // Load the specified executable to memory
+                if (pCpu->read_elf(cfg.exec_fname))
+                {
+                    error++;
+                }
+            }
+            else
+            {
+                // Load the specified binary to memory
+                if (read_binary(cfg.exec_fname, vcfg.bin_load_addr))
+                {
+                    error++;
+                }
+            }
+
+            if (!error)
             {
                 // Run the processor
                 pCpu->run(cfg);
