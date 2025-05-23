@@ -81,6 +81,7 @@ module ethernet_mac (
       .rx_fifo_overflow(),
       .rx_fifo_bad_frame(),
       .rx_fifo_good_frame(),
+      .tx_error_underflow(),
       .speed(speed),
 
       .cfg_ifg(8'd12),
