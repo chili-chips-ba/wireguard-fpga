@@ -5,7 +5,7 @@
 
 #include "string_bare.h"
 
-void *memset(void *dest, int value, size_t len)
+__attribute__((used)) void *memset(void *dest, int value, size_t len)
 {
     unsigned char *d = (unsigned char *)dest;
     unsigned char v = (unsigned char)value;
@@ -19,7 +19,7 @@ void *memset(void *dest, int value, size_t len)
     return dest;
 }
 
-void *memcpy(void *dest, const void *src, size_t len)
+__attribute__((used)) void *memcpy(void *dest, const void *src, size_t len)
 {
     unsigned char *d = (unsigned char *)dest;
     const unsigned char *s = (const unsigned char *)src;

@@ -23,7 +23,7 @@ SW_BLD  := $(BLD_DIR)/sw_build
 #   For more, see: 0.doc/1.README.Tool-Installs.txt
 #=============================================================
 CROSS = riscv64-unknown-elf-
-CFLAGS = -std=c++11 -DTCM=1 -DHARVARD=1 -DUART_TEST
+CFLAGS = -Os -std=c++11 -DTCM=1 -DHARVARD=1 -DUART_TEST
 
 #------------------------
 .PHONY: sw_all
