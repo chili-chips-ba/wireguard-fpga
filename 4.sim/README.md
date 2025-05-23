@@ -151,7 +151,9 @@ Usage:vusermain0 -t <test executable> [-hHebdrgxXRcI][-n <num instructions>]
       [-S <start addr>][-A <brk addr>][-D <debug o/p filename>][-p <port num>]
       [-l <line bytes>][-w <ways>][-s <sets>][-j <imem base addr>][-J <imem top addr>]
       [-P <cycles>][-x <base addr>][-X <top addr>][-V <core>]
-   -t specify test executable (default test.exe)
+   -t specify test executable/binary file (default test.exe)
+   -B specify to load a raw binary file (default load ELF executable)
+   -L specify address to load binary, if -B specified (default 0x00000000)
    -n specify number of instructions to run (default 0, i.e. run until unimp)
    -d Enable disassemble mode (default off)
    -r Enable run-time disassemble mode (default off. Overridden by -d)
@@ -183,7 +185,7 @@ Usage:vusermain0 -t <test executable> [-hHebdrgxXRcI][-n <num instructions>]
 ```
 With these options the model can load an elf executable to memory directly and be set up with some execution termination conditions. Disassembly output can also be switched on and registers dumped on exit. More details of all these features can be found in the <tt>rv32</tt> [ISS manual](https://github.com/wyvernSemi/riscV/blob/main/iss/doc/iss_manual.pdf).
 
-Specific to the Wireguard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>. The cache model can be enabled with the <tt>-I</tt> option and the cache configured. The <tt>-l</tt> option specifies the number of bytes in a cache line, which can be 4, 8 or 16. The number of ways is set with <tt>-w</tt> and can be either 1 or 2, and the number of sets is specified with the <tt>-s</tt> options and can be 128, 256, 512 or 1024. A set of pre-configured timing models can be specified with the <tt>-V</tt> option. The argument must be one of the following:
+Specific to the Wireguard project is the ability to specify the region where memory loads and stores will make external simulation transactions rather than use internal memory modelling or peripherals, using the <tt>-x</tt> and <tt>-X</tt> options. This is useful to allow access to the CSR registers in the HDL whilst mapping all of the memory internal using the sparse C memory model of <tt>mem_model</tt>. The cache model can be enabled with the <tt>-I</tt> option and the cache configured. The <tt>-l</tt> option specifies the number of bytes in a cache line, which can be 4, 8 or 16. The number of ways is set with <tt>-w</tt> and can be either 1 or 2, and the number of sets is specified with the <tt>-s</tt> options and can be 128, 256, 512 or 1024. The Wireguard project also has the option to load a raw binary file to memory in place of reading an ELF file. The <tt>-B</tt> selects this mode (with the <tt>-t</tt> still specifying the file name), and the load address can be changed from 0 with the <tt>-L</tt> option. A set of pre-configured timing models can be specified with the <tt>-V</tt> option. The argument must be one of the following:
 
 * DEFAULT
 * PICORV32
