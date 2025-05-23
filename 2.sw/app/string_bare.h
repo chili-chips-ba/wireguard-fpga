@@ -20,7 +20,7 @@ extern "C" {
  * @param len Number of bytes to be set
  * @return void* A pointer to the memory area dest
  */
-void *memset(void *dest, int value, size_t len);
+__attribute__((used)) void *memset(void *dest, int value, size_t len);
 
 /**
  * @brief Copy memory area
@@ -30,7 +30,7 @@ void *memset(void *dest, int value, size_t len);
  * @param len Number of bytes to copy
  * @return void* A pointer to the destination array
  */
-void *memcpy(void *dest, const void *src, size_t len);
+__attribute__((used)) void *memcpy(void *dest, const void *src, size_t len);
 
 /**
  * @brief Compare memory areas
