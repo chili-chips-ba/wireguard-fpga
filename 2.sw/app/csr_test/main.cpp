@@ -21,36 +21,25 @@ int main(void)
    // Set LED1 to the value of KEY1
    csr->gpio->led1(csr->gpio->key1());
 
-   // Send Hello world to UART (both ISS and RTL model of CPU work)
+   // Send Hello world to UART
+   uart_send(csr, "Hello world!\r\n");
 
-   char msg[] = "Hello world!\r\n";
-   char* s = msg;
-   while (*s) uart_send_char(csr, *(s++));
-
-/*
-   // Send Hello world to UART (RTL model of CPU works, ISS doesn't)
-   const char* s = "Hello world!\r\n";
-   for (int i = 0; i < 14; i++) {
-      uart_send_char(csr, s[i]);
-   }
-*/
-/*
    // Receive (and echo) the text terminated with CRLF
-   uart_recv(csr, rx_data);
+   while(!uart_recv(csr, rx_data));
 
+/*
    // Receive Ethernet packet for CPU FIFO
-   if (eth_receive_packet(csr, &packet)) {
-      // If packet is received from eth1
-      // forward it to eth2, and vice versa
-      if (packet.src == 1) {
-         packet.dst = 2;
-         packet.bypass_all = 1;
-         eth_send_packet(csr, &packet);
-      } else if (packet.src == 2) {
-         packet.dst = 1;
-         packet.bypass_all = 1;
-         eth_send_packet(csr, &packet);
-      }
+   while (!eth_receive_packet(csr, &packet));
+   // If packet is received from eth1
+   // forward it to eth2, and vice versa
+   if (packet.src == 1) {
+      packet.dst = 2;
+      packet.bypass_all = 1;
+      eth_send_packet(csr, &packet);
+   } else if (packet.src == 2) {
+      packet.dst = 1;
+      packet.bypass_all = 1;
+      eth_send_packet(csr, &packet);
    }
 */
    return 0;

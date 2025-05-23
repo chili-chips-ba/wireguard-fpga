@@ -14,52 +14,52 @@ Linker script and memory map
                 0x00000200                        _STACK_SIZE = 0x200
                 0x00000000                        . = ORIGIN (IMEM)
 
-.text           0x00000000      0x44c
+.text           0x00000000      0x54c
                 0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x00000000       0x70 /tmp/ccTFagpY.o
+ .text          0x00000000       0x70 /tmp/ccOzk7aK.o
                 0x00000000                _boot_crt
- .text          0x00000070       0x74 /tmp/ccedxTUb.ltrans0.ltrans.o
-                0x000000a0                memset
-                0x000000c0                memcpy
- .text.startup  0x000000e4      0x358 /tmp/ccedxTUb.ltrans0.ltrans.o
-                0x000000e4                main
+ .text          0x00000070       0x9c /tmp/cckK3AVu.ltrans0.ltrans.o
+                0x000000c8                memset
+                0x000000e8                memcpy
+ .text.startup  0x0000010c      0x430 /tmp/cckK3AVu.ltrans0.ltrans.o
+                0x0000010c                main
  *(.rodata .rodata.*)
  .rodata.str1.4
-                0x0000043c        0xf /tmp/ccedxTUb.ltrans0.ltrans.o
+                0x0000053c        0xf /tmp/cckK3AVu.ltrans0.ltrans.o
  *(.srodata .srodata.*)
-                0x0000044c                        . = ALIGN (0x4)
- *fill*         0x0000044b        0x1 
-                0x0000044c                        _text_end = .
-                0x0000044c                        _idata_start = _text_end
+                0x0000054c                        . = ALIGN (0x4)
+ *fill*         0x0000054b        0x1 
+                0x0000054c                        _text_end = .
+                0x0000054c                        _idata_start = _text_end
 
 .rela.dyn       0x00000000        0x0
- .rela.text     0x00000000        0x0 /tmp/ccTFagpY.o
+ .rela.text     0x00000000        0x0 /tmp/ccOzk7aK.o
 
-.data           0x10000000        0x0 load address 0x0000044c
+.data           0x10000000        0x0 load address 0x0000054c
                 0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x10000000        0x0 /tmp/ccTFagpY.o
- .data          0x10000000        0x0 /tmp/ccedxTUb.ltrans0.ltrans.o
+ .data          0x10000000        0x0 /tmp/ccOzk7aK.o
+ .data          0x10000000        0x0 /tmp/cckK3AVu.ltrans0.ltrans.o
                 0x10000000                        . = ALIGN (0x8)
                 0x10000800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.sdata .sdata.*)
                 0x10000000                        . = ALIGN (0x4)
                 0x10000000                        _data_end = .
 
-.bss            0x10000000      0x804 load address 0x0000044c
+.bss            0x10000000      0x804 load address 0x0000054c
                 0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x10000000        0x0 /tmp/ccTFagpY.o
- .bss           0x10000000      0x800 /tmp/ccedxTUb.ltrans0.ltrans.o
+ .bss           0x10000000        0x0 /tmp/ccOzk7aK.o
+ .bss           0x10000000      0x800 /tmp/cckK3AVu.ltrans0.ltrans.o
  *(.sbss .sbss.*)
- .sbss          0x10000800        0x4 /tmp/ccedxTUb.ltrans0.ltrans.o
+ .sbss          0x10000800        0x4 /tmp/cckK3AVu.ltrans0.ltrans.o
  *(COMMON)
                 0x10000804                        . = ALIGN (0x4)
                 0x10000804                        _bss_end = .
                 0x10000810                        . = ALIGN (0x10)
 
-.heap           0x10000804      0x40c load address 0x00000c50
+.heap           0x10000804      0x40c load address 0x00000d50
                 0x10000804                        _heap_start = .
                 0x10000c04                        . = (. + _HEAP_SIZE)
  *fill*         0x10000804      0x400 
@@ -75,24 +75,24 @@ Linker script and memory map
                 0x10008000                        . = (. + _STACK_SIZE)
  *fill*         0x10007e00      0x200 
                 0x10007e00                        _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/ccTFagpY.o
-LOAD /tmp/ccN0A1mJ.o
-LOAD /tmp/ccedxTUb.ltrans0.ltrans.o
-LOAD /tmp/cc5kydKB.o
-LOAD /tmp/ccPMSmY5.o
-LOAD /tmp/cc7ZLPbL.o
-LOAD /tmp/cce60mYV.o
-LOAD /tmp/cc6VIfMH.o
+LOAD /tmp/ccOzk7aK.o
+LOAD /tmp/ccubcMCf.o
+LOAD /tmp/cckK3AVu.ltrans0.ltrans.o
+LOAD /tmp/ccLzI7aN.o
+LOAD /tmp/ccInQi8f.o
+LOAD /tmp/ccNaeyqM.o
+LOAD /tmp/ccNTuUCC.o
+LOAD /tmp/ccBcgPlc.o
 LOAD /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a
 OUTPUT(/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
 
 .riscv.attributes
                 0x00000000       0x1c
  .riscv.attributes
-                0x00000000       0x1a /tmp/ccTFagpY.o
+                0x00000000       0x1a /tmp/ccOzk7aK.o
  .riscv.attributes
-                0x0000001a       0x1c /tmp/ccedxTUb.ltrans0.ltrans.o
+                0x0000001a       0x1c /tmp/cckK3AVu.ltrans0.ltrans.o
 
 .comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/ccedxTUb.ltrans0.ltrans.o
+ .comment       0x00000000       0x22 /tmp/cckK3AVu.ltrans0.ltrans.o
                                  0x23 (size before relaxing)
