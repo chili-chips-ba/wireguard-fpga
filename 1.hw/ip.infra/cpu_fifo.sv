@@ -41,6 +41,8 @@ module cpu_fifo
                                 to_cpu.tuser_bypass_stage,
                                 to_cpu.tuser_src,
                                 to_cpu.tuser_dst}),
+      .s_axis_tid             (),
+      .s_axis_tdest           (),
 
       .m_axis_tdata           ({to_csr.cpu_fifo.tx.data_127_96.tdata.next,
                                 to_csr.cpu_fifo.tx.data_95_64.tdata.next,
@@ -53,7 +55,17 @@ module cpu_fifo
       .m_axis_tuser           ({to_csr.cpu_fifo.tx.control.tuser_bypass_all.next,
                                 to_csr.cpu_fifo.tx.control.tuser_bypass_stage.next,
                                 to_csr.cpu_fifo.tx.control.tuser_src.next,
-                                to_csr.cpu_fifo.tx.control.tuser_dst.next})
+                                to_csr.cpu_fifo.tx.control.tuser_dst.next}),
+      .m_axis_tid             (),
+      .m_axis_tdest           (),
+      
+      .pause_req              (),
+      .pause_ack              (),
+      .status_depth           (),
+      .status_depth_commit    (),
+      .status_overflow        (),
+      .status_bad_frame       (),
+      .status_good_frame      ()
    );
 
    axis_fifo #(
@@ -78,6 +90,8 @@ module cpu_fifo
                                 from_csr.cpu_fifo.rx.control.tuser_bypass_stage.value,
                                 from_csr.cpu_fifo.rx.control.tuser_src.value,
                                 from_csr.cpu_fifo.rx.control.tuser_dst.value}),
+      .s_axis_tid             (),
+      .s_axis_tdest           (),
 
       .m_axis_tdata           (from_cpu.tdata),
       .m_axis_tkeep           (from_cpu.tkeep),
@@ -87,6 +101,16 @@ module cpu_fifo
       .m_axis_tuser           ({from_cpu.tuser_bypass_all,
                                 from_cpu.tuser_bypass_stage,
                                 from_cpu.tuser_src,
-                                from_cpu.tuser_dst})
+                                from_cpu.tuser_dst}),
+      .m_axis_tid             (),
+      .m_axis_tdest           (),
+      
+      .pause_req              (),
+      .pause_ack              (),
+      .status_depth           (),
+      .status_depth_commit    (),
+      .status_overflow        (),
+      .status_bad_frame       (),
+      .status_good_frame      ()
    );
 endmodule

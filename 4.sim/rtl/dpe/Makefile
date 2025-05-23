@@ -3,8 +3,8 @@
 #=============================================================
 SHELL   := /bin/bash
 
-BLD_DIR := $(CURDIR)/../../../../3.build
-HW_SRC  := $(CURDIR)/../../../.
+BLD_DIR := $(CURDIR)/../../../3.build
+HW_SRC  := $(CURDIR)/../../../1.hw
 TB_NAME := tb
 
 ARE_TESTS :=
@@ -27,7 +27,7 @@ compile:
 		-Wall \
 		-Wno-PINCONNECTEMPTY \
 		-Wno-UNUSEDPARAM \
-                -Wno-GENUNNAMED \
+		-Wno-GENUNNAMED \
 		--cc \
 		--timing \
 		--trace-fst \
