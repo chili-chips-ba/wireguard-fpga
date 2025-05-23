@@ -1,14 +1,14 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Tue May 20 20:41:06 2025
+[*] Fri May 23 02:17:49 2025
 [*]
-[dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.fst"
-[dumpfile_mtime] "Tue May 20 16:06:02 2025"
-[dumpfile_size] 135445304
-[savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.SANITY_TEST.gtkw"
+[dumpfile] "/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/4.sim/wave.fst"
+[dumpfile_mtime] "Fri May 23 02:17:34 2025"
+[dumpfile_size] 16667522
+[savefile] "/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/4.sim/wave.SANITY_TEST.gtkw"
 [timestart] 0
-[size] 1920 1128
-[pos] -127 -88
+[size] 1000 600
+[pos] -1 -1
 *-33.810024 31911556250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
@@ -27,7 +27,7 @@
 [sst_width] 276
 [signals_width] 288
 [sst_expanded] 1
-[sst_vpaned_height] 741
+[sst_vpaned_height] 342
 @200
 -BUS
 @28
