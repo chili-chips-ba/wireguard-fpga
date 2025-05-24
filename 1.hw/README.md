@@ -93,13 +93,11 @@ CHECKSUM = ADDR[7:0] + ADDR[15:8] + ADDR[23:16] + ADDR[31:24] + DATA[7:0] + DATA
 
 ![UARTBUSR](../0.doc/Wireguard/uart_busr.png)
 
-
-
-```
-CHECKSUM = ADDR[7:0] + ADDR[15:8] + ADDR[23:16] + ADDR[31:24] + DATA[7:0] + DATA[15:8] + DATA[23:16] + DATA[31:24]
-```
+The `C_BUSW` command is used for writing data to the bus. Upon receiving `C_BUSW`, the UART FSM expects a 4-byte address and a 4-byte data word to be written to the specified address. After that, it responds with a checksum calculated in the same way as in the `BUSR` procedure.
 
 ![UARTBUSW](../0.doc/Wireguard/uart_busw.png)
+
+It is important to note that immediately upon entering the special mode, the UART FSM takes control of the bus and effectively halts the CPU for the duration of the special communication mode. This allows multiple read/write transactions on the bus, which can be useful for implementing software-in-the-loop (SIL) co-emulation techniques.
 
 ## HW/SW Working Together as a Coherent System
 The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
