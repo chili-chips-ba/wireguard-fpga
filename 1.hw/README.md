@@ -59,15 +59,45 @@ The special mode enables four functionalities:
 
 The following diagrams illustrate these functionalities. They are not cycle-accurate, but rather show the relative timing and relationships between the data sent by the PC host (`uart_rx_data`) and the data sent by the UART module (`uart_tx_data`). Additionally, several internal signals such as FSM states and bus signals are shown to clarify what is happening.
 
+Entry into the special mode is triggered when the PC host sends the `C_SOP` character. Upon receiving `C_SOP`, the UART FSM transitions into a state where it waits for an instruction indicating which mode to switch to. Upon receiving `C_IMPR`, UART FSM assert CPU reset signal and the procedure for programming the IMEM begins (`IMPR`). At the beginning of the `IMPR` procedure, the UART FSM expects the lower and upper byte of the length of the binary/hex file that will be transferred over UART and programmed into the IMEM. After that, the file transfer begins word by word (4 bytes each), where the UART FSM sends an acknowledgment (`C_ACK`) after receiving each word. Once the last word has been transferred and acknowledged, an 8-bit checksum is sent, calculated over all bytes starting from the length field up to the last data word:
+
+```
+CHECKSUM = LEN[7:0] + LEN[15:8] + DATA_1[7:0] + DATA_1[15:8] + DATA_1[23:16] + DATA_1[31:24] + DATA_2[7:0] + ... + DATA_N[31:24]
+```
+
+After that, CPU reset is deasserted. This allows the application on the PC host to verify that the entire file has been transferred without errors and to conclude the communication by sending a `C_EOP`.
+
 ![UARTIMPROk](../0.doc/Wireguard/uart_impr_ok.png)
 
 The UART FSM also implements a timeout mechanism to ensure correct system operation even in the event of a communication interruption between the PC host and the FPGA SoC during an active transaction. The following figure illustrates a timeout occurring during IMEM programming.
 
 ![UARTIMPRTimeout](../0.doc/Wireguard/uart_impr_timeout.png)
 
-When the special communication mode is initiated, the UART FSM activates the bus.vld signal, thereby taking control of the bus and effectively pausing the CPU operation. This allows observation or modification of entire memory blocks in DMEM/CSR without the risk of the CPU making changes during that period. Therefore, we can safely say that accesses to DMEM/CSR are atomic.
+In addition to programming the entire IMEM, it is also possible to modify a single instruction within IMEM. This is achieved using the `C_IMWR` command. Upon receiving `C_IMWR`, the UART FSM expects a 2-byte address and a 4-byte data word to determine the location within IMEM where the existing instruction will be replaced. After that, the UART FSM responds with a checksum calculated over all received bytes, starting from the address up to the data to be written:
+
+```
+CHECKSUM = ADDR[7:0] + ADDR[15:8] + DATA[7:0] + DATA[15:8] + DATA[23:16] + DATA[31:24]
+```
+
+In this process, the CPU is not reset, which enables real-time modifications of the running program. This can be useful for inserting breakpoints for debugging purposes.
+
+![UARTIMWR](../0.doc/Wireguard/uart_imwr.png)
+
+When the special communication mode is initiated, the UART FSM activates the `bus.vld` signal, thereby taking control of the bus and effectively pausing the CPU operation. This allows observation or modification of entire memory blocks in DMEM/CSR without the risk of the CPU making changes during that period. Therefore, we can safely say that accesses to DMEM/CSR are atomic.
+
+The C_BUSR command is used for reading from the bus, after which the UART FSM expects a 4-byte address from which it will read the data. This data can originate from either the DMEM or CSR address space. After reading the data from the bus, it is sent to the PC host byte by byte. The data is then followed by a checksum, which is calculated based over all received and transmitted bytes, starting from the address up to the read data:
+
+```
+CHECKSUM = ADDR[7:0] + ADDR[15:8] + ADDR[23:16] + ADDR[31:24] + DATA[7:0] + DATA[15:8] + DATA[23:16] + DATA[31:24]
+```
 
 ![UARTBUSR](../0.doc/Wireguard/uart_busr.png)
+
+
+
+```
+CHECKSUM = ADDR[7:0] + ADDR[15:8] + ADDR[23:16] + ADDR[31:24] + DATA[7:0] + DATA[15:8] + DATA[23:16] + DATA[31:24]
+```
 
 ![UARTBUSW](../0.doc/Wireguard/uart_busw.png)
 
