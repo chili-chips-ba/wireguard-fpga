@@ -34,7 +34,7 @@ The red domain encompasses the entire CSR with all peripherals. The clock signal
 Although the DPE (green domain) transfers packets at approximately 10 Gbps, the cores in the DPE pipeline are not expected to process packets at such a rate. Given that we have 4 x 1Gbps Ethernet interfaces, the cryptographic cores must process packets at a rate of at least 4 Gbps to ensure the system works at wire speed. For some components, such as the _IP Lookup Engine_, packet rate is more critical than data rate because their processing focuses on the packet headers rather than the payload. Assuming that, in the worst-case scenario, the smallest packets (64 bytes) arrive via the 1 Gbps Ethernet interface, the packet rate for each Ethernet interface would be 1,488,096 packets per second (pps). Therefore, in the worst-case scenario, such components must process packets at approximately 6 Mpps rate (e.g. 6 million IP table lookups per second).
 
 ### DPE Data Flow
-![ExampleToplogy](../0.doc/Wireguard/wireguard-fpga-muxed-Interfaces.webp)
+![DPEInterfaces](../0.doc/Wireguard/wireguard-fpga-muxed-Interfaces.webp)
 
 The cores within the DPE transmit packets via the AXI4-Stream interface with standard signals (`TREADY`, `TVALID`, `TDATA`, `TKEEP`, `TLAST`, `TUSER`, and `TID`). Although data transfer on the `TDATA` bus is organized as little-endian, it is important to note that the internal organization of fields within the headers of Ethernet, IP, and UDP protocols follows big-endian format (also known as network byte order). On the other hand, the fields within the headers of the WireGuard protocol are transmitted in little-endian format. In this setup, `TUSER` is used to carry instructions for internal packet routing:
 - `TUSER[7:7] = bypass_all` – Instructs that the packet should not be routed through the DPE but sent directly to the ETH interface or the CPU (and vice versa).
@@ -44,7 +44,7 @@ The cores within the DPE transmit packets via the AXI4-Stream interface with sta
 
 `TID[7:0]` will be used internally within the DPE to carry the peer index (a result of the peer table lookup).
 
-![ExampleToplogy](../0.doc/Wireguard/hw_st_if_packet_data.png)
+![DPEPacketTransfer](../0.doc/Wireguard/hw_st_if_packet_data.png)
 
 ### UART Data Flow
 The UART interface is implemented with a dual purpose:
@@ -59,17 +59,17 @@ The special mode enables four functionalities:
 
 The following diagrams illustrate these functionalities. They are not cycle-accurate, but rather show the relative timing and relationships between the data sent by the PC host (`uart_rx_data`) and the data sent by the UART module (`uart_tx_data`). Additionally, several internal signals such as FSM states and bus signals are shown to clarify what is happening.
 
-![ExampleToplogy](../0.doc/Wireguard/uart_imwr_ok.png)
+![UARTIMPROk](../0.doc/Wireguard/uart_impr_ok.png)
 
 The UART FSM also implements a timeout mechanism to ensure correct system operation even in the event of a communication interruption between the PC host and the FPGA SoC during an active transaction. The following figure illustrates a timeout occurring during IMEM programming.
 
-![ExampleToplogy](../0.doc/Wireguard/uart_imwr_timeout.png)
+![UARTIMPRTimeout](../0.doc/Wireguard/uart_impr_timeout.png)
 
 When the special communication mode is initiated, the UART FSM activates the bus.vld signal, thereby taking control of the bus and effectively pausing the CPU operation. This allows observation or modification of entire memory blocks in DMEM/CSR without the risk of the CPU making changes during that period. Therefore, we can safely say that accesses to DMEM/CSR are atomic.
 
-![ExampleToplogy](../0.doc/Wireguard/uart_busr.png)
+![UARTBUSR](../0.doc/Wireguard/uart_busr.png)
 
-![ExampleToplogy](../0.doc/Wireguard/uart_busw.png)
+![UARTBUSW](../0.doc/Wireguard/uart_busw.png)
 
 ## HW/SW Working Together as a Coherent System
 The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
