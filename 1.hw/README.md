@@ -46,6 +46,31 @@ The cores within the DPE transmit packets via the AXI4-Stream interface with sta
 
 ![ExampleToplogy](../0.doc/Wireguard/hw_st_if_packet_data.png)
 
+### UART Data Flow
+The UART interface is implemented with a dual purpose:
+- Standard data exchange of printable characters between the PC host and the CPU within the FPGA SoC, supporting a CLI in the software
+- A special mode for binary data exchange between the PC host and the FPGA SoC
+
+The special mode enables four functionalities:
+- Programming the IMEM, ie. modifying the entire content with CPU reset (`IMPR`)
+- Modifying a single instruction in the IMEM without resetting the CPU (`IMWR`)
+- Reading data from the DMEM/CSR bus (`BUSR`)
+- Writing data to the DMEM/CSR bus (`BUSW`)
+
+The following diagrams illustrate these functionalities. They are not cycle-accurate, but rather show the relative timing and relationships between the data sent by the PC host (`uart_rx_data`) and the data sent by the UART module (`uart_tx_data`). Additionally, several internal signals such as FSM states and bus signals are shown to clarify what is happening.
+
+![ExampleToplogy](../0.doc/Wireguard/uart_imwr_ok.png)
+
+The UART FSM also implements a timeout mechanism to ensure correct system operation even in the event of a communication interruption between the PC host and the FPGA SoC during an active transaction. The following figure illustrates a timeout occurring during IMEM programming.
+
+![ExampleToplogy](../0.doc/Wireguard/uart_imwr_timeout.png)
+
+When the special communication mode is initiated, the UART FSM activates the bus.vld signal, thereby taking control of the bus and effectively pausing the CPU operation. This allows observation or modification of entire memory blocks in DMEM/CSR without the risk of the CPU making changes during that period. Therefore, we can safely say that accesses to DMEM/CSR are atomic.
+
+![ExampleToplogy](../0.doc/Wireguard/uart_busr.png)
+
+![ExampleToplogy](../0.doc/Wireguard/uart_busw.png)
+
 ## HW/SW Working Together as a Coherent System
 The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
 - 10.10.0.2 - the end-user host at site A
