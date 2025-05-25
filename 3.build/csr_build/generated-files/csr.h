@@ -418,32 +418,44 @@ typedef struct __attribute__ ((__packed__)) {
     csr__dpe__fcr_t fcr;
 } csr__dpe_t;
 
-// Reg - csr::hwid
-#define CSR__HWID__RELEASE_bm 0xffff
-#define CSR__HWID__RELEASE_bp 0
-#define CSR__HWID__RELEASE_bw 16
-#define CSR__HWID__RELEASE_reset 0x1
-#define CSR__HWID__VERSION_bm 0xffff0000
-#define CSR__HWID__VERSION_bp 16
-#define CSR__HWID__VERSION_bw 16
-#define CSR__HWID__VERSION_reset 0x1
-#define CSR__HWID__PID_bm 0xffff00000000
-#define CSR__HWID__PID_bp 32
-#define CSR__HWID__PID_bw 16
-#define CSR__HWID__PID_reset 0xcaca
-#define CSR__HWID__VID_bm 0xffff000000000000
-#define CSR__HWID__VID_bp 48
-#define CSR__HWID__VID_bw 16
-#define CSR__HWID__VID_reset 0xccae
+// Reg - csr::hw_id
+#define CSR__HW_ID__PRODUCT_bm 0xffff
+#define CSR__HW_ID__PRODUCT_bp 0
+#define CSR__HW_ID__PRODUCT_bw 16
+#define CSR__HW_ID__PRODUCT_reset 0xcaca
+#define CSR__HW_ID__VENDOR_bm 0xffff0000
+#define CSR__HW_ID__VENDOR_bp 16
+#define CSR__HW_ID__VENDOR_bw 16
+#define CSR__HW_ID__VENDOR_reset 0xccae
 typedef union {
     struct __attribute__ ((__packed__)) {
-        uint64_t RELEASE :16;
-        uint64_t VERSION :16;
-        uint64_t PID :16;
-        uint64_t VID :16;
+        uint32_t PRODUCT :16;
+        uint32_t VENDOR :16;
     } f;
-    uint64_t w;
-} csr__hwid_t;
+    uint32_t w;
+} csr__hw_id_t;
+
+// Reg - csr::hw_version
+#define CSR__HW_VERSION__PATCH_bm 0xffff
+#define CSR__HW_VERSION__PATCH_bp 0
+#define CSR__HW_VERSION__PATCH_bw 16
+#define CSR__HW_VERSION__PATCH_reset 0x0
+#define CSR__HW_VERSION__MINOR_bm 0xff0000
+#define CSR__HW_VERSION__MINOR_bp 16
+#define CSR__HW_VERSION__MINOR_bw 8
+#define CSR__HW_VERSION__MINOR_reset 0x1
+#define CSR__HW_VERSION__MAJOR_bm 0xff000000
+#define CSR__HW_VERSION__MAJOR_bp 24
+#define CSR__HW_VERSION__MAJOR_bw 8
+#define CSR__HW_VERSION__MAJOR_reset 0x0
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t PATCH :16;
+        uint32_t MINOR :8;
+        uint32_t MAJOR :8;
+    } f;
+    uint32_t w;
+} csr__hw_version_t;
 
 // Addrmap - csr
 typedef struct __attribute__ ((__packed__)) {
@@ -452,7 +464,8 @@ typedef struct __attribute__ ((__packed__)) {
     csr__gpio_t gpio;
     csr__ethernet_t ethernet[4];
     csr__dpe_t dpe;
-    csr__hwid_t hwid;
+    csr__hw_id_t hw_id;
+    csr__hw_version_t hw_version;
 } csr_t;
 
 // Addrmap - wireguard
