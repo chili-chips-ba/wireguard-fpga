@@ -70,10 +70,16 @@ To generate binaries (elf, bin, hex) and instruction memory (IMEM) Verilog confi
   * `main.bin`      : The raw binary file
   * `main.dump`     : The disassembly of the ELF file
   * `imem.INIT.vh`  : The IMEM Verilog configuration file
+  
+Additionally, `MakefileSW` supports running a Python script `imem.UART.py` to program the IMEM on a hardware target that is already configured (using the bitstream resulting from the HW compilation) and running. This script uses UART to transfer the generated binary/hex file (as described in the [UART Data Flow](/1.hw/README.md#uart-data-flow)) and facilitates software testing without the need for resynthesis and FPGA reconfiguration. It is launched as follows:
+
+```
+make -f MakefileSW program
+```
 
 ## HW Compilation
 
-TODO
+Hardware synthesis is currently supported through the Vivado GUI, using the prepared [project file](3.build/hw_build.Vivado/wireguard.xpr) located at `3.build/hw_build.Vivado`.
 
 ## Co-simulation HAL
 
