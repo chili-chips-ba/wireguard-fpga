@@ -129,10 +129,8 @@ SIMOPTS          = --cc                                       \
 SIMDEFS          = +define+VPROC_BYTE_ENABLE                  \
                    +define+SIM_ONLY                           \
 #                                                             \
-#                   +define+SDRAM_DEBUG                        \
-#                   +define+DAC_DEBUG                          \
-#                   +define+UART_BFM_DEBUG                     \
-#                   +define+ADC_DEBUG+ADC_BFM_DEBUG
+#                   +define+SDRAM_DEBUG                       \
+#                   +define+UART_BFM_DEBUG                     
 
 SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR) -I$(UDPDIR)
 SIMCFLAGS        = -std=c++20 -Wno-attributes $(USRCFLAGS)

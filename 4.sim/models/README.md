@@ -4,10 +4,7 @@ This directory contains the following bus functional models
 
 * `bfm_phy_mdio.sv` : MDIO slave bus functional model
 * `soc_cpu.VPROC.sv` : _VProc_ based `soc_cpu` compatible virtual processor.
-* `bfm_adc.sv`: Simple bus functional bodel of ADS1675 ADC
-* `bfm_dac.sv` : Minimal Digital to Analog Converter behavioural bodel
 * `bfm_uart.sv` : Minimal UART bus functional model
-* `gowin.prim.CHILI.v` : Shortened version of gowin.prim_sim.v
 
 In addition, sub-directories contain the following models
 

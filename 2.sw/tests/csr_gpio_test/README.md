@@ -22,7 +22,7 @@ For this block only a small CSR window is needed, so we map
 | Phase | Command | Run from | Notes |
 |-------|---------|----------|-------|
 | **1. Generate RTL + CSR headers** | `make -f MakefileCSR clean && make -f MakefileCSR` | **`3.build/`** | Produces RTL *.sv* + CSR headers in `csr_build/generated-files/`. |
-| **2. Build firmware** | `make -f MakefileSW` | **`3.build/`** | `MakefileSW` compiles `main.cpp` chosen via `SW_MAIN := $(SW_APP)/csr_gpio_test`. |
+| **2. Build firmware** | `make -f MakefileSW` | **`3.build/`** | `MakefileSW` compiles `main.cpp` chosen via `SW_MAIN := $(SW_TESTS)/csr_gpio_test`. |
 | **3. Configure simulation** | Edit **`4.sim/vusermain.cfg`** →<br>```text vusermain0 -r -H -R -c -x 0x20000000 -X 0x2000FFFF -t ../3.build/sw_build/main.elf ``` | **`4.sim/`** | Narrow window covers only GPIO registers and cuts sim compile time. |
 | **4. Run co‑simulation** | `make -f MakefileVProc.mk clean && make -f MakefileVProc.mk BUILD=ISS run` | **`4.sim/`** | Generates `wave.fst`. |
 | **5. View results** | `gtkwave wave.fst` → **File → Read Savefile… →** `wave.CSR_GPIO_TEST.gtkw` |  **`4.sim/`** | Inspect LED/KEY hand‑shakes. |
