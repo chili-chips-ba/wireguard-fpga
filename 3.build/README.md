@@ -79,7 +79,7 @@ make -f MakefileSW program
 
 ## HW Compilation
 
-Hardware synthesis is currently supported through the Vivado GUI, using the prepared [project file](3.build/hw_build.Vivado/wireguard.xpr) located at `3.build/hw_build.Vivado`.
+Hardware synthesis is currently supported through the Vivado GUI, using the prepared [project file](/3.build/hw_build.Vivado/wireguard.xpr) located at `3.build/hw_build.Vivado`.
 
 ## Co-simulation HAL
 
