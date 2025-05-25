@@ -6,11 +6,13 @@ BLD_DIR := $(CURDIR)
 
 SW_SRC  := $(BLD_DIR)/../2.sw
 SW_APP  := $(SW_SRC)/app
+SW_TESTS := $(SW_SRC)/tests
+
 #SW_MAIN := $(SW_APP)
-#SW_MAIN := $(SW_APP)/csr_uart_test
-#SW_MAIN := $(SW_APP)/csr_gpio_test
-#SW_MAIN := $(SW_APP)/csr_ethernet_test
-SW_MAIN := $(SW_APP)/csr_test
+#SW_MAIN := $(SW_TESTS)/csr_uart_test
+#SW_MAIN := $(SW_TESTS)/csr_gpio_test
+#SW_MAIN := $(SW_TESTS)/csr_ethernet_test
+SW_MAIN := $(SW_TESTS)/csr_test
 
 CSR_BLD := $(BLD_DIR)/csr_build/generated-files
 SW_BLD  := $(BLD_DIR)/sw_build
