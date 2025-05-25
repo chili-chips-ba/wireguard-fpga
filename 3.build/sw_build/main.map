@@ -17,16 +17,16 @@ Linker script and memory map
 .text           0x00000000      0x54c
                 0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x00000000       0x70 /tmp/ccOzk7aK.o
+ .text          0x00000000       0x70 /tmp/ccNw0kNZ.o
                 0x00000000                _boot_crt
- .text          0x00000070       0x9c /tmp/cckK3AVu.ltrans0.ltrans.o
+ .text          0x00000070       0x9c /tmp/cckUseiz.ltrans0.ltrans.o
                 0x000000c8                memset
                 0x000000e8                memcpy
- .text.startup  0x0000010c      0x430 /tmp/cckK3AVu.ltrans0.ltrans.o
+ .text.startup  0x0000010c      0x430 /tmp/cckUseiz.ltrans0.ltrans.o
                 0x0000010c                main
  *(.rodata .rodata.*)
  .rodata.str1.4
-                0x0000053c        0xf /tmp/cckK3AVu.ltrans0.ltrans.o
+                0x0000053c        0xf /tmp/cckUseiz.ltrans0.ltrans.o
  *(.srodata .srodata.*)
                 0x0000054c                        . = ALIGN (0x4)
  *fill*         0x0000054b        0x1 
@@ -34,13 +34,13 @@ Linker script and memory map
                 0x0000054c                        _idata_start = _text_end
 
 .rela.dyn       0x00000000        0x0
- .rela.text     0x00000000        0x0 /tmp/ccOzk7aK.o
+ .rela.text     0x00000000        0x0 /tmp/ccNw0kNZ.o
 
 .data           0x10000000        0x0 load address 0x0000054c
                 0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x10000000        0x0 /tmp/ccOzk7aK.o
- .data          0x10000000        0x0 /tmp/cckK3AVu.ltrans0.ltrans.o
+ .data          0x10000000        0x0 /tmp/ccNw0kNZ.o
+ .data          0x10000000        0x0 /tmp/cckUseiz.ltrans0.ltrans.o
                 0x10000000                        . = ALIGN (0x8)
                 0x10000800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.sdata .sdata.*)
@@ -50,10 +50,10 @@ Linker script and memory map
 .bss            0x10000000      0x804 load address 0x0000054c
                 0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x10000000        0x0 /tmp/ccOzk7aK.o
- .bss           0x10000000      0x800 /tmp/cckK3AVu.ltrans0.ltrans.o
+ .bss           0x10000000        0x0 /tmp/ccNw0kNZ.o
+ .bss           0x10000000      0x800 /tmp/cckUseiz.ltrans0.ltrans.o
  *(.sbss .sbss.*)
- .sbss          0x10000800        0x4 /tmp/cckK3AVu.ltrans0.ltrans.o
+ .sbss          0x10000800        0x4 /tmp/cckUseiz.ltrans0.ltrans.o
  *(COMMON)
                 0x10000804                        . = ALIGN (0x4)
                 0x10000804                        _bss_end = .
@@ -75,24 +75,24 @@ Linker script and memory map
                 0x10008000                        . = (. + _STACK_SIZE)
  *fill*         0x10007e00      0x200 
                 0x10007e00                        _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/ccOzk7aK.o
-LOAD /tmp/ccubcMCf.o
-LOAD /tmp/cckK3AVu.ltrans0.ltrans.o
-LOAD /tmp/ccLzI7aN.o
-LOAD /tmp/ccInQi8f.o
-LOAD /tmp/ccNaeyqM.o
-LOAD /tmp/ccNTuUCC.o
-LOAD /tmp/ccBcgPlc.o
+LOAD /tmp/ccNw0kNZ.o
+LOAD /tmp/ccQTKqyT.o
+LOAD /tmp/cckUseiz.ltrans0.ltrans.o
+LOAD /tmp/cc9ApTqC.o
+LOAD /tmp/cc1qT0Rr.o
+LOAD /tmp/ccdtcdca.o
+LOAD /tmp/ccZJ4GlO.o
+LOAD /tmp/cc1Qo6dW.o
 LOAD /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a
 OUTPUT(/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
 
 .riscv.attributes
                 0x00000000       0x1c
  .riscv.attributes
-                0x00000000       0x1a /tmp/ccOzk7aK.o
+                0x00000000       0x1a /tmp/ccNw0kNZ.o
  .riscv.attributes
-                0x0000001a       0x1c /tmp/cckK3AVu.ltrans0.ltrans.o
+                0x0000001a       0x1c /tmp/cckUseiz.ltrans0.ltrans.o
 
 .comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/cckK3AVu.ltrans0.ltrans.o
+ .comment       0x00000000       0x22 /tmp/cckUseiz.ltrans0.ltrans.o
                                  0x23 (size before relaxing)
