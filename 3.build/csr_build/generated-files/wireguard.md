@@ -57,8 +57,7 @@ No supported members.
 | 0x54 |ethernet[2]|csr.ethernet[0..3]|
 | 0x58 |ethernet[3]|csr.ethernet[0..3]|
 | 0x5C |    dpe    |      csr.dpe     |
-| 0x60 |   hw_id   |     csr.hw_id    |
-| 0x64 | hw_version|  csr.hw_version  |
+| 0x60 |    hwid   |     csr.hwid     |
 
 ## cpu_fifo register file
 
@@ -665,49 +664,33 @@ No supported members.
 
 <p>Pauses DPE</p>
 
-### hw_id register
+### hwid register
 
 - Absolute Address: 0x20000060
 - Base Offset: 0x60
-- Size: 0x4
+- Size: 0x8
 
 <p>Hardware IDs</p>
 
-| Bits|Identifier|Access| Reset|       Name      |
-|-----|----------|------|------|-----------------|
-| 15:0|  PRODUCT |   r  |0xCACA|csr.hw_id.PRODUCT|
-|31:16|  VENDOR  |   r  |0xCCAE| csr.hw_id.VENDOR|
+| Bits|Identifier|Access| Reset|      Name      |
+|-----|----------|------|------|----------------|
+| 15:0|  RELEASE |   r  |  0x1 |csr.hwid.RELEASE|
+|31:16|  VERSION |   r  |  0x1 |csr.hwid.VERSION|
+|47:32|    PID   |   r  |0xCACA|  csr.hwid.PID  |
+|63:48|    VID   |   r  |0xCCAE|  csr.hwid.VID  |
 
-#### PRODUCT field
+#### RELEASE field
+
+<p>Product release</p>
+
+#### VERSION field
+
+<p>Product version</p>
+
+#### PID field
 
 <p>Product ID</p>
 
-#### VENDOR field
+#### VID field
 
 <p>Vendor ID</p>
-
-### hw_version register
-
-- Absolute Address: 0x20000064
-- Base Offset: 0x64
-- Size: 0x4
-
-<p>Hardware Version</p>
-
-| Bits|Identifier|Access|Reset|        Name        |
-|-----|----------|------|-----|--------------------|
-| 15:0|   PATCH  |   r  | 0x0 |csr.hw_version.PATCH|
-|23:16|   MINOR  |   r  | 0x1 |csr.hw_version.MINOR|
-|31:24|   MAJOR  |   r  | 0x0 |csr.hw_version.MAJOR|
-
-#### PATCH field
-
-<p>Patch version</p>
-
-#### MINOR field
-
-<p>Minor version</p>
-
-#### MAJOR field
-
-<p>Major version</p>

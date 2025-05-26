@@ -616,44 +616,26 @@ public:
 
 // -----------------------------------------------------
 //
-class csr__hw_id_vp_t {
+class csr__hwid_vp_t {
 public:
-    csr__hw_id_vp_t (uint32_t* reg_addr = 0) : reg((csr__hw_id_t*)reg_addr) {};
+    csr__hwid_vp_t (uint32_t* reg_addr = 0) : reg((csr__hwid_t*)reg_addr) {};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint64_t data) {reg->w = data;};
+    inline uint64_t full()                    {return reg->w;};
 
-    inline void     PRODUCT(const uint32_t data) {reg->f.PRODUCT = data;};
-    inline uint32_t PRODUCT()                    {return reg->f.PRODUCT;};
-    inline void     VENDOR(const uint32_t data) {reg->f.VENDOR = data;};
-    inline uint32_t VENDOR()                    {return reg->f.VENDOR;};
+    inline void     RELEASE(const uint64_t data) {reg->f.RELEASE = data;};
+    inline uint64_t RELEASE()                    {return reg->f.RELEASE;};
+    inline void     VERSION(const uint64_t data) {reg->f.VERSION = data;};
+    inline uint64_t VERSION()                    {return reg->f.VERSION;};
+    inline void     PID(const uint64_t data) {reg->f.PID = data;};
+    inline uint64_t PID()                    {return reg->f.PID;};
+    inline void     VID(const uint64_t data) {reg->f.VID = data;};
+    inline uint64_t VID()                    {return reg->f.VID;};
 
     inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
 
 private:
-    csr__hw_id_t* reg;
-};
-
-// -----------------------------------------------------
-//
-class csr__hw_version_vp_t {
-public:
-    csr__hw_version_vp_t (uint32_t* reg_addr = 0) : reg((csr__hw_version_t*)reg_addr) {};
-
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
-
-    inline void     PATCH(const uint32_t data) {reg->f.PATCH = data;};
-    inline uint32_t PATCH()                    {return reg->f.PATCH;};
-    inline void     MINOR(const uint32_t data) {reg->f.MINOR = data;};
-    inline uint32_t MINOR()                    {return reg->f.MINOR;};
-    inline void     MAJOR(const uint32_t data) {reg->f.MAJOR = data;};
-    inline uint32_t MAJOR()                    {return reg->f.MAJOR;};
-
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
-
-private:
-    csr__hw_version_t* reg;
+    csr__hwid_t* reg;
 };
 
 // -----------------------------------------------------
@@ -685,20 +667,12 @@ public:
                                                                                    sizeof(csr__gpio_t)/4 + 
                                                                                    4*sizeof(csr__ethernet_t)/4
                                                                                     );
-        hw_id = new csr__hw_id_vp_t (base_addr +
+        hwid = new csr__hwid_vp_t (base_addr +
                                                                                    sizeof(csr__cpu_fifo_t)/4 + 
                                                                                    sizeof(csr__uart_t)/4 + 
                                                                                    sizeof(csr__gpio_t)/4 + 
                                                                                    4*sizeof(csr__ethernet_t)/4 + 
                                                                                    sizeof(csr__dpe_t)/4
-                                                                                    );
-        hw_version = new csr__hw_version_vp_t (base_addr +
-                                                                                   sizeof(csr__cpu_fifo_t)/4 + 
-                                                                                   sizeof(csr__uart_t)/4 + 
-                                                                                   sizeof(csr__gpio_t)/4 + 
-                                                                                   4*sizeof(csr__ethernet_t)/4 + 
-                                                                                   sizeof(csr__dpe_t)/4 + 
-                                                                                   sizeof(csr__hw_id_t)/4
                                                                                     );
     };
 
@@ -707,8 +681,7 @@ public:
     csr__gpio_vp_t* gpio;
     csr__ethernet_vp_t* ethernet[4];
     csr__dpe_vp_t* dpe;
-    csr__hw_id_vp_t* hw_id;
-    csr__hw_version_vp_t* hw_version;
+    csr__hwid_vp_t* hwid;
 } ;
 
 
