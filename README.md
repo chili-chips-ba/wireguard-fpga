@@ -112,6 +112,9 @@ It it in this take that we start creating hardware Datapath and hardening Wiregu
 -	IP Core for **ChaCha20-Poly1305** [Ref4] -- Definitely in hardware from the get-go
 > - https://github.com/Goshik92/FpgaCha
 > - https://github.com/secworks/ChaCha20-Poly1305
+> - https://github.com/FPGA-House-AG/ChaCha20Poly1305
+> - https://github.com/JulianKemmerer/PipelineC/tree/master/examples/chacha20poly1305
+
 - _Curve25519_ module for key exchange -- Likely in software at this point
 > - https://github.com/kazkojima/x25519-fpga
 - _blake2_ module for hashing -- Likely in software at this point
