@@ -49,6 +49,8 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
   
 **[Ref8]** [OpenXC7](https://github.com/openXC7) open-source tools for Xilinx Series7
 
+**[Ref9]** [Alex's Ethernet Stack](https://github.com/alexforencich/verilog-ethernet)
+
 # Project Outline
 
 ## Scope
