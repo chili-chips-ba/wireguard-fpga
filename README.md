@@ -122,22 +122,23 @@ It it in this take that we start creating hardware Datapath and hardening Wiregu
 - _blake2_ module for hashing -- Likely in software at this point
 > - https://github.com/secworks/blake2
 - [ ] Timing closure. Resolution of FPGA device utilization and routing congestion issues
-- [ ] Creation of cocoTB DV in the CI/CD environmenT, and representative test cases for datapath simulation
+- [X] Creation of cocoTB DV in the CI/CD environmenT, and representative test cases for datapath simulation
 
 ## Take3
 **Development and integration of embedded management software (Control Plane)**
 
 This work package is about hardware/software codesign and integration. The firmware will run on a soft RISC V processor, inside the FPGA. Our vanilla SOC is at this point starting to be customized to Wireguard needs. This work can to some extent go on in parallel with hardware activities of Take2. 
 
-- [ ]	SW design for the embedded on-chip processor
-- Code is to be written in the bare-metal C with, as necessary, few sections in Assembly
-- SW is responsible for configuration and management of hardware blocks
-- SW must not participate in the bulk datapath transfers
-- SW may however intercept the low-frequency management packets
-- For quick bring up, the IP Address Search (using novel balanced binary tree algorithm) may initially be hosted in software, then ported to hardware at a later point
-- SW will also cover KMM function -- Key Management Module
+- [X]	SW design for on-chip processor (Part 1)
+  - Code is to be written in the bare-metal C with, as necessary, a few sections in Assembly
+  - SW is responsible for configuration and management of hardware blocks
+  - SW must not participate in the bulk datapath transfers
+  - SW may however intercept the low-frequency management packets
 
-- [ ] HW/SW Integration
+- [ ]	SW design for on-chip processor (Part 2)
+  - KMM function -- Key Management Module
+
+- [X] HW/SW Integration
 
 ## Take4
 **VPN Tunnel: Session initialization, maintenance, and secure closure**
