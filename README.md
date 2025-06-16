@@ -31,9 +31,9 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 ## References
 
 **[Ref1]** Wireguard implementations in software:
->- [Netbird](https://github.com/netbirdio/netbird)
->- [Tailscale](https://tailscale.com/blog/more-throughput)
->- [Linux Kernel](https://thenewstack.io/Wireguard-vpn-protocol-coming-to-a-linux-kernel-near-you)
+  - [Netbird](https://github.com/netbirdio/netbird)
+  - [Tailscale](https://tailscale.com/blog/more-throughput)
+  - [Linux Kernel](https://thenewstack.io/Wireguard-vpn-protocol-coming-to-a-linux-kernel-near-you)
   
 **[Ref2]** 100Gbps [_Blackwire_](https://github.com/brightai-nl/BrightAI-Blackwire) Wireguard 
   
@@ -60,17 +60,18 @@ The Phase2 continuation project is therefore also in the plans, to maximize effi
 
 ## Recognized Challenges 
 1) HW/SW partitioning, interface, interactions and workload distribution
-> - While, contrary to _Blackwire_, we don’t rely on an external PC connected via PCIE, we will still have an on-chip RISC-V CPU with intricate hardware interface and significant Embedded Software component that controls the backbone of wire-speed datapath
+    - While, contrary to _Blackwire_, we don’t rely on an external PC connected via PCIE, we will still have an on-chip RISC-V CPU with intricate hardware interface and significant Embedded Software component that controls the backbone of wire-speed datapath
 
 2) HW/SW co-development, integration and debugging
-> - Standard simulation is impractical for the project of this size and complexity. We therefore intend to put to test and good use the very promissing new [VProc ISS](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7217116220754411520-08xZ?utm_source=share&utm_medium=member_desktop) [Ref6]
-> - It’s also impractical and expensive to provide full test systems with real traffic generators and checkers to all developers. We therefore plan to rent some space for a central lab that will host two test systems, then provide remote access to all developers
+    - Standard simulation is impractical for the project of this size and complexity. We therefore intend to put to test and good use the very promissing new [VProc ISS](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7217116220754411520-08xZ?utm_source=share&utm_medium=member_desktop) [Ref6]
+    - It’s also impractical and expensive to provide full test systems with real traffic generators and checkers to all developers. We therefore plan to rent some space for a central lab that will host two test systems, then provide remote access to all developers
+
 3)	Real-life, at-speed testing
 4)	Extent of open-source tools support for SystemVerilog and all needed FPGA primitives and IP functions
 5)	QOR of the (still maturing) open-source tools
-> - _Blackwire_ used commercial, AMD/Xilinx-proprietary Vivado toolchain, as well as high-end Alveo U50 FPGA silicon. Even then, they ran into multiple timing closure, utilization and routing congestion challenges.
+    - _Blackwire_ used commercial, AMD/Xilinx-proprietary Vivado toolchain, as well as high-end Alveo U50 FPGA silicon. Even then, they ran into multiple timing closure, utilization and routing congestion challenges.
 6) Financial resources
-> - Given that this is a complex, multi-disciplinary dev effort, the available funding may not be sufficient to bring it to completion. _Blackwire_, despite a larger allocated budget, ended up with funding crisis and abrupt cessation of dev activities.
+    - Given that this is a complex, multi-disciplinary dev effort, the available funding may not be sufficient to bring it to completion. _Blackwire_, despite a larger allocated budget, ended up with funding crisis and abrupt cessation of dev activities.
 
 # Project Execution Plan / Tracking
 
@@ -84,19 +85,19 @@ While the board we're using is low cost, it is also not particularly known in th
 Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not support High-Performance (HP) I/O. Consequently, we cannot push its I/O beyond 600MHz, nor its core logic beyond 100 MHz. 
 
 - [x] Familiarization with HW platform
-- Create our first FPGA program that blinks LEDs
-- Verify pinouts and connectivity using simple test routines
-- Generate a few Ethernet test patterns 
+  - Create our first FPGA program that blinks LEDs
+  - Verify pinouts and connectivity using simple test routines
+  - Generate a few Ethernet test patterns 
 
 - [x] Familiarization with SW platform
-- Initial bring up of embedded CPU within a _cookie-cutter_ SOC, such as [Ref5]
-- Design and test a simple SW interface to rudimentary HW Ethernet datapath
+  - Initial bring up of embedded CPU within a _cookie-cutter_ SOC, such as [Ref5]
+  - Design and test a simple SW interface to rudimentary HW Ethernet datapath
 
 - [x] Detailed analysis and comparisons of:
-- Wireguard [White Papers](https://www.ndss-symposium.org/wp-content/uploads/2017/09/ndss2017_04A-3_Donenfeld_paper.pdf)
-- existing implementations in software [Ref1]
-- vs. _Blackwire_ hardware implementation [Ref2]
-- [cryptographic algorithms](https://eprint.iacr.org/2018/080.pdf) used for Wireguard, esp. **ChaCha20** for encryption, **Poly1305** for authentication [Ref4] and, to a lesser extent, _Curve25519_ for key exchange and _blake2_ for hashing
+  - Wireguard [White Papers](https://www.ndss-symposium.org/wp-content/uploads/2017/09/ndss2017_04A-3_Donenfeld_paper.pdf)
+  - existing implementations in software [Ref1]
+  - vs. _Blackwire_ hardware implementation [Ref2]
+  - [cryptographic algorithms](https://eprint.iacr.org/2018/080.pdf) used for Wireguard, esp. **ChaCha20** for encryption, **Poly1305** for authentication [Ref4] and, to a lesser extent, _Curve25519_ for key exchange and _blake2_ for hashing
   
 - [x] Identification and assimilation of prior art and building IP blocks, in particular **Corundum** [Ref3] and, to a lesser extent, _10GE Switch_ [Ref7] 
 
@@ -110,17 +111,18 @@ Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not s
 It it in this take that we start creating hardware Datapath and hardening Wireguard encryption protocols, all using Vivado and Xilinx primitives.
 
 - [ ] Integration of collected RTL blocks into a coherent HW system that implements the basic Wireguard datapath for a handful of manually pre-configured channels.
-- Corundum FPGA-based NIC and platform for opensource Ethernet development [Ref3]
--	IP Core for **ChaCha20-Poly1305** [Ref4] -- Definitely in hardware from the get-go
-> - https://github.com/Goshik92/FpgaCha
-> - https://github.com/secworks/ChaCha20-Poly1305
-> - https://github.com/FPGA-House-AG/ChaCha20Poly1305
-> - https://github.com/JulianKemmerer/PipelineC/tree/master/examples/chacha20poly1305
+  - Corundum FPGA-based NIC and platform for opensource Ethernet development [Ref3]
+  -	IP Core for **ChaCha20-Poly1305** [Ref4] -- Definitely in hardware from the get-go
+    - https://github.com/Goshik92/FpgaCha
+    - https://github.com/secworks/ChaCha20-Poly1305
+    - https://github.com/FPGA-House-AG/ChaCha20Poly1305
+    - https://github.com/JulianKemmerer/PipelineC/tree/master/examples/chacha20poly1305
 
-- _Curve25519_ module for key exchange -- Likely in software at this point
-> - https://github.com/kazkojima/x25519-fpga
-- _blake2_ module for hashing -- Likely in software at this point
-> - https://github.com/secworks/blake2
+  - _Curve25519_ module for key exchange -- Likely in software at this point
+    - https://github.com/kazkojima/x25519-fpga
+  - _blake2_ module for hashing (we'll most likely do it in software)
+    - https://github.com/secworks/blake2
+      
 - [ ] Timing closure. Resolution of FPGA device utilization and routing congestion issues
 - [X] Creation of cocoTB DV in the CI/CD environmenT, and representative test cases for datapath simulation
 
@@ -156,10 +158,10 @@ This is about managing the bring-up, maintenance and tear-down of VPN tunnels be
 - [ ] Performance testing. HW/SW profiling, updates and enhancements to ensure the design indeed operates at close to the wire speed on all preconfigured channels
 
 - [ ] Porting to openXC7 [Ref8] using [SV2V](https://github.com/zachjs/sv2v), in the GoCD CI/CD setting 
-> This is challenging, as openXC7 has thus far been crashing for NES SV
+  - This is challenging, as openXC7 has thus far been crashing for NES SV
 
 - [ ] Timing closure with openXC7
-> This is definitely challenging, given that openXC7 is currently without accurate timing-driven STA
+  - This is definitely challenging, given that openXC7 is currently without accurate timing-driven STA
 
 - [ ] Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
       
@@ -167,12 +169,14 @@ This is about managing the bring-up, maintenance and tear-down of VPN tunnels be
       
 - [ ] Ongoing documentation updates and CI/CD script maintenance to keep it valid in the light of inevitable design mutations compared to the original Design Blueprint.
 
+
 ## Take6 (time-permitting Bonus)
 **Flow control module for efficient and stable VPN tunnel data management**
 
 The objective of this optional deliverable is to ensure stable and efficient links, thus taking this project one step closer to a deployable product.
 
 - [ ] Develop software components for management of data flow within VPN tunnels
+
 
 # Design Blueprint (WIP)
 ## HW/SW Partitioning
