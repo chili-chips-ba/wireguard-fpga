@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Fri May 23 02:17:49 2025
+[*] Sun Jun 22 14:24:55 2025
 [*]
-[dumpfile] "/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/4.sim/wave.fst"
-[dumpfile_mtime] "Fri May 23 02:17:34 2025"
-[dumpfile_size] 16667522
-[savefile] "/mnt/e/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/4.sim/wave.SANITY_TEST.gtkw"
+[dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.fst"
+[dumpfile_mtime] "Sun Jun 22 14:19:47 2025"
+[dumpfile_size] 16145765
+[savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.SANITY_TEST.gtkw"
 [timestart] 0
-[size] 1000 600
-[pos] -1 -1
-*-33.810024 31911556250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1920 1200
+[pos] -409 -134
+*-30.574270 3713660000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
 [treeopen] TOP.tb.dut.
@@ -19,15 +19,16 @@
 [treeopen] TOP.tb.dut.from_csr.uart.rx_trigger.
 [treeopen] TOP.tb.dut.from_csr.uart.tx.data.
 [treeopen] TOP.tb.dut.from_csr.uart.tx_trigger.
-[treeopen] TOP.tb.dut.to_csr.gpio.
+[treeopen] TOP.tb.dut.to_csr.ethernet[0].status.
 [treeopen] TOP.tb.dut.to_csr.uart.rx.data.
 [treeopen] TOP.tb.dut.to_csr.uart.tx.
+[treeopen] TOP.tb.dut.u_eth_1.
 [treeopen] TOP.tb.dut.u_fabric.
 [treeopen] TOP.tb.dut.u_uart.
 [sst_width] 276
-[signals_width] 288
+[signals_width] 365
 [sst_expanded] 1
-[sst_vpaned_height] 342
+[sst_vpaned_height] 796
 @200
 -BUS
 @28
@@ -90,8 +91,12 @@ TOP.tb.dut.from_csr.uart.tx.data.value[7:0]
 TOP.tb.dut.from_csr.uart.tx_trigger.write.value
 @200
 -from_csr/gpio/led1
-@29
+@28
 TOP.tb.dut.from_csr.gpio.led1.value
+@201
+-from_csr/gpio/led2
+@28
+TOP.tb.dut.from_csr.gpio.led2.value
 @200
 -
 -TO_CSR
@@ -110,5 +115,177 @@ TOP.tb.dut.to_csr.uart.rx.valid.next
 -to_csr/uart/tx/busy
 @28
 TOP.tb.dut.to_csr.uart.tx.busy.next
+@200
+-
+-FROM_ETH_1
+@28
+TOP.tb.dut.from_eth_1.clk
+TOP.tb.dut.from_eth_1.rst
+@22
+TOP.tb.dut.from_eth_1.tdata[127:0]
+TOP.tb.dut.from_eth_1.tid[7:0]
+TOP.tb.dut.from_eth_1.tkeep[15:0]
+@28
+TOP.tb.dut.from_eth_1.tlast
+TOP.tb.dut.from_eth_1.tready
+TOP.tb.dut.from_eth_1.tuser_bypass_all
+TOP.tb.dut.from_eth_1.tuser_bypass_stage
+TOP.tb.dut.from_eth_1.tuser_dst[2:0]
+TOP.tb.dut.from_eth_1.tuser_src[2:0]
+TOP.tb.dut.from_eth_1.tvalid
+@200
+-
+-TO_ETH_1
+@28
+TOP.tb.dut.to_eth_1.clk
+TOP.tb.dut.to_eth_1.rst
+@22
+TOP.tb.dut.to_eth_1.tdata[127:0]
+TOP.tb.dut.to_eth_1.tid[7:0]
+TOP.tb.dut.to_eth_1.tkeep[15:0]
+@28
+TOP.tb.dut.to_eth_1.tlast
+TOP.tb.dut.to_eth_1.tready
+TOP.tb.dut.to_eth_1.tuser_bypass_all
+TOP.tb.dut.to_eth_1.tuser_bypass_stage
+TOP.tb.dut.to_eth_1.tuser_dst[2:0]
+TOP.tb.dut.to_eth_1.tuser_src[2:0]
+TOP.tb.dut.to_eth_1.tvalid
+@200
+-
+-u_eth_1
+@28
+TOP.tb.dut.u_eth_1.gmii_rx_clk
+TOP.tb.dut.u_eth_1.gmii_rx_dv
+TOP.tb.dut.u_eth_1.gmii_rx_er
+@22
+TOP.tb.dut.u_eth_1.gmii_rxd[7:0]
+@28
+TOP.tb.dut.u_eth_1.gmii_tx_clk
+TOP.tb.dut.u_eth_1.gmii_tx_en
+TOP.tb.dut.u_eth_1.gmii_tx_er
+@22
+TOP.tb.dut.u_eth_1.gmii_txd[7:0]
+@28
+TOP.tb.dut.u_eth_1.gtx_clk
+TOP.tb.dut.u_eth_1.gtx_rst
+TOP.tb.dut.u_eth_1.mii_tx_clk
+TOP.tb.dut.u_eth_1.speed[1:0]
+@200
+-
+-u_eth_1/rx_fifo
+@28
+TOP.tb.dut.u_eth_1.rx_fifo.clk
+TOP.tb.dut.u_eth_1.rx_fifo.rst
+@22
+TOP.tb.dut.u_eth_1.rx_fifo.tdata[127:0]
+TOP.tb.dut.u_eth_1.rx_fifo.tid[7:0]
+TOP.tb.dut.u_eth_1.rx_fifo.tkeep[15:0]
+@28
+TOP.tb.dut.u_eth_1.rx_fifo.tlast
+TOP.tb.dut.u_eth_1.rx_fifo.tready
+TOP.tb.dut.u_eth_1.rx_fifo.tuser_bypass_all
+TOP.tb.dut.u_eth_1.rx_fifo.tuser_bypass_stage
+TOP.tb.dut.u_eth_1.rx_fifo.tuser_dst[2:0]
+TOP.tb.dut.u_eth_1.rx_fifo.tuser_src[2:0]
+TOP.tb.dut.u_eth_1.rx_fifo.tvalid
+@200
+-
+-u_eth_1/tx_fifo
+@28
+TOP.tb.dut.u_eth_1.tx_fifo.clk
+TOP.tb.dut.u_eth_1.tx_fifo.rst
+@22
+TOP.tb.dut.u_eth_1.tx_fifo.tdata[127:0]
+TOP.tb.dut.u_eth_1.tx_fifo.tid[7:0]
+TOP.tb.dut.u_eth_1.tx_fifo.tkeep[15:0]
+@28
+TOP.tb.dut.u_eth_1.tx_fifo.tlast
+TOP.tb.dut.u_eth_1.tx_fifo.tready
+TOP.tb.dut.u_eth_1.tx_fifo.tuser_bypass_all
+TOP.tb.dut.u_eth_1.tx_fifo.tuser_bypass_stage
+TOP.tb.dut.u_eth_1.tx_fifo.tuser_dst[2:0]
+TOP.tb.dut.u_eth_1.tx_fifo.tuser_src[2:0]
+TOP.tb.dut.u_eth_1.tx_fifo.tvalid
+@200
+-
+-bfm_udp
+@420
+TOP.tb.bfm_udp.MDIO_BUFF_ADDR
+TOP.tb.bfm_udp.NUM_PORTS
+TOP.tb.bfm_udp.RGMII
+TOP.tb.bfm_udp.START_NODE
+@28
+TOP.tb.bfm_udp.arst_n
+TOP.tb.bfm_udp.clk
+TOP.tb.bfm_udp.clkx2
+@22
+TOP.tb.bfm_udp.halt[3:0]
+@28
+TOP.tb.bfm_udp.halt_req
+@22
+TOP.tb.bfm_udp.mdio[3:0]
+TOP.tb.bfm_udp.mdio_en[3:0]
+TOP.tb.bfm_udp.mdio_out[3:0]
+@28
+TOP.tb.bfm_udp.mdioclk
+@22
+TOP.tb.bfm_udp.udp_gmii_rxd[0][7:0]
+TOP.tb.bfm_udp.udp_gmii_rxd[1][7:0]
+TOP.tb.bfm_udp.udp_gmii_rxd[2][7:0]
+TOP.tb.bfm_udp.udp_gmii_rxd[3][7:0]
+#{TOP.tb.bfm_udp.udp_gmii_rxdv[0:3]} TOP.tb.bfm_udp.udp_gmii_rxdv[0] TOP.tb.bfm_udp.udp_gmii_rxdv[1] TOP.tb.bfm_udp.udp_gmii_rxdv[2] TOP.tb.bfm_udp.udp_gmii_rxdv[3]
+#{TOP.tb.bfm_udp.udp_gmii_rxer[0:3]} TOP.tb.bfm_udp.udp_gmii_rxer[0] TOP.tb.bfm_udp.udp_gmii_rxer[1] TOP.tb.bfm_udp.udp_gmii_rxer[2] TOP.tb.bfm_udp.udp_gmii_rxer[3]
+TOP.tb.bfm_udp.udp_gmii_txd[0][7:0]
+TOP.tb.bfm_udp.udp_gmii_txd[1][7:0]
+TOP.tb.bfm_udp.udp_gmii_txd[2][7:0]
+TOP.tb.bfm_udp.udp_gmii_txd[3][7:0]
+@c00022
+#{TOP.tb.bfm_udp.udp_gmii_txen[0:3]} TOP.tb.bfm_udp.udp_gmii_txen[0] TOP.tb.bfm_udp.udp_gmii_txen[1] TOP.tb.bfm_udp.udp_gmii_txen[2] TOP.tb.bfm_udp.udp_gmii_txen[3]
+@28
+TOP.tb.bfm_udp.udp_gmii_txen[0]
+TOP.tb.bfm_udp.udp_gmii_txen[1]
+TOP.tb.bfm_udp.udp_gmii_txen[2]
+TOP.tb.bfm_udp.udp_gmii_txen[3]
+@1401200
+-group_end
+@22
+#{TOP.tb.bfm_udp.udp_gmii_txer[0:3]} TOP.tb.bfm_udp.udp_gmii_txer[0] TOP.tb.bfm_udp.udp_gmii_txer[1] TOP.tb.bfm_udp.udp_gmii_txer[2] TOP.tb.bfm_udp.udp_gmii_txer[3]
+@200
+-
+-tb/gmii[0]
+@28
+TOP.tb.gmii[0].arst_n
+TOP.tb.gmii[0].clk
+@22
+TOP.tb.gmii[0].rxd[7:0]
+@28
+TOP.tb.gmii[0].rxdv
+TOP.tb.gmii[0].rxer
+@22
+TOP.tb.gmii[0].txd[7:0]
+@28
+TOP.tb.gmii[0].txen
+TOP.tb.gmii[0].txer
+@200
+-
+-top
+@28
+TOP.tb.dut.e1_gtxc
+TOP.tb.dut.e1_mdc
+TOP.tb.dut.e1_mdio
+TOP.tb.dut.e1_reset
+TOP.tb.dut.e1_rxc
+@22
+TOP.tb.dut.e1_rxd[7:0]
+@28
+TOP.tb.dut.e1_rxdv
+TOP.tb.dut.e1_rxer
+TOP.tb.dut.e1_txc
+@22
+TOP.tb.dut.e1_txd[7:0]
+@28
+TOP.tb.dut.e1_txen
+TOP.tb.dut.e1_txer
 [pattern_trace] 1
 [pattern_trace] 0

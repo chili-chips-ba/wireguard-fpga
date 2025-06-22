@@ -145,9 +145,9 @@ module tb #(
    logic e4_gtxc, e4_txen, e4_txer;
    logic [7:0] e4_txd;
 
-   assign e1_rxdv = 1'b0;
+   assign e1_rxdv = gmii[0].rxdv;
    assign e1_rxer = 1'b0;
-   assign e1_rxd  = 8'd0;
+   assign e1_rxd  = gmii[0].rxd;
 
    assign e2_rxdv = 1'b0;
    assign e2_rxer = 1'b0;
@@ -244,7 +244,7 @@ module tb #(
 // Ethernet UDP/IPv4 BFM
 //--------------------------------------------------------------
 
-gmii_if                                   gmii [NUM_ETH_PORTS] (gmiiclk, gmiiarst_n) ;
+gmii_if                                   gmii [NUM_ETH_PORTS] (gmiiarst_n, gmiiclk) ;
 wire    [NUM_ETH_PORTS-1:0]               mdio;
 wire    [NUM_ETH_PORTS-1:0]               mdio_en;
 wire    [NUM_ETH_PORTS-1:0]               mdio_out;

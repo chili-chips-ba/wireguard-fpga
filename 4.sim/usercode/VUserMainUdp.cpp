@@ -28,14 +28,39 @@
 // VProc node main entry points for udpIpPg nodes
 // ----------------------------------------------------------------------------
 
+// these must match the Verilog defines
+#define TXD_ADDR   0x0
+#define TXC_ADDR   0x1
+#define HLT_ADDR   0x3
+
 extern "C" void VUserMain1(void)
 {
     const int node = 1;
-    
+
     VPrint("UDP/IPv4 node %d\n\n", node);
-    
-    // Create VProc access object for this node
+
     VProc* vp = new VProc(node);
+
+    static uint8_t pkt[] = {
+        0x01, 0x02, 0x03, 0x04,
+        0x05, 0x06, 0x07, 0x08,
+        0x09, 0x0a, 0x0b, 0x0c
+    };
+    const size_t len = sizeof(pkt);
+
+    const uint32_t SEND_BITS = 0x1;
+
+    while(true) {
+        for (size_t i = 0; i < len; ++i) {
+
+            vp->write(TXD_ADDR, pkt[i]);
+            vp->write(TXC_ADDR, SEND_BITS);
+        }
+    }
+
+    VPrint("UDP‐PG done sending %u bytes\n", (unsigned)len);
+
+    vp->write(HLT_ADDR, 1);
 
     // Sleep forever (and allow simulation to continue)
     while(true)
@@ -45,9 +70,9 @@ extern "C" void VUserMain1(void)
 extern "C" void VUserMain2(void)
 {
     const int node = 2;
-    
+
     VPrint("UDP/IPv4 node %d\n\n", node);
-    
+
     // Create VProc access object for this node
     VProc* vp = new VProc(node);
 
@@ -59,9 +84,9 @@ extern "C" void VUserMain2(void)
 extern "C" void VUserMain3(void)
 {
     const int node = 3;
-    
+
     VPrint("UDP/IPv4 node %d\n\n", node);
-    
+
     // Create VProc access object for this node
     VProc* vp = new VProc(node);
 
@@ -72,9 +97,9 @@ extern "C" void VUserMain3(void)
 extern "C" void VUserMain4(void)
 {
     const int node = 4;
-    
+
     VPrint("UDP/IPv4 node %d\n\n", node);
-    
+
     // Create VProc access object for this node
     VProc* vp = new VProc(node);
 
