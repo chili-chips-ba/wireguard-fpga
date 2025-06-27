@@ -146,7 +146,7 @@ module tb #(
    logic [7:0] e4_txd;
 
    assign e1_rxdv = gmii[0].rxdv;
-   assign e1_rxer = 1'b0;
+   assign e1_rxer = gmii[0].rxer;
    assign e1_rxd  = gmii[0].rxd;
 
    assign e2_rxdv = 1'b0;
@@ -267,6 +267,10 @@ generate
     assign gmii[PORT].txd  = '0;
   end
 endgenerate
+
+assign gmii[0].txen = e1_txen;
+assign gmii[0].txer = e1_txer;
+assign gmii[0].txd  = e1_txd;
 
 // verilator lint_off PINCONNECTEMPTY
  bfm_ethernet
