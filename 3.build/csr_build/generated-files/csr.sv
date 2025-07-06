@@ -99,7 +99,8 @@ module csr (
         struct {
             logic fcr;
         } dpe;
-        logic [1:0] hwid;
+        logic hw_id;
+        logic hw_version;
     } decoded_reg_strb_t;
     decoded_reg_strb_t decoded_reg_strb;
     logic decoded_req;
@@ -131,8 +132,8 @@ module csr (
             decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 7'h4c + (7)'(i0) * 7'h4);
         end
         decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 7'h5c);
-        decoded_reg_strb.hwid[0] = cpuif_req_masked & (cpuif_addr == 7'h60);
-        decoded_reg_strb.hwid[1] = cpuif_req_masked & (cpuif_addr == 7'h64);
+        decoded_reg_strb.hw_id = cpuif_req_masked & (cpuif_addr == 7'h60);
+        decoded_reg_strb.hw_version = cpuif_req_masked & (cpuif_addr == 7'h64);
     end
 
     // Pass down signals to next stage
@@ -774,10 +775,11 @@ module csr (
         end
     end
     assign hwif_out.dpe.fcr.pause.value = field_storage.dpe.fcr.pause.value;
-    assign hwif_out.hwid.RELEASE.value = 16'h1;
-    assign hwif_out.hwid.VERSION.value = 16'h1;
-    assign hwif_out.hwid.PID.value = 16'hcaca;
-    assign hwif_out.hwid.VID.value = 16'hccae;
+    assign hwif_out.hw_id.PRODUCT.value = 16'hcaca;
+    assign hwif_out.hw_id.VENDOR.value = 16'hccae;
+    assign hwif_out.hw_version.PATCH.value = 16'h0;
+    assign hwif_out.hw_version.MINOR.value = 8'h1;
+    assign hwif_out.hw_version.MAJOR.value = 8'h0;
 
     //--------------------------------------------------------------------------
     // Write response
@@ -850,10 +852,11 @@ module csr (
     assign readback_array[23][0:0] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? hwif_in.dpe.fcr.idle.next : '0;
     assign readback_array[23][30:1] = '0;
     assign readback_array[23][31:31] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? field_storage.dpe.fcr.pause.value : '0;
-    assign readback_array[24][15:0] = (decoded_reg_strb.hwid[0] && !decoded_req_is_wr) ? 16'h1 : '0;
-    assign readback_array[24][31:16] = (decoded_reg_strb.hwid[0] && !decoded_req_is_wr) ? 16'h1 : '0;
-    assign readback_array[25][15:0] = (decoded_reg_strb.hwid[1] && !decoded_req_is_wr) ? 16'hcaca : '0;
-    assign readback_array[25][31:16] = (decoded_reg_strb.hwid[1] && !decoded_req_is_wr) ? 16'hccae : '0;
+    assign readback_array[24][15:0] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hcaca : '0;
+    assign readback_array[24][31:16] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hccae : '0;
+    assign readback_array[25][15:0] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 16'h0 : '0;
+    assign readback_array[25][23:16] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h1 : '0;
+    assign readback_array[25][31:24] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h0 : '0;
 
     // Reduce the array
     always_comb begin

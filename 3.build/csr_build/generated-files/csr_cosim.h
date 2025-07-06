@@ -1399,89 +1399,125 @@ public:
 
 // -----------------------------------------------------
 //
-class csr__hwid_vp_t {
+class csr__hw_id_vp_t {
 public:
-    csr__hwid_vp_t (uint32_t* reg_addr = 0) : reg((uint64_t)reg_addr) {};
+    csr__hw_id_vp_t (uint32_t* reg_addr = 0) : reg((uint64_t)reg_addr) {};
 
-    inline void     full (const uint64_t data) {
-                        VWrite(reg, (uint32_t)(data & 0xffffffff), NO_DELTA_UPDATE, SOC_CPU_VPNODE);
-                        VWrite(reg + 4, (uint32_t)((data >> 32) & 0xffffffff), NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+    inline void     full(const uint32_t data) {
+                        VWrite(reg, data, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
                     };
 
-    inline uint64_t full() {
-                        uint64_t val;
+    inline uint32_t full()                    {
                         uint32_t rdata;
-
-                        VRead(reg, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE); val = rdata;
-                        VRead(reg + 4, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE); val |= (uint64_t)rdata << 32;
+                        VRead(reg, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
 
-                        return val;
+                        return rdata;
                     };
-
-    inline void     RELEASE (const uint64_t data) {
+    inline void     PRODUCT (const uint32_t data) {
                         uint32_t wdata = (uint32_t)(data & 0xffffffff);
 
                         VWriteBE(reg + 0, wdata << 0, 0x3, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
                     };
 
-    inline uint64_t RELEASE () {
+    inline uint32_t PRODUCT () {
                         uint32_t rdata;
 
                         VRead(reg + 0, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
 
-                        return (((uint64_t)rdata << 0) & CSR__HWID__RELEASE_bm) >> CSR__HWID__RELEASE_bp;
+                        return (((uint32_t)rdata << 0) & CSR__HW_ID__PRODUCT_bm) >> CSR__HW_ID__PRODUCT_bp;
                     };
 
-    inline void     VERSION (const uint64_t data) {
+    inline void     VENDOR (const uint32_t data) {
                         uint32_t wdata = (uint32_t)(data & 0xffffffff);
 
                         VWriteBE(reg + 0, wdata << 16, 0xc, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
                     };
 
-    inline uint64_t VERSION () {
+    inline uint32_t VENDOR () {
                         uint32_t rdata;
 
                         VRead(reg + 0, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
 
-                        return (((uint64_t)rdata << 0) & CSR__HWID__VERSION_bm) >> CSR__HWID__VERSION_bp;
+                        return (((uint32_t)rdata << 0) & CSR__HW_ID__VENDOR_bm) >> CSR__HW_ID__VENDOR_bp;
                     };
 
-    inline void     PID (const uint64_t data) {
+
+    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+private:
+    uint32_t reg;
+};
+
+// -----------------------------------------------------
+//
+class csr__hw_version_vp_t {
+public:
+    csr__hw_version_vp_t (uint32_t* reg_addr = 0) : reg((uint64_t)reg_addr) {};
+
+    inline void     full(const uint32_t data) {
+                        VWrite(reg, data, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+                    };
+
+    inline uint32_t full()                    {
+                        uint32_t rdata;
+                        VRead(reg, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+
+                        return rdata;
+                    };
+    inline void     PATCH (const uint32_t data) {
                         uint32_t wdata = (uint32_t)(data & 0xffffffff);
 
-                        VWriteBE(reg + 4, wdata << 0, 0x3, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VWriteBE(reg + 0, wdata << 0, 0x3, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
                     };
 
-    inline uint64_t PID () {
+    inline uint32_t PATCH () {
                         uint32_t rdata;
 
-                        VRead(reg + 4, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VRead(reg + 0, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
 
-                        return (((uint64_t)rdata << 32) & CSR__HWID__PID_bm) >> CSR__HWID__PID_bp;
+                        return (((uint32_t)rdata << 0) & CSR__HW_VERSION__PATCH_bm) >> CSR__HW_VERSION__PATCH_bp;
                     };
 
-    inline void     VID (const uint64_t data) {
+    inline void     MINOR (const uint32_t data) {
                         uint32_t wdata = (uint32_t)(data & 0xffffffff);
 
-                        VWriteBE(reg + 4, wdata << 16, 0xc, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VWriteBE(reg + 0, wdata << 16, 0x4, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
                     };
 
-    inline uint64_t VID () {
+    inline uint32_t MINOR () {
                         uint32_t rdata;
 
-                        VRead(reg + 4, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VRead(reg + 0, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
                         VTick(rand() % 33, SOC_CPU_VPNODE);
 
-                        return (((uint64_t)rdata << 32) & CSR__HWID__VID_bm) >> CSR__HWID__VID_bp;
+                        return (((uint32_t)rdata << 0) & CSR__HW_VERSION__MINOR_bm) >> CSR__HW_VERSION__MINOR_bp;
+                    };
+
+    inline void     MAJOR (const uint32_t data) {
+                        uint32_t wdata = (uint32_t)(data & 0xffffffff);
+
+                        VWriteBE(reg + 0, wdata << 24, 0x8, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+                    };
+
+    inline uint32_t MAJOR () {
+                        uint32_t rdata;
+
+                        VRead(reg + 0, &rdata, NO_DELTA_UPDATE, SOC_CPU_VPNODE);
+                        VTick(rand() % 33, SOC_CPU_VPNODE);
+
+                        return (((uint32_t)rdata << 0) & CSR__HW_VERSION__MAJOR_bm) >> CSR__HW_VERSION__MAJOR_bp;
                     };
 
 
@@ -1520,12 +1556,20 @@ public:
                                                                                    sizeof(csr__gpio_t)/4 + 
                                                                                    4*sizeof(csr__ethernet_t)/4
                                                                                     );
-        hwid = new csr__hwid_vp_t (base_addr +
+        hw_id = new csr__hw_id_vp_t (base_addr +
                                                                                    sizeof(csr__cpu_fifo_t)/4 + 
                                                                                    sizeof(csr__uart_t)/4 + 
                                                                                    sizeof(csr__gpio_t)/4 + 
                                                                                    4*sizeof(csr__ethernet_t)/4 + 
                                                                                    sizeof(csr__dpe_t)/4
+                                                                                    );
+        hw_version = new csr__hw_version_vp_t (base_addr +
+                                                                                   sizeof(csr__cpu_fifo_t)/4 + 
+                                                                                   sizeof(csr__uart_t)/4 + 
+                                                                                   sizeof(csr__gpio_t)/4 + 
+                                                                                   4*sizeof(csr__ethernet_t)/4 + 
+                                                                                   sizeof(csr__dpe_t)/4 + 
+                                                                                   sizeof(csr__hw_id_t)/4
                                                                                     );
     };
 
@@ -1534,7 +1578,8 @@ public:
     csr__gpio_vp_t* gpio;
     csr__ethernet_vp_t* ethernet[4];
     csr__dpe_vp_t* dpe;
-    csr__hwid_vp_t* hwid;
+    csr__hw_id_vp_t* hw_id;
+    csr__hw_version_vp_t* hw_version;
 } ;
 
 
