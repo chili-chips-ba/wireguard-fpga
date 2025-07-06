@@ -1,1 +1,3 @@
 0.doc/** linguist-vendored=true
+99.warmup/** linguist-vendored=true
+*.vho linguist-language=ignore
