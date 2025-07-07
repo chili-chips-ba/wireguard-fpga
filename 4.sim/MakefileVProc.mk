@@ -83,7 +83,7 @@ C++              = g++
 CPPSTD           = -std=c++20
 
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS        = -I$(USRCODEDIR) -I$(UDPCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR) $(RV32INCLOPTS)
+INCLPATHS        = -I$(USRCODEDIR) -I$(UDPCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR)/include $(RV32INCLOPTS)
 DEFS             = -DVERILATOR -DVPROC_SV -DVPROC
 
 VOBJDIR          = $(CURDIR)/obj
@@ -130,7 +130,7 @@ SIMDEFS          = +define+VPROC_BYTE_ENABLE                  \
                    +define+SIM_ONLY                           \
 #                                                             \
 #                   +define+SDRAM_DEBUG                       \
-#                   +define+UART_BFM_DEBUG                     
+#                   +define+UART_BFM_DEBUG
 
 SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR) -I$(UDPDIR)
 SIMCFLAGS        = -std=c++20 -Wno-attributes $(USRCFLAGS)

@@ -19,100 +19,99 @@
 //
 // =============================================================
 
-#include <stdio.h>
-#include <stdint.h>
-
+#include <cstdio>
+#include <cstdint>
 #include "VProcClass.h"
+#include "udpIpPg.h"
 
 // ----------------------------------------------------------------------------
-// VProc node main entry points for udpIpPg nodes
+// Node definitions: MAC/IP/UDP ports
 // ----------------------------------------------------------------------------
+#define NODE1_MAC_ADDR   0xd89ef3887ec3ULL
+#define NODE1_IPV4_ADDR  0xc0a81908   /* 192.168.25.8 */
+#define NODE1_UDP_PORT   0x0400       /* UDP port 1024 */
 
-// these must match the Verilog defines
-#define TXD_ADDR   0x0
-#define TXC_ADDR   0x1
-#define HLT_ADDR   0x3
+#define NODE2_MAC_ADDR   0x90324b070bd1ULL
+#define NODE2_IPV4_ADDR  0xc0a89801   /* 192.168.152.1 */
+#define NODE2_UDP_PORT   0x0401       /* UDP port 1025 */
 
-extern "C" void VUserMain1(void)
-{
-    const int node = 1;
+#define PAYLOAD_LEN      64
+#define PKT_BUF_SIZE     (2*1024)
 
-    VPrint("UDP/IPv4 node %d\n\n", node);
+static uint8_t  payload[PKT_BUF_SIZE];
+static uint32_t frmBuf[PKT_BUF_SIZE];
 
-    VProc* vp = new VProc(node);
+// ----------------------------------------------------------------------------
+// RX callback: print received packet info
+// ----------------------------------------------------------------------------
+static void rxCallback(udpIpPg::rxInfo_t info, void* /*hdl*/) {
+    std::printf("\n=== Node2 received packet ===\n");
+    std::printf("  MAC src      = %012lX\n", (unsigned long)info.mac_src_addr);
+    std::printf("  IPv4 src     = %08X\n", info.ipv4_src_addr);
+    std::printf("  UDP src port = %04X\n", info.udp_src_port);
+    std::printf("  UDP dst port = %04X\n", info.udp_dst_port);
+    std::printf("  Payload (%u bytes):\n", info.rx_len);
+    for (uint32_t i = 0; i < info.rx_len; ++i) {
+        std::printf(" %02X", info.rx_payload[i]);
+        if ((i & 0xF) == 0xF) std::printf("\n");
+    }
+    std::printf("\n=== End receive ===\n");
+}
 
-    static uint8_t pkt[] = {
-        // Dest MAC
-        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-        // Src MAC
-        0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C,
-        // EtherType (0x0800 – IPv4)
-        0x08, 0x00,
-        // Payload
-        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
-        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
-        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
-        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
-        // FCS/CRC32
-        0xAB, 0x15, 0x36, 0xC7
-    };
-    const size_t len = sizeof(pkt);
+extern "C" void VUserMain1(void) {
+    VPrint("Node1: initializing packet generator\n");
+    udpIpPg pUdp(1, NODE1_IPV4_ADDR, NODE1_MAC_ADDR, NODE1_UDP_PORT);
 
-    const uint32_t SEND_BITS = 0x1;
-
-    while(true) {
-        for (size_t i = 0; i < len; ++i) {
-            vp->write(TXD_ADDR, pkt[i]);
-            vp->write(TXC_ADDR, SEND_BITS);
-        }
+    VPrint("Node1: delaying 1ms for init...\n");
+    for (int i = 0; i < 125000; ++i) {
+        pUdp.UdpVpSendIdle(1);
     }
 
-    VPrint("UDP‐PG done sending %u bytes\n", (unsigned)len);
+    for (uint32_t i = 0; i < PAYLOAD_LEN; ++i) {
+        payload[i] = static_cast<uint8_t>(i);
+    }
 
-    vp->write(HLT_ADDR, 1);
+    udpIpPg::udpConfig_t cfg;
+    cfg.mac_dst_addr = NODE2_MAC_ADDR;
+    cfg.ip_dst_addr  = NODE2_IPV4_ADDR;
+    cfg.dst_port     = NODE2_UDP_PORT;
 
-    // Sleep forever (and allow simulation to continue)
-    while(true)
-        vp->tick(GO_TO_SLEEP);
+    uint32_t frameLen = pUdp.genUdpIpPkt(cfg, frmBuf, reinterpret_cast<uint32_t*>(payload), PAYLOAD_LEN);
+    VPrint("Node1: frameLen = %u bytes\n", frameLen);
+
+    std::printf("Node1: sending frame bytes:\n");
+    for (uint32_t i = 0; i < frameLen; ++i) {
+        printf("%02X ", frmBuf[i] & 0xFF);
+        if ((i & 0xF) == 0xF) printf("\n");
+    }
+    std::printf("\n");
+
+    pUdp.UdpVpSendRawEthFrame(frmBuf, frameLen);
+    VPrint("Node1: frame sent to Node2\n");
+
+    while (true) {
+        pUdp.UdpVpSendIdle(1);
+    }
 }
 
-extern "C" void VUserMain2(void)
-{
-    const int node = 2;
+extern "C" void VUserMain2(void) {
+    VPrint("Node2: initializing receiver\n");
+    udpIpPg pUdp(2, NODE2_IPV4_ADDR, NODE2_MAC_ADDR, NODE2_UDP_PORT);
+    pUdp.registerUsrRxCbFunc(rxCallback, nullptr);
 
-    VPrint("UDP/IPv4 node %d\n\n", node);
-
-    // Create VProc access object for this node
-    VProc* vp = new VProc(node);
-
-    // Sleep forever (and allow simulation to continue)
-    while(true)
-        vp->tick(GO_TO_SLEEP);
+    while (true) {
+        pUdp.UdpVpSendIdle(1);
+    }
 }
 
-extern "C" void VUserMain3(void)
-{
-    const int node = 3;
-
-    VPrint("UDP/IPv4 node %d\n\n", node);
-
-    // Create VProc access object for this node
-    VProc* vp = new VProc(node);
-
-    // Sleep forever (and allow simulation to continue)
-    while(true)
-        vp->tick(GO_TO_SLEEP);
+extern "C" void VUserMain3(void) {
+    VPrint("Node3: idle\n");
+    VProc vp(3);
+    while (true) vp.tick(GO_TO_SLEEP);
 }
-extern "C" void VUserMain4(void)
-{
-    const int node = 4;
 
-    VPrint("UDP/IPv4 node %d\n\n", node);
-
-    // Create VProc access object for this node
-    VProc* vp = new VProc(node);
-
-    // Sleep forever (and allow simulation to continue)
-    while(true)
-        vp->tick(GO_TO_SLEEP);
+extern "C" void VUserMain4(void) {
+    VPrint("Node4: idle\n");
+    VProc vp(4);
+    while (true) vp.tick(GO_TO_SLEEP);
 }
