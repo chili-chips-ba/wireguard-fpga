@@ -164,6 +164,19 @@ module uart
    end
 
 //--------------------------------------
+// uart_rx synchronizer
+//--------------------------------------
+   logic [1:0] uart_rx_ff;
+   always_ff @(negedge arst_n or posedge clk) begin
+      if (arst_n == 1'b0) begin
+         uart_rx_ff <= '1;      
+      end else begin
+         uart_rx_ff <= {uart_rx_ff[0], uart_rx};
+      end
+   end
+   assign uart_rx_sync = uart_rx_ff[1];
+
+//--------------------------------------
 // Rx
 //--------------------------------------
 // To save resources, SOC-level 1us tick is used as time base for
@@ -268,11 +281,11 @@ module uart
       // FSM runs on main clock, with most states gated by 'rx_cnt1us_is0'
          unique case (rx_state)
 
-         //---Wait for 'uart_rx' negedge to start reception
+         //---Wait for 'uart_rx_sync' negedge to start reception
             IDLE: begin
                rx_cnt1us <= RX_WAIT_D0;
 
-               if (uart_rx == 1'b0) begin
+               if (uart_rx_sync == 1'b0) begin
                   rx_state <= D0;
                end
             end
@@ -292,7 +305,7 @@ module uart
          //---Wait the prescribed amount of time to position sampling
          //   point to Rx bit center, then capture DATA bits
             default: if (rx_nextbit == 1'b1) begin
-               rx_shift <= {uart_rx, rx_shift[7:1]}; // MSB goes in last
+               rx_shift <= {uart_rx_sync, rx_shift[7:1]}; // MSB goes in last
 
                unique case (rx_state)
                   D0: begin

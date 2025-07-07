@@ -1,1 +1,6 @@
 0.doc/** linguist-vendored=true
+0.doc/**/*.vho linguist-detectable=false
+0.doc/**/*.vhd linguist-detectable=false
+99.warmup/** linguist-vendored=true
+99.warmup/**/*.vho linguist-detectable=false
+99.warmup/**/*.vhd linguist-detectable=false
