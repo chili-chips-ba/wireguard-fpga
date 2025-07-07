@@ -276,7 +276,8 @@ assign gmii[0].txd  = e1_txd;
  bfm_ethernet
    #(.START_NODE                          (ETH_START_NODE),
      .NUM_PORTS                           (NUM_ETH_PORTS),
-     .MDIO_BUFF_ADDR                      (MDIO_BUFF_ADDR)
+     .MDIO_BUFF_ADDR                      (MDIO_BUFF_ADDR),
+     .RGMII                               (0)
    ) bfm_udp
    (
      .clk                                 (gmiiclk),
