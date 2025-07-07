@@ -149,17 +149,17 @@ module tb #(
    assign e1_rxer = gmii[0].rxer;
    assign e1_rxd  = gmii[0].rxd;
 
-   assign e2_rxdv = 1'b0;
-   assign e2_rxer = 1'b0;
-   assign e2_rxd  = 8'd0;
+   assign e2_rxdv = gmii[1].rxdv;;
+   assign e2_rxer = gmii[1].rxer;
+   assign e2_rxd  = gmii[1].rxd;
 
-   assign e3_rxdv = 1'b0;
-   assign e3_rxer = 1'b0;
-   assign e3_rxd  = 8'd0;
+   assign e3_rxdv = gmii[2].rxdv;;
+   assign e3_rxer = gmii[2].rxer;
+   assign e3_rxd  = gmii[2].rxd;
 
-   assign e4_rxdv = 1'b0;
-   assign e4_rxer = 1'b0;
-   assign e4_rxd  = 8'd0;
+   assign e4_rxdv = gmii[3].rxdv;;
+   assign e4_rxer = gmii[3].rxer;
+   assign e4_rxd  = gmii[3].rxd;
 
 //--------------------------------------------------------------
 
@@ -271,6 +271,18 @@ endgenerate
 assign gmii[0].txen = e1_txen;
 assign gmii[0].txer = e1_txer;
 assign gmii[0].txd  = e1_txd;
+
+assign gmii[1].txen = e2_txen;
+assign gmii[1].txer = e2_txer;
+assign gmii[1].txd  = e2_txd;
+
+assign gmii[2].txen = e3_txen;
+assign gmii[2].txer = e3_txer;
+assign gmii[2].txd  = e3_txd;
+
+assign gmii[3].txen = e4_txen;
+assign gmii[3].txer = e4_txer;
+assign gmii[3].txd  = e4_txd;
 
 // verilator lint_off PINCONNECTEMPTY
  bfm_ethernet
