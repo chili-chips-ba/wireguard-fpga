@@ -1,0 +1,16 @@
+{
+  signal: [
+    {name: 'uart_rx_data', wave: 'x222222x......2x', data: ['C_SOP', 'C_BUSR', 'ADDR[7:0]', 'ADDR[15:8]', 'ADDR[23:16]', 'ADDR[31:24]', 'C_EOP']},
+    {name: 'uart_tx_data', wave: 'x........22222x.', data: ['DATA[7:0]', 'DATA[15:8]', 'DATA[23:16]', 'DATA[31:24]', 'CHECKSUM[7:0]']},
+    {name: 'state', wave: '2.22222222222222', data: ['WAIT_SOP', 'WAIT_CMD', 'BUSR_WAIT_ADDR0', 'BUSR_WAIT_ADDR1', 'BUSR_WAIT_ADDR2', 'BUSR_WAIT_ADDR3', 'BUSR_WAIT_DATA', 'BUSR_DATA0', 'BUSR_DATA1', 'BUSR_DATA2', 'BUSR_DATA3', 'BUSR_CHECKSUM', 'BUSR_DONE', 'WAIT_CMD', 'WAIT_SOP']},
+    {name: 'bus.vld', wave: '0.1............0'},
+    {name: 'bus.we', wave: '0...............'},
+    {name: 'bus.addr', wave: 'x......2x.......', data: ['ADDR[31:2]']},
+    {name: 'bus.rdat', wave: 'x......2x.......', data: ['DATA[31:0]']},
+    {name: 'bus.wdat', wave: 'x...............'}
+  ],
+  config: {
+    hscale: 4
+  }
+}
+ 

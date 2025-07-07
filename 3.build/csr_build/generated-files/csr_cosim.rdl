@@ -426,39 +426,49 @@ addrmap csr {
    } dpe;
    
    reg {
-      regwidth = 64;
-      
-      name = "csr.hwid";
+      name = "csr.hw_id";
       desc = "Hardware IDs";
-      
+
       field {
-         name = "csr.hwid.VID";
+         name = "csr.hw_id.VENDOR";
          desc = "Vendor ID";
          sw = r;
          hw = r;
-      } VID[63:48] = 0xCCAE;
-      
+      } VENDOR[31:16] = 0xCCAE;
+
       field {
-         name = "csr.hwid.PID";
+         name = "csr.hw_id.PRODUCT";
          desc = "Product ID";
          sw = r;
          hw = r;
-      } PID[47:32] = 0xCACA;
-      
+      } PRODUCT[15:0] = 0xCACA;
+   } hw_id;
+   
+   reg {
+      name = "csr.hw_version";
+      desc = "Hardware Version";
+
       field {
-         name = "csr.hwid.VERSION";
-         desc = "Product version";
+         name = "csr.hw_version.MAJOR";
+         desc = "Major version";
          sw = r;
          hw = r;
-      } VERSION[31:16] = 0x0001;
-      
+      } MAJOR[31:24] = 0x00;
+
       field {
-         name = "csr.hwid.RELEASE";
-         desc = "Product release";
+         name = "csr.hw_version.MINOR";
+         desc = "Minor version";
          sw = r;
          hw = r;
-      } RELEASE[15:0] = 0x0001;
-   } hwid;
+      } MINOR[23:16] = 0x01;
+      
+      field {
+         name = "csr.hw_version.PATCH";
+         desc = "Patch version";
+         sw = r;
+         hw = r;
+      } PATCH[15:0] = 0x0000;
+   } hw_version;
 };
 
 addrmap wireguard {

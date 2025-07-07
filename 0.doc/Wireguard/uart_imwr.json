@@ -1,0 +1,14 @@
+{
+  signal: [
+    {name: 'uart_rx_data', wave: 'x22222222x.2x', data: ['C_SOP', 'C_IMWR', 'ADDR[7:0]', 'ADDR[15:8]', 'DATA[7:0]', 'DATA[15:8]', 'DATA[23:16]', 'DATA[31:24]', 'C_EOP']},
+    {name: 'uart_tx_data', wave: 'x.........2x.', data: ['CHECKSUM[7:0]']},
+    {name: 'state', wave: '2.22222222222', data: ['WAIT_SOP', 'WAIT_CMD', 'IMWR_WAIT_ADDR0', 'IMWR_WAIT_ADDR1', 'IMWR_WAIT_DATA0', 'IMWR_WAIT_DATA1', 'IMWR_WAIT_DATA2', 'IMWR_WAIT_DATA3', 'IMWR_CHECKSUM', 'IMWR_DONE', 'WAIT_CMD', 'WAIT_SOP']},
+    {name: 'imem_cpu_rstn', wave: '1............'},
+    {name: 'imem_we', wave: '0........10..'},
+    {name: 'imem_addr', wave: 'x........2x..', data: ['ADDR[31:2]']},
+    {name: 'imem_wdat', wave: 'x........2x..', data: ['DATA[31:0]']}
+  ],
+  config: {
+    hscale: 4
+  }
+}
