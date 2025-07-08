@@ -390,9 +390,36 @@ typedef union {
     uint32_t w;
 } csr__ethernet__status_t;
 
+// Reg - csr::ethernet::mac_47_32
+#define CSR__ETHERNET__MAC_47_32__MAC_bm 0xffff
+#define CSR__ETHERNET__MAC_47_32__MAC_bp 0
+#define CSR__ETHERNET__MAC_47_32__MAC_bw 16
+#define CSR__ETHERNET__MAC_47_32__MAC_reset 0x0
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t mac :16;
+        uint32_t :16;
+    } f;
+    uint32_t w;
+} csr__ethernet__mac_47_32_t;
+
+// Reg - csr::ethernet::mac_31_0
+#define CSR__ETHERNET__MAC_31_0__MAC_bm 0xffffffff
+#define CSR__ETHERNET__MAC_31_0__MAC_bp 0
+#define CSR__ETHERNET__MAC_31_0__MAC_bw 32
+#define CSR__ETHERNET__MAC_31_0__MAC_reset 0x0
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t mac :32;
+    } f;
+    uint32_t w;
+} csr__ethernet__mac_31_0_t;
+
 // Regfile - csr::ethernet
 typedef struct __attribute__ ((__packed__)) {
     csr__ethernet__status_t status;
+    csr__ethernet__mac_47_32_t mac_47_32;
+    csr__ethernet__mac_31_0_t mac_31_0;
 } csr__ethernet_t;
 
 // Reg - csr::dpe::fcr
@@ -400,15 +427,15 @@ typedef struct __attribute__ ((__packed__)) {
 #define CSR__DPE__FCR__IDLE_bp 0
 #define CSR__DPE__FCR__IDLE_bw 1
 #define CSR__DPE__FCR__IDLE_reset 0x0
-#define CSR__DPE__FCR__PAUSE_bm 0x80000000
-#define CSR__DPE__FCR__PAUSE_bp 31
+#define CSR__DPE__FCR__PAUSE_bm 0x2
+#define CSR__DPE__FCR__PAUSE_bp 1
 #define CSR__DPE__FCR__PAUSE_bw 1
 #define CSR__DPE__FCR__PAUSE_reset 0x0
 typedef union {
     struct __attribute__ ((__packed__)) {
         uint32_t idle :1;
-        uint32_t :30;
         uint32_t pause :1;
+        uint32_t :30;
     } f;
     uint32_t w;
 } csr__dpe__fcr_t;
@@ -443,7 +470,7 @@ typedef union {
 #define CSR__HW_VERSION__MINOR_bm 0xff0000
 #define CSR__HW_VERSION__MINOR_bp 16
 #define CSR__HW_VERSION__MINOR_bw 8
-#define CSR__HW_VERSION__MINOR_reset 0x1
+#define CSR__HW_VERSION__MINOR_reset 0x2
 #define CSR__HW_VERSION__MAJOR_bm 0xff000000
 #define CSR__HW_VERSION__MAJOR_bp 24
 #define CSR__HW_VERSION__MAJOR_bw 8
@@ -478,7 +505,7 @@ typedef struct __attribute__ ((__packed__)) {
 } wireguard_t;
 
 
-static_assert(sizeof(wireguard_t) == 0x20000068, "Packing error");
+static_assert(sizeof(wireguard_t) == 0x20000088, "Packing error");
 
 #ifdef __cplusplus
 }
