@@ -4,7 +4,7 @@
 package csr_pkg;
 
     localparam CSR_DATA_WIDTH = 32;
-    localparam CSR_MIN_ADDR_WIDTH = 7;
+    localparam CSR_MIN_ADDR_WIDTH = 8;
 
     typedef struct {
         logic next;
@@ -334,6 +334,27 @@ package csr_pkg;
     } csr__gpio__out_t;
 
     typedef struct {
+        logic [15:0] value;
+    } csr__ethernet__mac_47_32__mac__out_t;
+
+    typedef struct {
+        csr__ethernet__mac_47_32__mac__out_t mac;
+    } csr__ethernet__mac_47_32__out_t;
+
+    typedef struct {
+        logic [31:0] value;
+    } csr__ethernet__mac_31_0__mac__out_t;
+
+    typedef struct {
+        csr__ethernet__mac_31_0__mac__out_t mac;
+    } csr__ethernet__mac_31_0__out_t;
+
+    typedef struct {
+        csr__ethernet__mac_47_32__out_t mac_47_32;
+        csr__ethernet__mac_31_0__out_t mac_31_0;
+    } csr__ethernet__out_t;
+
+    typedef struct {
         logic value;
     } csr__dpe__fcr__pause__out_t;
 
@@ -380,6 +401,7 @@ package csr_pkg;
         csr__cpu_fifo__out_t cpu_fifo;
         csr__uart__out_t uart;
         csr__gpio__out_t gpio;
+        csr__ethernet__out_t ethernet[4];
         csr__dpe__out_t dpe;
         csr__hw_id__out_t hw_id;
         csr__hw_version__out_t hw_version;

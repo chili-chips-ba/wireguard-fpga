@@ -7,7 +7,7 @@ module csr (
 
         input wire s_cpuif_req,
         input wire s_cpuif_req_is_wr,
-        input wire [6:0] s_cpuif_addr,
+        input wire [7:0] s_cpuif_addr,
         input wire [31:0] s_cpuif_wr_data,
         input wire [31:0] s_cpuif_wr_biten,
         output wire s_cpuif_req_stall_wr,
@@ -27,7 +27,7 @@ module csr (
     //--------------------------------------------------------------------------
     logic cpuif_req;
     logic cpuif_req_is_wr;
-    logic [6:0] cpuif_addr;
+    logic [7:0] cpuif_addr;
     logic [31:0] cpuif_wr_data;
     logic [31:0] cpuif_wr_biten;
     logic cpuif_req_stall_wr;
@@ -95,6 +95,8 @@ module csr (
         logic gpio;
         struct {
             logic status;
+            logic mac_47_32;
+            logic mac_31_0;
         } ethernet[4];
         struct {
             logic fcr;
@@ -109,31 +111,33 @@ module csr (
     logic [31:0] decoded_wr_biten;
 
     always_comb begin
-        decoded_reg_strb.cpu_fifo.rx.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h0);
-        decoded_reg_strb.cpu_fifo.rx.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h4);
-        decoded_reg_strb.cpu_fifo.rx.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h8);
-        decoded_reg_strb.cpu_fifo.rx.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'hc);
-        decoded_reg_strb.cpu_fifo.rx.control = cpuif_req_masked & (cpuif_addr == 7'h10);
-        decoded_reg_strb.cpu_fifo.rx.trigger = cpuif_req_masked & (cpuif_addr == 7'h14);
-        decoded_reg_strb.cpu_fifo.rx.status = cpuif_req_masked & (cpuif_addr == 7'h18);
-        decoded_reg_strb.cpu_fifo.tx.data_31_0 = cpuif_req_masked & (cpuif_addr == 7'h1c);
-        decoded_reg_strb.cpu_fifo.tx.data_63_32 = cpuif_req_masked & (cpuif_addr == 7'h20);
-        decoded_reg_strb.cpu_fifo.tx.data_95_64 = cpuif_req_masked & (cpuif_addr == 7'h24);
-        decoded_reg_strb.cpu_fifo.tx.data_127_96 = cpuif_req_masked & (cpuif_addr == 7'h28);
-        decoded_reg_strb.cpu_fifo.tx.control = cpuif_req_masked & (cpuif_addr == 7'h2c);
-        decoded_reg_strb.cpu_fifo.tx.trigger = cpuif_req_masked & (cpuif_addr == 7'h30);
-        decoded_reg_strb.cpu_fifo.tx.status = cpuif_req_masked & (cpuif_addr == 7'h34);
-        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 7'h38);
-        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 7'h3c);
-        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 7'h40);
-        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 7'h44);
-        decoded_reg_strb.gpio = cpuif_req_masked & (cpuif_addr == 7'h48);
+        decoded_reg_strb.cpu_fifo.rx.data_31_0 = cpuif_req_masked & (cpuif_addr == 8'h0);
+        decoded_reg_strb.cpu_fifo.rx.data_63_32 = cpuif_req_masked & (cpuif_addr == 8'h4);
+        decoded_reg_strb.cpu_fifo.rx.data_95_64 = cpuif_req_masked & (cpuif_addr == 8'h8);
+        decoded_reg_strb.cpu_fifo.rx.data_127_96 = cpuif_req_masked & (cpuif_addr == 8'hc);
+        decoded_reg_strb.cpu_fifo.rx.control = cpuif_req_masked & (cpuif_addr == 8'h10);
+        decoded_reg_strb.cpu_fifo.rx.trigger = cpuif_req_masked & (cpuif_addr == 8'h14);
+        decoded_reg_strb.cpu_fifo.rx.status = cpuif_req_masked & (cpuif_addr == 8'h18);
+        decoded_reg_strb.cpu_fifo.tx.data_31_0 = cpuif_req_masked & (cpuif_addr == 8'h1c);
+        decoded_reg_strb.cpu_fifo.tx.data_63_32 = cpuif_req_masked & (cpuif_addr == 8'h20);
+        decoded_reg_strb.cpu_fifo.tx.data_95_64 = cpuif_req_masked & (cpuif_addr == 8'h24);
+        decoded_reg_strb.cpu_fifo.tx.data_127_96 = cpuif_req_masked & (cpuif_addr == 8'h28);
+        decoded_reg_strb.cpu_fifo.tx.control = cpuif_req_masked & (cpuif_addr == 8'h2c);
+        decoded_reg_strb.cpu_fifo.tx.trigger = cpuif_req_masked & (cpuif_addr == 8'h30);
+        decoded_reg_strb.cpu_fifo.tx.status = cpuif_req_masked & (cpuif_addr == 8'h34);
+        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 8'h38);
+        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 8'h3c);
+        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 8'h40);
+        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 8'h44);
+        decoded_reg_strb.gpio = cpuif_req_masked & (cpuif_addr == 8'h48);
         for(int i0=0; i0<4; i0++) begin
-            decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 7'h4c + (7)'(i0) * 7'h4);
+            decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 8'h4c + (8)'(i0) * 8'hc);
+            decoded_reg_strb.ethernet[i0].mac_47_32 = cpuif_req_masked & (cpuif_addr == 8'h50 + (8)'(i0) * 8'hc);
+            decoded_reg_strb.ethernet[i0].mac_31_0 = cpuif_req_masked & (cpuif_addr == 8'h54 + (8)'(i0) * 8'hc);
         end
-        decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 7'h5c);
-        decoded_reg_strb.hw_id = cpuif_req_masked & (cpuif_addr == 7'h60);
-        decoded_reg_strb.hw_version = cpuif_req_masked & (cpuif_addr == 7'h64);
+        decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 8'h7c);
+        decoded_reg_strb.hw_id = cpuif_req_masked & (cpuif_addr == 8'h80);
+        decoded_reg_strb.hw_version = cpuif_req_masked & (cpuif_addr == 8'h84);
     end
 
     // Pass down signals to next stage
@@ -247,6 +251,20 @@ module csr (
         struct {
             struct {
                 struct {
+                    logic [15:0] next;
+                    logic load_next;
+                } mac;
+            } mac_47_32;
+            struct {
+                struct {
+                    logic [31:0] next;
+                    logic load_next;
+                } mac;
+            } mac_31_0;
+        } ethernet[4];
+        struct {
+            struct {
+                struct {
                     logic next;
                     logic load_next;
                 } pause;
@@ -337,6 +355,18 @@ module csr (
                 logic value;
             } led2;
         } gpio;
+        struct {
+            struct {
+                struct {
+                    logic [15:0] value;
+                } mac;
+            } mac_47_32;
+            struct {
+                struct {
+                    logic [31:0] value;
+                } mac;
+            } mac_31_0;
+        } ethernet[4];
         struct {
             struct {
                 struct {
@@ -752,6 +782,54 @@ module csr (
         end
     end
     assign hwif_out.gpio.led2.value = field_storage.gpio.led2.value;
+    for(genvar i0=0; i0<4; i0++) begin
+        // Field: csr.ethernet[].mac_47_32.mac
+        always_comb begin
+            automatic logic [15:0] next_c;
+            automatic logic load_next_c;
+            next_c = field_storage.ethernet[i0].mac_47_32.mac.value;
+            load_next_c = '0;
+            if(decoded_reg_strb.ethernet[i0].mac_47_32 && decoded_req_is_wr) begin // SW write
+                next_c = (field_storage.ethernet[i0].mac_47_32.mac.value & ~decoded_wr_biten[15:0]) | (decoded_wr_data[15:0] & decoded_wr_biten[15:0]);
+                load_next_c = '1;
+            end
+            field_combo.ethernet[i0].mac_47_32.mac.next = next_c;
+            field_combo.ethernet[i0].mac_47_32.mac.load_next = load_next_c;
+        end
+        always_ff @(posedge clk) begin
+            if(rst) begin
+                field_storage.ethernet[i0].mac_47_32.mac.value <= 16'h0;
+            end else begin
+                if(field_combo.ethernet[i0].mac_47_32.mac.load_next) begin
+                    field_storage.ethernet[i0].mac_47_32.mac.value <= field_combo.ethernet[i0].mac_47_32.mac.next;
+                end
+            end
+        end
+        assign hwif_out.ethernet[i0].mac_47_32.mac.value = field_storage.ethernet[i0].mac_47_32.mac.value;
+        // Field: csr.ethernet[].mac_31_0.mac
+        always_comb begin
+            automatic logic [31:0] next_c;
+            automatic logic load_next_c;
+            next_c = field_storage.ethernet[i0].mac_31_0.mac.value;
+            load_next_c = '0;
+            if(decoded_reg_strb.ethernet[i0].mac_31_0 && decoded_req_is_wr) begin // SW write
+                next_c = (field_storage.ethernet[i0].mac_31_0.mac.value & ~decoded_wr_biten[31:0]) | (decoded_wr_data[31:0] & decoded_wr_biten[31:0]);
+                load_next_c = '1;
+            end
+            field_combo.ethernet[i0].mac_31_0.mac.next = next_c;
+            field_combo.ethernet[i0].mac_31_0.mac.load_next = load_next_c;
+        end
+        always_ff @(posedge clk) begin
+            if(rst) begin
+                field_storage.ethernet[i0].mac_31_0.mac.value <= 32'h0;
+            end else begin
+                if(field_combo.ethernet[i0].mac_31_0.mac.load_next) begin
+                    field_storage.ethernet[i0].mac_31_0.mac.value <= field_combo.ethernet[i0].mac_31_0.mac.next;
+                end
+            end
+        end
+        assign hwif_out.ethernet[i0].mac_31_0.mac.value = field_storage.ethernet[i0].mac_31_0.mac.value;
+    end
     // Field: csr.dpe.fcr.pause
     always_comb begin
         automatic logic [0:0] next_c;
@@ -759,7 +837,7 @@ module csr (
         next_c = field_storage.dpe.fcr.pause.value;
         load_next_c = '0;
         if(decoded_reg_strb.dpe.fcr && decoded_req_is_wr) begin // SW write
-            next_c = (field_storage.dpe.fcr.pause.value & ~decoded_wr_biten[31:31]) | (decoded_wr_data[31:31] & decoded_wr_biten[31:31]);
+            next_c = (field_storage.dpe.fcr.pause.value & ~decoded_wr_biten[1:1]) | (decoded_wr_data[1:1] & decoded_wr_biten[1:1]);
             load_next_c = '1;
         end
         field_combo.dpe.fcr.pause.next = next_c;
@@ -778,7 +856,7 @@ module csr (
     assign hwif_out.hw_id.PRODUCT.value = 16'hcaca;
     assign hwif_out.hw_id.VENDOR.value = 16'hccae;
     assign hwif_out.hw_version.PATCH.value = 16'h0;
-    assign hwif_out.hw_version.MINOR.value = 8'h1;
+    assign hwif_out.hw_version.MINOR.value = 8'h2;
     assign hwif_out.hw_version.MAJOR.value = 8'h0;
 
     //--------------------------------------------------------------------------
@@ -797,7 +875,7 @@ module csr (
     logic [31:0] readback_data;
 
     // Assign readback values to a flattened array
-    logic [31:0] readback_array[26];
+    logic [31:0] readback_array[34];
     assign readback_array[0][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_31_0 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_31_0.tdata.value : '0;
     assign readback_array[1][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_63_32 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_63_32.tdata.value : '0;
     assign readback_array[2][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_95_64 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_95_64.tdata.value : '0;
@@ -846,17 +924,20 @@ module csr (
     assign readback_array[18][9:9] = (decoded_reg_strb.gpio && !decoded_req_is_wr) ? field_storage.gpio.led2.value : '0;
     assign readback_array[18][31:10] = '0;
     for(genvar i0=0; i0<4; i0++) begin
-        assign readback_array[i0 * 1 + 19][1:0] = (decoded_reg_strb.ethernet[i0].status && !decoded_req_is_wr) ? hwif_in.ethernet[i0].status.speed.next : '0;
-        assign readback_array[i0 * 1 + 19][31:2] = '0;
+        assign readback_array[i0 * 3 + 19][1:0] = (decoded_reg_strb.ethernet[i0].status && !decoded_req_is_wr) ? hwif_in.ethernet[i0].status.speed.next : '0;
+        assign readback_array[i0 * 3 + 19][31:2] = '0;
+        assign readback_array[i0 * 3 + 20][15:0] = (decoded_reg_strb.ethernet[i0].mac_47_32 && !decoded_req_is_wr) ? field_storage.ethernet[i0].mac_47_32.mac.value : '0;
+        assign readback_array[i0 * 3 + 20][31:16] = '0;
+        assign readback_array[i0 * 3 + 21][31:0] = (decoded_reg_strb.ethernet[i0].mac_31_0 && !decoded_req_is_wr) ? field_storage.ethernet[i0].mac_31_0.mac.value : '0;
     end
-    assign readback_array[23][0:0] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? hwif_in.dpe.fcr.idle.next : '0;
-    assign readback_array[23][30:1] = '0;
-    assign readback_array[23][31:31] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? field_storage.dpe.fcr.pause.value : '0;
-    assign readback_array[24][15:0] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hcaca : '0;
-    assign readback_array[24][31:16] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hccae : '0;
-    assign readback_array[25][15:0] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 16'h0 : '0;
-    assign readback_array[25][23:16] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h1 : '0;
-    assign readback_array[25][31:24] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h0 : '0;
+    assign readback_array[31][0:0] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? hwif_in.dpe.fcr.idle.next : '0;
+    assign readback_array[31][1:1] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? field_storage.dpe.fcr.pause.value : '0;
+    assign readback_array[31][31:2] = '0;
+    assign readback_array[32][15:0] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hcaca : '0;
+    assign readback_array[32][31:16] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hccae : '0;
+    assign readback_array[33][15:0] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 16'h0 : '0;
+    assign readback_array[33][23:16] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h2 : '0;
+    assign readback_array[33][31:24] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h0 : '0;
 
     // Reduce the array
     always_comb begin
@@ -864,7 +945,7 @@ module csr (
         readback_done = decoded_req & ~decoded_req_is_wr;
         readback_err = '0;
         readback_data_var = '0;
-        for(int i=0; i<26; i++) readback_data_var |= readback_array[i];
+        for(int i=0; i<34; i++) readback_data_var |= readback_array[i];
         readback_data = readback_data_var;
     end
 
