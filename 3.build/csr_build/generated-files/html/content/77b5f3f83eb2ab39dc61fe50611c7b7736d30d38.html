@@ -10,7 +10,7 @@
     <dt>Base Offset:</dt><dd class="address">0x0</dd>
     <dt>Size:</dt><dd class="address">0x4</dd>
     
-    <dt>Source:</dt><dd><a href="https://github.com/chili-chips-ba/wireguard-fpga/blob/main/3.build/csr_build/csr.rdl#L408" target="_blank">csr.rdl</a></dd>
+    <dt>Source:</dt><dd><a href="https://github.com/chili-chips-ba/wireguard-fpga/blob/main/3.build/csr_build/csr.rdl#L420" target="_blank">csr.rdl</a></dd>
     
 </dl>
 <h2>Description</h2>
@@ -29,8 +29,17 @@
         <th>Name</th>
         <th></th>
     </tr>
+    <tr class="reserved-field">
+    <td>[31:2]</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td></td>
+    <td>-</td>
+    <td></td>
+</tr>
     <tr id="pause">
-        <td>[31]</td>
+        <td>[1]</td>
         <td><a href="#pause.desc">pause</a></td>
         <td>
             <span title='Readable and Writable'>rw</span></td>
@@ -49,15 +58,6 @@
             <a class="headerlink" href="#pause" title="Permalink to this row"></a>
         </td>
     </tr>
-    <tr class="reserved-field">
-    <td>[30:1]</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td></td>
-    <td>-</td>
-    <td></td>
-</tr>
     <tr id="idle">
         <td>[0]</td>
         <td><a href="#idle.desc">idle</a></td>
