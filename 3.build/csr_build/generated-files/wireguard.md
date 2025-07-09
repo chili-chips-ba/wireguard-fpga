@@ -9,7 +9,7 @@ Don't override. Generated from: wireguard
 
 - Absolute Address: 0x0
 - Base Offset: 0x0
-- Size: 0x20000068
+- Size: 0x20000088
 
 |  Offset  |Identifier|Name|
 |----------|----------|----|
@@ -43,7 +43,7 @@ No supported members.
 
 - Absolute Address: 0x20000000
 - Base Offset: 0x20000000
-- Size: 0x68
+- Size: 0x88
 
 <p>WireGuard FPGA CSR</p>
 
@@ -53,12 +53,12 @@ No supported members.
 | 0x38 |    uart   |     csr.uart     |
 | 0x48 |    gpio   |     csr.gpio     |
 | 0x4C |ethernet[0]|csr.ethernet[0..3]|
-| 0x50 |ethernet[1]|csr.ethernet[0..3]|
-| 0x54 |ethernet[2]|csr.ethernet[0..3]|
-| 0x58 |ethernet[3]|csr.ethernet[0..3]|
-| 0x5C |    dpe    |      csr.dpe     |
-| 0x60 |   hw_id   |     csr.hw_id    |
-| 0x64 | hw_version|  csr.hw_version  |
+| 0x58 |ethernet[1]|csr.ethernet[0..3]|
+| 0x64 |ethernet[2]|csr.ethernet[0..3]|
+| 0x70 |ethernet[3]|csr.ethernet[0..3]|
+| 0x7C |    dpe    |      csr.dpe     |
+| 0x80 |   hw_id   |     csr.hw_id    |
+| 0x84 | hw_version|  csr.hw_version  |
 
 ## cpu_fifo register file
 
@@ -512,16 +512,18 @@ No supported members.
 
 - Absolute Address: 0x2000004C
 - Base Offset: 0x4C
-- Size: 0x4
+- Size: 0xC
 - Array Dimensions: [4]
-- Array Stride: 0x4
-- Total Size: 0x10
+- Array Stride: 0xC
+- Total Size: 0x30
 
 <p>Ethernet CSR</p>
 
-|Offset|Identifier|           Name          |
-|------|----------|-------------------------|
-|  0x0 |  status  |csr.ethernet[0..3].status|
+|Offset|Identifier|            Name            |
+|------|----------|----------------------------|
+|  0x0 |  status  |  csr.ethernet[0..3].status |
+|  0x4 | mac_47_32|csr.ethernet[0..3].mac_47_32|
+|  0x8 | mac_31_0 | csr.ethernet[0..3].mac_31_0|
 
 ### status register
 
@@ -539,82 +541,54 @@ No supported members.
 
 <p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
 
-## ethernet register file
+### mac_47_32 register
 
 - Absolute Address: 0x20000050
-- Base Offset: 0x4C
-- Size: 0x4
-- Array Dimensions: [4]
-- Array Stride: 0x4
-- Total Size: 0x10
-
-<p>Ethernet CSR</p>
-
-|Offset|Identifier|           Name          |
-|------|----------|-------------------------|
-|  0x0 |  status  |csr.ethernet[0..3].status|
-
-### status register
-
-- Absolute Address: 0x20000050
-- Base Offset: 0x0
+- Base Offset: 0x4
 - Size: 0x4
 
-<p>Ethernet Status Register</p>
+<p>Ethernet Interface MAC Address</p>
 
-|Bits|Identifier|Access|Reset|                Name                |
-|----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
+|Bits|Identifier|Access|Reset|                 Name                 |
+|----|----------|------|-----|--------------------------------------|
+|15:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_47_32.mac[15:0]|
 
-#### speed field
+#### mac field
 
-<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
+<p>Ethernet Interface MAC Address (upper word)</p>
 
-## ethernet register file
+### mac_31_0 register
 
 - Absolute Address: 0x20000054
-- Base Offset: 0x4C
-- Size: 0x4
-- Array Dimensions: [4]
-- Array Stride: 0x4
-- Total Size: 0x10
-
-<p>Ethernet CSR</p>
-
-|Offset|Identifier|           Name          |
-|------|----------|-------------------------|
-|  0x0 |  status  |csr.ethernet[0..3].status|
-
-### status register
-
-- Absolute Address: 0x20000054
-- Base Offset: 0x0
+- Base Offset: 0x8
 - Size: 0x4
 
-<p>Ethernet Status Register</p>
+<p>Ethernet Interface MAC Address</p>
 
-|Bits|Identifier|Access|Reset|                Name                |
-|----|----------|------|-----|------------------------------------|
-| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
+|Bits|Identifier|Access|Reset|                 Name                |
+|----|----------|------|-----|-------------------------------------|
+|31:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_31_0.mac[31:0]|
 
-#### speed field
+#### mac field
 
-<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
+<p>Ethernet Interface MAC Address (lower word)</p>
 
 ## ethernet register file
 
 - Absolute Address: 0x20000058
 - Base Offset: 0x4C
-- Size: 0x4
+- Size: 0xC
 - Array Dimensions: [4]
-- Array Stride: 0x4
-- Total Size: 0x10
+- Array Stride: 0xC
+- Total Size: 0x30
 
 <p>Ethernet CSR</p>
 
-|Offset|Identifier|           Name          |
-|------|----------|-------------------------|
-|  0x0 |  status  |csr.ethernet[0..3].status|
+|Offset|Identifier|            Name            |
+|------|----------|----------------------------|
+|  0x0 |  status  |  csr.ethernet[0..3].status |
+|  0x4 | mac_47_32|csr.ethernet[0..3].mac_47_32|
+|  0x8 | mac_31_0 | csr.ethernet[0..3].mac_31_0|
 
 ### status register
 
@@ -631,11 +605,173 @@ No supported members.
 #### speed field
 
 <p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
+
+### mac_47_32 register
+
+- Absolute Address: 0x2000005C
+- Base Offset: 0x4
+- Size: 0x4
+
+<p>Ethernet Interface MAC Address</p>
+
+|Bits|Identifier|Access|Reset|                 Name                 |
+|----|----------|------|-----|--------------------------------------|
+|15:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_47_32.mac[15:0]|
+
+#### mac field
+
+<p>Ethernet Interface MAC Address (upper word)</p>
+
+### mac_31_0 register
+
+- Absolute Address: 0x20000060
+- Base Offset: 0x8
+- Size: 0x4
+
+<p>Ethernet Interface MAC Address</p>
+
+|Bits|Identifier|Access|Reset|                 Name                |
+|----|----------|------|-----|-------------------------------------|
+|31:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_31_0.mac[31:0]|
+
+#### mac field
+
+<p>Ethernet Interface MAC Address (lower word)</p>
+
+## ethernet register file
+
+- Absolute Address: 0x20000064
+- Base Offset: 0x4C
+- Size: 0xC
+- Array Dimensions: [4]
+- Array Stride: 0xC
+- Total Size: 0x30
+
+<p>Ethernet CSR</p>
+
+|Offset|Identifier|            Name            |
+|------|----------|----------------------------|
+|  0x0 |  status  |  csr.ethernet[0..3].status |
+|  0x4 | mac_47_32|csr.ethernet[0..3].mac_47_32|
+|  0x8 | mac_31_0 | csr.ethernet[0..3].mac_31_0|
+
+### status register
+
+- Absolute Address: 0x20000064
+- Base Offset: 0x0
+- Size: 0x4
+
+<p>Ethernet Status Register</p>
+
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
+
+#### speed field
+
+<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
+
+### mac_47_32 register
+
+- Absolute Address: 0x20000068
+- Base Offset: 0x4
+- Size: 0x4
+
+<p>Ethernet Interface MAC Address</p>
+
+|Bits|Identifier|Access|Reset|                 Name                 |
+|----|----------|------|-----|--------------------------------------|
+|15:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_47_32.mac[15:0]|
+
+#### mac field
+
+<p>Ethernet Interface MAC Address (upper word)</p>
+
+### mac_31_0 register
+
+- Absolute Address: 0x2000006C
+- Base Offset: 0x8
+- Size: 0x4
+
+<p>Ethernet Interface MAC Address</p>
+
+|Bits|Identifier|Access|Reset|                 Name                |
+|----|----------|------|-----|-------------------------------------|
+|31:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_31_0.mac[31:0]|
+
+#### mac field
+
+<p>Ethernet Interface MAC Address (lower word)</p>
+
+## ethernet register file
+
+- Absolute Address: 0x20000070
+- Base Offset: 0x4C
+- Size: 0xC
+- Array Dimensions: [4]
+- Array Stride: 0xC
+- Total Size: 0x30
+
+<p>Ethernet CSR</p>
+
+|Offset|Identifier|            Name            |
+|------|----------|----------------------------|
+|  0x0 |  status  |  csr.ethernet[0..3].status |
+|  0x4 | mac_47_32|csr.ethernet[0..3].mac_47_32|
+|  0x8 | mac_31_0 | csr.ethernet[0..3].mac_31_0|
+
+### status register
+
+- Absolute Address: 0x20000070
+- Base Offset: 0x0
+- Size: 0x4
+
+<p>Ethernet Status Register</p>
+
+|Bits|Identifier|Access|Reset|                Name                |
+|----|----------|------|-----|------------------------------------|
+| 1:0|   speed  |   r  | 0x0 |csr.ethernet[0..3].status.speed[1:0]|
+
+#### speed field
+
+<p>Indicates the established link speed on a particular Ethernet interface (0 - 10 Mbps, 1 - 100 Mbps, 2 - 1000 Mbps)</p>
+
+### mac_47_32 register
+
+- Absolute Address: 0x20000074
+- Base Offset: 0x4
+- Size: 0x4
+
+<p>Ethernet Interface MAC Address</p>
+
+|Bits|Identifier|Access|Reset|                 Name                 |
+|----|----------|------|-----|--------------------------------------|
+|15:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_47_32.mac[15:0]|
+
+#### mac field
+
+<p>Ethernet Interface MAC Address (upper word)</p>
+
+### mac_31_0 register
+
+- Absolute Address: 0x20000078
+- Base Offset: 0x8
+- Size: 0x4
+
+<p>Ethernet Interface MAC Address</p>
+
+|Bits|Identifier|Access|Reset|                 Name                |
+|----|----------|------|-----|-------------------------------------|
+|31:0|    mac   |  rw  | 0x0 |csr.ethernet[0..3].mac_31_0.mac[31:0]|
+
+#### mac field
+
+<p>Ethernet Interface MAC Address (lower word)</p>
 
 ## dpe register file
 
-- Absolute Address: 0x2000005C
-- Base Offset: 0x5C
+- Absolute Address: 0x2000007C
+- Base Offset: 0x7C
 - Size: 0x4
 
 <p>Data Plane Engine CSR</p>
@@ -646,7 +782,7 @@ No supported members.
 
 ### fcr register
 
-- Absolute Address: 0x2000005C
+- Absolute Address: 0x2000007C
 - Base Offset: 0x0
 - Size: 0x4
 
@@ -655,7 +791,7 @@ No supported members.
 |Bits|Identifier|Access|Reset|       Name      |
 |----|----------|------|-----|-----------------|
 |  0 |   idle   |   r  | 0x0 | csr.dpe.fcr.idle|
-| 31 |   pause  |  rw  | 0x0 |csr.dpe.fcr.pause|
+|  1 |   pause  |  rw  | 0x0 |csr.dpe.fcr.pause|
 
 #### idle field
 
@@ -667,8 +803,8 @@ No supported members.
 
 ### hw_id register
 
-- Absolute Address: 0x20000060
-- Base Offset: 0x60
+- Absolute Address: 0x20000080
+- Base Offset: 0x80
 - Size: 0x4
 
 <p>Hardware IDs</p>
@@ -688,8 +824,8 @@ No supported members.
 
 ### hw_version register
 
-- Absolute Address: 0x20000064
-- Base Offset: 0x64
+- Absolute Address: 0x20000084
+- Base Offset: 0x84
 - Size: 0x4
 
 <p>Hardware Version</p>
@@ -697,7 +833,7 @@ No supported members.
 | Bits|Identifier|Access|Reset|        Name        |
 |-----|----------|------|-----|--------------------|
 | 15:0|   PATCH  |   r  | 0x0 |csr.hw_version.PATCH|
-|23:16|   MINOR  |   r  | 0x1 |csr.hw_version.MINOR|
+|23:16|   MINOR  |   r  | 0x2 |csr.hw_version.MINOR|
 |31:24|   MAJOR  |   r  | 0x0 |csr.hw_version.MAJOR|
 
 #### PATCH field

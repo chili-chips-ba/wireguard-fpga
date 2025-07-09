@@ -41,3 +41,4 @@
 *.lib
 *.exe
 *.str
+3.build/csr_build/generated-files/html/.launcher_data/*
