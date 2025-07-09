@@ -52,18 +52,18 @@ static uint32_t frmBuf[PKT_BUF_SIZE];
 // ----------------------------------------------------------------------------
 // Generic RX callback: print packet info
 // ----------------------------------------------------------------------------
-static void rxCallback(udpIpPg::rxInfo_t info) {
-    std::printf("\n=== Received packet on node %u ===\n", info.udp_dst_port == NODE2_UDP_PORT ? 2u : 4u);
-    std::printf("  MAC src      = %012lX\n", (unsigned long)info.mac_src_addr);
-    std::printf("  IPv4 src     = %08X\n", info.ipv4_src_addr);
-    std::printf("  UDP src port = %04X\n", info.udp_src_port);
-    std::printf("  UDP dst port = %04X\n", info.udp_dst_port);
-    std::printf("  Payload (%u bytes):\n", info.rx_len);
+static void rxCallback(udpIpPg::rxInfo_t info, void* /*hdl*/) {
+    VPrint("\n=== Received packet on node %u ===\n", info.udp_dst_port == NODE2_UDP_PORT ? 2u : 4u);
+    VPrint("  MAC src      = %012lX\n", (unsigned long)info.mac_src_addr);
+    VPrint("  IPv4 src     = %08X\n", info.ipv4_src_addr);
+    VPrint("  UDP src port = %04X\n", info.udp_src_port);
+    VPrint("  UDP dst port = %04X\n", info.udp_dst_port);
+    VPrint("  Payload (%u bytes):\n", info.rx_len);
     for (uint32_t i = 0; i < info.rx_len; ++i) {
-        std::printf(" %02X", info.rx_payload[i]);
-        if ((i & 0xF) == 0xF) std::printf("\n");
+        VPrint(" %02X", info.rx_payload[i]);
+        if ((i & 0xF) == 0xF) VPrint("\n");
     }
-    std::printf("\n=== End receive ===\n");
+    VPrint("\n=== End receive ===\n");
 }
 
 // ----------------------------------------------------------------------------
@@ -85,14 +85,6 @@ extern "C" void VUserMain1(void) {
 
     uint32_t frameLen = pUdp.genUdpIpPkt(cfg, frmBuf, reinterpret_cast<uint32_t*>(payload), PAYLOAD_LEN);
     VPrint("Node1: frameLen = %u bytes\n", frameLen);
-
-    std::printf("Node1: sending frame bytes:\n");
-    for (uint32_t i = 0; i < frameLen; ++i) {
-        printf("%02X ", frmBuf[i] & 0xFF);
-        if ((i & 0xF) == 0xF) printf("\n");
-    }
-    std::printf("\n");
-
     pUdp.UdpVpSendRawEthFrame(frmBuf, frameLen);
     VPrint("Node1: frame sent to Node2\n");
 
@@ -105,7 +97,7 @@ extern "C" void VUserMain1(void) {
 extern "C" void VUserMain2(void) {
     VPrint("Node2: initializing receiver\n");
     udpIpPg pUdp(2, NODE2_IPV4_ADDR, NODE2_MAC_ADDR, NODE2_UDP_PORT);
-    pUdp.registerUsrRxCbFunc([](udpIpPg::rxInfo_t info, void*){ rxCallback(info); }, nullptr);
+    pUdp.registerUsrRxCbFunc(rxCallback, nullptr);
     while (true) pUdp.UdpVpSendIdle(1);
 }
 
@@ -115,24 +107,19 @@ extern "C" void VUserMain2(void) {
 extern "C" void VUserMain3(void) {
     VPrint("Node3: initializing packet generator\n");
     udpIpPg pUdp(3, NODE3_IPV4_ADDR, NODE3_MAC_ADDR, NODE3_UDP_PORT);
-    VPrint("Node3: delaying 1ms for init...\n");
 
+    VPrint("Node3: delaying 1ms for init...\n");
     for (int i = 0; i < 250000; ++i) pUdp.UdpVpSendIdle(1);
+
     for (uint32_t i = 0; i < PAYLOAD_LEN; ++i) payload[i] = uint8_t(i);
 
-    udpIpPg::udpConfig_t cfg3{NODE4_UDP_PORT, NODE4_IPV4_ADDR, NODE4_MAC_ADDR};
+    udpIpPg::udpConfig_t cfg;
+    cfg.mac_dst_addr = NODE4_MAC_ADDR;
+    cfg.ip_dst_addr  = NODE4_IPV4_ADDR;
+    cfg.dst_port     = NODE4_UDP_PORT;
 
-    uint32_t frameLen = pUdp.genUdpIpPkt(cfg3, frmBuf, reinterpret_cast<uint32_t*>(payload), PAYLOAD_LEN);
-
+    uint32_t frameLen = pUdp.genUdpIpPkt(cfg, frmBuf, reinterpret_cast<uint32_t*>(payload), PAYLOAD_LEN);
     VPrint("Node3: frameLen = %u bytes\n", frameLen);
-
-    std::printf("Node3: sending frame bytes:\n");
-    for (uint32_t i = 0; i < frameLen; ++i) {
-        printf("%02X ", frmBuf[i] & 0xFF);
-        if ((i & 0xF) == 0xF) printf("\n");
-    }
-    std::printf("\n");
-
     pUdp.UdpVpSendRawEthFrame(frmBuf, frameLen);
     VPrint("Node3: frame sent to Node4\n");
 
@@ -145,6 +132,6 @@ extern "C" void VUserMain3(void) {
 extern "C" void VUserMain4(void) {
     VPrint("Node4: initializing receiver\n");
     udpIpPg pUdp(4, NODE4_IPV4_ADDR, NODE4_MAC_ADDR, NODE4_UDP_PORT);
-    pUdp.registerUsrRxCbFunc([](udpIpPg::rxInfo_t info, void*){ rxCallback(info); }, nullptr);
+    pUdp.registerUsrRxCbFunc(rxCallback, nullptr);
     while (true) pUdp.UdpVpSendIdle(1);
 }
