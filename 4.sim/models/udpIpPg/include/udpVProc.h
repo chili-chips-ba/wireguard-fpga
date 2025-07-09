@@ -71,7 +71,7 @@ public:
 
     // Ethernet parameters and header dimensions
     static const uint32_t ETH_MTU              = 1500;
-    static const uint32_t ETH_PREAMBLE         = 9;  // BYTES
+    static const uint32_t ETH_PREAMBLE         = 8;  // BYTES
     static const uint32_t ETH_802_1Q_LEN       = 4;  // BYTES
     static const uint32_t ETH_CRC_LEN          = 4;  // BYTES
     static const uint32_t ETH_HDR_LEN          = 14; // BYTES
@@ -171,7 +171,7 @@ private:
 
         // If not receiving a frame already, and a new frame detected,
         // flag receiving and reset the RX buffer index
-        if (!receiving_frame && (rxc & RX_VALID_MASK) == 0 && rxd == SOF)
+        if (!receiving_frame && (rxc & RX_VALID_MASK))
         {
             receiving_frame = true;
             error_detected  = false;
@@ -183,15 +183,22 @@ private:
         {
             // If an end-of-frame detected, clear the receiving frame state, and call the
             // method to process the data,
-            if ((rxc & RX_VALID_MASK) == 0 && rxd == IDLE)
+            if (!(rxc & RX_VALID_MASK))
             {
                 receiving_frame = false;
+
+                // Calculate length of preamble and SFD (could be variable)
+                int pidx = 0;
+                while (rx_buf[pidx] == PREAMBLE || rx_buf[pidx] == SFD)
+                {
+                    pidx++;
+                }
 
                 // Process input if no errors were seen
                 if (!error_detected)
                 {
-                    // Process input, subtracting the SOF, preamble, SFD and EOF
-                    processFrame(&rx_buf[ETH_PREAMBLE], rx_idx-ETH_PREAMBLE-1);
+                    // Process input, subtracting the Premable and SFD
+                    processFrame(&rx_buf[pidx], rx_idx-pidx);
                 }
             }
             // Whilst receiving a frame, place it in the receive buffer
