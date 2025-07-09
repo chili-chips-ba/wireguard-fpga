@@ -40,7 +40,7 @@ public:
     // Version
     static const uint32_t major_version        = 1;
     static const uint32_t minor_version        = 0;
-    static const uint32_t patch_version        = 4;
+    static const uint32_t patch_version        = 5;
 
     // CRC32 parameters
     static const uint32_t POLY                 = 0xEDB88320;  /* 0x04C11DB7 bit reversed */
