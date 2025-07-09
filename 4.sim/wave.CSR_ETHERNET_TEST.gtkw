@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Mon Jul  7 18:07:37 2025
+[*] Tue Jul  8 22:55:00 2025
 [*]
 [dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.fst"
-[dumpfile_mtime] "Mon Jul  7 17:07:24 2025"
-[dumpfile_size] 7149390
+[dumpfile_mtime] "Tue Jul  8 13:24:50 2025"
+[dumpfile_size] 6870029
 [savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.CSR_ETHERNET_TEST.gtkw"
-[timestart] 2000342030
+[timestart] 956300000
 [size] 1920 1128
-[pos] -409 -134
-*-13.515515 2000368750 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -362 -131
+*-25.559357 1036856250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
 [treeopen] TOP.tb.bfm_udp.
@@ -25,9 +25,12 @@
 [treeopen] TOP.tb.dut.to_csr.uart.rx.data.
 [treeopen] TOP.tb.dut.to_csr.uart.tx.
 [treeopen] TOP.tb.dut.u_eth_1.
+[treeopen] TOP.tb.dut.u_eth_4.
+[treeopen] TOP.tb.dut.u_eth_4.eth.
+[treeopen] TOP.tb.dut.u_eth_4.eth.eth_mac_1g_gmii_inst.
 [treeopen] TOP.tb.dut.u_fabric.
 [treeopen] TOP.tb.dut.u_uart.
-[sst_width] 276
+[sst_width] 315
 [signals_width] 313
 [sst_expanded] 1
 [sst_vpaned_height] 741
@@ -132,6 +135,51 @@ TOP.tb.dut.from_eth_1.tuser_src[2:0]
 TOP.tb.dut.from_eth_1.tvalid
 @200
 -
+-tb/dut/to_eth_2
+@28
+TOP.tb.dut.to_eth_2.clk
+TOP.tb.dut.to_eth_2.rst
+@22
+TOP.tb.dut.to_eth_2.tdata[127:0]
+TOP.tb.dut.to_eth_2.tid[7:0]
+TOP.tb.dut.to_eth_2.tkeep[15:0]
+@28
+TOP.tb.dut.to_eth_2.tlast
+TOP.tb.dut.to_eth_2.tready
+TOP.tb.dut.to_eth_2.tuser_bypass_all
+TOP.tb.dut.to_eth_2.tuser_bypass_stage
+TOP.tb.dut.to_eth_2.tuser_dst[2:0]
+TOP.tb.dut.to_eth_2.tuser_src[2:0]
+TOP.tb.dut.to_eth_2.tvalid
+@200
+-
+-tb/gmii[1]
+@28
+TOP.tb.gmii[1].arst_n
+TOP.tb.gmii[1].clk
+@22
+TOP.tb.gmii[1].rxd[7:0]
+@28
+TOP.tb.gmii[1].rxdv
+TOP.tb.gmii[1].rxer
+@22
+TOP.tb.gmii[1].txd[7:0]
+@28
+TOP.tb.gmii[1].txen
+TOP.tb.gmii[1].txer
+@200
+-
+-tb/dut/from_csr
+-gpio/led1
+@28
+TOP.tb.dut.from_csr.gpio.led1.value
+@200
+-gpio/led2
+@28
+TOP.tb.dut.from_csr.gpio.led2.value
+@201
+-
+@200
 -tb/dut/from_eth_3
 @28
 TOP.tb.dut.from_eth_3.clk
@@ -150,7 +198,6 @@ TOP.tb.dut.from_eth_3.tuser_src[2:0]
 TOP.tb.dut.from_eth_3.tvalid
 @200
 -
-@201
 -tb/dut/to_eth_4
 @28
 TOP.tb.dut.to_eth_4.clk
@@ -167,17 +214,5 @@ TOP.tb.dut.to_eth_4.tuser_bypass_stage
 TOP.tb.dut.to_eth_4.tuser_dst[2:0]
 TOP.tb.dut.to_eth_4.tuser_src[2:0]
 TOP.tb.dut.to_eth_4.tvalid
-@200
--
--tb/dut/from_csr
--gpio/led1
-@28
-TOP.tb.dut.from_csr.gpio.led1.value
-@200
--gpio/led2
-@28
-TOP.tb.dut.from_csr.gpio.led2.value
-@200
--
 [pattern_trace] 1
 [pattern_trace] 0

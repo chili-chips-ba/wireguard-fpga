@@ -1,5 +1,5 @@
 //=============================================================
-// 
+//
 // Copyright (c) 2024 -2025 Simon Southwell. All rights reserved.
 //
 // Date: 19th December 2024
@@ -54,14 +54,14 @@ public:
     static const uint32_t TXC_ADDR             = 1;
     static const uint32_t TICKS_ADDR           = 2;
     static const uint32_t HALT_ADDR            = 3;
-    
+
     // Ethernet tags and frame delimeters
     static const uint32_t IDLE                 = 0x07;
     static const uint32_t SOF                  = 0xfb;
     static const uint32_t EoF                  = 0xfd;
     static const uint32_t PREAMBLE             = 0x55;
     static const uint32_t SFD                  = 0xd5;
-    
+
     static const uint32_t RX_VALID_MASK        = 0x01;
     static const uint32_t RX_ERROR_MASK        = 0x02;
     static const uint32_t TX_ERROR_MASK        = 0x100;
@@ -123,7 +123,7 @@ public:
         {
             // Send out byte
             VWrite(TXD_ADDR, frame[idx] & 0xff,                                          true, node);
-            VWrite(TXC_ADDR, frame[idx] & TX_ERROR_MASK ? TX_CTRL_ERROR : TX_CTRL_VALID, true, node);
+            VWrite(TXC_ADDR, frame[idx] & TX_ERROR_MASK ? TX_CTRL_ERROR : (idx == 0 || idx == (len-1)) ? 0 : TX_CTRL_VALID, true, node);
 
             // Extract RX data and advance tick
             UdpVpExtractRx();
@@ -133,12 +133,12 @@ public:
 
         return error;
     }
-    
+
     // --------------------------------------------------
     // Method to set the halt output signal
     // --------------------------------------------------
     void UdpVpSetHalt(uint32_t val) {VWrite(HALT_ADDR, val & 0x1, false, node);}
-    
+
 private:
 
     // --------------------------------------------------
@@ -171,7 +171,7 @@ private:
 
         // If not receiving a frame already, and a new frame detected,
         // flag receiving and reset the RX buffer index
-        if (!receiving_frame && (rxc & RX_VALID_MASK) && rxd == SOF)
+        if (!receiving_frame && (rxc & RX_VALID_MASK) == 0 && rxd == SOF)
         {
             receiving_frame = true;
             error_detected  = false;
@@ -183,7 +183,7 @@ private:
         {
             // If an end-of-frame detected, clear the receiving frame state, and call the
             // method to process the data,
-            if (!rxc & RX_VALID_MASK)
+            if ((rxc & RX_VALID_MASK) == 0 && rxd == IDLE)
             {
                 receiving_frame = false;
 
