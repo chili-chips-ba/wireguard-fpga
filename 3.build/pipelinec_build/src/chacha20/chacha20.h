@@ -1,3 +1,4 @@
+#pragma once
 /**
  * based on code from
  * https://github.com/chili-chips-ba/wireguard-fpga/blob/main/2.sw/app/chacha20poly1305/chacha20.c

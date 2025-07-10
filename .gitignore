@@ -43,6 +43,8 @@
 *.str
 3.build/csr_build/generated-files/html/.launcher_data/*
 
-# PipelineC generated tests
+# PipelineC outputs
 3.build/pipelinec_build/generated-files-sim-comb/*
 3.build/pipelinec_build/generated-files-sim-pipe/*
+3.build/pipelinec_build/generated-files-verilog/*
+3.build/pipelinec_build/*.py

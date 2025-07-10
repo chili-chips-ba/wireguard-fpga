@@ -1,3 +1,4 @@
+#pragma once
 // Based on https://github.com/chili-chips-ba/wireguard-fpga/blob/main/2.sw/app/chacha20poly1305/poly1305.c
 
 #define POLY1305_BLOCK_SIZE 16

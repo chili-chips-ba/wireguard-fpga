@@ -1,3 +1,4 @@
+#pragma once
 #include "compiler.h"
 #include "chacha20/chacha20.h"
 #include "prep_auth_data/prep_auth_data.h"
