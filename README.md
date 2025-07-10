@@ -51,6 +51,8 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 
 **[Ref9]** [Alex's Ethernet Stack](https://github.com/alexforencich/verilog-ethernet)
 
+**[Ref10]** [Amina's ADASEC-SDN](https://github.com/etf-tk-sdn/ADASEC-SDN)
+
 # Project Outline
 
 ## Scope
