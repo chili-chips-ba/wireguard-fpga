@@ -122,8 +122,15 @@ public:
         for (int idx = 0; idx < len; idx++)
         {
             // Send out byte
-            VWrite(TXD_ADDR, frame[idx] & 0xff,                                          true, node);
-            VWrite(TXC_ADDR, frame[idx] & TX_ERROR_MASK ? TX_CTRL_ERROR : (idx == 0 || idx == (len-1)) ? 0 : TX_CTRL_VALID, true, node);
+            VWrite(TXD_ADDR, frame[idx] & 0xff, true, node);
+
+            // TX control bit
+#ifdef GENERATE_SOF_EOF
+            uint32_t txc = (frame[idx] & TX_ERROR_MASK) ? TX_CTRL_ERROR : (idx == 0 || idx == (len-1)) ? 0 : TX_CTRL_VALID;
+#else
+            uint32_t txc = (frame[idx] & TX_ERROR_MASK) ? TX_CTRL_ERROR : TX_CTRL_VALID;
+#endif
+            VWrite(TXC_ADDR, txc, true, node);
 
             // Extract RX data and advance tick
             UdpVpExtractRx();
