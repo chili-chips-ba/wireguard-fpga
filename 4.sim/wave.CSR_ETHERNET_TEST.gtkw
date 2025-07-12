@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Tue Jul  8 22:55:00 2025
+[*] Sat Jul 12 18:47:31 2025
 [*]
 [dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.fst"
-[dumpfile_mtime] "Tue Jul  8 13:24:50 2025"
-[dumpfile_size] 6870029
+[dumpfile_mtime] "Sat Jul 12 17:13:36 2025"
+[dumpfile_size] 6874500
 [savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.CSR_ETHERNET_TEST.gtkw"
-[timestart] 956300000
+[timestart] 2000611800
 [size] 1920 1128
-[pos] -362 -131
-*-25.559357 1036856250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -617 -353
+*-16.559357 2000984500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
 [treeopen] TOP.tb.bfm_udp.
@@ -177,9 +177,8 @@ TOP.tb.dut.from_csr.gpio.led1.value
 -gpio/led2
 @28
 TOP.tb.dut.from_csr.gpio.led2.value
-@201
--
 @200
+-
 -tb/dut/from_eth_3
 @28
 TOP.tb.dut.from_eth_3.clk
@@ -214,5 +213,38 @@ TOP.tb.dut.to_eth_4.tuser_bypass_stage
 TOP.tb.dut.to_eth_4.tuser_dst[2:0]
 TOP.tb.dut.to_eth_4.tuser_src[2:0]
 TOP.tb.dut.to_eth_4.tvalid
+@201
+-
+@200
+-tb/gmii[2]
+@28
+TOP.tb.gmii[2].arst_n
+TOP.tb.gmii[2].clk
+@22
+TOP.tb.gmii[2].rxd[7:0]
+@28
+TOP.tb.gmii[2].rxdv
+TOP.tb.gmii[2].rxer
+@22
+TOP.tb.gmii[2].txd[7:0]
+@28
+TOP.tb.gmii[2].txen
+TOP.tb.gmii[2].txer
+@200
+-
+-tb/gmii[3]
+@28
+TOP.tb.gmii[3].arst_n
+TOP.tb.gmii[3].clk
+@22
+TOP.tb.gmii[3].rxd[7:0]
+@28
+TOP.tb.gmii[3].rxdv
+TOP.tb.gmii[3].rxer
+@22
+TOP.tb.gmii[3].txd[7:0]
+@28
+TOP.tb.gmii[3].txen
+TOP.tb.gmii[3].txer
 [pattern_trace] 1
 [pattern_trace] 0
