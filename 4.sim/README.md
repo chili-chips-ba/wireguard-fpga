@@ -18,6 +18,7 @@
 * [The mem_model Co-Simulation Sparse Memory Model](#the-mem_model-co-simulation-sparse-memory-model)
 * [Driving the Wireguard Logic Ethernet Ports](#driving-the-wireguard-logic-ethernet-ports)
   * [_udpIpPg_ Software](#udpippg-software)
+  + [System-Level Ethernet Simulation](#system-level-ethernet-simulation)
 * [Co-simulation HAL](#co-simulation-hal)
 * [References](#references)
 
@@ -464,6 +465,36 @@ A pointer to a buffer with a payload followed by the length of the payload make 
 
 Once the packet has been constructed it is sent over the GMII interface in the logic simulation, via _VProc_, with a call to the `UdpVpSendRawEthFrame`, which is provided with the frame buffer pointer and the length returned by `genUdpIpPkt`. When no packet is to be transmitted, the interface must send idle symbols, and the `UdpVpSendIdle` method does just this, specifying the number of clock cycles. This is comparable to the `tick` method for the `soc_cpu.VPROC` [software](#vproc-software).
 
+### System-Level Ethernet Simulation
+
+With the addition of the UdpIpPg Virtual Processor module and accompanying C++ driver, it is now possible to perform full end-to-end Ethernet packet tests directly from user code:
+
+- **Frame generation**
+  A C++ application (in `4.sim/usercode/VUserMainUdp.cpp`) uses the `udpIpPg` class to
+  1. configure destination MAC/IP/UDP port,
+  2. build a complete Ethernet + IPv4 + UDP frame via `genUdpIpPkt()`, and
+  3. transmit it on GMII using `UdpVpSendRawEthFrame()`.
+  Idle symbols are driven between frames with `UdpVpSendIdle()` to keep the link alive.
+
+- **Frame reception**
+  The same `udpIpPg` API supports a **user callback** registered by
+  ```cpp
+  pUdp.registerUsrRxCbFunc(rxCallback, nullptr);
+  ```
+
+- This mechanism now makes system-level testing of the Ethernet data path trivial—no manual RTL testbench tweaks are required. You can script packet streams, verify traffic, and log every received packet directly in your C++ test harness.
+
+- Example Console Log:
+
+```text
+MAC src      = D89EF3887EC3
+IPv4 src     = C0A81908
+UDP src port = 0400
+UDP dst port = 0401
+Payload (64 bytes):
+00 04 08 0C 10 14 18 1C 20 24 28 2C 30 34 38 3C ......
+```
+
 ## Co-simulation HAL
 
 ### Using the HAL
@@ -480,13 +511,13 @@ The HAL provides a hierarchical access to the registers via a set of pointer der
     // Write to address field and read back.
     csr->ip_lookup_engine->table[0]->allowed_ip[0]->address(0x12345678);
     printf("address = 0x%08lx\n\n", csr->ip_lookup_engine->table[0]->allowed_ip[0]->address());
-    
+
     // Write to whole endpoint register
     csr->ip_lookup_engine->table[3]->endpoint->full(0x5555555555555555ULL);
-    
+
     // Write to bit field in endpoint register
     csr->ip_lookup_engine->table[3]->endpoint->interface(0x7);
-    
+
     // Read back bit field in endpoint register
     printf("interface = 0x%1lx\n\n", csr->ip_lookup_engine->table[3]->endpoint->interface());
 ```
@@ -510,7 +541,7 @@ void WGMAIN (void)
 }
 ```
 
-The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `3.build/sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 80MHz that the test bench uses for the `soc_cpu`. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `3.build/sysrdl_cosim.py`. 
+The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `3.build/sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 80MHz that the test bench uses for the `soc_cpu`. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `3.build/sysrdl_cosim.py`.
 
 Finally, the
 

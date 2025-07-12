@@ -1,0 +1,250 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Sat Jul 12 18:47:31 2025
+[*]
+[dumpfile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.fst"
+[dumpfile_mtime] "Sat Jul 12 17:13:36 2025"
+[dumpfile_size] 6874500
+[savefile] "/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/4.sim/wave.CSR_ETHERNET_TEST.gtkw"
+[timestart] 2000611800
+[size] 1920 1128
+[pos] -617 -353
+*-16.559357 2000984500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.tb.
+[treeopen] TOP.tb.bfm_udp.
+[treeopen] TOP.tb.dut.
+[treeopen] TOP.tb.dut.from_csr.
+[treeopen] TOP.tb.dut.from_csr.cpu_fifo.rx.data_31_0.
+[treeopen] TOP.tb.dut.from_csr.gpio.
+[treeopen] TOP.tb.dut.from_csr.uart.rx.
+[treeopen] TOP.tb.dut.from_csr.uart.rx_trigger.
+[treeopen] TOP.tb.dut.from_csr.uart.tx.data.
+[treeopen] TOP.tb.dut.from_csr.uart.tx_trigger.
+[treeopen] TOP.tb.dut.to_csr.ethernet[0].status.
+[treeopen] TOP.tb.dut.to_csr.uart.rx.data.
+[treeopen] TOP.tb.dut.to_csr.uart.tx.
+[treeopen] TOP.tb.dut.u_eth_1.
+[treeopen] TOP.tb.dut.u_eth_4.
+[treeopen] TOP.tb.dut.u_eth_4.eth.
+[treeopen] TOP.tb.dut.u_eth_4.eth.eth_mac_1g_gmii_inst.
+[treeopen] TOP.tb.dut.u_fabric.
+[treeopen] TOP.tb.dut.u_uart.
+[sst_width] 315
+[signals_width] 313
+[sst_expanded] 1
+[sst_vpaned_height] 741
+@200
+-BUS
+@28
+TOP.tb.dut.u_cpu.bus.vld
+TOP.tb.dut.u_cpu.bus.rdy
+TOP.tb.dut.u_cpu.bus.we[3:0]
+@22
+TOP.tb.dut.u_cpu.bus.addr[31:2]
+TOP.tb.dut.u_cpu.bus.rdat[31:0]
+TOP.tb.dut.u_cpu.bus.wdat[31:0]
+@200
+-
+-tb/bfm_udp
+@420
+TOP.tb.bfm_udp.MDIO_BUFF_ADDR
+TOP.tb.bfm_udp.NUM_PORTS
+TOP.tb.bfm_udp.RGMII
+TOP.tb.bfm_udp.START_NODE
+@28
+TOP.tb.bfm_udp.arst_n
+TOP.tb.bfm_udp.clk
+TOP.tb.bfm_udp.clkx2
+@22
+TOP.tb.bfm_udp.halt[3:0]
+@28
+TOP.tb.bfm_udp.halt_req
+@22
+TOP.tb.bfm_udp.mdio[3:0]
+TOP.tb.bfm_udp.mdio_en[3:0]
+TOP.tb.bfm_udp.mdio_out[3:0]
+@28
+TOP.tb.bfm_udp.mdioclk
+@22
+TOP.tb.bfm_udp.udp_gmii_rxd[0][7:0]
+TOP.tb.bfm_udp.udp_gmii_rxd[1][7:0]
+TOP.tb.bfm_udp.udp_gmii_rxd[2][7:0]
+TOP.tb.bfm_udp.udp_gmii_rxd[3][7:0]
+#{TOP.tb.bfm_udp.udp_gmii_rxdv[0:3]} TOP.tb.bfm_udp.udp_gmii_rxdv[0] TOP.tb.bfm_udp.udp_gmii_rxdv[1] TOP.tb.bfm_udp.udp_gmii_rxdv[2] TOP.tb.bfm_udp.udp_gmii_rxdv[3]
+#{TOP.tb.bfm_udp.udp_gmii_rxer[0:3]} TOP.tb.bfm_udp.udp_gmii_rxer[0] TOP.tb.bfm_udp.udp_gmii_rxer[1] TOP.tb.bfm_udp.udp_gmii_rxer[2] TOP.tb.bfm_udp.udp_gmii_rxer[3]
+TOP.tb.bfm_udp.udp_gmii_txd[0][7:0]
+TOP.tb.bfm_udp.udp_gmii_txd[1][7:0]
+TOP.tb.bfm_udp.udp_gmii_txd[2][7:0]
+TOP.tb.bfm_udp.udp_gmii_txd[3][7:0]
+#{TOP.tb.bfm_udp.udp_gmii_txen[0:3]} TOP.tb.bfm_udp.udp_gmii_txen[0] TOP.tb.bfm_udp.udp_gmii_txen[1] TOP.tb.bfm_udp.udp_gmii_txen[2] TOP.tb.bfm_udp.udp_gmii_txen[3]
+#{TOP.tb.bfm_udp.udp_gmii_txer[0:3]} TOP.tb.bfm_udp.udp_gmii_txer[0] TOP.tb.bfm_udp.udp_gmii_txer[1] TOP.tb.bfm_udp.udp_gmii_txer[2] TOP.tb.bfm_udp.udp_gmii_txer[3]
+@200
+-
+-tb/gmii[0]
+@28
+TOP.tb.gmii[0].arst_n
+TOP.tb.gmii[0].clk
+@22
+TOP.tb.gmii[0].rxd[7:0]
+@28
+TOP.tb.gmii[0].rxdv
+TOP.tb.gmii[0].rxer
+@22
+TOP.tb.gmii[0].txd[7:0]
+@28
+TOP.tb.gmii[0].txen
+TOP.tb.gmii[0].txer
+@200
+-
+-tb/dut/u_eth_1
+@28
+TOP.tb.dut.u_eth_1.gmii_rx_clk
+TOP.tb.dut.u_eth_1.gmii_rx_dv
+TOP.tb.dut.u_eth_1.gmii_rx_er
+@22
+TOP.tb.dut.u_eth_1.gmii_rxd[7:0]
+@28
+TOP.tb.dut.u_eth_1.gmii_tx_clk
+TOP.tb.dut.u_eth_1.gmii_tx_en
+TOP.tb.dut.u_eth_1.gmii_tx_er
+@22
+TOP.tb.dut.u_eth_1.gmii_txd[7:0]
+@28
+TOP.tb.dut.u_eth_1.gtx_clk
+TOP.tb.dut.u_eth_1.gtx_rst
+TOP.tb.dut.u_eth_1.mii_tx_clk
+TOP.tb.dut.u_eth_1.speed[1:0]
+@200
+-
+-tb/dut/from_eth_1
+@28
+TOP.tb.dut.from_eth_1.clk
+TOP.tb.dut.from_eth_1.rst
+@22
+TOP.tb.dut.from_eth_1.tdata[127:0]
+TOP.tb.dut.from_eth_1.tid[7:0]
+TOP.tb.dut.from_eth_1.tkeep[15:0]
+@28
+TOP.tb.dut.from_eth_1.tlast
+TOP.tb.dut.from_eth_1.tready
+TOP.tb.dut.from_eth_1.tuser_bypass_all
+TOP.tb.dut.from_eth_1.tuser_bypass_stage
+TOP.tb.dut.from_eth_1.tuser_dst[2:0]
+TOP.tb.dut.from_eth_1.tuser_src[2:0]
+TOP.tb.dut.from_eth_1.tvalid
+@200
+-
+-tb/dut/to_eth_2
+@28
+TOP.tb.dut.to_eth_2.clk
+TOP.tb.dut.to_eth_2.rst
+@22
+TOP.tb.dut.to_eth_2.tdata[127:0]
+TOP.tb.dut.to_eth_2.tid[7:0]
+TOP.tb.dut.to_eth_2.tkeep[15:0]
+@28
+TOP.tb.dut.to_eth_2.tlast
+TOP.tb.dut.to_eth_2.tready
+TOP.tb.dut.to_eth_2.tuser_bypass_all
+TOP.tb.dut.to_eth_2.tuser_bypass_stage
+TOP.tb.dut.to_eth_2.tuser_dst[2:0]
+TOP.tb.dut.to_eth_2.tuser_src[2:0]
+TOP.tb.dut.to_eth_2.tvalid
+@200
+-
+-tb/gmii[1]
+@28
+TOP.tb.gmii[1].arst_n
+TOP.tb.gmii[1].clk
+@22
+TOP.tb.gmii[1].rxd[7:0]
+@28
+TOP.tb.gmii[1].rxdv
+TOP.tb.gmii[1].rxer
+@22
+TOP.tb.gmii[1].txd[7:0]
+@28
+TOP.tb.gmii[1].txen
+TOP.tb.gmii[1].txer
+@200
+-
+-tb/dut/from_csr
+-gpio/led1
+@28
+TOP.tb.dut.from_csr.gpio.led1.value
+@200
+-gpio/led2
+@28
+TOP.tb.dut.from_csr.gpio.led2.value
+@200
+-
+-tb/dut/from_eth_3
+@28
+TOP.tb.dut.from_eth_3.clk
+TOP.tb.dut.from_eth_3.rst
+@22
+TOP.tb.dut.from_eth_3.tdata[127:0]
+TOP.tb.dut.from_eth_3.tid[7:0]
+TOP.tb.dut.from_eth_3.tkeep[15:0]
+@28
+TOP.tb.dut.from_eth_3.tlast
+TOP.tb.dut.from_eth_3.tready
+TOP.tb.dut.from_eth_3.tuser_bypass_all
+TOP.tb.dut.from_eth_3.tuser_bypass_stage
+TOP.tb.dut.from_eth_3.tuser_dst[2:0]
+TOP.tb.dut.from_eth_3.tuser_src[2:0]
+TOP.tb.dut.from_eth_3.tvalid
+@200
+-
+-tb/dut/to_eth_4
+@28
+TOP.tb.dut.to_eth_4.clk
+TOP.tb.dut.to_eth_4.rst
+@22
+TOP.tb.dut.to_eth_4.tdata[127:0]
+TOP.tb.dut.to_eth_4.tid[7:0]
+TOP.tb.dut.to_eth_4.tkeep[15:0]
+@28
+TOP.tb.dut.to_eth_4.tlast
+TOP.tb.dut.to_eth_4.tready
+TOP.tb.dut.to_eth_4.tuser_bypass_all
+TOP.tb.dut.to_eth_4.tuser_bypass_stage
+TOP.tb.dut.to_eth_4.tuser_dst[2:0]
+TOP.tb.dut.to_eth_4.tuser_src[2:0]
+TOP.tb.dut.to_eth_4.tvalid
+@201
+-
+@200
+-tb/gmii[2]
+@28
+TOP.tb.gmii[2].arst_n
+TOP.tb.gmii[2].clk
+@22
+TOP.tb.gmii[2].rxd[7:0]
+@28
+TOP.tb.gmii[2].rxdv
+TOP.tb.gmii[2].rxer
+@22
+TOP.tb.gmii[2].txd[7:0]
+@28
+TOP.tb.gmii[2].txen
+TOP.tb.gmii[2].txer
+@200
+-
+-tb/gmii[3]
+@28
+TOP.tb.gmii[3].arst_n
+TOP.tb.gmii[3].clk
+@22
+TOP.tb.gmii[3].rxd[7:0]
+@28
+TOP.tb.gmii[3].rxdv
+TOP.tb.gmii[3].rxer
+@22
+TOP.tb.gmii[3].txd[7:0]
+@28
+TOP.tb.gmii[3].txen
+TOP.tb.gmii[3].txer
+[pattern_trace] 1
+[pattern_trace] 0
