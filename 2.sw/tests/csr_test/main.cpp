@@ -27,7 +27,6 @@ int main(void)
    // Receive (and echo) the text terminated with CRLF
    while(!uart_recv(csr, rx_data));
 
-/*
    // Receive Ethernet packet for CPU FIFO
    while (!eth_receive_packet(csr, &packet));
    // If packet is received from eth1
@@ -41,6 +40,6 @@ int main(void)
       packet.bypass_all = 1;
       eth_send_packet(csr, &packet);
    }
-*/
+
    return 0;
 }

@@ -1,5 +1,5 @@
 //=============================================================
-// 
+//
 // Copyright (c) 2024 - 2025 Simon Southwell. All rights reserved.
 //
 // Date: 19th December 2024
@@ -36,12 +36,12 @@ public:
     // --------------------------------------------
     // Static constants
     // --------------------------------------------
-    
+
     // Version
     static const uint32_t major_version        = 1;
     static const uint32_t minor_version        = 0;
-    static const uint32_t patch_version        = 3;
-    
+    static const uint32_t patch_version        = 5;
+
     // CRC32 parameters
     static const uint32_t POLY                 = 0xEDB88320;  /* 0x04C11DB7 bit reversed */
     static const uint32_t INIT                 = 0xFFFFFFFF;
@@ -54,7 +54,7 @@ public:
     static const uint32_t IPV4_SUBNET_MASK     = 0xffffffff;
     static const uint32_t IPV4_MIN_HDR_LEN     = 5;  // DWORDS
     static const uint32_t IPV4_SRC_ADDR_OFFSET = 3;  // DWORDS
-    
+
     // UDP parameters
     static const uint32_t IPV4_DST_ADDR_OFFSET = 4;  // DWORDS
     static const uint32_t UDP_MIN_HDR_LEN      = 2;  // DWORDS
@@ -72,7 +72,7 @@ public:
     // --------------------------------------------
     // Type definitions
     // --------------------------------------------
-    
+
     // Structure for received packet information
     typedef struct {
         uint64_t mac_src_addr;
@@ -102,7 +102,7 @@ public:
     // --------------------------------------------
     // Constructor
     // --------------------------------------------
-    
+
     udpIpPg  (uint32_t nodeIn, uint32_t ipv4AddrIn, uint64_t macAddrIn, uint32_t udpPortIn) :
                                         udpVProc(nodeIn),
                                         ipv4_addr(ipv4AddrIn),
@@ -115,26 +115,26 @@ public:
     // --------------------------------------------
     // Public methods
     // --------------------------------------------
-    
+
     // Function to register user callback function to receive packets
     void           registerUsrRxCbFunc (pUsrRxCbFunc_t pFunc, void* hdlIn) { usrRxCbFunc = pFunc; hdl = hdlIn;};
 
     // Method to generate a UDP/IPv4 packet
     uint32_t       genUdpIpPkt         (udpConfig_t &cfg, uint32_t* frm_buf, uint32_t* payload, uint32_t payload_len);
-    
+
     void           getVersionString    (char* version_str, uint32_t maxlen = 12) {
-                                            snprintf(version_str, maxlen, "%d.%d.%d", major_version, minor_version, patch_version);} 
+                                            snprintf(version_str, maxlen, "%d.%d.%d", major_version, minor_version, patch_version);}
 
 private:
 
     // --------------------------------------------
     // Private methods
     // --------------------------------------------
-    
+
     // Method to construct an ethernet frame with (optional) payload
     uint32_t       ethFrame            (uint32_t* eth_frame,  uint32_t* payload, uint32_t payload_len, uint64_t dst_addr);
-    
-    
+
+
     // Method to construct an IPV4 frame with (optional) payload
     uint32_t       ipv4Frame           (uint32_t* ipv4_frame,
                                         uint32_t* payload,
@@ -153,29 +153,29 @@ private:
 
     // Ethernet CR32 calculation method
     uint32_t       crc32               (uint32_t* buf, uint32_t len, uint32_t poly = POLY, uint32_t init = INIT, bool debug = false);
-    
+
     // Method to calculate IP4v checksum. Also used (in ipv4frame) to calculate UDP checksum
     uint32_t       ipv4_chksum         (uint32_t* buf, uint32_t len, bool debug = false);
-    
+
     // Method to extract receive data
     void           extractRx           (void);
 
     // --------------------------------------------
     // Private member variables
     // --------------------------------------------
-    
+
     // This node's UDP port number
     uint32_t       udp_port;
-    
+
     // This node's IPV4 address
     uint32_t       ipv4_addr;
-    
+
     // This node's MAC address
     uint64_t       mac_addr;
 
     // Pointer to the user's receive callback function
     pUsrRxCbFunc_t usrRxCbFunc;
-    
+
     // Handle passed in with callback registration as pointer to calling class instance ('this' pointer).
     // Used to reference specific instances' methods and member variables.
     void*          hdl;
