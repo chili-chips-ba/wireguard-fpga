@@ -31,14 +31,6 @@ UDPCODEDIR   := $(SIM_DIR)/usercode
 USER_SOURCES := $(wildcard $(UDPCODEDIR)/*.cpp)
 
 # --------------------------------------------
-# Include paths for DPI / usercode
-# --------------------------------------------
-SIM_INCLUDES := \
-	-I$(UDPCODEDIR)         \
-	-I$(COSIMDIR)/include   \
-	-I$(UDPDIR)
-
-# --------------------------------------------
 # File lists for Verilator
 # --------------------------------------------
 TOP_FILELIST := $(HW_SRC)/top.filelist
@@ -72,7 +64,7 @@ compile:
 		-f $(TB_FILELIST) \
 		--top-module $(TB_NAME) \
 		--exe versimSV.cpp usercode/VUserMainUdp.cpp $(USER_SOURCES) \
-		-CFLAGS "-I$(COSIMDIR)/include -I$(UDPCODEDIR) -DVERILATOR -DVPROC_SV -DVPROC" \
+		-CFLAGS "-I$(COSIMDIR)/include -I$(UDPCODEDIR) -I$(UDPDIR)/include -DVERILATOR -DVPROC_SV -DVPROC" \
 		-LDFLAGS "\
 			-rdynamic \
 			$(COSIM_LDFLAGS) \
