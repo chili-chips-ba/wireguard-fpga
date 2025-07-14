@@ -1,0 +1,7 @@
+++ module tb file  lines 0 - 0
+++ comp avalon_int type avalon_if parent tb
+++ comp axis_int type axis_if parent tb
+++ comp pcap type pcapreader__Pz1 parent tb
+++ comp pcapwr type pcapwriter__Pz2 parent tb
+++ module pcapreader__Pz1 file  lines 0 - 0
+++ module pcapwriter__Pz2 file  lines 0 - 0
