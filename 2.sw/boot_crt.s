@@ -188,7 +188,7 @@ xor  a2, a2, a2 /* envp = 0 */
 .option pop    
 	
 #ifdef TESTCODE
-   call start_test
+   #call start_test
 #else
    call main
 #endif

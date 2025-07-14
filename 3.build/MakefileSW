@@ -51,7 +51,7 @@ sw_map: $(SW_SRC)/link_map.lds
 
 #------------------------
 # Compile and link Boot and App code
-sw_elf: sw_map $(SW_SRC)/boot_crt.S \
+sw_elf: sw_map $(SW_SRC)/boot_crt.s \
 $(SW_APP)/assert.h \
 $(CSR_BLD)/wireguard_regs.h \
 $(CSR_BLD)/csr_hw.h \
@@ -77,7 +77,7 @@ $(SW_MAIN)/main.cpp
    -fno-unwind-tables \
    -flto \
    -o $(SW_BLD)/main.elf \
-   $(SW_SRC)/boot_crt.S \
+   $(SW_SRC)/boot_crt.s \
    $(SW_APP)/uart.c \
    $(SW_APP)/ethernet.c \
    $(SW_APP)/network.c \
