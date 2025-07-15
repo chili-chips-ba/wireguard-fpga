@@ -86,7 +86,7 @@ module pcapwriter#
     begin
         if (to_writer_avalon.valid || to_writer_axis.valid) begin
             if(!first_sop) begin
-	        if(to_writer_avalon.sop) begin   //Axis interface - first occurence of data signal
+	        if(to_writer_avalon.sop || to_writer_axis.valid) begin   //Axis interface - first occurence of data signal
                     timestamp = int'(cnt_clk/1000);
                     first_sop <= 1;
                 end

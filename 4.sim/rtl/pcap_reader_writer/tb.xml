@@ -22,178 +22,178 @@
   </module_files>
   <cells>
     <cell loc="j,4,8,4,10" name="tb" submodname="tb" hier="tb">
-      <cell loc="j,18,42,18,52" name="avalon_int" submodname="avalon_if" hier="tb.avalon_int"/>
-      <cell loc="j,19,40,19,48" name="axis_int" submodname="axis_if" hier="tb.axis_int"/>
-      <cell loc="j,25,7,25,11" name="pcap" submodname="pcapreader__Pz1" hier="tb.pcap"/>
-      <cell loc="j,41,7,41,13" name="pcapwr" submodname="pcapwriter__Pz2" hier="tb.pcapwr"/>
+      <cell loc="j,17,42,17,52" name="avalon_int" submodname="avalon_if__D80" hier="tb.avalon_int"/>
+      <cell loc="j,18,40,18,48" name="axis_int" submodname="axis_if__D80" hier="tb.axis_int"/>
+      <cell loc="j,24,7,24,11" name="pcap" submodname="pcapreader__pi1" hier="tb.pcap"/>
+      <cell loc="j,40,7,40,13" name="pcapwr" submodname="pcapwriter__pi2" hier="tb.pcapwr"/>
     </cell>
   </cells>
   <netlist>
     <module loc="j,4,8,4,10" name="tb" origName="tb" topModule="1">
-      <var loc="j,7,11,7,16" name="CLOCK" dtype_id="1" vartype="logic" origName="CLOCK"/>
+      <var loc="j,6,11,6,16" name="CLOCK" dtype_id="1" vartype="logic" origName="CLOCK"/>
+      <initialstatic loc="j,6,19,6,20">
+        <assign loc="j,6,19,6,20" dtype_id="1">
+          <const loc="j,6,19,6,20" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="j,6,19,6,20" name="CLOCK" dtype_id="1"/>
+        </assign>
+      </initialstatic>
+      <var loc="j,7,11,7,16" name="reset" dtype_id="1" vartype="logic" origName="reset"/>
       <initialstatic loc="j,7,19,7,20">
         <assign loc="j,7,19,7,20" dtype_id="1">
-          <const loc="j,7,19,7,20" name="1&apos;h0" dtype_id="1"/>
-          <varref loc="j,7,19,7,20" name="CLOCK" dtype_id="1"/>
+          <const loc="j,7,19,7,20" name="1&apos;h1" dtype_id="1"/>
+          <varref loc="j,7,19,7,20" name="reset" dtype_id="1"/>
         </assign>
       </initialstatic>
-      <var loc="j,8,11,8,16" name="reset" dtype_id="1" vartype="logic" origName="reset"/>
-      <initialstatic loc="j,8,19,8,20">
-        <assign loc="j,8,19,8,20" dtype_id="1">
-          <const loc="j,8,19,8,20" name="1&apos;h1" dtype_id="1"/>
-          <varref loc="j,8,19,8,20" name="reset" dtype_id="1"/>
-        </assign>
-      </initialstatic>
-      <var loc="j,9,11,9,20" name="available" dtype_id="1" vartype="logic" origName="available"/>
-      <var loc="j,10,17,10,25" name="pktcount" dtype_id="2" vartype="logic" origName="pktcount"/>
-      <var loc="j,11,17,11,26" name="pktcountw" dtype_id="2" vartype="logic" origName="pktcountw"/>
-      <var loc="j,12,11,12,17" name="newpkt" dtype_id="1" vartype="logic" origName="newpkt"/>
-      <var loc="j,13,11,13,23" name="pcapfinished" dtype_id="1" vartype="logic" origName="pcapfinished"/>
-      <var loc="j,14,15,14,25" name="DATA_WIDTH" dtype_id="3" vartype="logic" origName="DATA_WIDTH" param="true">
-        <const loc="j,14,28,14,31" name="32&apos;sh200" dtype_id="3"/>
+      <var loc="j,8,11,8,20" name="available" dtype_id="1" vartype="logic" origName="available"/>
+      <var loc="j,9,17,9,25" name="pktcount" dtype_id="2" vartype="logic" origName="pktcount"/>
+      <var loc="j,10,17,10,26" name="pktcountw" dtype_id="2" vartype="logic" origName="pktcountw"/>
+      <var loc="j,11,11,11,17" name="newpkt" dtype_id="1" vartype="logic" origName="newpkt"/>
+      <var loc="j,12,11,12,23" name="pcapfinished" dtype_id="1" vartype="logic" origName="pcapfinished"/>
+      <var loc="j,13,15,13,25" name="DATA_WIDTH" dtype_id="3" vartype="logic" origName="DATA_WIDTH" param="true">
+        <const loc="j,13,28,13,31" name="32&apos;sh80" dtype_id="3"/>
       </var>
-      <var loc="j,15,15,15,26" name="SIGNAL_TYPE" dtype_id="4" vartype="logic" origName="SIGNAL_TYPE" param="true">
-        <const loc="j,15,29,15,37" name="48&apos;h6176616c6f6e" dtype_id="4"/>
+      <var loc="j,14,15,14,26" name="SIGNAL_TYPE" dtype_id="4" vartype="logic" origName="SIGNAL_TYPE" param="true">
+        <const loc="j,14,29,14,37" name="48&apos;h617869733030" dtype_id="4"/>
       </var>
-      <var loc="j,16,16,16,28" name="CLOCK_PERIOD" dtype_id="3" vartype="logic" origName="CLOCK_PERIOD" localparam="true">
-        <const loc="j,16,31,16,36" name="32&apos;sha00" dtype_id="3"/>
+      <var loc="j,15,16,15,28" name="CLOCK_PERIOD" dtype_id="3" vartype="logic" origName="CLOCK_PERIOD" localparam="true">
+        <const loc="j,15,31,15,36" name="32&apos;sh30d4" dtype_id="3"/>
       </var>
-      <instance loc="j,18,42,18,52" name="avalon_int" defName="avalon_if" origName="avalon_int">
-        <port loc="j,18,54,18,57" name="clk" direction="in" portIndex="1">
-          <varref loc="j,18,58,18,63" name="CLOCK" dtype_id="1"/>
+      <instance loc="j,17,42,17,52" name="avalon_int" defName="avalon_if__D80" origName="avalon_int">
+        <port loc="j,17,54,17,57" name="clk" direction="in" portIndex="1">
+          <varref loc="j,17,58,17,63" name="CLOCK" dtype_id="1"/>
         </port>
-        <port loc="j,18,66,18,69" name="rst" direction="in" portIndex="2">
-          <varref loc="j,18,70,18,75" name="reset" dtype_id="1"/>
-        </port>
-      </instance>
-      <var loc="j,18,42,18,52" name="avalon_int" dtype_id="5" vartype="ifaceref" origName="avalon_int__Viftop"/>
-      <instance loc="j,19,40,19,48" name="axis_int" defName="axis_if" origName="axis_int">
-        <port loc="j,19,50,19,53" name="clk" direction="in" portIndex="1">
-          <varref loc="j,19,54,19,59" name="CLOCK" dtype_id="1"/>
-        </port>
-        <port loc="j,19,62,19,65" name="rst" direction="in" portIndex="2">
-          <varref loc="j,19,66,19,71" name="reset" dtype_id="1"/>
+        <port loc="j,17,66,17,69" name="rst" direction="in" portIndex="2">
+          <varref loc="j,17,70,17,75" name="reset" dtype_id="1"/>
         </port>
       </instance>
-      <var loc="j,19,40,19,48" name="axis_int" dtype_id="6" vartype="ifaceref" origName="axis_int__Viftop"/>
-      <instance loc="j,25,7,25,11" name="pcap" defName="pcapreader__Pz1" origName="pcap">
-        <port loc="j,26,3,26,10" name="clk_out" direction="in" portIndex="1">
-          <varref loc="j,26,11,26,16" name="CLOCK" dtype_id="1"/>
+      <var loc="j,17,42,17,52" name="avalon_int" dtype_id="5" vartype="ifaceref" origName="avalon_int__Viftop"/>
+      <instance loc="j,18,40,18,48" name="axis_int" defName="axis_if__D80" origName="axis_int">
+        <port loc="j,18,50,18,53" name="clk" direction="in" portIndex="1">
+          <varref loc="j,18,54,18,59" name="CLOCK" dtype_id="1"/>
         </port>
-        <port loc="j,27,10,27,15" name="reset" direction="in" portIndex="2">
-          <varref loc="j,27,16,27,21" name="reset" dtype_id="1"/>
-        </port>
-        <port loc="j,28,10,28,19" name="available" direction="out" portIndex="3">
-          <varref loc="j,28,20,28,29" name="available" dtype_id="1"/>
-        </port>
-        <port loc="j,29,10,29,18" name="pktcount" direction="out" portIndex="4">
-          <varref loc="j,29,19,29,27" name="pktcount" dtype_id="2"/>
-        </port>
-        <port loc="j,30,10,30,16" name="newpkt" direction="out" portIndex="5">
-          <varref loc="j,30,17,30,23" name="newpkt" dtype_id="1"/>
-        </port>
-        <port loc="j,31,3,31,15" name="pcapfinished" direction="out" portIndex="6">
-          <varref loc="j,31,16,31,28" name="pcapfinished" dtype_id="1"/>
-        </port>
-        <port loc="j,33,3,33,21" name="from_reader_avalon" portIndex="7">
-          <varref loc="j,33,22,33,32" name="avalon_int" dtype_id="5"/>
-        </port>
-        <port loc="j,34,10,34,26" name="from_reader_axis" portIndex="8">
-          <varref loc="j,34,27,34,35" name="axis_int" dtype_id="6"/>
+        <port loc="j,18,62,18,65" name="rst" direction="in" portIndex="2">
+          <varref loc="j,18,66,18,71" name="reset" dtype_id="1"/>
         </port>
       </instance>
-      <instance loc="j,41,7,41,13" name="pcapwr" defName="pcapwriter__Pz2" origName="pcapwr">
-        <port loc="j,42,3,42,9" name="clk_in" direction="in" portIndex="1">
-          <varref loc="j,42,10,42,15" name="CLOCK" dtype_id="1"/>
+      <var loc="j,18,40,18,48" name="axis_int" dtype_id="6" vartype="ifaceref" origName="axis_int__Viftop"/>
+      <instance loc="j,24,7,24,11" name="pcap" defName="pcapreader__pi1" origName="pcap">
+        <port loc="j,25,3,25,10" name="clk_out" direction="in" portIndex="1">
+          <varref loc="j,25,11,25,16" name="CLOCK" dtype_id="1"/>
         </port>
-        <port loc="j,43,3,43,8" name="reset" direction="in" portIndex="2">
-          <varref loc="j,43,9,43,14" name="reset" dtype_id="1"/>
+        <port loc="j,26,10,26,15" name="reset" direction="in" portIndex="2">
+          <varref loc="j,26,16,26,21" name="reset" dtype_id="1"/>
         </port>
-        <port loc="j,45,3,45,19" name="to_writer_avalon" portIndex="3">
-          <varref loc="j,45,20,45,30" name="avalon_int" dtype_id="5"/>
+        <port loc="j,27,10,27,19" name="available" direction="out" portIndex="3">
+          <varref loc="j,27,20,27,29" name="available" dtype_id="1"/>
         </port>
-        <port loc="j,46,10,46,24" name="to_writer_axis" portIndex="4">
-          <varref loc="j,46,25,46,33" name="axis_int" dtype_id="6"/>
+        <port loc="j,28,10,28,18" name="pktcount" direction="out" portIndex="4">
+          <varref loc="j,28,19,28,27" name="pktcount" dtype_id="2"/>
         </port>
-        <port loc="j,48,10,48,18" name="pktcount" direction="out" portIndex="5">
-          <varref loc="j,48,19,48,28" name="pktcountw" dtype_id="2"/>
+        <port loc="j,29,10,29,16" name="newpkt" direction="out" portIndex="5">
+          <varref loc="j,29,17,29,23" name="newpkt" dtype_id="1"/>
+        </port>
+        <port loc="j,30,3,30,15" name="pcapfinished" direction="out" portIndex="6">
+          <varref loc="j,30,16,30,28" name="pcapfinished" dtype_id="1"/>
+        </port>
+        <port loc="j,32,3,32,21" name="from_reader_avalon" portIndex="7">
+          <varref loc="j,32,22,32,32" name="avalon_int" dtype_id="5"/>
+        </port>
+        <port loc="j,33,10,33,26" name="from_reader_axis" portIndex="8">
+          <varref loc="j,33,27,33,35" name="axis_int" dtype_id="6"/>
         </port>
       </instance>
-      <always loc="j,51,5,51,11">
-        <delay loc="j,51,12,51,13">
-          <const loc="j,51,26,51,27" name="64&apos;h500" dtype_id="7"/>
-          <assigndly loc="j,51,36,51,38" dtype_id="1">
-            <not loc="j,51,39,51,40" dtype_id="1">
-              <varref loc="j,51,40,51,45" name="CLOCK" dtype_id="1"/>
+      <instance loc="j,40,7,40,13" name="pcapwr" defName="pcapwriter__pi2" origName="pcapwr">
+        <port loc="j,41,3,41,9" name="clk_in" direction="in" portIndex="1">
+          <varref loc="j,41,10,41,15" name="CLOCK" dtype_id="1"/>
+        </port>
+        <port loc="j,42,3,42,8" name="reset" direction="in" portIndex="2">
+          <varref loc="j,42,9,42,14" name="reset" dtype_id="1"/>
+        </port>
+        <port loc="j,44,3,44,19" name="to_writer_avalon" portIndex="3">
+          <varref loc="j,44,20,44,30" name="avalon_int" dtype_id="5"/>
+        </port>
+        <port loc="j,45,10,45,24" name="to_writer_axis" portIndex="4">
+          <varref loc="j,45,25,45,33" name="axis_int" dtype_id="6"/>
+        </port>
+        <port loc="j,47,10,47,18" name="pktcount" direction="out" portIndex="5">
+          <varref loc="j,47,19,47,28" name="pktcountw" dtype_id="2"/>
+        </port>
+      </instance>
+      <always loc="j,50,5,50,11">
+        <delay loc="j,50,12,50,13">
+          <const loc="j,50,26,50,27" name="64&apos;h186a" dtype_id="7"/>
+          <assigndly loc="j,50,36,50,38" dtype_id="1">
+            <not loc="j,50,39,50,40" dtype_id="1">
+              <varref loc="j,50,40,50,45" name="CLOCK" dtype_id="1"/>
             </not>
-            <varref loc="j,51,30,51,35" name="CLOCK" dtype_id="1"/>
+            <varref loc="j,50,30,50,35" name="CLOCK" dtype_id="1"/>
           </assigndly>
         </delay>
       </always>
-      <var loc="j,53,13,53,14" name="i" dtype_id="8" vartype="integer" origName="i"/>
-      <initialstatic loc="j,53,17,53,18">
-        <assign loc="j,53,17,53,18" dtype_id="8">
-          <const loc="j,53,17,53,18" name="32&apos;sh0" dtype_id="3"/>
-          <varref loc="j,53,17,53,18" name="i" dtype_id="8"/>
+      <var loc="j,52,13,52,14" name="i" dtype_id="8" vartype="integer" origName="i"/>
+      <initialstatic loc="j,52,17,52,18">
+        <assign loc="j,52,17,52,18" dtype_id="8">
+          <const loc="j,52,17,52,18" name="32&apos;sh0" dtype_id="3"/>
+          <varref loc="j,52,17,52,18" name="i" dtype_id="8"/>
         </assign>
       </initialstatic>
-      <initial loc="j,55,5,55,12">
-        <begin loc="j,55,13,55,18">
-          <delay loc="j,60,9,60,10">
-            <const loc="j,60,11,60,23" name="64&apos;ha00" dtype_id="7"/>
+      <initial loc="j,54,5,54,12">
+        <begin loc="j,54,13,54,18">
+          <delay loc="j,55,9,55,10">
+            <const loc="j,55,11,55,23" name="64&apos;h30d4" dtype_id="7"/>
           </delay>
-          <assign loc="j,61,15,61,16" dtype_id="1">
-            <const loc="j,61,17,61,18" name="1&apos;h0" dtype_id="1"/>
-            <varref loc="j,61,9,61,14" name="reset" dtype_id="1"/>
+          <assign loc="j,56,15,56,16" dtype_id="1">
+            <const loc="j,56,17,56,18" name="1&apos;h0" dtype_id="1"/>
+            <varref loc="j,56,9,56,14" name="reset" dtype_id="1"/>
           </assign>
-          <while loc="j,63,9,63,14">
+          <while loc="j,58,9,58,14">
             <begin>
             </begin>
             <begin>
-              <not loc="j,63,16,63,17" dtype_id="1">
-                <varref loc="j,63,17,63,29" name="pcapfinished" dtype_id="1"/>
+              <not loc="j,58,16,58,17" dtype_id="1">
+                <varref loc="j,58,17,58,29" name="pcapfinished" dtype_id="1"/>
               </not>
             </begin>
             <begin>
-              <begin loc="j,63,31,63,36">
-                <delay loc="j,64,6,64,7">
-                  <const loc="j,64,7,64,9" name="64&apos;h14" dtype_id="7"/>
-                  <assign loc="j,65,8,65,9" dtype_id="8">
-                    <add loc="j,65,11,65,12" dtype_id="8">
-                      <const loc="j,65,12,65,13" name="32&apos;sh1" dtype_id="3"/>
-                      <varref loc="j,65,10,65,11" name="i" dtype_id="8"/>
+              <begin loc="j,58,31,58,36">
+                <delay loc="j,59,6,59,7">
+                  <const loc="j,59,7,59,9" name="64&apos;h14" dtype_id="7"/>
+                  <assign loc="j,60,8,60,9" dtype_id="8">
+                    <add loc="j,60,11,60,12" dtype_id="8">
+                      <const loc="j,60,12,60,13" name="32&apos;sh1" dtype_id="3"/>
+                      <varref loc="j,60,10,60,11" name="i" dtype_id="8"/>
                     </add>
-                    <varref loc="j,65,6,65,7" name="i" dtype_id="8"/>
+                    <varref loc="j,60,6,60,7" name="i" dtype_id="8"/>
                   </assign>
                 </delay>
               </begin>
             </begin>
           </while>
-          <delay loc="j,68,2,68,3">
-            <const loc="j,68,5,68,6" name="64&apos;h1400" dtype_id="7"/>
+          <delay loc="j,63,2,63,3">
+            <const loc="j,63,5,63,6" name="64&apos;h61a8" dtype_id="7"/>
           </delay>
-          <finish loc="j,70,2,70,9"/>
+          <finish loc="j,65,2,65,9"/>
         </begin>
       </initial>
     </module>
-    <module loc="h,9,8,9,18" name="pcapreader__Pz1" origName="pcapreader">
+    <module loc="h,9,8,9,18" name="pcapreader__pi1" origName="pcapreader">
       <var loc="h,11,15,11,28" name="PCAP_FILENAME" dtype_id="9" vartype="logic" origName="PCAP_FILENAME" param="true">
-        <const loc="j,22,24,22,39" name="104&apos;h2e2e2f74657374312e70636170" dtype_id="9"/>
+        <const loc="j,21,24,21,39" name="104&apos;h2e2e2f74657374312e70636170" dtype_id="9"/>
       </var>
       <var loc="h,12,15,12,26" name="SIGNAL_TYPE" dtype_id="4" vartype="logic" origName="SIGNAL_TYPE" param="true">
-        <const loc="j,23,22,23,33" name="48&apos;h6176616c6f6e" dtype_id="4"/>
+        <const loc="j,22,22,22,33" name="48&apos;h617869733030" dtype_id="4"/>
       </var>
       <var loc="h,13,15,13,25" name="DATA_WIDTH" dtype_id="3" vartype="logic" origName="DATA_WIDTH" param="true">
-        <const loc="j,24,21,24,31" name="32&apos;sh200" dtype_id="3"/>
+        <const loc="j,23,21,23,31" name="32&apos;sh80" dtype_id="3"/>
       </var>
       <var loc="h,14,15,14,27" name="CLOCK_PERIOD" dtype_id="3" vartype="logic" origName="CLOCK_PERIOD" param="true">
         <const loc="h,14,30,14,34" name="32&apos;sha00" dtype_id="3"/>
       </var>
       <var loc="h,15,15,15,26" name="EMPTY_WIDTH" dtype_id="3" vartype="logic" origName="EMPTY_WIDTH" param="true">
-        <const loc="h,15,44,15,50" name="32&apos;h6" dtype_id="3"/>
+        <const loc="h,15,44,15,50" name="32&apos;h4" dtype_id="3"/>
       </var>
       <var loc="h,16,15,16,25" name="KEEP_WIDTH" dtype_id="3" vartype="logic" origName="KEEP_WIDTH" param="true">
-        <const loc="h,16,38,16,39" name="32&apos;h40" dtype_id="3"/>
+        <const loc="h,16,38,16,39" name="32&apos;h10" dtype_id="3"/>
       </var>
       <var loc="h,18,27,18,34" name="clk_out" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk_out"/>
       <var loc="h,19,27,19,32" name="reset" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="reset"/>
@@ -288,7 +288,7 @@
       <var loc="h,42,13,42,27" name="bytes_data_out" dtype_id="8" vartype="integer" origName="bytes_data_out"/>
       <initialstatic loc="h,42,40,42,41">
         <assign loc="h,42,40,42,41" dtype_id="8">
-          <const loc="h,42,40,42,41" name="32&apos;h40" dtype_id="8"/>
+          <const loc="h,42,40,42,41" name="32&apos;h10" dtype_id="8"/>
           <varref loc="h,42,40,42,41" name="bytes_data_out" dtype_id="8"/>
         </assign>
       </initialstatic>
@@ -638,26 +638,18 @@
                   <const loc="h,113,29,113,30" name="1&apos;h1" dtype_id="1"/>
                   <varref loc="h,113,13,113,25" name="pcapfinished" dtype_id="1"/>
                 </assigndly>
-                <begin loc="h,114,34,114,39">
-                  <assigndly loc="h,115,33,115,35" dtype_id="1">
-                    <const loc="h,115,36,115,37" name="1&apos;h0" dtype_id="1"/>
-                    <varxref loc="h,115,29,115,32" name="eop" dtype_id="1" dotted="from_reader_avalon"/>
+                <begin loc="h,120,15,120,20">
+                  <assigndly loc="h,121,25,121,27" dtype_id="1">
+                    <const loc="h,121,28,121,29" name="1&apos;h0" dtype_id="1"/>
+                    <varxref loc="h,121,20,121,24" name="last" dtype_id="1" dotted="from_reader_axis"/>
                   </assigndly>
-                  <assigndly loc="h,116,26,116,28" dtype_id="1">
-                    <const loc="h,116,29,116,30" name="1&apos;h0" dtype_id="1"/>
-                    <varxref loc="h,116,22,116,25" name="sop" dtype_id="1" dotted="from_reader_avalon"/>
+                  <assigndly loc="h,122,40,122,42" dtype_id="1">
+                    <const loc="h,122,43,122,44" name="1&apos;h0" dtype_id="1"/>
+                    <varxref loc="h,122,34,122,39" name="valid" dtype_id="1" dotted="from_reader_axis"/>
                   </assigndly>
-                  <assigndly loc="h,117,28,117,30" dtype_id="1">
-                    <const loc="h,117,31,117,32" name="1&apos;h0" dtype_id="1"/>
-                    <varxref loc="h,117,22,117,27" name="valid" dtype_id="1" dotted="from_reader_avalon"/>
-                  </assigndly>
-                  <assigndly loc="h,118,41,118,43" dtype_id="18">
-                    <const loc="h,118,55,118,56" name="512&apos;h0" dtype_id="18"/>
-                    <varxref loc="h,118,36,118,40" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                  </assigndly>
-                  <assigndly loc="h,119,28,119,30" dtype_id="19">
-                    <const loc="h,119,43,119,44" name="6&apos;h0" dtype_id="19"/>
-                    <varxref loc="h,119,22,119,27" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
+                  <assigndly loc="h,123,32,123,34" dtype_id="18">
+                    <const loc="h,123,46,123,47" name="128&apos;h0" dtype_id="18"/>
+                    <varxref loc="h,123,27,123,31" name="data" dtype_id="18" dotted="from_reader_axis"/>
                   </assigndly>
                 </begin>
               </begin>
@@ -696,24 +688,24 @@
                       <begin>
                         <begin loc="h,129,24,129,29">
                           <assigndly loc="h,130,17,130,19" dtype_id="8">
-                            <concat loc="h,130,74,130,75" dtype_id="20">
+                            <concat loc="h,130,74,130,75" dtype_id="19">
                               <arraysel loc="h,130,34,130,35" dtype_id="2">
                                 <varref loc="h,130,21,130,34" name="packet_header" dtype_id="13"/>
-                                <const loc="h,130,35,130,37" name="4&apos;hb" dtype_id="21"/>
+                                <const loc="h,130,35,130,37" name="4&apos;hb" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,130,56,130,57" dtype_id="22">
+                              <concat loc="h,130,56,130,57" dtype_id="21">
                                 <arraysel loc="h,130,52,130,53" dtype_id="2">
                                   <varref loc="h,130,39,130,52" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,130,53,130,55" name="4&apos;ha" dtype_id="21"/>
+                                  <const loc="h,130,53,130,55" name="4&apos;ha" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,130,38,130,39" dtype_id="14">
                                   <arraysel loc="h,130,70,130,71" dtype_id="2">
                                     <varref loc="h,130,57,130,70" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,130,71,130,72" name="4&apos;h9" dtype_id="21"/>
+                                    <const loc="h,130,71,130,72" name="4&apos;h9" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,130,88,130,89" dtype_id="2">
                                     <varref loc="h,130,75,130,88" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,130,89,130,90" name="4&apos;h8" dtype_id="21"/>
+                                    <const loc="h,130,89,130,90" name="4&apos;h8" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -721,24 +713,24 @@
                             <varref loc="h,130,10,130,16" name="capLen" dtype_id="8"/>
                           </assigndly>
                           <assigndly loc="h,131,10,131,12" dtype_id="8">
-                            <concat loc="h,131,67,131,68" dtype_id="20">
+                            <concat loc="h,131,67,131,68" dtype_id="19">
                               <arraysel loc="h,131,27,131,28" dtype_id="2">
                                 <varref loc="h,131,14,131,27" name="packet_header" dtype_id="13"/>
-                                <const loc="h,131,28,131,30" name="4&apos;hf" dtype_id="21"/>
+                                <const loc="h,131,28,131,30" name="4&apos;hf" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,131,49,131,50" dtype_id="22">
+                              <concat loc="h,131,49,131,50" dtype_id="21">
                                 <arraysel loc="h,131,45,131,46" dtype_id="2">
                                   <varref loc="h,131,32,131,45" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,131,46,131,48" name="4&apos;he" dtype_id="21"/>
+                                  <const loc="h,131,46,131,48" name="4&apos;he" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,131,31,131,32" dtype_id="14">
                                   <arraysel loc="h,131,63,131,64" dtype_id="2">
                                     <varref loc="h,131,50,131,63" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,131,64,131,66" name="4&apos;hd" dtype_id="21"/>
+                                    <const loc="h,131,64,131,66" name="4&apos;hd" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,131,81,131,82" dtype_id="2">
                                     <varref loc="h,131,68,131,81" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,131,82,131,84" name="4&apos;hc" dtype_id="21"/>
+                                    <const loc="h,131,82,131,84" name="4&apos;hc" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -746,24 +738,24 @@
                             <varref loc="h,131,3,131,9" name="actLen" dtype_id="8"/>
                           </assigndly>
                           <assign loc="h,132,32,132,33" dtype_id="8">
-                            <concat loc="h,132,85,132,86" dtype_id="20">
+                            <concat loc="h,132,85,132,86" dtype_id="19">
                               <arraysel loc="h,132,48,132,49" dtype_id="2">
                                 <varref loc="h,132,35,132,48" name="packet_header" dtype_id="13"/>
-                                <const loc="h,132,49,132,50" name="4&apos;h7" dtype_id="21"/>
+                                <const loc="h,132,49,132,50" name="4&apos;h7" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,132,68,132,69" dtype_id="22">
+                              <concat loc="h,132,68,132,69" dtype_id="21">
                                 <arraysel loc="h,132,65,132,66" dtype_id="2">
                                   <varref loc="h,132,52,132,65" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,132,66,132,67" name="4&apos;h6" dtype_id="21"/>
+                                  <const loc="h,132,66,132,67" name="4&apos;h6" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,132,51,132,52" dtype_id="14">
                                   <arraysel loc="h,132,82,132,83" dtype_id="2">
                                     <varref loc="h,132,69,132,82" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,132,83,132,84" name="4&apos;h5" dtype_id="21"/>
+                                    <const loc="h,132,83,132,84" name="4&apos;h5" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,132,99,132,100" dtype_id="2">
                                     <varref loc="h,132,86,132,99" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,132,100,132,101" name="4&apos;h4" dtype_id="21"/>
+                                    <const loc="h,132,100,132,101" name="4&apos;h4" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -771,24 +763,24 @@
                             <varref loc="h,132,17,132,31" name="timestamp_usec" dtype_id="8"/>
                           </assign>
                           <assign loc="h,133,31,133,32" dtype_id="8">
-                            <concat loc="h,133,84,133,85" dtype_id="20">
+                            <concat loc="h,133,84,133,85" dtype_id="19">
                               <arraysel loc="h,133,47,133,48" dtype_id="2">
                                 <varref loc="h,133,34,133,47" name="packet_header" dtype_id="13"/>
-                                <const loc="h,133,48,133,49" name="4&apos;h3" dtype_id="21"/>
+                                <const loc="h,133,48,133,49" name="4&apos;h3" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,133,67,133,68" dtype_id="22">
+                              <concat loc="h,133,67,133,68" dtype_id="21">
                                 <arraysel loc="h,133,64,133,65" dtype_id="2">
                                   <varref loc="h,133,51,133,64" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,133,65,133,66" name="4&apos;h2" dtype_id="21"/>
+                                  <const loc="h,133,65,133,66" name="4&apos;h2" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,133,50,133,51" dtype_id="14">
                                   <arraysel loc="h,133,81,133,82" dtype_id="2">
                                     <varref loc="h,133,68,133,81" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,133,82,133,83" name="4&apos;h1" dtype_id="21"/>
+                                    <const loc="h,133,82,133,83" name="4&apos;h1" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,133,98,133,99" dtype_id="2">
                                     <varref loc="h,133,85,133,98" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,133,99,133,100" name="4&apos;h0" dtype_id="21"/>
+                                    <const loc="h,133,99,133,100" name="4&apos;h0" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -800,24 +792,24 @@
                       <begin>
                         <begin loc="h,134,15,134,20">
                           <assigndly loc="h,135,10,135,12" dtype_id="8">
-                            <concat loc="h,135,67,135,68" dtype_id="20">
+                            <concat loc="h,135,67,135,68" dtype_id="19">
                               <arraysel loc="h,135,27,135,28" dtype_id="2">
                                 <varref loc="h,135,14,135,27" name="packet_header" dtype_id="13"/>
-                                <const loc="h,135,29,135,30" name="4&apos;h8" dtype_id="21"/>
+                                <const loc="h,135,29,135,30" name="4&apos;h8" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,135,49,135,50" dtype_id="22">
+                              <concat loc="h,135,49,135,50" dtype_id="21">
                                 <arraysel loc="h,135,45,135,46" dtype_id="2">
                                   <varref loc="h,135,32,135,45" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,135,47,135,48" name="4&apos;h9" dtype_id="21"/>
+                                  <const loc="h,135,47,135,48" name="4&apos;h9" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,135,31,135,32" dtype_id="14">
                                   <arraysel loc="h,135,63,135,64" dtype_id="2">
                                     <varref loc="h,135,50,135,63" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,135,64,135,66" name="4&apos;ha" dtype_id="21"/>
+                                    <const loc="h,135,64,135,66" name="4&apos;ha" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,135,81,135,82" dtype_id="2">
                                     <varref loc="h,135,68,135,81" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,135,82,135,84" name="4&apos;hb" dtype_id="21"/>
+                                    <const loc="h,135,82,135,84" name="4&apos;hb" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -825,24 +817,24 @@
                             <varref loc="h,135,3,135,9" name="capLen" dtype_id="8"/>
                           </assigndly>
                           <assigndly loc="h,136,10,136,12" dtype_id="8">
-                            <concat loc="h,136,67,136,68" dtype_id="20">
+                            <concat loc="h,136,67,136,68" dtype_id="19">
                               <arraysel loc="h,136,27,136,28" dtype_id="2">
                                 <varref loc="h,136,14,136,27" name="packet_header" dtype_id="13"/>
-                                <const loc="h,136,28,136,30" name="4&apos;hc" dtype_id="21"/>
+                                <const loc="h,136,28,136,30" name="4&apos;hc" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,136,49,136,50" dtype_id="22">
+                              <concat loc="h,136,49,136,50" dtype_id="21">
                                 <arraysel loc="h,136,45,136,46" dtype_id="2">
                                   <varref loc="h,136,32,136,45" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,136,46,136,48" name="4&apos;hd" dtype_id="21"/>
+                                  <const loc="h,136,46,136,48" name="4&apos;hd" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,136,31,136,32" dtype_id="14">
                                   <arraysel loc="h,136,63,136,64" dtype_id="2">
                                     <varref loc="h,136,50,136,63" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,136,64,136,66" name="4&apos;he" dtype_id="21"/>
+                                    <const loc="h,136,64,136,66" name="4&apos;he" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,136,81,136,82" dtype_id="2">
                                     <varref loc="h,136,68,136,81" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,136,82,136,84" name="4&apos;hf" dtype_id="21"/>
+                                    <const loc="h,136,82,136,84" name="4&apos;hf" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -850,24 +842,24 @@
                             <varref loc="h,136,3,136,9" name="actLen" dtype_id="8"/>
                           </assigndly>
                           <assign loc="h,137,18,137,19" dtype_id="8">
-                            <concat loc="h,137,71,137,72" dtype_id="20">
+                            <concat loc="h,137,71,137,72" dtype_id="19">
                               <arraysel loc="h,137,34,137,35" dtype_id="2">
                                 <varref loc="h,137,21,137,34" name="packet_header" dtype_id="13"/>
-                                <const loc="h,137,35,137,36" name="4&apos;h4" dtype_id="21"/>
+                                <const loc="h,137,35,137,36" name="4&apos;h4" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,137,54,137,55" dtype_id="22">
+                              <concat loc="h,137,54,137,55" dtype_id="21">
                                 <arraysel loc="h,137,51,137,52" dtype_id="2">
                                   <varref loc="h,137,38,137,51" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,137,52,137,53" name="4&apos;h5" dtype_id="21"/>
+                                  <const loc="h,137,52,137,53" name="4&apos;h5" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,137,37,137,38" dtype_id="14">
                                   <arraysel loc="h,137,68,137,69" dtype_id="2">
                                     <varref loc="h,137,55,137,68" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,137,69,137,70" name="4&apos;h6" dtype_id="21"/>
+                                    <const loc="h,137,69,137,70" name="4&apos;h6" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,137,85,137,86" dtype_id="2">
                                     <varref loc="h,137,72,137,85" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,137,86,137,87" name="4&apos;h7" dtype_id="21"/>
+                                    <const loc="h,137,86,137,87" name="4&apos;h7" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -875,24 +867,24 @@
                             <varref loc="h,137,3,137,17" name="timestamp_usec" dtype_id="8"/>
                           </assign>
                           <assign loc="h,138,31,138,32" dtype_id="8">
-                            <concat loc="h,138,84,138,85" dtype_id="20">
+                            <concat loc="h,138,84,138,85" dtype_id="19">
                               <arraysel loc="h,138,47,138,48" dtype_id="2">
                                 <varref loc="h,138,34,138,47" name="packet_header" dtype_id="13"/>
-                                <const loc="h,138,48,138,49" name="4&apos;h0" dtype_id="21"/>
+                                <const loc="h,138,48,138,49" name="4&apos;h0" dtype_id="20"/>
                               </arraysel>
-                              <concat loc="h,138,67,138,68" dtype_id="22">
+                              <concat loc="h,138,67,138,68" dtype_id="21">
                                 <arraysel loc="h,138,64,138,65" dtype_id="2">
                                   <varref loc="h,138,51,138,64" name="packet_header" dtype_id="13"/>
-                                  <const loc="h,138,65,138,66" name="4&apos;h1" dtype_id="21"/>
+                                  <const loc="h,138,65,138,66" name="4&apos;h1" dtype_id="20"/>
                                 </arraysel>
                                 <concat loc="h,138,50,138,51" dtype_id="14">
                                   <arraysel loc="h,138,81,138,82" dtype_id="2">
                                     <varref loc="h,138,68,138,81" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,138,82,138,83" name="4&apos;h2" dtype_id="21"/>
+                                    <const loc="h,138,82,138,83" name="4&apos;h2" dtype_id="20"/>
                                   </arraysel>
                                   <arraysel loc="h,138,98,138,99" dtype_id="2">
                                     <varref loc="h,138,85,138,98" name="packet_header" dtype_id="13"/>
-                                    <const loc="h,138,99,138,100" name="4&apos;h3" dtype_id="21"/>
+                                    <const loc="h,138,99,138,100" name="4&apos;h3" dtype_id="20"/>
                                   </arraysel>
                                 </concat>
                               </concat>
@@ -1008,26 +1000,22 @@
                             </add>
                             <varref loc="h,159,10,159,18" name="pktcount" dtype_id="2"/>
                           </assigndly>
-                          <begin loc="h,160,45,160,50">
-                            <assigndly loc="h,161,37,161,39" dtype_id="1">
-                              <const loc="h,161,40,161,41" name="1&apos;h0" dtype_id="1"/>
-                              <varxref loc="h,161,33,161,36" name="eop" dtype_id="1" dotted="from_reader_avalon"/>
+                          <begin loc="h,166,26,166,31">
+                            <assigndly loc="h,167,29,167,31" dtype_id="1">
+                              <const loc="h,167,32,167,33" name="1&apos;h0" dtype_id="1"/>
+                              <varxref loc="h,167,24,167,28" name="last" dtype_id="1" dotted="from_reader_axis"/>
                             </assigndly>
-                            <assigndly loc="h,162,37,162,39" dtype_id="1">
-                              <const loc="h,162,40,162,41" name="1&apos;h0" dtype_id="1"/>
-                              <varxref loc="h,162,33,162,36" name="sop" dtype_id="1" dotted="from_reader_avalon"/>
+                            <assigndly loc="h,168,37,168,39" dtype_id="1">
+                              <const loc="h,168,40,168,41" name="1&apos;h0" dtype_id="1"/>
+                              <varxref loc="h,168,31,168,36" name="valid" dtype_id="1" dotted="from_reader_axis"/>
                             </assigndly>
-                            <assigndly loc="h,163,39,163,41" dtype_id="1">
-                              <const loc="h,163,42,163,43" name="1&apos;h0" dtype_id="1"/>
-                              <varxref loc="h,163,33,163,38" name="valid" dtype_id="1" dotted="from_reader_avalon"/>
+                            <assigndly loc="h,169,43,169,45" dtype_id="18">
+                              <const loc="h,169,57,169,58" name="128&apos;h0" dtype_id="18"/>
+                              <varxref loc="h,169,38,169,42" name="data" dtype_id="18" dotted="from_reader_axis"/>
                             </assigndly>
-                            <assigndly loc="h,164,45,164,47" dtype_id="18">
-                              <const loc="h,164,59,164,60" name="512&apos;h0" dtype_id="18"/>
-                              <varxref loc="h,164,40,164,44" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                            </assigndly>
-                            <assigndly loc="h,165,46,165,48" dtype_id="19">
-                              <const loc="h,165,61,165,62" name="6&apos;h0" dtype_id="19"/>
-                              <varxref loc="h,165,40,165,45" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
+                            <assigndly loc="h,170,43,170,45" dtype_id="14">
+                              <const loc="h,170,57,170,58" name="16&apos;h0" dtype_id="14"/>
+                              <varxref loc="h,170,38,170,42" name="keep" dtype_id="14" dotted="from_reader_axis"/>
                             </assigndly>
                           </begin>
                         </begin>
@@ -1038,26 +1026,22 @@
                             <const loc="h,173,33,173,34" name="1&apos;h1" dtype_id="1"/>
                             <varref loc="h,173,17,173,29" name="pcapfinished" dtype_id="1"/>
                           </assigndly>
-                          <begin loc="h,174,45,174,50">
-                            <assigndly loc="h,175,37,175,39" dtype_id="1">
-                              <const loc="h,175,40,175,41" name="1&apos;h0" dtype_id="1"/>
-                              <varxref loc="h,175,33,175,36" name="eop" dtype_id="1" dotted="from_reader_avalon"/>
+                          <begin loc="h,180,26,180,31">
+                            <assigndly loc="h,181,29,181,31" dtype_id="1">
+                              <const loc="h,181,32,181,33" name="1&apos;h0" dtype_id="1"/>
+                              <varxref loc="h,181,24,181,28" name="last" dtype_id="1" dotted="from_reader_axis"/>
                             </assigndly>
-                            <assigndly loc="h,176,37,176,39" dtype_id="1">
-                              <const loc="h,176,40,176,41" name="1&apos;h0" dtype_id="1"/>
-                              <varxref loc="h,176,33,176,36" name="sop" dtype_id="1" dotted="from_reader_avalon"/>
+                            <assigndly loc="h,182,37,182,39" dtype_id="1">
+                              <const loc="h,182,40,182,41" name="1&apos;h0" dtype_id="1"/>
+                              <varxref loc="h,182,31,182,36" name="valid" dtype_id="1" dotted="from_reader_axis"/>
                             </assigndly>
-                            <assigndly loc="h,177,32,177,34" dtype_id="1">
-                              <const loc="h,177,35,177,36" name="1&apos;h0" dtype_id="1"/>
-                              <varxref loc="h,177,26,177,31" name="valid" dtype_id="1" dotted="from_reader_avalon"/>
+                            <assigndly loc="h,183,43,183,45" dtype_id="18">
+                              <const loc="h,183,57,183,58" name="128&apos;h0" dtype_id="18"/>
+                              <varxref loc="h,183,38,183,42" name="data" dtype_id="18" dotted="from_reader_axis"/>
                             </assigndly>
-                            <assigndly loc="h,178,45,178,47" dtype_id="18">
-                              <const loc="h,178,59,178,60" name="512&apos;h0" dtype_id="18"/>
-                              <varxref loc="h,178,40,178,44" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                            </assigndly>
-                            <assigndly loc="h,179,46,179,48" dtype_id="19">
-                              <const loc="h,179,61,179,62" name="6&apos;h0" dtype_id="19"/>
-                              <varxref loc="h,179,40,179,45" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
+                            <assigndly loc="h,184,43,184,45" dtype_id="14">
+                              <const loc="h,184,57,184,58" name="16&apos;h0" dtype_id="14"/>
+                              <varxref loc="h,184,38,184,42" name="keep" dtype_id="14" dotted="from_reader_axis"/>
                             </assigndly>
                           </begin>
                         </begin>
@@ -1085,26 +1069,22 @@
                           </lts>
                           <begin>
                             <begin loc="h,190,36,190,41">
-                              <begin loc="h,191,45,191,50">
-                                <assigndly loc="h,192,37,192,39" dtype_id="1">
-                                  <const loc="h,192,40,192,41" name="1&apos;h0" dtype_id="1"/>
-                                  <varxref loc="h,192,33,192,36" name="eop" dtype_id="1" dotted="from_reader_avalon"/>
+                              <begin loc="h,197,26,197,31">
+                                <assigndly loc="h,198,36,198,38" dtype_id="1">
+                                  <const loc="h,198,39,198,40" name="1&apos;h0" dtype_id="1"/>
+                                  <varxref loc="h,198,31,198,35" name="last" dtype_id="1" dotted="from_reader_axis"/>
                                 </assigndly>
-                                <assigndly loc="h,193,37,193,39" dtype_id="1">
-                                  <const loc="h,193,40,193,41" name="1&apos;h0" dtype_id="1"/>
-                                  <varxref loc="h,193,33,193,36" name="sop" dtype_id="1" dotted="from_reader_avalon"/>
+                                <assigndly loc="h,199,37,199,39" dtype_id="1">
+                                  <const loc="h,199,40,199,41" name="1&apos;h0" dtype_id="1"/>
+                                  <varxref loc="h,199,31,199,36" name="valid" dtype_id="1" dotted="from_reader_axis"/>
                                 </assigndly>
-                                <assigndly loc="h,194,32,194,34" dtype_id="1">
-                                  <const loc="h,194,35,194,36" name="1&apos;h0" dtype_id="1"/>
-                                  <varxref loc="h,194,26,194,31" name="valid" dtype_id="1" dotted="from_reader_avalon"/>
+                                <assigndly loc="h,200,43,200,45" dtype_id="18">
+                                  <const loc="h,200,57,200,58" name="128&apos;h0" dtype_id="18"/>
+                                  <varxref loc="h,200,38,200,42" name="data" dtype_id="18" dotted="from_reader_axis"/>
                                 </assigndly>
-                                <assigndly loc="h,195,45,195,47" dtype_id="18">
-                                  <const loc="h,195,59,195,60" name="512&apos;h0" dtype_id="18"/>
-                                  <varxref loc="h,195,40,195,44" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                                </assigndly>
-                                <assigndly loc="h,196,46,196,48" dtype_id="19">
-                                  <const loc="h,196,61,196,62" name="6&apos;h0" dtype_id="19"/>
-                                  <varxref loc="h,196,40,196,45" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
+                                <assigndly loc="h,201,43,201,45" dtype_id="14">
+                                  <const loc="h,201,57,201,58" name="16&apos;h0" dtype_id="14"/>
+                                  <varxref loc="h,201,38,201,42" name="keep" dtype_id="14" dotted="from_reader_axis"/>
                                 </assigndly>
                               </begin>
                             </begin>
@@ -1162,17 +1142,13 @@
                                           </cond>
                                           <varref loc="h,209,21,209,27" name="actLen" dtype_id="8"/>
                                         </assigndly>
-                                        <begin loc="h,211,42,211,47">
-                                          <assigndly loc="h,212,41,212,43" dtype_id="1">
-                                            <varref loc="h,212,44,212,50" name="newpkt" dtype_id="1"/>
-                                            <varxref loc="h,212,37,212,40" name="sop" dtype_id="1" dotted="from_reader_avalon"/>
-                                          </assigndly>
-                                          <assigndly loc="h,213,27,213,29" dtype_id="1">
-                                            <ltes loc="h,213,37,213,39" dtype_id="1">
-                                              <varref loc="h,213,30,213,36" name="actLen" dtype_id="8"/>
-                                              <varref loc="h,213,40,213,54" name="bytes_data_out" dtype_id="8"/>
+                                        <begin loc="h,214,30,214,35">
+                                          <assigndly loc="h,215,26,215,28" dtype_id="1">
+                                            <ltes loc="h,215,36,215,38" dtype_id="1">
+                                              <varref loc="h,215,29,215,35" name="actLen" dtype_id="8"/>
+                                              <varref loc="h,215,39,215,53" name="bytes_data_out" dtype_id="8"/>
                                             </ltes>
-                                            <varxref loc="h,213,23,213,26" name="eop" dtype_id="1" dotted="from_reader_avalon"/>
+                                            <varxref loc="h,215,21,215,25" name="last" dtype_id="1" dotted="from_reader_axis"/>
                                           </assigndly>
                                         </begin>
                                         <if loc="h,218,21,218,23">
@@ -1198,35 +1174,29 @@
                                                   </begin>
                                                   <begin>
                                                     <begin loc="h,219,63,219,68">
-                                                      <begin loc="h,220,43,220,48">
-                                                        <assigndly loc="h,221,84,221,86" dtype_id="2">
-                                                          <sel loc="h,221,98,221,99" dtype_id="2" widthConst="8">
-                                                            <cond loc="h,221,98,221,99" dtype_id="20">
-                                                              <gts loc="h,221,94,221,95" dtype_id="1">
-                                                                <varref loc="h,221,87,221,93" name="capLen" dtype_id="8"/>
-                                                                <varref loc="h,221,96,221,97" name="i" dtype_id="8"/>
+                                                      <begin loc="h,222,38,222,43">
+                                                        <assigndly loc="h,223,35,223,37" dtype_id="2">
+                                                          <sel loc="h,223,49,223,50" dtype_id="2" widthConst="8">
+                                                            <cond loc="h,223,49,223,50" dtype_id="19">
+                                                              <gts loc="h,223,45,223,46" dtype_id="1">
+                                                                <varref loc="h,223,38,223,44" name="capLen" dtype_id="8"/>
+                                                                <varref loc="h,223,47,223,48" name="i" dtype_id="8"/>
                                                               </gts>
-                                                              <fgetc loc="h,221,100,221,106" dtype_id="3">
-                                                                <varref loc="h,221,107,221,111" name="file" dtype_id="8"/>
+                                                              <fgetc loc="h,223,51,223,57" dtype_id="3">
+                                                                <varref loc="h,223,58,223,62" name="file" dtype_id="8"/>
                                                               </fgetc>
-                                                              <const loc="h,221,115,221,119" name="32&apos;h0" dtype_id="20"/>
+                                                              <const loc="h,223,66,223,70" name="32&apos;h0" dtype_id="19"/>
                                                             </cond>
-                                                            <const loc="h,221,98,221,99" name="32&apos;h0" dtype_id="20"/>
+                                                            <const loc="h,223,49,223,50" name="32&apos;h0" dtype_id="19"/>
                                                           </sel>
-                                                          <sel loc="h,221,56,221,57" dtype_id="2" widthConst="8">
-                                                            <varxref loc="h,221,52,221,56" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                                                            <sel loc="h,221,77,221,78" dtype_id="23" widthConst="9">
-                                                              <muls loc="h,221,77,221,78" dtype_id="3">
-                                                                <const loc="h,221,78,221,79" name="32&apos;sh8" dtype_id="3"/>
-                                                                <sub loc="h,221,74,221,75" dtype_id="3">
-                                                                  <sub loc="h,221,72,221,73" dtype_id="3">
-                                                                    <varref loc="h,221,58,221,72" name="bytes_data_out" dtype_id="8"/>
-                                                                    <const loc="h,221,73,221,74" name="32&apos;sh1" dtype_id="3"/>
-                                                                  </sub>
-                                                                  <varref loc="h,221,75,221,76" name="i" dtype_id="8"/>
-                                                                </sub>
+                                                          <sel loc="h,223,26,223,27" dtype_id="2" widthConst="8">
+                                                            <varxref loc="h,223,22,223,26" name="data" dtype_id="18" dotted="from_reader_axis"/>
+                                                            <sel loc="h,223,28,223,29" dtype_id="22" widthConst="7">
+                                                              <muls loc="h,223,28,223,29" dtype_id="3">
+                                                                <const loc="h,223,29,223,30" name="32&apos;sh8" dtype_id="3"/>
+                                                                <varref loc="h,223,27,223,28" name="i" dtype_id="8"/>
                                                               </muls>
-                                                              <const loc="h,221,77,221,78" name="32&apos;h0" dtype_id="20"/>
+                                                              <const loc="h,223,28,223,29" name="32&apos;h0" dtype_id="19"/>
                                                             </sel>
                                                           </sel>
                                                         </assigndly>
@@ -1244,24 +1214,94 @@
                                                   </begin>
                                                 </while>
                                               </begin>
-                                              <begin loc="h,227,32,227,37">
-                                                <assigndly loc="h,228,54,228,56" dtype_id="19">
-                                                  <sel loc="h,228,96,228,97" dtype_id="24" widthConst="6">
-                                                    <cond loc="h,228,96,228,97" dtype_id="3">
-                                                      <gts loc="h,228,78,228,79" dtype_id="1">
-                                                        <varref loc="h,228,71,228,77" name="capLen" dtype_id="8"/>
-                                                        <varref loc="h,228,80,228,94" name="bytes_data_out" dtype_id="8"/>
-                                                      </gts>
-                                                      <const loc="h,228,98,228,99" name="32&apos;sh0" dtype_id="3"/>
-                                                      <sub loc="h,228,117,228,118" dtype_id="3">
-                                                        <varref loc="h,228,102,228,116" name="bytes_data_out" dtype_id="8"/>
-                                                        <varref loc="h,228,119,228,125" name="capLen" dtype_id="8"/>
-                                                      </sub>
-                                                    </cond>
-                                                    <const loc="h,228,96,228,97" name="32&apos;h0" dtype_id="20"/>
-                                                  </sel>
-                                                  <varxref loc="h,228,48,228,53" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
-                                                </assigndly>
+                                              <begin loc="h,229,27,229,32">
+                                                <if loc="h,230,29,230,31">
+                                                  <gts loc="h,230,38,230,39" dtype_id="1">
+                                                    <varref loc="h,230,32,230,38" name="capLen" dtype_id="8"/>
+                                                    <varref loc="h,230,39,230,53" name="bytes_data_out" dtype_id="8"/>
+                                                  </gts>
+                                                  <begin>
+                                                    <begin loc="h,230,55,230,60">
+                                                      <assigndly loc="h,231,34,231,36" dtype_id="14">
+                                                        <const loc="h,231,48,231,49" name="16&apos;hffff" dtype_id="14"/>
+                                                        <varxref loc="h,231,29,231,33" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                      </assigndly>
+                                                    </begin>
+                                                  </begin>
+                                                  <begin>
+                                                    <begin loc="h,232,38,232,43">
+                                                      <begin loc="h,233,33,233,36">
+                                                        <assign loc="h,233,39,233,40" dtype_id="8">
+                                                          <const loc="h,233,40,233,41" name="32&apos;sh0" dtype_id="3"/>
+                                                          <varref loc="h,233,38,233,39" name="i" dtype_id="8"/>
+                                                        </assign>
+                                                        <while loc="h,233,33,233,36">
+                                                          <begin>
+                                                          </begin>
+                                                          <begin>
+                                                            <gts loc="h,233,44,233,45" dtype_id="1">
+                                                              <const loc="h,233,45,233,55" name="32&apos;h10" dtype_id="3"/>
+                                                              <varref loc="h,233,43,233,44" name="i" dtype_id="8"/>
+                                                            </gts>
+                                                          </begin>
+                                                          <begin>
+                                                            <begin loc="h,233,64,233,69">
+                                                              <if loc="h,234,9,234,11">
+                                                                <lts loc="h,234,13,234,14" dtype_id="1">
+                                                                  <varref loc="h,234,12,234,13" name="i" dtype_id="8"/>
+                                                                  <sub loc="h,234,24,234,25" dtype_id="3">
+                                                                    <const loc="h,234,14,234,24" name="32&apos;h10" dtype_id="3"/>
+                                                                    <sub loc="h,234,40,234,41" dtype_id="3">
+                                                                      <varref loc="h,234,26,234,40" name="bytes_data_out" dtype_id="8"/>
+                                                                      <varref loc="h,234,41,234,47" name="capLen" dtype_id="8"/>
+                                                                    </sub>
+                                                                  </sub>
+                                                                </lts>
+                                                                <begin>
+                                                                  <begin loc="h,234,50,234,55">
+                                                                    <assigndly loc="h,235,44,235,46" dtype_id="1">
+                                                                      <const loc="h,235,46,235,47" name="1&apos;h1" dtype_id="1"/>
+                                                                      <sel loc="h,235,41,235,42" dtype_id="1" widthConst="1">
+                                                                        <varxref loc="h,235,37,235,41" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                                        <sel loc="h,235,42,235,43" dtype_id="20" widthConst="4">
+                                                                          <varref loc="h,235,42,235,43" name="i" dtype_id="8"/>
+                                                                          <const loc="h,235,42,235,43" name="32&apos;h0" dtype_id="19"/>
+                                                                        </sel>
+                                                                      </sel>
+                                                                    </assigndly>
+                                                                  </begin>
+                                                                </begin>
+                                                                <begin>
+                                                                  <begin loc="h,236,46,236,51">
+                                                                    <assigndly loc="h,237,30,237,32" dtype_id="1">
+                                                                      <const loc="h,237,32,237,33" name="1&apos;h0" dtype_id="1"/>
+                                                                      <sel loc="h,237,27,237,28" dtype_id="1" widthConst="1">
+                                                                        <varxref loc="h,237,23,237,27" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                                        <sel loc="h,237,28,237,29" dtype_id="20" widthConst="4">
+                                                                          <varref loc="h,237,28,237,29" name="i" dtype_id="8"/>
+                                                                          <const loc="h,237,28,237,29" name="32&apos;h0" dtype_id="19"/>
+                                                                        </sel>
+                                                                      </sel>
+                                                                    </assigndly>
+                                                                  </begin>
+                                                                </begin>
+                                                              </if>
+                                                            </begin>
+                                                          </begin>
+                                                          <begin>
+                                                            <assign loc="h,233,58,233,59" dtype_id="8">
+                                                              <add loc="h,233,60,233,61" dtype_id="8">
+                                                                <const loc="h,233,61,233,62" name="32&apos;sh1" dtype_id="3"/>
+                                                                <varref loc="h,233,59,233,60" name="i" dtype_id="8"/>
+                                                              </add>
+                                                              <varref loc="h,233,57,233,58" name="i" dtype_id="8"/>
+                                                            </assign>
+                                                          </begin>
+                                                        </while>
+                                                      </begin>
+                                                    </begin>
+                                                  </begin>
+                                                </if>
                                               </begin>
                                             </begin>
                                           </begin>
@@ -1290,35 +1330,29 @@
                                                         </begin>
                                                         <begin>
                                                           <begin loc="h,245,66,245,71">
-                                                            <begin loc="h,246,61,246,66">
-                                                              <assigndly loc="h,247,88,247,90" dtype_id="2">
-                                                                <sel loc="h,247,102,247,103" dtype_id="2" widthConst="8">
-                                                                  <cond loc="h,247,102,247,103" dtype_id="20">
-                                                                    <gts loc="h,247,98,247,99" dtype_id="1">
-                                                                      <varref loc="h,247,91,247,97" name="capLen" dtype_id="8"/>
-                                                                      <varref loc="h,247,100,247,101" name="i" dtype_id="8"/>
+                                                            <begin loc="h,248,42,248,47">
+                                                              <assigndly loc="h,249,39,249,41" dtype_id="2">
+                                                                <sel loc="h,249,53,249,54" dtype_id="2" widthConst="8">
+                                                                  <cond loc="h,249,53,249,54" dtype_id="19">
+                                                                    <gts loc="h,249,49,249,50" dtype_id="1">
+                                                                      <varref loc="h,249,42,249,48" name="capLen" dtype_id="8"/>
+                                                                      <varref loc="h,249,51,249,52" name="i" dtype_id="8"/>
                                                                     </gts>
-                                                                    <fgetc loc="h,247,104,247,110" dtype_id="3">
-                                                                      <varref loc="h,247,111,247,115" name="file" dtype_id="8"/>
+                                                                    <fgetc loc="h,249,55,249,61" dtype_id="3">
+                                                                      <varref loc="h,249,62,249,66" name="file" dtype_id="8"/>
                                                                     </fgetc>
-                                                                    <const loc="h,247,119,247,123" name="32&apos;h0" dtype_id="20"/>
+                                                                    <const loc="h,249,70,249,74" name="32&apos;h0" dtype_id="19"/>
                                                                   </cond>
-                                                                  <const loc="h,247,102,247,103" name="32&apos;h0" dtype_id="20"/>
+                                                                  <const loc="h,249,53,249,54" name="32&apos;h0" dtype_id="19"/>
                                                                 </sel>
-                                                                <sel loc="h,247,60,247,61" dtype_id="2" widthConst="8">
-                                                                  <varxref loc="h,247,56,247,60" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                                                                  <sel loc="h,247,81,247,82" dtype_id="23" widthConst="9">
-                                                                    <muls loc="h,247,81,247,82" dtype_id="3">
-                                                                      <const loc="h,247,82,247,83" name="32&apos;sh8" dtype_id="3"/>
-                                                                      <sub loc="h,247,78,247,79" dtype_id="3">
-                                                                        <sub loc="h,247,76,247,77" dtype_id="3">
-                                                                          <varref loc="h,247,62,247,76" name="bytes_data_out" dtype_id="8"/>
-                                                                          <const loc="h,247,77,247,78" name="32&apos;sh1" dtype_id="3"/>
-                                                                        </sub>
-                                                                        <varref loc="h,247,79,247,80" name="i" dtype_id="8"/>
-                                                                      </sub>
+                                                                <sel loc="h,249,30,249,31" dtype_id="2" widthConst="8">
+                                                                  <varxref loc="h,249,26,249,30" name="data" dtype_id="18" dotted="from_reader_axis"/>
+                                                                  <sel loc="h,249,32,249,33" dtype_id="22" widthConst="7">
+                                                                    <muls loc="h,249,32,249,33" dtype_id="3">
+                                                                      <const loc="h,249,33,249,34" name="32&apos;sh8" dtype_id="3"/>
+                                                                      <varref loc="h,249,31,249,32" name="i" dtype_id="8"/>
                                                                     </muls>
-                                                                    <const loc="h,247,81,247,82" name="32&apos;h0" dtype_id="20"/>
+                                                                    <const loc="h,249,32,249,33" name="32&apos;h0" dtype_id="19"/>
                                                                   </sel>
                                                                 </sel>
                                                               </assigndly>
@@ -1336,24 +1370,94 @@
                                                         </begin>
                                                       </while>
                                                     </begin>
-                                                    <begin loc="h,253,57,253,62">
-                                                      <assigndly loc="h,254,44,254,46" dtype_id="19">
-                                                        <sel loc="h,254,86,254,87" dtype_id="24" widthConst="6">
-                                                          <cond loc="h,254,86,254,87" dtype_id="3">
-                                                            <gts loc="h,254,68,254,69" dtype_id="1">
-                                                              <varref loc="h,254,61,254,67" name="actLen" dtype_id="8"/>
-                                                              <varref loc="h,254,70,254,84" name="bytes_data_out" dtype_id="8"/>
-                                                            </gts>
-                                                            <const loc="h,254,88,254,89" name="32&apos;sh0" dtype_id="3"/>
-                                                            <sub loc="h,254,107,254,108" dtype_id="3">
-                                                              <varref loc="h,254,92,254,106" name="bytes_data_out" dtype_id="8"/>
-                                                              <varref loc="h,254,109,254,115" name="actLen" dtype_id="8"/>
-                                                            </sub>
-                                                          </cond>
-                                                          <const loc="h,254,86,254,87" name="32&apos;h0" dtype_id="20"/>
-                                                        </sel>
-                                                        <varxref loc="h,254,38,254,43" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
-                                                      </assigndly>
+                                                    <begin loc="h,255,38,255,43">
+                                                      <if loc="h,256,5,256,7">
+                                                        <gts loc="h,256,14,256,15" dtype_id="1">
+                                                          <varref loc="h,256,8,256,14" name="actLen" dtype_id="8"/>
+                                                          <varref loc="h,256,15,256,29" name="bytes_data_out" dtype_id="8"/>
+                                                        </gts>
+                                                        <begin>
+                                                          <begin loc="h,256,31,256,36">
+                                                            <assigndly loc="h,257,31,257,33" dtype_id="14">
+                                                              <const loc="h,257,45,257,46" name="16&apos;hffff" dtype_id="14"/>
+                                                              <varxref loc="h,257,26,257,30" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                            </assigndly>
+                                                          </begin>
+                                                        </begin>
+                                                        <begin>
+                                                          <begin loc="h,258,42,258,47">
+                                                            <begin loc="h,259,37,259,40">
+                                                              <assign loc="h,259,43,259,44" dtype_id="8">
+                                                                <const loc="h,259,44,259,45" name="32&apos;sh0" dtype_id="3"/>
+                                                                <varref loc="h,259,42,259,43" name="i" dtype_id="8"/>
+                                                              </assign>
+                                                              <while loc="h,259,37,259,40">
+                                                                <begin>
+                                                                </begin>
+                                                                <begin>
+                                                                  <gts loc="h,259,48,259,49" dtype_id="1">
+                                                                    <const loc="h,259,49,259,59" name="32&apos;h10" dtype_id="3"/>
+                                                                    <varref loc="h,259,47,259,48" name="i" dtype_id="8"/>
+                                                                  </gts>
+                                                                </begin>
+                                                                <begin>
+                                                                  <begin loc="h,259,68,259,73">
+                                                                    <if loc="h,260,13,260,15">
+                                                                      <lts loc="h,260,17,260,18" dtype_id="1">
+                                                                        <varref loc="h,260,16,260,17" name="i" dtype_id="8"/>
+                                                                        <sub loc="h,260,28,260,29" dtype_id="3">
+                                                                          <const loc="h,260,18,260,28" name="32&apos;h10" dtype_id="3"/>
+                                                                          <sub loc="h,260,44,260,45" dtype_id="3">
+                                                                            <varref loc="h,260,30,260,44" name="bytes_data_out" dtype_id="8"/>
+                                                                            <varref loc="h,260,45,260,51" name="actLen" dtype_id="8"/>
+                                                                          </sub>
+                                                                        </sub>
+                                                                      </lts>
+                                                                      <begin>
+                                                                        <begin loc="h,260,54,260,59">
+                                                                          <assigndly loc="h,261,41,261,43" dtype_id="1">
+                                                                            <const loc="h,261,43,261,44" name="1&apos;h1" dtype_id="1"/>
+                                                                            <sel loc="h,261,38,261,39" dtype_id="1" widthConst="1">
+                                                                              <varxref loc="h,261,34,261,38" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                                              <sel loc="h,261,39,261,40" dtype_id="20" widthConst="4">
+                                                                                <varref loc="h,261,39,261,40" name="i" dtype_id="8"/>
+                                                                                <const loc="h,261,39,261,40" name="32&apos;h0" dtype_id="19"/>
+                                                                              </sel>
+                                                                            </sel>
+                                                                          </assigndly>
+                                                                        </begin>
+                                                                      </begin>
+                                                                      <begin>
+                                                                        <begin loc="h,262,50,262,55">
+                                                                          <assigndly loc="h,263,34,263,36" dtype_id="1">
+                                                                            <const loc="h,263,36,263,37" name="1&apos;h0" dtype_id="1"/>
+                                                                            <sel loc="h,263,31,263,32" dtype_id="1" widthConst="1">
+                                                                              <varxref loc="h,263,27,263,31" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                                              <sel loc="h,263,32,263,33" dtype_id="20" widthConst="4">
+                                                                                <varref loc="h,263,32,263,33" name="i" dtype_id="8"/>
+                                                                                <const loc="h,263,32,263,33" name="32&apos;h0" dtype_id="19"/>
+                                                                              </sel>
+                                                                            </sel>
+                                                                          </assigndly>
+                                                                        </begin>
+                                                                      </begin>
+                                                                    </if>
+                                                                  </begin>
+                                                                </begin>
+                                                                <begin>
+                                                                  <assign loc="h,259,62,259,63" dtype_id="8">
+                                                                    <add loc="h,259,64,259,65" dtype_id="8">
+                                                                      <const loc="h,259,65,259,66" name="32&apos;sh1" dtype_id="3"/>
+                                                                      <varref loc="h,259,63,259,64" name="i" dtype_id="8"/>
+                                                                    </add>
+                                                                    <varref loc="h,259,61,259,62" name="i" dtype_id="8"/>
+                                                                  </assign>
+                                                                </begin>
+                                                              </while>
+                                                            </begin>
+                                                          </begin>
+                                                        </begin>
+                                                      </if>
                                                     </begin>
                                                   </begin>
                                                 </begin>
@@ -1375,23 +1479,17 @@
                                                         </begin>
                                                         <begin>
                                                           <begin loc="h,270,66,270,71">
-                                                            <begin loc="h,271,61,271,66">
-                                                              <assigndly loc="h,272,88,272,90" dtype_id="2">
-                                                                <const loc="h,272,91,272,95" name="8&apos;h0" dtype_id="2"/>
-                                                                <sel loc="h,272,60,272,61" dtype_id="2" widthConst="8">
-                                                                  <varxref loc="h,272,56,272,60" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                                                                  <sel loc="h,272,81,272,82" dtype_id="23" widthConst="9">
-                                                                    <muls loc="h,272,81,272,82" dtype_id="3">
-                                                                      <const loc="h,272,82,272,83" name="32&apos;sh8" dtype_id="3"/>
-                                                                      <sub loc="h,272,78,272,79" dtype_id="3">
-                                                                        <sub loc="h,272,76,272,77" dtype_id="3">
-                                                                          <varref loc="h,272,62,272,76" name="bytes_data_out" dtype_id="8"/>
-                                                                          <const loc="h,272,77,272,78" name="32&apos;sh1" dtype_id="3"/>
-                                                                        </sub>
-                                                                        <varref loc="h,272,79,272,80" name="i" dtype_id="8"/>
-                                                                      </sub>
+                                                            <begin loc="h,273,42,273,47">
+                                                              <assigndly loc="h,274,39,274,41" dtype_id="2">
+                                                                <const loc="h,274,42,274,46" name="8&apos;h0" dtype_id="2"/>
+                                                                <sel loc="h,274,30,274,31" dtype_id="2" widthConst="8">
+                                                                  <varxref loc="h,274,26,274,30" name="data" dtype_id="18" dotted="from_reader_axis"/>
+                                                                  <sel loc="h,274,32,274,33" dtype_id="22" widthConst="7">
+                                                                    <muls loc="h,274,32,274,33" dtype_id="3">
+                                                                      <const loc="h,274,33,274,34" name="32&apos;sh8" dtype_id="3"/>
+                                                                      <varref loc="h,274,31,274,32" name="i" dtype_id="8"/>
                                                                     </muls>
-                                                                    <const loc="h,272,81,272,82" name="32&apos;h0" dtype_id="20"/>
+                                                                    <const loc="h,274,32,274,33" name="32&apos;h0" dtype_id="19"/>
                                                                   </sel>
                                                                 </sel>
                                                               </assigndly>
@@ -1409,24 +1507,94 @@
                                                         </begin>
                                                       </while>
                                                     </begin>
-                                                    <begin loc="h,278,43,278,48">
-                                                      <assigndly loc="h,279,44,279,46" dtype_id="19">
-                                                        <sel loc="h,279,86,279,87" dtype_id="24" widthConst="6">
-                                                          <cond loc="h,279,86,279,87" dtype_id="3">
-                                                            <gts loc="h,279,68,279,69" dtype_id="1">
-                                                              <varref loc="h,279,61,279,67" name="actLen" dtype_id="8"/>
-                                                              <varref loc="h,279,70,279,84" name="bytes_data_out" dtype_id="8"/>
-                                                            </gts>
-                                                            <const loc="h,279,88,279,89" name="32&apos;sh0" dtype_id="3"/>
-                                                            <sub loc="h,279,107,279,108" dtype_id="3">
-                                                              <varref loc="h,279,92,279,106" name="bytes_data_out" dtype_id="8"/>
-                                                              <varref loc="h,279,109,279,115" name="actLen" dtype_id="8"/>
-                                                            </sub>
-                                                          </cond>
-                                                          <const loc="h,279,86,279,87" name="32&apos;h0" dtype_id="20"/>
-                                                        </sel>
-                                                        <varxref loc="h,279,38,279,43" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
-                                                      </assigndly>
+                                                    <begin loc="h,280,24,280,29">
+                                                      <if loc="h,281,33,281,35">
+                                                        <gts loc="h,281,42,281,43" dtype_id="1">
+                                                          <varref loc="h,281,36,281,42" name="actLen" dtype_id="8"/>
+                                                          <varref loc="h,281,43,281,57" name="bytes_data_out" dtype_id="8"/>
+                                                        </gts>
+                                                        <begin>
+                                                          <begin loc="h,281,59,281,64">
+                                                            <assigndly loc="h,282,31,282,33" dtype_id="14">
+                                                              <const loc="h,282,45,282,46" name="16&apos;hffff" dtype_id="14"/>
+                                                              <varxref loc="h,282,26,282,30" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                            </assigndly>
+                                                          </begin>
+                                                        </begin>
+                                                        <begin>
+                                                          <begin loc="h,283,42,283,47">
+                                                            <begin loc="h,284,37,284,40">
+                                                              <assign loc="h,284,43,284,44" dtype_id="8">
+                                                                <const loc="h,284,44,284,45" name="32&apos;sh0" dtype_id="3"/>
+                                                                <varref loc="h,284,42,284,43" name="i" dtype_id="8"/>
+                                                              </assign>
+                                                              <while loc="h,284,37,284,40">
+                                                                <begin>
+                                                                </begin>
+                                                                <begin>
+                                                                  <gts loc="h,284,48,284,49" dtype_id="1">
+                                                                    <const loc="h,284,49,284,59" name="32&apos;h10" dtype_id="3"/>
+                                                                    <varref loc="h,284,47,284,48" name="i" dtype_id="8"/>
+                                                                  </gts>
+                                                                </begin>
+                                                                <begin>
+                                                                  <begin loc="h,284,68,284,73">
+                                                                    <if loc="h,285,13,285,15">
+                                                                      <lts loc="h,285,17,285,18" dtype_id="1">
+                                                                        <varref loc="h,285,16,285,17" name="i" dtype_id="8"/>
+                                                                        <sub loc="h,285,28,285,29" dtype_id="3">
+                                                                          <const loc="h,285,18,285,28" name="32&apos;h10" dtype_id="3"/>
+                                                                          <sub loc="h,285,44,285,45" dtype_id="3">
+                                                                            <varref loc="h,285,30,285,44" name="bytes_data_out" dtype_id="8"/>
+                                                                            <varref loc="h,285,45,285,51" name="actLen" dtype_id="8"/>
+                                                                          </sub>
+                                                                        </sub>
+                                                                      </lts>
+                                                                      <begin>
+                                                                        <begin loc="h,285,54,285,59">
+                                                                          <assigndly loc="h,286,41,286,43" dtype_id="1">
+                                                                            <const loc="h,286,43,286,44" name="1&apos;h1" dtype_id="1"/>
+                                                                            <sel loc="h,286,38,286,39" dtype_id="1" widthConst="1">
+                                                                              <varxref loc="h,286,34,286,38" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                                              <sel loc="h,286,39,286,40" dtype_id="20" widthConst="4">
+                                                                                <varref loc="h,286,39,286,40" name="i" dtype_id="8"/>
+                                                                                <const loc="h,286,39,286,40" name="32&apos;h0" dtype_id="19"/>
+                                                                              </sel>
+                                                                            </sel>
+                                                                          </assigndly>
+                                                                        </begin>
+                                                                      </begin>
+                                                                      <begin>
+                                                                        <begin loc="h,287,50,287,55">
+                                                                          <assigndly loc="h,288,34,288,36" dtype_id="1">
+                                                                            <const loc="h,288,36,288,37" name="1&apos;h0" dtype_id="1"/>
+                                                                            <sel loc="h,288,31,288,32" dtype_id="1" widthConst="1">
+                                                                              <varxref loc="h,288,27,288,31" name="keep" dtype_id="14" dotted="from_reader_axis"/>
+                                                                              <sel loc="h,288,32,288,33" dtype_id="20" widthConst="4">
+                                                                                <varref loc="h,288,32,288,33" name="i" dtype_id="8"/>
+                                                                                <const loc="h,288,32,288,33" name="32&apos;h0" dtype_id="19"/>
+                                                                              </sel>
+                                                                            </sel>
+                                                                          </assigndly>
+                                                                        </begin>
+                                                                      </begin>
+                                                                    </if>
+                                                                  </begin>
+                                                                </begin>
+                                                                <begin>
+                                                                  <assign loc="h,284,62,284,63" dtype_id="8">
+                                                                    <add loc="h,284,64,284,65" dtype_id="8">
+                                                                      <const loc="h,284,65,284,66" name="32&apos;sh1" dtype_id="3"/>
+                                                                      <varref loc="h,284,63,284,64" name="i" dtype_id="8"/>
+                                                                    </add>
+                                                                    <varref loc="h,284,61,284,62" name="i" dtype_id="8"/>
+                                                                  </assign>
+                                                                </begin>
+                                                              </while>
+                                                            </begin>
+                                                          </begin>
+                                                        </begin>
+                                                      </if>
                                                     </begin>
                                                   </begin>
                                                 </begin>
@@ -1464,10 +1632,10 @@
                                     </begin>
                                     <begin>
                                       <begin loc="h,299,12,299,17">
-                                        <begin loc="h,300,49,300,54">
-                                          <assigndly loc="h,301,36,301,38" dtype_id="1">
-                                            <const loc="h,301,39,301,40" name="1&apos;h1" dtype_id="1"/>
-                                            <varxref loc="h,301,30,301,35" name="valid" dtype_id="1" dotted="from_reader_avalon"/>
+                                        <begin loc="h,302,16,302,21">
+                                          <assigndly loc="h,303,48,303,50" dtype_id="1">
+                                            <const loc="h,303,51,303,52" name="1&apos;h1" dtype_id="1"/>
+                                            <varxref loc="h,303,42,303,47" name="valid" dtype_id="1" dotted="from_reader_axis"/>
                                           </assigndly>
                                         </begin>
                                       </begin>
@@ -1477,26 +1645,22 @@
                               </begin>
                               <begin>
                                 <begin loc="h,306,15,306,20">
-                                  <begin loc="h,307,38,307,43">
-                                    <assigndly loc="h,308,30,308,32" dtype_id="1">
-                                      <const loc="h,308,33,308,34" name="1&apos;h0" dtype_id="1"/>
-                                      <varxref loc="h,308,26,308,29" name="eop" dtype_id="1" dotted="from_reader_avalon"/>
+                                  <begin loc="h,313,26,313,31">
+                                    <assigndly loc="h,314,43,314,45" dtype_id="1">
+                                      <const loc="h,314,46,314,47" name="1&apos;h0" dtype_id="1"/>
+                                      <varxref loc="h,314,38,314,42" name="last" dtype_id="1" dotted="from_reader_axis"/>
                                     </assigndly>
-                                    <assigndly loc="h,309,30,309,32" dtype_id="1">
-                                      <const loc="h,309,33,309,34" name="1&apos;h0" dtype_id="1"/>
-                                      <varxref loc="h,309,26,309,29" name="sop" dtype_id="1" dotted="from_reader_avalon"/>
+                                    <assigndly loc="h,315,30,315,32" dtype_id="1">
+                                      <const loc="h,315,33,315,34" name="1&apos;h0" dtype_id="1"/>
+                                      <varxref loc="h,315,24,315,29" name="valid" dtype_id="1" dotted="from_reader_axis"/>
                                     </assigndly>
-                                    <assigndly loc="h,310,32,310,34" dtype_id="1">
-                                      <const loc="h,310,35,310,36" name="1&apos;h0" dtype_id="1"/>
-                                      <varxref loc="h,310,26,310,31" name="valid" dtype_id="1" dotted="from_reader_avalon"/>
+                                    <assigndly loc="h,316,43,316,45" dtype_id="18">
+                                      <const loc="h,316,57,316,58" name="128&apos;h0" dtype_id="18"/>
+                                      <varxref loc="h,316,38,316,42" name="data" dtype_id="18" dotted="from_reader_axis"/>
                                     </assigndly>
-                                    <assigndly loc="h,311,45,311,47" dtype_id="18">
-                                      <const loc="h,311,59,311,60" name="512&apos;h0" dtype_id="18"/>
-                                      <varxref loc="h,311,40,311,44" name="data" dtype_id="18" dotted="from_reader_avalon"/>
-                                    </assigndly>
-                                    <assigndly loc="h,312,46,312,48" dtype_id="19">
-                                      <const loc="h,312,61,312,62" name="6&apos;h0" dtype_id="19"/>
-                                      <varxref loc="h,312,40,312,45" name="empty" dtype_id="19" dotted="from_reader_avalon"/>
+                                    <assigndly loc="h,317,43,317,45" dtype_id="14">
+                                      <const loc="h,317,57,317,58" name="16&apos;h0" dtype_id="14"/>
+                                      <varxref loc="h,317,38,317,42" name="keep" dtype_id="14" dotted="from_reader_axis"/>
                                     </assigndly>
                                   </begin>
                                 </begin>
@@ -1514,32 +1678,32 @@
         </begin>
       </always>
     </module>
-    <module loc="i,8,8,8,18" name="pcapwriter__Pz2" origName="pcapwriter">
+    <module loc="i,8,8,8,18" name="pcapwriter__pi2" origName="pcapwriter">
       <var loc="i,10,15,10,28" name="PCAP_FILENAME" dtype_id="9" vartype="logic" origName="PCAP_FILENAME" param="true">
-        <const loc="j,38,17,38,32" name="104&apos;h2e2e2f74657374322e70636170" dtype_id="9"/>
+        <const loc="j,37,17,37,32" name="104&apos;h2e2e2f74657374322e70636170" dtype_id="9"/>
       </var>
       <var loc="i,11,15,11,26" name="PCAP_BUFFSZ" dtype_id="3" vartype="logic" origName="PCAP_BUFFSZ" param="true">
         <const loc="i,11,29,11,33" name="32&apos;sh2328" dtype_id="3"/>
       </var>
       <var loc="i,12,15,12,26" name="SIGNAL_TYPE" dtype_id="4" vartype="logic" origName="SIGNAL_TYPE" param="true">
-        <const loc="j,39,22,39,33" name="48&apos;h6176616c6f6e" dtype_id="4"/>
+        <const loc="j,38,22,38,33" name="48&apos;h617869733030" dtype_id="4"/>
       </var>
       <var loc="i,13,15,13,25" name="DATA_WIDTH" dtype_id="3" vartype="logic" origName="DATA_WIDTH" param="true">
-        <const loc="j,40,21,40,31" name="32&apos;sh200" dtype_id="3"/>
+        <const loc="j,39,21,39,31" name="32&apos;sh80" dtype_id="3"/>
       </var>
       <var loc="i,14,15,14,27" name="CLOCK_PERIOD" dtype_id="3" vartype="logic" origName="CLOCK_PERIOD" param="true">
         <const loc="i,14,30,14,34" name="32&apos;sha00" dtype_id="3"/>
       </var>
       <var loc="i,15,15,15,26" name="EMPTY_WIDTH" dtype_id="3" vartype="logic" origName="EMPTY_WIDTH" param="true">
-        <const loc="i,15,44,15,50" name="32&apos;h6" dtype_id="3"/>
+        <const loc="i,15,44,15,50" name="32&apos;h4" dtype_id="3"/>
       </var>
       <var loc="i,16,15,16,25" name="KEEP_WIDTH" dtype_id="3" vartype="logic" origName="KEEP_WIDTH" param="true">
-        <const loc="i,16,38,16,39" name="32&apos;h40" dtype_id="3"/>
+        <const loc="i,16,38,16,39" name="32&apos;h10" dtype_id="3"/>
       </var>
       <var loc="i,18,27,18,33" name="clk_in" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk_in"/>
       <var loc="i,19,27,19,32" name="reset" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="reset"/>
-      <var loc="i,21,27,21,43" name="to_writer_avalon" dtype_id="25" vartype="ifaceref" origName="to_writer_avalon"/>
-      <var loc="i,22,27,22,41" name="to_writer_axis" dtype_id="26" vartype="ifaceref" origName="to_writer_axis"/>
+      <var loc="i,21,27,21,43" name="to_writer_avalon" dtype_id="23" vartype="ifaceref" origName="to_writer_avalon"/>
+      <var loc="i,22,27,22,41" name="to_writer_axis" dtype_id="24" vartype="ifaceref" origName="to_writer_axis"/>
       <var loc="i,24,27,24,35" name="pktcount" dtype_id="2" dir="output" pinIndex="5" vartype="logic" origName="pktcount"/>
       <initialstatic loc="i,24,38,24,39">
         <assign loc="i,24,38,24,39" dtype_id="2">
@@ -1547,9 +1711,9 @@
           <varref loc="i,24,38,24,39" name="pktcount" dtype_id="2"/>
         </assign>
       </initialstatic>
-      <var loc="i,27,18,27,31" name="global_header" dtype_id="27" vartype="" origName="global_header"/>
-      <var loc="i,28,18,28,31" name="packet_header" dtype_id="28" vartype="" origName="packet_header"/>
-      <var loc="i,29,18,29,31" name="packet_buffer" dtype_id="29" vartype="" origName="packet_buffer"/>
+      <var loc="i,27,18,27,31" name="global_header" dtype_id="25" vartype="" origName="global_header"/>
+      <var loc="i,28,18,28,31" name="packet_header" dtype_id="26" vartype="" origName="packet_header"/>
+      <var loc="i,29,18,29,31" name="packet_buffer" dtype_id="27" vartype="" origName="packet_buffer"/>
       <var loc="i,32,13,32,17" name="file" dtype_id="8" vartype="integer" origName="file"/>
       <initialstatic loc="i,32,20,32,21">
         <assign loc="i,32,20,32,21" dtype_id="8">
@@ -1602,7 +1766,7 @@
       <var loc="i,39,13,39,27" name="bytes_data_out" dtype_id="8" vartype="integer" origName="bytes_data_out"/>
       <initialstatic loc="i,39,40,39,41">
         <assign loc="i,39,40,39,41" dtype_id="8">
-          <const loc="i,39,40,39,41" name="32&apos;h40" dtype_id="8"/>
+          <const loc="i,39,40,39,41" name="32&apos;h10" dtype_id="8"/>
           <varref loc="i,39,40,39,41" name="bytes_data_out" dtype_id="8"/>
         </assign>
       </initialstatic>
@@ -1610,15 +1774,15 @@
       <var loc="i,41,13,41,22" name="timestamp" dtype_id="8" vartype="integer" origName="timestamp"/>
       <initialstatic loc="i,41,26,41,31">
         <assign loc="i,41,26,41,31" dtype_id="8">
-          <const loc="i,41,26,41,31" name="32&apos;h0" dtype_id="20"/>
+          <const loc="i,41,26,41,31" name="32&apos;h0" dtype_id="19"/>
           <varref loc="i,41,26,41,31" name="timestamp" dtype_id="8"/>
         </assign>
       </initialstatic>
-      <var loc="i,43,18,43,31" name="pcap_buffsz32" dtype_id="20" vartype="logic" origName="pcap_buffsz32"/>
+      <var loc="i,43,18,43,31" name="pcap_buffsz32" dtype_id="19" vartype="logic" origName="pcap_buffsz32"/>
       <initialstatic loc="i,43,34,43,45">
-        <assign loc="i,43,34,43,45" dtype_id="20">
+        <assign loc="i,43,34,43,45" dtype_id="19">
           <const loc="i,43,34,43,45" name="32&apos;sh2328" dtype_id="3"/>
-          <varref loc="i,43,34,43,45" name="pcap_buffsz32" dtype_id="20"/>
+          <varref loc="i,43,34,43,45" name="pcap_buffsz32" dtype_id="19"/>
         </assign>
       </initialstatic>
       <initial loc="i,45,5,45,12">
@@ -1644,16 +1808,20 @@
               </begin>
             </begin>
           </if>
+          <display loc="i,60,9,60,16" displaytype="$fwrite">
+            <sformatf loc="i,60,9,60,16" name="M&lt;&#178;&#161;&#2;" dtype_id="15"/>
+            <varref loc="i,60,17,60,21" name="file" dtype_id="8"/>
+          </display>
         </begin>
       </initial>
       <var loc="i,70,17,70,18" name="x" dtype_id="2" vartype="logic" origName="x"/>
       <initialstatic loc="i,70,34,70,35">
         <assign loc="i,70,34,70,35" dtype_id="2">
           <arraysel loc="i,70,34,70,35" dtype_id="2">
-            <varref loc="i,70,21,70,34" name="packet_buffer" dtype_id="29"/>
-            <sel loc="i,70,35,70,36" dtype_id="30" widthConst="14">
+            <varref loc="i,70,21,70,34" name="packet_buffer" dtype_id="27"/>
+            <sel loc="i,70,35,70,36" dtype_id="28" widthConst="14">
               <varref loc="i,70,35,70,36" name="i" dtype_id="8"/>
-              <const loc="i,70,35,70,36" name="32&apos;h0" dtype_id="20"/>
+              <const loc="i,70,35,70,36" name="32&apos;h0" dtype_id="19"/>
             </sel>
           </arraysel>
           <varref loc="i,70,34,70,35" name="x" dtype_id="2"/>
@@ -1692,12 +1860,12 @@
             </begin>
             <begin>
               <begin loc="i,79,18,79,23">
-                <assigndly loc="i,80,19,80,21" dtype_id="17">
-                  <add loc="i,80,30,80,31" dtype_id="17">
-                    <const loc="i,80,32,80,44" name="64&apos;ha00" dtype_id="17"/>
-                    <varref loc="i,80,22,80,29" name="cnt_clk" dtype_id="17"/>
+                <assigndly loc="i,80,21,80,23" dtype_id="17">
+                  <add loc="i,80,32,80,33" dtype_id="17">
+                    <const loc="i,80,34,80,46" name="64&apos;ha00" dtype_id="17"/>
+                    <varref loc="i,80,24,80,31" name="cnt_clk" dtype_id="17"/>
                   </add>
-                  <varref loc="i,80,11,80,18" name="cnt_clk" dtype_id="17"/>
+                  <varref loc="i,80,13,80,20" name="cnt_clk" dtype_id="17"/>
                 </assigndly>
               </begin>
             </begin>
@@ -1725,16 +1893,19 @@
                   <begin>
                     <begin loc="i,88,28,88,33">
                       <if loc="i,89,10,89,12">
-                        <varxref loc="i,89,30,89,33" name="sop" dtype_id="1" dotted="to_writer_avalon"/>
+                        <or loc="i,89,34,89,36" dtype_id="1">
+                          <varxref loc="i,89,30,89,33" name="sop" dtype_id="1" dotted="to_writer_avalon"/>
+                          <varxref loc="i,89,52,89,57" name="valid" dtype_id="1" dotted="to_writer_axis"/>
+                        </or>
                         <begin>
-                          <begin loc="i,89,35,89,40">
+                          <begin loc="i,89,59,89,64">
                             <assign loc="i,90,31,90,32" dtype_id="8">
-                              <sel loc="i,90,45,90,46" dtype_id="31" widthConst="32">
-                                <divs loc="i,90,45,90,46" dtype_id="32">
+                              <sel loc="i,90,45,90,46" dtype_id="29" widthConst="32">
+                                <divs loc="i,90,45,90,46" dtype_id="30">
                                   <varref loc="i,90,38,90,45" name="cnt_clk" dtype_id="17"/>
-                                  <const loc="i,90,46,90,50" name="64&apos;h3e8" dtype_id="32"/>
+                                  <const loc="i,90,46,90,50" name="64&apos;h3e8" dtype_id="30"/>
                                 </divs>
-                                <const loc="i,90,45,90,46" name="32&apos;h0" dtype_id="20"/>
+                                <const loc="i,90,45,90,46" name="32&apos;h0" dtype_id="19"/>
                               </sel>
                               <varref loc="i,90,21,90,30" name="timestamp" dtype_id="8"/>
                             </assign>
@@ -1742,63 +1913,65 @@
                               <const loc="i,91,34,91,35" name="1&apos;h1" dtype_id="1"/>
                               <varref loc="i,91,21,91,30" name="first_sop" dtype_id="1"/>
                             </assigndly>
-                            <display loc="i,94,21,94,28" displaytype="$fwrite">
-                              <sformatf loc="i,94,21,94,28" name="M&lt;&#178;&#161;&#2;" dtype_id="15"/>
-                              <varref loc="i,94,29,94,33" name="file" dtype_id="8"/>
-                            </display>
                           </begin>
                         </begin>
                       </if>
                     </begin>
                   </begin>
                 </if>
-                <begin loc="i,107,17,107,20">
-                  <assign loc="i,107,22,107,23" dtype_id="8">
-                    <const loc="i,107,23,107,24" name="32&apos;sh0" dtype_id="3"/>
-                    <varref loc="i,107,21,107,22" name="i" dtype_id="8"/>
+                <begin loc="i,97,17,97,20">
+                  <assign loc="i,97,22,97,23" dtype_id="8">
+                    <const loc="i,97,23,97,24" name="32&apos;sh0" dtype_id="3"/>
+                    <varref loc="i,97,21,97,22" name="i" dtype_id="8"/>
                   </assign>
-                  <while loc="i,107,17,107,20">
+                  <while loc="i,97,17,97,20">
                     <begin>
                     </begin>
                     <begin>
-                      <lts loc="i,107,28,107,29" dtype_id="1">
-                        <varref loc="i,107,26,107,27" name="i" dtype_id="8"/>
-                        <varref loc="i,107,30,107,44" name="bytes_data_out" dtype_id="8"/>
+                      <lts loc="i,97,28,97,29" dtype_id="1">
+                        <varref loc="i,97,26,97,27" name="i" dtype_id="8"/>
+                        <varref loc="i,97,30,97,44" name="bytes_data_out" dtype_id="8"/>
                       </lts>
                     </begin>
                     <begin>
-                      <begin loc="i,107,53,107,58">
-                        <begin loc="i,108,42,108,47">
-                          <assign loc="i,109,51,109,52" dtype_id="2">
-                            <sel loc="i,109,74,109,75" dtype_id="2" widthConst="8">
-                              <varxref loc="i,109,70,109,74" name="data" dtype_id="18" dotted="to_writer_avalon"/>
-                              <sel loc="i,109,76,109,77" dtype_id="23" widthConst="9">
-                                <muls loc="i,109,76,109,77" dtype_id="3">
-                                  <const loc="i,109,77,109,78" name="32&apos;sh8" dtype_id="3"/>
-                                  <varref loc="i,109,75,109,76" name="i" dtype_id="8"/>
+                      <begin loc="i,97,53,97,58">
+                        <begin loc="i,100,30,100,35">
+                          <assign loc="i,101,51,101,52" dtype_id="2">
+                            <sel loc="i,101,72,101,73" dtype_id="2" widthConst="8">
+                              <varxref loc="i,101,68,101,72" name="data" dtype_id="18" dotted="to_writer_axis"/>
+                              <sel loc="i,101,93,101,94" dtype_id="22" widthConst="7">
+                                <muls loc="i,101,93,101,94" dtype_id="3">
+                                  <const loc="i,101,94,101,95" name="32&apos;sh8" dtype_id="3"/>
+                                  <sub loc="i,101,90,101,91" dtype_id="3">
+                                    <sub loc="i,101,88,101,89" dtype_id="3">
+                                      <varref loc="i,101,74,101,88" name="bytes_data_out" dtype_id="8"/>
+                                      <const loc="i,101,89,101,90" name="32&apos;sh1" dtype_id="3"/>
+                                    </sub>
+                                    <varref loc="i,101,91,101,92" name="i" dtype_id="8"/>
+                                  </sub>
                                 </muls>
-                                <const loc="i,109,76,109,77" name="32&apos;h0" dtype_id="20"/>
+                                <const loc="i,101,93,101,94" name="32&apos;h0" dtype_id="19"/>
                               </sel>
                             </sel>
-                            <arraysel loc="i,109,24,109,25" dtype_id="2">
-                              <varref loc="i,109,11,109,24" name="packet_buffer" dtype_id="29"/>
-                              <sub loc="i,109,47,109,48" dtype_id="30">
-                                <sub loc="i,109,45,109,46" dtype_id="33">
-                                  <add loc="i,109,30,109,31" dtype_id="33">
-                                    <sel loc="i,109,47,109,48" dtype_id="33" widthConst="14">
-                                      <varref loc="i,109,25,109,30" name="pktSz" dtype_id="8"/>
-                                      <const loc="i,109,47,109,48" name="32&apos;h0" dtype_id="20"/>
+                            <arraysel loc="i,101,24,101,25" dtype_id="2">
+                              <varref loc="i,101,11,101,24" name="packet_buffer" dtype_id="27"/>
+                              <sub loc="i,101,47,101,48" dtype_id="28">
+                                <sub loc="i,101,45,101,46" dtype_id="31">
+                                  <add loc="i,101,30,101,31" dtype_id="31">
+                                    <sel loc="i,101,47,101,48" dtype_id="31" widthConst="14">
+                                      <varref loc="i,101,25,101,30" name="pktSz" dtype_id="8"/>
+                                      <const loc="i,101,47,101,48" name="32&apos;h0" dtype_id="19"/>
                                     </sel>
-                                    <sel loc="i,109,47,109,48" dtype_id="33" widthConst="14">
-                                      <varref loc="i,109,31,109,45" name="bytes_data_out" dtype_id="8"/>
-                                      <const loc="i,109,47,109,48" name="32&apos;h0" dtype_id="20"/>
+                                    <sel loc="i,101,47,101,48" dtype_id="31" widthConst="14">
+                                      <varref loc="i,101,31,101,45" name="bytes_data_out" dtype_id="8"/>
+                                      <const loc="i,101,47,101,48" name="32&apos;h0" dtype_id="19"/>
                                     </sel>
                                   </add>
-                                  <const loc="i,109,47,109,48" name="14&apos;h1" dtype_id="33"/>
+                                  <const loc="i,101,47,101,48" name="14&apos;h1" dtype_id="31"/>
                                 </sub>
-                                <sel loc="i,109,47,109,48" dtype_id="33" widthConst="14">
-                                  <varref loc="i,109,48,109,49" name="i" dtype_id="8"/>
-                                  <const loc="i,109,47,109,48" name="32&apos;h0" dtype_id="20"/>
+                                <sel loc="i,101,47,101,48" dtype_id="31" widthConst="14">
+                                  <varref loc="i,101,48,101,49" name="i" dtype_id="8"/>
+                                  <const loc="i,101,47,101,48" name="32&apos;h0" dtype_id="19"/>
                                 </sel>
                               </sub>
                             </arraysel>
@@ -1807,44 +1980,47 @@
                       </begin>
                     </begin>
                     <begin>
-                      <assign loc="i,107,47,107,48" dtype_id="8">
-                        <add loc="i,107,49,107,50" dtype_id="8">
-                          <const loc="i,107,50,107,51" name="32&apos;sh1" dtype_id="3"/>
-                          <varref loc="i,107,48,107,49" name="i" dtype_id="8"/>
+                      <assign loc="i,97,47,97,48" dtype_id="8">
+                        <add loc="i,97,49,97,50" dtype_id="8">
+                          <const loc="i,97,50,97,51" name="32&apos;sh1" dtype_id="3"/>
+                          <varref loc="i,97,48,97,49" name="i" dtype_id="8"/>
                         </add>
-                        <varref loc="i,107,46,107,47" name="i" dtype_id="8"/>
+                        <varref loc="i,97,46,97,47" name="i" dtype_id="8"/>
                       </assign>
                     </begin>
                   </while>
                 </begin>
-                <begin loc="i,115,31,115,36">
-                  <assign loc="i,116,27,116,28" dtype_id="8">
-                    <add loc="i,116,119,116,120" dtype_id="8">
-                      <cond loc="i,116,53,116,54" dtype_id="8">
-                        <varxref loc="i,116,48,116,51" name="eop" dtype_id="1" dotted="to_writer_avalon"/>
-                        <sub loc="i,116,70,116,71" dtype_id="8">
-                          <varref loc="i,116,55,116,69" name="bytes_data_out" dtype_id="8"/>
-                          <extend loc="i,116,94,116,99" dtype_id="31" width="32" widthminv="6">
-                            <varxref loc="i,116,94,116,99" name="empty" dtype_id="19" dotted="to_writer_avalon"/>
-                          </extend>
+                <begin loc="i,107,26,107,31">
+                  <assign loc="i,108,27,108,28" dtype_id="8">
+                    <add loc="i,108,132,108,133" dtype_id="8">
+                      <cond loc="i,108,51,108,52" dtype_id="8">
+                        <varxref loc="i,108,46,108,50" name="last" dtype_id="1" dotted="to_writer_axis"/>
+                        <sub loc="i,108,68,108,69" dtype_id="8">
+                          <varref loc="i,108,53,108,67" name="bytes_data_out" dtype_id="8"/>
+                          <sub loc="i,108,81,108,82" dtype_id="8">
+                            <const loc="i,108,71,108,81" name="32&apos;h10" dtype_id="3"/>
+                            <countones loc="i,108,82,108,92" dtype_id="3">
+                              <varxref loc="i,108,108,108,112" name="keep" dtype_id="14" dotted="to_writer_axis"/>
+                            </countones>
+                          </sub>
                         </sub>
-                        <varref loc="i,116,103,116,117" name="bytes_data_out" dtype_id="8"/>
+                        <varref loc="i,108,116,108,130" name="bytes_data_out" dtype_id="8"/>
                       </cond>
-                      <varref loc="i,116,121,116,126" name="pktSz" dtype_id="8"/>
+                      <varref loc="i,108,134,108,139" name="pktSz" dtype_id="8"/>
                     </add>
-                    <varref loc="i,116,21,116,26" name="pktSz" dtype_id="8"/>
+                    <varref loc="i,108,21,108,26" name="pktSz" dtype_id="8"/>
                   </assign>
                 </begin>
-                <if loc="i,122,6,122,8">
-                  <or loc="i,122,30,122,32" dtype_id="1">
-                    <varxref loc="i,122,26,122,29" name="eop" dtype_id="1" dotted="to_writer_avalon"/>
-                    <varxref loc="i,122,48,122,52" name="last" dtype_id="1" dotted="to_writer_axis"/>
+                <if loc="i,112,6,112,8">
+                  <or loc="i,112,30,112,32" dtype_id="1">
+                    <varxref loc="i,112,26,112,29" name="eop" dtype_id="1" dotted="to_writer_avalon"/>
+                    <varxref loc="i,112,48,112,52" name="last" dtype_id="1" dotted="to_writer_axis"/>
                   </or>
                   <begin>
-                    <begin loc="i,122,54,122,59">
-                      <assigndly loc="i,123,26,123,28" dtype_id="1">
-                        <const loc="i,123,29,123,30" name="1&apos;h1" dtype_id="1"/>
-                        <varref loc="i,123,17,123,25" name="finished" dtype_id="1"/>
+                    <begin loc="i,112,54,112,59">
+                      <assigndly loc="i,113,26,113,28" dtype_id="1">
+                        <const loc="i,113,29,113,30" name="1&apos;h1" dtype_id="1"/>
+                        <varref loc="i,113,17,113,25" name="finished" dtype_id="1"/>
                       </assigndly>
                     </begin>
                   </begin>
@@ -1852,94 +2028,94 @@
               </begin>
             </begin>
           </if>
-          <if loc="i,128,9,128,11">
-            <varref loc="i,128,13,128,21" name="finished" dtype_id="1"/>
+          <if loc="i,118,9,118,11">
+            <varref loc="i,118,13,118,21" name="finished" dtype_id="1"/>
             <begin>
-              <begin loc="i,128,23,128,28">
-                <display loc="i,129,13,129,20" displaytype="$fwrite">
-                  <sformatf loc="i,129,13,129,20" name="" dtype_id="15">
-                    <varref loc="i,129,46,129,55" name="timestamp" dtype_id="8"/>
-                    <varref loc="i,129,57,129,62" name="pktSz" dtype_id="8"/>
-                    <varref loc="i,129,64,129,69" name="pktSz" dtype_id="8"/>
+              <begin loc="i,118,23,118,28">
+                <display loc="i,119,13,119,20" displaytype="$fwrite">
+                  <sformatf loc="i,119,13,119,20" name="" dtype_id="15">
+                    <varref loc="i,119,46,119,55" name="timestamp" dtype_id="8"/>
+                    <varref loc="i,119,57,119,62" name="pktSz" dtype_id="8"/>
+                    <varref loc="i,119,64,119,69" name="pktSz" dtype_id="8"/>
                   </sformatf>
-                  <varref loc="i,129,21,129,25" name="file" dtype_id="8"/>
+                  <varref loc="i,119,21,119,25" name="file" dtype_id="8"/>
                 </display>
-                <begin loc="i,130,6,130,9">
-                  <assign loc="i,130,11,130,12" dtype_id="8">
-                    <const loc="i,130,12,130,13" name="32&apos;sh0" dtype_id="3"/>
-                    <varref loc="i,130,10,130,11" name="i" dtype_id="8"/>
+                <begin loc="i,120,6,120,9">
+                  <assign loc="i,120,11,120,12" dtype_id="8">
+                    <const loc="i,120,12,120,13" name="32&apos;sh0" dtype_id="3"/>
+                    <varref loc="i,120,10,120,11" name="i" dtype_id="8"/>
                   </assign>
-                  <while loc="i,130,6,130,9">
+                  <while loc="i,120,6,120,9">
                     <begin>
                     </begin>
                     <begin>
-                      <lts loc="i,130,17,130,18" dtype_id="1">
-                        <varref loc="i,130,15,130,16" name="i" dtype_id="8"/>
-                        <varref loc="i,130,19,130,24" name="pktSz" dtype_id="8"/>
+                      <lts loc="i,120,17,120,18" dtype_id="1">
+                        <varref loc="i,120,15,120,16" name="i" dtype_id="8"/>
+                        <varref loc="i,120,19,120,24" name="pktSz" dtype_id="8"/>
                       </lts>
                     </begin>
                     <begin>
-                      <begin loc="i,130,33,130,38">
-                        <display loc="i,131,17,131,24" displaytype="$fwrite">
-                          <sformatf loc="i,131,17,131,24" name="%c" dtype_id="15">
-                            <arraysel loc="i,131,50,131,51" dtype_id="2">
-                              <varref loc="i,131,37,131,50" name="packet_buffer" dtype_id="29"/>
-                              <sel loc="i,131,51,131,52" dtype_id="30" widthConst="14">
-                                <varref loc="i,131,51,131,52" name="i" dtype_id="8"/>
-                                <const loc="i,131,51,131,52" name="32&apos;h0" dtype_id="20"/>
+                      <begin loc="i,120,33,120,38">
+                        <display loc="i,121,17,121,24" displaytype="$fwrite">
+                          <sformatf loc="i,121,17,121,24" name="%c" dtype_id="15">
+                            <arraysel loc="i,121,50,121,51" dtype_id="2">
+                              <varref loc="i,121,37,121,50" name="packet_buffer" dtype_id="27"/>
+                              <sel loc="i,121,51,121,52" dtype_id="28" widthConst="14">
+                                <varref loc="i,121,51,121,52" name="i" dtype_id="8"/>
+                                <const loc="i,121,51,121,52" name="32&apos;h0" dtype_id="19"/>
                               </sel>
                             </arraysel>
                           </sformatf>
-                          <varref loc="i,131,25,131,29" name="file" dtype_id="8"/>
+                          <varref loc="i,121,25,121,29" name="file" dtype_id="8"/>
                         </display>
                       </begin>
                     </begin>
                     <begin>
-                      <assign loc="i,130,27,130,28" dtype_id="8">
-                        <add loc="i,130,29,130,30" dtype_id="8">
-                          <const loc="i,130,30,130,31" name="32&apos;sh1" dtype_id="3"/>
-                          <varref loc="i,130,28,130,29" name="i" dtype_id="8"/>
+                      <assign loc="i,120,27,120,28" dtype_id="8">
+                        <add loc="i,120,29,120,30" dtype_id="8">
+                          <const loc="i,120,30,120,31" name="32&apos;sh1" dtype_id="3"/>
+                          <varref loc="i,120,28,120,29" name="i" dtype_id="8"/>
                         </add>
-                        <varref loc="i,130,26,130,27" name="i" dtype_id="8"/>
+                        <varref loc="i,120,26,120,27" name="i" dtype_id="8"/>
                       </assign>
                     </begin>
                   </while>
                 </begin>
-                <fflush loc="i,133,6,133,13">
-                  <varref loc="i,133,14,133,18" name="file" dtype_id="8"/>
+                <fflush loc="i,123,6,123,13">
+                  <varref loc="i,123,14,123,18" name="file" dtype_id="8"/>
                 </fflush>
-                <assign loc="i,135,12,135,13" dtype_id="8">
-                  <const loc="i,135,14,135,15" name="32&apos;sh0" dtype_id="3"/>
-                  <varref loc="i,135,6,135,11" name="pktSz" dtype_id="8"/>
+                <assign loc="i,125,12,125,13" dtype_id="8">
+                  <const loc="i,125,14,125,15" name="32&apos;sh0" dtype_id="3"/>
+                  <varref loc="i,125,6,125,11" name="pktSz" dtype_id="8"/>
                 </assign>
-                <assigndly loc="i,136,22,136,24" dtype_id="1">
-                  <const loc="i,136,25,136,26" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="i,136,13,136,21" name="finished" dtype_id="1"/>
+                <assigndly loc="i,126,22,126,24" dtype_id="1">
+                  <const loc="i,126,25,126,26" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="i,126,13,126,21" name="finished" dtype_id="1"/>
                 </assigndly>
-                <assigndly loc="i,137,23,137,25" dtype_id="1">
-                  <const loc="i,137,26,137,27" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="i,137,13,137,22" name="first_sop" dtype_id="1"/>
+                <assigndly loc="i,127,23,127,25" dtype_id="1">
+                  <const loc="i,127,26,127,27" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="i,127,13,127,22" name="first_sop" dtype_id="1"/>
                 </assigndly>
               </begin>
             </begin>
           </if>
         </begin>
       </always>
-      <contassign loc="i,142,35,142,36" dtype_id="1">
-        <const loc="i,142,37,142,41" name="1&apos;h1" dtype_id="1"/>
-        <varxref loc="i,142,29,142,34" name="ready" dtype_id="1" dotted="to_writer_avalon"/>
+      <contassign loc="i,132,35,132,36" dtype_id="1">
+        <const loc="i,132,37,132,41" name="1&apos;h1" dtype_id="1"/>
+        <varxref loc="i,132,29,132,34" name="ready" dtype_id="1" dotted="to_writer_avalon"/>
       </contassign>
-      <contassign loc="i,143,33,143,34" dtype_id="1">
-        <const loc="i,143,35,143,39" name="1&apos;h1" dtype_id="1"/>
-        <varxref loc="i,143,27,143,32" name="ready" dtype_id="1" dotted="to_writer_axis"/>
+      <contassign loc="i,133,33,133,34" dtype_id="1">
+        <const loc="i,133,35,133,39" name="1&apos;h1" dtype_id="1"/>
+        <varxref loc="i,133,27,133,32" name="ready" dtype_id="1" dotted="to_writer_axis"/>
       </contassign>
     </module>
-    <iface loc="f,1,11,1,20" name="avalon_if" origName="avalon_if">
+    <iface loc="f,1,11,1,20" name="avalon_if__D80" origName="avalon_if">
       <var loc="f,3,15,3,25" name="DATA_WIDTH" dtype_id="3" vartype="logic" origName="DATA_WIDTH" param="true">
-        <const loc="f,3,28,3,31" name="32&apos;sh200" dtype_id="3"/>
+        <const loc="j,17,29,17,39" name="32&apos;sh80" dtype_id="3"/>
       </var>
       <var loc="f,4,15,4,26" name="EMPTY_WIDTH" dtype_id="3" vartype="logic" origName="EMPTY_WIDTH" param="true">
-        <const loc="f,4,29,4,35" name="32&apos;h6" dtype_id="8"/>
+        <const loc="f,4,29,4,35" name="32&apos;h4" dtype_id="8"/>
       </var>
       <var loc="f,7,18,7,21" name="clk" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk"/>
       <var loc="f,8,18,8,21" name="rst" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="rst"/>
@@ -1948,7 +2124,7 @@
       <var loc="f,13,28,13,32" name="data" dtype_id="18" vartype="logic" origName="data"/>
       <var loc="f,14,28,14,31" name="sop" dtype_id="1" vartype="logic" origName="sop"/>
       <var loc="f,15,28,15,31" name="eop" dtype_id="1" vartype="logic" origName="eop"/>
-      <var loc="f,16,28,16,33" name="empty" dtype_id="19" vartype="logic" origName="empty"/>
+      <var loc="f,16,28,16,33" name="empty" dtype_id="32" vartype="logic" origName="empty"/>
       <modport loc="f,18,12,18,15" name="out">
         <modportvarref loc="f,19,17,19,20" name="clk" direction="in"/>
         <modportvarref loc="f,20,17,20,20" name="rst" direction="in"/>
@@ -1970,12 +2146,12 @@
         <modportvarref loc="f,37,17,37,22" name="empty" direction="in"/>
       </modport>
     </iface>
-    <iface loc="g,1,11,1,18" name="axis_if" origName="axis_if">
+    <iface loc="g,1,11,1,18" name="axis_if__D80" origName="axis_if">
       <var loc="g,3,15,3,25" name="DATA_WIDTH" dtype_id="3" vartype="logic" origName="DATA_WIDTH" param="true">
-        <const loc="g,3,28,3,31" name="32&apos;sh200" dtype_id="3"/>
+        <const loc="j,18,27,18,37" name="32&apos;sh80" dtype_id="3"/>
       </var>
       <var loc="g,4,15,4,25" name="KEEP_WIDTH" dtype_id="3" vartype="logic" origName="KEEP_WIDTH" param="true">
-        <const loc="g,4,38,4,39" name="32&apos;h40" dtype_id="3"/>
+        <const loc="g,4,38,4,39" name="32&apos;h10" dtype_id="3"/>
       </var>
       <var loc="g,7,28,7,31" name="clk" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clk"/>
       <var loc="g,8,28,8,31" name="rst" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="rst"/>
@@ -1983,7 +2159,7 @@
       <var loc="g,12,28,12,33" name="valid" dtype_id="1" vartype="logic" origName="valid"/>
       <var loc="g,13,28,13,32" name="data" dtype_id="18" vartype="logic" origName="data"/>
       <var loc="g,14,28,14,32" name="last" dtype_id="1" vartype="logic" origName="last"/>
-      <var loc="g,15,28,15,32" name="keep" dtype_id="7" vartype="logic" origName="keep"/>
+      <var loc="g,15,28,15,32" name="keep" dtype_id="14" vartype="logic" origName="keep"/>
       <modport loc="g,17,13,17,16" name="out">
         <modportvarref loc="g,18,18,18,21" name="clk" direction="in"/>
         <modportvarref loc="g,19,18,19,21" name="rst" direction="in"/>
@@ -2004,37 +2180,37 @@
       </modport>
     </iface>
     <typetable loc="a,0,0,0,0">
-      <voiddtype loc="e,48,18,48,27" id="34"/>
+      <voiddtype loc="e,48,18,48,27" id="33"/>
       <basicdtype loc="e,165,10,165,16" id="15" name="string"/>
       <basicdtype loc="h,12,29,12,37" id="4" name="logic" left="47" right="0"/>
       <basicdtype loc="h,53,31,53,35" id="14" name="logic" left="15" right="0"/>
       <basicdtype loc="h,88,23,88,28" id="7" name="logic" left="63" right="0"/>
-      <basicdtype loc="j,22,24,22,39" id="9" name="logic" left="103" right="0"/>
-      <ifacerefdtype loc="i,21,5,21,14" id="25" modportname="in"/>
-      <ifacerefdtype loc="i,22,5,22,12" id="26" modportname="in"/>
-      <unpackarraydtype loc="i,27,32,27,33" id="27" sub_dtype_id="20">
+      <basicdtype loc="j,21,24,21,39" id="9" name="logic" left="103" right="0"/>
+      <ifacerefdtype loc="i,21,5,21,14" id="23" modportname="in"/>
+      <ifacerefdtype loc="i,22,5,22,12" id="24" modportname="in"/>
+      <unpackarraydtype loc="i,27,32,27,33" id="25" sub_dtype_id="19">
         <range loc="i,27,32,27,33">
           <const loc="i,27,33,27,34" name="32&apos;sh0" dtype_id="3"/>
           <const loc="i,27,35,27,36" name="32&apos;sh5" dtype_id="3"/>
         </range>
       </unpackarraydtype>
-      <unpackarraydtype loc="i,28,32,28,33" id="28" sub_dtype_id="20">
+      <unpackarraydtype loc="i,28,32,28,33" id="26" sub_dtype_id="19">
         <range loc="i,28,32,28,33">
           <const loc="i,28,33,28,34" name="32&apos;sh0" dtype_id="3"/>
           <const loc="i,28,35,28,36" name="32&apos;sh3" dtype_id="3"/>
         </range>
       </unpackarraydtype>
-      <unpackarraydtype loc="i,29,32,29,33" id="29" sub_dtype_id="2">
+      <unpackarraydtype loc="i,29,32,29,33" id="27" sub_dtype_id="2">
         <range loc="i,29,32,29,33">
           <const loc="i,29,33,29,34" name="32&apos;sh0" dtype_id="3"/>
           <const loc="i,29,35,29,46" name="32&apos;sh2328" dtype_id="3"/>
         </range>
       </unpackarraydtype>
-      <basicdtype loc="i,70,34,70,35" id="30" name="logic" left="13" right="0" signed="true"/>
-      <basicdtype loc="i,80,30,80,31" id="32" name="logic" left="63" right="0" signed="true"/>
-      <basicdtype loc="i,77,19,77,21" id="20" name="logic" left="31" right="0"/>
-      <basicdtype loc="i,90,33,90,36" id="31" name="int" left="31" right="0" signed="true"/>
-      <basicdtype loc="i,109,74,109,75" id="23" name="logic" left="8" right="0" signed="true"/>
+      <basicdtype loc="i,70,34,70,35" id="28" name="logic" left="13" right="0" signed="true"/>
+      <basicdtype loc="i,80,32,80,33" id="30" name="logic" left="63" right="0" signed="true"/>
+      <basicdtype loc="i,77,19,77,21" id="19" name="logic" left="31" right="0"/>
+      <basicdtype loc="i,90,33,90,36" id="29" name="int" left="31" right="0" signed="true"/>
+      <basicdtype loc="i,99,74,99,75" id="22" name="logic" left="6" right="0" signed="true"/>
       <ifacerefdtype loc="h,22,5,22,14" id="10" modportname="out"/>
       <ifacerefdtype loc="h,23,5,23,12" id="11" modportname="out"/>
       <unpackarraydtype loc="h,31,31,31,32" id="12" sub_dtype_id="2">
@@ -2051,18 +2227,17 @@
       </unpackarraydtype>
       <basicdtype loc="h,82,82,82,83" id="16" name="logic" left="4" right="0" signed="true"/>
       <basicdtype loc="h,88,5,88,12" id="17" name="longint" left="63" right="0" signed="true"/>
-      <basicdtype loc="h,118,55,118,56" id="18" name="logic" left="511" right="0"/>
-      <basicdtype loc="h,119,43,119,44" id="19" name="logic" left="5" right="0"/>
-      <basicdtype loc="h,130,34,130,35" id="21" name="logic" left="3" right="0" signed="true"/>
-      <basicdtype loc="h,130,56,130,57" id="22" name="logic" left="23" right="0"/>
-      <basicdtype loc="h,228,68,228,69" id="24" name="logic" left="5" right="0" signed="true"/>
-      <basicdtype loc="j,7,5,7,10" id="1" name="logic"/>
-      <basicdtype loc="j,10,5,10,10" id="2" name="logic" left="7" right="0"/>
-      <ifacerefdtype loc="j,18,42,18,52" id="5" modportname=""/>
-      <ifacerefdtype loc="j,19,40,19,48" id="6" modportname=""/>
-      <basicdtype loc="j,53,5,53,12" id="8" name="integer" left="31" right="0" signed="true"/>
-      <basicdtype loc="j,14,28,14,31" id="3" name="logic" left="31" right="0" signed="true"/>
-      <basicdtype loc="i,109,47,109,48" id="33" name="logic" left="13" right="0"/>
+      <basicdtype loc="h,118,55,118,56" id="18" name="logic" left="127" right="0"/>
+      <basicdtype loc="h,119,43,119,44" id="32" name="logic" left="3" right="0"/>
+      <basicdtype loc="h,130,34,130,35" id="20" name="logic" left="3" right="0" signed="true"/>
+      <basicdtype loc="h,130,56,130,57" id="21" name="logic" left="23" right="0"/>
+      <basicdtype loc="j,6,5,6,10" id="1" name="logic"/>
+      <basicdtype loc="j,9,5,9,10" id="2" name="logic" left="7" right="0"/>
+      <ifacerefdtype loc="j,17,42,17,52" id="5" modportname=""/>
+      <ifacerefdtype loc="j,18,40,18,48" id="6" modportname=""/>
+      <basicdtype loc="j,52,5,52,12" id="8" name="integer" left="31" right="0" signed="true"/>
+      <basicdtype loc="j,13,28,13,31" id="3" name="logic" left="31" right="0" signed="true"/>
+      <basicdtype loc="i,99,47,99,48" id="31" name="logic" left="13" right="0"/>
     </typetable>
   </netlist>
 </verilator_xml>

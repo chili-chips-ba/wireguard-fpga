@@ -1,0 +1,39 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Mon Jul 14 23:56:55 2025
+[*]
+[dumpfile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/pcap_reader_writer/output/wave.fst"
+[dumpfile_mtime] "Mon Jul 14 23:51:38 2025"
+[dumpfile_size] 324922460
+[savefile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/pcap_reader_writer/.gtkwaverc"
+[timestart] 0
+[size] 3774 2081
+[pos] -27 -24
+*-26.205885 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.tb.
+[sst_width] 278
+[signals_width] 118
+[sst_expanded] 1
+[sst_vpaned_height] 673
+@28
+TOP.tb.axis_int.clk
+@22
+TOP.tb.axis_int.data[127:0]
+TOP.tb.axis_int.keep[15:0]
+@28
+TOP.tb.axis_int.last
+TOP.tb.axis_int.ready
+TOP.tb.axis_int.valid
+@22
+TOP.tb.avalon_int.data[127:0]
+TOP.tb.avalon_int.empty[3:0]
+@28
+TOP.tb.avalon_int.eop
+TOP.tb.avalon_int.ready
+TOP.tb.avalon_int.rst
+TOP.tb.avalon_int.sop
+@29
+TOP.tb.avalon_int.valid
+[pattern_trace] 1
+[pattern_trace] 0
