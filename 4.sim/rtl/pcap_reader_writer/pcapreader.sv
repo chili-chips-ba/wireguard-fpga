@@ -219,7 +219,7 @@ module pcapreader#
                         for (i=0; i< bytes_data_out; i = i+1) begin
 		            if(SIGNAL_TYPE == "avalon") begin
                                 from_reader_avalon.data[(bytes_data_out-1-i)*8+:8] <= capLen > i ? $fgetc(file) : 8'b0;
-                            end else if (SIGNAL_TYPE == "axis") begin
+                            end else begin
 				from_reader_axis.data[i*8+:8] <= capLen > i ? $fgetc(file) : 8'b0;
                             end
                         end
@@ -245,7 +245,7 @@ module pcapreader#
                             for (i=0; i<bytes_data_out; i = i+1) begin
                                 if(SIGNAL_TYPE == "avalon") begin
                                     from_reader_avalon.data[(bytes_data_out-1-i)*8+:8] <= capLen > i ? $fgetc(file) : 8'b0;
-                                end else if (SIGNAL_TYPE == "axis") begin
+                                end else begin
 				    from_reader_axis.data[i*8+:8] <= capLen > i ? $fgetc(file) : 8'b0;
                                 end
                             end
@@ -270,7 +270,7 @@ module pcapreader#
                             for (i=0; i<bytes_data_out; i = i+1) begin
                                 if(SIGNAL_TYPE == "avalon") begin
                                     from_reader_avalon.data[(bytes_data_out-1-i)*8+:8] <= 8'b0;
-                                end else if (SIGNAL_TYPE == "axis") begin
+                                end else begin
 				    from_reader_axis.data[i*8+:8] <= 8'b0;
                                 end
                             end

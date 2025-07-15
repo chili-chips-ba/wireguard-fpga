@@ -10,9 +10,9 @@ module tb;
     logic [7:0] pktcountw;
     logic newpkt;
     logic pcapfinished;
-    parameter DATA_WIDTH = 512;
-    parameter SIGNAL_TYPE = "avalon";
-    localparam CLOCK_PERIOD = 2_560;
+    parameter DATA_WIDTH = 128;
+    parameter SIGNAL_TYPE = "axis00";
+    localparam CLOCK_PERIOD = 12500;
 
     avalon_if #(.DATA_WIDTH(DATA_WIDTH)) avalon_int(.clk(CLOCK),.rst(reset));
     axis_if #(.DATA_WIDTH(DATA_WIDTH)) axis_int(.clk(CLOCK),.rst(reset));
