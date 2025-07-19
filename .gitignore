@@ -22,8 +22,8 @@
 *\#*
 0.doc/Gowin/IP/Integer-Multiply-Divider/Gowin_Integer_Multiply_Divider_RefDesign.rar
 0.doc/Gowin/IP/Filter-FD-Adaptive/Gowin_FD_Adaptive_Filter_RefDesign.zip
-/4.sim/tb.xml
-/4.sim/tb.stems
+tb.xml
+tb.stems
 
 # Vivado project directories and files
 *.jou
