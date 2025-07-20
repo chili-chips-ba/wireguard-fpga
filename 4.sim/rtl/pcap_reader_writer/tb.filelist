@@ -4,12 +4,12 @@
 
 ${HW_SRC}/ip.infra/dpe_pkg.sv
 ${HW_SRC}/ip.infra/dpe_if.sv
-${SIM_SRC}/avalon_if.sv
-${SIM_SRC}/axis_if.sv
-${SIM_SRC}/pcapreader.sv
-${SIM_SRC}/pcapwriter.sv
-${SIM_SRC}/dpe_pcapreader.sv
-${SIM_SRC}/dpe_pcapwriter.sv
+${SIM_SRC}/rtl/pcap_reader_writer/avalon_if.sv
+${SIM_SRC}/rtl/pcap_reader_writer/axis_if.sv
+${SIM_SRC}/rtl/pcap_reader_writer/pcapreader.sv
+${SIM_SRC}/rtl/pcap_reader_writer/pcapwriter.sv
+${SIM_SRC}/rtl/pcap_reader_writer/dpe_pcapreader.sv
+${SIM_SRC}/rtl/pcap_reader_writer/dpe_pcapwriter.sv
 
 #==========================================================================
 # End-of-File

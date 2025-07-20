@@ -5,10 +5,8 @@ SHELL   := /bin/bash
 
 BLD_DIR := $(CURDIR)/../../../3.build
 HW_SRC  := $(CURDIR)/../../../1.hw
-SIM_SRC := $(CURDIR)
+SIM_SRC := $(CURDIR)/../../../4.sim
 TB_NAME := tb
-
-ARE_TESTS :=
 
 COLOR_YELLOW=\033[1;33m
 COLOR_RESET=\033[0m
@@ -39,7 +37,7 @@ compile:
 		--Mdir ./output \
 		+define+SIM_ONLY \
 		$(ARE_TESTS) \
-		-f ${SIM_SRC}/top.filelist \
+		-f ${TB_NAME}.filelist \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 
@@ -72,7 +70,7 @@ xml2stems:
 		-xml-only \
 		-xml-output tb.xml \
 		--timescale 1ps/1ps \
-		-f ${SIM_SRC}/top.filelist \
+		-f ${TB_NAME}.filelist \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 	xml2stems tb.xml tb.stems

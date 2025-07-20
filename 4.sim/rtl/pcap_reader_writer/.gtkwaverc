@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Sun Jul 20 15:12:10 2025
+[*] Sun Jul 20 16:09:08 2025
 [*]
 [dumpfile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/pcap_reader_writer/output/wave.fst"
-[dumpfile_mtime] "Sun Jul 20 15:09:04 2025"
+[dumpfile_mtime] "Sun Jul 20 16:07:45 2025"
 [dumpfile_size] 10364118
 [savefile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/pcap_reader_writer/.gtkwaverc"
-[timestart] 0
+[timestart] 40095400
 [size] 1881 633
 [pos] -1 -1
-*-22.811056 41362700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.811056 41356250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
 [sst_width] 284
