@@ -1,67 +1,59 @@
+//==========================================================================
+// Copyright (C) 2024-2025 Chili.CHIPS*ba
+//--------------------------------------------------------------------------
+//                 PROPRIETARY INFORMATION
+//
+// The information contained in this file is the property of CHILI CHIPS LLC.
+// Except as specifically authorized in writing by CHILI CHIPS LLC, the holder
+// of this file: (1) shall keep all information contained herein confidential;
+// and (2) shall protect the same in whole or in part from disclosure and
+// dissemination to all third parties; and (3) shall use the same for operation
+// and maintenance purposes only.
+//--------------------------------------------------------------------------
+// Description:
+//   PCAP reader and writer testbench
+//==========================================================================
+
 `timescale 1ps / 1ps
 `define NULL 0
 
 module tb;
-    // Inputs
-    logic CLOCK = 0;
-    logic reset = 1;
-    logic available;
-    logic [7:0] pktcount;
-    logic [7:0] pktcountw;
-    logic newpkt;
-    logic pcapfinished;
-    parameter DATA_WIDTH = 128;
-    parameter SIGNAL_TYPE = "axis00";
-    localparam CLOCK_PERIOD = 12500;
+   // Inputs
+   logic clk;
+   logic rst;
+   logic pcapfinished;
+   localparam CLOCK_PERIOD = 12500;
 
-    avalon_if #(.DATA_WIDTH(DATA_WIDTH)) avalon_int(.clk(CLOCK),.rst(reset));
-    axis_if #(.DATA_WIDTH(DATA_WIDTH)) axis_int(.clk(CLOCK),.rst(reset));
+   dpe_if stream(.clk(clk), .rst(rst));
 
-    pcapreader #(
-        .PCAP_FILENAME("../test1.pcap"),
-        .SIGNAL_TYPE(SIGNAL_TYPE),
-        .DATA_WIDTH(DATA_WIDTH)
-    ) pcap (
-	.clk_out(CLOCK),
-        .reset(reset),
-        .available(available),
-        .pktcount(pktcount),
-        .newpkt(newpkt),
-	.pcapfinished(pcapfinished),
+   dpe_pcapreader #(
+      .PCAP_FILENAME("../test1.pcap")
+   ) pcaprd (
+	   .outp(stream),
+      .pcapfinished(pcapfinished)
+   );
 
-	.from_reader_avalon(avalon_int),
-        .from_reader_axis(axis_int)
-    );
+   dpe_pcapwriter #(
+	   .PCAP_FILENAME("../test2.pcap")
+   ) pcapwr (
+	   .inp(stream)
+   );
 
-    pcapwriter #(
-	.PCAP_FILENAME("../test2.pcap"),
-        .SIGNAL_TYPE(SIGNAL_TYPE),
-        .DATA_WIDTH(DATA_WIDTH)
-    ) pcapwr (
-	.clk_in(CLOCK),
-	.reset(reset),
+   always #(CLOCK_PERIOD/2) clk <= ~clk;
 
-	.to_writer_avalon(avalon_int),
-        .to_writer_axis(axis_int),
+   integer i = 0;
+   initial begin
+      rst = 1;
+      #(CLOCK_PERIOD);
+      rst = 0;
 
-        .pktcount(pktcountw)
-    );
+      while (~pcapfinished) begin
+	      #20
+	      i = i + 1;
+	   end
 
-    always #(CLOCK_PERIOD/2) CLOCK <= ~CLOCK;
+      #(2*CLOCK_PERIOD);
 
-    integer i = 0;
-
-    initial begin
-        #(CLOCK_PERIOD);
-        reset = 0;
-
-        while (~pcapfinished) begin
-	    #20
-	    i = i+1;
-	end
-
-	#(2*CLOCK_PERIOD);
-
-	$finish;
-    end
+      $finish;
+   end
 endmodule

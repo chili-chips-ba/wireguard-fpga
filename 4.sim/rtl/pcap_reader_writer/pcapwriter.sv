@@ -5,6 +5,7 @@
 // Based on pcapwriter_10gb by Chris Shucksmith (https://github.com/shuckc/verilog-utils/blob/master/pcap/pcapwriter_10gbmac.v)
 // Description: Write packets from an Avalon-ST or Axis bus to a pcap file
 
+/* verilator lint_off PROCASSINIT */
 module pcapwriter#
 (
     parameter PCAP_FILENAME = "none",
@@ -23,7 +24,6 @@ module pcapwriter#
 
     output logic [7:0]    pktcount = 0
 );
-
     logic [31:0] global_header [0:5];                 // 6*32bit words = 24 bytes
     logic [31:0] packet_header [0:3];                 // 4*32bit words = 16 bytes
     logic [7:0]  packet_buffer [0:PCAP_BUFFSZ];
@@ -132,3 +132,4 @@ module pcapwriter#
     assign to_writer_avalon.ready = 1'b1;
     assign to_writer_axis.ready = 1'b1;
 endmodule
+/* verilator lint_on PROCASSINIT */

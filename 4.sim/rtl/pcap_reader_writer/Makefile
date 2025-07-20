@@ -4,7 +4,8 @@
 SHELL   := /bin/bash
 
 BLD_DIR := $(CURDIR)/../../../3.build
-HW_SRC  := $(CURDIR)
+HW_SRC  := $(CURDIR)/../../../1.hw
+SIM_SRC := $(CURDIR)
 TB_NAME := tb
 
 ARE_TESTS :=
@@ -12,7 +13,7 @@ ARE_TESTS :=
 COLOR_YELLOW=\033[1;33m
 COLOR_RESET=\033[0m
 
-export BLD_DIR HW_SRC TB_NAME
+export BLD_DIR HW_SRC SIM_SRC TB_NAME
 
 #------------------------
 .PHONY: all
@@ -27,9 +28,8 @@ compile:
 		-Wall \
 		-Wno-PINCONNECTEMPTY \
 		-Wno-UNUSEDPARAM \
-                -Wno-UNUSEDSIGNAL \
+		-Wno-UNUSEDSIGNAL \
 		-Wno-GENUNNAMED \
-                -Wno-PROCASSINIT \
 		--cc \
 		--timing \
 		--trace-fst \
@@ -39,7 +39,7 @@ compile:
 		--Mdir ./output \
 		+define+SIM_ONLY \
 		$(ARE_TESTS) \
-		-f ${HW_SRC}/top.filelist \
+		-f ${SIM_SRC}/top.filelist \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 
@@ -67,12 +67,12 @@ wave-alt:
 #------------------------
 xml2stems:
 	verilator \
-                -Wno-DEPRECATED \
+		-Wno-DEPRECATED \
 		--timing \
 		-xml-only \
 		-xml-output tb.xml \
 		--timescale 1ps/1ps \
-		-f ${HW_SRC}/top.filelist \
+		-f ${SIM_SRC}/top.filelist \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 	xml2stems tb.xml tb.stems
