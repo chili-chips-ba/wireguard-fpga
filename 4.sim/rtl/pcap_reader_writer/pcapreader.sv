@@ -5,7 +5,7 @@
 // Based on pcapparser_10gb by Chris Shucksmith (https://github.com/shuckc/verilog-utils/blob/master/pcap/pcapparser_10gbmac.v)
 // Description: Replay packets from a pcap file over Avalon-ST or AXIS bus of arbitrary width
 
-
+/* verilator lint_off PROCASSINIT */
 module pcapreader#
 (
     parameter PCAP_FILENAME = "none",
@@ -26,8 +26,6 @@ module pcapreader#
     output logic          newpkt = 0,
     output logic          pcapfinished = 0
 );
-
-
     logic [7:0] global_header [0:23];   //24 bytes: magic number(4B) + version(2B for minor + 2B for major) + thiszone(4B) + sigfigs(4B) + snaplen(4B) + network(4B)
     logic [7:0] packet_header [0:15];   //16 bytes: timestamp sec(4B) + timestamp microsec/nanosec(4B) + captured length(4B) + original length(4B)
 
@@ -322,3 +320,4 @@ module pcapreader#
     /* verilator lint_on BLKSEQ */
 
 endmodule
+/* verilator lint_on PROCASSINIT */

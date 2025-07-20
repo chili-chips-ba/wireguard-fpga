@@ -11,49 +11,35 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description:
-//   PCAP reader and writer testbench
+//   DPE wrapper for PCAP packet writer
 //==========================================================================
 
-`timescale 1ps / 1ps
-`define NULL 0
+module dpe_pcapwriter#
+(
+   parameter PCAP_FILENAME = "none"
+) (
+   dpe_if.s_axis inp
+);
+   avalon_if #(.DATA_WIDTH(128)) avalon_int(.clk(inp.clk),.rst(inp.rst));
+   axis_if #(.DATA_WIDTH(128)) axis_int(.clk(inp.clk),.rst(inp.rst));
 
-module tb;
-   // Inputs
-   logic clk;
-   logic rst;
-   logic pcapfinished;
-   localparam CLOCK_PERIOD = 12500;
+   assign axis_int.data = inp.tdata;
+   assign axis_int.valid = inp.tvalid;
+   assign axis_int.last = inp.tlast;
+   assign axis_int.keep = inp.tkeep;
+   assign inp.tready = axis_int.ready;
 
-   dpe_if stream(.clk(clk), .rst(rst));
+   pcapwriter #(
+      .PCAP_FILENAME(PCAP_FILENAME),
+      .SIGNAL_TYPE("axisif"),
+      .DATA_WIDTH(128)
+   ) pcap (
+      .clk_in(inp.clk),
+      .reset(inp.rst),
 
-   dpe_pcapreader #(
-      .PCAP_FILENAME("../test1.pcap")
-   ) pcaprd (
-	   .outp(stream),
-      .pcapfinished(pcapfinished)
+      .to_writer_avalon(avalon_int),
+      .to_writer_axis(axis_int),
+
+      .pktcount()
    );
-
-   dpe_pcapwriter #(
-	   .PCAP_FILENAME("../test2.pcap")
-   ) pcapwr (
-	   .inp(stream)
-   );
-
-   always #(CLOCK_PERIOD/2) clk <= ~clk;
-
-   integer i = 0;
-   initial begin
-      rst = 1;
-      #(CLOCK_PERIOD);
-      rst = 0;
-
-      while (~pcapfinished) begin
-	      #20
-	      i = i + 1;
-	   end
-
-      #(2*CLOCK_PERIOD);
-
-      $finish;
-   end
 endmodule
