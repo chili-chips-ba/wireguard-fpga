@@ -23,11 +23,12 @@ clean:
 
 compile:
 	verilator \
-		-Wall \
 		-Wno-PINCONNECTEMPTY \
 		-Wno-UNUSEDPARAM \
 		-Wno-UNUSEDSIGNAL \
 		-Wno-GENUNNAMED \
+		-Wno-DECLFILENAME \
+		-Wno-UNOPTFLAT \
 		--cc \
 		--timing \
 		--trace-fst \

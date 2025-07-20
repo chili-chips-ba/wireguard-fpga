@@ -29,7 +29,6 @@ compile:
 		-Wno-GENUNNAMED \
 		-Wno-DECLFILENAME \
 		-Wno-UNOPTFLAT \
-		-Wno-WIDTHEXPAND \
 		--cc \
 		--timing \
 		--trace-fst \
@@ -39,7 +38,7 @@ compile:
 		--Mdir ./output \
 		+define+SIM_ONLY \
 		$(ARE_TESTS) \
-		-f top.filelist \
+		-f ${TB_NAME}.filelist \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 
@@ -67,12 +66,12 @@ wave-alt:
 #------------------------
 xml2stems:
 	verilator \
-	   -Wno-DEPRECATED \
+		-Wno-DEPRECATED \
 		--timing \
 		-xml-only \
 		-xml-output tb.xml \
 		--timescale 1ps/1ps \
-		-f top.filelist \
+		-f ${TB_NAME}.filelist \
 		${TB_NAME}.sv \
 		--top-module ${TB_NAME}
 	xml2stems tb.xml tb.stems

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Sat Jul 19 22:23:14 2025
+[*] Sun Jul 20 16:03:10 2025
 [*]
 [dumpfile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/chacha20poly1305_encrypt/output/wave.fst"
-[dumpfile_mtime] "Sat Jul 19 22:12:41 2025"
+[dumpfile_mtime] "Sun Jul 20 16:02:34 2025"
 [dumpfile_size] 1507810
 [savefile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/chacha20poly1305_encrypt/.gtkwaverc"
 [timestart] 0
 [size] 2109 876
 [pos] -1 -1
-*-18.546154 2393750 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-18.546154 156250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
 [sst_width] 284

@@ -1,0 +1,55 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Sun Jul 20 17:17:58 2025
+[*]
+[dumpfile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/dpe_wg_encryptor/output/wave.fst"
+[dumpfile_mtime] "Sun Jul 20 16:38:22 2025"
+[dumpfile_size] 6070220
+[savefile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/dpe_wg_encryptor/.gtkwaverc"
+[timestart] 0
+[size] 2494 1361
+[pos] -27 -24
+*-20.584980 880000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.tb.
+[sst_width] 284
+[signals_width] 438
+[sst_expanded] 1
+[sst_vpaned_height] 421
+@28
+TOP.tb.from_encryptor.clk
+TOP.tb.from_encryptor.rst
+@200
+-
+-to_encryptor
+@22
+TOP.tb.to_encryptor.tdata[127:0]
+TOP.tb.to_encryptor.tkeep[15:0]
+@28
+TOP.tb.to_encryptor.tlast
+TOP.tb.to_encryptor.tvalid
+TOP.tb.to_encryptor.tready
+TOP.tb.to_encryptor.tuser_bypass_all
+TOP.tb.to_encryptor.tuser_bypass_stage
+TOP.tb.to_encryptor.tuser_src[2:0]
+TOP.tb.to_encryptor.tuser_dst[2:0]
+@22
+TOP.tb.to_encryptor.tid[7:0]
+@200
+-
+-from_encryptor
+@22
+TOP.tb.from_encryptor.tdata[127:0]
+TOP.tb.from_encryptor.tkeep[15:0]
+@28
+TOP.tb.from_encryptor.tlast
+TOP.tb.from_encryptor.tvalid
+TOP.tb.from_encryptor.tready
+TOP.tb.from_encryptor.tuser_bypass_all
+TOP.tb.from_encryptor.tuser_bypass_stage
+TOP.tb.from_encryptor.tuser_src[2:0]
+TOP.tb.from_encryptor.tuser_dst[2:0]
+@22
+TOP.tb.from_encryptor.tid[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,20 @@
+#==========================================================================
+# List of file to make 'tb.sv' design module
+#==========================================================================
+
+${HW_SRC}/external_lib/axis/axis_register.v
+${HW_SRC}/ip.infra/dpe_pkg.sv
+${HW_SRC}/ip.infra/dpe_if.sv
+${HW_SRC}/ip.infra/dpe_if_skid_buffer.sv
+${BLD_DIR}/pipelinec_build/generated-files/chacha20poly1305_encrypt.v
+${HW_SRC}/ip.dpe/dpe_wg_encryptor.sv
+${SIM_SRC}/rtl/pcap_reader_writer/avalon_if.sv
+${SIM_SRC}/rtl/pcap_reader_writer/axis_if.sv
+${SIM_SRC}/rtl/pcap_reader_writer/pcapreader.sv
+${SIM_SRC}/rtl/pcap_reader_writer/pcapwriter.sv
+${SIM_SRC}/rtl/pcap_reader_writer/dpe_pcapreader.sv
+${SIM_SRC}/rtl/pcap_reader_writer/dpe_pcapwriter.sv
+
+#==========================================================================
+# End-of-File
+#==========================================================================
