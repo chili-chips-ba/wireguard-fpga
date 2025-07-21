@@ -67,6 +67,8 @@ module dpe_wg_encryptor (
    logic plaintext_valid, plaintext_valid_next;
    logic [127:0] encrypted_data, encrypted_data_next;
    logic input_finished, input_finished_next;
+   logic [15:0] packet_ip_len, packet_ip_len_next;
+   logic [15:0] packet_udp_len, packet_udp_len_next;
 
 // Internal signals
    dpe_if to_encrypt (.clk(inp.clk), .rst(inp.rst));
@@ -95,6 +97,8 @@ module dpe_wg_encryptor (
          plaintext_valid <= 1'b0;
          encrypted_data <= '0;
          input_finished <= 1'b0;
+         packet_ip_len <= '0;
+         packet_udp_len <= '0;
       end else begin
          state <= state_next;
          tuser_dst <= tuser_dst_next;
@@ -115,6 +119,8 @@ module dpe_wg_encryptor (
          plaintext_valid <= plaintext_valid_next;
          encrypted_data <= encrypted_data_next;
          input_finished <= input_finished_next;
+         packet_ip_len <= packet_ip_len_next;
+         packet_udp_len <= packet_udp_len_next;
       end
    end
 
@@ -139,6 +145,8 @@ module dpe_wg_encryptor (
       plaintext_valid_next = plaintext_valid;
       encrypted_data_next = encrypted_data;
       input_finished_next = input_finished;
+      packet_ip_len_next = packet_ip_len;
+      packet_udp_len_next = packet_udp_len;
 
       unique case (state)
          IDLE: begin
@@ -184,6 +192,12 @@ module dpe_wg_encryptor (
          HEADER_1: begin
             if (piped.tvalid && piped.tready) begin
                plaintext_data_next = piped.tdata;
+               /* verilator lint_off WIDTHEXPAND */
+               /* verilator lint_off WIDTHTRUNC */
+               packet_ip_len_next[15:0] = {piped.tdata[7:0], piped.tdata[15:12], 4'd0} + 16'd76;
+               packet_udp_len_next[15:0] = {piped.tdata[7:0], piped.tdata[15:12], 4'd0} + 16'd56;
+               /* verilator lint_on WIDTHEXPAND */
+               /* verilator lint_on WIDTHTRUNC */
                state_next = HEADER_2;
             end
             plaintext_valid_next = piped.tvalid;
@@ -317,7 +331,7 @@ module dpe_wg_encryptor (
 
             muxed.tvalid = 1'b1;
             //             IP:DA            IP:SA           IP:HCHK  IP:PROT IP:TTL IP:FLG    IP:ID     IP:TL
-            muxed.tdata = {remote_ip[15:0], local_ip[31:0], 16'h0000, 8'h11, 8'd64, 16'h0000, 16'h0000, 16'h3C00};
+            muxed.tdata = {remote_ip[15:0], local_ip[31:0], 16'h0000, 8'h11, 8'd64, 16'h0000, 16'h0000, packet_ip_len[7:0], packet_ip_len[15:8]};
             muxed.tlast = 1'b0;
             muxed.tkeep = 16'hFFFF;
             muxed.tuser_bypass_all = 1'b0;
@@ -334,8 +348,8 @@ module dpe_wg_encryptor (
             to_encrypt.tkeep = 16'hFFFF;
 
             muxed.tvalid = 1'b1;
-            //             WG:RCV           WG:TYPE       UDP:CHK   UDP:LEN   UDP:DP       UDP:SP      IP:DA
-            muxed.tdata = {remote_id[15:0], 32'h00000004, 16'h0000, 16'h2800, remote_port, local_port, remote_ip[31:16]};
+            //             WG:RCV           WG:TYPE       UDP:CHK   UDP:LEN                                    UDP:DP       UDP:SP      IP:DA
+            muxed.tdata = {remote_id[15:0], 32'h00000004, 16'h0000, packet_udp_len[7:0], packet_udp_len[15:8], remote_port, local_port, remote_ip[31:16]};
             muxed.tlast = 1'b0;
             muxed.tkeep = 16'hFFFF;
             muxed.tuser_bypass_all = 1'b0;

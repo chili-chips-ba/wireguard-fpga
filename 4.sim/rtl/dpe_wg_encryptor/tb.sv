@@ -29,7 +29,7 @@ module tb;
    dpe_if from_encryptor(.clk(clk), .rst(rst));
 
    dpe_pcapreader #(
-      .PCAP_FILENAME("../test_64.pcap"),
+      .PCAP_FILENAME("../plaintext_128.pcap"),
       .TUSER_BYPASS_STAGE(1'b0)
    ) pcaprd (
 	   .outp(to_encryptor),
@@ -57,7 +57,7 @@ module tb;
    );
 
    dpe_pcapwriter #(
-	   .PCAP_FILENAME("../test_output.pcap")
+	   .PCAP_FILENAME("../ciphertext_128.pcap")
    ) pcapwr (
 	   .inp(from_encryptor)
    );
