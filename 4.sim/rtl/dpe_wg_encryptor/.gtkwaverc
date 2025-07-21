@@ -1,24 +1,25 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Mon Jul 21 11:09:04 2025
+[*] Mon Jul 21 15:27:40 2025
 [*]
 [dumpfile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/dpe_wg_encryptor/output/wave.fst"
-[dumpfile_mtime] "Mon Jul 21 11:07:59 2025"
-[dumpfile_size] 1245073
+[dumpfile_mtime] "Mon Jul 21 15:24:43 2025"
+[dumpfile_size] 1436492
 [savefile] "/home/enio/Projects/ChiliChips/wireguard-fpga/4.sim/rtl/dpe_wg_encryptor/.gtkwaverc"
 [timestart] 0
-[size] 1870 1009
+[size] 2282 1137
 [pos] -1 -1
-*-15.765497 113600 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-17.770157 1696000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.tb.
 [treeopen] TOP.tb.encryptor.
 [sst_width] 284
-[signals_width] 438
+[signals_width] 451
 [sst_expanded] 1
-[sst_vpaned_height] 298
-@28
+[sst_vpaned_height] 344
+@29
 TOP.tb.from_encryptor.clk
+@28
 TOP.tb.from_encryptor.rst
 @200
 -
@@ -59,8 +60,10 @@ TOP.tb.from_encryptor.tid[7:0]
 TOP.tb.encryptor.state[3:0]
 @28
 TOP.tb.encryptor.fcr_idle
-@29
 TOP.tb.encryptor.input_finished
+@22
+TOP.tb.encryptor.packet_ip_len[15:0]
+TOP.tb.encryptor.packet_udp_len[15:0]
 @200
 -piped
 @22
