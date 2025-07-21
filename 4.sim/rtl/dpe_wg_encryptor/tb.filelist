@@ -3,9 +3,11 @@
 #==========================================================================
 
 ${HW_SRC}/external_lib/axis/axis_register.v
+${HW_SRC}/external_lib/axis/axis_pipeline_register.v
 ${HW_SRC}/ip.infra/dpe_pkg.sv
 ${HW_SRC}/ip.infra/dpe_if.sv
 ${HW_SRC}/ip.infra/dpe_if_skid_buffer.sv
+${HW_SRC}/ip.infra/dpe_if_pipeline.sv
 ${BLD_DIR}/pipelinec_build/generated-files/chacha20poly1305_encrypt.v
 ${HW_SRC}/ip.dpe/dpe_wg_encryptor.sv
 ${SIM_SRC}/rtl/pcap_reader_writer/avalon_if.sv

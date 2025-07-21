@@ -106,7 +106,7 @@ module pcapreader#
     /* verilator lint_off BLKSEQ */
     always @(posedge clk_out)
     begin
-
+    if(from_reader_avalon.ready==1 || from_reader_axis.ready==1) begin
         if (eof != 0 || pcapfinished == 1) begin
             pcapfinished <= 1;
 	    if(SIGNAL_TYPE == "avalon") begin
@@ -316,6 +316,7 @@ module pcapreader#
 		end
 	    end
         end
+    end
     end
     /* verilator lint_on BLKSEQ */
 

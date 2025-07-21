@@ -16,12 +16,12 @@
 
 module dpe_if_skid_buffer (
    dpe_if.s_axis inp,
-	dpe_if.m_axis outp
+   dpe_if.m_axis outp
 );
    axis_register #(
       .DATA_WIDTH(128),
       .USER_WIDTH(8),
-		.ID_WIDTH(8)
+      .ID_WIDTH(8)
    ) sbuff (
       .clk(inp.clk),
       .rst(inp.rst),

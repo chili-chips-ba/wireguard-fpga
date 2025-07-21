@@ -41,6 +41,7 @@ module dpe_pcapreader#
    assign outp.tuser_src = TUSER_SRC;
    assign outp.tuser_dst = TUSER_DST;
    assign outp.tid = TID;
+   assign avalon_int.ready = 1'b0;
 
    pcapreader #(
       .PCAP_FILENAME(PCAP_FILENAME),
