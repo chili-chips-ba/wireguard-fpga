@@ -11,18 +11,22 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description:
-//   DPE AXIS skid buffer
+//   DPE AXIS pipeline register
 //==========================================================================
 
-module dpe_if_skid_buffer (
+module dpe_if_pipeline #(
+   parameter LENGTH = 1
+) (
    dpe_if.s_axis inp,
    dpe_if.m_axis outp
 );
-   axis_register #(
+   axis_pipeline_register #(
       .DATA_WIDTH(128),
       .USER_WIDTH(8),
-      .ID_WIDTH(8)
-   ) sbuff (
+      .ID_WIDTH(8),
+      .LENGTH(LENGTH),
+      .REG_TYPE(2)
+   ) pipeline (
       .clk(inp.clk),
       .rst(inp.rst),
       .s_axis_tvalid(inp.tvalid),
