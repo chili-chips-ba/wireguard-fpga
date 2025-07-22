@@ -274,7 +274,7 @@ module ODDR (Q, C, CE, D1, D2, R, S);
    $width (posedge S, 0:0:0, 0, notifier);
 
 `endif
-   specparam PATHPULSE$ = 0;
+   //specparam PATHPULSE$ = 0;
 
    endspecify
 

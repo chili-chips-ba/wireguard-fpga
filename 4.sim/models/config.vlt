@@ -20,3 +20,5 @@ lint_off -rule UNOPTFLAT
 lint_off -rule BLKANDNBLK
 lint_off -rule WIDTHEXPAND
 lint_off -rule WIDTHTRUNC
+lint_off -rule PROCASSINIT
+lint_off -rule DEFOVERRIDE
