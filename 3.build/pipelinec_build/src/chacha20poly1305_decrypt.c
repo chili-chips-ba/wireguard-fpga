@@ -7,7 +7,7 @@
 // Top level IO port config, named like chacha20poly1305_decrypt_*
 #include "chacha20poly1305_decrypt.h"
 // Instance of chacha20 part of decryption
-#include "chacha20/chacha20_decrypt.c"
+#include "chacha20/chacha20.c"
 // Instance of preparing auth data part of decryption
 #include "prep_auth_data/prep_auth_data.c"
 // Instance of poly1305 part of decryption

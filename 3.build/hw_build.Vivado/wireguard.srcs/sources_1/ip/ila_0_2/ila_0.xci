@@ -3,7 +3,7 @@
   "ip_inst": {
     "xci_name": "ila_0",
     "component_reference": "xilinx.com:ip:ila:6.2",
-    "ip_revision": "16",
+    "ip_revision": "18",
     "gen_directory": "../../../../wireguard.gen/sources_1/ip/ila_0",
     "parameters": {
       "component_parameters": {
