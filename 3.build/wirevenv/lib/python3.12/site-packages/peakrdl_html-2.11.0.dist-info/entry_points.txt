@@ -1,0 +1,2 @@
+[peakrdl.exporters]
+html = peakrdl_html.__peakrdl__:Exporter

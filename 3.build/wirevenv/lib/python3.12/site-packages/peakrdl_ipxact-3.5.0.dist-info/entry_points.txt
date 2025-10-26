@@ -1,0 +1,5 @@
+[peakrdl.exporters]
+ip-xact = peakrdl_ipxact.__peakrdl__:Exporter
+
+[peakrdl.importers]
+ip-xact = peakrdl_ipxact.__peakrdl__:Importer
