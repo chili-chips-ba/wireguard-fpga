@@ -1,0 +1,2 @@
+[peakrdl.exporters]
+c-header = peakrdl_cheader.__peakrdl__:Exporter

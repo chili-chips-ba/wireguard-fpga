@@ -1,0 +1,31 @@
+Metadata-Version: 2.4
+Name: peakrdl-cli
+Version: 1.5.0
+Summary: Command-line tool for control/status register automation and code generation.
+Author: Alex Mykyta
+License: LGPLv3
+Project-URL: Source, https://github.com/SystemRDL/PeakRDL
+Project-URL: Tracker, https://github.com/SystemRDL/PeakRDL/issues
+Project-URL: Changelog, https://github.com/SystemRDL/PeakRDL/releases
+Project-URL: Documentation, https://peakrdl.readthedocs.io/
+Keywords: SystemRDL,PeakRDL,CSR,compiler,tool,registers,generator,C,header,software,Verilog,SystemVerilog,register abstraction layer,FPGA,ASIC
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: systemrdl-compiler~=1.27
+Requires-Dist: tomli; python_version < "3.11"
+Dynamic: license-file
+
+# PeakRDL command-line interface
+This package implements the command-line interface for the PeakRDL toolchain.
+
+## Documentation
+See the [PeakRDL Documentation](http://peakrdl.readthedocs.io) for more details.

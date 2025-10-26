@@ -1,0 +1,209 @@
+/* This file is part of PeakRDL-html <https://github.com/SystemRDL/PeakRDL-html>.
+ * and can be redistributed under the terms of GNU GPL v3 <https://www.gnu.org/licenses/>.
+ */
+
+/* Base layout */
+html, body {
+    height: 100%;
+}
+
+button {
+    cursor: pointer;
+}
+
+img {
+    max-width: 100%;
+}
+
+#_Sidebar {
+    height: 100%;
+}
+
+#_SBContents {
+    width: 19em;
+    min-width: 19em !important;
+}
+
+#_SBResizer {
+    width: 6px;
+    margin-left: -3px;
+    margin-right: -3px;
+    cursor: col-resize;
+}
+
+#MainPane {
+    height: 100%;
+}
+
+#_SBTreeContainer {
+    display: flex;
+    flex-direction: column;
+}
+#_SBTree {
+    display: inline-flex;
+    flex-direction: column;
+    min-width: max-content;
+}
+
+.node {
+    flex-direction: row;
+    display: flex;
+    flex-shrink: 0;
+}
+.node-link {
+    flex-grow: 1;
+}
+
+.node-icon {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.node-children {
+    padding-left: 1em;
+    display: inline-flex;
+    flex-direction: column;
+    min-width: max-content;
+}
+
+.pack-v {
+    display: flex;
+    flex-direction: column;
+}
+
+.pack-h {
+    display: flex;
+    flex-direction: row;
+}
+
+.scroll-v {
+    overflow-y: auto;
+}
+
+.scroll-h {
+    overflow-x: auto;
+}
+
+.stretchy {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.no-stretchy {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+#_Overlay {
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    display:none;
+    z-index: 2;
+    cursor:pointer;
+}
+
+#_IdxEditModal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 18.75em;
+    top: 18.75em;
+
+    padding: 0.625em;
+}
+
+/* arrow thingy on top of modal */
+#_IdxEditModal::before {
+    content: "";
+    width: 0em;
+    height: 0em;
+    position: absolute;
+    left: 2.188em; /* = ([input with] + [modal padding]*2)/2 - [this border_width] */
+    top: -1.25em;
+    border: 0.625em solid transparent;
+    border-bottom: 0.625em solid;
+}
+
+#_IdxEditInput {
+    width: 4.375em;
+}
+
+.crumb-idx {
+    cursor:pointer;
+}
+
+#_AbsAddr div {
+    cursor: pointer;
+}
+
+#_SearchResults{
+    margin: 0em;
+}
+
+#_SearchResults li{
+    cursor:pointer;
+    overflow: hidden;
+}
+
+#_Search, #_SearchBar{
+    display: none;
+}
+
+#_SearchInput {
+    width: 100%;
+}
+
+#_Search {
+    overflow-wrap: anywhere;
+}
+
+.generic-modal-overlay {
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    display:none;
+    z-index: 3;
+    cursor:pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+.generic-modal {
+    cursor: default;
+}
+
+/* Mobile mode */
+#_Sidebar {
+    display: none;
+    position: absolute;
+    z-index: 3;
+}
+
+#_SBSearchButton, #_SBSearchButtonSpan {
+    display: none;
+}
+
+/* Desktop mode */
+@media (min-width:950px){
+    #_Sidebar {
+        position: static;
+        display: flex!important;
+        z-index: 0;
+    }
+    #_SBSearchButton, #_SBSearchButtonSpan {
+        display: block;
+    }
+
+    #_MobiTitlebar {
+        display:none;
+    }
+
+    #_Overlay {
+        display: none!important;
+    }
+
+    .limit-h {
+        max-width: 900px;
+    }
+}

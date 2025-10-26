@@ -1,0 +1,58 @@
+Metadata-Version: 2.1
+Name: systemrdl-compiler
+Version: 1.30.1
+Summary: Parse and elaborate front-end for SystemRDL 2.0
+Author: Alex Mykyta
+License: MIT
+Project-URL: Source, https://github.com/SystemRDL/systemrdl-compiler
+Project-URL: Tracker, https://github.com/SystemRDL/systemrdl-compiler/issues
+Project-URL: Changelog, https://github.com/SystemRDL/systemrdl-compiler/releases
+Project-URL: Documentation, http://systemrdl-compiler.readthedocs.io
+Keywords: SystemRDL,CSR,compiler,tool,registers,generator,register abstraction layer,FPGA,ASIC
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)
+Classifier: Topic :: Software Development :: Compilers
+Classifier: Topic :: Software Development :: Code Generators
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: LICENSE-3RD-PARTY
+Requires-Dist: antlr4-python3-runtime <4.14,>=4.11
+Requires-Dist: colorama
+Requires-Dist: markdown
+Requires-Dist: typing-extensions
+
+[![Documentation Status](https://readthedocs.org/projects/systemrdl-compiler/badge/?version=latest)](http://systemrdl-compiler.readthedocs.io)
+[![build](https://github.com/SystemRDL/systemrdl-compiler/workflows/build/badge.svg)](https://github.com/SystemRDL/systemrdl-compiler/actions?query=workflow%3Abuild+branch%3Amain)
+[![Coverage Status](https://coveralls.io/repos/github/SystemRDL/systemrdl-compiler/badge.svg?branch=main)](https://coveralls.io/github/SystemRDL/systemrdl-compiler?branch=main)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/systemrdl-compiler.svg)](https://pypi.org/project/systemrdl-compiler)
+
+# SystemRDL Compiler
+
+The `systemrdl-compiler` project implements a generic compiler front-end for
+Accellera's [SystemRDL 2.0](http://accellera.org/downloads/standards/systemrdl)
+register description language. The goal of this project is to provide a free and
+open compiler that lowers the barrier to entry to using an industry standard
+register description language.
+
+By providing an elaborated register model that is easy to traverse and query,
+it should be far easier to write custom register space view generators.
+
+![overview](https://raw.githubusercontent.com/SystemRDL/systemrdl-compiler/main/docs/img/overview.svg?sanitize=true)
+
+## Documentation
+See the [SystemRDL Compiler Documentation](http://systemrdl-compiler.readthedocs.io) for more details
+
+## Related Projects
+
+If you are looking for a complete SystemRDL command line tool, see the [PeakRDL project](https://peakrdl.readthedocs.io).
+
+## License
+
+The SystemRDL Compiler is published and distributed under the [MIT License](LICENSE).

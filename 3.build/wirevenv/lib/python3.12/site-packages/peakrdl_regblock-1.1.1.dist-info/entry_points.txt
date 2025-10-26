@@ -1,0 +1,2 @@
+[peakrdl.exporters]
+regblock = peakrdl_regblock.__peakrdl__:Exporter
