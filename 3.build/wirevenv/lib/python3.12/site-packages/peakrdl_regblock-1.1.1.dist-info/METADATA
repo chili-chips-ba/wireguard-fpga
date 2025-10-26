@@ -1,0 +1,40 @@
+Metadata-Version: 2.4
+Name: peakrdl-regblock
+Version: 1.1.1
+Summary: Compile SystemRDL into a SystemVerilog control/status register (CSR) block
+Author: Alex Mykyta
+License: GPLv3
+Project-URL: Source, https://github.com/SystemRDL/PeakRDL-regblock
+Project-URL: Tracker, https://github.com/SystemRDL/PeakRDL-regblock/issues
+Project-URL: Changelog, https://github.com/SystemRDL/PeakRDL-regblock/releases
+Project-URL: Documentation, https://peakrdl-regblock.readthedocs.io/
+Keywords: SystemRDL,PeakRDL,CSR,compiler,tool,registers,generator,Verilog,SystemVerilog,register abstraction layer,FPGA,ASIC
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: systemrdl-compiler<2,>=1.29.0
+Requires-Dist: Jinja2>=2.11
+Provides-Extra: cli
+Requires-Dist: peakrdl-cli>=1.2.3; extra == "cli"
+Dynamic: license-file
+
+[![Documentation Status](https://readthedocs.org/projects/peakrdl-regblock/badge/?version=latest)](http://peakrdl-regblock.readthedocs.io)
+[![build](https://github.com/SystemRDL/PeakRDL-regblock/workflows/build/badge.svg)](https://github.com/SystemRDL/PeakRDL-regblock/actions?query=workflow%3Abuild+branch%3Amain)
+[![Coverage Status](https://coveralls.io/repos/github/SystemRDL/PeakRDL-regblock/badge.svg?branch=main)](https://coveralls.io/github/SystemRDL/PeakRDL-regblock?branch=main)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/peakrdl-regblock.svg)](https://pypi.org/project/peakrdl-regblock)
+
+# PeakRDL-regblock
+Compile SystemRDL into a SystemVerilog control/status register (CSR) block.
+
+For the command line tool, see the [PeakRDL project](https://peakrdl.readthedocs.io).
+
+## Documentation
+See the [PeakRDL-regblock Documentation](https://peakrdl-regblock.readthedocs.io) for more details

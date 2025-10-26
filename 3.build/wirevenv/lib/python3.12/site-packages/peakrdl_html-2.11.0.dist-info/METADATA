@@ -1,0 +1,147 @@
+Metadata-Version: 2.4
+Name: peakrdl-html
+Version: 2.11.0
+Summary: HTML documentation generator for SystemRDL-based register models
+Author: Alex Mykyta
+License: GPLv3
+Project-URL: Source, https://github.com/SystemRDL/PeakRDL-html
+Project-URL: Tracker, https://github.com/SystemRDL/PeakRDL-html/issues
+Project-URL: Changelog, https://github.com/SystemRDL/PeakRDL-html/releases
+Keywords: SystemRDL,PeakRDL,CSR,compiler,tool,registers,generator,HTML,documentation
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)
+Classifier: Topic :: Software Development :: Documentation
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+License-File: LICENSE-3RD-PARTY
+Requires-Dist: systemrdl-compiler<2,>=1.13.0
+Requires-Dist: Jinja2>=2.9
+Requires-Dist: markdown
+Requires-Dist: git-me-the-url>=2.0.3
+Requires-Dist: python-markdown-math
+Provides-Extra: cli
+Requires-Dist: peakrdl-cli>=1.2.3; extra == "cli"
+Dynamic: license-file
+
+[![build](https://github.com/SystemRDL/PeakRDL-html/workflows/build/badge.svg)](https://github.com/SystemRDL/PeakRDL-html/actions?query=workflow%3Abuild+branch%3Amaster)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/peakrdl-html.svg)](https://pypi.org/project/peakrdl-html)
+
+# PeakRDL-html
+Generate address space documentation HTML from compiled SystemRDL input.
+
+For the command line tool, see the [PeakRDL project](https://peakrdl.readthedocs.io).
+
+## Installing
+Install from [PyPi](https://pypi.org/project/peakrdl-html) using pip:
+
+    python3 -m pip install peakrdl-html
+
+
+## Example
+
+The easiest way to use PeakRDL-html is via the [PeakRDL command line tool](https://peakrdl.readthedocs.io/):
+
+```bash
+# Install the command line tool
+python3 -m pip install peakrdl
+
+# Generate HTML
+peakrdl html your_design.rdl -o output_dir
+```
+
+Here is an [example of HTML output](https://systemrdl.github.io/PeakRDL-html) generated from a
+fictional SystemRDL register description: [turboencabulator.rdl](example/turboencabulator.rdl).
+
+
+## PeakRDL TOML config options
+
+If using the [PeakRDL command-line tool](https://peakrdl.readthedocs.io), some
+additional things can be configured via the TOML configuration file.
+
+```toml
+[html]
+user_template_dir = "path/to/dir/"
+user_static_dir = "path/to/dir/"
+extra_doc_properties = ["list", "of", "properties"]
+generate_source_links = false
+```
+
+
+
+## Reference
+
+### `HTMLExporter(**kwargs)`
+Constructor for the HTML exporter class
+
+**Optional Parameters**
+
+* `markdown_inst`
+    * Override the class instance of the Markdown processor.
+      See the [Markdown module](https://python-markdown.github.io/reference/#Markdown)
+      for more details.
+    * By default, the following extensions are loaded: 'extra', 'admonition', 'mdx_math'
+* `user_template_dir`
+    * Path to a directory where user-defined template overrides are stored.
+* `user_static_dir`
+    * Path to user-defined static content to copy to output directory.
+* `user_context`
+    * Additional context variables to load into the template namespace.
+* `show_signals`
+    * Show signal components. Default is False
+* `extra_doc_properties`
+    * List of properties to explicitly document.
+
+      Nodes that have a property explicitly set will show its value in a table
+      in the node's description. Use this to bring forward user-defined
+      properties, or other built-in properties in your documentation.
+* `generate_source_links`
+    * If `True`, attempts to generate links back to original RDL source deginitions.
+      Defaults to `True`.
+* `gitmetheurl_translators`
+    * Override the list of [GitMeTheURL](https://github.com/amykyta3/git-me-the-url/blob/master/README.md) translators to use when generating source links.
+      If unset, GitMeTheURL uses its builtin translators, as well as any installed plugins.
+
+
+### `HTMLExporter.export(node, output_dir, **kwargs)`
+Perform the export!
+
+**Parameters**
+
+* `nodes`
+    * Top-level node to export. Can be the top-level `RootNode` or any internal `AddrmapNode`.
+      Can also be a list of `RootNode` and any internal `AddrmapNode`.
+* `output_dir`
+    * HTML output directory.
+
+**Optional Parameters**
+
+* `footer`
+    * Override footer text.
+* `title`
+    * Override title text.
+* `home_url`
+    * If a URL is specified, adds a home button to return to a parent home page.
+* `skip_not_present`
+    * Control whether nodes with `ispresent=false` are generated. Default is True.
+
+
+### API Example
+Pass the elaborated output of the [SystemRDL Compiler](http://systemrdl-compiler.readthedocs.io)
+into the exporter.
+
+Assuming `root` is the elaborated top-level node, or an internal `AddrmapNode`:
+
+```python
+from peakrdl_html import HTMLExporter
+
+exporter = HTMLExporter()
+
+exporter.export(root, "path/to/output")
+```
