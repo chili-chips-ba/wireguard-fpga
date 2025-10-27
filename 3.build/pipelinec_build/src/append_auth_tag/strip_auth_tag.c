@@ -1,7 +1,14 @@
 // Append the auth tag after the ciphertext
 #include "arrays.h"
 
-
+#ifndef BYTE_ARRAY_TO_UINT
+#define BYTE_ARRAY_TO_UINT(byteArray, size, uintVar) do { \
+   int i; \
+   for (i = 0; i < (size) && i < sizeof(*(uintVar)); i++) { \
+      ((unsigned char*)(uintVar))[i] = (byteArray)[i]; \
+   } \
+} while(0)
+#endif
 
 // Input stream of ciphertext followed by appended auth tag
 stream(axis128_t) strip_auth_tag_axis_in; // input
