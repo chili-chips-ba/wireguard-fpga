@@ -1,24 +1,16 @@
 // Append the auth tag after the ciphertext
 #include "arrays.h"
 
-#ifndef BYTE_ARRAY_TO_UINT
-#define BYTE_ARRAY_TO_UINT(byteArray, size, uintVar) do { \
-   int i; \
-   for (i = 0; i < (size) && i < sizeof(*(uintVar)); i++) { \
-      ((unsigned char*)(uintVar))[i] = (byteArray)[i]; \
-   } \
-} while(0)
-#endif
 
 // Input stream of ciphertext followed by appended auth tag
 stream(axis128_t) strip_auth_tag_axis_in; // input
 uint1_t strip_auth_tag_axis_in_ready; // output
 // Output stream of ciphertext
-stream(axis128_t) strip_auth_tag_axis_out; // input
-uint1_t strip_auth_tag_axis_out_ready; // output
+stream(axis128_t) strip_auth_tag_axis_out; // output
+uint1_t strip_auth_tag_axis_out_ready; // input
 // Output auth tag output
-stream(poly1305_auth_tag_uint_t) strip_auth_tag_auth_tag_out; // input
-uint1_t strip_auth_tag_auth_tag_out_ready; // output
+stream(poly1305_auth_tag_uint_t) strip_auth_tag_auth_tag_out; // output
+uint1_t strip_auth_tag_auth_tag_out_ready; // input
 
 typedef enum strip_auth_tag_state_t{
   CIPHERTEXT_PASS,    //Pass through input to ciphertext
@@ -41,35 +33,33 @@ void strip_auth_tag()
   
   if(state == CIPHERTEXT)
   {
-    //Try to recieve input: Ready if output is ready
+    // Pass input data to output (connect valid+ready)
+    strip_auth_tag_axis_out = strip_auth_tag_axis_in;
     strip_auth_tag_axis_in_ready = strip_auth_tag_axis_out_ready;
 
-    //Pass data to ciphertext output
-    strip_auth_tag_axis_out = strip_auth_tag_axis_in;
-
     //Check tlast for final block, which is the tag
-    if (strip_auth_tag_axis_in.data.tlast & strip_auth_tag_axis_in.valid & strip_auth_tag_axis_in_ready){
+    //don't need to check strip_auth_tag_axis_out_ready
+    //since we're not trying to output this last cycle
+    if (strip_auth_tag_axis_in.data.tlast & strip_auth_tag_axis_in.valid){
        //move to tag block
-       //don't output on the ciphertext stream
+       //don't pass input data to output 
+       //(disconnect valid+ready)
        strip_auth_tag_axis_out.valid = 0;
+       strip_auth_tag_axis_in_ready = 0;
        state = AUTH_TAG_EXTRACTION;
     }
    }
   else //if(state == AUTH_TAG_EXTRACTION)
   {
-    strip_auth_tag_axis_in_ready = 0;
+    //Connect AXIS input to auth tag output
+    //(know AXIS is last cycle from peeking last cycle)
+    strip_auth_tag_auth_tag_out.data = uint8_array16_le(strip_auth_tag_axis_in.data.tdata);
+    strip_auth_tag_auth_tag_out.valid = strip_auth_tag_axis_in.valid;
+    strip_auth_tag_axis_in_ready = strip_auth_tag_auth_tag_out_ready;
 
-    //extract the tag data from the input register and set it on the
-    //dedicated auth tag output stream
-    BYTE_ARRAY_TO_UINT(strip_auth_tag_axis_in.data.tdata, POLY1305_AUTH_TAG_SIZE, &strip_auth_tag_auth_tag_out.data)
-    strip_auth_tag_auth_tag_out.valid = 1; //always valid in this state
-    
     //set the ready signal for the auth tag output
-    uint1_t tag_transfer_successful = strip_auth_tag_auth_tag_out.valid & strip_auth_tag_auth_tag_out_ready;
-
-    if (tag_transfer_successful){
+    if (strip_auth_tag_auth_tag_out.valid & strip_auth_tag_auth_tag_out_ready){
        state = CIPHERTEXT_PASS;
     }
-
   }
 }
