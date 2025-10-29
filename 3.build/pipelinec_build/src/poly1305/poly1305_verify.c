@@ -2,6 +2,22 @@
 
 #include "arrays.h"
 
+#define POLY1305_TAG_BYTES 16
+typedef uint8_t poly1305_tag_data_t[POLY1305_TAG_BYTES]
+
+uint1_t compare_tags(const poly1305_tag_data_t tag1, const poly1305_tag_data_t tag2)
+{
+  int i;
+  for (i = 0; i < POLY1305_TAG_BYTES; i++)
+  {
+    // If tags don't match return 0
+    if(tag1[i] != tag2[i]) return 0;
+
+    // Tags match
+    return 1;
+  }
+}
+
 // Input auth_tag
 stream(axis128_t) poly1305_verify_auth_tag; //input
 uint1_t poly1305_verify_auth_tag_ready; //output
@@ -27,20 +43,64 @@ void poly1305_verify(){
   // Define static variables
   static poly1305_verify_state_t state = TAKE_AUTH_TAG;
   
+  // Regs to hold the tag value
+  static poly1305_tag_data_t auth_tag_reg;
+  static poly1305_tag_data_t calc_tag_reg;
+
+  // Reg to hold compare result
+  static uint1_t tags_match_reg = 0;
+
   // Default not ready for tag recieve
   poly1305_verify_auth_tag_ready = 0;
   poly1305_verify_calc_tag_ready = 0;
 
   // Default not outputting data
   stream(uint1_t) uint1_t_null = {0};
-  poly1305_verify_tags_match_ready = uint1_t_null; 
+  poly1305_verify_tags_match = uint1_t_null; 
 
-  if (state == TAKE_AUTH_TAG){}
-  else if (state == TAKE_CALC_TAG){}
-  else if (state == COMPARE_TAGS){}
-  else { //(state == OUTPUT_COMPARE_RESULT)
- 
+  if (state == TAKE_AUTH_TAG)
+  {
+    // Ready to take the input tag
+    poly1305_verify_auth_tag_ready = 1;
 
+    if (poly1305_verify_auth_tag.valid)
+    {
+      // Copy data to the register
+      ARRAY_COPY(auth_tag_reg, poly1305_verify_auth_tag.data.tdata, POLY1305_TAG_BYTES);
+      state = TAKE_CALC_TAG;
+    }
+  }
+  else if (state == TAKE_CALC_TAG)
+  {
+    // Ready to take the calculated tag
+    poly1305_verify_calc_tag_ready = 1;
+
+    if (poly1305_verify_calc_tag.valid)
+    {
+      ARRAY_COPY(calc_tag_reg, poly1305_verify_calc_tag.data.tdata, POLY1305_TAG_BYTES);
+      state = COMPARE_TAGS;
+    }
+  }
+  else if (state == COMPARE_TAGS)
+  {
+    // Perform comparison logic
+    tags_match_reg = compare_tags(auth_tag_reg, calc_tag_reg);
+
+    // Output the result
+    state = OUTPUT_COMPARE_RESULT
+  }
+  else //(state == OUTPUT_COMPARE_RESULT)
+  {
+    // Output result stored in register 
+    poly1305_verify_tags_match.data = tags_match_reg;
+    poly1305_verify_tags_match.valid = 1;
+
+    if (poly1305_verify_tags_match_ready)
+    {
+      // Successful output transfer
+      // Reset the FSM for the next verification
+      state = TAKE_AUTH_TAG;
+    }
   }
 
 }
