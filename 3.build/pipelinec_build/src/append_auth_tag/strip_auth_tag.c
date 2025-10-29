@@ -21,6 +21,9 @@ typedef enum strip_auth_tag_state_t{
 void strip_auth_tag()
 {
   static strip_auth_tag_state_t state = CIPHERTEXT_PASS;
+  
+  static stream(axis128_t) ciphertext_reg = {0};
+  static axis128_t tag_capture_reg = {0};
 
   // Default not ready for incoming data
   strip_auth_tag_axis_in_ready = 0;
@@ -31,35 +34,63 @@ void strip_auth_tag()
   stream(poly1305_auth_tag_uint_t) auth_tag_null = {0};
   strip_auth_tag_auth_tag_out = auth_tag_null;
   
+  // The output register is consumed if it's valid and the consumer is ready
+  uint1_t output_consumed = ciphertext_reg.valid & strip_auth_tag_axis_out_ready;
+
   if(state == CIPHERTEXT)
   {
-    // Pass input data to output (connect valid+ready)
-    strip_auth_tag_axis_out = strip_auth_tag_axis_in;
-    strip_auth_tag_axis_in_ready = strip_auth_tag_axis_out_ready;
+    //the FSM is ready for new input if the currennt output register is consumed
+    strip_auth_tag_axis_in_ready = output_consumed;
 
-    //Check tlast for final block, which is the tag
-    //don't need to check strip_auth_tag_axis_out_ready
-    //since we're not trying to output this last cycle
-    if (strip_auth_tag_axis_in.data.tlast & strip_auth_tag_axis_in.valid){
-       //move to tag block
-       //don't pass input data to output 
-       //(disconnect valid+ready)
-       strip_auth_tag_axis_out.valid = 0;
-       strip_auth_tag_axis_in_ready = 0;
-       state = AUTH_TAG_EXTRACTION;
+    //load the register and check for lookahead on a successful input transfer
+    if(strip_auth_tag_axis_in.valid & strip_auth_tag_axis_in_ready)
+    {
+      if(strip_auth_tag_axis_in.data.tlast)
+      {
+        //Next block is the tag
+	//this block is the one outputting in the next cycle
+	cyphertext_reg.data.tlast = 1;
+
+	// Capture the tag data
+	tag_capture_reg = strip_auth_tag_axis_in.data;
+
+	// Stop feeding the ciphertext pipeline
+	// We clear the valid bit of the register to ensure the 
+	// tag block is not output as ciphertext
+	ciphertext_reg.valid = 0;
+
+	// Transition to AUTH_TAG_EXTRACTION
+	state = AUTH_TAG_EXTRACTION;
+      }
     }
-   }
+
+    else
+    {
+      //Cipertext block
+      //Load the new block into the register
+      ciphertext_reg = strip_auth_tag_axis_in;
+      ciphertext_reg.data.tlast = 0;
+      ciphertext_reg.valid = 1;
+    }
+  }
+
   else //if(state == AUTH_TAG_EXTRACTION)
   {
-    //Connect AXIS input to auth tag output
-    //(know AXIS is last cycle from peeking last cycle)
-    strip_auth_tag_auth_tag_out.data = uint8_array16_le(strip_auth_tag_axis_in.data.tdata);
-    strip_auth_tag_auth_tag_out.valid = strip_auth_tag_axis_in.valid;
-    strip_auth_tag_axis_in_ready = strip_auth_tag_auth_tag_out_ready;
+    if (output_consumed){
+      // Disable the ciphertext output
+      ciphertext_reg.valid = 0;
 
-    //set the ready signal for the auth tag output
-    if (strip_auth_tag_auth_tag_out.valid & strip_auth_tag_auth_tag_out_ready){
-       state = CIPHERTEXT_PASS;
+      // Output the auth tag
+      strip_auth_tag_auth_tag_out.data = uint8_array16_le(tag_capture_reg.tdata)
+      strip_auth_tag_auth_tag_out.valid = 1;
+
+      if (strip_auth_tag_auth_tag_out_ready)
+      {
+	// Tag was successfully sent
+	tag_capture_reg.tlast = 0;
+	state = CIPHERTEXT;
+      }
     }
+  }
   }
 }
