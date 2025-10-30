@@ -1,29 +1,15 @@
 //Chech if auth_tag and calculated_tag are the same
 
 #include "arrays.h"
+#include "poly1305.h"
 
-#define POLY1305_TAG_BYTES 16
-typedef uint8_t poly1305_tag_data_t[POLY1305_TAG_BYTES]
-
-uint1_t compare_tags(const poly1305_tag_data_t tag1, const poly1305_tag_data_t tag2)
-{
-  int i;
-  for (i = 0; i < POLY1305_TAG_BYTES; i++)
-  {
-    // If tags don't match return 0
-    if(tag1[i] != tag2[i]) return 0;
-
-    // Tags match
-    return 1;
-  }
-}
 
 // Input auth_tag
-stream(axis128_t) poly1305_verify_auth_tag; //input
+stream(poly1305_auth_tag_uint_t) poly1305_verify_auth_tag; //input
 uint1_t poly1305_verify_auth_tag_ready; //output
 
 // Input calc_tag
-stream(axis128_t) poly1305_verify_calc_tag; //input
+stream(poly1305_auth_tag_uint_t) poly1305_verify_calc_tag; //input
 uint1_t poly1305_verify_calc_tag_ready; //output
 
 // Output stream is_verified/tags_match bit
@@ -66,7 +52,7 @@ void poly1305_verify(){
     if (poly1305_verify_auth_tag.valid)
     {
       // Copy data to the register
-      ARRAY_COPY(auth_tag_reg, poly1305_verify_auth_tag.data.tdata, POLY1305_TAG_BYTES);
+      auth_tag_reg = poly1305_verify_auth_tag.data;
       state = TAKE_CALC_TAG;
     }
   }
@@ -77,14 +63,14 @@ void poly1305_verify(){
 
     if (poly1305_verify_calc_tag.valid)
     {
-      ARRAY_COPY(calc_tag_reg, poly1305_verify_calc_tag.data.tdata, POLY1305_TAG_BYTES);
+      calc_tag_reg = poly1305_verify_calc_tag.data;
       state = COMPARE_TAGS;
     }
   }
   else if (state == COMPARE_TAGS)
   {
     // Perform comparison logic
-    tags_match_reg = compare_tags(auth_tag_reg, calc_tag_reg);
+    tags_match_reg = (auth_tag_reg == calc_tag_reg);
 
     // Output the result
     state = OUTPUT_COMPARE_RESULT
