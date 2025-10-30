@@ -37,7 +37,7 @@ void strip_auth_tag()
   // The output register is consumed if it's valid and the consumer is ready
   uint1_t output_consumed = ciphertext_reg.valid & strip_auth_tag_axis_out_ready;
 
-  if(state == CIPHERTEXT)
+  if(state == CIPHERTEXT_PASS)
   {
     //the FSM is ready for new input if the currennt output register is consumed
     strip_auth_tag_axis_in_ready = output_consumed;
