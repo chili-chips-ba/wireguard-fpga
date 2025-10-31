@@ -26,3 +26,10 @@ set_property IOSTANDARD DIFF_SSTL15 [get_ports clk_n]
 #################reset setting########################
 set_property IOSTANDARD LVCMOS15 [get_ports rst_n]
 set_property PACKAGE_PIN T6 [get_ports rst_n]
+
+############## usb uart define########################
+set_property IOSTANDARD LVCMOS33 [get_ports uart_rx]
+set_property PACKAGE_PIN AA15 [get_ports uart_rx]
+
+set_property IOSTANDARD LVCMOS33 [get_ports uart_tx]
+set_property PACKAGE_PIN AB15 [get_ports uart_tx]

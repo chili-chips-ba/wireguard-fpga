@@ -1,4 +1,5 @@
 #include "random.h"
+#include "uart.h"
 
 // Inline function to read cycle counter from RISC-V CPU
 static uint32_t rdcycle(void)
@@ -11,7 +12,7 @@ static uint32_t rdcycle(void)
 // Inline function to cause a small delay
 static void small_delay(void)
 {
-    for (volatile uint8_t i = 0; i < 8; i++) 
+    for (volatile int i = 0; i < 1000; i++) 
     {
         asm volatile("nop");
     }
@@ -43,7 +44,7 @@ void random_32bytes(uint8_t *out)
     memcpy(input, cycles, sizeof(cycles));
     memcpy(input + sizeof(cycles), &sp, sizeof(sp));
 
-    blake2s(out, 32, input, sizeof(input), NULL, 0);
+    blake2s(out, 32, NULL, 0, input, sizeof(input));
 
     memset(cycles, 0, sizeof(cycles));
     memset(input, 0, sizeof(input)); 

@@ -24,8 +24,8 @@ firmware: $(SOURCE_DIR)/main.elf
 	python $(SOURCE_DIR)/progmem.py
 
 # ** Compile and link the main ELF executable from all source files and the linker script
-$(SOURCE_DIR)/main.elf: $(SOURCE_DIR)/main.lds  $(SOURCE_DIR)/start.s $(SOURCE_DIR)/main.c $(SOURCE_DIR)/random.c $(SOURCE_DIR)/random.h $(BLAKE_DIR)/blake2s.c $(BLAKE_DIR)/blake2s.h $(SOURCE_DIR)/string_bare.c $(SOURCE_DIR)/string_bare.h
-	$(CROSS)gcc $(CFLAGS) -march=rv32im -mabi=ilp32 -Wl,--build-id=none,-Bstatic,-T,$(SOURCE_DIR)/main.lds,-Map,$(SOURCE_DIR)/main.map,--strip-debug -ffreestanding -nostdlib -o $@ $(SOURCE_DIR)/start.s $(SOURCE_DIR)/main.c $(SOURCE_DIR)/random.c $(BLAKE_DIR)/blake2s.c $(SOURCE_DIR)/string_bare.c
+$(SOURCE_DIR)/main.elf: $(SOURCE_DIR)/main.lds  $(SOURCE_DIR)/start.s $(SOURCE_DIR)/main.c $(SOURCE_DIR)/random.c $(SOURCE_DIR)/random.h $(BLAKE_DIR)/blake2s.c $(BLAKE_DIR)/blake2s.h $(SOURCE_DIR)/string_bare.c $(SOURCE_DIR)/string_bare.h $(SOURCE_DIR)/uart.c $(SOURCE_DIR)/uart.h
+	$(CROSS)gcc $(CFLAGS) -march=rv32im -mabi=ilp32 -Wl,--build-id=none,-Bstatic,-T,$(SOURCE_DIR)/main.lds,-Map,$(SOURCE_DIR)/main.map,--strip-debug -ffreestanding -nostdlib -o $@ $(SOURCE_DIR)/start.s $(SOURCE_DIR)/main.c $(SOURCE_DIR)/random.c $(BLAKE_DIR)/blake2s.c $(SOURCE_DIR)/string_bare.c $(SOURCE_DIR)/uart.c
 
 # ** Preprocess the sections linker script using the C preprocessor
 $(SOURCE_DIR)/main.lds: $(SOURCE_DIR)/sections.lds
