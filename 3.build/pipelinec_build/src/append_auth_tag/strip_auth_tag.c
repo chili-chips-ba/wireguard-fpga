@@ -48,19 +48,19 @@ void strip_auth_tag()
       if(strip_auth_tag_axis_in.data.tlast)
       {
         //Next block is the tag
-	//this block is the one outputting in the next cycle
-	cyphertext_reg.data.tlast = 1;
+        //this block is the one outputting in the next cycle
+        cyphertext_reg.data.tlast = 1;
 
-	// Capture the tag data
-	tag_capture_reg = strip_auth_tag_axis_in.data;
+        // Capture the tag data
+        tag_capture_reg = strip_auth_tag_axis_in.data;
 
-	// Stop feeding the ciphertext pipeline
-	// We clear the valid bit of the register to ensure the 
-	// tag block is not output as ciphertext
+        // Stop feeding the ciphertext pipeline
+        // We clear the valid bit of the register to ensure the 
+        // tag block is not output as ciphertext
 	ciphertext_reg.valid = 0;
 
-	// Transition to AUTH_TAG_EXTRACTION
-	state = AUTH_TAG_EXTRACTION;
+        // Transition to AUTH_TAG_EXTRACTION
+        state = AUTH_TAG_EXTRACTION;
       }
     }
 
@@ -76,7 +76,8 @@ void strip_auth_tag()
 
   else //if(state == AUTH_TAG_EXTRACTION)
   {
-    if (output_consumed){
+    if (output_consumed)
+    {
       // Disable the ciphertext output
       ciphertext_reg.valid = 0;
 
@@ -86,11 +87,10 @@ void strip_auth_tag()
 
       if (strip_auth_tag_auth_tag_out_ready)
       {
-	// Tag was successfully sent
-	tag_capture_reg.tlast = 0;
-	state = CIPHERTEXT;
+        // Tag was successfully sent
+        tag_capture_reg.tlast = 0;
+        state = CIPHERTEXT;
       }
     }
-  }
   }
 }
