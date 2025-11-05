@@ -41,9 +41,6 @@ void wait_to_verify()
   // the data+valid for output stream
   // (aka fifo read data, not eampty signal)
   wait_to_verify_axis_out = verify_fifo_out;
-  // the ready for the output stream
-  // (aka fifo read enable)
-  verify_fifo_out_ready = wait_to_verify_axis_out_ready;
   
   // Default not ready for the single verify bit input
   wait_to_verify_bit_ready = 0;
@@ -51,7 +48,6 @@ void wait_to_verify()
   verify_fifo_out_ready = 0;
   // Default output valid/tlast for stream is 0
   wait_to_verify_axis_out.valid = 0;
-  wait_to_verify_axis_out.data.tlast = 0;
   // Default is_verified output
   wait_to_verify_is_verified_out = 0;
 
@@ -80,17 +76,13 @@ void wait_to_verify()
   else //if(state == OUTPUT_PLAINTEXT)
   {
     // Plaintext output
+    verify_fifo_out_ready = wait_to_verify_axis_out_ready;
     // Valid only if FIFO is not empty
-    wait_to_verify_axis_out.valid = fifo_out.data_out_valid;
-    //tlast comes directly from the FIFO data
-    wait_to_verify_axis_out.data.tlast = verify_fifo_out.data.tlast;
+    wait_to_verify_axis_out.valid = verify_fifo_out.valid;
 
     // Verified bit output
     // Synchronize with stream valid
-    if (wait_to_verify_axis_out.valid)
-    {
-      wait_to_verify_is_verified_out = tags_match_reg;
-    }
+    wait_to_verify_is_verified_out = tags_match_reg;
 
     // Check for successful consumption of the last packet
     if(wait_to_verify_axis_out.valid && wait_to_verify_axis_out_ready)
