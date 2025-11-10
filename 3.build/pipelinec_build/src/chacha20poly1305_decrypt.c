@@ -1,7 +1,5 @@
 /**
- * WIP
- * based on code from
- * https://github.com/chili-chips-ba/wireguard-fpga/blob/main/2.sw/app/chacha20poly1305/
+ * Decryption Pipeline for ChaCha20-Poly1305
 */
 #include "arrays.h"
 // Top level IO port config, named like chacha20poly1305_decrypt_*
@@ -12,43 +10,67 @@
 #include "prep_auth_data/prep_auth_data.c"
 // Instance of poly1305 part of decryption
 #include "poly1305/poly1305_mac.c"
-// Instance of the appending auth tag part of decryption
-#include "append_auth_tag/append_auth_tag.c"
+// Instance of the poly1305 verification block
+#include "poly1305/poly1305_verify.c"
+// Instance of strip auth tag
+#include "append_auth_tag/strip_auth_tag.c"
+// Instance wait to verify block 
+#include "append_auth_tag/wait_to_verify"
+
 
 // The primary dataflow for single clock domain ChaCha20-Poly1305 decryption
 #pragma PART "xc7a200tffg1156-2" // Artix 7 200T
 #pragma MAIN_MHZ main 80.0
 void main(){
-    // Connect chacha20poly1305_decrypt_* input stream to chacha20_decrypt
-    chacha20_decrypt_axis_in = chacha20poly1305_decrypt_axis_in;
-    chacha20poly1305_decrypt_axis_in_ready = chacha20_decrypt_axis_in_ready;
-    chacha20_decrypt_key = chacha20poly1305_decrypt_key;
-    chacha20_decrypt_nonce = chacha20poly1305_decrypt_nonce;
 
-    // Connect chacha20_decrypt output poly key into poly1305_mac key input
+    // Strip auth tag (splits input streams)
+    // Connect chacha20poly1305_decrypt_* input stream to strip_auth_tag
+    strip_auth_tag_axis_in = chacha20poly1305_decrypt_axis_in;
+    chacha20poly1305_decrypt_axis_in_ready = strip_auth_tag_axis_in_ready;
+
+
+    // Poly1305 key generation and MAC connection
+    // The key goes to chacha20 first to generate the Poly1305 key
+    chacha20_decrypt_key = chacha20poly1305_decrypt_key;
+    chacha20_decrypt_nonce = chacha20_decrypt_nonce;
+
+    // Connect chacha20_decrypt poly key output to poly1305_mac key input
     poly1305_mac_key = chacha20_decrypt_poly_key;
     chacha20_decrypt_poly_key_ready = poly1305_mac_key_ready;
 
-    // Connect chacha20_decrypt ciphertext output to both
-    //  prep_auth_data input
-    //  append auth tag input
-    // Fork the stream by combining valids and readys
-    //  default no data passing, invalidate passthrough
-    prep_auth_data_axis_in = chacha20_decrypt_axis_out;
+
+    // Ciphertext stream fork
+    // The stripped ciphertext stream must be forked to two consumers:
+    // a) prep_auth_data (for MAC calculation)
+    // b) chacha20_decrypt (for actual decryption)
+
+    // Default: no data passing
     prep_auth_data_axis_in.valid = 0;
-    append_auth_tag_axis_in = chacha20_decrypt_axis_out;
-    append_auth_tag_axis_in.valid = 0;
-    //  allow pass through if both sinks are ready
-    //  or if sink isnt ready (no data passing anyway)
-    chacha20_decrypt_axis_out_ready = prep_auth_data_axis_in_ready & append_auth_tag_axis_in_ready;
-    if(chacha20_decrypt_axis_out_ready | ~prep_auth_data_axis_in_ready){
-        prep_auth_data_axis_in.valid = chacha20_decrypt_axis_out.valid;
-    }
-    if(chacha20_decrypt_axis_out_ready | ~append_auth_tag_axis_in_ready){
-        append_auth_tag_axis_in.valid = chacha20_decrypt_axis_out.valid;
+    chacha20_decrypt_axis_in.valid = 0;
+
+    // The source (strip_auth_tag_axis_out) is ready only if both sinks are ready
+    strip_auth_tag_axis_out_ready = prep_auth_data_axis_in_ready & chacha20_decrypt_axis_in_ready;
+
+    //Pass data to a sink if the source is ready AND (both sinks are ready OR the OTHER sink is not ready)
+
+    if (strip_auth_tag_axis_out.valid){
+      //Pass data to prep_auth_data if it's ready, OR if chacha20_decrypt is not demanding a cycle
+      if (strip_auth_tag_axis_out_ready | ~chacha_decrypt_axis_in_ready){
+        prep_auth_data_axis_in.valid = 1;
+      }
+      // Pass data to chacha20_decrypt if it's ready, OR if prep_auth_data is not demanding a cycle
+      if (strip_auth_tag_axis_out_ready | ~prep_auth_data_axis_in_ready){
+        chacha20_decrypt_axis_in.valid = 1;
+      }
     }
 
-    // Prep auth data CSR inputs
+    // Connect data streams
+    prep_auth_data_axis_in.data = strip_auth_tag_axis_out.data;
+    chacha20_decrypt_axis_in.data = strip_auth_tag_axis_out.data;
+
+
+    // Prepare auth data and calculate MAC
+    // prep_auth_data CSR inputs
     prep_auth_data_aad = chacha20poly1305_decrypt_aad;
     prep_auth_data_aad_len = chacha20poly1305_decrypt_aad_len;
 
@@ -56,11 +78,29 @@ void main(){
     poly1305_mac_data_in = prep_auth_data_axis_out;
     prep_auth_data_axis_out_ready = poly1305_mac_data_in_ready;
 
-    // Connect poly1305_mac auth tag output to append auth tag input
-    append_auth_tag_auth_tag_in = poly1305_mac_auth_tag;
-    poly1305_mac_auth_tag_ready = append_auth_tag_auth_tag_in_ready;
-    
-    // Connect append auth tag output to chacha20poly1305_decrypt_* output
-    chacha20poly1305_decrypt_axis_out = append_auth_tag_axis_out;
-    append_auth_tag_axis_out_ready = chacha20poly1305_decrypt_axis_out_ready;
+
+    // Poly1305 verification
+    // Connect strip_auth_tag (input tag) and poly1305_mac (calculated tag) to poly1305_verify
+    poly305_verify_auth_tag = strip_auth_tag_auth_tag_out;
+    strip_auth_tag_auth_tag_out_ready = poly1305_verify_auth_tag_ready;
+
+    poly1305_verify_calc_tag = poly1305_mac_auth_tag;
+    poly1305_mac_auth_tag_ready = poly1305_verify_calc_tag_ready;
+
+
+    // Wait to verify (buffer plaintext)
+    // Connect chacha20 decrypt output (plaintext stream) to wait_to_verify input (buffering FIFO)
+    wait_to_verify_axis_in = chacha20_decrypt_axis_out;
+    chacha20_decrypt_axis_out_ready = wait_to_verify_axis_in_ready;
+
+    // Connect poly1305_verify output (result bit) to wait_to_verify trigger input
+    wait_to_verify_verify_bit = poly1305_verify_tags_match;
+    poly1305_verify_tags_match_ready = wait_to_verify_verify_bit_ready;
+
+    // Connect wait_to_verify output to the top-level final output
+    chacha20poly1305_decrypt_axis_out = wait_to_verify_axis_out;
+    wait_to_verify_axis_out_ready = chacha20poly1305_decrypt_axis_out_ready;
+
+    // Connect final verification result parallel wire
+    chacha20poly1305_decrypt_is_verified_out = wait_to_verify_is_verified_out;
 }
