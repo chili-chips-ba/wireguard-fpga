@@ -1,12 +1,15 @@
 /*
- * WIP
+ * Header file defining top-level IO ports and internal wires for the
+ * Chacha20-Poly1305 decryption pipeline
+ *
+ * This file handles the conversion between VHDL ports and C-streams 
  * */
 
 #pragma once
 #include "compiler.h"
 #include "chacha20/chacha20.h"
 #include "prep_auth_data/prep_auth_data.h"
-#include "poly1305/poly1305.h"
+#include "poly1305/poly1305.h""
 
 #ifndef SIMULATION
 // Flattened top level ports with AXIS style manager/subordinate naming
@@ -29,6 +32,9 @@ DECL_OUTPUT(uint16_t, m_axis_tkeep)
 DECL_OUTPUT(uint1_t, m_axis_tlast)
 DECL_OUTPUT(uint1_t, m_axis_tvalid)
 DECL_INPUT(uint1_t, m_axis_tready)
+
+// Parallel output (verification status)
+DECL_OUTPUT(uint1_t, m_verified)
 #endif
 
 // Nice struct/array type globally visible wires to use instead of flattened top level ports
@@ -42,6 +48,9 @@ uint8_t chacha20poly1305_decrypt_aad[AAD_MAX_LEN]; // input
 uint8_t chacha20poly1305_decrypt_aad_len; // input
 stream(axis128_t) chacha20poly1305_decrypt_axis_out; // output
 uint1_t chacha20poly1305_decrypt_axis_out_ready; // input
+
+// Parallel output (verification result)
+uint1_t chacha20poly1305_decrypt_is_verified_out; //output
 
 // For real hardware connect top level ports to these wires
 #ifndef SIMULATION
@@ -64,5 +73,8 @@ void chacha20poly1305_decrypt_io_wires(){
   m_axis_tlast = chacha20poly1305_decrypt_axis_out.data.tlast;
   m_axis_tvalid = chacha20poly1305_decrypt_axis_out.valid;
   chacha20poly1305_decrypt_axis_out_ready = m_axis_tready;
+
+  // Connect the parallel verification output wire
+  m_verified = chacha20poly1305_decrypt_is_verified_out;
 }
 #endif
