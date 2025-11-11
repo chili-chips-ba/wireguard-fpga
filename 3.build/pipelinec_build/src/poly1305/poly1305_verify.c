@@ -3,6 +3,7 @@
 #include "arrays.h"
 #include "poly1305.h"
 
+DECL_STREAM_TYPE(uint1_t)
 
 // Input auth_tag
 stream(poly1305_auth_tag_uint_t) poly1305_verify_auth_tag; //input
@@ -21,7 +22,7 @@ typedef enum poly1305_verify_state_t{
   TAKE_CALC_TAG, //take calculated tag and plae it into a reg
   COMPARE_TAGS,  //take the two tags and compare them if equal ("==") and place res in reg
   OUTPUT_COMPARE_RESULT //output the compare value 
-};
+}poly1305_verify_state_t; 
 
 #pragma MAIN poly1305_verify
 void poly1305_verify(){
@@ -30,8 +31,8 @@ void poly1305_verify(){
   static poly1305_verify_state_t state = TAKE_AUTH_TAG;
   
   // Regs to hold the tag value
-  static poly1305_tag_data_t auth_tag_reg;
-  static poly1305_tag_data_t calc_tag_reg;
+  static poly1305_auth_tag_uint_t auth_tag_reg;
+  static poly1305_auth_tag_uint_t calc_tag_reg;
 
   // Reg to hold compare result
   static uint1_t tags_match_reg = 0;
@@ -73,7 +74,7 @@ void poly1305_verify(){
     tags_match_reg = (auth_tag_reg == calc_tag_reg);
 
     // Output the result
-    state = OUTPUT_COMPARE_RESULT
+    state = OUTPUT_COMPARE_RESULT;
   }
   else //(state == OUTPUT_COMPARE_RESULT)
   {
