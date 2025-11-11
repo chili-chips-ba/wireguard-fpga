@@ -15,7 +15,7 @@ uint1_t wait_to_verify_axis_out_ready; // input
 uint1_t wait_to_verify_is_verified_out; // output
 
 typedef enum wait_to_verify_state_t{
-  WAIT_FOR_VERIFY_BIT,  //Place the input plaintext into fifo until verify bit arrives
+  WAIT_TO_VERIFY_BIT,  //Place the input plaintext into fifo until verify bit arrives
   OUTPUT_PLAINTEXT //once verify bit arrives output plaintext and verify bit
 }wait_to_verify_state_t;
 
@@ -43,7 +43,7 @@ void wait_to_verify()
   wait_to_verify_axis_out = verify_fifo_out;
   
   // Default not ready for the single verify bit input
-  wait_to_verify_bit_ready = 0;
+  wait_to_verify_verify_bit_ready = 0;
   // Default FIFO Read Enable is set by FSM
   verify_fifo_out_ready = 0;
   // Default output valid/tlast for stream is 0
@@ -51,7 +51,7 @@ void wait_to_verify()
   // Default is_verified output
   wait_to_verify_is_verified_out = 0;
 
-  if(state == WAIT_FOR_VERIFY_BIT)
+  if(state == WAIT_TO_VERIFY_BIT)
   {
     // FIFO Read Enable: Disconnected, data stays buffered
     verify_fifo_out_ready = 0;
@@ -66,7 +66,7 @@ void wait_to_verify()
     if(wait_to_verify_verify_bit.valid)
     {
       // Capture the result and signal reception
-      tags_match_reg = wait_to_verify_bit.data;
+      tags_match_reg = wait_to_verify_verify_bit.data;
 
       // Move to output state
       state = OUTPUT_PLAINTEXT;
@@ -91,7 +91,7 @@ void wait_to_verify()
       if (wait_to_verify_axis_out.data.tlast)
       {
         // End of buffered plaintext, reset the FSM
-        state = WAIT_FOR_VERIFY_BIT;
+        state = WAIT_TO_VERIFY_BIT;
       }  
     }
 
