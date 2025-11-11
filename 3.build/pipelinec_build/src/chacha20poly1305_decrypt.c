@@ -5,7 +5,7 @@
 // Top level IO port config, named like chacha20poly1305_decrypt_*
 #include "chacha20poly1305_decrypt.h"
 // Instance of chacha20 part of decryption
-#include "chacha20/chacha20.c"
+#include "chacha20/chacha20_decrypt.c"
 // Instance of preparing auth data part of decryption
 #include "prep_auth_data/prep_auth_data.c"
 // Instance of poly1305 part of decryption
@@ -15,7 +15,7 @@
 // Instance of strip auth tag
 #include "append_auth_tag/strip_auth_tag.c"
 // Instance wait to verify block 
-#include "append_auth_tag/wait_to_verify"
+#include "append_auth_tag/wait_to_verify.c"
 
 
 // The primary dataflow for single clock domain ChaCha20-Poly1305 decryption
@@ -31,12 +31,12 @@ void main(){
 
     // Poly1305 key generation and MAC connection
     // The key goes to chacha20 first to generate the Poly1305 key
-    chacha20_decrypt_key = chacha20poly1305_decrypt_key;
-    chacha20_decrypt_nonce = chacha20_decrypt_nonce;
+    chacha20_key = chacha20poly1305_decrypt_key;
+    chacha20_nonce = chacha20_decrypt_nonce;
 
     // Connect chacha20_decrypt poly key output to poly1305_mac key input
-    poly1305_mac_key = chacha20_decrypt_poly_key;
-    chacha20_decrypt_poly_key_ready = poly1305_mac_key_ready;
+    poly1305_mac_key = chacha20_poly_key;
+    chacha20_poly_key_ready = poly1305_mac_key_ready;
 
 
     // Ciphertext stream fork
@@ -46,27 +46,27 @@ void main(){
 
     // Default: no data passing
     prep_auth_data_axis_in.valid = 0;
-    chacha20_decrypt_axis_in.valid = 0;
+    chacha20_axis_in.valid = 0;
 
     // The source (strip_auth_tag_axis_out) is ready only if both sinks are ready
-    strip_auth_tag_axis_out_ready = prep_auth_data_axis_in_ready & chacha20_decrypt_axis_in_ready;
+    strip_auth_tag_axis_out_ready = prep_auth_data_axis_in_ready & chacha20_axis_in_ready;
 
     //Pass data to a sink if the source is ready AND (both sinks are ready OR the OTHER sink is not ready)
 
     if (strip_auth_tag_axis_out.valid){
       //Pass data to prep_auth_data if it's ready, OR if chacha20_decrypt is not demanding a cycle
-      if (strip_auth_tag_axis_out_ready | ~chacha_decrypt_axis_in_ready){
+      if (strip_auth_tag_axis_out_ready | ~chacha_axis_in_ready){
         prep_auth_data_axis_in.valid = 1;
       }
       // Pass data to chacha20_decrypt if it's ready, OR if prep_auth_data is not demanding a cycle
       if (strip_auth_tag_axis_out_ready | ~prep_auth_data_axis_in_ready){
-        chacha20_decrypt_axis_in.valid = 1;
+        chacha20__axis_in.valid = 1;
       }
     }
 
     // Connect data streams
     prep_auth_data_axis_in.data = strip_auth_tag_axis_out.data;
-    chacha20_decrypt_axis_in.data = strip_auth_tag_axis_out.data;
+    chacha20_axis_in.data = strip_auth_tag_axis_out.data;
 
 
     // Prepare auth data and calculate MAC
@@ -90,8 +90,8 @@ void main(){
 
     // Wait to verify (buffer plaintext)
     // Connect chacha20 decrypt output (plaintext stream) to wait_to_verify input (buffering FIFO)
-    wait_to_verify_axis_in = chacha20_decrypt_axis_out;
-    chacha20_decrypt_axis_out_ready = wait_to_verify_axis_in_ready;
+    wait_to_verify_axis_in = chacha20_axis_out;
+    chacha20_axis_out_ready = wait_to_verify_axis_in_ready;
 
     // Connect poly1305_verify output (result bit) to wait_to_verify trigger input
     wait_to_verify_verify_bit = poly1305_verify_tags_match;
