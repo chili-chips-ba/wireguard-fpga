@@ -193,7 +193,9 @@ uint8_t[64] chacha20_encrypt_fixed(
 Pass by value version of body part of per-block loop:
     want in form: output_t func_name(input_t)
 */
-typedef struct chacha20_encrypt_loop_body_in_t
+// FIX: The alias name and function signature were incorrectly using 'encrypt'
+// when the struct tag and calling code in chacha20_decrypt.c expect 'decrypt'.
+typedef struct chacha20_decrypt_loop_body_in_t
 {
   axis512_t axis_in; // Stream of 64 byte blocks
   // TODO key and nonce dont change every block right? only per packet?
@@ -201,10 +203,10 @@ typedef struct chacha20_encrypt_loop_body_in_t
   uint8_t key[CHACHA20_KEY_SIZE]; 
   uint8_t nonce[CHACHA20_NONCE_SIZE];
   uint32_t counter;
-} chacha20_encrypt_loop_body_in_t;
-DECL_STREAM_TYPE(chacha20_encrypt_loop_body_in_t)
-axis512_t chacha20_encrypt_loop_body(
-  chacha20_encrypt_loop_body_in_t inputs
+} chacha20_decrypt_loop_body_in_t;
+DECL_STREAM_TYPE(chacha20_decrypt_loop_body_in_t)
+axis512_t chacha20_decrypt_loop_body(
+  chacha20_decrypt_loop_body_in_t inputs
 ){
   uint8_t in_data[CHACHA20_BLOCK_SIZE] = inputs.axis_in.tdata; // TODO handle tkeep
   uint8_t key[CHACHA20_KEY_SIZE] = inputs.key;

@@ -41,10 +41,8 @@ void poly1305_verify(){
   poly1305_verify_auth_tag_ready = 0;
   poly1305_verify_calc_tag_ready = 0;
 
-  // Default not outputting data
-  stream(uint1_t) uint1_t_null = {0};
-  poly1305_verify_tags_match = uint1_t_null; 
-
+  stream(uint1_t) tags_match_output = {0};
+  
   if (state == TAKE_AUTH_TAG)
   {
     // Ready to take the input tag
@@ -78,9 +76,9 @@ void poly1305_verify(){
   }
   else //(state == OUTPUT_COMPARE_RESULT)
   {
-    // Output result stored in register 
-    poly1305_verify_tags_match.data = tags_match_reg;
-    poly1305_verify_tags_match.valid = 1;
+    // Output result stored in register via local stream 
+    tags_match_output.data = tags_match_reg;
+    tags_match_output.valid = 1;
 
     if (poly1305_verify_tags_match_ready)
     {
@@ -89,7 +87,7 @@ void poly1305_verify(){
       state = TAKE_AUTH_TAG;
     }
   }
-
+  poly1305_verify_tags_match = tags_match_output;
 }
 
 

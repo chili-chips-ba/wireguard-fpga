@@ -22,15 +22,15 @@ void strip_auth_tag()
 {
   static strip_auth_tag_state_t state = CIPHERTEXT_PASS;
   
-  static stream(axis128_t) cyphertext_reg = {0};
-  static axis128_t tag_capture_reg = {0};
+  stream(axis128_t) axis_null = {0};
+  static stream(axis128_t) cyphertext_reg = axis_null;
+  static axis128_t tag_capture_reg ;
 
   // Default not ready for incoming data
   strip_auth_tag_axis_in_ready = 0;
   
   // Default not outputting data
-  stream(axis128_t) axis128_null = {0};
-  strip_auth_tag_axis_out = axis128_null;
+  strip_auth_tag_axis_out = axis_null;
   stream(poly1305_auth_tag_uint_t) auth_tag_null = {0};
   strip_auth_tag_auth_tag_out = auth_tag_null;
   
