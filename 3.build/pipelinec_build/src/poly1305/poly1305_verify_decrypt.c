@@ -24,8 +24,8 @@ typedef enum poly1305_verify_state_t{
   OUTPUT_COMPARE_RESULT //output the compare value 
 }poly1305_verify_state_t; 
 
-#pragma MAIN poly1305_verify
-void poly1305_verify(){
+#pragma MAIN poly1305_verify_decrypt
+void poly1305_verify_decrypt(){
 
   // Define static variables
   static poly1305_verify_state_t state = TAKE_AUTH_TAG;
@@ -39,8 +39,9 @@ void poly1305_verify(){
 
   poly1305_verify_auth_tag_ready = 0; 
   poly1305_verify_calc_tag_ready = 0; 
-  poly1305_verify_tags_match.valid = 0; 
-  poly1305_verify_tags_match.data = 0; 
+
+  stream(uint1_t) null_uint1 = {0};
+  poly1305_verify_tags_match = null_uint1;
   
   if (state == TAKE_AUTH_TAG)
   {
