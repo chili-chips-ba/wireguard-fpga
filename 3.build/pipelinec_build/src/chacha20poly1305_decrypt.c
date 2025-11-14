@@ -11,7 +11,7 @@
 // Instance of poly1305 part of decryption
 #include "poly1305/poly1305_mac.c"
 // Instance of the poly1305 verification block
-#include "poly1305/poly1305_verify.c"
+#include "poly1305/poly1305_verify_decrypt.c"
 // Instance of strip auth tag
 #include "append_auth_tag/strip_auth_tag.c"
 // Instance wait to verify block 
