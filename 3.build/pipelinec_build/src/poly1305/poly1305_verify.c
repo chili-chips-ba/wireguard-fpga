@@ -35,20 +35,19 @@ void poly1305_verify(){
   static poly1305_auth_tag_uint_t calc_tag_reg;
 
   // Reg to hold compare result
-  static uint1_t tags_match_reg = 0;
+  static uint1_t tags_match_reg;
 
-  // Default not ready for tag recieve
-  poly1305_verify_auth_tag_ready = 0;
-  poly1305_verify_calc_tag_ready = 0;
-
-  stream(uint1_t) tags_match_output = {0};
+  poly1305_verify_auth_tag_ready = 0; 
+  poly1305_verify_calc_tag_ready = 0; 
+  poly1305_verify_tags_match.valid = 0; 
+  poly1305_verify_tags_match.data = 0; 
   
   if (state == TAKE_AUTH_TAG)
   {
     // Ready to take the input tag
     poly1305_verify_auth_tag_ready = 1;
 
-    if (poly1305_verify_auth_tag.valid)
+    if (poly1305_verify_auth_tag.valid & poly1305_verify_auth_tag_ready)
     {
       // Copy data to the register
       auth_tag_reg = poly1305_verify_auth_tag.data;
@@ -60,7 +59,7 @@ void poly1305_verify(){
     // Ready to take the calculated tag
     poly1305_verify_calc_tag_ready = 1;
 
-    if (poly1305_verify_calc_tag.valid)
+    if (poly1305_verify_calc_tag.valid & poly1305_verify_calc_tag_ready)
     {
       calc_tag_reg = poly1305_verify_calc_tag.data;
       state = COMPARE_TAGS;
@@ -77,17 +76,16 @@ void poly1305_verify(){
   else //(state == OUTPUT_COMPARE_RESULT)
   {
     // Output result stored in register via local stream 
-    tags_match_output.data = tags_match_reg;
-    tags_match_output.valid = 1;
+    poly1305_verify_tags_match.data = tags_match_reg;
+    poly1305_verify_tags_match.valid = 1;
 
-    if (poly1305_verify_tags_match_ready)
+    if (poly1305_verify_tags_match_ready & poly1305_verify_tags_match.valid)
     {
       // Successful output transfer
       // Reset the FSM for the next verification
       state = TAKE_AUTH_TAG;
     }
   }
-  poly1305_verify_tags_match = tags_match_output;
 }
 
 
