@@ -1,9 +1,12 @@
 /*
- *   WIP
+ * Testbench for ChaCha20-Poly1305 Decryption
  */
 
 #define SIMULATION
 #include "chacha20poly1305_decrypt.c"
+
+// Note: Assuming the DUT exposes the final authentication result as a wire:
+extern uint1_t chacha20poly1305_decrypt_tags_match;
 
 // Annoying fixed array sized single string printf funcs
 // trying to match software print_hex
@@ -65,8 +68,6 @@ void print_aad(uint8_t aad[AAD_MAX_LEN], uint32_t aad_len)
     );
 }
 
-// CSR values available all at once do not need to be static=registers
-// Streaming inputs data is done as shift register
 #pragma MAIN tb
 stream(axis128_t) tb()
 {
@@ -77,49 +78,36 @@ stream(axis128_t) tb()
         0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
         0x98, 0x99, 0x9a, 0x9b, 0x9c, 0x9d, 0x9e, 0x9f};
 
-    /*uint8_t key[CHACHA20_KEY_SIZE] = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};*/
-
     uint8_t nonce[CHACHA20_NONCE_SIZE] = {
         0x07, 0x00, 0x00, 0x00, 0x40, 0x41, 0x42, 0x43,
         0x44, 0x45, 0x46, 0x47};
 
-    /*uint8_t nonce[CHACHA20_NONCE_SIZE] = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00};*/
-
     #define AAD_TEST_STR "Additional authenticated data"
-    //#define AAD_TEST_STR ""
     uint8_t aad[AAD_MAX_LEN] = AAD_TEST_STR;
     uint32_t aad_len = strlen(AAD_TEST_STR);
     
     /*
-     * We define the expected outputs from our decryptor
+     * We define the expected outputs (Plaintext) 
      * */
-    #define NUM_EXPECTED_PLAINTEXT_STRS 2
-    #define EXPECTED_PLAINTEXT_STR_MAX_SIZE 128
+    #define NUM_PACKETS 2
+    #define PLAINTEXT_MAX_SIZE 128
     #define EXPECTED_PLAINTEXT_STR0 "Hello CHILIChips - Wireguard team, let's test this aead!"
     #define EXPECTED_PLAINTEXT_STR0_LEN strlen(EXPECTED_PLAINTEXT_STR0)
     #define EXPECTED_PLAINTEXT_STR1 "PipelineC is the best HDL around :) Let's go CHILIChips Wireguard team!"
     #define EXPECTED_PLAINTEXT_STR1_LEN strlen(EXPECTED_PLAINTEXT_STR1)
-    char plaintexts[NUM_EXPECTED_PLAINTEXT_STRS][EXPECTED_PLAINTEXT_STR_MAX_SIZE] = {
+    char plaintexts[NUM_PACKETS][PLAINTEXT_MAX_SIZE] = {
         EXPECTED_PLAINTEXT_STR0,
         EXPECTED_PLAINTEXT_STR1
     };
-    uint32_t plaintext_lens[NUM_EXPECTED_PLAINTEXT_STRS] = {
+    uint32_t plaintext_lens[NUM_PACKETS] = {
         EXPECTED_PLAINTEXT_STR0_LEN,
         EXPECTED_PLAINTEXT_STR1_LEN
     };
 
     /*
-     *
-     * We define the input ciphertext and auth_tag
-     *
+     * We define the input ciphertext and auth_tag (combined into one stream)
      */
-    #define CIPHERTEXT_MAX_SIZE (EXPECTED_PLAINTEXT_STR_MAX_SIZE + POLY1305_AUTH_TAG_SIZE)
+    #define CIPHERTEXT_MAX_SIZE (PLAINTEXT_MAX_SIZE + POLY1305_AUTH_TAG_SIZE)
     #define CIPHERTEXT0_SIZE (64 + POLY1305_AUTH_TAG_SIZE)
     uint8_t input_ciphertext0[CIPHERTEXT_MAX_SIZE] = {
         // Ciphertext:
@@ -131,7 +119,7 @@ stream(axis128_t) tb()
         0x98, 0xae, 0xd7, 0x7c, 0x8e, 0xfb, 0x26, 0x80,
         0x1c, 0x77, 0x92, 0x0f, 0xdb, 0x08, 0x09, 0x6e,
         0x60, 0xa4, 0x85, 0xcf, 0x11, 0xb8, 0x1b, 0x59,
-        // Auth Tag: 
+        // Auth Tag (tlast=1 for this block): 
         0x5d, 0xa8, 0x7d, 0x6a, 0x2d, 0x03, 0xc9, 0xba,
         0xdf, 0x5c, 0xb9, 0x47, 0x74, 0x42, 0x12, 0x3f
     };
@@ -152,11 +140,11 @@ stream(axis128_t) tb()
         0x07, 0xc7, 0xe3, 0x1f, 0x0f, 0xeb, 0x4b, 0x61, 
         0xea, 0x2d, 0xd2, 0xa4, 0x59, 0x7c, 0xae, 0xe9
     };
-    uint8_t input_ciphertexts[NUM_EXPECTED_PLAINTEXT_STRS][CIPHERTEXT_MAX_SIZE] = {
+    uint8_t input_ciphertexts[NUM_PACKETS][CIPHERTEXT_MAX_SIZE] = {
         input_ciphertext0,
         input_ciphertext1
     };
-    uint32_t ciphertext_lens[NUM_EXPECTED_PLAINTEXT_STRS] = {
+    uint32_t ciphertext_lens[NUM_PACKETS] = {
         CIPHERTEXT0_SIZE,
         CIPHERTEXT1_SIZE
     };
@@ -167,125 +155,150 @@ stream(axis128_t) tb()
     chacha20poly1305_decrypt_aad = aad;
     chacha20poly1305_decrypt_aad_len = aad_len;
 
-    // Registers for the input side of testbench state machine
+    // --- Input State Machine (Streams CIPHERTEXT) ---
     static uint32_t input_packet_count;
-    static char plaintext[EXPECTED_PLAINTEXT_STR_MAX_SIZE];
-    static uint32_t plaintext_remaining;
+    static uint8_t ciphertext_in_stream[CIPHERTEXT_MAX_SIZE];
+    static uint32_t ciphertext_remaining_in;
     static uint32_t cycle_counter;
 
-    // Decrypt:
+    // --- Output State Machine (Checks PLAINTEXT) ---
+    static uint32_t output_packet_count;
+    static uint32_t plaintext_out_size;
+    static uint32_t plaintext_remaining_out;
+    static uint8_t plaintext_out_expected[PLAINTEXT_MAX_SIZE];
+    static uint1_t tag_match_checked;
+
+    // Initialize/Reset Logic
     if(cycle_counter == 0)
     {
-        printf("=== ChaCha20-Poly1305 AEAD Test ===\n");
+        printf("=== ChaCha20-Poly1305 Decryption Test ===\n");
         // Print test inputs
         PRINT_32_BYTES("Key: ", key)
         PRINT_12_BYTES("Nonce: ", nonce)
         print_aad(aad, aad_len);
-        // Init regs with first test string
-        plaintext = plaintexts[input_packet_count];
-        plaintext_remaining = plaintext_lens[input_packet_count];
-        printf("Encrypting test string %d...\n", input_packet_count);
+        
+        // Init input regs with first test ciphertext
+        memcpy(ciphertext_in_stream, input_ciphertexts[input_packet_count], CIPHERTEXT_MAX_SIZE);
+        ciphertext_remaining_in = ciphertext_lens[input_packet_count];
+        printf("Decrypting test string %u (Ciphertext size: %u)...\n", input_packet_count, ciphertext_remaining_in);
+
+        // Init output regs with first expected plaintext
+        plaintext_out_size = plaintext_lens[output_packet_count];
+        plaintext_remaining_out = plaintext_out_size;
+        memcpy(plaintext_out_expected, plaintexts[output_packet_count], PLAINTEXT_MAX_SIZE);
+        printf("Checking Plaintext for test string %u (Expected size: %u)...\n", output_packet_count, plaintext_out_size);
+        tag_match_checked = 0;
     }
 
-    // Stream plaintext into dut
+    // Stream ciphertext into dut
     chacha20poly1305_decrypt_axis_in.valid = 0;
-    // Have valid data if there is more plaintext to send
-    if(plaintext_remaining > 0)
+    
+    // Have valid data if there is more ciphertext to send
+    if(ciphertext_remaining_in > 0)
     {
-        // Up to 16 bytes of plaintext onto axis128
-        // padded with zeros if needed
+        // Up to 16 bytes of ciphertext/tag onto axis128
         for(int32_t i=0; i<16; i+=1)
         {
             chacha20poly1305_decrypt_axis_in.data.tkeep[i] = 1;
-            chacha20poly1305_decrypt_axis_in.data.tdata[i] = 0;
-            if(plaintext_remaining > i)
+            chacha20poly1305_decrypt_axis_in.data.tdata[i] = 0; // default zero
+            if(ciphertext_remaining_in > i)
             {
-                chacha20poly1305_decrypt_axis_in.data.tdata[i] = plaintext[i];
+                chacha20poly1305_decrypt_axis_in.data.tdata[i] = ciphertext_in_stream[i];
             }
         }
-        chacha20poly1305_decrypt_axis_in.data.tlast = (plaintext_remaining <= 16);
+        // tlast is set when the remaining data is 16 bytes or less (i.e., the last block)
+        chacha20poly1305_decrypt_axis_in.data.tlast = (ciphertext_remaining_in <= 16);
         chacha20poly1305_decrypt_axis_in.valid = 1;
+        
         if(chacha20poly1305_decrypt_axis_in.valid & chacha20poly1305_decrypt_axis_in_ready)
         {
-            PRINT_16_BYTES("Plaintext next 16 bytes: ", chacha20poly1305_decrypt_axis_in.data.tdata)
+            PRINT_16_BYTES("Input Ciphertext/Tag next 16 bytes: ", chacha20poly1305_decrypt_axis_in.data.tdata)
+            
             if(chacha20poly1305_decrypt_axis_in.data.tlast){
-                printf("End of plaintext for test %d\n", input_packet_count);
-                plaintext_remaining = 0;
+                printf("End of Ciphertext/Tag for test %u\n", input_packet_count);
+                ciphertext_remaining_in = 0;
                 input_packet_count += 1;
-                if(input_packet_count < NUM_EXPECTED_PLAINTEXT_STRS)
-                {
-                    // Reset for next test string
-                    plaintext = plaintexts[input_packet_count];
-                    plaintext_remaining = plaintext_lens[input_packet_count];
-                    printf("Encrypting next test string %d...\n", input_packet_count);
-                }
-            }else{
-                plaintext_remaining -= 16;
-                ARRAY_SHIFT_DOWN(plaintext, EXPECTED_PLAINTEXT_STR_MAX_SIZE, 16)
+            } else {
+                ciphertext_remaining_in -= 16;
+                ARRAY_SHIFT_DOWN(ciphertext_in_stream, CIPHERTEXT_MAX_SIZE, 16)
             }
         }
     }
     
-    // Registers for the output side of testbench state machine
-    static uint32_t output_packet_count;
-    static uint32_t ciphertext_size;
-    static uint32_t ciphertext_remaining;
-    static uint8_t input_ciphertext[CIPHERTEXT_MAX_SIZE];
-
-    // Check decrypted ciphertext output:
-    if(cycle_counter == 0)
-    {
-        // Init regs for first test string
-        input_ciphertext = input_ciphertexts[output_packet_count];
-        ciphertext_size = ciphertext_lens[output_packet_count];
-        ciphertext_remaining = ciphertext_size;
-        printf("Checking ciphertext for test string %d...\n", output_packet_count);
-    }
-
-    // Stream ciphertext out of dut
+    // Testbench is ready to receive plaintext
     chacha20poly1305_decrypt_axis_out_ready = 1;
+
     if(chacha20poly1305_decrypt_axis_out.valid & chacha20poly1305_decrypt_axis_out_ready)
     {
-        // Print ciphertext as it flows out of dut
-        PRINT_16_BYTES("Ciphertext next 16 bytes: ", chacha20poly1305_decrypt_axis_out.data.tdata)
-        // compare to input_ciphertext and shift
+        // Print plaintext as it flows out of dut
+        PRINT_16_BYTES("Output Plaintext next 16 bytes: ", chacha20poly1305_decrypt_axis_out.data.tdata)
+        
+        // Compare to expected plaintext and shift expected array
         for(int32_t i = 0; i<16; i+=1)
         {
-            if(ciphertext_remaining > i)
+            if(plaintext_remaining_out > i)
             {
-                if(chacha20poly1305_decrypt_axis_out.data.tdata[i] != input_ciphertext[i])
+                if(chacha20poly1305_decrypt_axis_out.data.tdata[i] != plaintext_out_expected[i])
                 {
-                    uint32_t ciphertext_pos = (ciphertext_size-ciphertext_remaining) + i;
-                    printf("ERROR: Ciphertext mismatch at byte[%d]. expected 0x%X got 0x%X\n", 
-                           ciphertext_pos, input_ciphertext[i], chacha20poly1305_decrypt_axis_out.data.tdata[i]);
+                    uint32_t plaintext_pos = (plaintext_out_size-plaintext_remaining_out) + i;
+                    printf("ERROR: Plaintext mismatch at byte[%u]. expected 0x%X got 0x%X\n", 
+                           plaintext_pos, plaintext_out_expected[i], chacha20poly1305_decrypt_axis_out.data.tdata[i]);
                 }
             }
         }
-        // Too much data?
-        if(ciphertext_remaining == 0){
-            printf("ERROR: Extra ciphertext output!\n");
-        }
-        // Too little data? Or more to come?
+        
+        // Handle stream end
         if(chacha20poly1305_decrypt_axis_out.data.tlast){
-            if(ciphertext_remaining > 16){
-                printf("ERROR: Early end to ciphertext output!\n");
-            }else{
-                printf("Test %d DONE!\n", output_packet_count);
-                ciphertext_remaining = 0;
-                output_packet_count += 1;
-                if(output_packet_count < NUM_EXPECTED_PLAINTEXT_STRS)
-                {
-                    // Reset for next test string
-                    input_ciphertext = input_ciphertexts[output_packet_count];
-                    ciphertext_size = ciphertext_lens[output_packet_count];
-                    ciphertext_remaining = ciphertext_size;
-                    printf("Checking ciphertext for next test string %d...\n", output_packet_count);
-                }
+            if(plaintext_remaining_out > 16){
+                printf("ERROR: Early end to Plaintext output!\n");
+            } else {
+                printf("Plaintext stream DONE for test %u.\n", output_packet_count);
+                plaintext_remaining_out = 0;
             }
         }else{
-            ciphertext_remaining -= 16;
-            ARRAY_SHIFT_DOWN(input_ciphertext, CIPHERTEXT_MAX_SIZE, 16)
+            if(plaintext_remaining_out == 0){
+                 printf("ERROR: Extra Plaintext output!\n");
+            } else {
+                plaintext_remaining_out -= 16;
+                ARRAY_SHIFT_DOWN(plaintext_out_expected, PLAINTEXT_MAX_SIZE, 16)
+            }
         }   
+    }
+    
+    // Check the final authentication result after the stream is done
+    if (plaintext_remaining_out == 0 && output_packet_count < NUM_PACKETS && !tag_match_checked)
+    {
+        if (chacha20poly1305_decrypt_tags_match == 1)
+        {
+            printf("SUCCESS: Test %u Authentication Tag MATCHES!\n", output_packet_count);
+        } else {
+            printf("FAILURE: Test %u Authentication Tag MISMATCHES!\n", output_packet_count);
+        }
+
+        // Reset for the next test vector if needed
+        output_packet_count += 1;
+        if(output_packet_count < NUM_PACKETS)
+        {
+            // Reset for next test vector (Only reset if the input flow is ready for the next packet too)
+            if (input_packet_count == output_packet_count) {
+                // Reset input regs with next test ciphertext
+                memcpy(ciphertext_in_stream, input_ciphertexts[input_packet_count], CIPHERTEXT_MAX_SIZE);
+                ciphertext_remaining_in = ciphertext_lens[input_packet_count];
+                printf("Decrypting next test string %u (Ciphertext size: %u)...\n", input_packet_count, ciphertext_remaining_in);
+                
+                // Reset output regs with next expected plaintext
+                plaintext_out_size = plaintext_lens[output_packet_count];
+                plaintext_remaining_out = plaintext_out_size;
+                memcpy(plaintext_out_expected, plaintexts[output_packet_count], PLAINTEXT_MAX_SIZE);
+                printf("Checking Plaintext for next test string %u (Expected size: %u)...\n", output_packet_count, plaintext_out_size);
+            }
+        }
+        tag_match_checked = 1;
+    }
+    
+    // If input flow is done and output flow is done, mark checked flag false for next run
+    if (input_packet_count > output_packet_count) {
+        tag_match_checked = 0;
     }
 
     cycle_counter += 1;
