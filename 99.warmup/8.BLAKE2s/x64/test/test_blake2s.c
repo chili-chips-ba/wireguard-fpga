@@ -55,11 +55,11 @@ int blake2s_selftest()
             inlen = b2s_in_len[j];
 
             selftest_seq(in, inlen, inlen); // unkeyed hash
-            blake2s(md, outlen, NULL, 0, in, inlen);
+            hash(md, outlen, NULL, 0, in, inlen);
             blake2s_update(&ctx, md, outlen); // hash the hash
 
             selftest_seq(key, outlen, outlen); // keyed hash
-            blake2s(md, outlen, key, outlen, in, inlen);
+            hash(md, outlen, key, outlen, in, inlen);
             blake2s_update(&ctx, md, outlen); // hash the hash
         }
     }
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
         const char *expected_hex = tests[i].expected_hex;
 
         // Compute hash
-        blake2s(out, 32, NULL, 0, msg, strlen(msg));
+        hash(out, 32, NULL, 0, msg, strlen(msg));
 
         // Convert expected hex to bytes for comparison
         uint8_t expected[32];
