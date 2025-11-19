@@ -1,0 +1,2745 @@
+-- Timing params:
+--   Fixed?: False
+--   Pipeline Slices: []
+--   Input regs?: False
+--   Output regs?: False
+library std;
+use std.textio.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.float_pkg.all;
+use work.c_structs_pkg.all;
+-- Submodules: 73
+entity axis128_array_to_axis512_0CLK_fcdf4ca0 is
+port(
+ axis_chunks : in axis128_t_stream_t_4;
+ return_output : out axis512_t);
+end axis128_array_to_axis512_0CLK_fcdf4ca0;
+architecture arch of axis128_array_to_axis512_0CLK_fcdf4ca0 is
+-- Types and such
+-- Declarations
+attribute mark_debug : string;
+constant ADDED_PIPELINE_LATENCY : integer := 0;
+-- All of the wires/regs in function
+-- Each function instance gets signals
+-- FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND[axis_h_l345_c20_7db8]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR[axis_h_l345_c5_88aa]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND[axis_h_l345_c20_7db8]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR[axis_h_l345_c5_bb75]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND[axis_h_l345_c20_7db8]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR[axis_h_l345_c5_0688]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND[axis_h_l345_c20_7db8]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR[axis_h_l345_c5_c5ef]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a]
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+signal FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+
+function CONST_REF_RD_axis512_t_axis512_t_fafd( ref_toks_0 : unsigned;
+ ref_toks_1 : unsigned;
+ ref_toks_2 : unsigned;
+ ref_toks_3 : unsigned;
+ ref_toks_4 : unsigned;
+ ref_toks_5 : unsigned;
+ ref_toks_6 : unsigned;
+ ref_toks_7 : unsigned;
+ ref_toks_8 : unsigned;
+ ref_toks_9 : unsigned;
+ ref_toks_10 : unsigned;
+ ref_toks_11 : unsigned;
+ ref_toks_12 : unsigned;
+ ref_toks_13 : unsigned;
+ ref_toks_14 : unsigned;
+ ref_toks_15 : unsigned;
+ ref_toks_16 : unsigned;
+ ref_toks_17 : unsigned;
+ ref_toks_18 : unsigned;
+ ref_toks_19 : unsigned;
+ ref_toks_20 : unsigned;
+ ref_toks_21 : unsigned;
+ ref_toks_22 : unsigned;
+ ref_toks_23 : unsigned;
+ ref_toks_24 : unsigned;
+ ref_toks_25 : unsigned;
+ ref_toks_26 : unsigned;
+ ref_toks_27 : unsigned;
+ ref_toks_28 : unsigned;
+ ref_toks_29 : unsigned;
+ ref_toks_30 : unsigned;
+ ref_toks_31 : unsigned;
+ ref_toks_32 : unsigned;
+ ref_toks_33 : unsigned;
+ ref_toks_34 : unsigned;
+ ref_toks_35 : unsigned;
+ ref_toks_36 : unsigned;
+ ref_toks_37 : unsigned;
+ ref_toks_38 : unsigned;
+ ref_toks_39 : unsigned;
+ ref_toks_40 : unsigned;
+ ref_toks_41 : unsigned;
+ ref_toks_42 : unsigned;
+ ref_toks_43 : unsigned;
+ ref_toks_44 : unsigned;
+ ref_toks_45 : unsigned;
+ ref_toks_46 : unsigned;
+ ref_toks_47 : unsigned;
+ ref_toks_48 : unsigned;
+ ref_toks_49 : unsigned;
+ ref_toks_50 : unsigned;
+ ref_toks_51 : unsigned;
+ ref_toks_52 : unsigned;
+ ref_toks_53 : unsigned;
+ ref_toks_54 : unsigned;
+ ref_toks_55 : unsigned;
+ ref_toks_56 : unsigned;
+ ref_toks_57 : unsigned;
+ ref_toks_58 : unsigned;
+ ref_toks_59 : unsigned;
+ ref_toks_60 : unsigned;
+ ref_toks_61 : unsigned;
+ ref_toks_62 : unsigned;
+ ref_toks_63 : unsigned;
+ ref_toks_64 : unsigned;
+ ref_toks_65 : unsigned;
+ ref_toks_66 : unsigned;
+ ref_toks_67 : unsigned;
+ ref_toks_68 : unsigned;
+ ref_toks_69 : unsigned;
+ ref_toks_70 : unsigned;
+ ref_toks_71 : unsigned;
+ ref_toks_72 : unsigned;
+ ref_toks_73 : unsigned;
+ ref_toks_74 : unsigned;
+ ref_toks_75 : unsigned;
+ ref_toks_76 : unsigned;
+ ref_toks_77 : unsigned;
+ ref_toks_78 : unsigned;
+ ref_toks_79 : unsigned;
+ ref_toks_80 : unsigned;
+ ref_toks_81 : unsigned;
+ ref_toks_82 : unsigned;
+ ref_toks_83 : unsigned;
+ ref_toks_84 : unsigned;
+ ref_toks_85 : unsigned;
+ ref_toks_86 : unsigned;
+ ref_toks_87 : unsigned;
+ ref_toks_88 : unsigned;
+ ref_toks_89 : unsigned;
+ ref_toks_90 : unsigned;
+ ref_toks_91 : unsigned;
+ ref_toks_92 : unsigned;
+ ref_toks_93 : unsigned;
+ ref_toks_94 : unsigned;
+ ref_toks_95 : unsigned;
+ ref_toks_96 : unsigned;
+ ref_toks_97 : unsigned;
+ ref_toks_98 : unsigned;
+ ref_toks_99 : unsigned;
+ ref_toks_100 : unsigned;
+ ref_toks_101 : unsigned;
+ ref_toks_102 : unsigned;
+ ref_toks_103 : unsigned;
+ ref_toks_104 : unsigned;
+ ref_toks_105 : unsigned;
+ ref_toks_106 : unsigned;
+ ref_toks_107 : unsigned;
+ ref_toks_108 : unsigned;
+ ref_toks_109 : unsigned;
+ ref_toks_110 : unsigned;
+ ref_toks_111 : unsigned;
+ ref_toks_112 : unsigned;
+ ref_toks_113 : unsigned;
+ ref_toks_114 : unsigned;
+ ref_toks_115 : unsigned;
+ ref_toks_116 : unsigned;
+ ref_toks_117 : unsigned;
+ ref_toks_118 : unsigned;
+ ref_toks_119 : unsigned;
+ ref_toks_120 : unsigned;
+ ref_toks_121 : unsigned;
+ ref_toks_122 : unsigned;
+ ref_toks_123 : unsigned;
+ ref_toks_124 : unsigned;
+ ref_toks_125 : unsigned;
+ ref_toks_126 : unsigned;
+ ref_toks_127 : unsigned;
+ ref_toks_128 : unsigned) return axis512_t is
+ 
+  variable base : axis512_t; 
+  variable return_output : axis512_t;
+begin
+      base.tdata(0) := ref_toks_0;
+      base.tkeep(0) := ref_toks_1;
+      base.tdata(1) := ref_toks_2;
+      base.tkeep(1) := ref_toks_3;
+      base.tdata(2) := ref_toks_4;
+      base.tkeep(2) := ref_toks_5;
+      base.tdata(3) := ref_toks_6;
+      base.tkeep(3) := ref_toks_7;
+      base.tdata(4) := ref_toks_8;
+      base.tkeep(4) := ref_toks_9;
+      base.tdata(5) := ref_toks_10;
+      base.tkeep(5) := ref_toks_11;
+      base.tdata(6) := ref_toks_12;
+      base.tkeep(6) := ref_toks_13;
+      base.tdata(7) := ref_toks_14;
+      base.tkeep(7) := ref_toks_15;
+      base.tdata(8) := ref_toks_16;
+      base.tkeep(8) := ref_toks_17;
+      base.tdata(9) := ref_toks_18;
+      base.tkeep(9) := ref_toks_19;
+      base.tdata(10) := ref_toks_20;
+      base.tkeep(10) := ref_toks_21;
+      base.tdata(11) := ref_toks_22;
+      base.tkeep(11) := ref_toks_23;
+      base.tdata(12) := ref_toks_24;
+      base.tkeep(12) := ref_toks_25;
+      base.tdata(13) := ref_toks_26;
+      base.tkeep(13) := ref_toks_27;
+      base.tdata(14) := ref_toks_28;
+      base.tkeep(14) := ref_toks_29;
+      base.tdata(15) := ref_toks_30;
+      base.tkeep(15) := ref_toks_31;
+      base.tdata(16) := ref_toks_32;
+      base.tkeep(16) := ref_toks_33;
+      base.tdata(17) := ref_toks_34;
+      base.tkeep(17) := ref_toks_35;
+      base.tdata(18) := ref_toks_36;
+      base.tkeep(18) := ref_toks_37;
+      base.tdata(19) := ref_toks_38;
+      base.tkeep(19) := ref_toks_39;
+      base.tdata(20) := ref_toks_40;
+      base.tkeep(20) := ref_toks_41;
+      base.tdata(21) := ref_toks_42;
+      base.tkeep(21) := ref_toks_43;
+      base.tdata(22) := ref_toks_44;
+      base.tkeep(22) := ref_toks_45;
+      base.tdata(23) := ref_toks_46;
+      base.tkeep(23) := ref_toks_47;
+      base.tdata(24) := ref_toks_48;
+      base.tkeep(24) := ref_toks_49;
+      base.tdata(25) := ref_toks_50;
+      base.tkeep(25) := ref_toks_51;
+      base.tdata(26) := ref_toks_52;
+      base.tkeep(26) := ref_toks_53;
+      base.tdata(27) := ref_toks_54;
+      base.tkeep(27) := ref_toks_55;
+      base.tdata(28) := ref_toks_56;
+      base.tkeep(28) := ref_toks_57;
+      base.tdata(29) := ref_toks_58;
+      base.tkeep(29) := ref_toks_59;
+      base.tdata(30) := ref_toks_60;
+      base.tkeep(30) := ref_toks_61;
+      base.tdata(31) := ref_toks_62;
+      base.tkeep(31) := ref_toks_63;
+      base.tdata(32) := ref_toks_64;
+      base.tkeep(32) := ref_toks_65;
+      base.tdata(33) := ref_toks_66;
+      base.tkeep(33) := ref_toks_67;
+      base.tdata(34) := ref_toks_68;
+      base.tkeep(34) := ref_toks_69;
+      base.tdata(35) := ref_toks_70;
+      base.tkeep(35) := ref_toks_71;
+      base.tdata(36) := ref_toks_72;
+      base.tkeep(36) := ref_toks_73;
+      base.tdata(37) := ref_toks_74;
+      base.tkeep(37) := ref_toks_75;
+      base.tdata(38) := ref_toks_76;
+      base.tkeep(38) := ref_toks_77;
+      base.tdata(39) := ref_toks_78;
+      base.tkeep(39) := ref_toks_79;
+      base.tdata(40) := ref_toks_80;
+      base.tkeep(40) := ref_toks_81;
+      base.tdata(41) := ref_toks_82;
+      base.tkeep(41) := ref_toks_83;
+      base.tdata(42) := ref_toks_84;
+      base.tkeep(42) := ref_toks_85;
+      base.tdata(43) := ref_toks_86;
+      base.tkeep(43) := ref_toks_87;
+      base.tdata(44) := ref_toks_88;
+      base.tkeep(44) := ref_toks_89;
+      base.tdata(45) := ref_toks_90;
+      base.tkeep(45) := ref_toks_91;
+      base.tdata(46) := ref_toks_92;
+      base.tkeep(46) := ref_toks_93;
+      base.tdata(47) := ref_toks_94;
+      base.tkeep(47) := ref_toks_95;
+      base.tlast := ref_toks_96;
+      base.tdata(48) := ref_toks_97;
+      base.tkeep(48) := ref_toks_98;
+      base.tdata(49) := ref_toks_99;
+      base.tkeep(49) := ref_toks_100;
+      base.tdata(50) := ref_toks_101;
+      base.tkeep(50) := ref_toks_102;
+      base.tdata(51) := ref_toks_103;
+      base.tkeep(51) := ref_toks_104;
+      base.tdata(52) := ref_toks_105;
+      base.tkeep(52) := ref_toks_106;
+      base.tdata(53) := ref_toks_107;
+      base.tkeep(53) := ref_toks_108;
+      base.tdata(54) := ref_toks_109;
+      base.tkeep(54) := ref_toks_110;
+      base.tdata(55) := ref_toks_111;
+      base.tkeep(55) := ref_toks_112;
+      base.tdata(56) := ref_toks_113;
+      base.tkeep(56) := ref_toks_114;
+      base.tdata(57) := ref_toks_115;
+      base.tkeep(57) := ref_toks_116;
+      base.tdata(58) := ref_toks_117;
+      base.tkeep(58) := ref_toks_118;
+      base.tdata(59) := ref_toks_119;
+      base.tkeep(59) := ref_toks_120;
+      base.tdata(60) := ref_toks_121;
+      base.tkeep(60) := ref_toks_122;
+      base.tdata(61) := ref_toks_123;
+      base.tkeep(61) := ref_toks_124;
+      base.tdata(62) := ref_toks_125;
+      base.tkeep(62) := ref_toks_126;
+      base.tdata(63) := ref_toks_127;
+      base.tkeep(63) := ref_toks_128;
+
+      return_output := base;
+      return return_output; 
+end function;
+
+
+begin
+
+-- SUBMODULE INSTANCES 
+-- FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8 : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa : entity work.BIN_OP_OR_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8 : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75 : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75 : entity work.BIN_OP_OR_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8 : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688 : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688 : entity work.BIN_OP_OR_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8 : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef : entity work.BIN_OP_OR_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+-- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : 0 clocks latency
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right,
+FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+
+
+-- Combinatorial process for pipeline stages
+process (
+ -- Inputs
+ axis_chunks,
+ -- All submodule outputs
+ FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+ FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output)
+is 
+ -- All of the wires in function
+ variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_return_output : axis512_t;
+ variable VAR_axis_chunks : axis128_t_stream_t_4;
+ variable VAR_CHUNK_SIZE : unsigned(31 downto 0);
+ variable VAR_axis : axis512_t;
+ variable VAR_c : unsigned(31 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tlast_d41d_axis_h_l345_c43_3db3_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_return_output : unsigned(0 downto 0);
+ variable VAR_b : unsigned(31 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tlast_d41d_axis_h_l345_c43_3db3_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tlast_d41d_axis_h_l345_c43_3db3_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tlast_d41d_axis_h_l345_c43_3db3_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right : unsigned(0 downto 0);
+ variable VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_axis512_t_axis512_t_fafd_axis_h_l353_c10_f25e_return_output : axis512_t;
+ variable VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output : unsigned(0 downto 0);
+begin
+ -- Constants and things derived from constants alone
+     -- Submodule level 0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_left := to_unsigned(0, 1);
+
+ -- Loop to construct simultaneous register transfers for each of the pipeline stages
+ -- LATENCY=0 is combinational Logic
+ for STAGE in 0 to ADDED_PIPELINE_LATENCY loop
+   if STAGE = 0 then
+     -- Mux in inputs
+     VAR_axis_chunks := axis_chunks;
+
+     -- Submodule level 0
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_5_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(5);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_0_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_13_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(13);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_4_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_6_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_9_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_11_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(11);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_4_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_9_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_3_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(3);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_10_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_10_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_12_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_2_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_1_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_0_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_7_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_4_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_11_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(11);
+
+     -- CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223 LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output := VAR_axis_chunks(0).valid;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_11_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(11);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_8_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_10_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_2_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_0_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_15_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(15);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_3_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(3);
+
+     -- CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56 LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output := VAR_axis_chunks(1).valid;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_15_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(15);
+
+     -- CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400 LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output := VAR_axis_chunks(3).valid;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_5_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(5);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_8_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tlast_d41d[axis_h_l345_c43_3db3] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tlast_d41d_axis_h_l345_c43_3db3_return_output := VAR_axis_chunks(3).data.tlast;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_7_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_13_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(13);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_8_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_10_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_14_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_6_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_1_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_9_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_0_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_3_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(3);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_10_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_5_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(5);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_13_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(13);
+
+     -- CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431 LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output := VAR_axis_chunks(2).valid;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_7_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_12_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_8_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_14_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_15_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(15);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_2_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tlast_d41d[axis_h_l345_c43_3db3] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tlast_d41d_axis_h_l345_c43_3db3_return_output := VAR_axis_chunks(1).data.tlast;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_7_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_3_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(3);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_11_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(11);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_4_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_4_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_5_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(5);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_14_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_9_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_10_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_2_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_6_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_7_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_13_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(13);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_2_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_8_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_1_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_3_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(3);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_12_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_0_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_13_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(13);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_0_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_4_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_14_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_9_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_2_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_9_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tlast_d41d[axis_h_l345_c43_3db3] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tlast_d41d_axis_h_l345_c43_3db3_return_output := VAR_axis_chunks(0).data.tlast;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_15_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(15);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_13_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(13);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_5_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(5);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_9_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_9_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(9);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_7_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_15_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(15);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_3_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(3);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_6_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_14_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_1_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_12_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_4_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_14_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_1_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_13_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(13);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_14_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_13_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(13);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_4_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(4);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_15_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(15);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_3_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(3);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_8_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_1_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_11_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(11);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_5_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(5);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_1_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_2_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_2_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(2);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_6_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_5_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(5);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_12_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_10_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_6_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_6_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(0).data.tdata(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_7_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_11_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(11);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_8_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_14_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(1).data.tkeep(14);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_7_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(7);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_0_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_12_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_6_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(6);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_15_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(15);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_1_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(1);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_12_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_12_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(12);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_11_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(2).data.tkeep(11);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_8_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(1).data.tdata(8);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_15_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(15);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_3_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(0).data.tkeep(3);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tlast_d41d[axis_h_l345_c43_3db3] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tlast_d41d_axis_h_l345_c43_3db3_return_output := VAR_axis_chunks(2).data.tlast;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_11_d41d[axis_h_l350_c62_ceb1] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output := VAR_axis_chunks(3).data.tkeep(11);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_0_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(2).data.tdata(0);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_10_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(10);
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_5_d41d[axis_h_l348_c38_c0ed] LATENCY=0
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output := VAR_axis_chunks(3).data.tdata(5);
+
+     -- Submodule level 1
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_valid_d41d_axis_h_l345_l350_DUPLICATE_7223_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_valid_d41d_axis_h_l345_l350_DUPLICATE_7e56_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_valid_d41d_axis_h_l345_l350_DUPLICATE_f431_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_valid_d41d_axis_h_l345_l350_DUPLICATE_3400_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tlast_d41d_axis_h_l345_c43_3db3_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_0_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tlast_d41d_axis_h_l345_c43_3db3_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_1_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tlast_d41d_axis_h_l345_c43_3db3_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_2_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tlast_d41d_axis_h_l345_c43_3db3_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_0_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_10_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_11_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_12_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_13_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_14_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_15_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_1_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_2_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_3_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_4_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_5_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_6_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_7_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_8_d41d_axis_h_l350_c62_ceb1_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint1_t_axis128_t_stream_t_4_3_data_tkeep_9_d41d_axis_h_l350_c62_ceb1_return_output;
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND[axis_h_l345_c20_7db8] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND[axis_h_l345_c20_7db8] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND[axis_h_l345_c20_7db8] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND[axis_h_l345_c20_7db8] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND[axis_h_l350_c39_d25a] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output;
+
+     -- Submodule level 2
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_right := VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_AND_axis_h_l345_c20_7db8_return_output;
+     -- FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR[axis_h_l345_c5_88aa] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_left;
+     FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_return_output := FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_return_output;
+
+     -- Submodule level 3
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_left := VAR_FOR_axis_h_l342_c3_55c6_ITER_0_BIN_OP_OR_axis_h_l345_c5_88aa_return_output;
+     -- FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR[axis_h_l345_c5_bb75] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_left;
+     FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_return_output := FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_return_output;
+
+     -- Submodule level 4
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_left := VAR_FOR_axis_h_l342_c3_55c6_ITER_1_BIN_OP_OR_axis_h_l345_c5_bb75_return_output;
+     -- FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR[axis_h_l345_c5_0688] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_left;
+     FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_return_output := FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_return_output;
+
+     -- Submodule level 5
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_left := VAR_FOR_axis_h_l342_c3_55c6_ITER_2_BIN_OP_OR_axis_h_l345_c5_0688_return_output;
+     -- FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR[axis_h_l345_c5_c5ef] LATENCY=0
+     -- Inputs
+     FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_left <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_left;
+     FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_right <= VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_right;
+     -- Outputs
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_return_output := FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_return_output;
+
+     -- Submodule level 6
+     -- CONST_REF_RD_axis512_t_axis512_t_fafd[axis_h_l353_c10_f25e] LATENCY=0
+     VAR_CONST_REF_RD_axis512_t_axis512_t_fafd_axis_h_l353_c10_f25e_return_output := CONST_REF_RD_axis512_t_axis512_t_fafd(
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_0_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_0_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_1_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_1_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_2_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_2_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_BIN_OP_OR_axis_h_l345_c5_c5ef_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_0_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_0_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_1_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_1_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_2_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_2_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_3_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_3_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_4_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_4_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_5_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_5_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_6_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_6_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_7_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_7_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_8_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_8_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_9_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_9_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_10_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_10_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_11_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_11_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_12_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_12_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_13_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_13_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_14_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_14_BIN_OP_AND_axis_h_l350_c39_d25a_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_CONST_REF_RD_uint8_t_axis128_t_stream_t_4_3_data_tdata_15_d41d_axis_h_l348_c38_c0ed_return_output,
+     VAR_FOR_axis_h_l342_c3_55c6_ITER_3_FOR_axis_h_l346_c5_44c3_ITER_15_BIN_OP_AND_axis_h_l350_c39_d25a_return_output);
+
+     -- Submodule level 7
+     VAR_return_output := VAR_CONST_REF_RD_axis512_t_axis512_t_fafd_axis_h_l353_c10_f25e_return_output;
+     -- Last stage of pipeline return wire to return port/reg
+     return_output <= VAR_return_output;
+   end if;
+ end loop;
+
+end process;
+
+end arch;

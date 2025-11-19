@@ -5,7 +5,6 @@
 #define SIMULATION
 #include "chacha20poly1305_decrypt.c"
 
-// Note: Assuming the DUT exposes the final authentication result as a wire:
 extern uint1_t chacha20poly1305_decrypt_tags_match;
 
 // Annoying fixed array sized single string printf funcs
@@ -68,6 +67,8 @@ void print_aad(uint8_t aad[AAD_MAX_LEN], uint32_t aad_len)
     );
 }
 
+// CSR values available all at once do not need to be static=registers
+// Streaming inputs data is done as shift register
 #pragma MAIN tb
 stream(axis128_t) tb()
 {
@@ -88,6 +89,8 @@ stream(axis128_t) tb()
     
     /*
      * We define the expected outputs (Plaintext) 
+     * NOTE: Changed 'char' to 'uint8_t' to ensure compatible array types
+     * and avoid the problematic C cast.
      * */
     #define NUM_PACKETS 2
     #define PLAINTEXT_MAX_SIZE 128
@@ -95,7 +98,9 @@ stream(axis128_t) tb()
     #define EXPECTED_PLAINTEXT_STR0_LEN strlen(EXPECTED_PLAINTEXT_STR0)
     #define EXPECTED_PLAINTEXT_STR1 "PipelineC is the best HDL around :) Let's go CHILIChips Wireguard team!"
     #define EXPECTED_PLAINTEXT_STR1_LEN strlen(EXPECTED_PLAINTEXT_STR1)
-    char plaintexts[NUM_PACKETS][PLAINTEXT_MAX_SIZE] = {
+    
+    // *** FIX 1: Change to uint8_t to match plaintext_out_expected ***
+    uint8_t plaintexts[NUM_PACKETS][PLAINTEXT_MAX_SIZE] = {
         EXPECTED_PLAINTEXT_STR0,
         EXPECTED_PLAINTEXT_STR1
     };
@@ -157,6 +162,7 @@ stream(axis128_t) tb()
 
     // --- Input State Machine (Streams CIPHERTEXT) ---
     static uint32_t input_packet_count;
+    // Note: Must be static array for array assignment (equals sign) to work
     static uint8_t ciphertext_in_stream[CIPHERTEXT_MAX_SIZE];
     static uint32_t ciphertext_remaining_in;
     static uint32_t cycle_counter;
@@ -165,7 +171,8 @@ stream(axis128_t) tb()
     static uint32_t output_packet_count;
     static uint32_t plaintext_out_size;
     static uint32_t plaintext_remaining_out;
-    static uint8_t plaintext_out_expected[PLAINTEXT_MAX_SIZE];
+    // Note: Must be static array for array assignment (equals sign) to work
+    static uint8_t plaintext_out_expected[PLAINTEXT_MAX_SIZE]; 
     static uint1_t tag_match_checked;
 
     // Initialize/Reset Logic
@@ -178,14 +185,18 @@ stream(axis128_t) tb()
         print_aad(aad, aad_len);
         
         // Init input regs with first test ciphertext
-        memcpy(ciphertext_in_stream, input_ciphertexts[input_packet_count], CIPHERTEXT_MAX_SIZE);
+        // Assignment is fine here as both are uint8_t arrays
+        ciphertext_in_stream = input_ciphertexts[input_packet_count]; 
         ciphertext_remaining_in = ciphertext_lens[input_packet_count];
         printf("Decrypting test string %u (Ciphertext size: %u)...\n", input_packet_count, ciphertext_remaining_in);
 
         // Init output regs with first expected plaintext
         plaintext_out_size = plaintext_lens[output_packet_count];
         plaintext_remaining_out = plaintext_out_size;
-        memcpy(plaintext_out_expected, plaintexts[output_packet_count], PLAINTEXT_MAX_SIZE);
+        
+        // *** FIX 2: Removed explicit cast; now array types are compatible (uint8_t[128]) ***
+        plaintext_out_expected = plaintexts[output_packet_count];
+        
         printf("Checking Plaintext for test string %u (Expected size: %u)...\n", output_packet_count, plaintext_out_size);
         tag_match_checked = 0;
     }
@@ -282,14 +293,16 @@ stream(axis128_t) tb()
             // Reset for next test vector (Only reset if the input flow is ready for the next packet too)
             if (input_packet_count == output_packet_count) {
                 // Reset input regs with next test ciphertext
-                memcpy(ciphertext_in_stream, input_ciphertexts[input_packet_count], CIPHERTEXT_MAX_SIZE);
+                ciphertext_in_stream = input_ciphertexts[input_packet_count]; 
                 ciphertext_remaining_in = ciphertext_lens[input_packet_count];
                 printf("Decrypting next test string %u (Ciphertext size: %u)...\n", input_packet_count, ciphertext_remaining_in);
                 
                 // Reset output regs with next expected plaintext
                 plaintext_out_size = plaintext_lens[output_packet_count];
                 plaintext_remaining_out = plaintext_out_size;
-                memcpy(plaintext_out_expected, plaintexts[output_packet_count], PLAINTEXT_MAX_SIZE);
+                
+                plaintext_out_expected = plaintexts[output_packet_count];
+                
                 printf("Checking Plaintext for next test string %u (Expected size: %u)...\n", output_packet_count, plaintext_out_size);
             }
         }
