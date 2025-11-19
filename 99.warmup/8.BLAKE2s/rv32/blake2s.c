@@ -158,7 +158,7 @@ void blake2s_final(blake2s_ctx *ctx, void *out)
 
 // Convenience function for all-in-one computation.
 
-int blake2s(void *out, size_t outlen,
+int hash(void *out, size_t outlen,
     const void *key, size_t keylen,
     const void *in, size_t inlen)
 {
@@ -168,6 +168,45 @@ int blake2s(void *out, size_t outlen,
         return -1;
     blake2s_update(&ctx, in, inlen);
     blake2s_final(&ctx, out);
+
+    return 0;
+}
+
+// HMAC using BLAKE2s
+
+int hmac(uint8_t *out, const uint8_t *in, const uint8_t *key, 
+    const size_t inlen, const size_t keylen)
+{
+    blake2s_ctx ctx;
+    uint8_t x_key[BLAKE2S_BLOCK_SIZE] = {0};
+    uint8_t i_hash[BLAKE2S_HASH_SIZE];
+
+    if (keylen > BLAKE2S_BLOCK_SIZE) {
+        blake2s_init(&ctx, BLAKE2S_HASH_SIZE, NULL, 0);
+        blake2s_update(&ctx, key, keylen);
+        blake2s_final(&ctx, x_key);
+    } else {
+        memcpy(x_key, key, keylen);
+    }
+
+    for (size_t i = 0; i < BLAKE2S_BLOCK_SIZE; i++)
+        x_key[i] ^= 0x36;
+
+    blake2s_init(&ctx, BLAKE2S_HASH_SIZE, NULL, 0);
+    blake2s_update(&ctx, x_key, BLAKE2S_BLOCK_SIZE);
+    blake2s_update(&ctx, in, inlen);
+    blake2s_final(&ctx, i_hash);
+
+    for (size_t i = 0; i < BLAKE2S_BLOCK_SIZE; i++)
+        x_key[i] ^= 0x36 ^ 0x5c;
+
+    blake2s_init(&ctx, BLAKE2S_HASH_SIZE, NULL, 0);
+    blake2s_update(&ctx, x_key, BLAKE2S_BLOCK_SIZE);
+    blake2s_update(&ctx, i_hash, BLAKE2S_HASH_SIZE);
+    blake2s_final(&ctx, out);
+
+    memset(x_key, 0, BLAKE2S_BLOCK_SIZE);
+    memset(i_hash, 0, BLAKE2S_HASH_SIZE);
 
     return 0;
 }

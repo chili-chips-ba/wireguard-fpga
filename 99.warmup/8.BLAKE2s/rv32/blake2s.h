@@ -8,6 +8,9 @@
 #include <stddef.h>
 #include "string_bare.h"
 
+#define BLAKE2S_BLOCK_SIZE 64
+#define BLAKE2S_HASH_SIZE 32
+
 // state context
 typedef struct {
     uint8_t b[64];                      // input buffer
@@ -31,9 +34,13 @@ void blake2s_update(blake2s_ctx *ctx,   // context
 //      Result placed in "out".
 void blake2s_final(blake2s_ctx *ctx, void *out);
 
-// All-in-one convenience function.
-int blake2s(void *out, size_t outlen,   // return buffer for digest
-    const void *key, size_t keylen,     // optional secret key
-    const void *in, size_t inlen);      // data to be hashed
+// Hash function.
+int hash(void *out, size_t outlen,     // return buffer for digest
+    const void *key, size_t keylen,    // optional secret key
+    const void *in, size_t inlen);     // data to be hashed
+
+// HMAC using BLAKE2s as the underlying hash.
+int hmac(uint8_t *out, const uint8_t *in, const uint8_t *key, 
+    const size_t inlen, const size_t keylen);
 
 #endif
