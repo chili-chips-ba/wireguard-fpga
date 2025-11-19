@@ -59,11 +59,11 @@ int blake2s_selftest()
             inlen = b2s_in_len[j];
 
             selftest_seq(in, inlen, inlen); // unkeyed hash
-            blake2s(md, outlen, NULL, 0, in, inlen);
+            hash(md, outlen, NULL, 0, in, inlen);
             blake2s_update(&ctx, md, outlen); // hash the hash
 
             selftest_seq(key, outlen, outlen); // keyed hash
-            blake2s(md, outlen, key, outlen, in, inlen);
+            hash(md, outlen, key, outlen, in, inlen);
             blake2s_update(&ctx, md, outlen); // hash the hash
         }
     }
@@ -91,9 +91,9 @@ static int compare_digest(const uint8_t *a, const uint8_t *b, size_t len)
 int main(int argc, char **argv)
 {
     // test the LEDs, so we can see the LED change when tests finish
-    reg_gpio |= LED0;
+    reg_gpio |= LED0; // off
     delay(3000000);
-    reg_gpio &= ~LED0;
+    reg_gpio &= ~LED0; // on
     delay(3000000);
 
     uint8_t out[32];
@@ -130,7 +130,7 @@ int main(int argc, char **argv)
         const uint8_t *expected = tests[i].expected;
 
         // Compute hash
-        blake2s(out, 32, NULL, 0, msg, strlen(msg)); 
+        hash(out, 32, NULL, 0, msg, strlen(msg)); 
 
         // Compare
         int ok = 1;
@@ -143,12 +143,13 @@ int main(int argc, char **argv)
             }
         }
 
-    if (!ok) pass = 0;
-}
+        if (!ok) pass = 0;
+    }
 
     if (pass) 
     {
         reg_gpio |= LED0; //hashing successful
     }
+    
     return 0;
 }
