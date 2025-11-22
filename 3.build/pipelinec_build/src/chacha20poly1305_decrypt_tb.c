@@ -5,8 +5,6 @@
 #define SIMULATION
 #include "chacha20poly1305_decrypt.c"
 
-extern uint1_t chacha20poly1305_decrypt_tags_match;
-
 // Annoying fixed array sized single string printf funcs
 // trying to match software print_hex
 #define PRINT_32_BYTES(label, array) \
@@ -279,7 +277,7 @@ stream(axis128_t) tb()
     // Check the final authentication result after the stream is done
     if (plaintext_remaining_out == 0 && output_packet_count < NUM_PACKETS && !tag_match_checked)
     {
-        if (chacha20poly1305_decrypt_tags_match == 1)
+        if (chacha20poly1305_decrypt_is_verified_out == 1)
         {
             printf("SUCCESS: Test %u Authentication Tag MATCHES!\n", output_packet_count);
         } else {
