@@ -1,5 +1,5 @@
 
-/home/enio/Projects/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf:     file format elf32-littleriscv
+/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/3.build/sw_build/main.elf:     file format elf32-littleriscv
 
 
 Disassembly of section .text:
