@@ -77,7 +77,7 @@ extern "C" void VUserMain1(void) {
         pUdp.UdpVpSendIdle(1); // ~1ms
     }
 
-    std::string in1 = Manager::GetEnvOr("PCAP_IN_1", "./rtl/pcap_reader_writer/test_udp_rand.pcap");
+    std::string in1 = Manager::GetEnvOr("PCAP_IN_1", "./tools/test_udp_rand.pcap");
     VPrint("Node1: replaying %s\n", in1.c_str());
     bool rewrite = Manager::GetEnvBool("PCAP_REWRITE", true);
     static pcapio::Writer tx1;
@@ -140,7 +140,7 @@ extern "C" void VUserMain3(void) {
         pUdp.UdpVpSendIdle(1); // ~2ms
     }
 
-    std::string in3 = Manager::GetEnvOr("PCAP_IN_1", "./rtl/pcap_reader_writer/test_udp_rand.pcap");
+    std::string in3 = Manager::GetEnvOr("PCAP_IN_1", "./tools/test_udp_rand.pcap");
     VPrint("Node3: replaying %s\n", in3.c_str());
     bool rewrite = Manager::GetEnvBool("PCAP_REWRITE", true);
     static pcapio::Writer tx3;

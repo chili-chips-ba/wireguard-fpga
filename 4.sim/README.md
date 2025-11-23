@@ -495,6 +495,18 @@ Payload (64 bytes):
 00 04 08 0C 10 14 18 1C 20 24 28 2C 30 34 38 3C ......
 ```
 
+#### PCAP replay/record quickstart (VUserMainPcap)
+
+- Generate a test PCAP (writes into `tools/`):
+  `python tools/gen_udp_pcap.py --frames 5 --interval-us 500 --out ./tools/test_udp_rand.pcap`
+- Build fresh and run the Ethernet replay/record simulation (uses `PCAP_IN_1` default `./tools/test_udp_rand.pcap`):  
+  `make -f MakefileVProc.mk clean`  
+  `make -f MakefileVProc.mk UDP_C=VUserMainPcap.cpp BUILD=ISS run`
+  - Outputs of interest in `./output/`:
+    - `node2_out.pcap`, `node4_out.pcap` – RX captures with corrected timestamps
+    - `merge_node2.pcap`, `merge_node4.pcap` – TX+RX merged on a single timeline
+  - In Wireshark: set Time Display to “Seconds Since Epoch” or “Date and Time of Day”. Start-to-start latency (TX→RX) should match what you measure in `wave.fst` via GTKWave.
+
 ## Co-simulation HAL
 
 ### Using the HAL
