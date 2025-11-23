@@ -27,28 +27,28 @@ constant ADDED_PIPELINE_LATENCY : integer := 3;
 -- Stage 1
 -- Stage 2
 -- Each function instance gets signals
--- bytes_to_uint320[poly1305_h_l309_c16_3648]
-signal bytes_to_uint320_poly1305_h_l309_c16_3648_src : uint8_t_40;
-signal bytes_to_uint320_poly1305_h_l309_c16_3648_return_output : u320_t;
+-- bytes_to_uint320[poly1305_h_l309_c16_ddbe]
+signal bytes_to_uint320_poly1305_h_l309_c16_ddbe_src : uint8_t_40;
+signal bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output : u320_t;
 
--- BIN_OP_OR[poly1305_h_l312_c5_d919]
-signal BIN_OP_OR_poly1305_h_l312_c5_d919_left : unsigned(63 downto 0);
-signal BIN_OP_OR_poly1305_h_l312_c5_d919_right : unsigned(3 downto 0);
-signal BIN_OP_OR_poly1305_h_l312_c5_d919_return_output : unsigned(63 downto 0);
+-- BIN_OP_OR[poly1305_h_l312_c5_596f]
+signal BIN_OP_OR_poly1305_h_l312_c5_596f_left : unsigned(63 downto 0);
+signal BIN_OP_OR_poly1305_h_l312_c5_596f_right : unsigned(3 downto 0);
+signal BIN_OP_OR_poly1305_h_l312_c5_596f_return_output : unsigned(63 downto 0);
 
--- uint320_add[poly1305_h_l315_c9_2493]
-signal uint320_add_poly1305_h_l315_c9_2493_a : u320_t;
-signal uint320_add_poly1305_h_l315_c9_2493_b : u320_t;
-signal uint320_add_poly1305_h_l315_c9_2493_return_output : u320_t;
+-- uint320_add[poly1305_h_l315_c9_a544]
+signal uint320_add_poly1305_h_l315_c9_a544_a : u320_t;
+signal uint320_add_poly1305_h_l315_c9_a544_b : u320_t;
+signal uint320_add_poly1305_h_l315_c9_a544_return_output : u320_t;
 
--- uint320_mul[poly1305_h_l319_c9_9dc4]
-signal uint320_mul_poly1305_h_l319_c9_9dc4_a : u320_t;
-signal uint320_mul_poly1305_h_l319_c9_9dc4_b : u320_t;
-signal uint320_mul_poly1305_h_l319_c9_9dc4_return_output : u320_t;
+-- uint320_mul[poly1305_h_l319_c9_32be]
+signal uint320_mul_poly1305_h_l319_c9_32be_a : u320_t;
+signal uint320_mul_poly1305_h_l319_c9_32be_b : u320_t;
+signal uint320_mul_poly1305_h_l319_c9_32be_return_output : u320_t;
 
--- uint320_mod_prime[poly1305_h_l322_c9_282e]
-signal uint320_mod_prime_poly1305_h_l322_c9_282e_a : u320_t;
-signal uint320_mod_prime_poly1305_h_l322_c9_282e_return_output : u320_t;
+-- uint320_mod_prime[poly1305_h_l322_c9_b42f]
+signal uint320_mod_prime_poly1305_h_l322_c9_b42f_a : u320_t;
+signal uint320_mod_prime_poly1305_h_l322_c9_b42f_return_output : u320_t;
 
 function CONST_REF_RD_uint8_t_40_uint8_t_40_7a60( ref_toks_0 : uint8_t_40;
  ref_toks_1 : unsigned;
@@ -110,34 +110,34 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- bytes_to_uint320_poly1305_h_l309_c16_3648 : 0 clocks latency
-bytes_to_uint320_poly1305_h_l309_c16_3648 : entity work.bytes_to_uint320_0CLK_b3848d7a port map (
-bytes_to_uint320_poly1305_h_l309_c16_3648_src,
-bytes_to_uint320_poly1305_h_l309_c16_3648_return_output);
+-- bytes_to_uint320_poly1305_h_l309_c16_ddbe : 0 clocks latency
+bytes_to_uint320_poly1305_h_l309_c16_ddbe : entity work.bytes_to_uint320_0CLK_b3848d7a port map (
+bytes_to_uint320_poly1305_h_l309_c16_ddbe_src,
+bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output);
 
--- BIN_OP_OR_poly1305_h_l312_c5_d919 : 0 clocks latency
-BIN_OP_OR_poly1305_h_l312_c5_d919 : entity work.BIN_OP_OR_uint64_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_OR_poly1305_h_l312_c5_d919_left,
-BIN_OP_OR_poly1305_h_l312_c5_d919_right,
-BIN_OP_OR_poly1305_h_l312_c5_d919_return_output);
+-- BIN_OP_OR_poly1305_h_l312_c5_596f : 0 clocks latency
+BIN_OP_OR_poly1305_h_l312_c5_596f : entity work.BIN_OP_OR_uint64_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_OR_poly1305_h_l312_c5_596f_left,
+BIN_OP_OR_poly1305_h_l312_c5_596f_right,
+BIN_OP_OR_poly1305_h_l312_c5_596f_return_output);
 
--- uint320_add_poly1305_h_l315_c9_2493 : 0 clocks latency
-uint320_add_poly1305_h_l315_c9_2493 : entity work.uint320_add_0CLK_10d8c973 port map (
-uint320_add_poly1305_h_l315_c9_2493_a,
-uint320_add_poly1305_h_l315_c9_2493_b,
-uint320_add_poly1305_h_l315_c9_2493_return_output);
+-- uint320_add_poly1305_h_l315_c9_a544 : 0 clocks latency
+uint320_add_poly1305_h_l315_c9_a544 : entity work.uint320_add_0CLK_10d8c973 port map (
+uint320_add_poly1305_h_l315_c9_a544_a,
+uint320_add_poly1305_h_l315_c9_a544_b,
+uint320_add_poly1305_h_l315_c9_a544_return_output);
 
--- uint320_mul_poly1305_h_l319_c9_9dc4 : 3 clocks latency
-uint320_mul_poly1305_h_l319_c9_9dc4 : entity work.uint320_mul_3CLK_087b5579 port map (
+-- uint320_mul_poly1305_h_l319_c9_32be : 3 clocks latency
+uint320_mul_poly1305_h_l319_c9_32be : entity work.uint320_mul_3CLK_087b5579 port map (
 clk,
-uint320_mul_poly1305_h_l319_c9_9dc4_a,
-uint320_mul_poly1305_h_l319_c9_9dc4_b,
-uint320_mul_poly1305_h_l319_c9_9dc4_return_output);
+uint320_mul_poly1305_h_l319_c9_32be_a,
+uint320_mul_poly1305_h_l319_c9_32be_b,
+uint320_mul_poly1305_h_l319_c9_32be_return_output);
 
--- uint320_mod_prime_poly1305_h_l322_c9_282e : 0 clocks latency
-uint320_mod_prime_poly1305_h_l322_c9_282e : entity work.uint320_mod_prime_0CLK_461d892c port map (
-uint320_mod_prime_poly1305_h_l322_c9_282e_a,
-uint320_mod_prime_poly1305_h_l322_c9_282e_return_output);
+-- uint320_mod_prime_poly1305_h_l322_c9_b42f : 0 clocks latency
+uint320_mod_prime_poly1305_h_l322_c9_b42f : entity work.uint320_mod_prime_0CLK_461d892c port map (
+uint320_mod_prime_poly1305_h_l322_c9_b42f_a,
+uint320_mod_prime_poly1305_h_l322_c9_b42f_return_output);
 
 
 
@@ -150,62 +150,62 @@ process (
  -- Stage 1
  -- Stage 2
  -- All submodule outputs
- bytes_to_uint320_poly1305_h_l309_c16_3648_return_output,
- BIN_OP_OR_poly1305_h_l312_c5_d919_return_output,
- uint320_add_poly1305_h_l315_c9_2493_return_output,
- uint320_mul_poly1305_h_l319_c9_9dc4_return_output,
- uint320_mod_prime_poly1305_h_l322_c9_282e_return_output)
+ bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output,
+ BIN_OP_OR_poly1305_h_l312_c5_596f_return_output,
+ uint320_add_poly1305_h_l315_c9_a544_return_output,
+ uint320_mul_poly1305_h_l319_c9_32be_return_output,
+ uint320_mod_prime_poly1305_h_l322_c9_b42f_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
  variable VAR_return_output : u320_t;
  variable VAR_inputs : poly1305_mac_loop_body_in_t;
  variable VAR_block_bytes : uint8_t_16;
- variable VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output : uint8_t_16;
+ variable VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output : uint8_t_16;
  variable VAR_r : u320_t;
- variable VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d_poly1305_h_l302_c16_b8ad_return_output : u320_t;
+ variable VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d_poly1305_h_l302_c16_c9c3_return_output : u320_t;
  variable VAR_a : u320_t;
- variable VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d_poly1305_h_l303_c16_d7ba_return_output : u320_t;
+ variable VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d_poly1305_h_l303_c16_0a4f_return_output : u320_t;
  variable VAR_n_bytes : uint8_t_40;
  variable VAR_i : unsigned(31 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
- variable VAR_FOR_poly1305_h_l306_c5_a97a_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d_poly1305_h_l307_c22_92e8_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_poly1305_h_l306_c5_151d_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d_poly1305_h_l307_c22_ece4_return_output : unsigned(7 downto 0);
  variable VAR_n : u320_t;
- variable VAR_bytes_to_uint320_poly1305_h_l309_c16_3648_src : uint8_t_40;
- variable VAR_CONST_REF_RD_uint8_t_40_uint8_t_40_7a60_poly1305_h_l309_c33_21b1_return_output : uint8_t_40;
- variable VAR_bytes_to_uint320_poly1305_h_l309_c16_3648_return_output : u320_t;
- variable VAR_CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d_poly1305_h_l312_c5_4186_return_output : unsigned(63 downto 0);
- variable VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_left : unsigned(63 downto 0);
- variable VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_return_output : unsigned(63 downto 0);
- variable VAR_uint320_add_poly1305_h_l315_c9_2493_a : u320_t;
- variable VAR_uint320_add_poly1305_h_l315_c9_2493_b : u320_t;
- variable VAR_CONST_REF_RD_u320_t_u320_t_7c3b_poly1305_h_l315_c24_51f9_return_output : u320_t;
- variable VAR_uint320_add_poly1305_h_l315_c9_2493_return_output : u320_t;
+ variable VAR_bytes_to_uint320_poly1305_h_l309_c16_ddbe_src : uint8_t_40;
+ variable VAR_CONST_REF_RD_uint8_t_40_uint8_t_40_7a60_poly1305_h_l309_c33_db3d_return_output : uint8_t_40;
+ variable VAR_bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output : u320_t;
+ variable VAR_CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d_poly1305_h_l312_c5_0f0a_return_output : unsigned(63 downto 0);
+ variable VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_left : unsigned(63 downto 0);
+ variable VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_return_output : unsigned(63 downto 0);
+ variable VAR_uint320_add_poly1305_h_l315_c9_a544_a : u320_t;
+ variable VAR_uint320_add_poly1305_h_l315_c9_a544_b : u320_t;
+ variable VAR_CONST_REF_RD_u320_t_u320_t_7c3b_poly1305_h_l315_c24_fb6b_return_output : u320_t;
+ variable VAR_uint320_add_poly1305_h_l315_c9_a544_return_output : u320_t;
  variable VAR_temp : u320_t;
- variable VAR_uint320_mul_poly1305_h_l319_c9_9dc4_a : u320_t;
- variable VAR_uint320_mul_poly1305_h_l319_c9_9dc4_b : u320_t;
- variable VAR_uint320_mul_poly1305_h_l319_c9_9dc4_return_output : u320_t;
- variable VAR_uint320_mod_prime_poly1305_h_l322_c9_282e_a : u320_t;
- variable VAR_uint320_mod_prime_poly1305_h_l322_c9_282e_return_output : u320_t;
+ variable VAR_uint320_mul_poly1305_h_l319_c9_32be_a : u320_t;
+ variable VAR_uint320_mul_poly1305_h_l319_c9_32be_b : u320_t;
+ variable VAR_uint320_mul_poly1305_h_l319_c9_32be_return_output : u320_t;
+ variable VAR_uint320_mod_prime_poly1305_h_l322_c9_b42f_a : u320_t;
+ variable VAR_uint320_mod_prime_poly1305_h_l322_c9_b42f_return_output : u320_t;
 begin
  -- Constants and things derived from constants alone
      -- Submodule level 0
-     VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_right := to_unsigned(1, 4);
+     VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_right := to_unsigned(1, 4);
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -215,129 +215,129 @@ begin
      VAR_inputs := inputs;
 
      -- Submodule level 0
-     -- CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d[poly1305_h_l302_c16_b8ad] LATENCY=0
-     VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d_poly1305_h_l302_c16_b8ad_return_output := VAR_inputs.r;
+     -- CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d[poly1305_h_l301_c31_e9c8] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output := VAR_inputs.block_bytes;
 
-     -- CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d[poly1305_h_l301_c31_ed87] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output := VAR_inputs.block_bytes;
+     -- CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d[poly1305_h_l303_c16_0a4f] LATENCY=0
+     VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d_poly1305_h_l303_c16_0a4f_return_output := VAR_inputs.a;
 
-     -- CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d[poly1305_h_l303_c16_d7ba] LATENCY=0
-     VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d_poly1305_h_l303_c16_d7ba_return_output := VAR_inputs.a;
+     -- CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d[poly1305_h_l302_c16_c9c3] LATENCY=0
+     VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d_poly1305_h_l302_c16_c9c3_return_output := VAR_inputs.r;
 
      -- Submodule level 1
-     VAR_uint320_add_poly1305_h_l315_c9_2493_a := VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d_poly1305_h_l303_c16_d7ba_return_output;
-     VAR_uint320_mul_poly1305_h_l319_c9_9dc4_b := VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d_poly1305_h_l302_c16_b8ad_return_output;
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(14);
+     VAR_uint320_add_poly1305_h_l315_c9_a544_a := VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_a_d41d_poly1305_h_l303_c16_0a4f_return_output;
+     VAR_uint320_mul_poly1305_h_l319_c9_32be_b := VAR_CONST_REF_RD_u320_t_poly1305_mac_loop_body_in_t_r_d41d_poly1305_h_l302_c16_c9c3_return_output;
+     -- FOR_poly1305_h_l306_c5_151d_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(4);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(6);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(9);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(10);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(6);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(15);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(15);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(9);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(8);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(5);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(14);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(2);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(13);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(3);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(11);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(7);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(10);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(12);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(7);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(11);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(1);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(8);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(0);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(0);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(5);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(13);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(12);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(4);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(2);
 
-     -- FOR_poly1305_h_l306_c5_a97a_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d[poly1305_h_l307_c22_92e8] LATENCY=0
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d_poly1305_h_l307_c22_92e8_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_ed87_return_output(1);
+     -- FOR_poly1305_h_l306_c5_151d_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d[poly1305_h_l307_c22_ece4] LATENCY=0
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d_poly1305_h_l307_c22_ece4_return_output := VAR_CONST_REF_RD_uint8_t_16_poly1305_mac_loop_body_in_t_block_bytes_d41d_poly1305_h_l301_c31_e9c8_return_output(3);
 
      -- Submodule level 2
-     -- CONST_REF_RD_uint8_t_40_uint8_t_40_7a60[poly1305_h_l309_c33_21b1] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_40_uint8_t_40_7a60_poly1305_h_l309_c33_21b1_return_output := CONST_REF_RD_uint8_t_40_uint8_t_40_7a60(
+     -- CONST_REF_RD_uint8_t_40_uint8_t_40_7a60[poly1305_h_l309_c33_db3d] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_40_uint8_t_40_7a60_poly1305_h_l309_c33_db3d_return_output := CONST_REF_RD_uint8_t_40_uint8_t_40_7a60(
      (others => to_unsigned(0, 8)),
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d_poly1305_h_l307_c22_92e8_return_output,
-     VAR_FOR_poly1305_h_l306_c5_a97a_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d_poly1305_h_l307_c22_92e8_return_output);
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_0_CONST_REF_RD_uint8_t_uint8_t_16_0_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_1_CONST_REF_RD_uint8_t_uint8_t_16_1_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_2_CONST_REF_RD_uint8_t_uint8_t_16_2_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_3_CONST_REF_RD_uint8_t_uint8_t_16_3_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_4_CONST_REF_RD_uint8_t_uint8_t_16_4_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_5_CONST_REF_RD_uint8_t_uint8_t_16_5_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_6_CONST_REF_RD_uint8_t_uint8_t_16_6_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_7_CONST_REF_RD_uint8_t_uint8_t_16_7_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_8_CONST_REF_RD_uint8_t_uint8_t_16_8_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_9_CONST_REF_RD_uint8_t_uint8_t_16_9_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_10_CONST_REF_RD_uint8_t_uint8_t_16_10_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_11_CONST_REF_RD_uint8_t_uint8_t_16_11_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_12_CONST_REF_RD_uint8_t_uint8_t_16_12_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_13_CONST_REF_RD_uint8_t_uint8_t_16_13_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_14_CONST_REF_RD_uint8_t_uint8_t_16_14_d41d_poly1305_h_l307_c22_ece4_return_output,
+     VAR_FOR_poly1305_h_l306_c5_151d_ITER_15_CONST_REF_RD_uint8_t_uint8_t_16_15_d41d_poly1305_h_l307_c22_ece4_return_output);
 
      -- Submodule level 3
-     VAR_bytes_to_uint320_poly1305_h_l309_c16_3648_src := VAR_CONST_REF_RD_uint8_t_40_uint8_t_40_7a60_poly1305_h_l309_c33_21b1_return_output;
-     -- bytes_to_uint320[poly1305_h_l309_c16_3648] LATENCY=0
+     VAR_bytes_to_uint320_poly1305_h_l309_c16_ddbe_src := VAR_CONST_REF_RD_uint8_t_40_uint8_t_40_7a60_poly1305_h_l309_c33_db3d_return_output;
+     -- bytes_to_uint320[poly1305_h_l309_c16_ddbe] LATENCY=0
      -- Inputs
-     bytes_to_uint320_poly1305_h_l309_c16_3648_src <= VAR_bytes_to_uint320_poly1305_h_l309_c16_3648_src;
+     bytes_to_uint320_poly1305_h_l309_c16_ddbe_src <= VAR_bytes_to_uint320_poly1305_h_l309_c16_ddbe_src;
      -- Outputs
-     VAR_bytes_to_uint320_poly1305_h_l309_c16_3648_return_output := bytes_to_uint320_poly1305_h_l309_c16_3648_return_output;
+     VAR_bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output := bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output;
 
      -- Submodule level 4
-     -- CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d[poly1305_h_l312_c5_4186] LATENCY=0
-     VAR_CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d_poly1305_h_l312_c5_4186_return_output := VAR_bytes_to_uint320_poly1305_h_l309_c16_3648_return_output.limbs(2);
+     -- CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d[poly1305_h_l312_c5_0f0a] LATENCY=0
+     VAR_CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d_poly1305_h_l312_c5_0f0a_return_output := VAR_bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output.limbs(2);
 
      -- Submodule level 5
-     VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_left := VAR_CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d_poly1305_h_l312_c5_4186_return_output;
-     -- BIN_OP_OR[poly1305_h_l312_c5_d919] LATENCY=0
+     VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_left := VAR_CONST_REF_RD_uint64_t_u320_t_limbs_2_d41d_poly1305_h_l312_c5_0f0a_return_output;
+     -- BIN_OP_OR[poly1305_h_l312_c5_596f] LATENCY=0
      -- Inputs
-     BIN_OP_OR_poly1305_h_l312_c5_d919_left <= VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_left;
-     BIN_OP_OR_poly1305_h_l312_c5_d919_right <= VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_right;
+     BIN_OP_OR_poly1305_h_l312_c5_596f_left <= VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_left;
+     BIN_OP_OR_poly1305_h_l312_c5_596f_right <= VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_right;
      -- Outputs
-     VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_return_output := BIN_OP_OR_poly1305_h_l312_c5_d919_return_output;
+     VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_return_output := BIN_OP_OR_poly1305_h_l312_c5_596f_return_output;
 
      -- Submodule level 6
-     -- CONST_REF_RD_u320_t_u320_t_7c3b[poly1305_h_l315_c24_51f9] LATENCY=0
-     VAR_CONST_REF_RD_u320_t_u320_t_7c3b_poly1305_h_l315_c24_51f9_return_output := CONST_REF_RD_u320_t_u320_t_7c3b(
-     VAR_bytes_to_uint320_poly1305_h_l309_c16_3648_return_output,
-     VAR_BIN_OP_OR_poly1305_h_l312_c5_d919_return_output);
+     -- CONST_REF_RD_u320_t_u320_t_7c3b[poly1305_h_l315_c24_fb6b] LATENCY=0
+     VAR_CONST_REF_RD_u320_t_u320_t_7c3b_poly1305_h_l315_c24_fb6b_return_output := CONST_REF_RD_u320_t_u320_t_7c3b(
+     VAR_bytes_to_uint320_poly1305_h_l309_c16_ddbe_return_output,
+     VAR_BIN_OP_OR_poly1305_h_l312_c5_596f_return_output);
 
      -- Submodule level 7
-     VAR_uint320_add_poly1305_h_l315_c9_2493_b := VAR_CONST_REF_RD_u320_t_u320_t_7c3b_poly1305_h_l315_c24_51f9_return_output;
-     -- uint320_add[poly1305_h_l315_c9_2493] LATENCY=0
+     VAR_uint320_add_poly1305_h_l315_c9_a544_b := VAR_CONST_REF_RD_u320_t_u320_t_7c3b_poly1305_h_l315_c24_fb6b_return_output;
+     -- uint320_add[poly1305_h_l315_c9_a544] LATENCY=0
      -- Inputs
-     uint320_add_poly1305_h_l315_c9_2493_a <= VAR_uint320_add_poly1305_h_l315_c9_2493_a;
-     uint320_add_poly1305_h_l315_c9_2493_b <= VAR_uint320_add_poly1305_h_l315_c9_2493_b;
+     uint320_add_poly1305_h_l315_c9_a544_a <= VAR_uint320_add_poly1305_h_l315_c9_a544_a;
+     uint320_add_poly1305_h_l315_c9_a544_b <= VAR_uint320_add_poly1305_h_l315_c9_a544_b;
      -- Outputs
-     VAR_uint320_add_poly1305_h_l315_c9_2493_return_output := uint320_add_poly1305_h_l315_c9_2493_return_output;
+     VAR_uint320_add_poly1305_h_l315_c9_a544_return_output := uint320_add_poly1305_h_l315_c9_a544_return_output;
 
      -- Submodule level 8
-     VAR_uint320_mul_poly1305_h_l319_c9_9dc4_a := VAR_uint320_add_poly1305_h_l315_c9_2493_return_output;
-     -- uint320_mul[poly1305_h_l319_c9_9dc4] LATENCY=3
+     VAR_uint320_mul_poly1305_h_l319_c9_32be_a := VAR_uint320_add_poly1305_h_l315_c9_a544_return_output;
+     -- uint320_mul[poly1305_h_l319_c9_32be] LATENCY=3
      -- Inputs
-     uint320_mul_poly1305_h_l319_c9_9dc4_a <= VAR_uint320_mul_poly1305_h_l319_c9_9dc4_a;
-     uint320_mul_poly1305_h_l319_c9_9dc4_b <= VAR_uint320_mul_poly1305_h_l319_c9_9dc4_b;
+     uint320_mul_poly1305_h_l319_c9_32be_a <= VAR_uint320_mul_poly1305_h_l319_c9_32be_a;
+     uint320_mul_poly1305_h_l319_c9_32be_b <= VAR_uint320_mul_poly1305_h_l319_c9_32be_b;
 
      -- Write to comb signals
    elsif STAGE = 1 then
@@ -351,18 +351,18 @@ begin
    elsif STAGE = 3 then
      -- Read from prev stage
      -- Submodule outputs
-     VAR_uint320_mul_poly1305_h_l319_c9_9dc4_return_output := uint320_mul_poly1305_h_l319_c9_9dc4_return_output;
+     VAR_uint320_mul_poly1305_h_l319_c9_32be_return_output := uint320_mul_poly1305_h_l319_c9_32be_return_output;
 
      -- Submodule level 0
-     VAR_uint320_mod_prime_poly1305_h_l322_c9_282e_a := VAR_uint320_mul_poly1305_h_l319_c9_9dc4_return_output;
-     -- uint320_mod_prime[poly1305_h_l322_c9_282e] LATENCY=0
+     VAR_uint320_mod_prime_poly1305_h_l322_c9_b42f_a := VAR_uint320_mul_poly1305_h_l319_c9_32be_return_output;
+     -- uint320_mod_prime[poly1305_h_l322_c9_b42f] LATENCY=0
      -- Inputs
-     uint320_mod_prime_poly1305_h_l322_c9_282e_a <= VAR_uint320_mod_prime_poly1305_h_l322_c9_282e_a;
+     uint320_mod_prime_poly1305_h_l322_c9_b42f_a <= VAR_uint320_mod_prime_poly1305_h_l322_c9_b42f_a;
      -- Outputs
-     VAR_uint320_mod_prime_poly1305_h_l322_c9_282e_return_output := uint320_mod_prime_poly1305_h_l322_c9_282e_return_output;
+     VAR_uint320_mod_prime_poly1305_h_l322_c9_b42f_return_output := uint320_mod_prime_poly1305_h_l322_c9_b42f_return_output;
 
      -- Submodule level 1
-     VAR_return_output := VAR_uint320_mod_prime_poly1305_h_l322_c9_282e_return_output;
+     VAR_return_output := VAR_uint320_mod_prime_poly1305_h_l322_c9_b42f_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

@@ -25,11 +25,11 @@ attribute mark_debug : string;
 constant ADDED_PIPELINE_LATENCY : integer := 0;
 -- All of the wires/regs in function
 -- Each function instance gets signals
--- layer0_node0_MUX[bit_math_h_l18_c3_7182]
-signal layer0_node0_MUX_bit_math_h_l18_c3_7182_cond : unsigned(0 downto 0);
-signal layer0_node0_MUX_bit_math_h_l18_c3_7182_iftrue : unsigned(31 downto 0);
-signal layer0_node0_MUX_bit_math_h_l18_c3_7182_iffalse : unsigned(31 downto 0);
-signal layer0_node0_MUX_bit_math_h_l18_c3_7182_return_output : unsigned(31 downto 0);
+-- layer0_node0_MUX[bit_math_h_l18_c3_e425]
+signal layer0_node0_MUX_bit_math_h_l18_c3_e425_cond : unsigned(0 downto 0);
+signal layer0_node0_MUX_bit_math_h_l18_c3_e425_iftrue : unsigned(31 downto 0);
+signal layer0_node0_MUX_bit_math_h_l18_c3_e425_iffalse : unsigned(31 downto 0);
+signal layer0_node0_MUX_bit_math_h_l18_c3_e425_return_output : unsigned(31 downto 0);
 
 function uint1_0_0( x : unsigned) return unsigned is
 --variable x : unsigned(0 downto 0);
@@ -45,12 +45,12 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- layer0_node0_MUX_bit_math_h_l18_c3_7182 : 0 clocks latency
-layer0_node0_MUX_bit_math_h_l18_c3_7182 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-layer0_node0_MUX_bit_math_h_l18_c3_7182_cond,
-layer0_node0_MUX_bit_math_h_l18_c3_7182_iftrue,
-layer0_node0_MUX_bit_math_h_l18_c3_7182_iffalse,
-layer0_node0_MUX_bit_math_h_l18_c3_7182_return_output);
+-- layer0_node0_MUX_bit_math_h_l18_c3_e425 : 0 clocks latency
+layer0_node0_MUX_bit_math_h_l18_c3_e425 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+layer0_node0_MUX_bit_math_h_l18_c3_e425_cond,
+layer0_node0_MUX_bit_math_h_l18_c3_e425_iftrue,
+layer0_node0_MUX_bit_math_h_l18_c3_e425_iffalse,
+layer0_node0_MUX_bit_math_h_l18_c3_e425_return_output);
 
 
 
@@ -61,7 +61,7 @@ process (
  in0,
  in1,
  -- All submodule outputs
- layer0_node0_MUX_bit_math_h_l18_c3_7182_return_output)
+ layer0_node0_MUX_bit_math_h_l18_c3_e425_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
@@ -70,12 +70,12 @@ is
  variable VAR_in0 : unsigned(31 downto 0);
  variable VAR_in1 : unsigned(31 downto 0);
  variable VAR_sel0 : unsigned(0 downto 0);
- variable VAR_uint1_0_0_bit_math_h_l14_c10_0376_return_output : unsigned(0 downto 0);
+ variable VAR_uint1_0_0_bit_math_h_l14_c10_86b6_return_output : unsigned(0 downto 0);
  variable VAR_layer0_node0 : unsigned(31 downto 0);
- variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_iftrue : unsigned(31 downto 0);
- variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_iffalse : unsigned(31 downto 0);
- variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_return_output : unsigned(31 downto 0);
- variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_cond : unsigned(0 downto 0);
+ variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_iftrue : unsigned(31 downto 0);
+ variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_iffalse : unsigned(31 downto 0);
+ variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_return_output : unsigned(31 downto 0);
+ variable VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_cond : unsigned(0 downto 0);
 begin
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
@@ -88,24 +88,24 @@ begin
      VAR_in1 := in1;
 
      -- Submodule level 0
-     VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_iffalse := VAR_in0;
-     VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_iftrue := VAR_in1;
-     -- uint1_0_0[bit_math_h_l14_c10_0376] LATENCY=0
-     VAR_uint1_0_0_bit_math_h_l14_c10_0376_return_output := uint1_0_0(
+     VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_iffalse := VAR_in0;
+     VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_iftrue := VAR_in1;
+     -- uint1_0_0[bit_math_h_l14_c10_86b6] LATENCY=0
+     VAR_uint1_0_0_bit_math_h_l14_c10_86b6_return_output := uint1_0_0(
      VAR_sel);
 
      -- Submodule level 1
-     VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_cond := VAR_uint1_0_0_bit_math_h_l14_c10_0376_return_output;
-     -- layer0_node0_MUX[bit_math_h_l18_c3_7182] LATENCY=0
+     VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_cond := VAR_uint1_0_0_bit_math_h_l14_c10_86b6_return_output;
+     -- layer0_node0_MUX[bit_math_h_l18_c3_e425] LATENCY=0
      -- Inputs
-     layer0_node0_MUX_bit_math_h_l18_c3_7182_cond <= VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_cond;
-     layer0_node0_MUX_bit_math_h_l18_c3_7182_iftrue <= VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_iftrue;
-     layer0_node0_MUX_bit_math_h_l18_c3_7182_iffalse <= VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_iffalse;
+     layer0_node0_MUX_bit_math_h_l18_c3_e425_cond <= VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_cond;
+     layer0_node0_MUX_bit_math_h_l18_c3_e425_iftrue <= VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_iftrue;
+     layer0_node0_MUX_bit_math_h_l18_c3_e425_iffalse <= VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_iffalse;
      -- Outputs
-     VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_return_output := layer0_node0_MUX_bit_math_h_l18_c3_7182_return_output;
+     VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_return_output := layer0_node0_MUX_bit_math_h_l18_c3_e425_return_output;
 
      -- Submodule level 2
-     VAR_return_output := VAR_layer0_node0_MUX_bit_math_h_l18_c3_7182_return_output;
+     VAR_return_output := VAR_layer0_node0_MUX_bit_math_h_l18_c3_e425_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

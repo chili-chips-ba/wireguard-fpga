@@ -75,7 +75,7 @@ is
  variable VAR_id : unsigned(7 downto 0);
  variable VAR_valid : unsigned(0 downto 0);
  variable VAR_rv : poly1305_pipeline_out_reg_t;
- variable VAR_the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4_poly1305_mac_c_l16_c29_2a7d_return_output : poly1305_pipeline_out_reg_t;
+ variable VAR_the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4_poly1305_mac_c_l16_c29_3d1f_return_output : poly1305_pipeline_out_reg_t;
  -- State registers comb logic variables
 variable REG_VAR_the_reg : poly1305_pipeline_out_reg_t;
 begin
@@ -97,14 +97,14 @@ begin
 
      -- Submodule level 0
      VAR_return_output := the_reg;
-     -- the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4[poly1305_mac_c_l16_c29_2a7d] LATENCY=0
-     VAR_the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4_poly1305_mac_c_l16_c29_2a7d_return_output := CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4(
+     -- the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4[poly1305_mac_c_l16_c29_3d1f] LATENCY=0
+     VAR_the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4_poly1305_mac_c_l16_c29_3d1f_return_output := CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4(
      VAR_data,
      VAR_id,
      VAR_valid);
 
      -- Submodule level 1
-     REG_VAR_the_reg := VAR_the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4_poly1305_mac_c_l16_c29_2a7d_return_output;
+     REG_VAR_the_reg := VAR_the_reg_CONST_REF_RD_poly1305_pipeline_out_reg_t_poly1305_pipeline_out_reg_t_30d4_poly1305_mac_c_l16_c29_3d1f_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

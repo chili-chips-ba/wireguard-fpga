@@ -26,192 +26,192 @@ attribute mark_debug : string;
 constant ADDED_PIPELINE_LATENCY : integer := 1;
 -- All of the wires/regs in function
 -- Stage 0
-signal REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output : unsigned(31 downto 0);
-signal REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output : unsigned(31 downto 0);
-signal REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output : unsigned(31 downto 0);
-signal REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output : unsigned(31 downto 0);
-signal COMB_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output : unsigned(31 downto 0);
-signal COMB_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output : unsigned(31 downto 0);
-signal COMB_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output : unsigned(31 downto 0);
-signal COMB_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output : unsigned(31 downto 0);
+signal REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output : unsigned(31 downto 0);
+signal REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output : unsigned(31 downto 0);
+signal REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output : unsigned(31 downto 0);
+signal REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output : unsigned(31 downto 0);
+signal COMB_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output : unsigned(31 downto 0);
+signal COMB_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output : unsigned(31 downto 0);
+signal COMB_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output : unsigned(31 downto 0);
+signal COMB_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output : unsigned(31 downto 0);
 -- Each function instance gets signals
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_right : unsigned(0 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_right : unsigned(1 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_return_output : unsigned(0 downto 0);
 
--- rv_data_0_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d]
-signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_cond : unsigned(0 downto 0);
-signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iftrue : unsigned(31 downto 0);
-signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iffalse : unsigned(31 downto 0);
-signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output : unsigned(31 downto 0);
+-- rv_data_2_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66]
+signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_cond : unsigned(0 downto 0);
+signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iftrue : unsigned(31 downto 0);
+signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iffalse : unsigned(31 downto 0);
+signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_right : unsigned(1 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_right : unsigned(2 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_return_output : unsigned(0 downto 0);
 
--- rv_data_3_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5]
-signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_cond : unsigned(0 downto 0);
-signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iftrue : unsigned(31 downto 0);
-signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iffalse : unsigned(31 downto 0);
-signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output : unsigned(31 downto 0);
+-- rv_data_5_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef]
+signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_cond : unsigned(0 downto 0);
+signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iftrue : unsigned(31 downto 0);
+signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iffalse : unsigned(31 downto 0);
+signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_return_output : unsigned(0 downto 0);
 
--- rv_data_9_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c]
-signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_cond : unsigned(0 downto 0);
-signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iftrue : unsigned(31 downto 0);
-signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iffalse : unsigned(31 downto 0);
-signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_return_output : unsigned(31 downto 0);
+-- rv_data_11_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da]
+signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_cond : unsigned(0 downto 0);
+signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iftrue : unsigned(31 downto 0);
+signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iffalse : unsigned(31 downto 0);
+signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_right : unsigned(2 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_return_output : unsigned(0 downto 0);
 
--- rv_data_6_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd]
-signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_cond : unsigned(0 downto 0);
-signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iftrue : unsigned(31 downto 0);
-signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iffalse : unsigned(31 downto 0);
-signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_return_output : unsigned(31 downto 0);
+-- rv_data_8_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459]
+signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_cond : unsigned(0 downto 0);
+signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iftrue : unsigned(31 downto 0);
+signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iffalse : unsigned(31 downto 0);
+signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_return_output : unsigned(0 downto 0);
 
--- rv_data_12_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e]
-signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_cond : unsigned(0 downto 0);
-signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iftrue : unsigned(31 downto 0);
-signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iffalse : unsigned(31 downto 0);
-signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_return_output : unsigned(31 downto 0);
+-- rv_data_14_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d]
+signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_cond : unsigned(0 downto 0);
+signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iftrue : unsigned(31 downto 0);
+signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iffalse : unsigned(31 downto 0);
+signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_right : unsigned(0 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_return_output : unsigned(0 downto 0);
 
--- rv_data_15_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877]
-signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_cond : unsigned(0 downto 0);
-signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iftrue : unsigned(31 downto 0);
-signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iffalse : unsigned(31 downto 0);
-signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_return_output : unsigned(31 downto 0);
+-- rv_data_0_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223]
+signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_cond : unsigned(0 downto 0);
+signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iftrue : unsigned(31 downto 0);
+signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iffalse : unsigned(31 downto 0);
+signal rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_right : unsigned(2 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_right : unsigned(1 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_return_output : unsigned(0 downto 0);
 
--- rv_data_4_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78]
-signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_cond : unsigned(0 downto 0);
-signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iftrue : unsigned(31 downto 0);
-signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iffalse : unsigned(31 downto 0);
-signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_return_output : unsigned(31 downto 0);
+-- rv_data_3_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8]
+signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_cond : unsigned(0 downto 0);
+signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iftrue : unsigned(31 downto 0);
+signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iffalse : unsigned(31 downto 0);
+signal rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_right : unsigned(0 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_return_output : unsigned(0 downto 0);
 
--- rv_data_1_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2]
-signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_cond : unsigned(0 downto 0);
-signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iftrue : unsigned(31 downto 0);
-signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iffalse : unsigned(31 downto 0);
-signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output : unsigned(31 downto 0);
+-- rv_data_9_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7]
+signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_cond : unsigned(0 downto 0);
+signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iftrue : unsigned(31 downto 0);
+signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iffalse : unsigned(31 downto 0);
+signal rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_right : unsigned(2 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_right : unsigned(2 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_return_output : unsigned(0 downto 0);
 
--- rv_data_7_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b]
-signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_cond : unsigned(0 downto 0);
-signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iftrue : unsigned(31 downto 0);
-signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iffalse : unsigned(31 downto 0);
-signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_return_output : unsigned(31 downto 0);
+-- rv_data_6_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32]
+signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_cond : unsigned(0 downto 0);
+signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iftrue : unsigned(31 downto 0);
+signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iffalse : unsigned(31 downto 0);
+signal rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_return_output : unsigned(0 downto 0);
 
--- rv_data_10_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc]
-signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_cond : unsigned(0 downto 0);
-signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iftrue : unsigned(31 downto 0);
-signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iffalse : unsigned(31 downto 0);
-signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_return_output : unsigned(31 downto 0);
+-- rv_data_12_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2]
+signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_cond : unsigned(0 downto 0);
+signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iftrue : unsigned(31 downto 0);
+signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iffalse : unsigned(31 downto 0);
+signal rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_return_output : unsigned(0 downto 0);
 
--- rv_data_13_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53]
-signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_cond : unsigned(0 downto 0);
-signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iftrue : unsigned(31 downto 0);
-signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iffalse : unsigned(31 downto 0);
-signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_return_output : unsigned(31 downto 0);
+-- rv_data_15_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a]
+signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_cond : unsigned(0 downto 0);
+signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iftrue : unsigned(31 downto 0);
+signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iffalse : unsigned(31 downto 0);
+signal rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_right : unsigned(1 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_right : unsigned(2 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_return_output : unsigned(0 downto 0);
 
--- rv_data_2_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845]
-signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_cond : unsigned(0 downto 0);
-signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iftrue : unsigned(31 downto 0);
-signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iffalse : unsigned(31 downto 0);
-signal rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output : unsigned(31 downto 0);
+-- rv_data_4_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436]
+signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_cond : unsigned(0 downto 0);
+signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iftrue : unsigned(31 downto 0);
+signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iffalse : unsigned(31 downto 0);
+signal rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_right : unsigned(2 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_right : unsigned(0 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_return_output : unsigned(0 downto 0);
 
--- rv_data_5_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee]
-signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_cond : unsigned(0 downto 0);
-signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iftrue : unsigned(31 downto 0);
-signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iffalse : unsigned(31 downto 0);
-signal rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_return_output : unsigned(31 downto 0);
+-- rv_data_1_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75]
+signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_cond : unsigned(0 downto 0);
+signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iftrue : unsigned(31 downto 0);
+signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iffalse : unsigned(31 downto 0);
+signal rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_right : unsigned(2 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_return_output : unsigned(0 downto 0);
 
--- rv_data_11_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51]
-signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_cond : unsigned(0 downto 0);
-signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iftrue : unsigned(31 downto 0);
-signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iffalse : unsigned(31 downto 0);
-signal rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_return_output : unsigned(31 downto 0);
+-- rv_data_7_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79]
+signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_cond : unsigned(0 downto 0);
+signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iftrue : unsigned(31 downto 0);
+signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iffalse : unsigned(31 downto 0);
+signal rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_return_output : unsigned(0 downto 0);
 
--- rv_data_8_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c]
-signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_cond : unsigned(0 downto 0);
-signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iftrue : unsigned(31 downto 0);
-signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iffalse : unsigned(31 downto 0);
-signal rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_return_output : unsigned(31 downto 0);
+-- rv_data_10_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016]
+signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_cond : unsigned(0 downto 0);
+signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iftrue : unsigned(31 downto 0);
+signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iffalse : unsigned(31 downto 0);
+signal rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_return_output : unsigned(31 downto 0);
 
--- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92]
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_left : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_right : unsigned(3 downto 0);
-signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5]
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_left : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_right : unsigned(3 downto 0);
+signal BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_return_output : unsigned(0 downto 0);
 
--- rv_data_14_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102]
-signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_cond : unsigned(0 downto 0);
-signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iftrue : unsigned(31 downto 0);
-signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iffalse : unsigned(31 downto 0);
-signal rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_return_output : unsigned(31 downto 0);
+-- rv_data_13_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb]
+signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_cond : unsigned(0 downto 0);
+signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iftrue : unsigned(31 downto 0);
+signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iffalse : unsigned(31 downto 0);
+signal rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_return_output : unsigned(31 downto 0);
 
-function CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_53b0( ref_toks_0 : unsigned;
+function CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_b3fb( ref_toks_0 : unsigned;
  ref_toks_1 : unsigned;
  ref_toks_2 : unsigned;
  ref_toks_3 : unsigned;
@@ -231,22 +231,22 @@ function CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_53b0( ref_toks_0 :
   variable base : uint32_t_array_16_t; 
   variable return_output : uint32_t_array_16_t;
 begin
-      base.data(0) := ref_toks_0;
-      base.data(3) := ref_toks_1;
-      base.data(9) := ref_toks_2;
-      base.data(6) := ref_toks_3;
-      base.data(12) := ref_toks_4;
-      base.data(15) := ref_toks_5;
-      base.data(4) := ref_toks_6;
-      base.data(1) := ref_toks_7;
-      base.data(7) := ref_toks_8;
-      base.data(10) := ref_toks_9;
-      base.data(13) := ref_toks_10;
-      base.data(2) := ref_toks_11;
-      base.data(5) := ref_toks_12;
-      base.data(11) := ref_toks_13;
-      base.data(8) := ref_toks_14;
-      base.data(14) := ref_toks_15;
+      base.data(2) := ref_toks_0;
+      base.data(5) := ref_toks_1;
+      base.data(11) := ref_toks_2;
+      base.data(8) := ref_toks_3;
+      base.data(14) := ref_toks_4;
+      base.data(0) := ref_toks_5;
+      base.data(3) := ref_toks_6;
+      base.data(9) := ref_toks_7;
+      base.data(6) := ref_toks_8;
+      base.data(12) := ref_toks_9;
+      base.data(15) := ref_toks_10;
+      base.data(4) := ref_toks_11;
+      base.data(1) := ref_toks_12;
+      base.data(7) := ref_toks_13;
+      base.data(10) := ref_toks_14;
+      base.data(13) := ref_toks_15;
 
       return_output := base;
       return return_output; 
@@ -256,225 +256,225 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79 : entity work.BIN_OP_EQ_uint4_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4 : entity work.BIN_OP_EQ_uint4_t_uint2_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_return_output);
 
--- rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d : 0 clocks latency
-rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_cond,
-rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iftrue,
-rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iffalse,
-rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output);
+-- rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66 : 0 clocks latency
+rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_cond,
+rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iftrue,
+rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iffalse,
+rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413 : entity work.BIN_OP_EQ_uint4_t_uint2_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_return_output);
 
--- rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5 : 0 clocks latency
-rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_cond,
-rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iftrue,
-rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iffalse,
-rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output);
-
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_return_output);
-
--- rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c : 1 clocks latency
-rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef : 1 clocks latency
+rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_cond,
-rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iftrue,
-rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iffalse,
-rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_return_output);
+rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_cond,
+rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iftrue,
+rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iffalse,
+rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140 : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_return_output);
 
--- rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd : 1 clocks latency
-rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da : 1 clocks latency
+rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_cond,
-rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iftrue,
-rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iffalse,
-rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_return_output);
+rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_cond,
+rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iftrue,
+rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iffalse,
+rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_return_output);
 
--- rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e : 1 clocks latency
-rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459 : 1 clocks latency
+rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_cond,
-rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iftrue,
-rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iffalse,
-rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_return_output);
+rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_cond,
+rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iftrue,
+rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iffalse,
+rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_return_output);
 
--- rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877 : 1 clocks latency
-rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d : 1 clocks latency
+rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_cond,
-rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iftrue,
-rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iffalse,
-rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_return_output);
+rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_cond,
+rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iftrue,
+rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iffalse,
+rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971 : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef : entity work.BIN_OP_EQ_uint4_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_return_output);
 
--- rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78 : 1 clocks latency
-rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223 : 0 clocks latency
+rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_cond,
+rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iftrue,
+rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iffalse,
+rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output);
+
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880 : entity work.BIN_OP_EQ_uint4_t_uint2_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_return_output);
+
+-- rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8 : 0 clocks latency
+rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_cond,
+rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iftrue,
+rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iffalse,
+rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output);
+
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_return_output);
+
+-- rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7 : 1 clocks latency
+rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_cond,
-rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iftrue,
-rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iffalse,
-rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_return_output);
+rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_cond,
+rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iftrue,
+rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iffalse,
+rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c : entity work.BIN_OP_EQ_uint4_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278 : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_return_output);
 
--- rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2 : 0 clocks latency
-rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_cond,
-rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iftrue,
-rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iffalse,
-rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output);
-
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75 : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_return_output);
-
--- rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b : 1 clocks latency
-rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32 : 1 clocks latency
+rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_cond,
-rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iftrue,
-rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iffalse,
-rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_return_output);
+rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_cond,
+rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iftrue,
+rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iffalse,
+rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_return_output);
 
--- rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc : 1 clocks latency
-rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2 : 1 clocks latency
+rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_cond,
-rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iftrue,
-rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iffalse,
-rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_return_output);
+rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_cond,
+rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iftrue,
+rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iffalse,
+rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_return_output);
 
--- rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53 : 1 clocks latency
-rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a : 1 clocks latency
+rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_cond,
-rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iftrue,
-rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iffalse,
-rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_return_output);
+rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_cond,
+rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iftrue,
+rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iffalse,
+rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793 : entity work.BIN_OP_EQ_uint4_t_uint2_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4 : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_return_output);
 
--- rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845 : 0 clocks latency
-rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_cond,
-rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iftrue,
-rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iffalse,
-rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output);
-
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555 : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_return_output);
-
--- rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee : 1 clocks latency
-rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436 : 1 clocks latency
+rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_cond,
-rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iftrue,
-rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iffalse,
-rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_return_output);
+rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_cond,
+rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iftrue,
+rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iffalse,
+rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6 : entity work.BIN_OP_EQ_uint4_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_return_output);
 
--- rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51 : 1 clocks latency
-rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75 : 0 clocks latency
+rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_cond,
+rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iftrue,
+rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iffalse,
+rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output);
+
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18 : entity work.BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_return_output);
+
+-- rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79 : 1 clocks latency
+rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_cond,
-rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iftrue,
-rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iffalse,
-rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_return_output);
+rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_cond,
+rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iftrue,
+rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iffalse,
+rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_return_output);
 
--- rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c : 1 clocks latency
-rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016 : 1 clocks latency
+rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_cond,
-rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iftrue,
-rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iffalse,
-rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_return_output);
+rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_cond,
+rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iftrue,
+rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iffalse,
+rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_return_output);
 
--- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92 : 0 clocks latency
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_left,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_right,
-BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_return_output);
+-- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5 : 0 clocks latency
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5 : entity work.BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_left,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_right,
+BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_return_output);
 
--- rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102 : 1 clocks latency
-rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102 : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
+-- rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb : 1 clocks latency
+rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb : entity work.MUX_uint1_t_uint32_t_uint32_t_1CLK_9d348dba port map (
 clk,
-rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_cond,
-rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iftrue,
-rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iffalse,
-rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_return_output);
+rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_cond,
+rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iftrue,
+rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iffalse,
+rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_return_output);
 
 
 
@@ -486,43 +486,43 @@ process (
  var_dim_0,
  -- Registers
  -- Stage 0
- REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output,
- REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output,
- REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output,
- REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output,
+ REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output,
+ REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output,
+ REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output,
+ REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output,
  -- All submodule outputs
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_return_output,
- rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_return_output,
- rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_return_output,
- rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_return_output,
- rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_return_output,
- rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_return_output,
- rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_return_output,
- rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_return_output,
- rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_return_output,
- rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_return_output,
- rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_return_output,
- rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_return_output,
- rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_return_output,
- rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_return_output,
- rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_return_output,
- rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_return_output,
- BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_return_output,
- rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_return_output)
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_return_output,
+ rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_return_output,
+ rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_return_output,
+ rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_return_output,
+ rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_return_output,
+ rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_return_output,
+ rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_return_output,
+ rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_return_output,
+ rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_return_output,
+ rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_return_output,
+ rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_return_output,
+ rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_return_output,
+ rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_return_output,
+ rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_return_output,
+ rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_return_output,
+ rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_return_output,
+ BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_return_output,
+ rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
@@ -532,154 +532,154 @@ is
  variable VAR_return_output : uint32_t_array_16_t;
  variable VAR_base : chacha20_state;
  variable VAR_rv : uint32_t_array_16_t;
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5144_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_ac05_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c15_ecef_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b9bf_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_0298_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c16_2e43_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_afa7_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_e8b5_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_4546_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_3ca4_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_097f_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_890d_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_2aa8_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c16_ba98_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c15_adc6_return_output : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_7b50_return_output : unsigned(31 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_right : unsigned(1 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_right : unsigned(2 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_right : unsigned(2 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_right : unsigned(2 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_right : unsigned(1 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_right : unsigned(2 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_left : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_return_output : unsigned(0 downto 0);
- variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iftrue : unsigned(31 downto 0);
- variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iffalse : unsigned(31 downto 0);
- variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_return_output : unsigned(31 downto 0);
- variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_cond : unsigned(0 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_53b0_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_2a86_return_output : uint32_t_array_16_t;
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5817_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_d228_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c16_c037_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b2a5_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_9c47_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c15_fca0_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_916b_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_6aaa_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_1c61_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_0858_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_72a3_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_3f3d_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_4985_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c15_3905_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c16_f28c_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_201e_return_output : unsigned(31 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_right : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_right : unsigned(2 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_right : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_right : unsigned(2 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_right : unsigned(2 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_right : unsigned(2 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_left : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_return_output : unsigned(0 downto 0);
+ variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iftrue : unsigned(31 downto 0);
+ variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iffalse : unsigned(31 downto 0);
+ variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_return_output : unsigned(31 downto 0);
+ variable VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_cond : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_b3fb_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_409e_return_output : uint32_t_array_16_t;
 begin
  -- Constants and things derived from constants alone
      -- Submodule level 0
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_right := to_unsigned(2, 2);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_right := to_unsigned(10, 4);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_right := to_unsigned(4, 3);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_right := to_unsigned(6, 3);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_right := to_unsigned(8, 4);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_right := to_unsigned(13, 4);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_right := to_unsigned(12, 4);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_right := to_unsigned(15, 4);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_right := to_unsigned(7, 3);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_right := to_unsigned(1, 1);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_right := to_unsigned(5, 3);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_right := to_unsigned(3, 2);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_right := to_unsigned(0, 1);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_right := to_unsigned(11, 4);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_right := to_unsigned(9, 4);
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_right := to_unsigned(14, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_right := to_unsigned(12, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_right := to_unsigned(10, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_right := to_unsigned(11, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_right := to_unsigned(7, 3);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_right := to_unsigned(6, 3);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_right := to_unsigned(13, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_right := to_unsigned(4, 3);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_right := to_unsigned(3, 2);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_right := to_unsigned(15, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_right := to_unsigned(0, 1);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_right := to_unsigned(1, 1);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_right := to_unsigned(8, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_right := to_unsigned(2, 2);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_right := to_unsigned(9, 4);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_right := to_unsigned(5, 3);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_right := to_unsigned(14, 4);
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -691,383 +691,383 @@ begin
      VAR_var_dim_0 := var_dim_0;
 
      -- Submodule level 0
-     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iftrue := VAR_elem_val;
-     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iftrue := VAR_elem_val;
-     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iftrue := VAR_elem_val;
-     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iftrue := VAR_elem_val;
-     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iftrue := VAR_elem_val;
-     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iftrue := VAR_elem_val;
-     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iftrue := VAR_elem_val;
-     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iftrue := VAR_elem_val;
-     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iftrue := VAR_elem_val;
-     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iftrue := VAR_elem_val;
-     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iftrue := VAR_elem_val;
-     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iftrue := VAR_elem_val;
-     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iftrue := VAR_elem_val;
-     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iftrue := VAR_elem_val;
-     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iftrue := VAR_elem_val;
-     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iftrue := VAR_elem_val;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_left := VAR_var_dim_0;
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_left := VAR_var_dim_0;
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5144] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5144_return_output := VAR_ref_toks_0.state(0);
+     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iftrue := VAR_elem_val;
+     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iftrue := VAR_elem_val;
+     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iftrue := VAR_elem_val;
+     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iftrue := VAR_elem_val;
+     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iftrue := VAR_elem_val;
+     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iftrue := VAR_elem_val;
+     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iftrue := VAR_elem_val;
+     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iftrue := VAR_elem_val;
+     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iftrue := VAR_elem_val;
+     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iftrue := VAR_elem_val;
+     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iftrue := VAR_elem_val;
+     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iftrue := VAR_elem_val;
+     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iftrue := VAR_elem_val;
+     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iftrue := VAR_elem_val;
+     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iftrue := VAR_elem_val;
+     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iftrue := VAR_elem_val;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_left := VAR_var_dim_0;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_left := VAR_var_dim_0;
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_1c61] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_1c61_return_output := VAR_ref_toks_0.state(6);
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971] LATENCY=0
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_4985] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_4985_return_output := VAR_ref_toks_0.state(1);
+
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b2a5] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b2a5_return_output := VAR_ref_toks_0.state(8);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c16_c037] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c16_c037_return_output := VAR_ref_toks_0.state(11);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_return_output;
 
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_097f] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_097f_return_output := VAR_ref_toks_0.state(13);
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_afa7] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_afa7_return_output := VAR_ref_toks_0.state(4);
-
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555] LATENCY=0
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64] LATENCY=0
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_return_output;
 
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_ac05] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_ac05_return_output := VAR_ref_toks_0.state(3);
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_4546] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_4546_return_output := VAR_ref_toks_0.state(7);
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_7b50] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_7b50_return_output := VAR_ref_toks_0.state(14);
-
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2] LATENCY=0
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_return_output;
 
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b9bf] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b9bf_return_output := VAR_ref_toks_0.state(6);
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_3f3d] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_3f3d_return_output := VAR_ref_toks_0.state(4);
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_201e] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_201e_return_output := VAR_ref_toks_0.state(13);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_return_output;
 
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c15_adc6] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c15_adc6_return_output := VAR_ref_toks_0.state(8);
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_9c47] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_9c47_return_output := VAR_ref_toks_0.state(14);
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_6aaa] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_6aaa_return_output := VAR_ref_toks_0.state(9);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_return_output;
 
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c15_ecef] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c15_ecef_return_output := VAR_ref_toks_0.state(9);
-
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140] LATENCY=0
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c15_fca0] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c15_fca0_return_output := VAR_ref_toks_0.state(0);
+
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_d228] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_d228_return_output := VAR_ref_toks_0.state(5);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_return_output;
 
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c16_ba98] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c16_ba98_return_output := VAR_ref_toks_0.state(11);
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_890d] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_890d_return_output := VAR_ref_toks_0.state(2);
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_2aa8] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_2aa8_return_output := VAR_ref_toks_0.state(5);
-
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c] LATENCY=0
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_72a3] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_72a3_return_output := VAR_ref_toks_0.state(15);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c15_3905] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c15_3905_return_output := VAR_ref_toks_0.state(7);
+
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_916b] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_916b_return_output := VAR_ref_toks_0.state(3);
+
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c16_f28c] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c16_f28c_return_output := VAR_ref_toks_0.state(10);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_return_output;
 
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c16_2e43] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c16_2e43_return_output := VAR_ref_toks_0.state(15);
-
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813] LATENCY=0
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_0858] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_0858_return_output := VAR_ref_toks_0.state(12);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_return_output;
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_return_output;
 
-     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79] LATENCY=0
+     -- CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5817] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5817_return_output := VAR_ref_toks_0.state(2);
+
+     -- BIN_OP_EQ[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_left;
-     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_right;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_left <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_left;
+     BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_right <= VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_right;
      -- Outputs
-     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_return_output;
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_3ca4] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_3ca4_return_output := VAR_ref_toks_0.state(10);
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_0298] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_0298_return_output := VAR_ref_toks_0.state(12);
-
-     -- CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_e8b5] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_e8b5_return_output := VAR_ref_toks_0.state(1);
+     VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_return_output := BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_return_output;
 
      -- Submodule level 1
-     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_b793_return_output;
-     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_b555_return_output;
-     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_c813_return_output;
-     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_00f9_return_output;
-     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6e92_return_output;
-     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_ac79_return_output;
-     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_3413_return_output;
-     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_ffb8_return_output;
-     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_9140_return_output;
-     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_f83e_return_output;
-     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_8ab8_return_output;
-     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_e971_return_output;
-     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_ef2c_return_output;
-     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_bd75_return_output;
-     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_fcc2_return_output;
-     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_4c64_return_output;
-     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5144_return_output;
-     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_3ca4_return_output;
-     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c16_ba98_return_output;
-     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_0298_return_output;
-     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_097f_return_output;
-     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_7b50_return_output;
-     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c16_2e43_return_output;
-     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_e8b5_return_output;
-     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_890d_return_output;
-     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_ac05_return_output;
-     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_afa7_return_output;
-     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_2aa8_return_output;
-     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b9bf_return_output;
-     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_4546_return_output;
-     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c15_adc6_return_output;
-     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c15_ecef_return_output;
-     -- rv_data_3_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5] LATENCY=0
+     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l101_c5_a7d4_return_output;
+     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l107_c5_f4e6_return_output;
+     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l113_c5_fc18_return_output;
+     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l119_c5_5344_return_output;
+     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l125_c5_6fa5_return_output;
+     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l35_c5_96f4_return_output;
+     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l41_c5_9e0f_return_output;
+     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l47_c5_18e0_return_output;
+     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l53_c5_8973_return_output;
+     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l59_c5_c7a3_return_output;
+     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l65_c5_95ef_return_output;
+     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l71_c5_c880_return_output;
+     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l77_c5_1b7e_return_output;
+     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l83_c5_2278_return_output;
+     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l89_c5_a99a_return_output;
+     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_cond := VAR_BIN_OP_EQ_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l95_c5_7e23_return_output;
+     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_0_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l22_c15_fca0_return_output;
+     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_10_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l31_c16_f28c_return_output;
+     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_11_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l19_c16_c037_return_output;
+     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_12_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l26_c16_0858_return_output;
+     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_13_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l32_c16_201e_return_output;
+     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_14_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l21_c16_9c47_return_output;
+     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_15_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l27_c16_72a3_return_output;
+     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_1_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l29_c15_4985_return_output;
+     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_2_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l17_c15_5817_return_output;
+     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_3_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l23_c15_916b_return_output;
+     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_4_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l28_c15_3f3d_return_output;
+     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_5_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l18_c15_d228_return_output;
+     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_6_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l25_c15_1c61_return_output;
+     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_7_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l30_c15_3905_return_output;
+     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_8_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l20_c15_b2a5_return_output;
+     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iffalse := VAR_CONST_REF_RD_uint32_t_chacha20_state_state_9_d41d_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l24_c15_6aaa_return_output;
+     -- rv_data_9_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7] LATENCY=1
      -- Inputs
-     rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_cond <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_cond;
-     rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iftrue <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iftrue;
-     rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iffalse <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_iffalse;
+     rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_cond <= VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_cond;
+     rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iftrue <= VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iftrue;
+     rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iffalse <= VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_iffalse;
+
+     -- rv_data_7_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79] LATENCY=1
+     -- Inputs
+     rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_cond <= VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_cond;
+     rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iftrue <= VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iftrue;
+     rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iffalse <= VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_iffalse;
+
+     -- rv_data_4_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436] LATENCY=1
+     -- Inputs
+     rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_cond <= VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_cond;
+     rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iftrue <= VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iftrue;
+     rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iffalse <= VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_iffalse;
+
+     -- rv_data_14_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d] LATENCY=1
+     -- Inputs
+     rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_cond <= VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_cond;
+     rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iftrue <= VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iftrue;
+     rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iffalse <= VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_iffalse;
+
+     -- rv_data_2_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66] LATENCY=0
+     -- Inputs
+     rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_cond <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_cond;
+     rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iftrue <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iftrue;
+     rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iffalse <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_iffalse;
      -- Outputs
-     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output := rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output;
+     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output := rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output;
 
-     -- rv_data_8_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c] LATENCY=1
+     -- rv_data_6_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32] LATENCY=1
      -- Inputs
-     rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_cond <= VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_cond;
-     rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iftrue <= VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iftrue;
-     rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iffalse <= VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_iffalse;
+     rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_cond <= VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_cond;
+     rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iftrue <= VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iftrue;
+     rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iffalse <= VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_iffalse;
 
-     -- rv_data_15_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877] LATENCY=1
+     -- rv_data_1_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75] LATENCY=0
      -- Inputs
-     rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_cond <= VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_cond;
-     rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iftrue <= VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iftrue;
-     rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iffalse <= VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_iffalse;
-
-     -- rv_data_11_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51] LATENCY=1
-     -- Inputs
-     rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_cond <= VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_cond;
-     rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iftrue <= VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iftrue;
-     rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iffalse <= VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_iffalse;
-
-     -- rv_data_10_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc] LATENCY=1
-     -- Inputs
-     rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_cond <= VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_cond;
-     rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iftrue <= VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iftrue;
-     rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iffalse <= VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_iffalse;
-
-     -- rv_data_7_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b] LATENCY=1
-     -- Inputs
-     rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_cond <= VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_cond;
-     rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iftrue <= VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iftrue;
-     rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iffalse <= VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_iffalse;
-
-     -- rv_data_12_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e] LATENCY=1
-     -- Inputs
-     rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_cond <= VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_cond;
-     rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iftrue <= VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iftrue;
-     rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iffalse <= VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_iffalse;
-
-     -- rv_data_14_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102] LATENCY=1
-     -- Inputs
-     rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_cond <= VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_cond;
-     rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iftrue <= VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iftrue;
-     rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iffalse <= VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_iffalse;
-
-     -- rv_data_6_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd] LATENCY=1
-     -- Inputs
-     rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_cond <= VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_cond;
-     rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iftrue <= VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iftrue;
-     rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iffalse <= VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_iffalse;
-
-     -- rv_data_9_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c] LATENCY=1
-     -- Inputs
-     rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_cond <= VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_cond;
-     rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iftrue <= VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iftrue;
-     rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iffalse <= VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_iffalse;
-
-     -- rv_data_5_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee] LATENCY=1
-     -- Inputs
-     rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_cond <= VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_cond;
-     rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iftrue <= VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iftrue;
-     rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iffalse <= VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_iffalse;
-
-     -- rv_data_4_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78] LATENCY=1
-     -- Inputs
-     rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_cond <= VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_cond;
-     rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iftrue <= VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iftrue;
-     rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iffalse <= VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_iffalse;
-
-     -- rv_data_1_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2] LATENCY=0
-     -- Inputs
-     rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_cond <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_cond;
-     rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iftrue <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iftrue;
-     rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iffalse <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_iffalse;
+     rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_cond <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_cond;
+     rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iftrue <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iftrue;
+     rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iffalse <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_iffalse;
      -- Outputs
-     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output := rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output;
+     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output := rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output;
 
-     -- rv_data_0_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d] LATENCY=0
+     -- rv_data_11_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da] LATENCY=1
      -- Inputs
-     rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_cond <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_cond;
-     rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iftrue <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iftrue;
-     rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iffalse <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_iffalse;
+     rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_cond <= VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_cond;
+     rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iftrue <= VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iftrue;
+     rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iffalse <= VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_iffalse;
+
+     -- rv_data_8_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459] LATENCY=1
+     -- Inputs
+     rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_cond <= VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_cond;
+     rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iftrue <= VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iftrue;
+     rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iffalse <= VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_iffalse;
+
+     -- rv_data_12_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2] LATENCY=1
+     -- Inputs
+     rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_cond <= VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_cond;
+     rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iftrue <= VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iftrue;
+     rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iffalse <= VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_iffalse;
+
+     -- rv_data_3_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8] LATENCY=0
+     -- Inputs
+     rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_cond <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_cond;
+     rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iftrue <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iftrue;
+     rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iffalse <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_iffalse;
      -- Outputs
-     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output := rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output;
+     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output := rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output;
 
-     -- rv_data_2_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845] LATENCY=0
+     -- rv_data_10_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016] LATENCY=1
      -- Inputs
-     rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_cond <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_cond;
-     rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iftrue <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iftrue;
-     rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iffalse <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_iffalse;
+     rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_cond <= VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_cond;
+     rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iftrue <= VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iftrue;
+     rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iffalse <= VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_iffalse;
+
+     -- rv_data_13_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb] LATENCY=1
+     -- Inputs
+     rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_cond <= VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_cond;
+     rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iftrue <= VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iftrue;
+     rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iffalse <= VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_iffalse;
+
+     -- rv_data_15_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a] LATENCY=1
+     -- Inputs
+     rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_cond <= VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_cond;
+     rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iftrue <= VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iftrue;
+     rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iffalse <= VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_iffalse;
+
+     -- rv_data_5_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef] LATENCY=1
+     -- Inputs
+     rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_cond <= VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_cond;
+     rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iftrue <= VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iftrue;
+     rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iffalse <= VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_iffalse;
+
+     -- rv_data_0_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223] LATENCY=0
+     -- Inputs
+     rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_cond <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_cond;
+     rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iftrue <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iftrue;
+     rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iffalse <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_iffalse;
      -- Outputs
-     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output := rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output;
-
-     -- rv_data_13_MUX[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53] LATENCY=1
-     -- Inputs
-     rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_cond <= VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_cond;
-     rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iftrue <= VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iftrue;
-     rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iffalse <= VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_iffalse;
+     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output := rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output;
 
      -- Submodule level 2
      -- Write to comb signals
-     COMB_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output;
-     COMB_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output;
-     COMB_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output;
-     COMB_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output;
+     COMB_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output <= VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output;
+     COMB_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output <= VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output;
+     COMB_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output <= VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output;
+     COMB_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output <= VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output;
    elsif STAGE = 1 then
      -- Read from prev stage
-     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output := REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output;
-     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output := REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output;
-     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output := REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output;
-     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output := REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output;
+     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output := REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output;
+     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output := REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output;
+     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output := REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output;
+     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output := REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output;
      -- Submodule outputs
-     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_return_output := rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_return_output;
-     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_return_output := rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_return_output;
-     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_return_output := rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_return_output;
-     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_return_output := rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_return_output;
-     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_return_output := rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_return_output;
-     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_return_output := rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_return_output;
-     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_return_output := rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_return_output;
-     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_return_output := rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_return_output;
-     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_return_output := rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_return_output;
-     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_return_output := rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_return_output;
-     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_return_output := rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_return_output;
-     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_return_output := rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_return_output;
+     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_return_output := rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_return_output;
+     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_return_output := rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_return_output;
+     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_return_output := rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_return_output;
+     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_return_output := rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_return_output;
+     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_return_output := rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_return_output;
+     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_return_output := rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_return_output;
+     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_return_output := rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_return_output;
+     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_return_output := rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_return_output;
+     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_return_output := rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_return_output;
+     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_return_output := rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_return_output;
+     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_return_output := rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_return_output;
+     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_return_output := rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_return_output;
 
      -- Submodule level 0
-     -- CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_53b0[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_2a86] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_53b0_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_2a86_return_output := CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_53b0(
-     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output,
-     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output,
-     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_1c0c_return_output,
-     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_0bfd_return_output,
-     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_801e_return_output,
-     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_7877_return_output,
-     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_0b78_return_output,
-     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output,
-     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_f80b_return_output,
-     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_ecfc_return_output,
-     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_4d53_return_output,
-     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output,
-     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_a0ee_return_output,
-     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_cc51_return_output,
-     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_664c_return_output,
-     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_2102_return_output);
+     -- CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_b3fb[VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_409e] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_b3fb_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_409e_return_output := CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_b3fb(
+     VAR_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output,
+     VAR_rv_data_5_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_30ef_return_output,
+     VAR_rv_data_11_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l46_c2_54da_return_output,
+     VAR_rv_data_8_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l52_c2_9459_return_output,
+     VAR_rv_data_14_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l58_c2_bf1d_return_output,
+     VAR_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output,
+     VAR_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output,
+     VAR_rv_data_9_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_a8f7_return_output,
+     VAR_rv_data_6_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l82_c2_aa32_return_output,
+     VAR_rv_data_12_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l88_c2_f1e2_return_output,
+     VAR_rv_data_15_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l94_c2_059a_return_output,
+     VAR_rv_data_4_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_6436_return_output,
+     VAR_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output,
+     VAR_rv_data_7_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l112_c2_eb79_return_output,
+     VAR_rv_data_10_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l118_c2_9016_return_output,
+     VAR_rv_data_13_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l124_c2_b6eb_return_output);
 
      -- Submodule level 1
-     VAR_return_output := VAR_CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_53b0_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_2a86_return_output;
+     VAR_return_output := VAR_CONST_REF_RD_uint32_t_array_16_t_uint32_t_array_16_t_b3fb_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l131_c10_409e_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;
@@ -1080,10 +1080,10 @@ process(clk) is
 begin
  if rising_edge(clk) then
      -- Stage 0
-     REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output <= COMB_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_828d_return_output;
-     REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output <= COMB_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l40_c2_2be5_return_output;
-     REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output <= COMB_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l76_c2_35b2_return_output;
-     REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output <= COMB_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l100_c2_c845_return_output;
+     REG_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output <= COMB_STAGE0_rv_data_2_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l34_c2_5a66_return_output;
+     REG_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output <= COMB_STAGE0_rv_data_0_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l64_c2_f223_return_output;
+     REG_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output <= COMB_STAGE0_rv_data_3_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l70_c2_06a8_return_output;
+     REG_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output <= COMB_STAGE0_rv_data_1_MUX_VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_c_l106_c2_cc75_return_output;
  end if;
 end process;
 

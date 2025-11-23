@@ -23,339 +23,339 @@ attribute mark_debug : string;
 constant ADDED_PIPELINE_LATENCY : integer := 0;
 -- All of the wires/regs in function
 -- Each function instance gets signals
--- chacha20_init[chacha20_h_l216_c26_87d0]
-signal chacha20_init_chacha20_h_l216_c26_87d0_key : uint8_t_32;
-signal chacha20_init_chacha20_h_l216_c26_87d0_nonce : uint8_t_12;
-signal chacha20_init_chacha20_h_l216_c26_87d0_counter : unsigned(31 downto 0);
-signal chacha20_init_chacha20_h_l216_c26_87d0_return_output : chacha20_state;
-
--- chacha20_block[chacha20_h_l217_c26_3364]
-signal chacha20_block_chacha20_h_l217_c26_3364_state : chacha20_state;
-signal chacha20_block_chacha20_h_l217_c26_3364_return_output : chacha20_state;
-
--- chacha20_state_to_bytes[chacha20_h_l220_c38_fc33]
-signal chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_x : chacha20_state;
-signal chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_return_output : uint8_t_array_64_t;
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR[chacha20_h_l228_c19_5b98]
-signal FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
-signal FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
+-- chacha20_init[chacha20_h_l216_c26_aa2f]
+signal chacha20_init_chacha20_h_l216_c26_aa2f_key : uint8_t_32;
+signal chacha20_init_chacha20_h_l216_c26_aa2f_nonce : uint8_t_12;
+signal chacha20_init_chacha20_h_l216_c26_aa2f_counter : unsigned(31 downto 0);
+signal chacha20_init_chacha20_h_l216_c26_aa2f_return_output : chacha20_state;
+
+-- chacha20_block[chacha20_h_l217_c26_5850]
+signal chacha20_block_chacha20_h_l217_c26_5850_state : chacha20_state;
+signal chacha20_block_chacha20_h_l217_c26_5850_return_output : chacha20_state;
+
+-- chacha20_state_to_bytes[chacha20_h_l220_c38_09d5]
+signal chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_x : chacha20_state;
+signal chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_return_output : uint8_t_array_64_t;
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR[chacha20_h_l228_c19_3553]
+signal FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+signal FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
 
 function CONST_REF_RD_uint8_t_64_uint8_t_64_62ba( ref_toks_0 : unsigned;
  ref_toks_1 : unsigned;
@@ -511,406 +511,406 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- chacha20_init_chacha20_h_l216_c26_87d0 : 0 clocks latency
-chacha20_init_chacha20_h_l216_c26_87d0 : entity work.chacha20_init_0CLK_50a1b8d0 port map (
-chacha20_init_chacha20_h_l216_c26_87d0_key,
-chacha20_init_chacha20_h_l216_c26_87d0_nonce,
-chacha20_init_chacha20_h_l216_c26_87d0_counter,
-chacha20_init_chacha20_h_l216_c26_87d0_return_output);
-
--- chacha20_block_chacha20_h_l217_c26_3364 : 0 clocks latency
-chacha20_block_chacha20_h_l217_c26_3364 : entity work.chacha20_block_0CLK_f1a496f6 port map (
-chacha20_block_chacha20_h_l217_c26_3364_state,
-chacha20_block_chacha20_h_l217_c26_3364_return_output);
-
--- chacha20_state_to_bytes_chacha20_h_l220_c38_fc33 : 0 clocks latency
-chacha20_state_to_bytes_chacha20_h_l220_c38_fc33 : entity work.chacha20_state_to_bytes_0CLK_d3fba2d7 port map (
-chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_x,
-chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
-
--- FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : 0 clocks latency
-FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
-FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left,
-FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right,
-FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
+-- chacha20_init_chacha20_h_l216_c26_aa2f : 0 clocks latency
+chacha20_init_chacha20_h_l216_c26_aa2f : entity work.chacha20_init_0CLK_50a1b8d0 port map (
+chacha20_init_chacha20_h_l216_c26_aa2f_key,
+chacha20_init_chacha20_h_l216_c26_aa2f_nonce,
+chacha20_init_chacha20_h_l216_c26_aa2f_counter,
+chacha20_init_chacha20_h_l216_c26_aa2f_return_output);
+
+-- chacha20_block_chacha20_h_l217_c26_5850 : 0 clocks latency
+chacha20_block_chacha20_h_l217_c26_5850 : entity work.chacha20_block_0CLK_f1a496f6 port map (
+chacha20_block_chacha20_h_l217_c26_5850_state,
+chacha20_block_chacha20_h_l217_c26_5850_return_output);
+
+-- chacha20_state_to_bytes_chacha20_h_l220_c38_09d5 : 0 clocks latency
+chacha20_state_to_bytes_chacha20_h_l220_c38_09d5 : entity work.chacha20_state_to_bytes_0CLK_d3fba2d7 port map (
+chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_x,
+chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
+
+-- FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553 : 0 clocks latency
+FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553 : entity work.BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78 port map (
+FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_left,
+FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_right,
+FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
 
 
 
@@ -919,425 +919,425 @@ process (
  -- Inputs
  inputs,
  -- All submodule outputs
- chacha20_init_chacha20_h_l216_c26_87d0_return_output,
- chacha20_block_chacha20_h_l217_c26_3364_return_output,
- chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
- FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output)
+ chacha20_init_chacha20_h_l216_c26_aa2f_return_output,
+ chacha20_block_chacha20_h_l217_c26_5850_return_output,
+ chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+ FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
  variable VAR_return_output : axis512_t;
  variable VAR_inputs : chacha20_decrypt_loop_body_in_t;
  variable VAR_in_data : uint8_t_64;
- variable VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output : uint8_t_64;
+ variable VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output : uint8_t_64;
  variable VAR_key : uint8_t_32;
- variable VAR_CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d_chacha20_h_l212_c21_171e_return_output : uint8_t_32;
+ variable VAR_CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d_chacha20_h_l212_c21_9d24_return_output : uint8_t_32;
  variable VAR_nonce : uint8_t_12;
- variable VAR_CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d_chacha20_h_l213_c23_6b12_return_output : uint8_t_12;
+ variable VAR_CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d_chacha20_h_l213_c23_7950_return_output : uint8_t_12;
  variable VAR_counter : unsigned(31 downto 0);
- variable VAR_CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d_chacha20_h_l214_c22_5b67_return_output : unsigned(31 downto 0);
+ variable VAR_CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d_chacha20_h_l214_c22_73f9_return_output : unsigned(31 downto 0);
  variable VAR_state : chacha20_state;
- variable VAR_chacha20_init_chacha20_h_l216_c26_87d0_key : uint8_t_32;
- variable VAR_chacha20_init_chacha20_h_l216_c26_87d0_nonce : uint8_t_12;
- variable VAR_chacha20_init_chacha20_h_l216_c26_87d0_counter : unsigned(31 downto 0);
- variable VAR_chacha20_init_chacha20_h_l216_c26_87d0_return_output : chacha20_state;
+ variable VAR_chacha20_init_chacha20_h_l216_c26_aa2f_key : uint8_t_32;
+ variable VAR_chacha20_init_chacha20_h_l216_c26_aa2f_nonce : uint8_t_12;
+ variable VAR_chacha20_init_chacha20_h_l216_c26_aa2f_counter : unsigned(31 downto 0);
+ variable VAR_chacha20_init_chacha20_h_l216_c26_aa2f_return_output : chacha20_state;
  variable VAR_block : chacha20_state;
- variable VAR_chacha20_block_chacha20_h_l217_c26_3364_state : chacha20_state;
- variable VAR_chacha20_block_chacha20_h_l217_c26_3364_return_output : chacha20_state;
+ variable VAR_chacha20_block_chacha20_h_l217_c26_5850_state : chacha20_state;
+ variable VAR_chacha20_block_chacha20_h_l217_c26_5850_return_output : chacha20_state;
  variable VAR_block_bytes_t : uint8_t_array_64_t;
- variable VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_x : chacha20_state;
- variable VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_return_output : uint8_t_array_64_t;
+ variable VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_x : chacha20_state;
+ variable VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_return_output : uint8_t_array_64_t;
  variable VAR_block_bytes : uint8_t_64;
- variable VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output : uint8_t_64;
+ variable VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output : uint8_t_64;
  variable VAR_out_data : uint8_t_64;
  variable VAR_i : unsigned(31 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c19_3381_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c32_a9a4_return_output : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right : unsigned(7 downto 0);
- variable VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c19_5418_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_left : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c32_7168_return_output : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_right : unsigned(7 downto 0);
+ variable VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output : unsigned(7 downto 0);
  variable VAR_axis_out : axis512_t;
- variable VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d_chacha20_h_l231_c24_e8ef_return_output : axis512_t;
- variable VAR_CONST_REF_RD_uint8_t_64_uint8_t_64_62ba_chacha20_h_l233_c20_6c97_return_output : uint8_t_64;
- variable VAR_CONST_REF_RD_axis512_t_axis512_t_774e_chacha20_h_l234_c10_53f5_return_output : axis512_t;
+ variable VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d_chacha20_h_l231_c24_706a_return_output : axis512_t;
+ variable VAR_CONST_REF_RD_uint8_t_64_uint8_t_64_62ba_chacha20_h_l233_c20_5c3b_return_output : uint8_t_64;
+ variable VAR_CONST_REF_RD_axis512_t_axis512_t_774e_chacha20_h_l234_c10_5a6d_return_output : axis512_t;
 begin
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
@@ -1348,1091 +1348,1091 @@ begin
      VAR_inputs := inputs;
 
      -- Submodule level 0
-     -- CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d[chacha20_h_l214_c22_5b67] LATENCY=0
-     VAR_CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d_chacha20_h_l214_c22_5b67_return_output := VAR_inputs.counter;
+     -- CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d[chacha20_h_l213_c23_7950] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d_chacha20_h_l213_c23_7950_return_output := VAR_inputs.nonce;
 
-     -- CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d[chacha20_h_l231_c24_e8ef] LATENCY=0
-     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d_chacha20_h_l231_c24_e8ef_return_output := VAR_inputs.axis_in;
+     -- CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d[chacha20_h_l212_c21_9d24] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d_chacha20_h_l212_c21_9d24_return_output := VAR_inputs.key;
 
-     -- CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d[chacha20_h_l212_c21_171e] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d_chacha20_h_l212_c21_171e_return_output := VAR_inputs.key;
+     -- CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d[chacha20_h_l211_c25_ecc1] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output := VAR_inputs.axis_in.tdata;
 
-     -- CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d[chacha20_h_l211_c25_926b] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output := VAR_inputs.axis_in.tdata;
+     -- CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d[chacha20_h_l214_c22_73f9] LATENCY=0
+     VAR_CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d_chacha20_h_l214_c22_73f9_return_output := VAR_inputs.counter;
 
-     -- CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d[chacha20_h_l213_c23_6b12] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d_chacha20_h_l213_c23_6b12_return_output := VAR_inputs.nonce;
+     -- CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d[chacha20_h_l231_c24_706a] LATENCY=0
+     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d_chacha20_h_l231_c24_706a_return_output := VAR_inputs.axis_in;
 
      -- Submodule level 1
-     VAR_chacha20_init_chacha20_h_l216_c26_87d0_counter := VAR_CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d_chacha20_h_l214_c22_5b67_return_output;
-     VAR_chacha20_init_chacha20_h_l216_c26_87d0_nonce := VAR_CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d_chacha20_h_l213_c23_6b12_return_output;
-     VAR_chacha20_init_chacha20_h_l216_c26_87d0_key := VAR_CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d_chacha20_h_l212_c21_171e_return_output;
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(7);
+     VAR_chacha20_init_chacha20_h_l216_c26_aa2f_counter := VAR_CONST_REF_RD_uint32_t_chacha20_decrypt_loop_body_in_t_counter_d41d_chacha20_h_l214_c22_73f9_return_output;
+     VAR_chacha20_init_chacha20_h_l216_c26_aa2f_nonce := VAR_CONST_REF_RD_uint8_t_12_chacha20_decrypt_loop_body_in_t_nonce_d41d_chacha20_h_l213_c23_7950_return_output;
+     VAR_chacha20_init_chacha20_h_l216_c26_aa2f_key := VAR_CONST_REF_RD_uint8_t_32_chacha20_decrypt_loop_body_in_t_key_d41d_chacha20_h_l212_c21_9d24_return_output;
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(39);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(26);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(59);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(41);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(10);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(51);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(19);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(1);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(40);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(46);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(23);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(15);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(7);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(21);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(46);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(38);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(5);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(4);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(63);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(24);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(61);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(52);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(12);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(19);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(17);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(43);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(57);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(35);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(41);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(10);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(27);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(0);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(36);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(47);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(47);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(5);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(55);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(29);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(60);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(48);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(1);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(55);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(15);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(54);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(44);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(2);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(25);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(39);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(28);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(3);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(18);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(32);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(44);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(45);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(23);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(8);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(40);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(61);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(34);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(33);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(20);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(30);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(62);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(9);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(36);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(13);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(49);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(12);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(14);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(17);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(59);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(37);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(60);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(11);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(16);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(31);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(57);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(50);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(63);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(58);
-
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(6);
-
-     -- chacha20_init[chacha20_h_l216_c26_87d0] LATENCY=0
+     -- chacha20_init[chacha20_h_l216_c26_aa2f] LATENCY=0
      -- Inputs
-     chacha20_init_chacha20_h_l216_c26_87d0_key <= VAR_chacha20_init_chacha20_h_l216_c26_87d0_key;
-     chacha20_init_chacha20_h_l216_c26_87d0_nonce <= VAR_chacha20_init_chacha20_h_l216_c26_87d0_nonce;
-     chacha20_init_chacha20_h_l216_c26_87d0_counter <= VAR_chacha20_init_chacha20_h_l216_c26_87d0_counter;
+     chacha20_init_chacha20_h_l216_c26_aa2f_key <= VAR_chacha20_init_chacha20_h_l216_c26_aa2f_key;
+     chacha20_init_chacha20_h_l216_c26_aa2f_nonce <= VAR_chacha20_init_chacha20_h_l216_c26_aa2f_nonce;
+     chacha20_init_chacha20_h_l216_c26_aa2f_counter <= VAR_chacha20_init_chacha20_h_l216_c26_aa2f_counter;
      -- Outputs
-     VAR_chacha20_init_chacha20_h_l216_c26_87d0_return_output := chacha20_init_chacha20_h_l216_c26_87d0_return_output;
+     VAR_chacha20_init_chacha20_h_l216_c26_aa2f_return_output := chacha20_init_chacha20_h_l216_c26_aa2f_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(27);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(53);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(42);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(3);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(56);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(24);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(22);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(37);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d[chacha20_h_l228_c19_3381] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c19_3381_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_926b_return_output(53);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(38);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(49);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(50);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(21);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(28);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(30);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(20);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(58);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(42);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(11);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(13);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(54);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(31);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(51);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(62);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(0);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(33);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(25);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(43);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(34);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(45);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(26);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(52);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(35);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(6);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(4);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(2);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(14);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(16);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(18);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(48);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(29);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(56);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(9);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(8);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(32);
+
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d[chacha20_h_l228_c19_5418] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c19_5418_return_output := VAR_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_axis_in_tdata_d41d_chacha20_h_l211_c25_ecc1_return_output(22);
 
      -- Submodule level 2
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c19_3381_return_output;
-     VAR_chacha20_block_chacha20_h_l217_c26_3364_state := VAR_chacha20_init_chacha20_h_l216_c26_87d0_return_output;
-     -- chacha20_block[chacha20_h_l217_c26_3364] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_left := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c19_5418_return_output;
+     VAR_chacha20_block_chacha20_h_l217_c26_5850_state := VAR_chacha20_init_chacha20_h_l216_c26_aa2f_return_output;
+     -- chacha20_block[chacha20_h_l217_c26_5850] LATENCY=0
      -- Inputs
-     chacha20_block_chacha20_h_l217_c26_3364_state <= VAR_chacha20_block_chacha20_h_l217_c26_3364_state;
+     chacha20_block_chacha20_h_l217_c26_5850_state <= VAR_chacha20_block_chacha20_h_l217_c26_5850_state;
      -- Outputs
-     VAR_chacha20_block_chacha20_h_l217_c26_3364_return_output := chacha20_block_chacha20_h_l217_c26_3364_return_output;
+     VAR_chacha20_block_chacha20_h_l217_c26_5850_return_output := chacha20_block_chacha20_h_l217_c26_5850_return_output;
 
      -- Submodule level 3
-     VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_x := VAR_chacha20_block_chacha20_h_l217_c26_3364_return_output;
-     -- chacha20_state_to_bytes[chacha20_h_l220_c38_fc33] LATENCY=0
+     VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_x := VAR_chacha20_block_chacha20_h_l217_c26_5850_return_output;
+     -- chacha20_state_to_bytes[chacha20_h_l220_c38_09d5] LATENCY=0
      -- Inputs
-     chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_x <= VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_x;
+     chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_x <= VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_x;
      -- Outputs
-     VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_return_output := chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_return_output;
+     VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_return_output := chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_return_output;
 
      -- Submodule level 4
-     -- CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d[chacha20_h_l221_c29_1504] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output := VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_fc33_return_output.data;
+     -- CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d[chacha20_h_l221_c29_ad3c] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output := VAR_chacha20_state_to_bytes_chacha20_h_l220_c38_09d5_return_output.data;
 
      -- Submodule level 5
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(7);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(11);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(42);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(49);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(0);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(20);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(50);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(53);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(17);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(44);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(61);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(18);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(6);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(6);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(29);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(21);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(45);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(43);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(14);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(5);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(63);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(0);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(56);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(19);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(36);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(23);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(47);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(27);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(1);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(63);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(18);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(45);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(5);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(35);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(54);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(41);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(8);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(36);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(12);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(24);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(62);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(58);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(13);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(22);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(60);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(38);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(19);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(4);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(52);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(46);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(38);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(61);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(51);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(14);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(28);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(16);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(20);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(12);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(41);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(39);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(24);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(60);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(9);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(37);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(34);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(48);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(59);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(15);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(4);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(17);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(30);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(47);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(44);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(40);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(31);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(51);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(48);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(52);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(58);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(28);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(46);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(8);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(33);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(31);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(32);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(29);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(23);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(32);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(2);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(33);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(49);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(25);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(22);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(2);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(16);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(9);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(21);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(50);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(37);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(62);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(55);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(30);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(25);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(56);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(27);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(54);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(15);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(1);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(26);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(26);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(11);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(59);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(3);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(55);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(39);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(7);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(43);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(34);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(53);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(3);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(57);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(13);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(10);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(42);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(35);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(57);
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d[chacha20_h_l228_c32_a9a4] LATENCY=0
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c32_a9a4_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_1504_return_output(40);
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d[chacha20_h_l228_c32_7168] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c32_7168_return_output := VAR_CONST_REF_RD_uint8_t_64_uint8_t_array_64_t_data_d41d_chacha20_h_l221_c29_ad3c_return_output(10);
 
      -- Submodule level 6
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right := VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c32_a9a4_return_output;
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_CONST_REF_RD_uint8_t_uint8_t_64_0_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_CONST_REF_RD_uint8_t_uint8_t_64_10_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_CONST_REF_RD_uint8_t_uint8_t_64_11_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_CONST_REF_RD_uint8_t_uint8_t_64_12_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_CONST_REF_RD_uint8_t_uint8_t_64_13_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_CONST_REF_RD_uint8_t_uint8_t_64_14_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_CONST_REF_RD_uint8_t_uint8_t_64_15_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_CONST_REF_RD_uint8_t_uint8_t_64_16_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_CONST_REF_RD_uint8_t_uint8_t_64_17_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_CONST_REF_RD_uint8_t_uint8_t_64_18_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_CONST_REF_RD_uint8_t_uint8_t_64_19_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_CONST_REF_RD_uint8_t_uint8_t_64_1_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_CONST_REF_RD_uint8_t_uint8_t_64_20_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_CONST_REF_RD_uint8_t_uint8_t_64_21_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_CONST_REF_RD_uint8_t_uint8_t_64_22_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_CONST_REF_RD_uint8_t_uint8_t_64_23_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_CONST_REF_RD_uint8_t_uint8_t_64_24_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_CONST_REF_RD_uint8_t_uint8_t_64_25_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_CONST_REF_RD_uint8_t_uint8_t_64_26_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_CONST_REF_RD_uint8_t_uint8_t_64_27_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_CONST_REF_RD_uint8_t_uint8_t_64_28_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_CONST_REF_RD_uint8_t_uint8_t_64_29_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_CONST_REF_RD_uint8_t_uint8_t_64_2_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_CONST_REF_RD_uint8_t_uint8_t_64_30_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_CONST_REF_RD_uint8_t_uint8_t_64_31_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_CONST_REF_RD_uint8_t_uint8_t_64_32_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_CONST_REF_RD_uint8_t_uint8_t_64_33_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_CONST_REF_RD_uint8_t_uint8_t_64_34_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_CONST_REF_RD_uint8_t_uint8_t_64_35_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_CONST_REF_RD_uint8_t_uint8_t_64_36_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_CONST_REF_RD_uint8_t_uint8_t_64_37_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_CONST_REF_RD_uint8_t_uint8_t_64_38_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_CONST_REF_RD_uint8_t_uint8_t_64_39_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_CONST_REF_RD_uint8_t_uint8_t_64_3_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_CONST_REF_RD_uint8_t_uint8_t_64_40_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_CONST_REF_RD_uint8_t_uint8_t_64_41_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_CONST_REF_RD_uint8_t_uint8_t_64_42_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_CONST_REF_RD_uint8_t_uint8_t_64_43_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_CONST_REF_RD_uint8_t_uint8_t_64_44_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_CONST_REF_RD_uint8_t_uint8_t_64_45_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_CONST_REF_RD_uint8_t_uint8_t_64_46_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_CONST_REF_RD_uint8_t_uint8_t_64_47_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_CONST_REF_RD_uint8_t_uint8_t_64_48_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_CONST_REF_RD_uint8_t_uint8_t_64_49_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_CONST_REF_RD_uint8_t_uint8_t_64_4_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_CONST_REF_RD_uint8_t_uint8_t_64_50_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_CONST_REF_RD_uint8_t_uint8_t_64_51_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_CONST_REF_RD_uint8_t_uint8_t_64_52_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_CONST_REF_RD_uint8_t_uint8_t_64_53_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_CONST_REF_RD_uint8_t_uint8_t_64_54_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_CONST_REF_RD_uint8_t_uint8_t_64_55_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_CONST_REF_RD_uint8_t_uint8_t_64_56_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_CONST_REF_RD_uint8_t_uint8_t_64_57_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_CONST_REF_RD_uint8_t_uint8_t_64_58_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_CONST_REF_RD_uint8_t_uint8_t_64_59_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_CONST_REF_RD_uint8_t_uint8_t_64_5_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_CONST_REF_RD_uint8_t_uint8_t_64_60_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_CONST_REF_RD_uint8_t_uint8_t_64_61_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_CONST_REF_RD_uint8_t_uint8_t_64_62_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_CONST_REF_RD_uint8_t_uint8_t_64_63_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_CONST_REF_RD_uint8_t_uint8_t_64_6_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_CONST_REF_RD_uint8_t_uint8_t_64_7_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_CONST_REF_RD_uint8_t_uint8_t_64_8_d41d_chacha20_h_l228_c32_7168_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_right := VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_CONST_REF_RD_uint8_t_uint8_t_64_9_d41d_chacha20_h_l228_c32_7168_return_output;
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
-     -- FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR[chacha20_h_l228_c19_5b98] LATENCY=0
+     -- FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR[chacha20_h_l228_c19_3553] LATENCY=0
      -- Inputs
-     FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_left;
-     FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right <= VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_right;
+     FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_left <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_left;
+     FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_right <= VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_right;
      -- Outputs
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output := FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output;
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output := FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output;
 
      -- Submodule level 7
-     -- CONST_REF_RD_uint8_t_64_uint8_t_64_62ba[chacha20_h_l233_c20_6c97] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_64_uint8_t_64_62ba_chacha20_h_l233_c20_6c97_return_output := CONST_REF_RD_uint8_t_64_uint8_t_64_62ba(
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output,
-     VAR_FOR_chacha20_h_l226_c3_40d2_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_5b98_return_output);
+     -- CONST_REF_RD_uint8_t_64_uint8_t_64_62ba[chacha20_h_l233_c20_5c3b] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_64_uint8_t_64_62ba_chacha20_h_l233_c20_5c3b_return_output := CONST_REF_RD_uint8_t_64_uint8_t_64_62ba(
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_0_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_1_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_2_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_3_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_4_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_5_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_6_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_7_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_8_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_9_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_10_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_11_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_12_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_13_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_14_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_15_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_16_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_17_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_18_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_19_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_20_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_21_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_22_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_23_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_24_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_25_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_26_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_27_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_28_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_29_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_30_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_31_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_32_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_33_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_34_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_35_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_36_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_37_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_38_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_39_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_40_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_41_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_42_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_43_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_44_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_45_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_46_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_47_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_48_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_49_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_50_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_51_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_52_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_53_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_54_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_55_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_56_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_57_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_58_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_59_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_60_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_61_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_62_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output,
+     VAR_FOR_chacha20_h_l226_c3_9e72_ITER_63_BIN_OP_XOR_chacha20_h_l228_c19_3553_return_output);
 
      -- Submodule level 8
-     -- CONST_REF_RD_axis512_t_axis512_t_774e[chacha20_h_l234_c10_53f5] LATENCY=0
-     VAR_CONST_REF_RD_axis512_t_axis512_t_774e_chacha20_h_l234_c10_53f5_return_output := CONST_REF_RD_axis512_t_axis512_t_774e(
-     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d_chacha20_h_l231_c24_e8ef_return_output,
-     VAR_CONST_REF_RD_uint8_t_64_uint8_t_64_62ba_chacha20_h_l233_c20_6c97_return_output);
+     -- CONST_REF_RD_axis512_t_axis512_t_774e[chacha20_h_l234_c10_5a6d] LATENCY=0
+     VAR_CONST_REF_RD_axis512_t_axis512_t_774e_chacha20_h_l234_c10_5a6d_return_output := CONST_REF_RD_axis512_t_axis512_t_774e(
+     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_axis_in_d41d_chacha20_h_l231_c24_706a_return_output,
+     VAR_CONST_REF_RD_uint8_t_64_uint8_t_64_62ba_chacha20_h_l233_c20_5c3b_return_output);
 
      -- Submodule level 9
-     VAR_return_output := VAR_CONST_REF_RD_axis512_t_axis512_t_774e_chacha20_h_l234_c10_53f5_return_output;
+     VAR_return_output := VAR_CONST_REF_RD_axis512_t_axis512_t_774e_chacha20_h_l234_c10_5a6d_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

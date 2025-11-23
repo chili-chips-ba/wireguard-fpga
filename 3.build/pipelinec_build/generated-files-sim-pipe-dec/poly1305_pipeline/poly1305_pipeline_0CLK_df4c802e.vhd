@@ -28,50 +28,50 @@ constant ADDED_PIPELINE_LATENCY : integer := 0;
 -- Resolved maybe from input reg clock enable
 signal clk_en_internal : std_logic;
 -- Each function instance gets signals
--- poly1305_pipeline_in_reg_func[poly1305_mac_c_l16_c60_4f93]
-signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_CLOCK_ENABLE : unsigned(0 downto 0);
-signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_data : poly1305_mac_loop_body_in_t;
-signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_id : unsigned(7 downto 0);
-signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_valid : unsigned(0 downto 0);
-signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output : poly1305_pipeline_in_reg_t;
+-- poly1305_pipeline_in_reg_func[poly1305_mac_c_l16_c60_ea37]
+signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_CLOCK_ENABLE : unsigned(0 downto 0);
+signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_data : poly1305_mac_loop_body_in_t;
+signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_id : unsigned(7 downto 0);
+signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_valid : unsigned(0 downto 0);
+signal poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output : poly1305_pipeline_in_reg_t;
 
--- poly1305_mac_loop_body[poly1305_mac_c_l16_c179_700a]
-signal poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_inputs : poly1305_mac_loop_body_in_t;
-signal poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_return_output : u320_t;
+-- poly1305_mac_loop_body[poly1305_mac_c_l16_c179_beed]
+signal poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_inputs : poly1305_mac_loop_body_in_t;
+signal poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_return_output : u320_t;
 
--- poly1305_pipeline_out_reg_func[poly1305_mac_c_l16_c243_8372]
-signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_CLOCK_ENABLE : unsigned(0 downto 0);
-signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_data : u320_t;
-signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_id : unsigned(7 downto 0);
-signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_valid : unsigned(0 downto 0);
-signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output : poly1305_pipeline_out_reg_t;
+-- poly1305_pipeline_out_reg_func[poly1305_mac_c_l16_c243_3918]
+signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_CLOCK_ENABLE : unsigned(0 downto 0);
+signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_data : u320_t;
+signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_id : unsigned(7 downto 0);
+signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_valid : unsigned(0 downto 0);
+signal poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output : poly1305_pipeline_out_reg_t;
 
 
 begin
 
 -- SUBMODULE INSTANCES 
--- poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93 : 0 clocks latency
-poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93 : entity work.poly1305_pipeline_in_reg_func_0CLK_b45f1687 port map (
+-- poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37 : 0 clocks latency
+poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37 : entity work.poly1305_pipeline_in_reg_func_0CLK_b45f1687 port map (
 clk,
-poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_CLOCK_ENABLE,
-poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_data,
-poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_id,
-poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_valid,
-poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output);
+poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_CLOCK_ENABLE,
+poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_data,
+poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_id,
+poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_valid,
+poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output);
 
--- poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a : 0 clocks latency
-poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a : entity work.poly1305_mac_loop_body_0CLK_eea59ee4 port map (
-poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_inputs,
-poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_return_output);
+-- poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed : 0 clocks latency
+poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed : entity work.poly1305_mac_loop_body_0CLK_eea59ee4 port map (
+poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_inputs,
+poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_return_output);
 
--- poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372 : 0 clocks latency
-poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372 : entity work.poly1305_pipeline_out_reg_func_0CLK_b45f1687 port map (
+-- poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918 : 0 clocks latency
+poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918 : entity work.poly1305_pipeline_out_reg_func_0CLK_b45f1687 port map (
 clk,
-poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_CLOCK_ENABLE,
-poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_data,
-poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_id,
-poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_valid,
-poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output);
+poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_CLOCK_ENABLE,
+poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_data,
+poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_id,
+poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_valid,
+poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output);
 
 
 
@@ -84,9 +84,9 @@ clk_en_internal,
  -- Clock cross input
  global_to_module,
  -- All submodule outputs
- poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output,
- poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_return_output,
- poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output)
+ poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output,
+ poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_return_output,
+ poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
@@ -97,36 +97,36 @@ is
  variable VAR_poly1305_pipeline_out_id : unsigned(7 downto 0);
  variable VAR_poly1305_pipeline_out_valid : unsigned(0 downto 0);
  variable VAR_i : poly1305_pipeline_in_reg_t;
- variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_data : poly1305_mac_loop_body_in_t;
- variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_id : unsigned(7 downto 0);
- variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_valid : unsigned(0 downto 0);
- variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_CLOCK_ENABLE : unsigned(0 downto 0);
- variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output : poly1305_pipeline_in_reg_t;
+ variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_data : poly1305_mac_loop_body_in_t;
+ variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_id : unsigned(7 downto 0);
+ variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_valid : unsigned(0 downto 0);
+ variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output : poly1305_pipeline_in_reg_t;
  variable VAR_d : u320_t;
- variable VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_inputs : poly1305_mac_loop_body_in_t;
- variable VAR_CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d_poly1305_mac_c_l16_c202_ac4b_return_output : poly1305_mac_loop_body_in_t;
- variable VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_return_output : u320_t;
+ variable VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_inputs : poly1305_mac_loop_body_in_t;
+ variable VAR_CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d_poly1305_mac_c_l16_c202_b7e8_return_output : poly1305_mac_loop_body_in_t;
+ variable VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_return_output : u320_t;
  variable VAR_o : poly1305_pipeline_out_reg_t;
- variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_data : u320_t;
- variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_id : unsigned(7 downto 0);
- variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_valid : unsigned(0 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d_poly1305_mac_c_l16_c278_b40d_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d_poly1305_mac_c_l16_c284_4c1b_return_output : unsigned(0 downto 0);
- variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_CLOCK_ENABLE : unsigned(0 downto 0);
- variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output : poly1305_pipeline_out_reg_t;
- variable VAR_CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d_poly1305_mac_c_l16_c319_3ba2_return_output : u320_t;
- variable VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d_poly1305_mac_c_l16_c354_e6fd_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d_poly1305_mac_c_l16_c390_2912_return_output : unsigned(0 downto 0);
+ variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_data : u320_t;
+ variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_id : unsigned(7 downto 0);
+ variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_valid : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d_poly1305_mac_c_l16_c278_6c78_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d_poly1305_mac_c_l16_c284_9c05_return_output : unsigned(0 downto 0);
+ variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output : poly1305_pipeline_out_reg_t;
+ variable VAR_CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d_poly1305_mac_c_l16_c319_715a_return_output : u320_t;
+ variable VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d_poly1305_mac_c_l16_c354_c799_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d_poly1305_mac_c_l16_c390_e335_return_output : unsigned(0 downto 0);
 begin
  -- Constants and things derived from constants alone
      -- Submodule level 0
-     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_id := to_unsigned(0, 8);
+     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_id := to_unsigned(0, 8);
  -- Reads from global variables
      VAR_poly1305_pipeline_in := global_to_module.poly1305_pipeline_in;
      VAR_poly1305_pipeline_in_valid := global_to_module.poly1305_pipeline_in_valid;
      -- Submodule level 0
-     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_data := VAR_poly1305_pipeline_in;
-     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_valid := VAR_poly1305_pipeline_in_valid;
+     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_data := VAR_poly1305_pipeline_in;
+     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_valid := VAR_poly1305_pipeline_in_valid;
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -136,64 +136,64 @@ begin
      VAR_CLOCK_ENABLE(0) := clk_en_internal;
 
      -- Submodule level 0
-     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
-     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
-     -- poly1305_pipeline_in_reg_func[poly1305_mac_c_l16_c60_4f93] LATENCY=0
+     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     -- poly1305_pipeline_in_reg_func[poly1305_mac_c_l16_c60_ea37] LATENCY=0
      -- Clock enable
-     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_CLOCK_ENABLE <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_CLOCK_ENABLE;
+     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_CLOCK_ENABLE <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_CLOCK_ENABLE;
      -- Inputs
-     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_data <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_data;
-     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_id <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_id;
-     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_valid <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_valid;
+     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_data <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_data;
+     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_id <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_id;
+     poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_valid <= VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_valid;
      -- Outputs
-     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output := poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output;
+     VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output := poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output;
 
      -- Submodule level 1
-     -- CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d[poly1305_mac_c_l16_c202_ac4b] LATENCY=0
-     VAR_CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d_poly1305_mac_c_l16_c202_ac4b_return_output := VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output.data;
+     -- CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d[poly1305_mac_c_l16_c202_b7e8] LATENCY=0
+     VAR_CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d_poly1305_mac_c_l16_c202_b7e8_return_output := VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output.data;
 
-     -- CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d[poly1305_mac_c_l16_c278_b40d] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d_poly1305_mac_c_l16_c278_b40d_return_output := VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output.id;
+     -- CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d[poly1305_mac_c_l16_c278_6c78] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d_poly1305_mac_c_l16_c278_6c78_return_output := VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output.id;
 
-     -- CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d[poly1305_mac_c_l16_c284_4c1b] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d_poly1305_mac_c_l16_c284_4c1b_return_output := VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_4f93_return_output.valid;
+     -- CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d[poly1305_mac_c_l16_c284_9c05] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d_poly1305_mac_c_l16_c284_9c05_return_output := VAR_poly1305_pipeline_in_reg_func_poly1305_mac_c_l16_c60_ea37_return_output.valid;
 
      -- Submodule level 2
-     VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_inputs := VAR_CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d_poly1305_mac_c_l16_c202_ac4b_return_output;
-     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_valid := VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d_poly1305_mac_c_l16_c284_4c1b_return_output;
-     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_id := VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d_poly1305_mac_c_l16_c278_b40d_return_output;
-     -- poly1305_mac_loop_body[poly1305_mac_c_l16_c179_700a] LATENCY=0
+     VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_inputs := VAR_CONST_REF_RD_poly1305_mac_loop_body_in_t_poly1305_pipeline_in_reg_t_data_d41d_poly1305_mac_c_l16_c202_b7e8_return_output;
+     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_valid := VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_in_reg_t_valid_d41d_poly1305_mac_c_l16_c284_9c05_return_output;
+     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_id := VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_in_reg_t_id_d41d_poly1305_mac_c_l16_c278_6c78_return_output;
+     -- poly1305_mac_loop_body[poly1305_mac_c_l16_c179_beed] LATENCY=0
      -- Inputs
-     poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_inputs <= VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_inputs;
+     poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_inputs <= VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_inputs;
      -- Outputs
-     VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_return_output := poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_return_output;
+     VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_return_output := poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_return_output;
 
      -- Submodule level 3
-     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_data := VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_700a_return_output;
-     -- poly1305_pipeline_out_reg_func[poly1305_mac_c_l16_c243_8372] LATENCY=0
+     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_data := VAR_poly1305_mac_loop_body_poly1305_mac_c_l16_c179_beed_return_output;
+     -- poly1305_pipeline_out_reg_func[poly1305_mac_c_l16_c243_3918] LATENCY=0
      -- Clock enable
-     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_CLOCK_ENABLE <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_CLOCK_ENABLE;
+     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_CLOCK_ENABLE <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_CLOCK_ENABLE;
      -- Inputs
-     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_data <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_data;
-     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_id <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_id;
-     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_valid <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_valid;
+     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_data <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_data;
+     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_id <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_id;
+     poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_valid <= VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_valid;
      -- Outputs
-     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output := poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output;
+     VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output := poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output;
 
      -- Submodule level 4
-     -- CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d[poly1305_mac_c_l16_c354_e6fd] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d_poly1305_mac_c_l16_c354_e6fd_return_output := VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output.id;
+     -- CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d[poly1305_mac_c_l16_c354_c799] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d_poly1305_mac_c_l16_c354_c799_return_output := VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output.id;
 
-     -- CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d[poly1305_mac_c_l16_c390_2912] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d_poly1305_mac_c_l16_c390_2912_return_output := VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output.valid;
+     -- CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d[poly1305_mac_c_l16_c319_715a] LATENCY=0
+     VAR_CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d_poly1305_mac_c_l16_c319_715a_return_output := VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output.data;
 
-     -- CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d[poly1305_mac_c_l16_c319_3ba2] LATENCY=0
-     VAR_CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d_poly1305_mac_c_l16_c319_3ba2_return_output := VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_8372_return_output.data;
+     -- CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d[poly1305_mac_c_l16_c390_e335] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d_poly1305_mac_c_l16_c390_e335_return_output := VAR_poly1305_pipeline_out_reg_func_poly1305_mac_c_l16_c243_3918_return_output.valid;
 
      -- Submodule level 5
-     VAR_poly1305_pipeline_out := VAR_CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d_poly1305_mac_c_l16_c319_3ba2_return_output;
-     VAR_poly1305_pipeline_out_valid := VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d_poly1305_mac_c_l16_c390_2912_return_output;
-     VAR_poly1305_pipeline_out_id := VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d_poly1305_mac_c_l16_c354_e6fd_return_output;
+     VAR_poly1305_pipeline_out := VAR_CONST_REF_RD_u320_t_poly1305_pipeline_out_reg_t_data_d41d_poly1305_mac_c_l16_c319_715a_return_output;
+     VAR_poly1305_pipeline_out_valid := VAR_CONST_REF_RD_uint1_t_poly1305_pipeline_out_reg_t_valid_d41d_poly1305_mac_c_l16_c390_e335_return_output;
+     VAR_poly1305_pipeline_out_id := VAR_CONST_REF_RD_uint8_t_poly1305_pipeline_out_reg_t_id_d41d_poly1305_mac_c_l16_c354_c799_return_output;
    end if;
  end loop;
 

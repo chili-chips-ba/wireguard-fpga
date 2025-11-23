@@ -23,40 +23,40 @@ attribute mark_debug : string;
 constant ADDED_PIPELINE_LATENCY : integer := 0;
 -- All of the wires/regs in function
 -- Each function instance gets signals
--- BIN_OP_AND[poly1305_h_l56_c5_e6c2]
-signal BIN_OP_AND_poly1305_h_l56_c5_e6c2_left : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l56_c5_e6c2_right : unsigned(3 downto 0);
-signal BIN_OP_AND_poly1305_h_l56_c5_e6c2_return_output : unsigned(7 downto 0);
+-- BIN_OP_AND[poly1305_h_l56_c5_a722]
+signal BIN_OP_AND_poly1305_h_l56_c5_a722_left : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l56_c5_a722_right : unsigned(3 downto 0);
+signal BIN_OP_AND_poly1305_h_l56_c5_a722_return_output : unsigned(7 downto 0);
 
--- BIN_OP_AND[poly1305_h_l57_c5_f518]
-signal BIN_OP_AND_poly1305_h_l57_c5_f518_left : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l57_c5_f518_right : unsigned(3 downto 0);
-signal BIN_OP_AND_poly1305_h_l57_c5_f518_return_output : unsigned(7 downto 0);
+-- BIN_OP_AND[poly1305_h_l57_c5_5791]
+signal BIN_OP_AND_poly1305_h_l57_c5_5791_left : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l57_c5_5791_right : unsigned(3 downto 0);
+signal BIN_OP_AND_poly1305_h_l57_c5_5791_return_output : unsigned(7 downto 0);
 
--- BIN_OP_AND[poly1305_h_l58_c5_f39a]
-signal BIN_OP_AND_poly1305_h_l58_c5_f39a_left : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l58_c5_f39a_right : unsigned(3 downto 0);
-signal BIN_OP_AND_poly1305_h_l58_c5_f39a_return_output : unsigned(7 downto 0);
+-- BIN_OP_AND[poly1305_h_l58_c5_e092]
+signal BIN_OP_AND_poly1305_h_l58_c5_e092_left : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l58_c5_e092_right : unsigned(3 downto 0);
+signal BIN_OP_AND_poly1305_h_l58_c5_e092_return_output : unsigned(7 downto 0);
 
--- BIN_OP_AND[poly1305_h_l59_c5_34f3]
-signal BIN_OP_AND_poly1305_h_l59_c5_34f3_left : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l59_c5_34f3_right : unsigned(3 downto 0);
-signal BIN_OP_AND_poly1305_h_l59_c5_34f3_return_output : unsigned(7 downto 0);
+-- BIN_OP_AND[poly1305_h_l59_c5_eb83]
+signal BIN_OP_AND_poly1305_h_l59_c5_eb83_left : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l59_c5_eb83_right : unsigned(3 downto 0);
+signal BIN_OP_AND_poly1305_h_l59_c5_eb83_return_output : unsigned(7 downto 0);
 
--- BIN_OP_AND[poly1305_h_l60_c5_c590]
-signal BIN_OP_AND_poly1305_h_l60_c5_c590_left : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l60_c5_c590_right : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l60_c5_c590_return_output : unsigned(7 downto 0);
+-- BIN_OP_AND[poly1305_h_l60_c5_868c]
+signal BIN_OP_AND_poly1305_h_l60_c5_868c_left : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l60_c5_868c_right : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l60_c5_868c_return_output : unsigned(7 downto 0);
 
--- BIN_OP_AND[poly1305_h_l61_c5_a59b]
-signal BIN_OP_AND_poly1305_h_l61_c5_a59b_left : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l61_c5_a59b_right : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l61_c5_a59b_return_output : unsigned(7 downto 0);
+-- BIN_OP_AND[poly1305_h_l61_c5_9b9a]
+signal BIN_OP_AND_poly1305_h_l61_c5_9b9a_left : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l61_c5_9b9a_right : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l61_c5_9b9a_return_output : unsigned(7 downto 0);
 
--- BIN_OP_AND[poly1305_h_l62_c5_3d65]
-signal BIN_OP_AND_poly1305_h_l62_c5_3d65_left : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l62_c5_3d65_right : unsigned(7 downto 0);
-signal BIN_OP_AND_poly1305_h_l62_c5_3d65_return_output : unsigned(7 downto 0);
+-- BIN_OP_AND[poly1305_h_l62_c5_c25f]
+signal BIN_OP_AND_poly1305_h_l62_c5_c25f_left : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l62_c5_c25f_right : unsigned(7 downto 0);
+signal BIN_OP_AND_poly1305_h_l62_c5_c25f_return_output : unsigned(7 downto 0);
 
 function CONST_REF_RD_u8_16_t_u8_16_t_be0a( ref_toks_0 : u8_16_t;
  ref_toks_1 : unsigned;
@@ -87,47 +87,47 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- BIN_OP_AND_poly1305_h_l56_c5_e6c2 : 0 clocks latency
-BIN_OP_AND_poly1305_h_l56_c5_e6c2 : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_AND_poly1305_h_l56_c5_e6c2_left,
-BIN_OP_AND_poly1305_h_l56_c5_e6c2_right,
-BIN_OP_AND_poly1305_h_l56_c5_e6c2_return_output);
+-- BIN_OP_AND_poly1305_h_l56_c5_a722 : 0 clocks latency
+BIN_OP_AND_poly1305_h_l56_c5_a722 : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_h_l56_c5_a722_left,
+BIN_OP_AND_poly1305_h_l56_c5_a722_right,
+BIN_OP_AND_poly1305_h_l56_c5_a722_return_output);
 
--- BIN_OP_AND_poly1305_h_l57_c5_f518 : 0 clocks latency
-BIN_OP_AND_poly1305_h_l57_c5_f518 : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_AND_poly1305_h_l57_c5_f518_left,
-BIN_OP_AND_poly1305_h_l57_c5_f518_right,
-BIN_OP_AND_poly1305_h_l57_c5_f518_return_output);
+-- BIN_OP_AND_poly1305_h_l57_c5_5791 : 0 clocks latency
+BIN_OP_AND_poly1305_h_l57_c5_5791 : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_h_l57_c5_5791_left,
+BIN_OP_AND_poly1305_h_l57_c5_5791_right,
+BIN_OP_AND_poly1305_h_l57_c5_5791_return_output);
 
--- BIN_OP_AND_poly1305_h_l58_c5_f39a : 0 clocks latency
-BIN_OP_AND_poly1305_h_l58_c5_f39a : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_AND_poly1305_h_l58_c5_f39a_left,
-BIN_OP_AND_poly1305_h_l58_c5_f39a_right,
-BIN_OP_AND_poly1305_h_l58_c5_f39a_return_output);
+-- BIN_OP_AND_poly1305_h_l58_c5_e092 : 0 clocks latency
+BIN_OP_AND_poly1305_h_l58_c5_e092 : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_h_l58_c5_e092_left,
+BIN_OP_AND_poly1305_h_l58_c5_e092_right,
+BIN_OP_AND_poly1305_h_l58_c5_e092_return_output);
 
--- BIN_OP_AND_poly1305_h_l59_c5_34f3 : 0 clocks latency
-BIN_OP_AND_poly1305_h_l59_c5_34f3 : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
-BIN_OP_AND_poly1305_h_l59_c5_34f3_left,
-BIN_OP_AND_poly1305_h_l59_c5_34f3_right,
-BIN_OP_AND_poly1305_h_l59_c5_34f3_return_output);
+-- BIN_OP_AND_poly1305_h_l59_c5_eb83 : 0 clocks latency
+BIN_OP_AND_poly1305_h_l59_c5_eb83 : entity work.BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_h_l59_c5_eb83_left,
+BIN_OP_AND_poly1305_h_l59_c5_eb83_right,
+BIN_OP_AND_poly1305_h_l59_c5_eb83_return_output);
 
--- BIN_OP_AND_poly1305_h_l60_c5_c590 : 0 clocks latency
-BIN_OP_AND_poly1305_h_l60_c5_c590 : entity work.BIN_OP_AND_uint8_t_uint8_t_0CLK_de264c78 port map (
-BIN_OP_AND_poly1305_h_l60_c5_c590_left,
-BIN_OP_AND_poly1305_h_l60_c5_c590_right,
-BIN_OP_AND_poly1305_h_l60_c5_c590_return_output);
+-- BIN_OP_AND_poly1305_h_l60_c5_868c : 0 clocks latency
+BIN_OP_AND_poly1305_h_l60_c5_868c : entity work.BIN_OP_AND_uint8_t_uint8_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_h_l60_c5_868c_left,
+BIN_OP_AND_poly1305_h_l60_c5_868c_right,
+BIN_OP_AND_poly1305_h_l60_c5_868c_return_output);
 
--- BIN_OP_AND_poly1305_h_l61_c5_a59b : 0 clocks latency
-BIN_OP_AND_poly1305_h_l61_c5_a59b : entity work.BIN_OP_AND_uint8_t_uint8_t_0CLK_de264c78 port map (
-BIN_OP_AND_poly1305_h_l61_c5_a59b_left,
-BIN_OP_AND_poly1305_h_l61_c5_a59b_right,
-BIN_OP_AND_poly1305_h_l61_c5_a59b_return_output);
+-- BIN_OP_AND_poly1305_h_l61_c5_9b9a : 0 clocks latency
+BIN_OP_AND_poly1305_h_l61_c5_9b9a : entity work.BIN_OP_AND_uint8_t_uint8_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_h_l61_c5_9b9a_left,
+BIN_OP_AND_poly1305_h_l61_c5_9b9a_right,
+BIN_OP_AND_poly1305_h_l61_c5_9b9a_return_output);
 
--- BIN_OP_AND_poly1305_h_l62_c5_3d65 : 0 clocks latency
-BIN_OP_AND_poly1305_h_l62_c5_3d65 : entity work.BIN_OP_AND_uint8_t_uint8_t_0CLK_de264c78 port map (
-BIN_OP_AND_poly1305_h_l62_c5_3d65_left,
-BIN_OP_AND_poly1305_h_l62_c5_3d65_right,
-BIN_OP_AND_poly1305_h_l62_c5_3d65_return_output);
+-- BIN_OP_AND_poly1305_h_l62_c5_c25f : 0 clocks latency
+BIN_OP_AND_poly1305_h_l62_c5_c25f : entity work.BIN_OP_AND_uint8_t_uint8_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_h_l62_c5_c25f_left,
+BIN_OP_AND_poly1305_h_l62_c5_c25f_right,
+BIN_OP_AND_poly1305_h_l62_c5_c25f_return_output);
 
 
 
@@ -136,57 +136,57 @@ process (
  -- Inputs
  r,
  -- All submodule outputs
- BIN_OP_AND_poly1305_h_l56_c5_e6c2_return_output,
- BIN_OP_AND_poly1305_h_l57_c5_f518_return_output,
- BIN_OP_AND_poly1305_h_l58_c5_f39a_return_output,
- BIN_OP_AND_poly1305_h_l59_c5_34f3_return_output,
- BIN_OP_AND_poly1305_h_l60_c5_c590_return_output,
- BIN_OP_AND_poly1305_h_l61_c5_a59b_return_output,
- BIN_OP_AND_poly1305_h_l62_c5_3d65_return_output)
+ BIN_OP_AND_poly1305_h_l56_c5_a722_return_output,
+ BIN_OP_AND_poly1305_h_l57_c5_5791_return_output,
+ BIN_OP_AND_poly1305_h_l58_c5_e092_return_output,
+ BIN_OP_AND_poly1305_h_l59_c5_eb83_return_output,
+ BIN_OP_AND_poly1305_h_l60_c5_868c_return_output,
+ BIN_OP_AND_poly1305_h_l61_c5_9b9a_return_output,
+ BIN_OP_AND_poly1305_h_l62_c5_c25f_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
  variable VAR_return_output : u8_16_t;
  variable VAR_r : u8_16_t;
- variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d_poly1305_h_l56_c5_2313_return_output : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_left : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d_poly1305_h_l57_c5_c0d0_return_output : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_left : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d_poly1305_h_l58_c5_8621_return_output : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_left : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d_poly1305_h_l59_c5_dd65_return_output : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_left : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_right : unsigned(3 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d_poly1305_h_l60_c5_fa01_return_output : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_left : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_right : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d_poly1305_h_l61_c5_218a_return_output : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_left : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_right : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d_poly1305_h_l62_c5_a051_return_output : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_left : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_right : unsigned(7 downto 0);
- variable VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_u8_16_t_u8_16_t_be0a_poly1305_h_l63_c12_ae5f_return_output : u8_16_t;
+ variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d_poly1305_h_l56_c5_1d75_return_output : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_left : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d_poly1305_h_l57_c5_2b06_return_output : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_left : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d_poly1305_h_l58_c5_f780_return_output : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_left : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d_poly1305_h_l59_c5_0a15_return_output : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_left : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_right : unsigned(3 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d_poly1305_h_l60_c5_02a0_return_output : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_left : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_right : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d_poly1305_h_l61_c5_6783_return_output : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_left : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_right : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d_poly1305_h_l62_c5_54ce_return_output : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_left : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_right : unsigned(7 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_u8_16_t_u8_16_t_be0a_poly1305_h_l63_c12_0675_return_output : u8_16_t;
 begin
  -- Constants and things derived from constants alone
      -- Submodule level 0
-     VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_right := to_unsigned(15, 4);
-     VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_right := to_unsigned(252, 8);
-     VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_right := to_unsigned(15, 4);
-     VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_right := to_unsigned(15, 4);
-     VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_right := to_unsigned(15, 4);
-     VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_right := to_unsigned(252, 8);
-     VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_right := to_unsigned(252, 8);
+     VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_right := to_unsigned(252, 8);
+     VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_right := to_unsigned(15, 4);
+     VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_right := to_unsigned(15, 4);
+     VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_right := to_unsigned(15, 4);
+     VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_right := to_unsigned(15, 4);
+     VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_right := to_unsigned(252, 8);
+     VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_right := to_unsigned(252, 8);
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -196,98 +196,98 @@ begin
      VAR_r := r;
 
      -- Submodule level 0
-     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d[poly1305_h_l60_c5_fa01] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d_poly1305_h_l60_c5_fa01_return_output := VAR_r.bytes(4);
+     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d[poly1305_h_l60_c5_02a0] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d_poly1305_h_l60_c5_02a0_return_output := VAR_r.bytes(4);
 
-     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d[poly1305_h_l58_c5_8621] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d_poly1305_h_l58_c5_8621_return_output := VAR_r.bytes(11);
+     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d[poly1305_h_l58_c5_f780] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d_poly1305_h_l58_c5_f780_return_output := VAR_r.bytes(11);
 
-     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d[poly1305_h_l59_c5_dd65] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d_poly1305_h_l59_c5_dd65_return_output := VAR_r.bytes(15);
+     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d[poly1305_h_l57_c5_2b06] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d_poly1305_h_l57_c5_2b06_return_output := VAR_r.bytes(7);
 
-     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d[poly1305_h_l56_c5_2313] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d_poly1305_h_l56_c5_2313_return_output := VAR_r.bytes(3);
+     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d[poly1305_h_l59_c5_0a15] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d_poly1305_h_l59_c5_0a15_return_output := VAR_r.bytes(15);
 
-     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d[poly1305_h_l61_c5_218a] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d_poly1305_h_l61_c5_218a_return_output := VAR_r.bytes(8);
+     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d[poly1305_h_l62_c5_54ce] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d_poly1305_h_l62_c5_54ce_return_output := VAR_r.bytes(12);
 
-     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d[poly1305_h_l62_c5_a051] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d_poly1305_h_l62_c5_a051_return_output := VAR_r.bytes(12);
+     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d[poly1305_h_l56_c5_1d75] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d_poly1305_h_l56_c5_1d75_return_output := VAR_r.bytes(3);
 
-     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d[poly1305_h_l57_c5_c0d0] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d_poly1305_h_l57_c5_c0d0_return_output := VAR_r.bytes(7);
+     -- CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d[poly1305_h_l61_c5_6783] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d_poly1305_h_l61_c5_6783_return_output := VAR_r.bytes(8);
 
      -- Submodule level 1
-     VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d_poly1305_h_l58_c5_8621_return_output;
-     VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d_poly1305_h_l62_c5_a051_return_output;
-     VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d_poly1305_h_l59_c5_dd65_return_output;
-     VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d_poly1305_h_l56_c5_2313_return_output;
-     VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d_poly1305_h_l60_c5_fa01_return_output;
-     VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d_poly1305_h_l57_c5_c0d0_return_output;
-     VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d_poly1305_h_l61_c5_218a_return_output;
-     -- BIN_OP_AND[poly1305_h_l57_c5_f518] LATENCY=0
+     VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_11_d41d_poly1305_h_l58_c5_f780_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_12_d41d_poly1305_h_l62_c5_54ce_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_15_d41d_poly1305_h_l59_c5_0a15_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_3_d41d_poly1305_h_l56_c5_1d75_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_4_d41d_poly1305_h_l60_c5_02a0_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_7_d41d_poly1305_h_l57_c5_2b06_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_left := VAR_CONST_REF_RD_uint8_t_u8_16_t_bytes_8_d41d_poly1305_h_l61_c5_6783_return_output;
+     -- BIN_OP_AND[poly1305_h_l61_c5_9b9a] LATENCY=0
      -- Inputs
-     BIN_OP_AND_poly1305_h_l57_c5_f518_left <= VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_left;
-     BIN_OP_AND_poly1305_h_l57_c5_f518_right <= VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_right;
+     BIN_OP_AND_poly1305_h_l61_c5_9b9a_left <= VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_left;
+     BIN_OP_AND_poly1305_h_l61_c5_9b9a_right <= VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_right;
      -- Outputs
-     VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_return_output := BIN_OP_AND_poly1305_h_l57_c5_f518_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_return_output := BIN_OP_AND_poly1305_h_l61_c5_9b9a_return_output;
 
-     -- BIN_OP_AND[poly1305_h_l58_c5_f39a] LATENCY=0
+     -- BIN_OP_AND[poly1305_h_l56_c5_a722] LATENCY=0
      -- Inputs
-     BIN_OP_AND_poly1305_h_l58_c5_f39a_left <= VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_left;
-     BIN_OP_AND_poly1305_h_l58_c5_f39a_right <= VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_right;
+     BIN_OP_AND_poly1305_h_l56_c5_a722_left <= VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_left;
+     BIN_OP_AND_poly1305_h_l56_c5_a722_right <= VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_right;
      -- Outputs
-     VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_return_output := BIN_OP_AND_poly1305_h_l58_c5_f39a_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_return_output := BIN_OP_AND_poly1305_h_l56_c5_a722_return_output;
 
-     -- BIN_OP_AND[poly1305_h_l56_c5_e6c2] LATENCY=0
+     -- BIN_OP_AND[poly1305_h_l59_c5_eb83] LATENCY=0
      -- Inputs
-     BIN_OP_AND_poly1305_h_l56_c5_e6c2_left <= VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_left;
-     BIN_OP_AND_poly1305_h_l56_c5_e6c2_right <= VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_right;
+     BIN_OP_AND_poly1305_h_l59_c5_eb83_left <= VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_left;
+     BIN_OP_AND_poly1305_h_l59_c5_eb83_right <= VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_right;
      -- Outputs
-     VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_return_output := BIN_OP_AND_poly1305_h_l56_c5_e6c2_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_return_output := BIN_OP_AND_poly1305_h_l59_c5_eb83_return_output;
 
-     -- BIN_OP_AND[poly1305_h_l62_c5_3d65] LATENCY=0
+     -- BIN_OP_AND[poly1305_h_l58_c5_e092] LATENCY=0
      -- Inputs
-     BIN_OP_AND_poly1305_h_l62_c5_3d65_left <= VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_left;
-     BIN_OP_AND_poly1305_h_l62_c5_3d65_right <= VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_right;
+     BIN_OP_AND_poly1305_h_l58_c5_e092_left <= VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_left;
+     BIN_OP_AND_poly1305_h_l58_c5_e092_right <= VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_right;
      -- Outputs
-     VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_return_output := BIN_OP_AND_poly1305_h_l62_c5_3d65_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_return_output := BIN_OP_AND_poly1305_h_l58_c5_e092_return_output;
 
-     -- BIN_OP_AND[poly1305_h_l59_c5_34f3] LATENCY=0
+     -- BIN_OP_AND[poly1305_h_l60_c5_868c] LATENCY=0
      -- Inputs
-     BIN_OP_AND_poly1305_h_l59_c5_34f3_left <= VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_left;
-     BIN_OP_AND_poly1305_h_l59_c5_34f3_right <= VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_right;
+     BIN_OP_AND_poly1305_h_l60_c5_868c_left <= VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_left;
+     BIN_OP_AND_poly1305_h_l60_c5_868c_right <= VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_right;
      -- Outputs
-     VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_return_output := BIN_OP_AND_poly1305_h_l59_c5_34f3_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_return_output := BIN_OP_AND_poly1305_h_l60_c5_868c_return_output;
 
-     -- BIN_OP_AND[poly1305_h_l60_c5_c590] LATENCY=0
+     -- BIN_OP_AND[poly1305_h_l62_c5_c25f] LATENCY=0
      -- Inputs
-     BIN_OP_AND_poly1305_h_l60_c5_c590_left <= VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_left;
-     BIN_OP_AND_poly1305_h_l60_c5_c590_right <= VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_right;
+     BIN_OP_AND_poly1305_h_l62_c5_c25f_left <= VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_left;
+     BIN_OP_AND_poly1305_h_l62_c5_c25f_right <= VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_right;
      -- Outputs
-     VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_return_output := BIN_OP_AND_poly1305_h_l60_c5_c590_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_return_output := BIN_OP_AND_poly1305_h_l62_c5_c25f_return_output;
 
-     -- BIN_OP_AND[poly1305_h_l61_c5_a59b] LATENCY=0
+     -- BIN_OP_AND[poly1305_h_l57_c5_5791] LATENCY=0
      -- Inputs
-     BIN_OP_AND_poly1305_h_l61_c5_a59b_left <= VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_left;
-     BIN_OP_AND_poly1305_h_l61_c5_a59b_right <= VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_right;
+     BIN_OP_AND_poly1305_h_l57_c5_5791_left <= VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_left;
+     BIN_OP_AND_poly1305_h_l57_c5_5791_right <= VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_right;
      -- Outputs
-     VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_return_output := BIN_OP_AND_poly1305_h_l61_c5_a59b_return_output;
+     VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_return_output := BIN_OP_AND_poly1305_h_l57_c5_5791_return_output;
 
      -- Submodule level 2
-     -- CONST_REF_RD_u8_16_t_u8_16_t_be0a[poly1305_h_l63_c12_ae5f] LATENCY=0
-     VAR_CONST_REF_RD_u8_16_t_u8_16_t_be0a_poly1305_h_l63_c12_ae5f_return_output := CONST_REF_RD_u8_16_t_u8_16_t_be0a(
+     -- CONST_REF_RD_u8_16_t_u8_16_t_be0a[poly1305_h_l63_c12_0675] LATENCY=0
+     VAR_CONST_REF_RD_u8_16_t_u8_16_t_be0a_poly1305_h_l63_c12_0675_return_output := CONST_REF_RD_u8_16_t_u8_16_t_be0a(
      VAR_r,
-     VAR_BIN_OP_AND_poly1305_h_l56_c5_e6c2_return_output,
-     VAR_BIN_OP_AND_poly1305_h_l57_c5_f518_return_output,
-     VAR_BIN_OP_AND_poly1305_h_l58_c5_f39a_return_output,
-     VAR_BIN_OP_AND_poly1305_h_l59_c5_34f3_return_output,
-     VAR_BIN_OP_AND_poly1305_h_l60_c5_c590_return_output,
-     VAR_BIN_OP_AND_poly1305_h_l61_c5_a59b_return_output,
-     VAR_BIN_OP_AND_poly1305_h_l62_c5_3d65_return_output);
+     VAR_BIN_OP_AND_poly1305_h_l56_c5_a722_return_output,
+     VAR_BIN_OP_AND_poly1305_h_l57_c5_5791_return_output,
+     VAR_BIN_OP_AND_poly1305_h_l58_c5_e092_return_output,
+     VAR_BIN_OP_AND_poly1305_h_l59_c5_eb83_return_output,
+     VAR_BIN_OP_AND_poly1305_h_l60_c5_868c_return_output,
+     VAR_BIN_OP_AND_poly1305_h_l61_c5_9b9a_return_output,
+     VAR_BIN_OP_AND_poly1305_h_l62_c5_c25f_return_output);
 
      -- Submodule level 3
-     VAR_return_output := VAR_CONST_REF_RD_u8_16_t_u8_16_t_be0a_poly1305_h_l63_c12_ae5f_return_output;
+     VAR_return_output := VAR_CONST_REF_RD_u8_16_t_u8_16_t_be0a_poly1305_h_l63_c12_0675_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;
