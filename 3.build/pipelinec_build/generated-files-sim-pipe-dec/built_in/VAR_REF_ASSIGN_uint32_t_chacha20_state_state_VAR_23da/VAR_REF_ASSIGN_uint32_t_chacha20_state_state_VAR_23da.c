@@ -14,6 +14,11 @@ uint32_t_array_16_t VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da(uint32
  base = ref_toks_0;
  // Copy base into rv
  uint32_t_array_16_t rv;
+ rv.data[2] = base.state[2];
+ rv.data[5] = base.state[5];
+ rv.data[11] = base.state[11];
+ rv.data[8] = base.state[8];
+ rv.data[14] = base.state[14];
  rv.data[0] = base.state[0];
  rv.data[3] = base.state[3];
  rv.data[9] = base.state[9];
@@ -25,12 +30,37 @@ uint32_t_array_16_t VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da(uint32
  rv.data[7] = base.state[7];
  rv.data[10] = base.state[10];
  rv.data[13] = base.state[13];
- rv.data[2] = base.state[2];
- rv.data[5] = base.state[5];
- rv.data[11] = base.state[11];
- rv.data[8] = base.state[8];
- rv.data[14] = base.state[14];
  // Do mux for each element
+ if(
+   (var_dim_0 == 2) 
+ )
+ {
+   rv.data[2] = elem_val;
+ }
+ if(
+   (var_dim_0 == 5) 
+ )
+ {
+   rv.data[5] = elem_val;
+ }
+ if(
+   (var_dim_0 == 11) 
+ )
+ {
+   rv.data[11] = elem_val;
+ }
+ if(
+   (var_dim_0 == 8) 
+ )
+ {
+   rv.data[8] = elem_val;
+ }
+ if(
+   (var_dim_0 == 14) 
+ )
+ {
+   rv.data[14] = elem_val;
+ }
  if(
    (var_dim_0 == 0) 
  )
@@ -96,36 +126,6 @@ uint32_t_array_16_t VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da(uint32
  )
  {
    rv.data[13] = elem_val;
- }
- if(
-   (var_dim_0 == 2) 
- )
- {
-   rv.data[2] = elem_val;
- }
- if(
-   (var_dim_0 == 5) 
- )
- {
-   rv.data[5] = elem_val;
- }
- if(
-   (var_dim_0 == 11) 
- )
- {
-   rv.data[11] = elem_val;
- }
- if(
-   (var_dim_0 == 8) 
- )
- {
-   rv.data[8] = elem_val;
- }
- if(
-   (var_dim_0 == 14) 
- )
- {
-   rv.data[14] = elem_val;
  }
 
   return rv;

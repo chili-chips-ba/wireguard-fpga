@@ -1,0 +1,936 @@
+-- Timing params:
+--   Fixed?: False
+--   Pipeline Slices: []
+--   Input regs?: False
+--   Output regs?: False
+library std;
+use std.textio.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.float_pkg.all;
+use work.c_structs_pkg.all;
+use work.global_wires_pkg.all;
+-- Submodules: 28
+entity poly1305_verify_decrypt_0CLK_08de2a73 is
+port(
+ clk : in std_logic;
+ CLOCK_ENABLE : in unsigned(0 downto 0);
+ global_to_module : in poly1305_verify_decrypt_global_to_module_t;
+ module_to_global : out poly1305_verify_decrypt_module_to_global_t);
+end poly1305_verify_decrypt_0CLK_08de2a73;
+architecture arch of poly1305_verify_decrypt_0CLK_08de2a73 is
+-- Types and such
+-- Declarations
+attribute mark_debug : string;
+constant ADDED_PIPELINE_LATENCY : integer := 0;
+-- All of the wires/regs in function
+
+-- All user state registers
+signal state : unsigned(1 downto 0) := unsigned(poly1305_verify_state_t_to_slv(TAKE_AUTH_TAG));
+signal auth_tag_reg : unsigned(127 downto 0) := to_unsigned(0, 128);
+signal calc_tag_reg : unsigned(127 downto 0) := to_unsigned(0, 128);
+signal tags_match_reg : unsigned(0 downto 0) := to_unsigned(0, 1);
+signal REG_COMB_state : unsigned(1 downto 0);
+signal REG_COMB_auth_tag_reg : unsigned(127 downto 0);
+signal REG_COMB_calc_tag_reg : unsigned(127 downto 0);
+signal REG_COMB_tags_match_reg : unsigned(0 downto 0);
+
+-- Resolved maybe from input reg clock enable
+signal clk_en_internal : std_logic;
+-- Each function instance gets signals
+-- BIN_OP_EQ[poly1305_verify_decrypt_c_l46_c7_11d3]
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_left : unsigned(1 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_right : unsigned(1 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output : unsigned(0 downto 0);
+
+-- state_MUX[poly1305_verify_decrypt_c_l46_c3_c9db]
+signal state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(1 downto 0);
+
+-- poly1305_verify_auth_tag_ready_MUX[poly1305_verify_decrypt_c_l46_c3_c9db]
+signal poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+signal poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(0 downto 0);
+signal poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(0 downto 0);
+signal poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(0 downto 0);
+
+-- calc_tag_reg_MUX[poly1305_verify_decrypt_c_l46_c3_c9db]
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(127 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(127 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(127 downto 0);
+
+-- poly1305_verify_calc_tag_ready_MUX[poly1305_verify_decrypt_c_l46_c3_c9db]
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(0 downto 0);
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(0 downto 0);
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(0 downto 0);
+
+-- poly1305_verify_tags_match_MUX[poly1305_verify_decrypt_c_l46_c3_c9db]
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : uint1_t_stream_t;
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : uint1_t_stream_t;
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : uint1_t_stream_t;
+
+-- tags_match_reg_MUX[poly1305_verify_decrypt_c_l46_c3_c9db]
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(0 downto 0);
+
+-- auth_tag_reg_MUX[poly1305_verify_decrypt_c_l46_c3_c9db]
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(127 downto 0);
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(127 downto 0);
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(127 downto 0);
+
+-- BIN_OP_AND[poly1305_verify_decrypt_c_l51_c9_dc0d]
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_left : unsigned(0 downto 0);
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_right : unsigned(0 downto 0);
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output : unsigned(0 downto 0);
+
+-- state_MUX[poly1305_verify_decrypt_c_l51_c5_f556]
+signal state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond : unsigned(0 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output : unsigned(1 downto 0);
+
+-- auth_tag_reg_MUX[poly1305_verify_decrypt_c_l51_c5_f556]
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond : unsigned(0 downto 0);
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue : unsigned(127 downto 0);
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse : unsigned(127 downto 0);
+signal auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output : unsigned(127 downto 0);
+
+-- BIN_OP_EQ[poly1305_verify_decrypt_c_l58_c12_e2a5]
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_left : unsigned(1 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_right : unsigned(1 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output : unsigned(0 downto 0);
+
+-- state_MUX[poly1305_verify_decrypt_c_l58_c8_a576]
+signal state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(1 downto 0);
+
+-- calc_tag_reg_MUX[poly1305_verify_decrypt_c_l58_c8_a576]
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(127 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(127 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(127 downto 0);
+
+-- poly1305_verify_calc_tag_ready_MUX[poly1305_verify_decrypt_c_l58_c8_a576]
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(0 downto 0);
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(0 downto 0);
+signal poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(0 downto 0);
+
+-- poly1305_verify_tags_match_MUX[poly1305_verify_decrypt_c_l58_c8_a576]
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : uint1_t_stream_t;
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : uint1_t_stream_t;
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : uint1_t_stream_t;
+
+-- tags_match_reg_MUX[poly1305_verify_decrypt_c_l58_c8_a576]
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(0 downto 0);
+
+-- BIN_OP_AND[poly1305_verify_decrypt_c_l63_c9_96e1]
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_left : unsigned(0 downto 0);
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_right : unsigned(0 downto 0);
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output : unsigned(0 downto 0);
+
+-- state_MUX[poly1305_verify_decrypt_c_l63_c5_5a42]
+signal state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond : unsigned(0 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output : unsigned(1 downto 0);
+
+-- calc_tag_reg_MUX[poly1305_verify_decrypt_c_l63_c5_5a42]
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond : unsigned(0 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue : unsigned(127 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse : unsigned(127 downto 0);
+signal calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output : unsigned(127 downto 0);
+
+-- BIN_OP_EQ[poly1305_verify_decrypt_c_l69_c12_c4ec]
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_left : unsigned(1 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_right : unsigned(1 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output : unsigned(0 downto 0);
+
+-- state_MUX[poly1305_verify_decrypt_c_l69_c8_b8e0]
+signal state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond : unsigned(0 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output : unsigned(1 downto 0);
+
+-- poly1305_verify_tags_match_MUX[poly1305_verify_decrypt_c_l69_c8_b8e0]
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond : unsigned(0 downto 0);
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue : uint1_t_stream_t;
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse : uint1_t_stream_t;
+signal poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output : uint1_t_stream_t;
+
+-- tags_match_reg_MUX[poly1305_verify_decrypt_c_l69_c8_b8e0]
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse : unsigned(0 downto 0);
+signal tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output : unsigned(0 downto 0);
+
+-- BIN_OP_EQ[poly1305_verify_decrypt_c_l72_c23_cb96]
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_left : unsigned(127 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_right : unsigned(127 downto 0);
+signal BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_return_output : unsigned(0 downto 0);
+
+-- BIN_OP_AND[poly1305_verify_decrypt_c_l83_c9_f8d6]
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_left : unsigned(0 downto 0);
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_right : unsigned(0 downto 0);
+signal BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_return_output : unsigned(0 downto 0);
+
+-- state_MUX[poly1305_verify_decrypt_c_l83_c5_22f4]
+signal state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_cond : unsigned(0 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iftrue : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iffalse : unsigned(1 downto 0);
+signal state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_return_output : unsigned(1 downto 0);
+
+function CONST_REF_RD_uint1_t_stream_t_uint1_t_stream_t_42b0( ref_toks_0 : unsigned;
+ ref_toks_1 : unsigned) return uint1_t_stream_t is
+ 
+  variable base : uint1_t_stream_t; 
+  variable return_output : uint1_t_stream_t;
+begin
+      base.data := ref_toks_0;
+      base.valid := ref_toks_1;
+
+      return_output := base;
+      return return_output; 
+end function;
+
+
+begin
+
+-- SUBMODULE INSTANCES 
+-- BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3 : 0 clocks latency
+BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3 : entity work.BIN_OP_EQ_uint2_t_uint2_t_0CLK_de264c78 port map (
+BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_left,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_right,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output);
+
+-- state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : 0 clocks latency
+state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : entity work.MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0CLK_de264c78 port map (
+state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond,
+state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue,
+state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse,
+state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output);
+
+-- poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : 0 clocks latency
+poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond,
+poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue,
+poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse,
+poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output);
+
+-- calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : 0 clocks latency
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : entity work.MUX_uint1_t_uint128_t_uint128_t_0CLK_de264c78 port map (
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output);
+
+-- poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : 0 clocks latency
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond,
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue,
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse,
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output);
+
+-- poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : 0 clocks latency
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : entity work.MUX_uint1_t_uint1_t_stream_t_uint1_t_stream_t_0CLK_de264c78 port map (
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output);
+
+-- tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : 0 clocks latency
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output);
+
+-- auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : 0 clocks latency
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db : entity work.MUX_uint1_t_uint128_t_uint128_t_0CLK_de264c78 port map (
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond,
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue,
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse,
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output);
+
+-- BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d : 0 clocks latency
+BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_left,
+BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_right,
+BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output);
+
+-- state_MUX_poly1305_verify_decrypt_c_l51_c5_f556 : 0 clocks latency
+state_MUX_poly1305_verify_decrypt_c_l51_c5_f556 : entity work.MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0CLK_de264c78 port map (
+state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond,
+state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue,
+state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse,
+state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output);
+
+-- auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556 : 0 clocks latency
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556 : entity work.MUX_uint1_t_uint128_t_uint128_t_0CLK_de264c78 port map (
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond,
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue,
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse,
+auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output);
+
+-- BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5 : 0 clocks latency
+BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5 : entity work.BIN_OP_EQ_uint2_t_uint2_t_0CLK_de264c78 port map (
+BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_left,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_right,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output);
+
+-- state_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : 0 clocks latency
+state_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : entity work.MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0CLK_de264c78 port map (
+state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond,
+state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue,
+state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse,
+state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output);
+
+-- calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : 0 clocks latency
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : entity work.MUX_uint1_t_uint128_t_uint128_t_0CLK_de264c78 port map (
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output);
+
+-- poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : 0 clocks latency
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond,
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue,
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse,
+poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output);
+
+-- poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : 0 clocks latency
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : entity work.MUX_uint1_t_uint1_t_stream_t_uint1_t_stream_t_0CLK_de264c78 port map (
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output);
+
+-- tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : 0 clocks latency
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output);
+
+-- BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1 : 0 clocks latency
+BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_left,
+BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_right,
+BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output);
+
+-- state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42 : 0 clocks latency
+state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42 : entity work.MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0CLK_de264c78 port map (
+state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond,
+state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue,
+state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse,
+state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output);
+
+-- calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42 : 0 clocks latency
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42 : entity work.MUX_uint1_t_uint128_t_uint128_t_0CLK_de264c78 port map (
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse,
+calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output);
+
+-- BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec : 0 clocks latency
+BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec : entity work.BIN_OP_EQ_uint2_t_uint2_t_0CLK_de264c78 port map (
+BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_left,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_right,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output);
+
+-- state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0 : 0 clocks latency
+state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0 : entity work.MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0CLK_de264c78 port map (
+state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond,
+state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue,
+state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse,
+state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output);
+
+-- poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0 : 0 clocks latency
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0 : entity work.MUX_uint1_t_uint1_t_stream_t_uint1_t_stream_t_0CLK_de264c78 port map (
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse,
+poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output);
+
+-- tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0 : 0 clocks latency
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse,
+tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output);
+
+-- BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96 : 0 clocks latency
+BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96 : entity work.BIN_OP_EQ_uint128_t_uint128_t_0CLK_de264c78 port map (
+BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_left,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_right,
+BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_return_output);
+
+-- BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6 : 0 clocks latency
+BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_left,
+BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_right,
+BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_return_output);
+
+-- state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4 : 0 clocks latency
+state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4 : entity work.MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0CLK_de264c78 port map (
+state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_cond,
+state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iftrue,
+state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iffalse,
+state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_return_output);
+
+
+
+-- Resolve what clock enable to use for user logic
+clk_en_internal <= CLOCK_ENABLE(0);
+-- Combinatorial process for pipeline stages
+process (
+CLOCK_ENABLE,
+clk_en_internal,
+ -- Registers
+ state,
+ auth_tag_reg,
+ calc_tag_reg,
+ tags_match_reg,
+ -- Clock cross input
+ global_to_module,
+ -- All submodule outputs
+ BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output,
+ state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output,
+ poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output,
+ calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output,
+ poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output,
+ poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output,
+ tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output,
+ auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output,
+ BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output,
+ state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output,
+ auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output,
+ BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output,
+ state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output,
+ calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output,
+ poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output,
+ poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output,
+ tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output,
+ BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output,
+ state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output,
+ calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output,
+ BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output,
+ state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output,
+ poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output,
+ tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output,
+ BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_return_output,
+ BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_return_output,
+ state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_return_output)
+is 
+ -- All of the wires in function
+ variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_auth_tag_ready : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_tags_match : uint1_t_stream_t;
+ variable VAR_poly1305_verify_auth_tag : uint128_t_stream_t;
+ variable VAR_poly1305_verify_calc_tag : uint128_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_ready : unsigned(0 downto 0);
+ variable VAR_null_uint1 : uint1_t_stream_t;
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_left : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_right : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output : unsigned(0 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue : unsigned(127 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output : unsigned(127 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse : unsigned(127 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output : unsigned(127 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d_poly1305_verify_decrypt_c_l51_c9_aecd_return_output : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_left : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output : unsigned(0 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond : unsigned(0 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue : unsigned(127 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse : unsigned(127 downto 0);
+ variable VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d_poly1305_verify_decrypt_c_l54_c22_dedd_return_output : unsigned(127 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_left : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_right : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output : unsigned(0 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d_poly1305_verify_decrypt_c_l63_c9_3539_return_output : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_left : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output : unsigned(0 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond : unsigned(0 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse : unsigned(127 downto 0);
+ variable VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d_poly1305_verify_decrypt_c_l65_c22_99a2_return_output : unsigned(127 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_left : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_right : unsigned(1 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output : unsigned(0 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_return_output : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond : unsigned(0 downto 0);
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_stream_t_uint1_t_stream_t_42b0_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output : uint1_t_stream_t;
+ variable VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse : unsigned(0 downto 0);
+ variable VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_left : unsigned(127 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_right : unsigned(127 downto 0);
+ variable VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_return_output : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_left : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_return_output : unsigned(0 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iftrue : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iffalse : unsigned(1 downto 0);
+ variable VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_cond : unsigned(0 downto 0);
+ -- State registers comb logic variables
+variable REG_VAR_state : unsigned(1 downto 0);
+variable REG_VAR_auth_tag_reg : unsigned(127 downto 0);
+variable REG_VAR_calc_tag_reg : unsigned(127 downto 0);
+variable REG_VAR_tags_match_reg : unsigned(0 downto 0);
+begin
+
+  -- STATE REGS
+  -- Default read regs into vars
+  REG_VAR_state := state;
+  REG_VAR_auth_tag_reg := auth_tag_reg;
+  REG_VAR_calc_tag_reg := calc_tag_reg;
+  REG_VAR_tags_match_reg := tags_match_reg;
+ -- Constants and things derived from constants alone
+     -- Submodule level 0
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_right := unsigned(poly1305_verify_state_t_to_slv(COMPARE_TAGS));
+     VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue := unsigned(poly1305_verify_state_t_to_slv(OUTPUT_COMPARE_RESULT));
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue := to_unsigned(0, 1);
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse := to_unsigned(0, 1);
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_right := to_unsigned(1, 1);
+     VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue := unsigned(poly1305_verify_state_t_to_slv(COMPARE_TAGS));
+     VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue := unsigned(poly1305_verify_state_t_to_slv(TAKE_CALC_TAG));
+     VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue := to_unsigned(1, 1);
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_right := to_unsigned(1, 1);
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_right := unsigned(poly1305_verify_state_t_to_slv(TAKE_AUTH_TAG));
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue := uint1_t_stream_t_NULL;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue := uint1_t_stream_t_NULL;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue := uint1_t_stream_t_NULL;
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_right := unsigned(poly1305_verify_state_t_to_slv(TAKE_CALC_TAG));
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_right := to_unsigned(1, 1);
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue := to_unsigned(1, 1);
+     VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse := to_unsigned(0, 1);
+     VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iftrue := unsigned(poly1305_verify_state_t_to_slv(TAKE_AUTH_TAG));
+ -- Reads from global variables
+     VAR_poly1305_verify_auth_tag := global_to_module.poly1305_verify_auth_tag;
+     VAR_poly1305_verify_calc_tag := global_to_module.poly1305_verify_calc_tag;
+     VAR_poly1305_verify_tags_match_ready := global_to_module.poly1305_verify_tags_match_ready;
+     -- Submodule level 0
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_left := VAR_poly1305_verify_tags_match_ready;
+     -- CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d[poly1305_verify_decrypt_c_l54_c22_dedd] LATENCY=0
+     VAR_CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d_poly1305_verify_decrypt_c_l54_c22_dedd_return_output := VAR_poly1305_verify_auth_tag.data;
+
+     -- CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d[poly1305_verify_decrypt_c_l51_c9_aecd] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d_poly1305_verify_decrypt_c_l51_c9_aecd_return_output := VAR_poly1305_verify_auth_tag.valid;
+
+     -- CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d[poly1305_verify_decrypt_c_l65_c22_99a2] LATENCY=0
+     VAR_CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d_poly1305_verify_decrypt_c_l65_c22_99a2_return_output := VAR_poly1305_verify_calc_tag.data;
+
+     -- CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d[poly1305_verify_decrypt_c_l63_c9_3539] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d_poly1305_verify_decrypt_c_l63_c9_3539_return_output := VAR_poly1305_verify_calc_tag.valid;
+
+     -- Submodule level 1
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue := VAR_CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d_poly1305_verify_decrypt_c_l54_c22_dedd_return_output;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue := VAR_CONST_REF_RD_uint128_t_uint128_t_stream_t_data_d41d_poly1305_verify_decrypt_c_l65_c22_99a2_return_output;
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_left := VAR_CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d_poly1305_verify_decrypt_c_l63_c9_3539_return_output;
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_left := VAR_CONST_REF_RD_uint1_t_uint128_t_stream_t_valid_d41d_poly1305_verify_decrypt_c_l51_c9_aecd_return_output;
+
+ -- Loop to construct simultaneous register transfers for each of the pipeline stages
+ -- LATENCY=0 is combinational Logic
+ for STAGE in 0 to ADDED_PIPELINE_LATENCY loop
+   if STAGE = 0 then
+     -- Mux in clock enable
+     VAR_CLOCK_ENABLE(0) := clk_en_internal;
+
+     -- Submodule level 0
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_left := auth_tag_reg;
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse := auth_tag_reg;
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse := auth_tag_reg;
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_right := calc_tag_reg;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue := calc_tag_reg;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse := calc_tag_reg;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse := calc_tag_reg;
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_left := state;
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_left := state;
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_left := state;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse := state;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse := state;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iffalse := state;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue := tags_match_reg;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue := tags_match_reg;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse := tags_match_reg;
+     -- BIN_OP_EQ[poly1305_verify_decrypt_c_l69_c12_c4ec] LATENCY=0
+     -- Inputs
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_left <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_left;
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_right <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_right;
+     -- Outputs
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output := BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output;
+
+     -- BIN_OP_AND[poly1305_verify_decrypt_c_l83_c9_f8d6] LATENCY=0
+     -- Inputs
+     BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_left <= VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_left;
+     BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_right <= VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_right;
+     -- Outputs
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_return_output := BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_return_output;
+
+     -- BIN_OP_AND[poly1305_verify_decrypt_c_l51_c9_dc0d] LATENCY=0
+     -- Inputs
+     BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_left <= VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_left;
+     BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_right <= VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_right;
+     -- Outputs
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output := BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output;
+
+     -- BIN_OP_EQ[poly1305_verify_decrypt_c_l46_c7_11d3] LATENCY=0
+     -- Inputs
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_left <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_left;
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_right <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_right;
+     -- Outputs
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output := BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+
+     -- BIN_OP_AND[poly1305_verify_decrypt_c_l63_c9_96e1] LATENCY=0
+     -- Inputs
+     BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_left <= VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_left;
+     BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_right <= VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_right;
+     -- Outputs
+     VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output := BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output;
+
+     -- BIN_OP_EQ[poly1305_verify_decrypt_c_l72_c23_cb96] LATENCY=0
+     -- Inputs
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_left <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_left;
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_right <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_right;
+     -- Outputs
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_return_output := BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_return_output;
+
+     -- poly1305_verify_tags_match_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_stream_t_uint1_t_stream_t_42b0[poly1305_verify_decrypt_c_l69_c8_b8e0] LATENCY=0
+     VAR_poly1305_verify_tags_match_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_stream_t_uint1_t_stream_t_42b0_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output := CONST_REF_RD_uint1_t_stream_t_uint1_t_stream_t_42b0(
+     tags_match_reg,
+     to_unsigned(1, 1));
+
+     -- BIN_OP_EQ[poly1305_verify_decrypt_c_l58_c12_e2a5] LATENCY=0
+     -- Inputs
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_left <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_left;
+     BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_right <= VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_right;
+     -- Outputs
+     VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output := BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output;
+
+     -- Submodule level 1
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond := VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond := VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l51_c9_dc0d_return_output;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond := VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond := VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l63_c9_96e1_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_cond := VAR_BIN_OP_AND_poly1305_verify_decrypt_c_l83_c9_f8d6_return_output;
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+     VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l46_c7_11d3_return_output;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output;
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l58_c12_e2a5_return_output;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l69_c12_c4ec_return_output;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue := VAR_BIN_OP_EQ_poly1305_verify_decrypt_c_l72_c23_cb96_return_output;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse := VAR_poly1305_verify_tags_match_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_stream_t_uint1_t_stream_t_42b0_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output;
+     -- state_MUX[poly1305_verify_decrypt_c_l51_c5_f556] LATENCY=0
+     -- Inputs
+     state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond <= VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond;
+     state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue <= VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue;
+     state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse <= VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse;
+     -- Outputs
+     VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output := state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output;
+
+     -- poly1305_verify_calc_tag_ready_MUX[poly1305_verify_decrypt_c_l58_c8_a576] LATENCY=0
+     -- Inputs
+     poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond <= VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond;
+     poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue <= VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue;
+     poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse <= VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse;
+     -- Outputs
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output := poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+
+     -- tags_match_reg_MUX[poly1305_verify_decrypt_c_l69_c8_b8e0] LATENCY=0
+     -- Inputs
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond;
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue;
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse;
+     -- Outputs
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output := tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output;
+
+     -- poly1305_verify_auth_tag_ready_MUX[poly1305_verify_decrypt_c_l46_c3_c9db] LATENCY=0
+     -- Inputs
+     poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond <= VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond;
+     poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue <= VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue;
+     poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse <= VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse;
+     -- Outputs
+     VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output := poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+
+     -- poly1305_verify_tags_match_MUX[poly1305_verify_decrypt_c_l69_c8_b8e0] LATENCY=0
+     -- Inputs
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond;
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue;
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse;
+     -- Outputs
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output := poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output;
+
+     -- state_MUX[poly1305_verify_decrypt_c_l83_c5_22f4] LATENCY=0
+     -- Inputs
+     state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_cond <= VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_cond;
+     state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iftrue <= VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iftrue;
+     state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iffalse <= VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_iffalse;
+     -- Outputs
+     VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_return_output := state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_return_output;
+
+     -- auth_tag_reg_MUX[poly1305_verify_decrypt_c_l51_c5_f556] LATENCY=0
+     -- Inputs
+     auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond <= VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_cond;
+     auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue <= VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iftrue;
+     auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse <= VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_iffalse;
+     -- Outputs
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output := auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output;
+
+     -- calc_tag_reg_MUX[poly1305_verify_decrypt_c_l63_c5_5a42] LATENCY=0
+     -- Inputs
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond;
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue;
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse;
+     -- Outputs
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output := calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output;
+
+     -- state_MUX[poly1305_verify_decrypt_c_l63_c5_5a42] LATENCY=0
+     -- Inputs
+     state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond <= VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_cond;
+     state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue <= VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iftrue;
+     state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse <= VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_iffalse;
+     -- Outputs
+     VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output := state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output;
+
+     -- Submodule level 2
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue := VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue := VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output;
+     VAR_poly1305_verify_auth_tag_ready := VAR_poly1305_verify_auth_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse := VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse := VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue := VAR_state_MUX_poly1305_verify_decrypt_c_l51_c5_f556_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue := VAR_state_MUX_poly1305_verify_decrypt_c_l63_c5_5a42_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse := VAR_state_MUX_poly1305_verify_decrypt_c_l83_c5_22f4_return_output;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse := VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output;
+     -- calc_tag_reg_MUX[poly1305_verify_decrypt_c_l58_c8_a576] LATENCY=0
+     -- Inputs
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond;
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue;
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse;
+     -- Outputs
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output := calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+
+     -- tags_match_reg_MUX[poly1305_verify_decrypt_c_l58_c8_a576] LATENCY=0
+     -- Inputs
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond;
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue;
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse;
+     -- Outputs
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output := tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+
+     -- poly1305_verify_tags_match_MUX[poly1305_verify_decrypt_c_l58_c8_a576] LATENCY=0
+     -- Inputs
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond;
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue;
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse;
+     -- Outputs
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output := poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+
+     -- auth_tag_reg_MUX[poly1305_verify_decrypt_c_l46_c3_c9db] LATENCY=0
+     -- Inputs
+     auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond <= VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond;
+     auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue <= VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue;
+     auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse <= VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse;
+     -- Outputs
+     VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output := auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+
+     -- poly1305_verify_calc_tag_ready_MUX[poly1305_verify_decrypt_c_l46_c3_c9db] LATENCY=0
+     -- Inputs
+     poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond <= VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond;
+     poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue <= VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue;
+     poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse <= VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse;
+     -- Outputs
+     VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output := poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+
+     -- state_MUX[poly1305_verify_decrypt_c_l69_c8_b8e0] LATENCY=0
+     -- Inputs
+     state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond <= VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_cond;
+     state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue <= VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iftrue;
+     state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse <= VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_iffalse;
+     -- Outputs
+     VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output := state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output;
+
+     -- Submodule level 3
+     REG_VAR_auth_tag_reg := VAR_auth_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse := VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+     VAR_poly1305_verify_calc_tag_ready := VAR_poly1305_verify_calc_tag_ready_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse := VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse := VAR_state_MUX_poly1305_verify_decrypt_c_l69_c8_b8e0_return_output;
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse := VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+     -- calc_tag_reg_MUX[poly1305_verify_decrypt_c_l46_c3_c9db] LATENCY=0
+     -- Inputs
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond;
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue;
+     calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse <= VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse;
+     -- Outputs
+     VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output := calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+
+     -- state_MUX[poly1305_verify_decrypt_c_l58_c8_a576] LATENCY=0
+     -- Inputs
+     state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond <= VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_cond;
+     state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue <= VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iftrue;
+     state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse <= VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_iffalse;
+     -- Outputs
+     VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output := state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+
+     -- poly1305_verify_tags_match_MUX[poly1305_verify_decrypt_c_l46_c3_c9db] LATENCY=0
+     -- Inputs
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond;
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue;
+     poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse <= VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse;
+     -- Outputs
+     VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output := poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+
+     -- tags_match_reg_MUX[poly1305_verify_decrypt_c_l46_c3_c9db] LATENCY=0
+     -- Inputs
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond;
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue;
+     tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse <= VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse;
+     -- Outputs
+     VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output := tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+
+     -- Submodule level 4
+     REG_VAR_calc_tag_reg := VAR_calc_tag_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+     VAR_poly1305_verify_tags_match := VAR_poly1305_verify_tags_match_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+     VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse := VAR_state_MUX_poly1305_verify_decrypt_c_l58_c8_a576_return_output;
+     REG_VAR_tags_match_reg := VAR_tags_match_reg_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+     -- state_MUX[poly1305_verify_decrypt_c_l46_c3_c9db] LATENCY=0
+     -- Inputs
+     state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond <= VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_cond;
+     state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue <= VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iftrue;
+     state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse <= VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_iffalse;
+     -- Outputs
+     VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output := state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+
+     -- Submodule level 5
+     REG_VAR_state := VAR_state_MUX_poly1305_verify_decrypt_c_l46_c3_c9db_return_output;
+   end if;
+ end loop;
+
+-- Write regs vars to comb logic
+REG_COMB_state <= REG_VAR_state;
+REG_COMB_auth_tag_reg <= REG_VAR_auth_tag_reg;
+REG_COMB_calc_tag_reg <= REG_VAR_calc_tag_reg;
+REG_COMB_tags_match_reg <= REG_VAR_tags_match_reg;
+-- Global wires driven various places in pipeline
+if clk_en_internal='1' then
+  module_to_global.poly1305_verify_auth_tag_ready <= VAR_poly1305_verify_auth_tag_ready;
+else
+  module_to_global.poly1305_verify_auth_tag_ready <= to_unsigned(0, 1);
+end if;
+if clk_en_internal='1' then
+  module_to_global.poly1305_verify_calc_tag_ready <= VAR_poly1305_verify_calc_tag_ready;
+else
+  module_to_global.poly1305_verify_calc_tag_ready <= to_unsigned(0, 1);
+end if;
+if clk_en_internal='1' then
+  module_to_global.poly1305_verify_tags_match <= VAR_poly1305_verify_tags_match;
+else
+  module_to_global.poly1305_verify_tags_match <= uint1_t_stream_t_NULL;
+end if;
+end process;
+
+-- Register comb signals
+process(clk) is
+begin
+ if rising_edge(clk) then
+ if clk_en_internal='1' then
+     state <= REG_COMB_state;
+     auth_tag_reg <= REG_COMB_auth_tag_reg;
+     calc_tag_reg <= REG_COMB_calc_tag_reg;
+     tags_match_reg <= REG_COMB_tags_match_reg;
+ end if;
+ end if;
+end process;
+
+end arch;

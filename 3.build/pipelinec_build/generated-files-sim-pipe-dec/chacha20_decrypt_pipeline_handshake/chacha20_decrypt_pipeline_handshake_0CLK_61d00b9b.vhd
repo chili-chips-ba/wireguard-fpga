@@ -33,49 +33,49 @@ signal REG_COMB_fifo_count : unsigned(15 downto 0);
 -- Resolved maybe from input reg clock enable
 signal clk_en_internal : std_logic;
 -- Each function instance gets signals
--- BIN_OP_LT[chacha20_decrypt_c_l24_c111_5a96]
-signal BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_left : unsigned(15 downto 0);
-signal BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_right : unsigned(6 downto 0);
-signal BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output : unsigned(0 downto 0);
+-- BIN_OP_LT[chacha20_decrypt_c_l24_c111_bb84]
+signal BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_left : unsigned(15 downto 0);
+signal BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_right : unsigned(6 downto 0);
+signal BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output : unsigned(0 downto 0);
 
--- chacha20_decrypt_pipeline_FIFO[chacha20_decrypt_c_l24_c571_fab8]
-signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_CLOCK_ENABLE : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_ready_for_data_out : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in : axis512_t;
-signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in_valid : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output : chacha20_decrypt_pipeline_FIFO_t;
+-- chacha20_decrypt_pipeline_FIFO[chacha20_decrypt_c_l24_c571_e6a6]
+signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_CLOCK_ENABLE : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_ready_for_data_out : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in : axis512_t;
+signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in_valid : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output : chacha20_decrypt_pipeline_FIFO_t;
 
--- fifo_count_MUX[chacha20_decrypt_c_l24_c756_d39b]
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_cond : unsigned(0 downto 0);
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iftrue : unsigned(15 downto 0);
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iffalse : unsigned(15 downto 0);
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output : unsigned(15 downto 0);
+-- fifo_count_MUX[chacha20_decrypt_c_l24_c756_5c65]
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_cond : unsigned(0 downto 0);
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iftrue : unsigned(15 downto 0);
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iffalse : unsigned(15 downto 0);
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output : unsigned(15 downto 0);
 
--- BIN_OP_PLUS[chacha20_decrypt_c_l24_c833_d96f]
-signal BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_left : unsigned(15 downto 0);
-signal BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_right : unsigned(0 downto 0);
-signal BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_return_output : unsigned(16 downto 0);
+-- BIN_OP_PLUS[chacha20_decrypt_c_l24_c833_baee]
+signal BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_left : unsigned(15 downto 0);
+signal BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_right : unsigned(0 downto 0);
+signal BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_return_output : unsigned(16 downto 0);
 
--- BIN_OP_AND[chacha20_decrypt_c_l24_c855_ee57]
-signal BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_left : unsigned(0 downto 0);
-signal BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_right : unsigned(0 downto 0);
-signal BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_return_output : unsigned(0 downto 0);
+-- BIN_OP_AND[chacha20_decrypt_c_l24_c855_f143]
+signal BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_left : unsigned(0 downto 0);
+signal BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_right : unsigned(0 downto 0);
+signal BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_return_output : unsigned(0 downto 0);
 
--- fifo_count_MUX[chacha20_decrypt_c_l24_c852_9702]
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_cond : unsigned(0 downto 0);
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iftrue : unsigned(15 downto 0);
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iffalse : unsigned(15 downto 0);
-signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_return_output : unsigned(15 downto 0);
+-- fifo_count_MUX[chacha20_decrypt_c_l24_c852_a99c]
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_cond : unsigned(0 downto 0);
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iftrue : unsigned(15 downto 0);
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iffalse : unsigned(15 downto 0);
+signal fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_return_output : unsigned(15 downto 0);
 
--- BIN_OP_MINUS[chacha20_decrypt_c_l24_c931_e91f]
-signal BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_left : unsigned(15 downto 0);
-signal BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_right : unsigned(0 downto 0);
-signal BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_return_output : unsigned(15 downto 0);
+-- BIN_OP_MINUS[chacha20_decrypt_c_l24_c931_0c5f]
+signal BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_left : unsigned(15 downto 0);
+signal BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_right : unsigned(0 downto 0);
+signal BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_return_output : unsigned(15 downto 0);
 
--- BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67
-signal BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_left : unsigned(0 downto 0);
-signal BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_right : unsigned(0 downto 0);
-signal BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output : unsigned(0 downto 0);
+-- BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e
+signal BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_left : unsigned(0 downto 0);
+signal BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_right : unsigned(0 downto 0);
+signal BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output : unsigned(0 downto 0);
 
 function CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095( ref_toks_0 : unsigned;
  ref_toks_1 : axis512_t) return axis512_t_stream_t is
@@ -94,58 +94,58 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96 : 0 clocks latency
-BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96 : entity work.BIN_OP_LT_uint16_t_uint7_t_0CLK_5af1a430 port map (
-BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_left,
-BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_right,
-BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output);
+-- BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84 : 0 clocks latency
+BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84 : entity work.BIN_OP_LT_uint16_t_uint7_t_0CLK_5af1a430 port map (
+BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_left,
+BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_right,
+BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output);
 
--- chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8 : 0 clocks latency
-chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8 : entity work.chacha20_decrypt_pipeline_FIFO_0CLK_b45f1687 port map (
+-- chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6 : 0 clocks latency
+chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6 : entity work.chacha20_decrypt_pipeline_FIFO_0CLK_b45f1687 port map (
 clk,
-chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_CLOCK_ENABLE,
-chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_ready_for_data_out,
-chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in,
-chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in_valid,
-chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output);
+chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_CLOCK_ENABLE,
+chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_ready_for_data_out,
+chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in,
+chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in_valid,
+chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output);
 
--- fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b : 0 clocks latency
-fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b : entity work.MUX_uint1_t_uint16_t_uint16_t_0CLK_de264c78 port map (
-fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_cond,
-fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iftrue,
-fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iffalse,
-fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output);
+-- fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65 : 0 clocks latency
+fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65 : entity work.MUX_uint1_t_uint16_t_uint16_t_0CLK_de264c78 port map (
+fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_cond,
+fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iftrue,
+fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iffalse,
+fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output);
 
--- BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f : 0 clocks latency
-BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f : entity work.BIN_OP_PLUS_uint16_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_left,
-BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_right,
-BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_return_output);
+-- BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee : 0 clocks latency
+BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee : entity work.BIN_OP_PLUS_uint16_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_left,
+BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_right,
+BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_return_output);
 
--- BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57 : 0 clocks latency
-BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_left,
-BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_right,
-BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_return_output);
+-- BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143 : 0 clocks latency
+BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_left,
+BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_right,
+BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_return_output);
 
--- fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702 : 0 clocks latency
-fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702 : entity work.MUX_uint1_t_uint16_t_uint16_t_0CLK_de264c78 port map (
-fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_cond,
-fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iftrue,
-fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iffalse,
-fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_return_output);
+-- fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c : 0 clocks latency
+fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c : entity work.MUX_uint1_t_uint16_t_uint16_t_0CLK_de264c78 port map (
+fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_cond,
+fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iftrue,
+fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iffalse,
+fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_return_output);
 
--- BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f : 0 clocks latency
-BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f : entity work.BIN_OP_MINUS_uint16_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_left,
-BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_right,
-BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_return_output);
+-- BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f : 0 clocks latency
+BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f : entity work.BIN_OP_MINUS_uint16_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_left,
+BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_right,
+BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_return_output);
 
--- BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67 : 0 clocks latency
-BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_left,
-BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_right,
-BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output);
+-- BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e : 0 clocks latency
+BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_left,
+BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_right,
+BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output);
 
 
 
@@ -160,14 +160,14 @@ clk_en_internal,
  -- Clock cross input
  global_to_module,
  -- All submodule outputs
- BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output,
- chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output,
- fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output,
- BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_return_output,
- BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_return_output,
- fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_return_output,
- BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_return_output,
- BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output)
+ BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output,
+ chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output,
+ fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output,
+ BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_return_output,
+ BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_return_output,
+ fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_return_output,
+ BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_return_output,
+ BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
@@ -179,44 +179,44 @@ is
  variable VAR_chacha20_decrypt_pipeline_no_handshake_out : axis512_t;
  variable VAR_chacha20_decrypt_pipeline_out_ready : unsigned(0 downto 0);
  variable VAR_chacha20_decrypt_pipeline_out : axis512_t_stream_t;
- variable VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_left : unsigned(15 downto 0);
- variable VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_right : unsigned(6 downto 0);
- variable VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output : unsigned(0 downto 0);
- variable VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d_chacha20_decrypt_c_l24_c296_d1d7_return_output : chacha20_decrypt_loop_body_in_t;
+ variable VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_left : unsigned(15 downto 0);
+ variable VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_right : unsigned(6 downto 0);
+ variable VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d_chacha20_decrypt_c_l24_c296_3a0e_return_output : chacha20_decrypt_loop_body_in_t;
  variable VAR_fifo_wr_en : unsigned(0 downto 0);
  variable VAR_fifo_wr_data : axis512_t;
  variable VAR_fifo_rd_en : unsigned(0 downto 0);
  variable VAR_fifo_o : chacha20_decrypt_pipeline_FIFO_t;
- variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_ready_for_data_out : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in : axis512_t;
- variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in_valid : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_CLOCK_ENABLE : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output : chacha20_decrypt_pipeline_FIFO_t;
- variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_c5d0_return_output : unsigned(0 downto 0);
- variable VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d_chacha20_decrypt_c_l24_c739_be13_return_output : axis512_t;
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iftrue : unsigned(15 downto 0);
- variable VAR_fifo_count_chacha20_decrypt_c_l24_c833_367b : unsigned(15 downto 0);
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iffalse : unsigned(15 downto 0);
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output : unsigned(15 downto 0);
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_left : unsigned(15 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_return_output : unsigned(16 downto 0);
- variable VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_left : unsigned(0 downto 0);
- variable VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_return_output : unsigned(0 downto 0);
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iftrue : unsigned(15 downto 0);
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iffalse : unsigned(15 downto 0);
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_return_output : unsigned(15 downto 0);
- variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_left : unsigned(15 downto 0);
- variable VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_return_output : unsigned(15 downto 0);
- variable VAR_chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095_chacha20_decrypt_c_l24_c6_64cb_return_output : axis512_t_stream_t;
- variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_920d_return_output : unsigned(0 downto 0);
- variable VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_left : unsigned(0 downto 0);
- variable VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_ready_for_data_out : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in : axis512_t;
+ variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in_valid : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output : chacha20_decrypt_pipeline_FIFO_t;
+ variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_702d_return_output : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d_chacha20_decrypt_c_l24_c739_6c19_return_output : axis512_t;
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iftrue : unsigned(15 downto 0);
+ variable VAR_fifo_count_chacha20_decrypt_c_l24_c833_cdc7 : unsigned(15 downto 0);
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iffalse : unsigned(15 downto 0);
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output : unsigned(15 downto 0);
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_left : unsigned(15 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_return_output : unsigned(16 downto 0);
+ variable VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_left : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_return_output : unsigned(0 downto 0);
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iftrue : unsigned(15 downto 0);
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iffalse : unsigned(15 downto 0);
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_return_output : unsigned(15 downto 0);
+ variable VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_left : unsigned(15 downto 0);
+ variable VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_return_output : unsigned(15 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095_chacha20_decrypt_c_l24_c6_0b4a_return_output : axis512_t_stream_t;
+ variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_5503_return_output : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_left : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output : unsigned(0 downto 0);
  -- State registers comb logic variables
 variable REG_VAR_fifo_count : unsigned(15 downto 0);
 begin
@@ -226,28 +226,28 @@ begin
   REG_VAR_fifo_count := fifo_count;
  -- Constants and things derived from constants alone
      -- Submodule level 0
-     VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_right := to_unsigned(64, 7);
-     VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_right := to_unsigned(1, 1);
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_right := to_unsigned(1, 1);
+     VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_right := to_unsigned(1, 1);
+     VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_right := to_unsigned(64, 7);
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_right := to_unsigned(1, 1);
  -- Reads from global variables
      VAR_chacha20_decrypt_pipeline_in := global_to_module.chacha20_decrypt_pipeline_in;
      VAR_chacha20_decrypt_pipeline_no_handshake_out_valid := global_to_module.chacha20_decrypt_pipeline_no_handshake_out_valid;
      VAR_chacha20_decrypt_pipeline_no_handshake_out := global_to_module.chacha20_decrypt_pipeline_no_handshake_out;
      VAR_chacha20_decrypt_pipeline_out_ready := global_to_module.chacha20_decrypt_pipeline_out_ready;
      -- Submodule level 0
-     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in_valid := VAR_chacha20_decrypt_pipeline_no_handshake_out_valid;
-     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_ready_for_data_out := VAR_chacha20_decrypt_pipeline_out_ready;
-     VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_right := VAR_chacha20_decrypt_pipeline_out_ready;
-     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in := VAR_chacha20_decrypt_pipeline_no_handshake_out;
-     -- CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d[chacha20_decrypt_c_l24_c296_d1d7] LATENCY=0
-     VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d_chacha20_decrypt_c_l24_c296_d1d7_return_output := VAR_chacha20_decrypt_pipeline_in.data;
+     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in_valid := VAR_chacha20_decrypt_pipeline_no_handshake_out_valid;
+     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_ready_for_data_out := VAR_chacha20_decrypt_pipeline_out_ready;
+     VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_right := VAR_chacha20_decrypt_pipeline_out_ready;
+     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in := VAR_chacha20_decrypt_pipeline_no_handshake_out;
+     -- CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_5503 LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_5503_return_output := VAR_chacha20_decrypt_pipeline_in.valid;
 
-     -- CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_920d LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_920d_return_output := VAR_chacha20_decrypt_pipeline_in.valid;
+     -- CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d[chacha20_decrypt_c_l24_c296_3a0e] LATENCY=0
+     VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d_chacha20_decrypt_c_l24_c296_3a0e_return_output := VAR_chacha20_decrypt_pipeline_in.data;
 
      -- Submodule level 1
-     VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_left := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_920d_return_output;
-     VAR_chacha20_decrypt_pipeline_no_handshake_in := VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d_chacha20_decrypt_c_l24_c296_d1d7_return_output;
+     VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_left := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l24_DUPLICATE_5503_return_output;
+     VAR_chacha20_decrypt_pipeline_no_handshake_in := VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_loop_body_in_t_stream_t_data_d41d_chacha20_decrypt_c_l24_c296_3a0e_return_output;
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -257,100 +257,100 @@ begin
      VAR_CLOCK_ENABLE(0) := clk_en_internal;
 
      -- Submodule level 0
-     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
-     VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_left := fifo_count;
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_left := fifo_count;
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iffalse := fifo_count;
-     -- BIN_OP_LT[chacha20_decrypt_c_l24_c111_5a96] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_left := fifo_count;
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_left := fifo_count;
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iffalse := fifo_count;
+     -- BIN_OP_LT[chacha20_decrypt_c_l24_c111_bb84] LATENCY=0
      -- Inputs
-     BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_left <= VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_left;
-     BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_right <= VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_right;
+     BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_left <= VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_left;
+     BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_right <= VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_right;
      -- Outputs
-     VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output := BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output;
+     VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output := BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output;
 
-     -- chacha20_decrypt_pipeline_FIFO[chacha20_decrypt_c_l24_c571_fab8] LATENCY=0
+     -- BIN_OP_PLUS[chacha20_decrypt_c_l24_c833_baee] LATENCY=0
+     -- Inputs
+     BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_left <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_left;
+     BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_right <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_right;
+     -- Outputs
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_return_output := BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_return_output;
+
+     -- chacha20_decrypt_pipeline_FIFO[chacha20_decrypt_c_l24_c571_e6a6] LATENCY=0
      -- Clock enable
-     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_CLOCK_ENABLE <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_CLOCK_ENABLE;
+     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_CLOCK_ENABLE <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_CLOCK_ENABLE;
      -- Inputs
-     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_ready_for_data_out <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_ready_for_data_out;
-     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in;
-     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in_valid <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_data_in_valid;
+     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_ready_for_data_out <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_ready_for_data_out;
+     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in;
+     chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in_valid <= VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_data_in_valid;
      -- Outputs
-     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output := chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output;
-
-     -- BIN_OP_PLUS[chacha20_decrypt_c_l24_c833_d96f] LATENCY=0
-     -- Inputs
-     BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_left <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_left;
-     BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_right <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_right;
-     -- Outputs
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_return_output := BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_return_output;
+     VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output := chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output;
 
      -- Submodule level 1
-     VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_right := VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output;
-     VAR_chacha20_decrypt_pipeline_in_ready := VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_5a96_return_output;
-     VAR_fifo_count_chacha20_decrypt_c_l24_c833_367b := resize(VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_d96f_return_output, 16);
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iftrue := VAR_fifo_count_chacha20_decrypt_c_l24_c833_367b;
-     -- CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d[chacha20_decrypt_c_l24_c679_c5d0] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_c5d0_return_output := VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output.data_out_valid;
-
-     -- BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67 LATENCY=0
+     VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_right := VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output;
+     VAR_chacha20_decrypt_pipeline_in_ready := VAR_BIN_OP_LT_chacha20_decrypt_c_l24_c111_bb84_return_output;
+     VAR_fifo_count_chacha20_decrypt_c_l24_c833_cdc7 := resize(VAR_BIN_OP_PLUS_chacha20_decrypt_c_l24_c833_baee_return_output, 16);
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iftrue := VAR_fifo_count_chacha20_decrypt_c_l24_c833_cdc7;
+     -- BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e LATENCY=0
      -- Inputs
-     BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_left <= VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_left;
-     BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_right <= VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_right;
+     BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_left <= VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_left;
+     BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_right <= VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_right;
      -- Outputs
-     VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output := BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output;
+     VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output := BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output;
 
-     -- CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d[chacha20_decrypt_c_l24_c739_be13] LATENCY=0
-     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d_chacha20_decrypt_c_l24_c739_be13_return_output := VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_fab8_return_output.data_out;
+     -- CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d[chacha20_decrypt_c_l24_c679_702d] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_702d_return_output := VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output.data_out_valid;
+
+     -- CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d[chacha20_decrypt_c_l24_c739_6c19] LATENCY=0
+     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d_chacha20_decrypt_c_l24_c739_6c19_return_output := VAR_chacha20_decrypt_pipeline_FIFO_chacha20_decrypt_c_l24_c571_e6a6_return_output.data_out;
 
      -- Submodule level 2
-     VAR_chacha20_decrypt_pipeline_no_handshake_in_valid := VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output;
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_cond := VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_8b67_return_output;
-     VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_left := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_c5d0_return_output;
-     -- chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095[chacha20_decrypt_c_l24_c6_64cb] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095_chacha20_decrypt_c_l24_c6_64cb_return_output := CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095(
-     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_c5d0_return_output,
-     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d_chacha20_decrypt_c_l24_c739_be13_return_output);
+     VAR_chacha20_decrypt_pipeline_no_handshake_in_valid := VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output;
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_cond := VAR_BIN_OP_AND_uint1_t_uint1_t_chacha20_decrypt_c_l24_DUPLICATE_366e_return_output;
+     VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_left := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_702d_return_output;
+     -- chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095[chacha20_decrypt_c_l24_c6_0b4a] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095_chacha20_decrypt_c_l24_c6_0b4a_return_output := CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095(
+     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_FIFO_t_data_out_valid_d41d_chacha20_decrypt_c_l24_c679_702d_return_output,
+     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_FIFO_t_data_out_d41d_chacha20_decrypt_c_l24_c739_6c19_return_output);
 
-     -- BIN_OP_AND[chacha20_decrypt_c_l24_c855_ee57] LATENCY=0
+     -- BIN_OP_AND[chacha20_decrypt_c_l24_c855_f143] LATENCY=0
      -- Inputs
-     BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_left <= VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_left;
-     BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_right <= VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_right;
+     BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_left <= VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_left;
+     BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_right <= VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_right;
      -- Outputs
-     VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_return_output := BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_return_output;
+     VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_return_output := BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_return_output;
 
-     -- fifo_count_MUX[chacha20_decrypt_c_l24_c756_d39b] LATENCY=0
+     -- fifo_count_MUX[chacha20_decrypt_c_l24_c756_5c65] LATENCY=0
      -- Inputs
-     fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_cond <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_cond;
-     fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iftrue <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iftrue;
-     fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iffalse <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_iffalse;
+     fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_cond <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_cond;
+     fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iftrue <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iftrue;
+     fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iffalse <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_iffalse;
      -- Outputs
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output := fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output;
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output := fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output;
 
      -- Submodule level 3
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_cond := VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_ee57_return_output;
-     VAR_chacha20_decrypt_pipeline_out := VAR_chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095_chacha20_decrypt_c_l24_c6_64cb_return_output;
-     VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_left := VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output;
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iffalse := VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_d39b_return_output;
-     -- BIN_OP_MINUS[chacha20_decrypt_c_l24_c931_e91f] LATENCY=0
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_cond := VAR_BIN_OP_AND_chacha20_decrypt_c_l24_c855_f143_return_output;
+     VAR_chacha20_decrypt_pipeline_out := VAR_chacha20_decrypt_pipeline_out_CONST_REF_RD_axis512_t_stream_t_axis512_t_stream_t_1095_chacha20_decrypt_c_l24_c6_0b4a_return_output;
+     VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_left := VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output;
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iffalse := VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c756_5c65_return_output;
+     -- BIN_OP_MINUS[chacha20_decrypt_c_l24_c931_0c5f] LATENCY=0
      -- Inputs
-     BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_left <= VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_left;
-     BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_right <= VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_right;
+     BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_left <= VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_left;
+     BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_right <= VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_right;
      -- Outputs
-     VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_return_output := BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_return_output;
+     VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_return_output := BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_return_output;
 
      -- Submodule level 4
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iftrue := VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_e91f_return_output;
-     -- fifo_count_MUX[chacha20_decrypt_c_l24_c852_9702] LATENCY=0
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iftrue := VAR_BIN_OP_MINUS_chacha20_decrypt_c_l24_c931_0c5f_return_output;
+     -- fifo_count_MUX[chacha20_decrypt_c_l24_c852_a99c] LATENCY=0
      -- Inputs
-     fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_cond <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_cond;
-     fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iftrue <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iftrue;
-     fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iffalse <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_iffalse;
+     fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_cond <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_cond;
+     fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iftrue <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iftrue;
+     fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iffalse <= VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_iffalse;
      -- Outputs
-     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_return_output := fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_return_output;
+     VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_return_output := fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_return_output;
 
      -- Submodule level 5
-     REG_VAR_fifo_count := VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_9702_return_output;
+     REG_VAR_fifo_count := VAR_fifo_count_MUX_chacha20_decrypt_c_l24_c852_a99c_return_output;
    end if;
  end loop;
 

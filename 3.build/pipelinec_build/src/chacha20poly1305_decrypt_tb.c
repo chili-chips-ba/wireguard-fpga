@@ -87,18 +87,15 @@ stream(axis128_t) tb()
     
     /*
      * We define the expected outputs (Plaintext) 
-     * NOTE: Changed 'char' to 'uint8_t' to ensure compatible array types
-     * and avoid the problematic C cast.
-     * */
+     */
     #define NUM_PACKETS 2
     #define PLAINTEXT_MAX_SIZE 128
     #define EXPECTED_PLAINTEXT_STR0 "Hello CHILIChips - Wireguard team, let's test this aead!"
     #define EXPECTED_PLAINTEXT_STR0_LEN strlen(EXPECTED_PLAINTEXT_STR0)
     #define EXPECTED_PLAINTEXT_STR1 "PipelineC is the best HDL around :) Let's go CHILIChips Wireguard team!"
     #define EXPECTED_PLAINTEXT_STR1_LEN strlen(EXPECTED_PLAINTEXT_STR1)
-    
-    // *** FIX 1: Change to uint8_t to match plaintext_out_expected ***
-    uint8_t plaintexts[NUM_PACKETS][PLAINTEXT_MAX_SIZE] = {
+
+    char plaintexts[NUM_PACKETS][PLAINTEXT_MAX_SIZE] = {
         EXPECTED_PLAINTEXT_STR0,
         EXPECTED_PLAINTEXT_STR1
     };
@@ -169,8 +166,7 @@ stream(axis128_t) tb()
     static uint32_t output_packet_count;
     static uint32_t plaintext_out_size;
     static uint32_t plaintext_remaining_out;
-    // Note: Must be static array for array assignment (equals sign) to work
-    static uint8_t plaintext_out_expected[PLAINTEXT_MAX_SIZE]; 
+    static char plaintext_out_expected[PLAINTEXT_MAX_SIZE]; 
     static uint1_t tag_match_checked;
 
     // Initialize/Reset Logic
@@ -183,7 +179,6 @@ stream(axis128_t) tb()
         print_aad(aad, aad_len);
         
         // Init input regs with first test ciphertext
-        // Assignment is fine here as both are uint8_t arrays
         ciphertext_in_stream = input_ciphertexts[input_packet_count]; 
         ciphertext_remaining_in = ciphertext_lens[input_packet_count];
         printf("Decrypting test string %u (Ciphertext size: %u)...\n", input_packet_count, ciphertext_remaining_in);
@@ -192,7 +187,6 @@ stream(axis128_t) tb()
         plaintext_out_size = plaintext_lens[output_packet_count];
         plaintext_remaining_out = plaintext_out_size;
         
-        // *** FIX 2: Removed explicit cast; now array types are compatible (uint8_t[128]) ***
         plaintext_out_expected = plaintexts[output_packet_count];
         
         printf("Checking Plaintext for test string %u (Expected size: %u)...\n", output_packet_count, plaintext_out_size);

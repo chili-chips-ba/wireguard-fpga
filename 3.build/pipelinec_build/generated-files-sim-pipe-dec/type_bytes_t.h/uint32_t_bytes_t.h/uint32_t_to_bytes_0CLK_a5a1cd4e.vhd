@@ -88,11 +88,11 @@ is
  variable VAR_return_output : uint8_t_array_4_t;
  variable VAR_x : unsigned(31 downto 0);
  variable VAR_rv : uint8_t_array_4_t;
- variable VAR_uint32_7_0_uint32_t_bytes_t_h_l11_c14_ee12_return_output : unsigned(7 downto 0);
- variable VAR_uint32_15_8_uint32_t_bytes_t_h_l12_c14_4525_return_output : unsigned(7 downto 0);
- variable VAR_uint32_23_16_uint32_t_bytes_t_h_l13_c14_5db8_return_output : unsigned(7 downto 0);
- variable VAR_uint32_31_24_uint32_t_bytes_t_h_l14_c14_13ad_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68_uint32_t_bytes_t_h_l16_c12_a59d_return_output : uint8_t_array_4_t;
+ variable VAR_uint32_7_0_uint32_t_bytes_t_h_l11_c14_d39c_return_output : unsigned(7 downto 0);
+ variable VAR_uint32_15_8_uint32_t_bytes_t_h_l12_c14_71c1_return_output : unsigned(7 downto 0);
+ variable VAR_uint32_23_16_uint32_t_bytes_t_h_l13_c14_07ec_return_output : unsigned(7 downto 0);
+ variable VAR_uint32_31_24_uint32_t_bytes_t_h_l14_c14_8b26_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68_uint32_t_bytes_t_h_l16_c12_c412_return_output : uint8_t_array_4_t;
 begin
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
@@ -103,32 +103,32 @@ begin
      VAR_x := x;
 
      -- Submodule level 0
-     -- uint32_31_24[uint32_t_bytes_t_h_l14_c14_13ad] LATENCY=0
-     VAR_uint32_31_24_uint32_t_bytes_t_h_l14_c14_13ad_return_output := uint32_31_24(
+     -- uint32_23_16[uint32_t_bytes_t_h_l13_c14_07ec] LATENCY=0
+     VAR_uint32_23_16_uint32_t_bytes_t_h_l13_c14_07ec_return_output := uint32_23_16(
      VAR_x);
 
-     -- uint32_7_0[uint32_t_bytes_t_h_l11_c14_ee12] LATENCY=0
-     VAR_uint32_7_0_uint32_t_bytes_t_h_l11_c14_ee12_return_output := uint32_7_0(
+     -- uint32_31_24[uint32_t_bytes_t_h_l14_c14_8b26] LATENCY=0
+     VAR_uint32_31_24_uint32_t_bytes_t_h_l14_c14_8b26_return_output := uint32_31_24(
      VAR_x);
 
-     -- uint32_23_16[uint32_t_bytes_t_h_l13_c14_5db8] LATENCY=0
-     VAR_uint32_23_16_uint32_t_bytes_t_h_l13_c14_5db8_return_output := uint32_23_16(
+     -- uint32_7_0[uint32_t_bytes_t_h_l11_c14_d39c] LATENCY=0
+     VAR_uint32_7_0_uint32_t_bytes_t_h_l11_c14_d39c_return_output := uint32_7_0(
      VAR_x);
 
-     -- uint32_15_8[uint32_t_bytes_t_h_l12_c14_4525] LATENCY=0
-     VAR_uint32_15_8_uint32_t_bytes_t_h_l12_c14_4525_return_output := uint32_15_8(
+     -- uint32_15_8[uint32_t_bytes_t_h_l12_c14_71c1] LATENCY=0
+     VAR_uint32_15_8_uint32_t_bytes_t_h_l12_c14_71c1_return_output := uint32_15_8(
      VAR_x);
 
      -- Submodule level 1
-     -- CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68[uint32_t_bytes_t_h_l16_c12_a59d] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68_uint32_t_bytes_t_h_l16_c12_a59d_return_output := CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68(
-     VAR_uint32_7_0_uint32_t_bytes_t_h_l11_c14_ee12_return_output,
-     VAR_uint32_15_8_uint32_t_bytes_t_h_l12_c14_4525_return_output,
-     VAR_uint32_23_16_uint32_t_bytes_t_h_l13_c14_5db8_return_output,
-     VAR_uint32_31_24_uint32_t_bytes_t_h_l14_c14_13ad_return_output);
+     -- CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68[uint32_t_bytes_t_h_l16_c12_c412] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68_uint32_t_bytes_t_h_l16_c12_c412_return_output := CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68(
+     VAR_uint32_7_0_uint32_t_bytes_t_h_l11_c14_d39c_return_output,
+     VAR_uint32_15_8_uint32_t_bytes_t_h_l12_c14_71c1_return_output,
+     VAR_uint32_23_16_uint32_t_bytes_t_h_l13_c14_07ec_return_output,
+     VAR_uint32_31_24_uint32_t_bytes_t_h_l14_c14_8b26_return_output);
 
      -- Submodule level 2
-     VAR_return_output := VAR_CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68_uint32_t_bytes_t_h_l16_c12_a59d_return_output;
+     VAR_return_output := VAR_CONST_REF_RD_uint8_t_array_4_t_uint8_t_array_4_t_4a68_uint32_t_bytes_t_h_l16_c12_c412_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

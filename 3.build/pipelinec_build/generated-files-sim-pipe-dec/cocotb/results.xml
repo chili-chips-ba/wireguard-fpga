@@ -1,6 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1763548907" />
-    <testcase name="my_first_test" classname="test_top" file="/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/cocotb/test_top.py" lineno="7" time="10.341845035552979" sim_time_ns="3118.75" ratio_time="301.56611216648736" />
+    <property name="random_seed" value="1763721477" />
+    <testcase name="my_first_test" classname="test_top" file="/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/cocotb/test_top.py" lineno="7" time="11.056424856185913" sim_time_ns="3118.75" ratio_time="282.07581027018" />
   </testsuite>
 </testsuites>

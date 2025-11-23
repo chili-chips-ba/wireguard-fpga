@@ -128,15 +128,15 @@ is
  variable VAR_return_output : uint8_t_array_8_t;
  variable VAR_x : unsigned(63 downto 0);
  variable VAR_rv : uint8_t_array_8_t;
- variable VAR_uint64_7_0_uint64_t_bytes_t_h_l11_c14_c779_return_output : unsigned(7 downto 0);
- variable VAR_uint64_15_8_uint64_t_bytes_t_h_l12_c14_c697_return_output : unsigned(7 downto 0);
- variable VAR_uint64_23_16_uint64_t_bytes_t_h_l13_c14_bd60_return_output : unsigned(7 downto 0);
- variable VAR_uint64_31_24_uint64_t_bytes_t_h_l14_c14_8f11_return_output : unsigned(7 downto 0);
- variable VAR_uint64_39_32_uint64_t_bytes_t_h_l15_c14_e02d_return_output : unsigned(7 downto 0);
- variable VAR_uint64_47_40_uint64_t_bytes_t_h_l16_c14_dace_return_output : unsigned(7 downto 0);
- variable VAR_uint64_55_48_uint64_t_bytes_t_h_l17_c14_0580_return_output : unsigned(7 downto 0);
- variable VAR_uint64_63_56_uint64_t_bytes_t_h_l18_c14_dde4_return_output : unsigned(7 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58_uint64_t_bytes_t_h_l20_c12_ed3d_return_output : uint8_t_array_8_t;
+ variable VAR_uint64_7_0_uint64_t_bytes_t_h_l11_c14_62f0_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_15_8_uint64_t_bytes_t_h_l12_c14_9c6a_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_23_16_uint64_t_bytes_t_h_l13_c14_b5a7_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_31_24_uint64_t_bytes_t_h_l14_c14_8a5f_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_39_32_uint64_t_bytes_t_h_l15_c14_96cf_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_47_40_uint64_t_bytes_t_h_l16_c14_35e2_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_55_48_uint64_t_bytes_t_h_l17_c14_f2c0_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_63_56_uint64_t_bytes_t_h_l18_c14_231f_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58_uint64_t_bytes_t_h_l20_c12_be87_return_output : uint8_t_array_8_t;
 begin
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
@@ -147,52 +147,52 @@ begin
      VAR_x := x;
 
      -- Submodule level 0
-     -- uint64_31_24[uint64_t_bytes_t_h_l14_c14_8f11] LATENCY=0
-     VAR_uint64_31_24_uint64_t_bytes_t_h_l14_c14_8f11_return_output := uint64_31_24(
+     -- uint64_47_40[uint64_t_bytes_t_h_l16_c14_35e2] LATENCY=0
+     VAR_uint64_47_40_uint64_t_bytes_t_h_l16_c14_35e2_return_output := uint64_47_40(
      VAR_x);
 
-     -- uint64_63_56[uint64_t_bytes_t_h_l18_c14_dde4] LATENCY=0
-     VAR_uint64_63_56_uint64_t_bytes_t_h_l18_c14_dde4_return_output := uint64_63_56(
+     -- uint64_7_0[uint64_t_bytes_t_h_l11_c14_62f0] LATENCY=0
+     VAR_uint64_7_0_uint64_t_bytes_t_h_l11_c14_62f0_return_output := uint64_7_0(
      VAR_x);
 
-     -- uint64_47_40[uint64_t_bytes_t_h_l16_c14_dace] LATENCY=0
-     VAR_uint64_47_40_uint64_t_bytes_t_h_l16_c14_dace_return_output := uint64_47_40(
+     -- uint64_55_48[uint64_t_bytes_t_h_l17_c14_f2c0] LATENCY=0
+     VAR_uint64_55_48_uint64_t_bytes_t_h_l17_c14_f2c0_return_output := uint64_55_48(
      VAR_x);
 
-     -- uint64_55_48[uint64_t_bytes_t_h_l17_c14_0580] LATENCY=0
-     VAR_uint64_55_48_uint64_t_bytes_t_h_l17_c14_0580_return_output := uint64_55_48(
+     -- uint64_31_24[uint64_t_bytes_t_h_l14_c14_8a5f] LATENCY=0
+     VAR_uint64_31_24_uint64_t_bytes_t_h_l14_c14_8a5f_return_output := uint64_31_24(
      VAR_x);
 
-     -- uint64_23_16[uint64_t_bytes_t_h_l13_c14_bd60] LATENCY=0
-     VAR_uint64_23_16_uint64_t_bytes_t_h_l13_c14_bd60_return_output := uint64_23_16(
+     -- uint64_63_56[uint64_t_bytes_t_h_l18_c14_231f] LATENCY=0
+     VAR_uint64_63_56_uint64_t_bytes_t_h_l18_c14_231f_return_output := uint64_63_56(
      VAR_x);
 
-     -- uint64_15_8[uint64_t_bytes_t_h_l12_c14_c697] LATENCY=0
-     VAR_uint64_15_8_uint64_t_bytes_t_h_l12_c14_c697_return_output := uint64_15_8(
+     -- uint64_23_16[uint64_t_bytes_t_h_l13_c14_b5a7] LATENCY=0
+     VAR_uint64_23_16_uint64_t_bytes_t_h_l13_c14_b5a7_return_output := uint64_23_16(
      VAR_x);
 
-     -- uint64_7_0[uint64_t_bytes_t_h_l11_c14_c779] LATENCY=0
-     VAR_uint64_7_0_uint64_t_bytes_t_h_l11_c14_c779_return_output := uint64_7_0(
+     -- uint64_39_32[uint64_t_bytes_t_h_l15_c14_96cf] LATENCY=0
+     VAR_uint64_39_32_uint64_t_bytes_t_h_l15_c14_96cf_return_output := uint64_39_32(
      VAR_x);
 
-     -- uint64_39_32[uint64_t_bytes_t_h_l15_c14_e02d] LATENCY=0
-     VAR_uint64_39_32_uint64_t_bytes_t_h_l15_c14_e02d_return_output := uint64_39_32(
+     -- uint64_15_8[uint64_t_bytes_t_h_l12_c14_9c6a] LATENCY=0
+     VAR_uint64_15_8_uint64_t_bytes_t_h_l12_c14_9c6a_return_output := uint64_15_8(
      VAR_x);
 
      -- Submodule level 1
-     -- CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58[uint64_t_bytes_t_h_l20_c12_ed3d] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58_uint64_t_bytes_t_h_l20_c12_ed3d_return_output := CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58(
-     VAR_uint64_7_0_uint64_t_bytes_t_h_l11_c14_c779_return_output,
-     VAR_uint64_15_8_uint64_t_bytes_t_h_l12_c14_c697_return_output,
-     VAR_uint64_23_16_uint64_t_bytes_t_h_l13_c14_bd60_return_output,
-     VAR_uint64_31_24_uint64_t_bytes_t_h_l14_c14_8f11_return_output,
-     VAR_uint64_39_32_uint64_t_bytes_t_h_l15_c14_e02d_return_output,
-     VAR_uint64_47_40_uint64_t_bytes_t_h_l16_c14_dace_return_output,
-     VAR_uint64_55_48_uint64_t_bytes_t_h_l17_c14_0580_return_output,
-     VAR_uint64_63_56_uint64_t_bytes_t_h_l18_c14_dde4_return_output);
+     -- CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58[uint64_t_bytes_t_h_l20_c12_be87] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58_uint64_t_bytes_t_h_l20_c12_be87_return_output := CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58(
+     VAR_uint64_7_0_uint64_t_bytes_t_h_l11_c14_62f0_return_output,
+     VAR_uint64_15_8_uint64_t_bytes_t_h_l12_c14_9c6a_return_output,
+     VAR_uint64_23_16_uint64_t_bytes_t_h_l13_c14_b5a7_return_output,
+     VAR_uint64_31_24_uint64_t_bytes_t_h_l14_c14_8a5f_return_output,
+     VAR_uint64_39_32_uint64_t_bytes_t_h_l15_c14_96cf_return_output,
+     VAR_uint64_47_40_uint64_t_bytes_t_h_l16_c14_35e2_return_output,
+     VAR_uint64_55_48_uint64_t_bytes_t_h_l17_c14_f2c0_return_output,
+     VAR_uint64_63_56_uint64_t_bytes_t_h_l18_c14_231f_return_output);
 
      -- Submodule level 2
-     VAR_return_output := VAR_CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58_uint64_t_bytes_t_h_l20_c12_ed3d_return_output;
+     VAR_return_output := VAR_CONST_REF_RD_uint8_t_array_8_t_uint8_t_array_8_t_dd58_uint64_t_bytes_t_h_l20_c12_be87_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;
