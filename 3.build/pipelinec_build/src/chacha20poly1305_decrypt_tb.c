@@ -195,15 +195,20 @@ stream(axis128_t) tb()
 
     // Stream ciphertext into dut
     chacha20poly1305_decrypt_axis_in.valid = 0;
+
+    //DEBUGGING 
+    printf("Length of remaining ciphertext: %d\n", ciphertext_remaining_in);
     
     // Have valid data if there is more ciphertext to send
     if(ciphertext_remaining_in > 0)
     {
+
+        printf("Entering ciphertext_remaining_in > 0\n");
         // Up to 16 bytes of ciphertext/tag onto axis128
         for(int32_t i=0; i<16; i+=1)
         {
             chacha20poly1305_decrypt_axis_in.data.tkeep[i] = 1;
-            chacha20poly1305_decrypt_axis_in.data.tdata[i] = 0; // default zero
+            chacha20poly1305_decrypt_axis_in.data.tdata[i] = 0; 
             if(ciphertext_remaining_in > i)
             {
                 chacha20poly1305_decrypt_axis_in.data.tdata[i] = ciphertext_in_stream[i];
@@ -212,8 +217,12 @@ stream(axis128_t) tb()
         // tlast is set when the remaining data is 16 bytes or less (i.e., the last block)
         chacha20poly1305_decrypt_axis_in.data.tlast = (ciphertext_remaining_in <= 16);
         chacha20poly1305_decrypt_axis_in.valid = 1;
+
+        printf("chacha20poly1305_decrypt_axis_in.data.tlast = %u\n", chacha20poly1305_decrypt_axis_in.data.tlast);
+        printf("chacha20poly1305_decrypt_axis_in.valid = %u\n", chacha20poly1305_decrypt_axis_in.valid);
+        printf("chacha20poly1305_decrypt_axis_in_ready = %u\n", chacha20poly1305_decrypt_axis_in_ready);
         
-        if(chacha20poly1305_decrypt_axis_in.valid & chacha20poly1305_decrypt_axis_in_ready)
+        if(chacha20poly1305_decrypt_axis_in.valid ) //& chacha20poly1305_decrypt_axis_in_ready
         {
             PRINT_16_BYTES("Input Ciphertext/Tag next 16 bytes: ", chacha20poly1305_decrypt_axis_in.data.tdata)
             

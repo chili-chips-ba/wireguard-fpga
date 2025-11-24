@@ -104,7 +104,7 @@ main_0CLK_fc74e538 : entity work.main_0CLK_fc74e538 port map (
 global_to_module.main,
 module_to_global.main);
 
-tb_0CLK_447ec4ab : entity work.tb_0CLK_447ec4ab port map (
+tb_0CLK_4a3c2ae0 : entity work.tb_0CLK_4a3c2ae0 port map (
 clk_80p0,
 to_unsigned(1,1),
 global_to_module.tb,
@@ -129,133 +129,133 @@ global_to_module.verify_fifo_rd_stream_out.verify_fifo_FIFO_READ_1_return_output
 
 
 -- Directly connected global wires
-global_to_module.poly1305_mac.poly1305_pipeline_out <= module_to_global.poly1305_pipeline.poly1305_pipeline_out;
-
-global_to_module.main.chacha20poly1305_decrypt_aad_len <= module_to_global.tb.chacha20poly1305_decrypt_aad_len;
-
-global_to_module.strip_auth_tag.strip_auth_tag_axis_in <= module_to_global.main.strip_auth_tag_axis_in;
-
-global_to_module.main.poly1305_mac_data_in_ready <= module_to_global.poly1305_mac.poly1305_mac_data_in_ready;
-
-global_to_module.wait_to_verify.wait_to_verify_axis_in <= module_to_global.main.wait_to_verify_axis_in;
-
-global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_no_handshake_out_valid <= module_to_global.chacha20_decrypt_pipeline_no_handshake.chacha20_decrypt_pipeline_no_handshake_out_valid;
-
-global_to_module.main.wait_to_verify_axis_in_ready <= module_to_global.wait_to_verify.wait_to_verify_axis_in_ready;
-
-global_to_module.poly1305_mac.poly1305_mac_data_in <= module_to_global.main.poly1305_mac_data_in;
-
-global_to_module.main.chacha20poly1305_decrypt_nonce <= module_to_global.tb.chacha20poly1305_decrypt_nonce;
-
-global_to_module.main.chacha20poly1305_decrypt_aad <= module_to_global.tb.chacha20poly1305_decrypt_aad;
+global_to_module.main.chacha20poly1305_decrypt_axis_out_ready <= module_to_global.tb.chacha20poly1305_decrypt_axis_out_ready;
 
 global_to_module.tb.chacha20poly1305_decrypt_axis_in_ready <= module_to_global.main.chacha20poly1305_decrypt_axis_in_ready;
 
-global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_out_ready <= module_to_global.chacha20_decrypt_output_side.chacha20_decrypt_pipeline_out_ready;
-
-global_to_module.prep_auth_data.prep_auth_data_axis_out_ready <= module_to_global.main.prep_auth_data_axis_out_ready;
-
-global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_pipeline_in_ready <= module_to_global.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_in_ready;
-
-global_to_module.wait_to_verify.wait_to_verify_verify_bit <= module_to_global.main.wait_to_verify_verify_bit;
-
-global_to_module.main.prep_auth_data_axis_out <= module_to_global.prep_auth_data.prep_auth_data_axis_out;
-
-global_to_module.chacha20_decrypt_pipeline_no_handshake.chacha20_decrypt_pipeline_no_handshake_in <= module_to_global.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_no_handshake_in;
-
-global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_axis_in <= module_to_global.main.chacha20_decrypt_axis_in;
-
-global_to_module.main.poly1305_verify_auth_tag_ready <= module_to_global.poly1305_verify_decrypt.poly1305_verify_auth_tag_ready;
-
-global_to_module.main.strip_auth_tag_auth_tag_out <= module_to_global.strip_auth_tag.strip_auth_tag_auth_tag_out;
-
-global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_nonce <= module_to_global.main.chacha20_decrypt_nonce;
-
-global_to_module.strip_auth_tag.strip_auth_tag_axis_out_ready <= module_to_global.main.strip_auth_tag_axis_out_ready;
-
-global_to_module.prep_auth_data.prep_auth_data_aad <= module_to_global.main.prep_auth_data_aad;
-
-global_to_module.main.poly1305_mac_key_ready <= module_to_global.poly1305_mac.poly1305_mac_key_ready;
-
-global_to_module.main.chacha20poly1305_decrypt_axis_out_ready <= module_to_global.tb.chacha20poly1305_decrypt_axis_out_ready;
-
-global_to_module.prep_auth_data.prep_auth_data_axis_in <= module_to_global.main.prep_auth_data_axis_in;
-
-global_to_module.main.poly1305_verify_tags_match <= module_to_global.poly1305_verify_decrypt.poly1305_verify_tags_match;
-
-global_to_module.main.wait_to_verify_verify_bit_ready <= module_to_global.wait_to_verify.wait_to_verify_verify_bit_ready;
-
-global_to_module.main.wait_to_verify_axis_out <= module_to_global.wait_to_verify.wait_to_verify_axis_out;
-
-global_to_module.main.chacha20_decrypt_poly_key <= module_to_global.chacha20_decrypt_output_side.chacha20_decrypt_poly_key;
-
-global_to_module.wait_to_verify.verify_fifo_out <= module_to_global.verify_fifo_rd_stream_out.verify_fifo_out;
+global_to_module.chacha20_decrypt_output_side.chacha20_decrypt_axis_out_ready <= module_to_global.main.chacha20_decrypt_axis_out_ready;
 
 global_to_module.strip_auth_tag.strip_auth_tag_auth_tag_out_ready <= module_to_global.main.strip_auth_tag_auth_tag_out_ready;
 
-global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_key <= module_to_global.main.chacha20_decrypt_key;
-
-global_to_module.main.poly1305_verify_calc_tag_ready <= module_to_global.poly1305_verify_decrypt.poly1305_verify_calc_tag_ready;
-
-global_to_module.verify_fifo_rd_stream_out.verify_fifo_out_ready <= module_to_global.wait_to_verify.verify_fifo_out_ready;
-
-global_to_module.poly1305_mac.poly1305_mac_auth_tag_ready <= module_to_global.main.poly1305_mac_auth_tag_ready;
-
-global_to_module.chacha20_decrypt_output_side.chacha20_decrypt_axis_out_ready <= module_to_global.main.chacha20_decrypt_axis_out_ready;
-
-global_to_module.main.prep_auth_data_axis_in_ready <= module_to_global.prep_auth_data.prep_auth_data_axis_in_ready;
-
-global_to_module.chacha20_decrypt_output_side.chacha20_decrypt_poly_key_ready <= module_to_global.main.chacha20_decrypt_poly_key_ready;
-
-global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_in <= module_to_global.chacha20_decrypt_input_side.chacha20_decrypt_pipeline_in;
-
-global_to_module.poly1305_verify_decrypt.poly1305_verify_auth_tag <= module_to_global.main.poly1305_verify_auth_tag;
-
-global_to_module.main.chacha20_decrypt_axis_in_ready <= module_to_global.chacha20_decrypt_input_side.chacha20_decrypt_axis_in_ready;
-
-global_to_module.poly1305_pipeline.poly1305_pipeline_in_valid <= module_to_global.poly1305_mac.poly1305_pipeline_in_valid;
-
-global_to_module.verify_fifo_wr_stream_in.verify_fifo_in <= module_to_global.wait_to_verify.verify_fifo_in;
-
-global_to_module.poly1305_mac.poly1305_pipeline_out_valid <= module_to_global.poly1305_pipeline.poly1305_pipeline_out_valid;
-
-global_to_module.tb.chacha20poly1305_decrypt_is_verified_out <= module_to_global.main.chacha20poly1305_decrypt_is_verified_out;
-
-global_to_module.main.wait_to_verify_is_verified_out <= module_to_global.wait_to_verify.wait_to_verify_is_verified_out;
-
-global_to_module.chacha20_decrypt_output_side.chacha20_decrypt_pipeline_out <= module_to_global.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_out;
-
-global_to_module.main.chacha20_decrypt_axis_out <= module_to_global.chacha20_decrypt_output_side.chacha20_decrypt_axis_out;
-
-global_to_module.prep_auth_data.prep_auth_data_aad_len <= module_to_global.main.prep_auth_data_aad_len;
+global_to_module.tb.chacha20poly1305_decrypt_axis_out <= module_to_global.main.chacha20poly1305_decrypt_axis_out;
 
 global_to_module.chacha20_decrypt_pipeline_no_handshake.chacha20_decrypt_pipeline_no_handshake_in_valid <= module_to_global.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_no_handshake_in_valid;
 
-global_to_module.tb.chacha20poly1305_decrypt_axis_out <= module_to_global.main.chacha20poly1305_decrypt_axis_out;
+global_to_module.chacha20_decrypt_output_side.chacha20_decrypt_pipeline_out <= module_to_global.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_out;
 
-global_to_module.poly1305_mac.poly1305_mac_key <= module_to_global.main.poly1305_mac_key;
+global_to_module.main.poly1305_verify_auth_tag_ready <= module_to_global.poly1305_verify_decrypt.poly1305_verify_auth_tag_ready;
+
+global_to_module.poly1305_verify_decrypt.poly1305_verify_calc_tag <= module_to_global.main.poly1305_verify_calc_tag;
+
+global_to_module.main.wait_to_verify_verify_bit_ready <= module_to_global.wait_to_verify.wait_to_verify_verify_bit_ready;
+
+global_to_module.poly1305_pipeline.poly1305_pipeline_in_valid <= module_to_global.poly1305_mac.poly1305_pipeline_in_valid;
+
+global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_nonce <= module_to_global.main.chacha20_decrypt_nonce;
+
+global_to_module.poly1305_pipeline.poly1305_pipeline_in <= module_to_global.poly1305_mac.poly1305_pipeline_in;
+
+global_to_module.main.poly1305_verify_calc_tag_ready <= module_to_global.poly1305_verify_decrypt.poly1305_verify_calc_tag_ready;
+
+global_to_module.prep_auth_data.prep_auth_data_aad_len <= module_to_global.main.prep_auth_data_aad_len;
+
+global_to_module.verify_fifo_wr_stream_in.verify_fifo_in <= module_to_global.wait_to_verify.verify_fifo_in;
+
+global_to_module.main.wait_to_verify_is_verified_out <= module_to_global.wait_to_verify.wait_to_verify_is_verified_out;
+
+global_to_module.poly1305_verify_decrypt.poly1305_verify_auth_tag <= module_to_global.main.poly1305_verify_auth_tag;
+
+global_to_module.main.strip_auth_tag_axis_out <= module_to_global.strip_auth_tag.strip_auth_tag_axis_out;
+
+global_to_module.prep_auth_data.prep_auth_data_aad <= module_to_global.main.prep_auth_data_aad;
+
+global_to_module.poly1305_mac.poly1305_mac_data_in <= module_to_global.main.poly1305_mac_data_in;
+
+global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_pipeline_in_ready <= module_to_global.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_in_ready;
+
+global_to_module.main.chacha20_decrypt_axis_out <= module_to_global.chacha20_decrypt_output_side.chacha20_decrypt_axis_out;
+
+global_to_module.wait_to_verify.verify_fifo_out <= module_to_global.verify_fifo_rd_stream_out.verify_fifo_out;
+
+global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_no_handshake_out <= module_to_global.chacha20_decrypt_pipeline_no_handshake.chacha20_decrypt_pipeline_no_handshake_out;
+
+global_to_module.main.poly1305_verify_tags_match <= module_to_global.poly1305_verify_decrypt.poly1305_verify_tags_match;
+
+global_to_module.main.prep_auth_data_axis_in_ready <= module_to_global.prep_auth_data.prep_auth_data_axis_in_ready;
+
+global_to_module.wait_to_verify.wait_to_verify_verify_bit <= module_to_global.main.wait_to_verify_verify_bit;
+
+global_to_module.chacha20_decrypt_pipeline_no_handshake.chacha20_decrypt_pipeline_no_handshake_in <= module_to_global.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_no_handshake_in;
+
+global_to_module.main.wait_to_verify_axis_out <= module_to_global.wait_to_verify.wait_to_verify_axis_out;
+
+global_to_module.main.strip_auth_tag_axis_in_ready <= module_to_global.strip_auth_tag.strip_auth_tag_axis_in_ready;
+
+global_to_module.main.chacha20poly1305_decrypt_aad_len <= module_to_global.tb.chacha20poly1305_decrypt_aad_len;
+
+global_to_module.strip_auth_tag.strip_auth_tag_axis_out_ready <= module_to_global.main.strip_auth_tag_axis_out_ready;
+
+global_to_module.wait_to_verify.wait_to_verify_axis_out_ready <= module_to_global.main.wait_to_verify_axis_out_ready;
+
+global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_out_ready <= module_to_global.chacha20_decrypt_output_side.chacha20_decrypt_pipeline_out_ready;
+
+global_to_module.chacha20_decrypt_output_side.chacha20_decrypt_poly_key_ready <= module_to_global.main.chacha20_decrypt_poly_key_ready;
+
+global_to_module.main.chacha20poly1305_decrypt_nonce <= module_to_global.tb.chacha20poly1305_decrypt_nonce;
 
 global_to_module.main.poly1305_mac_auth_tag <= module_to_global.poly1305_mac.poly1305_mac_auth_tag;
 
 global_to_module.main.chacha20poly1305_decrypt_key <= module_to_global.tb.chacha20poly1305_decrypt_key;
 
-global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_no_handshake_out <= module_to_global.chacha20_decrypt_pipeline_no_handshake.chacha20_decrypt_pipeline_no_handshake_out;
+global_to_module.prep_auth_data.prep_auth_data_axis_out_ready <= module_to_global.main.prep_auth_data_axis_out_ready;
 
 global_to_module.main.chacha20poly1305_decrypt_axis_in <= module_to_global.tb.chacha20poly1305_decrypt_axis_in;
 
-global_to_module.wait_to_verify.wait_to_verify_axis_out_ready <= module_to_global.main.wait_to_verify_axis_out_ready;
+global_to_module.wait_to_verify.wait_to_verify_axis_in <= module_to_global.main.wait_to_verify_axis_in;
 
-global_to_module.poly1305_verify_decrypt.poly1305_verify_calc_tag <= module_to_global.main.poly1305_verify_calc_tag;
+global_to_module.main.prep_auth_data_axis_out <= module_to_global.prep_auth_data.prep_auth_data_axis_out;
 
-global_to_module.poly1305_pipeline.poly1305_pipeline_in <= module_to_global.poly1305_mac.poly1305_pipeline_in;
+global_to_module.main.wait_to_verify_axis_in_ready <= module_to_global.wait_to_verify.wait_to_verify_axis_in_ready;
 
-global_to_module.main.strip_auth_tag_axis_out <= module_to_global.strip_auth_tag.strip_auth_tag_axis_out;
+global_to_module.verify_fifo_rd_stream_out.verify_fifo_out_ready <= module_to_global.wait_to_verify.verify_fifo_out_ready;
 
 global_to_module.poly1305_verify_decrypt.poly1305_verify_tags_match_ready <= module_to_global.main.poly1305_verify_tags_match_ready;
 
-global_to_module.main.strip_auth_tag_axis_in_ready <= module_to_global.strip_auth_tag.strip_auth_tag_axis_in_ready;
+global_to_module.main.chacha20poly1305_decrypt_aad <= module_to_global.tb.chacha20poly1305_decrypt_aad;
+
+global_to_module.tb.chacha20poly1305_decrypt_is_verified_out <= module_to_global.main.chacha20poly1305_decrypt_is_verified_out;
 
 global_to_module.wait_to_verify.verify_fifo_in_ready <= module_to_global.verify_fifo_wr_stream_in.verify_fifo_in_ready;
+
+global_to_module.main.poly1305_mac_key_ready <= module_to_global.poly1305_mac.poly1305_mac_key_ready;
+
+global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_key <= module_to_global.main.chacha20_decrypt_key;
+
+global_to_module.poly1305_mac.poly1305_pipeline_out <= module_to_global.poly1305_pipeline.poly1305_pipeline_out;
+
+global_to_module.main.chacha20_decrypt_axis_in_ready <= module_to_global.chacha20_decrypt_input_side.chacha20_decrypt_axis_in_ready;
+
+global_to_module.poly1305_mac.poly1305_mac_key <= module_to_global.main.poly1305_mac_key;
+
+global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_no_handshake_out_valid <= module_to_global.chacha20_decrypt_pipeline_no_handshake.chacha20_decrypt_pipeline_no_handshake_out_valid;
+
+global_to_module.main.strip_auth_tag_auth_tag_out <= module_to_global.strip_auth_tag.strip_auth_tag_auth_tag_out;
+
+global_to_module.chacha20_decrypt_pipeline_handshake.chacha20_decrypt_pipeline_in <= module_to_global.chacha20_decrypt_input_side.chacha20_decrypt_pipeline_in;
+
+global_to_module.poly1305_mac.poly1305_pipeline_out_valid <= module_to_global.poly1305_pipeline.poly1305_pipeline_out_valid;
+
+global_to_module.prep_auth_data.prep_auth_data_axis_in <= module_to_global.main.prep_auth_data_axis_in;
+
+global_to_module.main.chacha20_decrypt_poly_key <= module_to_global.chacha20_decrypt_output_side.chacha20_decrypt_poly_key;
+
+global_to_module.strip_auth_tag.strip_auth_tag_axis_in <= module_to_global.main.strip_auth_tag_axis_in;
+
+global_to_module.main.poly1305_mac_data_in_ready <= module_to_global.poly1305_mac.poly1305_mac_data_in_ready;
+
+global_to_module.poly1305_mac.poly1305_mac_auth_tag_ready <= module_to_global.main.poly1305_mac_auth_tag_ready;
+
+global_to_module.chacha20_decrypt_input_side.chacha20_decrypt_axis_in <= module_to_global.main.chacha20_decrypt_axis_in;
 
 
 end arch;

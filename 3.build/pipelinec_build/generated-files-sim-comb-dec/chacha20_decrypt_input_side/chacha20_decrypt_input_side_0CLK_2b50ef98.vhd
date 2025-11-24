@@ -43,127 +43,127 @@ signal clk_en_internal : std_logic;
 -- Feedback vars in the func
 signal feedback_vars : feedback_vars_t;
 -- Each function instance gets signals
--- axis128_to_axis512[chacha20_decrypt_c_l45_c38_7d78]
-signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_CLOCK_ENABLE : unsigned(0 downto 0);
-signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_in : axis128_t_stream_t;
-signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_out_ready : unsigned(0 downto 0);
-signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output : axis128_to_axis512_t;
+-- axis128_to_axis512[chacha20_decrypt_c_l45_c38_1a06]
+signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_CLOCK_ENABLE : unsigned(0 downto 0);
+signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_in : axis128_t_stream_t;
+signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_out_ready : unsigned(0 downto 0);
+signal axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output : axis128_to_axis512_t;
 
--- BIN_OP_EQ[chacha20_decrypt_c_l61_c6_1894]
-signal BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_left : unsigned(0 downto 0);
-signal BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_right : unsigned(0 downto 0);
-signal BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[chacha20_decrypt_c_l61_c6_46e8]
+signal BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_left : unsigned(0 downto 0);
+signal BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_right : unsigned(0 downto 0);
+signal BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output : unsigned(0 downto 0);
 
--- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l61_c3_306b]
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(0 downto 0);
+-- block_in_ready_MUX[chacha20_decrypt_c_l61_c3_2c38]
+signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(0 downto 0);
+signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(0 downto 0);
+signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(0 downto 0);
 
--- chacha20_decrypt_pipeline_in_data_axis_in_MUX[chacha20_decrypt_c_l61_c3_306b]
-signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : axis512_t;
-signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : axis512_t;
-signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : axis512_t;
+-- input_side_state_MUX[chacha20_decrypt_c_l61_c3_2c38]
+signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(0 downto 0);
 
--- block_in_ready_MUX[chacha20_decrypt_c_l61_c3_306b]
-signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
-signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(0 downto 0);
-signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(0 downto 0);
-signal block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(0 downto 0);
+-- chacha20_decrypt_pipeline_in_data_axis_in_MUX[chacha20_decrypt_c_l61_c3_2c38]
+signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : axis512_t;
+signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : axis512_t;
+signal chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : axis512_t;
 
--- input_side_state_MUX[chacha20_decrypt_c_l61_c3_306b]
-signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(0 downto 0);
+-- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l61_c3_2c38]
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(0 downto 0);
 
--- block_count_MUX[chacha20_decrypt_c_l61_c3_306b]
-signal block_count_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(31 downto 0);
+-- block_count_MUX[chacha20_decrypt_c_l61_c3_2c38]
+signal block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(31 downto 0);
 
--- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX[chacha20_decrypt_c_l63_c5_37c9]
-signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : uint1_t_64;
-signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : uint1_t_64;
-signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : uint1_t_64;
+-- input_side_state_MUX[chacha20_decrypt_c_l63_c5_7cb8]
+signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : unsigned(0 downto 0);
 
--- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l63_c5_37c9]
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : unsigned(0 downto 0);
+-- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX[chacha20_decrypt_c_l63_c5_7cb8]
+signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : uint1_t_64;
+signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : uint1_t_64;
+signal chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint1_t_64;
 
--- chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX[chacha20_decrypt_c_l63_c5_37c9]
-signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
-signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : uint8_t_64;
-signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : uint8_t_64;
-signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : uint8_t_64;
+-- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l63_c5_7cb8]
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : unsigned(0 downto 0);
 
--- input_side_state_MUX[chacha20_decrypt_c_l63_c5_37c9]
-signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : unsigned(0 downto 0);
+-- chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX[chacha20_decrypt_c_l63_c5_7cb8]
+signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : uint8_t_64;
+signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : uint8_t_64;
+signal chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint8_t_64;
 
--- block_count_MUX[chacha20_decrypt_c_l63_c5_37c9]
-signal block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : unsigned(31 downto 0);
+-- block_count_MUX[chacha20_decrypt_c_l63_c5_7cb8]
+signal block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : unsigned(31 downto 0);
 
--- input_side_state_MUX[chacha20_decrypt_c_l70_c7_cece]
-signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_cond : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_return_output : unsigned(0 downto 0);
+-- input_side_state_MUX[chacha20_decrypt_c_l70_c7_5d87]
+signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_cond : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output : unsigned(0 downto 0);
 
--- block_count_MUX[chacha20_decrypt_c_l70_c7_cece]
-signal block_count_MUX_chacha20_decrypt_c_l70_c7_cece_cond : unsigned(0 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l70_c7_cece_return_output : unsigned(31 downto 0);
+-- block_count_MUX[chacha20_decrypt_c_l70_c7_5d87]
+signal block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_cond : unsigned(0 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output : unsigned(31 downto 0);
 
--- BIN_OP_PLUS[chacha20_decrypt_c_l71_c9_33d5]
-signal BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_left : unsigned(31 downto 0);
-signal BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_right : unsigned(0 downto 0);
-signal BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_return_output : unsigned(32 downto 0);
+-- BIN_OP_PLUS[chacha20_decrypt_c_l71_c9_27cd]
+signal BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_left : unsigned(31 downto 0);
+signal BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_right : unsigned(0 downto 0);
+signal BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_return_output : unsigned(32 downto 0);
 
--- BIN_OP_AND[chacha20_decrypt_c_l80_c8_ecc5]
-signal BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_left : unsigned(0 downto 0);
-signal BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_right : unsigned(0 downto 0);
-signal BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output : unsigned(0 downto 0);
+-- BIN_OP_AND[chacha20_decrypt_c_l80_c8_ed44]
+signal BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_left : unsigned(0 downto 0);
+signal BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_right : unsigned(0 downto 0);
+signal BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output : unsigned(0 downto 0);
 
--- input_side_state_MUX[chacha20_decrypt_c_l80_c5_d000]
-signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_cond : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_return_output : unsigned(0 downto 0);
+-- input_side_state_MUX[chacha20_decrypt_c_l80_c5_2aba]
+signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_cond : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output : unsigned(0 downto 0);
 
--- block_count_MUX[chacha20_decrypt_c_l80_c5_d000]
-signal block_count_MUX_chacha20_decrypt_c_l80_c5_d000_cond : unsigned(0 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l80_c5_d000_return_output : unsigned(31 downto 0);
+-- block_count_MUX[chacha20_decrypt_c_l80_c5_2aba]
+signal block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_cond : unsigned(0 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output : unsigned(31 downto 0);
 
--- BIN_OP_PLUS[chacha20_decrypt_c_l81_c7_6e05]
-signal BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_left : unsigned(31 downto 0);
-signal BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_right : unsigned(0 downto 0);
-signal BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_return_output : unsigned(32 downto 0);
+-- BIN_OP_PLUS[chacha20_decrypt_c_l81_c7_450d]
+signal BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_left : unsigned(31 downto 0);
+signal BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_right : unsigned(0 downto 0);
+signal BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_return_output : unsigned(32 downto 0);
 
--- input_side_state_MUX[chacha20_decrypt_c_l83_c7_da85]
-signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_cond : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse : unsigned(0 downto 0);
-signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_return_output : unsigned(0 downto 0);
+-- input_side_state_MUX[chacha20_decrypt_c_l83_c7_5812]
+signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_cond : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse : unsigned(0 downto 0);
+signal input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_return_output : unsigned(0 downto 0);
 
--- block_count_MUX[chacha20_decrypt_c_l83_c7_da85]
-signal block_count_MUX_chacha20_decrypt_c_l83_c7_da85_cond : unsigned(0 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse : unsigned(31 downto 0);
-signal block_count_MUX_chacha20_decrypt_c_l83_c7_da85_return_output : unsigned(31 downto 0);
+-- block_count_MUX[chacha20_decrypt_c_l83_c7_5812]
+signal block_count_MUX_chacha20_decrypt_c_l83_c7_5812_cond : unsigned(0 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse : unsigned(31 downto 0);
+signal block_count_MUX_chacha20_decrypt_c_l83_c7_5812_return_output : unsigned(31 downto 0);
 
 function CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c( ref_toks_0 : unsigned;
  ref_toks_1 : unsigned;
@@ -439,16 +439,16 @@ begin
       return return_output; 
 end function;
 
-function CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_ed16( ref_toks_0 : chacha20_decrypt_loop_body_in_t_stream_t;
- ref_toks_1 : uint8_t_64;
- ref_toks_2 : uint1_t_64) return axis512_t is
+function CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_6028( ref_toks_0 : chacha20_decrypt_loop_body_in_t_stream_t;
+ ref_toks_1 : uint1_t_64;
+ ref_toks_2 : uint8_t_64) return axis512_t is
  
   variable base : chacha20_decrypt_loop_body_in_t_stream_t; 
   variable return_output : axis512_t;
 begin
       base := ref_toks_0;
-      base.data.axis_in.tdata := ref_toks_1;
-      base.data.axis_in.tkeep := ref_toks_2;
+      base.data.axis_in.tkeep := ref_toks_1;
+      base.data.axis_in.tdata := ref_toks_2;
 
       return_output := base.data.axis_in;
       return return_output; 
@@ -465,11 +465,11 @@ begin
       return return_output; 
 end function;
 
-function CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_8db4( ref_toks_0 : uint8_t_32;
+function CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_9c0e( ref_toks_0 : uint8_t_32;
  ref_toks_1 : uint8_t_12;
  ref_toks_2 : unsigned;
- ref_toks_3 : unsigned;
- ref_toks_4 : axis512_t) return chacha20_decrypt_loop_body_in_t_stream_t is
+ ref_toks_3 : axis512_t;
+ ref_toks_4 : unsigned) return chacha20_decrypt_loop_body_in_t_stream_t is
  
   variable base : chacha20_decrypt_loop_body_in_t_stream_t; 
   variable return_output : chacha20_decrypt_loop_body_in_t_stream_t;
@@ -477,8 +477,8 @@ begin
       base.data.key := ref_toks_0;
       base.data.nonce := ref_toks_1;
       base.data.counter := ref_toks_2;
-      base.valid := ref_toks_3;
-      base.data.axis_in := ref_toks_4;
+      base.data.axis_in := ref_toks_3;
+      base.valid := ref_toks_4;
 
       return_output := base;
       return return_output; 
@@ -488,149 +488,149 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78 : 0 clocks latency
-axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78 : entity work.axis128_to_axis512_0CLK_c1f85885 port map (
+-- axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06 : 0 clocks latency
+axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06 : entity work.axis128_to_axis512_0CLK_c1f85885 port map (
 clk,
-axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_CLOCK_ENABLE,
-axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_in,
-axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_out_ready,
-axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output);
+axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_CLOCK_ENABLE,
+axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_in,
+axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_out_ready,
+axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output);
 
--- BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894 : 0 clocks latency
-BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894 : entity work.BIN_OP_EQ_uint1_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_left,
-BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_right,
-BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output);
+-- BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8 : 0 clocks latency
+BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8 : entity work.BIN_OP_EQ_uint1_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_left,
+BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_right,
+BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output);
 
--- chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b : 0 clocks latency
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_cond,
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue,
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse,
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_return_output);
+-- block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38 : 0 clocks latency
+block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_cond,
+block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue,
+block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse,
+block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output);
 
--- chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b : 0 clocks latency
-chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b : entity work.MUX_uint1_t_axis512_t_axis512_t_0CLK_de264c78 port map (
-chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_cond,
-chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue,
-chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse,
-chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_return_output);
+-- input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38 : 0 clocks latency
+input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38 : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
+input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_cond,
+input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue,
+input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse,
+input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output);
 
--- block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b : 0 clocks latency
-block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
-block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_cond,
-block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue,
-block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse,
-block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_return_output);
+-- chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38 : 0 clocks latency
+chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38 : entity work.MUX_uint1_t_axis512_t_axis512_t_0CLK_de264c78 port map (
+chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_cond,
+chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue,
+chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse,
+chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output);
 
--- input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b : 0 clocks latency
-input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
-input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_cond,
-input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue,
-input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse,
-input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_return_output);
+-- chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38 : 0 clocks latency
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_cond,
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue,
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse,
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output);
 
--- block_count_MUX_chacha20_decrypt_c_l61_c3_306b : 0 clocks latency
-block_count_MUX_chacha20_decrypt_c_l61_c3_306b : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-block_count_MUX_chacha20_decrypt_c_l61_c3_306b_cond,
-block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue,
-block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse,
-block_count_MUX_chacha20_decrypt_c_l61_c3_306b_return_output);
+-- block_count_MUX_chacha20_decrypt_c_l61_c3_2c38 : 0 clocks latency
+block_count_MUX_chacha20_decrypt_c_l61_c3_2c38 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_cond,
+block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue,
+block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse,
+block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output);
 
--- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9 : 0 clocks latency
-chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9 : entity work.MUX_uint1_t_uint1_t_64_uint1_t_64_0CLK_de264c78 port map (
-chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_cond,
-chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue,
-chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse,
-chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output);
+-- input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8 : 0 clocks latency
+input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8 : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
+input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond,
+input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue,
+input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse,
+input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output);
 
--- chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9 : 0 clocks latency
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_cond,
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue,
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse,
-chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output);
+-- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8 : 0 clocks latency
+chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8 : entity work.MUX_uint1_t_uint1_t_64_uint1_t_64_0CLK_de264c78 port map (
+chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond,
+chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue,
+chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse,
+chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output);
 
--- chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9 : 0 clocks latency
-chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9 : entity work.MUX_uint1_t_uint8_t_64_uint8_t_64_0CLK_de264c78 port map (
-chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_cond,
-chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue,
-chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse,
-chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output);
+-- chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8 : 0 clocks latency
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond,
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue,
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse,
+chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output);
 
--- input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9 : 0 clocks latency
-input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9 : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
-input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_cond,
-input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue,
-input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse,
-input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output);
+-- chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8 : 0 clocks latency
+chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8 : entity work.MUX_uint1_t_uint8_t_64_uint8_t_64_0CLK_de264c78 port map (
+chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond,
+chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue,
+chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse,
+chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output);
 
--- block_count_MUX_chacha20_decrypt_c_l63_c5_37c9 : 0 clocks latency
-block_count_MUX_chacha20_decrypt_c_l63_c5_37c9 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_cond,
-block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue,
-block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse,
-block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output);
+-- block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8 : 0 clocks latency
+block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond,
+block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue,
+block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse,
+block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output);
 
--- input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece : 0 clocks latency
-input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
-input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_cond,
-input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue,
-input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse,
-input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_return_output);
+-- input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87 : 0 clocks latency
+input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87 : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
+input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_cond,
+input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue,
+input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse,
+input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output);
 
--- block_count_MUX_chacha20_decrypt_c_l70_c7_cece : 0 clocks latency
-block_count_MUX_chacha20_decrypt_c_l70_c7_cece : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-block_count_MUX_chacha20_decrypt_c_l70_c7_cece_cond,
-block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue,
-block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse,
-block_count_MUX_chacha20_decrypt_c_l70_c7_cece_return_output);
+-- block_count_MUX_chacha20_decrypt_c_l70_c7_5d87 : 0 clocks latency
+block_count_MUX_chacha20_decrypt_c_l70_c7_5d87 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_cond,
+block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue,
+block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse,
+block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output);
 
--- BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5 : 0 clocks latency
-BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5 : entity work.BIN_OP_PLUS_uint32_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_left,
-BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_right,
-BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_return_output);
+-- BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd : 0 clocks latency
+BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd : entity work.BIN_OP_PLUS_uint32_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_left,
+BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_right,
+BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_return_output);
 
--- BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5 : 0 clocks latency
-BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_left,
-BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_right,
-BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output);
+-- BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44 : 0 clocks latency
+BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44 : entity work.BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_left,
+BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_right,
+BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output);
 
--- input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000 : 0 clocks latency
-input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000 : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
-input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_cond,
-input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue,
-input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse,
-input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_return_output);
+-- input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba : 0 clocks latency
+input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
+input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_cond,
+input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue,
+input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse,
+input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output);
 
--- block_count_MUX_chacha20_decrypt_c_l80_c5_d000 : 0 clocks latency
-block_count_MUX_chacha20_decrypt_c_l80_c5_d000 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-block_count_MUX_chacha20_decrypt_c_l80_c5_d000_cond,
-block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue,
-block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse,
-block_count_MUX_chacha20_decrypt_c_l80_c5_d000_return_output);
+-- block_count_MUX_chacha20_decrypt_c_l80_c5_2aba : 0 clocks latency
+block_count_MUX_chacha20_decrypt_c_l80_c5_2aba : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_cond,
+block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue,
+block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse,
+block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output);
 
--- BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05 : 0 clocks latency
-BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05 : entity work.BIN_OP_PLUS_uint32_t_uint1_t_0CLK_de264c78 port map (
-BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_left,
-BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_right,
-BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_return_output);
+-- BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d : 0 clocks latency
+BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d : entity work.BIN_OP_PLUS_uint32_t_uint1_t_0CLK_de264c78 port map (
+BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_left,
+BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_right,
+BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_return_output);
 
--- input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85 : 0 clocks latency
-input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85 : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
-input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_cond,
-input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue,
-input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse,
-input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_return_output);
+-- input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812 : 0 clocks latency
+input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812 : entity work.MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78 port map (
+input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_cond,
+input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue,
+input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse,
+input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_return_output);
 
--- block_count_MUX_chacha20_decrypt_c_l83_c7_da85 : 0 clocks latency
-block_count_MUX_chacha20_decrypt_c_l83_c7_da85 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
-block_count_MUX_chacha20_decrypt_c_l83_c7_da85_cond,
-block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue,
-block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse,
-block_count_MUX_chacha20_decrypt_c_l83_c7_da85_return_output);
+-- block_count_MUX_chacha20_decrypt_c_l83_c7_5812 : 0 clocks latency
+block_count_MUX_chacha20_decrypt_c_l83_c7_5812 : entity work.MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78 port map (
+block_count_MUX_chacha20_decrypt_c_l83_c7_5812_cond,
+block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue,
+block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse,
+block_count_MUX_chacha20_decrypt_c_l83_c7_5812_return_output);
 
 
 
@@ -648,27 +648,27 @@ clk_en_internal,
  -- Clock cross input
  global_to_module,
  -- All submodule outputs
- axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output,
- BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output,
- chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_return_output,
- chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_return_output,
- block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_return_output,
- input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_return_output,
- block_count_MUX_chacha20_decrypt_c_l61_c3_306b_return_output,
- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output,
- chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output,
- chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output,
- input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output,
- block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output,
- input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_return_output,
- block_count_MUX_chacha20_decrypt_c_l70_c7_cece_return_output,
- BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_return_output,
- BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output,
- input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_return_output,
- block_count_MUX_chacha20_decrypt_c_l80_c5_d000_return_output,
- BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_return_output,
- input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_return_output,
- block_count_MUX_chacha20_decrypt_c_l83_c7_da85_return_output)
+ axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output,
+ BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output,
+ block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output,
+ input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output,
+ chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output,
+ chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output,
+ block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output,
+ input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output,
+ chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output,
+ chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output,
+ chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output,
+ block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output,
+ input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output,
+ block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output,
+ BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_return_output,
+ BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output,
+ input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output,
+ block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output,
+ BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_return_output,
+ input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_return_output,
+ block_count_MUX_chacha20_decrypt_c_l83_c7_5812_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
@@ -680,103 +680,103 @@ is
  variable VAR_chacha20_decrypt_pipeline_in_ready : unsigned(0 downto 0);
  variable VAR_block_in_ready : unsigned(0 downto 0);
  variable VAR_in_to_block : axis128_to_axis512_t;
- variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_in : axis128_t_stream_t;
- variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_out_ready : unsigned(0 downto 0);
- variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_CLOCK_ENABLE : unsigned(0 downto 0);
- variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output : axis128_to_axis512_t;
+ variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_in : axis128_t_stream_t;
+ variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_out_ready : unsigned(0 downto 0);
+ variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output : axis128_to_axis512_t;
  variable VAR_block_in_stream : axis512_t_stream_t;
- variable VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_fd60_return_output : axis512_t_stream_t;
- variable VAR_CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d_chacha20_decrypt_c_l47_c36_ef49_return_output : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_5135_return_output : axis512_t_stream_t;
+ variable VAR_CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d_chacha20_decrypt_c_l47_c36_d3f4_return_output : unsigned(0 downto 0);
  variable VAR_NULL_PIPELINE_IN : chacha20_decrypt_loop_body_in_t_stream_t;
- variable VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_left : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : axis512_t;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_ed16_chacha20_decrypt_c_l61_c3_306b_return_output : axis512_t;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : axis512_t;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : axis512_t;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
- variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(0 downto 0);
- variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(0 downto 0);
- variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(0 downto 0);
- variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_return_output : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_return_output : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_return_output : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_cond : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : uint1_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c_chacha20_decrypt_c_l63_c5_37c9_return_output : uint1_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : uint1_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output : uint1_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : uint1_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : uint8_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c_chacha20_decrypt_c_l63_c5_37c9_return_output : uint8_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : uint8_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output : uint8_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output : uint8_t_64;
- variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_return_output : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_return_output : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_left : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output : unsigned(0 downto 0);
+ variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(0 downto 0);
+ variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(0 downto 0);
+ variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(0 downto 0);
+ variable VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : axis512_t;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_6028_chacha20_decrypt_c_l61_c3_2c38_return_output : axis512_t;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : axis512_t;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : axis512_t;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_cond : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : uint1_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint1_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : uint1_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint1_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint1_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : uint8_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint8_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : uint8_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint8_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output : uint8_t_64;
+ variable VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond : unsigned(0 downto 0);
  variable VAR_ARRAY_SET_i : unsigned(31 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_cond : unsigned(0 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue : unsigned(31 downto 0);
- variable VAR_block_count_chacha20_decrypt_c_l71_c9_436d : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_left : unsigned(31 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_return_output : unsigned(32 downto 0);
- variable VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_eb90_return_output : axis512_t;
- variable VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_left : unsigned(0 downto 0);
- variable VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_return_output : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_cond : unsigned(0 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_return_output : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_cond : unsigned(0 downto 0);
- variable VAR_block_count_chacha20_decrypt_c_l81_c7_886d : unsigned(31 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_left : unsigned(31 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_right : unsigned(0 downto 0);
- variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_return_output : unsigned(32 downto 0);
- variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b736_return_output : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse : unsigned(0 downto 0);
- variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_cond : unsigned(0 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse : unsigned(31 downto 0);
- variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_cond : unsigned(0 downto 0);
- variable VAR_chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_8db4_chacha20_decrypt_c_l40_c6_8722_return_output : chacha20_decrypt_loop_body_in_t_stream_t;
- variable VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_cond : unsigned(0 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue : unsigned(31 downto 0);
+ variable VAR_block_count_chacha20_decrypt_c_l71_c9_89fb : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_left : unsigned(31 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_return_output : unsigned(32 downto 0);
+ variable VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_b03e_return_output : axis512_t;
+ variable VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_left : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_cond : unsigned(0 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_return_output : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_cond : unsigned(0 downto 0);
+ variable VAR_block_count_chacha20_decrypt_c_l81_c7_1d62 : unsigned(31 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_left : unsigned(31 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_right : unsigned(0 downto 0);
+ variable VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_return_output : unsigned(32 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b988_return_output : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse : unsigned(0 downto 0);
+ variable VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_cond : unsigned(0 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse : unsigned(31 downto 0);
+ variable VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_cond : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_9c0e_chacha20_decrypt_c_l40_c6_7219_return_output : chacha20_decrypt_loop_body_in_t_stream_t;
+ variable VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output : unsigned(0 downto 0);
  -- State registers comb logic variables
 variable REG_VAR_input_side_state : unsigned(0 downto 0);
 variable REG_VAR_block_count : unsigned(31 downto 0);
@@ -788,16 +788,19 @@ begin
   REG_VAR_block_count := block_count;
  -- Constants and things derived from constants alone
      -- Submodule level 0
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue := unsigned(chacha20_decrypt_state_t_to_slv(POLY_KEY));
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue := to_unsigned(1, 1);
-     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue := to_unsigned(0, 32);
-     VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_right := unsigned(chacha20_decrypt_state_t_to_slv(POLY_KEY));
-     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue := to_unsigned(0, 1);
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_right := to_unsigned(1, 1);
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_right := to_unsigned(1, 1);
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue := unsigned(chacha20_decrypt_state_t_to_slv(PLAINTEXT));
-     -- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c_chacha20_decrypt_c_l63_c5_37c9_return_output := CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c(
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_right := to_unsigned(1, 1);
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue := unsigned(chacha20_decrypt_state_t_to_slv(POLY_KEY));
+     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue := to_unsigned(0, 32);
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue := to_unsigned(1, 1);
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_right := to_unsigned(1, 1);
+     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue := to_unsigned(0, 1);
+     VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_right := unsigned(chacha20_decrypt_state_t_to_slv(POLY_KEY));
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue := unsigned(chacha20_decrypt_state_t_to_slv(PLAINTEXT));
+     -- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output := chacha20_decrypt_loop_body_in_t_stream_t_NULL.data.axis_in.tkeep;
+
+     -- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c_chacha20_decrypt_c_l63_c5_7cb8_return_output := CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c(
      to_unsigned(1, 1),
      to_unsigned(1, 1),
      to_unsigned(1, 1),
@@ -863,8 +866,14 @@ begin
      to_unsigned(1, 1),
      to_unsigned(1, 1));
 
-     -- chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c_chacha20_decrypt_c_l63_c5_37c9_return_output := CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c(
+     -- chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output := chacha20_decrypt_loop_body_in_t_stream_t_NULL.data.axis_in.tdata;
+
+     -- chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output := chacha20_decrypt_loop_body_in_t_stream_t_NULL.valid;
+
+     -- chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c_chacha20_decrypt_c_l63_c5_7cb8_return_output := CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c(
      to_unsigned(0, 8),
      to_unsigned(0, 8),
      to_unsigned(0, 8),
@@ -930,32 +939,23 @@ begin
      to_unsigned(0, 8),
      to_unsigned(0, 8));
 
-     -- chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output := chacha20_decrypt_loop_body_in_t_stream_t_NULL.data.axis_in.tdata;
-
-     -- chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output := chacha20_decrypt_loop_body_in_t_stream_t_NULL.valid;
-
-     -- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output := chacha20_decrypt_loop_body_in_t_stream_t_NULL.data.axis_in.tkeep;
-
      -- Submodule level 1
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output;
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c_chacha20_decrypt_c_l63_c5_37c9_return_output;
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c_chacha20_decrypt_c_l63_c5_37c9_return_output;
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse := VAR_chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output;
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d_chacha20_decrypt_c_l63_c5_37c9_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_FALSE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_TRUE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_9b6c_chacha20_decrypt_c_l63_c5_7cb8_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tkeep_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output;
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse := VAR_chacha20_decrypt_pipeline_in_valid_FALSE_INPUT_MUX_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_c5_7cb8_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue := VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_TRUE_INPUT_MUX_CONST_REF_RD_uint8_t_64_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tdata_037c_chacha20_decrypt_c_l63_c5_7cb8_return_output;
  -- Reads from global variables
      VAR_chacha20_decrypt_axis_in := global_to_module.chacha20_decrypt_axis_in;
      VAR_chacha20_decrypt_key := global_to_module.chacha20_decrypt_key;
      VAR_chacha20_decrypt_nonce := global_to_module.chacha20_decrypt_nonce;
      VAR_chacha20_decrypt_pipeline_in_ready := global_to_module.chacha20_decrypt_pipeline_in_ready;
      -- Submodule level 0
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_cond := VAR_chacha20_decrypt_pipeline_in_ready;
-     VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_right := VAR_chacha20_decrypt_pipeline_in_ready;
-     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse := VAR_chacha20_decrypt_pipeline_in_ready;
-     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_cond := VAR_chacha20_decrypt_pipeline_in_ready;
-     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_in := VAR_chacha20_decrypt_axis_in;
+     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_in := VAR_chacha20_decrypt_axis_in;
+     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_cond := VAR_chacha20_decrypt_pipeline_in_ready;
+     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse := VAR_chacha20_decrypt_pipeline_in_ready;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_cond := VAR_chacha20_decrypt_pipeline_in_ready;
+     VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_right := VAR_chacha20_decrypt_pipeline_in_ready;
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -965,256 +965,256 @@ begin
      VAR_CLOCK_ENABLE(0) := clk_en_internal;
 
      -- Submodule level 0
-     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_left := block_count;
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_left := block_count;
-     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse := block_count;
-     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse := block_count;
-     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse := block_count;
-     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_out_ready := feedback_vars.block_in_ready;
-     VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_left := input_side_state;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse := input_side_state;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse := input_side_state;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse := input_side_state;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse := input_side_state;
-     -- BIN_OP_PLUS[chacha20_decrypt_c_l81_c7_6e05] LATENCY=0
+     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_left := block_count;
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_left := block_count;
+     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse := block_count;
+     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse := block_count;
+     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse := block_count;
+     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_out_ready := feedback_vars.block_in_ready;
+     VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_left := input_side_state;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse := input_side_state;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse := input_side_state;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse := input_side_state;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse := input_side_state;
+     -- BIN_OP_PLUS[chacha20_decrypt_c_l81_c7_450d] LATENCY=0
      -- Inputs
-     BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_left <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_left;
-     BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_right <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_right;
+     BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_left <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_left;
+     BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_right <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_right;
      -- Outputs
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_return_output := BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_return_output;
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_return_output := BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_return_output;
 
-     -- input_side_state_MUX[chacha20_decrypt_c_l70_c7_cece] LATENCY=0
+     -- BIN_OP_PLUS[chacha20_decrypt_c_l71_c9_27cd] LATENCY=0
      -- Inputs
-     input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_cond;
-     input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue;
-     input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse;
+     BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_left <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_left;
+     BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_right <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_right;
      -- Outputs
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_return_output := input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_return_output;
+     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_return_output := BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_return_output;
 
-     -- axis128_to_axis512[chacha20_decrypt_c_l45_c38_7d78] LATENCY=0
+     -- input_side_state_MUX[chacha20_decrypt_c_l70_c7_5d87] LATENCY=0
+     -- Inputs
+     input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_cond;
+     input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue;
+     input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse;
+     -- Outputs
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output := input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output;
+
+     -- axis128_to_axis512[chacha20_decrypt_c_l45_c38_1a06] LATENCY=0
      -- Clock enable
-     axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_CLOCK_ENABLE <= VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_CLOCK_ENABLE;
+     axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_CLOCK_ENABLE <= VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_CLOCK_ENABLE;
      -- Inputs
-     axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_in <= VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_in;
-     axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_out_ready <= VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_axis_out_ready;
+     axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_in <= VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_in;
+     axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_out_ready <= VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_axis_out_ready;
      -- Outputs
-     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output := axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output;
+     VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output := axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output;
 
-     -- BIN_OP_PLUS[chacha20_decrypt_c_l71_c9_33d5] LATENCY=0
+     -- BIN_OP_EQ[chacha20_decrypt_c_l61_c6_46e8] LATENCY=0
      -- Inputs
-     BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_left <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_left;
-     BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_right <= VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_right;
+     BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_left <= VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_left;
+     BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_right <= VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_right;
      -- Outputs
-     VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_return_output := BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_return_output;
-
-     -- BIN_OP_EQ[chacha20_decrypt_c_l61_c6_1894] LATENCY=0
-     -- Inputs
-     BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_left <= VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_left;
-     BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_right <= VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_right;
-     -- Outputs
-     VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output := BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output;
+     VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output := BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output;
 
      -- Submodule level 1
-     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output;
-     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output;
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output;
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_1894_return_output;
-     VAR_block_count_chacha20_decrypt_c_l71_c9_436d := resize(VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_33d5_return_output, 32);
-     VAR_block_count_chacha20_decrypt_c_l81_c7_886d := resize(VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_6e05_return_output, 32);
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue := VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_cece_return_output;
-     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue := VAR_block_count_chacha20_decrypt_c_l71_c9_436d;
-     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse := VAR_block_count_chacha20_decrypt_c_l81_c7_886d;
-     -- block_count_MUX[chacha20_decrypt_c_l70_c7_cece] LATENCY=0
+     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output;
+     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output;
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_cond := VAR_BIN_OP_EQ_chacha20_decrypt_c_l61_c6_46e8_return_output;
+     VAR_block_count_chacha20_decrypt_c_l71_c9_89fb := resize(VAR_BIN_OP_PLUS_chacha20_decrypt_c_l71_c9_27cd_return_output, 32);
+     VAR_block_count_chacha20_decrypt_c_l81_c7_1d62 := resize(VAR_BIN_OP_PLUS_chacha20_decrypt_c_l81_c7_450d_return_output, 32);
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue := VAR_input_side_state_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue := VAR_block_count_chacha20_decrypt_c_l71_c9_89fb;
+     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse := VAR_block_count_chacha20_decrypt_c_l81_c7_1d62;
+     -- block_in_ready_MUX[chacha20_decrypt_c_l61_c3_2c38] LATENCY=0
      -- Inputs
-     block_count_MUX_chacha20_decrypt_c_l70_c7_cece_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_cond;
-     block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iftrue;
-     block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_iffalse;
+     block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_cond <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_cond;
+     block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue;
+     block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse;
      -- Outputs
-     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_return_output := block_count_MUX_chacha20_decrypt_c_l70_c7_cece_return_output;
+     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output := block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
 
-     -- CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d[chacha20_decrypt_c_l46_c40_fd60] LATENCY=0
-     VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_fd60_return_output := VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output.axis_out;
+     -- CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d[chacha20_decrypt_c_l46_c40_5135] LATENCY=0
+     VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_5135_return_output := VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output.axis_out;
 
-     -- CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d[chacha20_decrypt_c_l47_c36_ef49] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d_chacha20_decrypt_c_l47_c36_ef49_return_output := VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_7d78_return_output.axis_in_ready;
-
-     -- block_in_ready_MUX[chacha20_decrypt_c_l61_c3_306b] LATENCY=0
+     -- block_count_MUX[chacha20_decrypt_c_l70_c7_5d87] LATENCY=0
      -- Inputs
-     block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_cond <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_cond;
-     block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue;
-     block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse;
+     block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_cond;
+     block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iftrue;
+     block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_iffalse;
      -- Outputs
-     VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_return_output := block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output := block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output;
+
+     -- CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d[chacha20_decrypt_c_l47_c36_d3f4] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d_chacha20_decrypt_c_l47_c36_d3f4_return_output := VAR_axis128_to_axis512_chacha20_decrypt_c_l45_c38_1a06_return_output.axis_in_ready;
 
      -- Submodule level 2
-     VAR_chacha20_decrypt_axis_in_ready := VAR_CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d_chacha20_decrypt_c_l47_c36_ef49_return_output;
-     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue := VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_cece_return_output;
-     feedback_vars.block_in_ready <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
-     -- CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d[chacha20_decrypt_c_l77_c49_eb90] LATENCY=0
-     VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_eb90_return_output := VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_fd60_return_output.data;
+     VAR_chacha20_decrypt_axis_in_ready := VAR_CONST_REF_RD_uint1_t_axis128_to_axis512_t_axis_in_ready_d41d_chacha20_decrypt_c_l47_c36_d3f4_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue := VAR_block_count_MUX_chacha20_decrypt_c_l70_c7_5d87_return_output;
+     feedback_vars.block_in_ready <= VAR_block_in_ready_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
+     -- CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d[chacha20_decrypt_c_l77_c49_b03e] LATENCY=0
+     VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_b03e_return_output := VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_5135_return_output.data;
 
-     -- CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17 LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output := VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_fd60_return_output.valid;
+     -- CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30 LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output := VAR_CONST_REF_RD_axis512_t_stream_t_axis128_to_axis512_t_axis_out_d41d_chacha20_decrypt_c_l46_c40_5135_return_output.valid;
 
      -- Submodule level 3
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse := VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_eb90_return_output;
-     VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_left := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output;
-     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output;
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output;
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output;
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output;
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l63_l78_DUPLICATE_df17_return_output;
-     -- BIN_OP_AND[chacha20_decrypt_c_l80_c8_ecc5] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse := VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_b03e_return_output;
+     VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_left := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output;
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output;
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond := VAR_CONST_REF_RD_uint1_t_axis512_t_stream_t_valid_d41d_chacha20_decrypt_c_l78_l63_DUPLICATE_3b30_return_output;
+     -- chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
      -- Inputs
-     BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_left <= VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_left;
-     BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_right <= VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_right;
+     chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond;
+     chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue;
+     chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse;
      -- Outputs
-     VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output := BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output := chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
 
-     -- input_side_state_MUX[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
+     -- BIN_OP_AND[chacha20_decrypt_c_l80_c8_ed44] LATENCY=0
      -- Inputs
-     input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_cond;
-     input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue;
-     input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse;
+     BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_left <= VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_left;
+     BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_right <= VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_right;
      -- Outputs
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output := input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
+     VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output := BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output;
 
-     -- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
+     -- block_count_MUX[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
      -- Inputs
-     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_cond <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_cond;
-     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue;
-     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse;
+     block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond;
+     block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue;
+     block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse;
      -- Outputs
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output := chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output := block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
 
-     -- chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
+     -- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
      -- Inputs
-     chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_cond <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_cond;
-     chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue;
-     chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse;
+     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond;
+     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue;
+     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse;
      -- Outputs
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output := chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output := chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
 
-     -- CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0[chacha20_decrypt_c_l83_c10_b736] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b736_return_output := CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0(
-     VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_eb90_return_output);
-
-     -- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
+     -- chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
      -- Inputs
-     chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_cond <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_cond;
-     chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue;
-     chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse;
+     chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond;
+     chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue;
+     chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse;
      -- Outputs
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output := chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output := chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
 
-     -- block_count_MUX[chacha20_decrypt_c_l63_c5_37c9] LATENCY=0
+     -- CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0[chacha20_decrypt_c_l83_c10_b988] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b988_return_output := CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0(
+     VAR_CONST_REF_RD_axis512_t_axis512_t_stream_t_data_d41d_chacha20_decrypt_c_l77_c49_b03e_return_output);
+
+     -- input_side_state_MUX[chacha20_decrypt_c_l63_c5_7cb8] LATENCY=0
      -- Inputs
-     block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_cond;
-     block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iftrue;
-     block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_iffalse;
+     input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_cond;
+     input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iftrue;
+     input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_iffalse;
      -- Outputs
-     VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output := block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output := input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
 
      -- Submodule level 4
-     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_cond := VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_cond := VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ecc5_return_output;
-     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_cond := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b736_return_output;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_cond := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b736_return_output;
-     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue := VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue := VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue := VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output;
-     -- chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_ed16[chacha20_decrypt_c_l61_c3_306b] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_ed16_chacha20_decrypt_c_l61_c3_306b_return_output := CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_ed16(
+     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_cond := VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_cond := VAR_BIN_OP_AND_chacha20_decrypt_c_l80_c8_ed44_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_cond := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b988_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_cond := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_tlast_cef0_chacha20_decrypt_c_l83_c10_b988_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue := VAR_block_count_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue := VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue := VAR_input_side_state_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output;
+     -- block_count_MUX[chacha20_decrypt_c_l83_c7_5812] LATENCY=0
+     -- Inputs
+     block_count_MUX_chacha20_decrypt_c_l83_c7_5812_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_cond;
+     block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue;
+     block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse;
+     -- Outputs
+     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_return_output := block_count_MUX_chacha20_decrypt_c_l83_c7_5812_return_output;
+
+     -- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l61_c3_2c38] LATENCY=0
+     -- Inputs
+     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_cond <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_cond;
+     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue;
+     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse;
+     -- Outputs
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output := chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
+
+     -- chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_6028[chacha20_decrypt_c_l61_c3_2c38] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_6028_chacha20_decrypt_c_l61_c3_2c38_return_output := CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_6028(
      chacha20_decrypt_loop_body_in_t_stream_t_NULL,
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output,
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_37c9_return_output);
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tkeep_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output,
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_tdata_MUX_chacha20_decrypt_c_l63_c5_7cb8_return_output);
 
-     -- block_count_MUX[chacha20_decrypt_c_l83_c7_da85] LATENCY=0
+     -- input_side_state_MUX[chacha20_decrypt_c_l83_c7_5812] LATENCY=0
      -- Inputs
-     block_count_MUX_chacha20_decrypt_c_l83_c7_da85_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_cond;
-     block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue;
-     block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse;
+     input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_cond;
+     input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iftrue;
+     input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_iffalse;
      -- Outputs
-     VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_return_output := block_count_MUX_chacha20_decrypt_c_l83_c7_da85_return_output;
-
-     -- input_side_state_MUX[chacha20_decrypt_c_l83_c7_da85] LATENCY=0
-     -- Inputs
-     input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_cond;
-     input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iftrue;
-     input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_iffalse;
-     -- Outputs
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_return_output := input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_return_output;
-
-     -- chacha20_decrypt_pipeline_in_valid_MUX[chacha20_decrypt_c_l61_c3_306b] LATENCY=0
-     -- Inputs
-     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_cond <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_cond;
-     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue;
-     chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse <= VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse;
-     -- Outputs
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_return_output := chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_return_output := input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_return_output;
 
      -- Submodule level 5
-     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue := VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_da85_return_output;
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue := VAR_chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_ed16_chacha20_decrypt_c_l61_c3_306b_return_output;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue := VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_da85_return_output;
-     -- input_side_state_MUX[chacha20_decrypt_c_l80_c5_d000] LATENCY=0
+     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue := VAR_block_count_MUX_chacha20_decrypt_c_l83_c7_5812_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue := VAR_chacha20_decrypt_pipeline_in_data_axis_in_TRUE_INPUT_MUX_CONST_REF_RD_axis512_t_chacha20_decrypt_loop_body_in_t_stream_t_data_axis_in_6028_chacha20_decrypt_c_l61_c3_2c38_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue := VAR_input_side_state_MUX_chacha20_decrypt_c_l83_c7_5812_return_output;
+     -- input_side_state_MUX[chacha20_decrypt_c_l80_c5_2aba] LATENCY=0
      -- Inputs
-     input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_cond;
-     input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue;
-     input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse;
+     input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_cond;
+     input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue;
+     input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse;
      -- Outputs
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_return_output := input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output := input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output;
 
-     -- chacha20_decrypt_pipeline_in_data_axis_in_MUX[chacha20_decrypt_c_l61_c3_306b] LATENCY=0
+     -- chacha20_decrypt_pipeline_in_data_axis_in_MUX[chacha20_decrypt_c_l61_c3_2c38] LATENCY=0
      -- Inputs
-     chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_cond <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_cond;
-     chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue;
-     chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse;
+     chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_cond <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_cond;
+     chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue;
+     chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse <= VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse;
      -- Outputs
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_return_output := chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output := chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
 
-     -- block_count_MUX[chacha20_decrypt_c_l80_c5_d000] LATENCY=0
+     -- block_count_MUX[chacha20_decrypt_c_l80_c5_2aba] LATENCY=0
      -- Inputs
-     block_count_MUX_chacha20_decrypt_c_l80_c5_d000_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_cond;
-     block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iftrue;
-     block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_iffalse;
+     block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_cond;
+     block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iftrue;
+     block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_iffalse;
      -- Outputs
-     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_return_output := block_count_MUX_chacha20_decrypt_c_l80_c5_d000_return_output;
+     VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output := block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output;
 
      -- Submodule level 6
-     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse := VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_d000_return_output;
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse := VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_d000_return_output;
-     -- input_side_state_MUX[chacha20_decrypt_c_l61_c3_306b] LATENCY=0
-     -- Inputs
-     input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_cond;
-     input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue;
-     input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse;
-     -- Outputs
-     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_return_output := input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
-
-     -- block_count_MUX[chacha20_decrypt_c_l61_c3_306b] LATENCY=0
-     -- Inputs
-     block_count_MUX_chacha20_decrypt_c_l61_c3_306b_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_cond;
-     block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iftrue;
-     block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_iffalse;
-     -- Outputs
-     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_return_output := block_count_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
-
-     -- chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_8db4[chacha20_decrypt_c_l40_c6_8722] LATENCY=0
-     VAR_chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_8db4_chacha20_decrypt_c_l40_c6_8722_return_output := CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_8db4(
+     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse := VAR_block_count_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output;
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse := VAR_input_side_state_MUX_chacha20_decrypt_c_l80_c5_2aba_return_output;
+     -- chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_9c0e[chacha20_decrypt_c_l40_c6_7219] LATENCY=0
+     VAR_chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_9c0e_chacha20_decrypt_c_l40_c6_7219_return_output := CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_9c0e(
      VAR_chacha20_decrypt_key,
      VAR_chacha20_decrypt_nonce,
      block_count,
-     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_306b_return_output,
-     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_306b_return_output);
+     VAR_chacha20_decrypt_pipeline_in_data_axis_in_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output,
+     VAR_chacha20_decrypt_pipeline_in_valid_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output);
+
+     -- block_count_MUX[chacha20_decrypt_c_l61_c3_2c38] LATENCY=0
+     -- Inputs
+     block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_cond <= VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_cond;
+     block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue <= VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue;
+     block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse <= VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse;
+     -- Outputs
+     VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output := block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
+
+     -- input_side_state_MUX[chacha20_decrypt_c_l61_c3_2c38] LATENCY=0
+     -- Inputs
+     input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_cond <= VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_cond;
+     input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue <= VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iftrue;
+     input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse <= VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_iffalse;
+     -- Outputs
+     VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output := input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
 
      -- Submodule level 7
-     REG_VAR_block_count := VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
-     VAR_chacha20_decrypt_pipeline_in := VAR_chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_8db4_chacha20_decrypt_c_l40_c6_8722_return_output;
-     REG_VAR_input_side_state := VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_306b_return_output;
+     REG_VAR_block_count := VAR_block_count_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
+     VAR_chacha20_decrypt_pipeline_in := VAR_chacha20_decrypt_pipeline_in_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_stream_t_chacha20_decrypt_loop_body_in_t_stream_t_9c0e_chacha20_decrypt_c_l40_c6_7219_return_output;
+     REG_VAR_input_side_state := VAR_input_side_state_MUX_chacha20_decrypt_c_l61_c3_2c38_return_output;
    end if;
  end loop;
 

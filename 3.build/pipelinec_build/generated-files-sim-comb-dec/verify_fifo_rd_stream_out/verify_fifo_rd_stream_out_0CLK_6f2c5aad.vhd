@@ -60,17 +60,17 @@ is
  variable VAR_verify_fifo_out_ready : unsigned(0 downto 0);
  variable VAR_verify_fifo_out : axis128_t_stream_t;
  variable VAR_rd : verify_fifo_FIFO_read_t;
- variable VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_read_enable : unsigned(0 downto 0);
- variable VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_CLOCK_ENABLE : unsigned(0 downto 0);
- variable VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_return_output : verify_fifo_FIFO_read_t;
- variable VAR_CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d_wait_to_verify_c_l23_c136_4aed_return_output : axis128_t;
- variable VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d_wait_to_verify_c_l23_c172_c405_return_output : unsigned(0 downto 0);
- variable VAR_verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0_wait_to_verify_c_l23_c7_c830_return_output : axis128_t_stream_t;
+ variable VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_read_enable : unsigned(0 downto 0);
+ variable VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_return_output : verify_fifo_FIFO_read_t;
+ variable VAR_CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d_wait_to_verify_c_l23_c136_47bf_return_output : axis128_t;
+ variable VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d_wait_to_verify_c_l23_c172_71ac_return_output : unsigned(0 downto 0);
+ variable VAR_verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0_wait_to_verify_c_l23_c7_506d_return_output : axis128_t_stream_t;
 begin
  -- Reads from global variables
      VAR_verify_fifo_out_ready := global_to_module.verify_fifo_out_ready;
      -- Submodule level 0
-     VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_read_enable := VAR_verify_fifo_out_ready;
+     VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_read_enable := VAR_verify_fifo_out_ready;
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -80,30 +80,30 @@ begin
      VAR_CLOCK_ENABLE(0) := clk_en_internal;
 
      -- Submodule level 0
-     VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
-     -- verify_fifo_FIFO_READ_1[wait_to_verify_c_l23_c65_7e90] LATENCY=0
+     VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     -- verify_fifo_FIFO_READ_1[wait_to_verify_c_l23_c65_767b] LATENCY=0
      -- Clock enable
-     module_to_global.verify_fifo_FIFO_READ_1_CLOCK_ENABLE <= VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_CLOCK_ENABLE;
+     module_to_global.verify_fifo_FIFO_READ_1_CLOCK_ENABLE <= VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_CLOCK_ENABLE;
      -- Inputs
-     module_to_global.verify_fifo_FIFO_READ_1_read_enable <= VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_read_enable;
+     module_to_global.verify_fifo_FIFO_READ_1_read_enable <= VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_read_enable;
      -- Outputs
-     VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_return_output := global_to_module.verify_fifo_FIFO_READ_1_return_output;
+     VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_return_output := global_to_module.verify_fifo_FIFO_READ_1_return_output;
 
      -- Submodule level 1
-     -- CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d[wait_to_verify_c_l23_c136_4aed] LATENCY=0
-     VAR_CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d_wait_to_verify_c_l23_c136_4aed_return_output := VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_return_output.data(0);
+     -- CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d[wait_to_verify_c_l23_c172_71ac] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d_wait_to_verify_c_l23_c172_71ac_return_output := VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_return_output.valid;
 
-     -- CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d[wait_to_verify_c_l23_c172_c405] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d_wait_to_verify_c_l23_c172_c405_return_output := VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_7e90_return_output.valid;
+     -- CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d[wait_to_verify_c_l23_c136_47bf] LATENCY=0
+     VAR_CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d_wait_to_verify_c_l23_c136_47bf_return_output := VAR_verify_fifo_FIFO_READ_1_wait_to_verify_c_l23_c65_767b_return_output.data(0);
 
      -- Submodule level 2
-     -- verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0[wait_to_verify_c_l23_c7_c830] LATENCY=0
-     VAR_verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0_wait_to_verify_c_l23_c7_c830_return_output := CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0(
-     VAR_CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d_wait_to_verify_c_l23_c136_4aed_return_output,
-     VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d_wait_to_verify_c_l23_c172_c405_return_output);
+     -- verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0[wait_to_verify_c_l23_c7_506d] LATENCY=0
+     VAR_verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0_wait_to_verify_c_l23_c7_506d_return_output := CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0(
+     VAR_CONST_REF_RD_axis128_t_verify_fifo_FIFO_read_t_data_0_d41d_wait_to_verify_c_l23_c136_47bf_return_output,
+     VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_read_t_valid_d41d_wait_to_verify_c_l23_c172_71ac_return_output);
 
      -- Submodule level 3
-     VAR_verify_fifo_out := VAR_verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0_wait_to_verify_c_l23_c7_c830_return_output;
+     VAR_verify_fifo_out := VAR_verify_fifo_out_CONST_REF_RD_axis128_t_stream_t_axis128_t_stream_t_42b0_wait_to_verify_c_l23_c7_506d_return_output;
    end if;
  end loop;
 
