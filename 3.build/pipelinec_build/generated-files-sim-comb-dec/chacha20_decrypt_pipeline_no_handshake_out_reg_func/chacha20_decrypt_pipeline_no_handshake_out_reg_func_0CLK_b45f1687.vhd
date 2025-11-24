@@ -75,7 +75,7 @@ is
  variable VAR_id : unsigned(7 downto 0);
  variable VAR_valid : unsigned(0 downto 0);
  variable VAR_rv : chacha20_decrypt_pipeline_no_handshake_out_reg_t;
- variable VAR_the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4_chacha20_decrypt_c_l24_c50_e8ab_return_output : chacha20_decrypt_pipeline_no_handshake_out_reg_t;
+ variable VAR_the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4_chacha20_decrypt_c_l24_c50_7ddf_return_output : chacha20_decrypt_pipeline_no_handshake_out_reg_t;
  -- State registers comb logic variables
 variable REG_VAR_the_reg : chacha20_decrypt_pipeline_no_handshake_out_reg_t;
 begin
@@ -97,14 +97,14 @@ begin
 
      -- Submodule level 0
      VAR_return_output := the_reg;
-     -- the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4[chacha20_decrypt_c_l24_c50_e8ab] LATENCY=0
-     VAR_the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4_chacha20_decrypt_c_l24_c50_e8ab_return_output := CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4(
+     -- the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4[chacha20_decrypt_c_l24_c50_7ddf] LATENCY=0
+     VAR_the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4_chacha20_decrypt_c_l24_c50_7ddf_return_output := CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4(
      VAR_data,
      VAR_id,
      VAR_valid);
 
      -- Submodule level 1
-     REG_VAR_the_reg := VAR_the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4_chacha20_decrypt_c_l24_c50_e8ab_return_output;
+     REG_VAR_the_reg := VAR_the_reg_CONST_REF_RD_chacha20_decrypt_pipeline_no_handshake_out_reg_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_30d4_chacha20_decrypt_c_l24_c50_7ddf_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

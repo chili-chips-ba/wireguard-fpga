@@ -58,33 +58,33 @@ is
  variable VAR_verify_fifo_in : axis128_t_stream_t;
  variable VAR_verify_fifo_in_ready : unsigned(0 downto 0);
  variable VAR_din : axis128_t_1;
- variable VAR_CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d_wait_to_verify_c_l23_c56_5bd7_return_output : axis128_t;
+ variable VAR_CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d_wait_to_verify_c_l23_c56_64e6_return_output : axis128_t;
  variable VAR_wr : verify_fifo_FIFO_write_t;
- variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_write_data : axis128_t_1;
- variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_write_enable : unsigned(0 downto 0);
- variable VAR_CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d_wait_to_verify_c_l23_c134_9c17_return_output : axis128_t_1;
- variable VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d_wait_to_verify_c_l23_c139_69dd_return_output : unsigned(0 downto 0);
- variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_CLOCK_ENABLE : unsigned(0 downto 0);
- variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_return_output : verify_fifo_FIFO_write_t;
- variable VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d_wait_to_verify_c_l23_c185_58df_return_output : unsigned(0 downto 0);
+ variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_write_data : axis128_t_1;
+ variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_write_enable : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d_wait_to_verify_c_l23_c134_68cd_return_output : axis128_t_1;
+ variable VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d_wait_to_verify_c_l23_c139_526a_return_output : unsigned(0 downto 0);
+ variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_return_output : verify_fifo_FIFO_write_t;
+ variable VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d_wait_to_verify_c_l23_c185_0d84_return_output : unsigned(0 downto 0);
 begin
  -- Reads from global variables
      VAR_verify_fifo_in := global_to_module.verify_fifo_in;
      -- Submodule level 0
-     -- CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d[wait_to_verify_c_l23_c139_69dd] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d_wait_to_verify_c_l23_c139_69dd_return_output := VAR_verify_fifo_in.valid;
+     -- CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d[wait_to_verify_c_l23_c139_526a] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d_wait_to_verify_c_l23_c139_526a_return_output := VAR_verify_fifo_in.valid;
 
-     -- CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d[wait_to_verify_c_l23_c56_5bd7] LATENCY=0
-     VAR_CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d_wait_to_verify_c_l23_c56_5bd7_return_output := VAR_verify_fifo_in.data;
+     -- CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d[wait_to_verify_c_l23_c56_64e6] LATENCY=0
+     VAR_CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d_wait_to_verify_c_l23_c56_64e6_return_output := VAR_verify_fifo_in.data;
 
      -- Submodule level 1
-     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_write_enable := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d_wait_to_verify_c_l23_c139_69dd_return_output;
-     -- CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d[wait_to_verify_c_l23_c134_9c17] LATENCY=0
-     VAR_CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d_wait_to_verify_c_l23_c134_9c17_return_output := CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d(
-     VAR_CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d_wait_to_verify_c_l23_c56_5bd7_return_output);
+     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_write_enable := VAR_CONST_REF_RD_uint1_t_axis128_t_stream_t_valid_d41d_wait_to_verify_c_l23_c139_526a_return_output;
+     -- CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d[wait_to_verify_c_l23_c134_68cd] LATENCY=0
+     VAR_CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d_wait_to_verify_c_l23_c134_68cd_return_output := CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d(
+     VAR_CONST_REF_RD_axis128_t_axis128_t_stream_t_data_d41d_wait_to_verify_c_l23_c56_64e6_return_output);
 
      -- Submodule level 2
-     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_write_data := VAR_CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d_wait_to_verify_c_l23_c134_9c17_return_output;
+     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_write_data := VAR_CONST_REF_RD_axis128_t_1_axis128_t_1_4e8d_wait_to_verify_c_l23_c134_68cd_return_output;
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
  -- LATENCY=0 is combinational Logic
@@ -94,22 +94,22 @@ begin
      VAR_CLOCK_ENABLE(0) := clk_en_internal;
 
      -- Submodule level 0
-     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
-     -- verify_fifo_FIFO_WRITE_1[wait_to_verify_c_l23_c109_fe03] LATENCY=0
+     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     -- verify_fifo_FIFO_WRITE_1[wait_to_verify_c_l23_c109_fe0b] LATENCY=0
      -- Clock enable
-     module_to_global.verify_fifo_FIFO_WRITE_1_CLOCK_ENABLE <= VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_CLOCK_ENABLE;
+     module_to_global.verify_fifo_FIFO_WRITE_1_CLOCK_ENABLE <= VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_CLOCK_ENABLE;
      -- Inputs
-     module_to_global.verify_fifo_FIFO_WRITE_1_write_data <= VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_write_data;
-     module_to_global.verify_fifo_FIFO_WRITE_1_write_enable <= VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_write_enable;
+     module_to_global.verify_fifo_FIFO_WRITE_1_write_data <= VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_write_data;
+     module_to_global.verify_fifo_FIFO_WRITE_1_write_enable <= VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_write_enable;
      -- Outputs
-     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_return_output := global_to_module.verify_fifo_FIFO_WRITE_1_return_output;
+     VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_return_output := global_to_module.verify_fifo_FIFO_WRITE_1_return_output;
 
      -- Submodule level 1
-     -- CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d[wait_to_verify_c_l23_c185_58df] LATENCY=0
-     VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d_wait_to_verify_c_l23_c185_58df_return_output := VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe03_return_output.ready;
+     -- CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d[wait_to_verify_c_l23_c185_0d84] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d_wait_to_verify_c_l23_c185_0d84_return_output := VAR_verify_fifo_FIFO_WRITE_1_wait_to_verify_c_l23_c109_fe0b_return_output.ready;
 
      -- Submodule level 2
-     VAR_verify_fifo_in_ready := VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d_wait_to_verify_c_l23_c185_58df_return_output;
+     VAR_verify_fifo_in_ready := VAR_CONST_REF_RD_uint1_t_verify_fifo_FIFO_write_t_ready_d41d_wait_to_verify_c_l23_c185_0d84_return_output;
    end if;
  end loop;
 

@@ -33,14 +33,11 @@ void strip_auth_tag()
   strip_auth_tag_axis_out = axis_null;
   stream(poly1305_auth_tag_uint_t) auth_tag_null = {0};
   strip_auth_tag_auth_tag_out = auth_tag_null;
-  
-  // The output register is consumed if it's valid and the consumer is ready
-  uint1_t output_consumed = cyphertext_reg.valid & strip_auth_tag_axis_out_ready;
 
   if(state == CIPHERTEXT_PASS)
   {
     //the FSM is ready for new input if the currennt output register is consumed
-    strip_auth_tag_axis_in_ready = output_consumed;
+    strip_auth_tag_axis_in_ready = cyphertext_reg.valid & strip_auth_tag_axis_out_ready;
 
     //load the register and check for lookahead on a successful input transfer
     if(strip_auth_tag_axis_in.valid & strip_auth_tag_axis_in_ready)
@@ -76,7 +73,7 @@ void strip_auth_tag()
 
   else //if(state == AUTH_TAG_EXTRACTION)
   {
-    if (output_consumed)
+    if (cyphertext_reg.valid & strip_auth_tag_axis_out_ready)
     {
       // Disable the ciphertext output
       cyphertext_reg.valid = 0;

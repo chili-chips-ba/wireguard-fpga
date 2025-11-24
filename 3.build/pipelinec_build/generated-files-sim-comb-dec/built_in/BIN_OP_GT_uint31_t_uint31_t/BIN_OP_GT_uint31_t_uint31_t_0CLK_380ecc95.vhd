@@ -24,10 +24,10 @@ attribute mark_debug : string;
 constant ADDED_PIPELINE_LATENCY : integer := 0;
 -- All of the wires/regs in function
 -- Each function instance gets signals
--- BIN_OP_MINUS[BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb]
-signal BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_left : signed(31 downto 0);
-signal BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_right : signed(31 downto 0);
-signal BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_return_output : signed(32 downto 0);
+-- BIN_OP_MINUS[BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77]
+signal BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_left : signed(31 downto 0);
+signal BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_right : signed(31 downto 0);
+signal BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_return_output : signed(32 downto 0);
 
 function CAST_TO_int32_t_uint31_t( rhs : unsigned) return signed is
 
@@ -54,11 +54,11 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb : 0 clocks latency
-BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb : entity work.BIN_OP_MINUS_int32_t_int32_t_0CLK_de264c78 port map (
-BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_left,
-BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_right,
-BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_return_output);
+-- BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77 : 0 clocks latency
+BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77 : entity work.BIN_OP_MINUS_int32_t_int32_t_0CLK_de264c78 port map (
+BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_left,
+BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_right,
+BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_return_output);
 
 
 
@@ -68,7 +68,7 @@ process (
  left,
  right,
  -- All submodule outputs
- BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_return_output)
+ BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
@@ -76,17 +76,17 @@ is
  variable VAR_right : unsigned(30 downto 0);
  variable VAR_return_output : unsigned(0 downto 0);
  variable VAR_left_bot : unsigned(30 downto 0);
- variable VAR_left_bot_BIN_OP_GT_uint31_t_uint31_t_c_l9_c14_5bea_0 : unsigned(30 downto 0);
+ variable VAR_left_bot_BIN_OP_GT_uint31_t_uint31_t_c_l9_c14_adeb_0 : unsigned(30 downto 0);
  variable VAR_right_bot : unsigned(30 downto 0);
  variable VAR_rv : unsigned(0 downto 0);
  variable VAR_sub : signed(31 downto 0);
- variable VAR_sub_BIN_OP_GT_uint31_t_uint31_t_c_l14_c13_35fe_0 : signed(31 downto 0);
- variable VAR_CAST_TO_int32_t_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_2432_return_output : signed(31 downto 0);
- variable VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_left : signed(31 downto 0);
- variable VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_right : signed(31 downto 0);
- variable VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_return_output : signed(32 downto 0);
+ variable VAR_sub_BIN_OP_GT_uint31_t_uint31_t_c_l14_c13_c878_0 : signed(31 downto 0);
+ variable VAR_CAST_TO_int32_t_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_a4b2_return_output : signed(31 downto 0);
+ variable VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_left : signed(31 downto 0);
+ variable VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_right : signed(31 downto 0);
+ variable VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_return_output : signed(32 downto 0);
  variable VAR_lt_zero : unsigned(0 downto 0);
- variable VAR_int32_31_31_BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_7019_return_output : unsigned(0 downto 0);
+ variable VAR_int32_31_31_BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_47ac_return_output : unsigned(0 downto 0);
 begin
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
@@ -98,29 +98,29 @@ begin
      VAR_right := right;
 
      -- Submodule level 0
-     VAR_left_bot_BIN_OP_GT_uint31_t_uint31_t_c_l9_c14_5bea_0 := VAR_left;
-     VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_right := signed(std_logic_vector(resize(VAR_left_bot_BIN_OP_GT_uint31_t_uint31_t_c_l9_c14_5bea_0, 32)));
-     -- CAST_TO_int32_t[BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_2432] LATENCY=0
-     VAR_CAST_TO_int32_t_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_2432_return_output := CAST_TO_int32_t_uint31_t(
+     VAR_left_bot_BIN_OP_GT_uint31_t_uint31_t_c_l9_c14_adeb_0 := VAR_left;
+     VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_right := signed(std_logic_vector(resize(VAR_left_bot_BIN_OP_GT_uint31_t_uint31_t_c_l9_c14_adeb_0, 32)));
+     -- CAST_TO_int32_t[BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_a4b2] LATENCY=0
+     VAR_CAST_TO_int32_t_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_a4b2_return_output := CAST_TO_int32_t_uint31_t(
      VAR_right);
 
      -- Submodule level 1
-     VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_left := VAR_CAST_TO_int32_t_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_2432_return_output;
-     -- BIN_OP_MINUS[BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb] LATENCY=0
+     VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_left := VAR_CAST_TO_int32_t_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_a4b2_return_output;
+     -- BIN_OP_MINUS[BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77] LATENCY=0
      -- Inputs
-     BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_left <= VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_left;
-     BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_right <= VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_right;
+     BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_left <= VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_left;
+     BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_right <= VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_right;
      -- Outputs
-     VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_return_output := BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_return_output;
+     VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_return_output := BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_return_output;
 
      -- Submodule level 2
-     VAR_sub_BIN_OP_GT_uint31_t_uint31_t_c_l14_c13_35fe_0 := resize(VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_bfdb_return_output, 32);
-     -- int32_31_31[BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_7019] LATENCY=0
-     VAR_int32_31_31_BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_7019_return_output := int32_31_31(
-     VAR_sub_BIN_OP_GT_uint31_t_uint31_t_c_l14_c13_35fe_0);
+     VAR_sub_BIN_OP_GT_uint31_t_uint31_t_c_l14_c13_c878_0 := resize(VAR_BIN_OP_MINUS_BIN_OP_GT_uint31_t_uint31_t_c_l14_c19_0d77_return_output, 32);
+     -- int32_31_31[BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_47ac] LATENCY=0
+     VAR_int32_31_31_BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_47ac_return_output := int32_31_31(
+     VAR_sub_BIN_OP_GT_uint31_t_uint31_t_c_l14_c13_c878_0);
 
      -- Submodule level 3
-     VAR_return_output := VAR_int32_31_31_BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_7019_return_output;
+     VAR_return_output := VAR_int32_31_31_BIN_OP_GT_uint31_t_uint31_t_c_l15_c23_47ac_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;
