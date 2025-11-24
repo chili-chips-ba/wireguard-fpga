@@ -16450,6 +16450,12 @@ function strip_auth_tag_state_t_to_slv(e : strip_auth_tag_state_t) return std_lo
   );
   
 function wait_to_verify_state_t_to_slv(e : wait_to_verify_state_t) return std_logic_vector;
+subtype uint8_t_32 is byte_array_t(0 to 31);
+constant uint8_t_32_SLV_LEN : integer := 8 * 32;
+
+      function uint8_t_32_to_slv(data : uint8_t_32) return std_logic_vector;
+
+      function slv_to_uint8_t_32(data : std_logic_vector) return uint8_t_32;
 subtype uint8_t_16 is byte_array_t(0 to 15);
 constant uint8_t_16_SLV_LEN : integer := 8 * 16;
 
@@ -16462,12 +16468,6 @@ constant uint64_t_5_SLV_LEN : integer := 64 * 5;
       function uint64_t_5_to_slv(data : uint64_t_5) return std_logic_vector;
 
       function slv_to_uint64_t_5(data : std_logic_vector) return uint64_t_5;
-subtype uint8_t_32 is byte_array_t(0 to 31);
-constant uint8_t_32_SLV_LEN : integer := 8 * 32;
-
-      function uint8_t_32_to_slv(data : uint8_t_32) return std_logic_vector;
-
-      function slv_to_uint8_t_32(data : std_logic_vector) return uint8_t_32;
 subtype uint8_t_12 is byte_array_t(0 to 11);
 constant uint8_t_12_SLV_LEN : integer := 8 * 12;
 
@@ -17323,24 +17323,6 @@ constant uint32_t_16_SLV_LEN : integer := 32 * 16;
 
   function slv_to_verify_fifo_FIFO_write_t(data : std_logic_vector) return verify_fifo_FIFO_write_t;
 
-  type uint8_t_array_64_t is record
-  
-    data : uint8_t_64;
-  end record;
-  
-  constant uint8_t_array_64_t_NULL : uint8_t_array_64_t := (
-  
-    data => (others => to_unsigned(0, 8))
-  );
-  
-  constant uint8_t_array_64_t_SLV_LEN : integer := (
-  uint8_t_64_SLV_LEN
-  );
-  
-  function uint8_t_array_64_t_to_slv(data : uint8_t_array_64_t) return std_logic_vector;
-
-  function slv_to_uint8_t_array_64_t(data : std_logic_vector) return uint8_t_array_64_t;
-
   type uint8_t_array_40_t is record
   
     data : uint8_t_40;
@@ -17359,23 +17341,23 @@ constant uint32_t_16_SLV_LEN : integer := 32 * 16;
 
   function slv_to_uint8_t_array_40_t(data : std_logic_vector) return uint8_t_array_40_t;
 
-  type uint8_t_array_8_t is record
+  type uint8_t_array_64_t is record
   
-    data : uint8_t_8;
+    data : uint8_t_64;
   end record;
   
-  constant uint8_t_array_8_t_NULL : uint8_t_array_8_t := (
+  constant uint8_t_array_64_t_NULL : uint8_t_array_64_t := (
   
     data => (others => to_unsigned(0, 8))
   );
   
-  constant uint8_t_array_8_t_SLV_LEN : integer := (
-  uint8_t_8_SLV_LEN
+  constant uint8_t_array_64_t_SLV_LEN : integer := (
+  uint8_t_64_SLV_LEN
   );
   
-  function uint8_t_array_8_t_to_slv(data : uint8_t_array_8_t) return std_logic_vector;
+  function uint8_t_array_64_t_to_slv(data : uint8_t_array_64_t) return std_logic_vector;
 
-  function slv_to_uint8_t_array_8_t(data : std_logic_vector) return uint8_t_array_8_t;
+  function slv_to_uint8_t_array_64_t(data : std_logic_vector) return uint8_t_array_64_t;
 
   type uint8_t_array_4_t is record
   
@@ -17394,6 +17376,24 @@ constant uint32_t_16_SLV_LEN : integer := 32 * 16;
   function uint8_t_array_4_t_to_slv(data : uint8_t_array_4_t) return std_logic_vector;
 
   function slv_to_uint8_t_array_4_t(data : std_logic_vector) return uint8_t_array_4_t;
+
+  type uint8_t_array_8_t is record
+  
+    data : uint8_t_8;
+  end record;
+  
+  constant uint8_t_array_8_t_NULL : uint8_t_array_8_t := (
+  
+    data => (others => to_unsigned(0, 8))
+  );
+  
+  constant uint8_t_array_8_t_SLV_LEN : integer := (
+  uint8_t_8_SLV_LEN
+  );
+  
+  function uint8_t_array_8_t_to_slv(data : uint8_t_array_8_t) return std_logic_vector;
+
+  function slv_to_uint8_t_array_8_t(data : std_logic_vector) return uint8_t_array_8_t;
 
   type uint32_t_array_16_t is record
   
@@ -66769,187 +66769,6 @@ end case;
 return rv;
 end function;
     
-      function uint8_t_16_to_slv(data : uint8_t_16) return std_logic_vector is
-        variable rv : std_logic_vector(uint8_t_16_SLV_LEN-1 downto 0);
-        variable pos : integer := 0;
-      begin
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(0));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(1));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(2));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(3));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(4));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(5));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(6));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(7));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(8));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(9));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(10));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(11));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(12));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(13));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(14));
-            pos := pos + 8;
-    
-            rv((pos+8)-1 downto pos) := std_logic_vector(data(15));
-            pos := pos + 8;
-    
-          return rv;
-      end function;
-    
-      function slv_to_uint8_t_16(data : std_logic_vector) return uint8_t_16 is
-        variable rv : uint8_t_16;
-        variable elem_slv : std_logic_vector(8-1 downto 0);
-        variable pos : integer := 0;
-      begin
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(0) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(1) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(2) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(3) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(4) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(5) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(6) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(7) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(8) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(9) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(10) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(11) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(12) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(13) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(14) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-            elem_slv := data((pos+8)-1 downto pos);
-            rv(15) := unsigned(elem_slv);
-            pos := pos + 8;
-    
-          return rv;
-      end function;
-    
-      function uint64_t_5_to_slv(data : uint64_t_5) return std_logic_vector is
-        variable rv : std_logic_vector(uint64_t_5_SLV_LEN-1 downto 0);
-        variable pos : integer := 0;
-      begin
-    
-            rv((pos+64)-1 downto pos) := std_logic_vector(data(0));
-            pos := pos + 64;
-    
-            rv((pos+64)-1 downto pos) := std_logic_vector(data(1));
-            pos := pos + 64;
-    
-            rv((pos+64)-1 downto pos) := std_logic_vector(data(2));
-            pos := pos + 64;
-    
-            rv((pos+64)-1 downto pos) := std_logic_vector(data(3));
-            pos := pos + 64;
-    
-            rv((pos+64)-1 downto pos) := std_logic_vector(data(4));
-            pos := pos + 64;
-    
-          return rv;
-      end function;
-    
-      function slv_to_uint64_t_5(data : std_logic_vector) return uint64_t_5 is
-        variable rv : uint64_t_5;
-        variable elem_slv : std_logic_vector(64-1 downto 0);
-        variable pos : integer := 0;
-      begin
-    
-            elem_slv := data((pos+64)-1 downto pos);
-            rv(0) := unsigned(elem_slv);
-            pos := pos + 64;
-    
-            elem_slv := data((pos+64)-1 downto pos);
-            rv(1) := unsigned(elem_slv);
-            pos := pos + 64;
-    
-            elem_slv := data((pos+64)-1 downto pos);
-            rv(2) := unsigned(elem_slv);
-            pos := pos + 64;
-    
-            elem_slv := data((pos+64)-1 downto pos);
-            rv(3) := unsigned(elem_slv);
-            pos := pos + 64;
-    
-            elem_slv := data((pos+64)-1 downto pos);
-            rv(4) := unsigned(elem_slv);
-            pos := pos + 64;
-    
-          return rv;
-      end function;
-    
       function uint8_t_32_to_slv(data : uint8_t_32) return std_logic_vector is
         variable rv : std_logic_vector(uint8_t_32_SLV_LEN-1 downto 0);
         variable pos : integer := 0;
@@ -67187,6 +67006,187 @@ end function;
             elem_slv := data((pos+8)-1 downto pos);
             rv(31) := unsigned(elem_slv);
             pos := pos + 8;
+    
+          return rv;
+      end function;
+    
+      function uint8_t_16_to_slv(data : uint8_t_16) return std_logic_vector is
+        variable rv : std_logic_vector(uint8_t_16_SLV_LEN-1 downto 0);
+        variable pos : integer := 0;
+      begin
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(0));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(1));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(2));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(3));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(4));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(5));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(6));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(7));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(8));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(9));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(10));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(11));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(12));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(13));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(14));
+            pos := pos + 8;
+    
+            rv((pos+8)-1 downto pos) := std_logic_vector(data(15));
+            pos := pos + 8;
+    
+          return rv;
+      end function;
+    
+      function slv_to_uint8_t_16(data : std_logic_vector) return uint8_t_16 is
+        variable rv : uint8_t_16;
+        variable elem_slv : std_logic_vector(8-1 downto 0);
+        variable pos : integer := 0;
+      begin
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(0) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(1) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(2) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(3) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(4) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(5) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(6) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(7) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(8) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(9) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(10) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(11) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(12) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(13) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(14) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+            elem_slv := data((pos+8)-1 downto pos);
+            rv(15) := unsigned(elem_slv);
+            pos := pos + 8;
+    
+          return rv;
+      end function;
+    
+      function uint64_t_5_to_slv(data : uint64_t_5) return std_logic_vector is
+        variable rv : std_logic_vector(uint64_t_5_SLV_LEN-1 downto 0);
+        variable pos : integer := 0;
+      begin
+    
+            rv((pos+64)-1 downto pos) := std_logic_vector(data(0));
+            pos := pos + 64;
+    
+            rv((pos+64)-1 downto pos) := std_logic_vector(data(1));
+            pos := pos + 64;
+    
+            rv((pos+64)-1 downto pos) := std_logic_vector(data(2));
+            pos := pos + 64;
+    
+            rv((pos+64)-1 downto pos) := std_logic_vector(data(3));
+            pos := pos + 64;
+    
+            rv((pos+64)-1 downto pos) := std_logic_vector(data(4));
+            pos := pos + 64;
+    
+          return rv;
+      end function;
+    
+      function slv_to_uint64_t_5(data : std_logic_vector) return uint64_t_5 is
+        variable rv : uint64_t_5;
+        variable elem_slv : std_logic_vector(64-1 downto 0);
+        variable pos : integer := 0;
+      begin
+    
+            elem_slv := data((pos+64)-1 downto pos);
+            rv(0) := unsigned(elem_slv);
+            pos := pos + 64;
+    
+            elem_slv := data((pos+64)-1 downto pos);
+            rv(1) := unsigned(elem_slv);
+            pos := pos + 64;
+    
+            elem_slv := data((pos+64)-1 downto pos);
+            rv(2) := unsigned(elem_slv);
+            pos := pos + 64;
+    
+            elem_slv := data((pos+64)-1 downto pos);
+            rv(3) := unsigned(elem_slv);
+            pos := pos + 64;
+    
+            elem_slv := data((pos+64)-1 downto pos);
+            rv(4) := unsigned(elem_slv);
+            pos := pos + 64;
     
           return rv;
       end function;
@@ -72714,30 +72714,6 @@ end function;
       return rv;
   end function;
 
-  function uint8_t_array_64_t_to_slv(data : uint8_t_array_64_t) return std_logic_vector is
-    variable rv : std_logic_vector(uint8_t_array_64_t_SLV_LEN-1 downto 0);
-    variable pos : integer := 0;
-  begin
-
-        rv((pos+uint8_t_64_SLV_LEN)-1 downto pos) := uint8_t_64_to_slv(data.data);
-        pos := pos + uint8_t_64_SLV_LEN;
-
-      return rv;
-  end function;
-
-  function slv_to_uint8_t_array_64_t(data : std_logic_vector) return uint8_t_array_64_t is
-    variable rv : uint8_t_array_64_t;
-    variable pos : integer := 0;
-    variable data_slv : std_logic_vector(uint8_t_64_SLV_LEN-1 downto 0);
-  begin
-
-        data_slv := data((pos+uint8_t_64_SLV_LEN)-1 downto pos);
-        rv.data := slv_to_uint8_t_64(data_slv);
-        pos := pos + uint8_t_64_SLV_LEN;
-
-      return rv;
-  end function;
-
   function uint8_t_array_40_t_to_slv(data : uint8_t_array_40_t) return std_logic_vector is
     variable rv : std_logic_vector(uint8_t_array_40_t_SLV_LEN-1 downto 0);
     variable pos : integer := 0;
@@ -72762,26 +72738,26 @@ end function;
       return rv;
   end function;
 
-  function uint8_t_array_8_t_to_slv(data : uint8_t_array_8_t) return std_logic_vector is
-    variable rv : std_logic_vector(uint8_t_array_8_t_SLV_LEN-1 downto 0);
+  function uint8_t_array_64_t_to_slv(data : uint8_t_array_64_t) return std_logic_vector is
+    variable rv : std_logic_vector(uint8_t_array_64_t_SLV_LEN-1 downto 0);
     variable pos : integer := 0;
   begin
 
-        rv((pos+uint8_t_8_SLV_LEN)-1 downto pos) := uint8_t_8_to_slv(data.data);
-        pos := pos + uint8_t_8_SLV_LEN;
+        rv((pos+uint8_t_64_SLV_LEN)-1 downto pos) := uint8_t_64_to_slv(data.data);
+        pos := pos + uint8_t_64_SLV_LEN;
 
       return rv;
   end function;
 
-  function slv_to_uint8_t_array_8_t(data : std_logic_vector) return uint8_t_array_8_t is
-    variable rv : uint8_t_array_8_t;
+  function slv_to_uint8_t_array_64_t(data : std_logic_vector) return uint8_t_array_64_t is
+    variable rv : uint8_t_array_64_t;
     variable pos : integer := 0;
-    variable data_slv : std_logic_vector(uint8_t_8_SLV_LEN-1 downto 0);
+    variable data_slv : std_logic_vector(uint8_t_64_SLV_LEN-1 downto 0);
   begin
 
-        data_slv := data((pos+uint8_t_8_SLV_LEN)-1 downto pos);
-        rv.data := slv_to_uint8_t_8(data_slv);
-        pos := pos + uint8_t_8_SLV_LEN;
+        data_slv := data((pos+uint8_t_64_SLV_LEN)-1 downto pos);
+        rv.data := slv_to_uint8_t_64(data_slv);
+        pos := pos + uint8_t_64_SLV_LEN;
 
       return rv;
   end function;
@@ -72806,6 +72782,30 @@ end function;
         data_slv := data((pos+uint8_t_4_SLV_LEN)-1 downto pos);
         rv.data := slv_to_uint8_t_4(data_slv);
         pos := pos + uint8_t_4_SLV_LEN;
+
+      return rv;
+  end function;
+
+  function uint8_t_array_8_t_to_slv(data : uint8_t_array_8_t) return std_logic_vector is
+    variable rv : std_logic_vector(uint8_t_array_8_t_SLV_LEN-1 downto 0);
+    variable pos : integer := 0;
+  begin
+
+        rv((pos+uint8_t_8_SLV_LEN)-1 downto pos) := uint8_t_8_to_slv(data.data);
+        pos := pos + uint8_t_8_SLV_LEN;
+
+      return rv;
+  end function;
+
+  function slv_to_uint8_t_array_8_t(data : std_logic_vector) return uint8_t_array_8_t is
+    variable rv : uint8_t_array_8_t;
+    variable pos : integer := 0;
+    variable data_slv : std_logic_vector(uint8_t_8_SLV_LEN-1 downto 0);
+  begin
+
+        data_slv := data((pos+uint8_t_8_SLV_LEN)-1 downto pos);
+        rv.data := slv_to_uint8_t_8(data_slv);
+        pos := pos + uint8_t_8_SLV_LEN;
 
       return rv;
   end function;

@@ -199,22 +199,22 @@ is
  variable VAR_return_output : unsigned(63 downto 0);
  variable VAR_bytes : uint8_t_8;
  variable VAR_rv : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_0_d41d_uint64_t_bytes_t_h_l36_c25_b110_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_0_uint64_t_bytes_t_h_l36_c6_ad21_return_output : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_1_d41d_uint64_t_bytes_t_h_l37_c25_92b5_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_8_uint64_t_bytes_t_h_l37_c6_6980_return_output : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_2_d41d_uint64_t_bytes_t_h_l38_c26_f16b_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_16_uint64_t_bytes_t_h_l38_c6_83c1_return_output : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_3_d41d_uint64_t_bytes_t_h_l39_c26_dfee_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_24_uint64_t_bytes_t_h_l39_c6_6b5c_return_output : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_4_d41d_uint64_t_bytes_t_h_l40_c26_2e57_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_32_uint64_t_bytes_t_h_l40_c6_a2d8_return_output : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_5_d41d_uint64_t_bytes_t_h_l41_c26_22d3_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_40_uint64_t_bytes_t_h_l41_c6_1d59_return_output : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_6_d41d_uint64_t_bytes_t_h_l42_c26_ccac_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_48_uint64_t_bytes_t_h_l42_c6_1ea1_return_output : unsigned(63 downto 0);
- variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_7_d41d_uint64_t_bytes_t_h_l43_c26_8ee4_return_output : unsigned(7 downto 0);
- variable VAR_uint64_uint8_56_uint64_t_bytes_t_h_l43_c6_7e96_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_0_d41d_uint64_t_bytes_t_h_l36_c25_9e4b_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_0_uint64_t_bytes_t_h_l36_c6_a8d5_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_1_d41d_uint64_t_bytes_t_h_l37_c25_b3e6_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_8_uint64_t_bytes_t_h_l37_c6_eabd_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_2_d41d_uint64_t_bytes_t_h_l38_c26_4dd1_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_16_uint64_t_bytes_t_h_l38_c6_a7e5_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_3_d41d_uint64_t_bytes_t_h_l39_c26_3d5e_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_24_uint64_t_bytes_t_h_l39_c6_c9ad_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_4_d41d_uint64_t_bytes_t_h_l40_c26_b70a_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_32_uint64_t_bytes_t_h_l40_c6_c1e1_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_5_d41d_uint64_t_bytes_t_h_l41_c26_4c72_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_40_uint64_t_bytes_t_h_l41_c6_9174_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_6_d41d_uint64_t_bytes_t_h_l42_c26_cff0_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_48_uint64_t_bytes_t_h_l42_c6_33a1_return_output : unsigned(63 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_uint8_t_8_7_d41d_uint64_t_bytes_t_h_l43_c26_f548_return_output : unsigned(7 downto 0);
+ variable VAR_uint64_uint8_56_uint64_t_bytes_t_h_l43_c6_322e_return_output : unsigned(63 downto 0);
 begin
  -- Constants and things derived from constants alone
      -- Submodule level 0
@@ -227,80 +227,80 @@ begin
      VAR_bytes := bytes;
 
      -- Submodule level 0
-     -- CONST_REF_RD_uint8_t_uint8_t_8_6_d41d[uint64_t_bytes_t_h_l42_c26_ccac] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_6_d41d_uint64_t_bytes_t_h_l42_c26_ccac_return_output := VAR_bytes(6);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_0_d41d[uint64_t_bytes_t_h_l36_c25_9e4b] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_0_d41d_uint64_t_bytes_t_h_l36_c25_9e4b_return_output := VAR_bytes(0);
 
-     -- CONST_REF_RD_uint8_t_uint8_t_8_2_d41d[uint64_t_bytes_t_h_l38_c26_f16b] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_2_d41d_uint64_t_bytes_t_h_l38_c26_f16b_return_output := VAR_bytes(2);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_1_d41d[uint64_t_bytes_t_h_l37_c25_b3e6] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_1_d41d_uint64_t_bytes_t_h_l37_c25_b3e6_return_output := VAR_bytes(1);
 
-     -- CONST_REF_RD_uint8_t_uint8_t_8_7_d41d[uint64_t_bytes_t_h_l43_c26_8ee4] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_7_d41d_uint64_t_bytes_t_h_l43_c26_8ee4_return_output := VAR_bytes(7);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_6_d41d[uint64_t_bytes_t_h_l42_c26_cff0] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_6_d41d_uint64_t_bytes_t_h_l42_c26_cff0_return_output := VAR_bytes(6);
 
-     -- CONST_REF_RD_uint8_t_uint8_t_8_4_d41d[uint64_t_bytes_t_h_l40_c26_2e57] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_4_d41d_uint64_t_bytes_t_h_l40_c26_2e57_return_output := VAR_bytes(4);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_5_d41d[uint64_t_bytes_t_h_l41_c26_4c72] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_5_d41d_uint64_t_bytes_t_h_l41_c26_4c72_return_output := VAR_bytes(5);
 
-     -- CONST_REF_RD_uint8_t_uint8_t_8_3_d41d[uint64_t_bytes_t_h_l39_c26_dfee] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_3_d41d_uint64_t_bytes_t_h_l39_c26_dfee_return_output := VAR_bytes(3);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_2_d41d[uint64_t_bytes_t_h_l38_c26_4dd1] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_2_d41d_uint64_t_bytes_t_h_l38_c26_4dd1_return_output := VAR_bytes(2);
 
-     -- CONST_REF_RD_uint8_t_uint8_t_8_5_d41d[uint64_t_bytes_t_h_l41_c26_22d3] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_5_d41d_uint64_t_bytes_t_h_l41_c26_22d3_return_output := VAR_bytes(5);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_3_d41d[uint64_t_bytes_t_h_l39_c26_3d5e] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_3_d41d_uint64_t_bytes_t_h_l39_c26_3d5e_return_output := VAR_bytes(3);
 
-     -- CONST_REF_RD_uint8_t_uint8_t_8_1_d41d[uint64_t_bytes_t_h_l37_c25_92b5] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_1_d41d_uint64_t_bytes_t_h_l37_c25_92b5_return_output := VAR_bytes(1);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_4_d41d[uint64_t_bytes_t_h_l40_c26_b70a] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_4_d41d_uint64_t_bytes_t_h_l40_c26_b70a_return_output := VAR_bytes(4);
 
-     -- CONST_REF_RD_uint8_t_uint8_t_8_0_d41d[uint64_t_bytes_t_h_l36_c25_b110] LATENCY=0
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_0_d41d_uint64_t_bytes_t_h_l36_c25_b110_return_output := VAR_bytes(0);
+     -- CONST_REF_RD_uint8_t_uint8_t_8_7_d41d[uint64_t_bytes_t_h_l43_c26_f548] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_7_d41d_uint64_t_bytes_t_h_l43_c26_f548_return_output := VAR_bytes(7);
 
      -- Submodule level 1
-     -- uint64_uint8_0[uint64_t_bytes_t_h_l36_c6_ad21] LATENCY=0
-     VAR_uint64_uint8_0_uint64_t_bytes_t_h_l36_c6_ad21_return_output := uint64_uint8_0(
+     -- uint64_uint8_0[uint64_t_bytes_t_h_l36_c6_a8d5] LATENCY=0
+     VAR_uint64_uint8_0_uint64_t_bytes_t_h_l36_c6_a8d5_return_output := uint64_uint8_0(
      to_unsigned(0, 64),
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_0_d41d_uint64_t_bytes_t_h_l36_c25_b110_return_output);
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_0_d41d_uint64_t_bytes_t_h_l36_c25_9e4b_return_output);
 
      -- Submodule level 2
-     -- uint64_uint8_8[uint64_t_bytes_t_h_l37_c6_6980] LATENCY=0
-     VAR_uint64_uint8_8_uint64_t_bytes_t_h_l37_c6_6980_return_output := uint64_uint8_8(
-     VAR_uint64_uint8_0_uint64_t_bytes_t_h_l36_c6_ad21_return_output,
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_1_d41d_uint64_t_bytes_t_h_l37_c25_92b5_return_output);
+     -- uint64_uint8_8[uint64_t_bytes_t_h_l37_c6_eabd] LATENCY=0
+     VAR_uint64_uint8_8_uint64_t_bytes_t_h_l37_c6_eabd_return_output := uint64_uint8_8(
+     VAR_uint64_uint8_0_uint64_t_bytes_t_h_l36_c6_a8d5_return_output,
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_1_d41d_uint64_t_bytes_t_h_l37_c25_b3e6_return_output);
 
      -- Submodule level 3
-     -- uint64_uint8_16[uint64_t_bytes_t_h_l38_c6_83c1] LATENCY=0
-     VAR_uint64_uint8_16_uint64_t_bytes_t_h_l38_c6_83c1_return_output := uint64_uint8_16(
-     VAR_uint64_uint8_8_uint64_t_bytes_t_h_l37_c6_6980_return_output,
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_2_d41d_uint64_t_bytes_t_h_l38_c26_f16b_return_output);
+     -- uint64_uint8_16[uint64_t_bytes_t_h_l38_c6_a7e5] LATENCY=0
+     VAR_uint64_uint8_16_uint64_t_bytes_t_h_l38_c6_a7e5_return_output := uint64_uint8_16(
+     VAR_uint64_uint8_8_uint64_t_bytes_t_h_l37_c6_eabd_return_output,
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_2_d41d_uint64_t_bytes_t_h_l38_c26_4dd1_return_output);
 
      -- Submodule level 4
-     -- uint64_uint8_24[uint64_t_bytes_t_h_l39_c6_6b5c] LATENCY=0
-     VAR_uint64_uint8_24_uint64_t_bytes_t_h_l39_c6_6b5c_return_output := uint64_uint8_24(
-     VAR_uint64_uint8_16_uint64_t_bytes_t_h_l38_c6_83c1_return_output,
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_3_d41d_uint64_t_bytes_t_h_l39_c26_dfee_return_output);
+     -- uint64_uint8_24[uint64_t_bytes_t_h_l39_c6_c9ad] LATENCY=0
+     VAR_uint64_uint8_24_uint64_t_bytes_t_h_l39_c6_c9ad_return_output := uint64_uint8_24(
+     VAR_uint64_uint8_16_uint64_t_bytes_t_h_l38_c6_a7e5_return_output,
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_3_d41d_uint64_t_bytes_t_h_l39_c26_3d5e_return_output);
 
      -- Submodule level 5
-     -- uint64_uint8_32[uint64_t_bytes_t_h_l40_c6_a2d8] LATENCY=0
-     VAR_uint64_uint8_32_uint64_t_bytes_t_h_l40_c6_a2d8_return_output := uint64_uint8_32(
-     VAR_uint64_uint8_24_uint64_t_bytes_t_h_l39_c6_6b5c_return_output,
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_4_d41d_uint64_t_bytes_t_h_l40_c26_2e57_return_output);
+     -- uint64_uint8_32[uint64_t_bytes_t_h_l40_c6_c1e1] LATENCY=0
+     VAR_uint64_uint8_32_uint64_t_bytes_t_h_l40_c6_c1e1_return_output := uint64_uint8_32(
+     VAR_uint64_uint8_24_uint64_t_bytes_t_h_l39_c6_c9ad_return_output,
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_4_d41d_uint64_t_bytes_t_h_l40_c26_b70a_return_output);
 
      -- Submodule level 6
-     -- uint64_uint8_40[uint64_t_bytes_t_h_l41_c6_1d59] LATENCY=0
-     VAR_uint64_uint8_40_uint64_t_bytes_t_h_l41_c6_1d59_return_output := uint64_uint8_40(
-     VAR_uint64_uint8_32_uint64_t_bytes_t_h_l40_c6_a2d8_return_output,
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_5_d41d_uint64_t_bytes_t_h_l41_c26_22d3_return_output);
+     -- uint64_uint8_40[uint64_t_bytes_t_h_l41_c6_9174] LATENCY=0
+     VAR_uint64_uint8_40_uint64_t_bytes_t_h_l41_c6_9174_return_output := uint64_uint8_40(
+     VAR_uint64_uint8_32_uint64_t_bytes_t_h_l40_c6_c1e1_return_output,
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_5_d41d_uint64_t_bytes_t_h_l41_c26_4c72_return_output);
 
      -- Submodule level 7
-     -- uint64_uint8_48[uint64_t_bytes_t_h_l42_c6_1ea1] LATENCY=0
-     VAR_uint64_uint8_48_uint64_t_bytes_t_h_l42_c6_1ea1_return_output := uint64_uint8_48(
-     VAR_uint64_uint8_40_uint64_t_bytes_t_h_l41_c6_1d59_return_output,
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_6_d41d_uint64_t_bytes_t_h_l42_c26_ccac_return_output);
+     -- uint64_uint8_48[uint64_t_bytes_t_h_l42_c6_33a1] LATENCY=0
+     VAR_uint64_uint8_48_uint64_t_bytes_t_h_l42_c6_33a1_return_output := uint64_uint8_48(
+     VAR_uint64_uint8_40_uint64_t_bytes_t_h_l41_c6_9174_return_output,
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_6_d41d_uint64_t_bytes_t_h_l42_c26_cff0_return_output);
 
      -- Submodule level 8
-     -- uint64_uint8_56[uint64_t_bytes_t_h_l43_c6_7e96] LATENCY=0
-     VAR_uint64_uint8_56_uint64_t_bytes_t_h_l43_c6_7e96_return_output := uint64_uint8_56(
-     VAR_uint64_uint8_48_uint64_t_bytes_t_h_l42_c6_1ea1_return_output,
-     VAR_CONST_REF_RD_uint8_t_uint8_t_8_7_d41d_uint64_t_bytes_t_h_l43_c26_8ee4_return_output);
+     -- uint64_uint8_56[uint64_t_bytes_t_h_l43_c6_322e] LATENCY=0
+     VAR_uint64_uint8_56_uint64_t_bytes_t_h_l43_c6_322e_return_output := uint64_uint8_56(
+     VAR_uint64_uint8_48_uint64_t_bytes_t_h_l42_c6_33a1_return_output,
+     VAR_CONST_REF_RD_uint8_t_uint8_t_8_7_d41d_uint64_t_bytes_t_h_l43_c26_f548_return_output);
 
      -- Submodule level 9
-     VAR_return_output := VAR_uint64_uint8_56_uint64_t_bytes_t_h_l43_c6_7e96_return_output;
+     VAR_return_output := VAR_uint64_uint8_56_uint64_t_bytes_t_h_l43_c6_322e_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

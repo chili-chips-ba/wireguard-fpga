@@ -23,18 +23,18 @@ attribute mark_debug : string;
 constant ADDED_PIPELINE_LATENCY : integer := 0;
 -- All of the wires/regs in function
 -- Each function instance gets signals
--- bytes_to_u320_t[poly1305_h_l76_c12_5157]
-signal bytes_to_u320_t_poly1305_h_l76_c12_5157_bytes : uint8_t_40;
-signal bytes_to_u320_t_poly1305_h_l76_c12_5157_return_output : u320_t;
+-- bytes_to_u320_t[poly1305_h_l76_c12_b90a]
+signal bytes_to_u320_t_poly1305_h_l76_c12_b90a_bytes : uint8_t_40;
+signal bytes_to_u320_t_poly1305_h_l76_c12_b90a_return_output : u320_t;
 
 
 begin
 
 -- SUBMODULE INSTANCES 
--- bytes_to_u320_t_poly1305_h_l76_c12_5157 : 0 clocks latency
-bytes_to_u320_t_poly1305_h_l76_c12_5157 : entity work.bytes_to_u320_t_0CLK_4bbc8984 port map (
-bytes_to_u320_t_poly1305_h_l76_c12_5157_bytes,
-bytes_to_u320_t_poly1305_h_l76_c12_5157_return_output);
+-- bytes_to_u320_t_poly1305_h_l76_c12_b90a : 0 clocks latency
+bytes_to_u320_t_poly1305_h_l76_c12_b90a : entity work.bytes_to_u320_t_0CLK_4bbc8984 port map (
+bytes_to_u320_t_poly1305_h_l76_c12_b90a_bytes,
+bytes_to_u320_t_poly1305_h_l76_c12_b90a_return_output);
 
 
 
@@ -43,14 +43,14 @@ process (
  -- Inputs
  src,
  -- All submodule outputs
- bytes_to_u320_t_poly1305_h_l76_c12_5157_return_output)
+ bytes_to_u320_t_poly1305_h_l76_c12_b90a_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
  variable VAR_return_output : u320_t;
  variable VAR_src : uint8_t_40;
- variable VAR_bytes_to_u320_t_poly1305_h_l76_c12_5157_bytes : uint8_t_40;
- variable VAR_bytes_to_u320_t_poly1305_h_l76_c12_5157_return_output : u320_t;
+ variable VAR_bytes_to_u320_t_poly1305_h_l76_c12_b90a_bytes : uint8_t_40;
+ variable VAR_bytes_to_u320_t_poly1305_h_l76_c12_b90a_return_output : u320_t;
 begin
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
@@ -61,15 +61,15 @@ begin
      VAR_src := src;
 
      -- Submodule level 0
-     VAR_bytes_to_u320_t_poly1305_h_l76_c12_5157_bytes := VAR_src;
-     -- bytes_to_u320_t[poly1305_h_l76_c12_5157] LATENCY=0
+     VAR_bytes_to_u320_t_poly1305_h_l76_c12_b90a_bytes := VAR_src;
+     -- bytes_to_u320_t[poly1305_h_l76_c12_b90a] LATENCY=0
      -- Inputs
-     bytes_to_u320_t_poly1305_h_l76_c12_5157_bytes <= VAR_bytes_to_u320_t_poly1305_h_l76_c12_5157_bytes;
+     bytes_to_u320_t_poly1305_h_l76_c12_b90a_bytes <= VAR_bytes_to_u320_t_poly1305_h_l76_c12_b90a_bytes;
      -- Outputs
-     VAR_bytes_to_u320_t_poly1305_h_l76_c12_5157_return_output := bytes_to_u320_t_poly1305_h_l76_c12_5157_return_output;
+     VAR_bytes_to_u320_t_poly1305_h_l76_c12_b90a_return_output := bytes_to_u320_t_poly1305_h_l76_c12_b90a_return_output;
 
      -- Submodule level 1
-     VAR_return_output := VAR_bytes_to_u320_t_poly1305_h_l76_c12_5157_return_output;
+     VAR_return_output := VAR_bytes_to_u320_t_poly1305_h_l76_c12_b90a_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;

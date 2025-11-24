@@ -24,29 +24,29 @@ attribute mark_debug : string;
 constant ADDED_PIPELINE_LATENCY : integer := 0;
 -- All of the wires/regs in function
 -- Each function instance gets signals
--- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3]
-signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_x : signed(31 downto 0);
-signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_return_output : signed(31 downto 0);
+-- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030]
+signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_x : signed(31 downto 0);
+signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_return_output : signed(31 downto 0);
 
--- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a]
-signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_x : signed(31 downto 0);
-signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_return_output : signed(31 downto 0);
+-- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b]
+signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_x : signed(31 downto 0);
+signal CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_return_output : signed(31 downto 0);
 
--- BIN_OP_EQ[BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1]
-signal BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_left : unsigned(15 downto 0);
-signal BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_right : unsigned(15 downto 0);
-signal BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_return_output : unsigned(0 downto 0);
+-- BIN_OP_EQ[BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b]
+signal BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_left : unsigned(15 downto 0);
+signal BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_right : unsigned(15 downto 0);
+signal BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_return_output : unsigned(0 downto 0);
 
--- rv_MUX[BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93]
-signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_cond : unsigned(0 downto 0);
-signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iftrue : unsigned(0 downto 0);
-signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iffalse : unsigned(0 downto 0);
-signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_return_output : unsigned(0 downto 0);
+-- rv_MUX[BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b]
+signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_cond : unsigned(0 downto 0);
+signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iftrue : unsigned(0 downto 0);
+signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iffalse : unsigned(0 downto 0);
+signal rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_return_output : unsigned(0 downto 0);
 
--- BIN_OP_GT[BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348]
-signal BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_left : unsigned(15 downto 0);
-signal BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_right : unsigned(15 downto 0);
-signal BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_return_output : unsigned(0 downto 0);
+-- BIN_OP_GT[BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf]
+signal BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_left : unsigned(15 downto 0);
+signal BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_right : unsigned(15 downto 0);
+signal BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_return_output : unsigned(0 downto 0);
 
 function int32_31_31( x : signed) return unsigned is
 --variable x : signed(31 downto 0);
@@ -62,34 +62,34 @@ end function;
 begin
 
 -- SUBMODULE INSTANCES 
--- CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3 : 0 clocks latency
-CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3 : entity work.CONST_SR_16_int32_t_0CLK_de264c78 port map (
-CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_x,
-CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_return_output);
+-- CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030 : 0 clocks latency
+CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030 : entity work.CONST_SR_16_int32_t_0CLK_de264c78 port map (
+CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_x,
+CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_return_output);
 
--- CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a : 0 clocks latency
-CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a : entity work.CONST_SR_16_int32_t_0CLK_de264c78 port map (
-CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_x,
-CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_return_output);
+-- CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b : 0 clocks latency
+CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b : entity work.CONST_SR_16_int32_t_0CLK_de264c78 port map (
+CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_x,
+CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_return_output);
 
--- BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1 : 0 clocks latency
-BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1 : entity work.BIN_OP_EQ_uint16_t_uint16_t_0CLK_de264c78 port map (
-BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_left,
-BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_right,
-BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_return_output);
+-- BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b : 0 clocks latency
+BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b : entity work.BIN_OP_EQ_uint16_t_uint16_t_0CLK_de264c78 port map (
+BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_left,
+BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_right,
+BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_return_output);
 
--- rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93 : 0 clocks latency
-rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93 : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
-rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_cond,
-rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iftrue,
-rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iffalse,
-rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_return_output);
+-- rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b : 0 clocks latency
+rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b : entity work.MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78 port map (
+rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_cond,
+rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iftrue,
+rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iffalse,
+rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_return_output);
 
--- BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348 : 0 clocks latency
-BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348 : entity work.BIN_OP_GT_uint16_t_uint16_t_0CLK_380ecc95 port map (
-BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_left,
-BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_right,
-BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_return_output);
+-- BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf : 0 clocks latency
+BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf : entity work.BIN_OP_GT_uint16_t_uint16_t_0CLK_380ecc95 port map (
+BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_left,
+BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_right,
+BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_return_output);
 
 
 
@@ -99,11 +99,11 @@ process (
  left,
  right,
  -- All submodule outputs
- CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_return_output,
- CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_return_output,
- BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_return_output,
- rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_return_output,
- BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_return_output)
+ CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_return_output,
+ CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_return_output,
+ BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_return_output,
+ rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_return_output,
+ BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_return_output)
 is 
  -- All of the wires in function
  variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
@@ -112,33 +112,33 @@ is
  variable VAR_return_output : unsigned(0 downto 0);
  variable VAR_lsign : unsigned(0 downto 0);
  variable VAR_rsign : unsigned(0 downto 0);
- variable VAR_int32_31_31_BIN_OP_GT_int17_t_int32_t_c_l8_c21_15ad_return_output : unsigned(0 downto 0);
+ variable VAR_int32_31_31_BIN_OP_GT_int17_t_int32_t_c_l8_c21_2649_return_output : unsigned(0 downto 0);
  variable VAR_lsigned : signed(31 downto 0);
- variable VAR_lsigned_BIN_OP_GT_int17_t_int32_t_c_l9_c13_81f9_0 : signed(31 downto 0);
+ variable VAR_lsigned_BIN_OP_GT_int17_t_int32_t_c_l9_c13_384a_0 : signed(31 downto 0);
  variable VAR_rsigned : signed(31 downto 0);
  variable VAR_extra_sign_bits : unsigned(15 downto 0);
- variable VAR_extra_sign_bits_BIN_OP_GT_int17_t_int32_t_c_l12_c14_1b26_0 : unsigned(15 downto 0);
- variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_return_output : signed(31 downto 0);
- variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_x : signed(31 downto 0);
+ variable VAR_extra_sign_bits_BIN_OP_GT_int17_t_int32_t_c_l12_c14_0e8b_0 : unsigned(15 downto 0);
+ variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_return_output : signed(31 downto 0);
+ variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_x : signed(31 downto 0);
  variable VAR_sign_ext_like_zero : unsigned(15 downto 0);
- variable VAR_sign_ext_like_zero_BIN_OP_GT_int17_t_int32_t_c_l13_c14_2a3f_0 : unsigned(15 downto 0);
- variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_return_output : signed(31 downto 0);
- variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_x : signed(31 downto 0);
+ variable VAR_sign_ext_like_zero_BIN_OP_GT_int17_t_int32_t_c_l13_c14_6398_0 : unsigned(15 downto 0);
+ variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_return_output : signed(31 downto 0);
+ variable VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_x : signed(31 downto 0);
  variable VAR_lunsigned : unsigned(15 downto 0);
- variable VAR_lunsigned_BIN_OP_GT_int17_t_int32_t_c_l16_c14_0767_0 : unsigned(15 downto 0);
+ variable VAR_lunsigned_BIN_OP_GT_int17_t_int32_t_c_l16_c14_7f3b_0 : unsigned(15 downto 0);
  variable VAR_runsigned : unsigned(15 downto 0);
- variable VAR_runsigned_BIN_OP_GT_int17_t_int32_t_c_l17_c14_d569_0 : unsigned(15 downto 0);
+ variable VAR_runsigned_BIN_OP_GT_int17_t_int32_t_c_l17_c14_dc10_0 : unsigned(15 downto 0);
  variable VAR_rv : unsigned(0 downto 0);
- variable VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_left : unsigned(15 downto 0);
- variable VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_right : unsigned(15 downto 0);
- variable VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_return_output : unsigned(0 downto 0);
- variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iftrue : unsigned(0 downto 0);
- variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iffalse : unsigned(0 downto 0);
- variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_return_output : unsigned(0 downto 0);
- variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_cond : unsigned(0 downto 0);
- variable VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_left : unsigned(15 downto 0);
- variable VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_right : unsigned(15 downto 0);
- variable VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_return_output : unsigned(0 downto 0);
+ variable VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_left : unsigned(15 downto 0);
+ variable VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_right : unsigned(15 downto 0);
+ variable VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_return_output : unsigned(0 downto 0);
+ variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iftrue : unsigned(0 downto 0);
+ variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iffalse : unsigned(0 downto 0);
+ variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_return_output : unsigned(0 downto 0);
+ variable VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_cond : unsigned(0 downto 0);
+ variable VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_left : unsigned(15 downto 0);
+ variable VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_right : unsigned(15 downto 0);
+ variable VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_return_output : unsigned(0 downto 0);
 begin
 
  -- Loop to construct simultaneous register transfers for each of the pipeline stages
@@ -150,62 +150,62 @@ begin
      VAR_right := right;
 
      -- Submodule level 0
-     VAR_lsigned_BIN_OP_GT_int17_t_int32_t_c_l9_c13_81f9_0 := resize(VAR_left, 32);
-     VAR_lunsigned_BIN_OP_GT_int17_t_int32_t_c_l16_c14_0767_0 := resize(unsigned(std_logic_vector(VAR_left)),16);
-     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_x := VAR_right;
-     VAR_runsigned_BIN_OP_GT_int17_t_int32_t_c_l17_c14_d569_0 := resize(unsigned(std_logic_vector(VAR_right)),16);
-     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_x := VAR_lsigned_BIN_OP_GT_int17_t_int32_t_c_l9_c13_81f9_0;
-     VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_left := VAR_lunsigned_BIN_OP_GT_int17_t_int32_t_c_l16_c14_0767_0;
-     VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_right := VAR_runsigned_BIN_OP_GT_int17_t_int32_t_c_l17_c14_d569_0;
-     -- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a] LATENCY=0
-     -- Inputs
-     CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_x <= VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_x;
-     -- Outputs
-     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_return_output := CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_return_output;
-
-     -- int32_31_31[BIN_OP_GT_int17_t_int32_t_c_l8_c21_15ad] LATENCY=0
-     VAR_int32_31_31_BIN_OP_GT_int17_t_int32_t_c_l8_c21_15ad_return_output := int32_31_31(
+     VAR_lsigned_BIN_OP_GT_int17_t_int32_t_c_l9_c13_384a_0 := resize(VAR_left, 32);
+     VAR_lunsigned_BIN_OP_GT_int17_t_int32_t_c_l16_c14_7f3b_0 := resize(unsigned(std_logic_vector(VAR_left)),16);
+     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_x := VAR_right;
+     VAR_runsigned_BIN_OP_GT_int17_t_int32_t_c_l17_c14_dc10_0 := resize(unsigned(std_logic_vector(VAR_right)),16);
+     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_x := VAR_lsigned_BIN_OP_GT_int17_t_int32_t_c_l9_c13_384a_0;
+     VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_left := VAR_lunsigned_BIN_OP_GT_int17_t_int32_t_c_l16_c14_7f3b_0;
+     VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_right := VAR_runsigned_BIN_OP_GT_int17_t_int32_t_c_l17_c14_dc10_0;
+     -- int32_31_31[BIN_OP_GT_int17_t_int32_t_c_l8_c21_2649] LATENCY=0
+     VAR_int32_31_31_BIN_OP_GT_int17_t_int32_t_c_l8_c21_2649_return_output := int32_31_31(
      VAR_right);
 
-     -- BIN_OP_GT[BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348] LATENCY=0
+     -- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030] LATENCY=0
      -- Inputs
-     BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_left <= VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_left;
-     BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_right <= VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_right;
+     CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_x <= VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_x;
      -- Outputs
-     VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_return_output := BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_return_output;
+     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_return_output := CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_return_output;
 
-     -- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3] LATENCY=0
+     -- CONST_SR_16[BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b] LATENCY=0
      -- Inputs
-     CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_x <= VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_x;
+     CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_x <= VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_x;
      -- Outputs
-     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_return_output := CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_return_output;
+     VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_return_output := CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_return_output;
+
+     -- BIN_OP_GT[BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf] LATENCY=0
+     -- Inputs
+     BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_left <= VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_left;
+     BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_right <= VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_right;
+     -- Outputs
+     VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_return_output := BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_return_output;
 
      -- Submodule level 1
-     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iftrue := VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_2348_return_output;
-     VAR_extra_sign_bits_BIN_OP_GT_int17_t_int32_t_c_l12_c14_1b26_0 := resize(unsigned(std_logic_vector(VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_c3b3_return_output)),16);
-     VAR_sign_ext_like_zero_BIN_OP_GT_int17_t_int32_t_c_l13_c14_2a3f_0 := resize(unsigned(std_logic_vector(VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_886a_return_output)),16);
-     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iffalse := VAR_int32_31_31_BIN_OP_GT_int17_t_int32_t_c_l8_c21_15ad_return_output;
-     VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_left := VAR_extra_sign_bits_BIN_OP_GT_int17_t_int32_t_c_l12_c14_1b26_0;
-     VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_right := VAR_sign_ext_like_zero_BIN_OP_GT_int17_t_int32_t_c_l13_c14_2a3f_0;
-     -- BIN_OP_EQ[BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1] LATENCY=0
+     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iftrue := VAR_BIN_OP_GT_BIN_OP_GT_int17_t_int32_t_c_l22_c14_cedf_return_output;
+     VAR_extra_sign_bits_BIN_OP_GT_int17_t_int32_t_c_l12_c14_0e8b_0 := resize(unsigned(std_logic_vector(VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l12_c32_2030_return_output)),16);
+     VAR_sign_ext_like_zero_BIN_OP_GT_int17_t_int32_t_c_l13_c14_6398_0 := resize(unsigned(std_logic_vector(VAR_CONST_SR_16_BIN_OP_GT_int17_t_int32_t_c_l13_c35_975b_return_output)),16);
+     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iffalse := VAR_int32_31_31_BIN_OP_GT_int17_t_int32_t_c_l8_c21_2649_return_output;
+     VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_left := VAR_extra_sign_bits_BIN_OP_GT_int17_t_int32_t_c_l12_c14_0e8b_0;
+     VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_right := VAR_sign_ext_like_zero_BIN_OP_GT_int17_t_int32_t_c_l13_c14_6398_0;
+     -- BIN_OP_EQ[BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b] LATENCY=0
      -- Inputs
-     BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_left <= VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_left;
-     BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_right <= VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_right;
+     BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_left <= VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_left;
+     BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_right <= VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_right;
      -- Outputs
-     VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_return_output := BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_return_output;
+     VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_return_output := BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_return_output;
 
      -- Submodule level 2
-     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_cond := VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_70e1_return_output;
-     -- rv_MUX[BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93] LATENCY=0
+     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_cond := VAR_BIN_OP_EQ_BIN_OP_GT_int17_t_int32_t_c_l20_c8_334b_return_output;
+     -- rv_MUX[BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b] LATENCY=0
      -- Inputs
-     rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_cond <= VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_cond;
-     rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iftrue <= VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iftrue;
-     rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iffalse <= VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_iffalse;
+     rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_cond <= VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_cond;
+     rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iftrue <= VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iftrue;
+     rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iffalse <= VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_iffalse;
      -- Outputs
-     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_return_output := rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_return_output;
+     VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_return_output := rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_return_output;
 
      -- Submodule level 3
-     VAR_return_output := VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_ac93_return_output;
+     VAR_return_output := VAR_rv_MUX_BIN_OP_GT_int17_t_int32_t_c_l20_c5_0a0b_return_output;
      -- Last stage of pipeline return wire to return port/reg
      return_output <= VAR_return_output;
    end if;
