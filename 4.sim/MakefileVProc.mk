@@ -192,8 +192,10 @@ $(VOBJDIR)/%.o: $(UDPCODEDIR)/%.cpp
 	@$(C++) -c -fPIC $(OPTFLAGS) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build library of user code
+# Note: delete existing archive first to avoid stale objects (e.g. switching UDP_C)
 $(USERLIB): $(VOBJDIR) $(VOBJS)
-	@ar cr $(USERLIB) $(VOBJS)
+	@rm -f $(USERLIB)
+	@ar crs $(USERLIB) $(VOBJS)
 
 #
 # Compile simulation C++ code

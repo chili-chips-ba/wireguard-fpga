@@ -17,12 +17,12 @@ Linker script and memory map
 .text           0x00000000      0x7a8
                 0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x00000000       0x70 /tmp/cc9NsnYt.o
+ .text          0x00000000       0x70 /tmp/ccCZhzhs.o
                 0x00000000                _boot_crt
- .text          0x00000070      0x298 /tmp/ccrAi3a0.ltrans0.ltrans.o
+ .text          0x00000070      0x298 /tmp/cceWCj7X.ltrans0.ltrans.o
                 0x000002c4                memset
                 0x000002e4                memcpy
- .text.startup  0x00000308      0x4a0 /tmp/ccrAi3a0.ltrans0.ltrans.o
+ .text.startup  0x00000308      0x4a0 /tmp/cceWCj7X.ltrans0.ltrans.o
                 0x00000308                main
  *(.rodata .rodata.*)
  *(.srodata .srodata.*)
@@ -31,13 +31,13 @@ Linker script and memory map
                 0x000007a8                        _idata_start = _text_end
 
 .rela.dyn       0x000007a8        0x0
- .rela.text     0x000007a8        0x0 /tmp/cc9NsnYt.o
+ .rela.text     0x000007a8        0x0 /tmp/ccCZhzhs.o
 
 .data           0x10000000        0x0 load address 0x000007a8
                 0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x10000000        0x0 /tmp/cc9NsnYt.o
- .data          0x10000000        0x0 /tmp/ccrAi3a0.ltrans0.ltrans.o
+ .data          0x10000000        0x0 /tmp/ccCZhzhs.o
+ .data          0x10000000        0x0 /tmp/cceWCj7X.ltrans0.ltrans.o
                 0x10000000                        . = ALIGN (0x8)
                 0x10000800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.sdata .sdata.*)
@@ -47,10 +47,10 @@ Linker script and memory map
 .bss            0x10000000      0xe0c load address 0x000007a8
                 0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x10000000        0x0 /tmp/cc9NsnYt.o
- .bss           0x10000000      0xe08 /tmp/ccrAi3a0.ltrans0.ltrans.o
+ .bss           0x10000000        0x0 /tmp/ccCZhzhs.o
+ .bss           0x10000000      0xe08 /tmp/cceWCj7X.ltrans0.ltrans.o
  *(.sbss .sbss.*)
- .sbss          0x10000e08        0x4 /tmp/ccrAi3a0.ltrans0.ltrans.o
+ .sbss          0x10000e08        0x4 /tmp/cceWCj7X.ltrans0.ltrans.o
  *(COMMON)
                 0x10000e0c                        . = ALIGN (0x4)
                 0x10000e0c                        _bss_end = .
@@ -72,24 +72,24 @@ Linker script and memory map
                 0x10008000                        . = (. + _STACK_SIZE)
  *fill*         0x10007e00      0x200 
                 0x10007e00                        _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/cc9NsnYt.o
-LOAD /tmp/cc8t4KXV.o
-LOAD /tmp/ccrAi3a0.ltrans0.ltrans.o
-LOAD /tmp/ccIf7OrX.o
-LOAD /tmp/cch13b9P.o
-LOAD /tmp/cc3Vzmdd.o
-LOAD /tmp/ccRSZPYC.o
-LOAD /tmp/ccX1CMQv.o
+LOAD /tmp/ccCZhzhs.o
+LOAD /tmp/ccxqID5u.o
+LOAD /tmp/cceWCj7X.ltrans0.ltrans.o
+LOAD /tmp/ccPV3a6j.o
+LOAD /tmp/cclkrTGJ.o
+LOAD /tmp/ccgz1E3k.o
+LOAD /tmp/cc0DAB21.o
+LOAD /tmp/ccq9jBZk.o
 LOAD /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a
-OUTPUT(/home/enio/Projects/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
+OUTPUT(/mnt/c/Users/azuni/Documents/Projects/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
 
 .riscv.attributes
                 0x00000000       0x1c
  .riscv.attributes
-                0x00000000       0x1a /tmp/cc9NsnYt.o
+                0x00000000       0x1a /tmp/ccCZhzhs.o
  .riscv.attributes
-                0x0000001a       0x1c /tmp/ccrAi3a0.ltrans0.ltrans.o
+                0x0000001a       0x1c /tmp/cceWCj7X.ltrans0.ltrans.o
 
 .comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/ccrAi3a0.ltrans0.ltrans.o
+ .comment       0x00000000       0x22 /tmp/cceWCj7X.ltrans0.ltrans.o
                                  0x23 (size before relaxing)
