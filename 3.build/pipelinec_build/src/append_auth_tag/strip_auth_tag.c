@@ -3,7 +3,7 @@
 
 
 // Input stream of ciphertext followed by appended auth tag
-stream(axis128_t) strip_auth_tag_axis_in // input
+stream(axis128_t) strip_auth_tag_axis_in; // input
 uint1_t strip_auth_tag_axis_in_ready; // output
 // Output stream of ciphertext
 stream(axis128_t) strip_auth_tag_axis_out; // output
@@ -42,11 +42,7 @@ axis128_early_tlast_t axis128_early_tlast(
       axis_in.valid;
     if(buff_to_out_connected){
       o.axis_out = buffer_reg;
-      if(buffer_is_tlast){
-        o.next_axis_out_is_tlast = 0; 
-      }else{
-        o.next_axis_out_is_tlast = axis_in.data.tlast;
-      }
+      o.next_axis_out_is_tlast = axis_in.valid & axis_in.data.tlast;
     }
 
     // Outgoing transfer clears buffer valid
@@ -77,12 +73,12 @@ void strip_auth_tag()
 
   // Ready for axis into early module
   strip_auth_tag_axis_in_ready = early_tlast.ready_for_axis_in;
-  //stream coming out of early module
+  // stream coming out of early module
   stream(axis128_t) axis_in = early_tlast.axis_out;
   
   
   // Default passing input axis data to ciphertext output
-  strip_auth_tag_axis_out = axis_out;
+  strip_auth_tag_axis_out = axis_in;
   ready_for_axis_in = strip_auth_tag_axis_out_ready;
 
   // With override to use for the early tlast for ciphertext tlast
@@ -97,12 +93,10 @@ void strip_auth_tag()
      // not passing ciphertext output
      strip_auth_tag_axis_out.valid = 0;
      // Connect to auth tag output
-     // TODO .data uint type conversion
-     strip_auth_tag_auth_tag_out = axis_in;
-     ready_for_axis_in = ready_for_axis_in = strip_auth_tag_auth_tag_out_ready;
-  }
-
-  
-  }
+     strip_auth_tag_auth_tag_out.data = poly1305_auth_tag_uint_from_bytes(axis_in.data.tdata);
+     strip_auth_tag_auth_tag_out.valid = axis_in.valid;
+     ready_for_axis_in = strip_auth_tag_auth_tag_out_ready;
+  }  
+}
 
   
