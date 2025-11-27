@@ -222,7 +222,7 @@ stream(axis128_t) tb()
         printf("chacha20poly1305_decrypt_axis_in.valid = %u\n", chacha20poly1305_decrypt_axis_in.valid);
         printf("chacha20poly1305_decrypt_axis_in_ready = %u\n", chacha20poly1305_decrypt_axis_in_ready);
         
-        if(chacha20poly1305_decrypt_axis_in.valid ) //& chacha20poly1305_decrypt_axis_in_ready
+        if(chacha20poly1305_decrypt_axis_in.valid & chacha20poly1305_decrypt_axis_in_ready)
         {
             PRINT_16_BYTES("Input Ciphertext/Tag next 16 bytes: ", chacha20poly1305_decrypt_axis_in.data.tdata)
             
