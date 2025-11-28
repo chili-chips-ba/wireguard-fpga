@@ -267,7 +267,7 @@ stream(axis128_t) tb()
             }
         }else{
             plaintext_remaining -= 16;
-            ARRAY_SHIFT_DOWN(plaintext_out_expected, CIPHERTEXT_MAX_SIZE, 16)
+            ARRAY_SHIFT_DOWN(plaintext_out_expected, PLAINTEXT_MAX_SIZE, 16)
         }   
     }
 
