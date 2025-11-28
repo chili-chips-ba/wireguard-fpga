@@ -259,14 +259,15 @@ stream(axis128_t) tb()
                 if(output_packet_count < NUM_PACKETS)
                 {
                     // Reset for next test string
-                    plaintext_out_expected = input_ciphertexts[output_packet_count];
-                    plaintext_out_size = ciphertext_lens[output_packet_count];
+                 plaintext_out_expected = plaintexts[output_packet_count]; 
+                    
+                    plaintext_out_size = plaintext_lens[output_packet_count];
                     plaintext_remaining_out = plaintext_out_size;
-                    printf("Checking ciphertext for next test string %d...\n", output_packet_count);
+                    printf("Checking plaintext for next test string %d...\n", output_packet_count);
                 }
             }
         }else{
-            plaintext_remaining -= 16;
+            plaintext_remaining_out -= 16;
             ARRAY_SHIFT_DOWN(plaintext_out_expected, PLAINTEXT_MAX_SIZE, 16)
         }   
     }
