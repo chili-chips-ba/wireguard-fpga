@@ -26,7 +26,7 @@ GLOBAL_STREAM_FIFO(axis128_t, verify_fifo, 128)
 void wait_to_verify()
 {
   static wait_to_verify_state_t state = WAIT_TO_VERIFY_BIT;
-  // Reg to hold teh recieved verification result (tags_match)
+  // Reg to hold the recieved verification result (tags_match)
   static uint1_t tags_match_reg = 0;
 
   // Write side of FIFO
