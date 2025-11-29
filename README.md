@@ -53,6 +53,8 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 
 **[Ref10]** [Amina's ADASEC-SDN](https://github.com/etf-tk-sdn/ADASEC-SDN)
 
+**[Ref11]** [High-performance Switches and Routers](https://books.google.ba/books?id=kzstoFdvZ2sC&printsec=frontcover&redir_esc=y#v=onepage&q&f=false)
+
 # Project Outline
 
 ## Scope
