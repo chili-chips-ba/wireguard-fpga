@@ -39,16 +39,12 @@ typedef enum chacha20_decrypt_state_t{
 #pragma MAIN chacha20_decrypt_input_side
 void chacha20_decrypt_input_side()
 {
-  // Convert input axis to 512b
-  uint1_t block_in_ready;
-  #pragma FEEDBACK block_in_ready
-  axis128_to_axis512_t in_to_block = axis128_to_axis512(chacha20_decrypt_axis_in, block_in_ready);
-  stream(axis512_t) block_in_stream = in_to_block.axis_out;
-  chacha20_decrypt_axis_in_ready = in_to_block.axis_in_ready;
-
   // Pipeline input muxing FSM
   static chacha20_decrypt_state_t input_side_state;
   static uint32_t block_count = 0;
+  // Default no input into width conversion
+  stream(axis128_t) dwidth_conv_data_in = {0};
+  chacha20_decrypt_axis_in_ready = 0;
   // Default no input into pipeline
   stream(chacha20_decrypt_loop_body_in_t) NULL_PIPELINE_IN = {0};
   chacha20_decrypt_pipeline_in = NULL_PIPELINE_IN;
@@ -56,11 +52,26 @@ void chacha20_decrypt_input_side()
   chacha20_decrypt_pipeline_in.data.key = chacha20_decrypt_key;
   chacha20_decrypt_pipeline_in.data.nonce = chacha20_decrypt_nonce;
   chacha20_decrypt_pipeline_in.data.counter = block_count;
+  
+  // Convert input axis to 512b
+  // Input axis into dwidth conv default gated until in plaintext state
+  if(input_side_state == PLAINTEXT){
+    dwidth_conv_data_in = chacha20_decrypt_axis_in;
+  }
+  uint1_t block_in_ready;
+  #pragma FEEDBACK block_in_ready
+  axis128_to_axis512_t in_to_block = axis128_to_axis512(dwidth_conv_data_in, block_in_ready);
+  stream(axis512_t) block_in_stream = in_to_block.axis_out;
   // Default not ready for incoming blocks
   block_in_ready = 0;
+  // Input axis into dwidth conv default gated until in plaintext state
+  if(input_side_state == PLAINTEXT){
+    chacha20_decrypt_axis_in_ready = in_to_block.axis_in_ready;
+  }
+  
   if(input_side_state == POLY_KEY){
     // Wait for incoming plaintext
-    if(block_in_stream.valid){
+    if(chacha20_decrypt_axis_in.valid | block_in_stream.valid){
       // Do poly1305_key_gen, use counter 0 and generate a block
       // Start by putting zero data and block_count=0 into chacha pipeline
       ARRAY_SET(chacha20_decrypt_pipeline_in.data.axis_in.tdata, 0, CHACHA20_BLOCK_SIZE)
