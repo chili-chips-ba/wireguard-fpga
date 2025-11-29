@@ -63,12 +63,7 @@ void main(){
 
     // Connect data streams
     prep_auth_data_axis_in.data = strip_auth_tag_axis_out.data;
-    chacha20_decrypt_axis_in.data = strip_auth_tag_axis_out.data; 
-
-    // DEBUG
-    printf("prep_auth_data_axis_in_ready: %d\n", prep_auth_data_axis_in_ready);
-    printf("chacha20_decrypt_axis_in_ready: %d\n", chacha20_decrypt_axis_in_ready);
-    printf("strip_auth_tag_axis_out.valid: %d\n", strip_auth_tag_axis_out.valid);
+    chacha20_decrypt_axis_in.data = strip_auth_tag_axis_out.data;
 
     // Prepare auth data and calculate MAC
     // prep_auth_data CSR inputs
