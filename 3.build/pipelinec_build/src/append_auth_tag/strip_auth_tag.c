@@ -88,7 +88,7 @@ void strip_auth_tag()
   strip_auth_tag_auth_tag_out = auth_tag_null;
 
   // If this is last input cycle then it's auth tag
-  if (axis_in.data.tlast)
+  if (axis_in.valid & axis_in.data.tlast)
   {
      // not passing ciphertext output
      strip_auth_tag_axis_out.valid = 0;

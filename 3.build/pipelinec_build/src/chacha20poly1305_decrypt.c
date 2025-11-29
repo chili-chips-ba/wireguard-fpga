@@ -51,16 +51,12 @@ void main(){
 
     // The source (strip_auth_tag_axis_out) is ready only if both sinks are ready
     strip_auth_tag_axis_out_ready = prep_auth_data_axis_in_ready & chacha20_decrypt_axis_in_ready; 
-
-    //Pass data to a sink if the source is ready AND (both sinks are ready OR the OTHER sink is not ready)
-
+    // If a sink is not ready its allowed to see the pending valid=1 since no transfer happens anyway
     if (strip_auth_tag_axis_out.valid){
-      //Pass data to prep_auth_data if it's ready, OR if chacha20_decrypt is not demanding a cycle
-      if (strip_auth_tag_axis_out_ready | ~chacha20_decrypt_axis_in_ready){ 
+      if (strip_auth_tag_axis_out_ready | ~prep_auth_data_axis_in_ready){ 
         prep_auth_data_axis_in.valid = 1;
       }
-      // Pass data to chacha20_decrypt if it's ready, OR if prep_auth_data is not demanding a cycle
-      if (strip_auth_tag_axis_out_ready | ~prep_auth_data_axis_in_ready){
+      if (strip_auth_tag_axis_out_ready | ~chacha20_decrypt_axis_in_ready ){
         chacha20_decrypt_axis_in.valid = 1; 
       }
     }
@@ -69,6 +65,10 @@ void main(){
     prep_auth_data_axis_in.data = strip_auth_tag_axis_out.data;
     chacha20_decrypt_axis_in.data = strip_auth_tag_axis_out.data; 
 
+    // DEBUG
+    printf("prep_auth_data_axis_in_ready: %d\n", prep_auth_data_axis_in_ready);
+    printf("chacha20_decrypt_axis_in_ready: %d\n", chacha20_decrypt_axis_in_ready);
+    printf("strip_auth_tag_axis_out.valid: %d\n", strip_auth_tag_axis_out.valid);
 
     // Prepare auth data and calculate MAC
     // prep_auth_data CSR inputs
