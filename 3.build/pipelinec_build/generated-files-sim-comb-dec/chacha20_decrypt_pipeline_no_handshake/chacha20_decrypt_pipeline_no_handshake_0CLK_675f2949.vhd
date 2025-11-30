@@ -1,0 +1,213 @@
+-- Timing params:
+--   Fixed?: False
+--   Pipeline Slices: []
+--   Input regs?: False
+--   Output regs?: False
+library std;
+use std.textio.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.float_pkg.all;
+use work.c_structs_pkg.all;
+use work.global_wires_pkg.all;
+-- Submodules: 3
+entity chacha20_decrypt_pipeline_no_handshake_0CLK_675f2949 is
+port(
+ clk : in std_logic;
+ CLOCK_ENABLE : in unsigned(0 downto 0);
+ global_to_module : in chacha20_decrypt_pipeline_no_handshake_global_to_module_t;
+ module_to_global : out chacha20_decrypt_pipeline_no_handshake_module_to_global_t);
+end chacha20_decrypt_pipeline_no_handshake_0CLK_675f2949;
+architecture arch of chacha20_decrypt_pipeline_no_handshake_0CLK_675f2949 is
+-- Types and such
+-- Declarations
+attribute mark_debug : string;
+constant ADDED_PIPELINE_LATENCY : integer := 0;
+-- All of the wires/regs in function
+-- Resolved maybe from input reg clock enable
+signal clk_en_internal : std_logic;
+-- Each function instance gets signals
+-- chacha20_decrypt_pipeline_no_handshake_in_reg_func[chacha20_decrypt_c_l24_c102_f419]
+signal chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_CLOCK_ENABLE : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_data : chacha20_decrypt_loop_body_in_t;
+signal chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_id : unsigned(7 downto 0);
+signal chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_valid : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output : chacha20_decrypt_pipeline_no_handshake_in_reg_t;
+
+-- chacha20_decrypt_loop_body[chacha20_decrypt_c_l24_c308_6c84]
+signal chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_inputs : chacha20_decrypt_loop_body_in_t;
+signal chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_return_output : axis512_t;
+
+-- chacha20_decrypt_pipeline_no_handshake_out_reg_func[chacha20_decrypt_c_l24_c397_a1e6]
+signal chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_CLOCK_ENABLE : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_data : axis512_t;
+signal chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_id : unsigned(7 downto 0);
+signal chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_valid : unsigned(0 downto 0);
+signal chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output : chacha20_decrypt_pipeline_no_handshake_out_reg_t;
+
+
+begin
+
+-- SUBMODULE INSTANCES 
+-- chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419 : 0 clocks latency
+chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419 : entity work.chacha20_decrypt_pipeline_no_handshake_in_reg_func_0CLK_b45f1687 port map (
+clk,
+chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_CLOCK_ENABLE,
+chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_data,
+chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_id,
+chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_valid,
+chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output);
+
+-- chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84 : 0 clocks latency
+chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84 : entity work.chacha20_decrypt_loop_body_0CLK_d3613582 port map (
+chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_inputs,
+chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_return_output);
+
+-- chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6 : 0 clocks latency
+chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6 : entity work.chacha20_decrypt_pipeline_no_handshake_out_reg_func_0CLK_b45f1687 port map (
+clk,
+chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_CLOCK_ENABLE,
+chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_data,
+chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_id,
+chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_valid,
+chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output);
+
+
+
+-- Resolve what clock enable to use for user logic
+clk_en_internal <= CLOCK_ENABLE(0);
+-- Combinatorial process for pipeline stages
+process (
+CLOCK_ENABLE,
+clk_en_internal,
+ -- Clock cross input
+ global_to_module,
+ -- All submodule outputs
+ chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output,
+ chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_return_output,
+ chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output)
+is 
+ -- All of the wires in function
+ variable VAR_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in : chacha20_decrypt_loop_body_in_t;
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in_id : unsigned(7 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in_valid : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out : axis512_t;
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out_id : unsigned(7 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out_valid : unsigned(0 downto 0);
+ variable VAR_i : chacha20_decrypt_pipeline_no_handshake_in_reg_t;
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_data : chacha20_decrypt_loop_body_in_t;
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_id : unsigned(7 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_valid : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output : chacha20_decrypt_pipeline_no_handshake_in_reg_t;
+ variable VAR_d : axis512_t;
+ variable VAR_chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_inputs : chacha20_decrypt_loop_body_in_t;
+ variable VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_data_d41d_chacha20_decrypt_c_l24_c335_0341_return_output : chacha20_decrypt_loop_body_in_t;
+ variable VAR_chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_return_output : axis512_t;
+ variable VAR_o : chacha20_decrypt_pipeline_no_handshake_out_reg_t;
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_data : axis512_t;
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_id : unsigned(7 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_valid : unsigned(0 downto 0);
+ variable VAR_CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_id_d41d_chacha20_decrypt_c_l24_c453_f17c_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_valid_d41d_chacha20_decrypt_c_l24_c459_c0f0_return_output : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_CLOCK_ENABLE : unsigned(0 downto 0);
+ variable VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output : chacha20_decrypt_pipeline_no_handshake_out_reg_t;
+ variable VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_data_d41d_chacha20_decrypt_c_l24_c515_d97b_return_output : axis512_t;
+ variable VAR_CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_id_d41d_chacha20_decrypt_c_l24_c571_cd69_return_output : unsigned(7 downto 0);
+ variable VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_valid_d41d_chacha20_decrypt_c_l24_c628_1388_return_output : unsigned(0 downto 0);
+begin
+ -- Constants and things derived from constants alone
+     -- Submodule level 0
+     VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_id := to_unsigned(0, 8);
+ -- Reads from global variables
+     VAR_chacha20_decrypt_pipeline_no_handshake_in := global_to_module.chacha20_decrypt_pipeline_no_handshake_in;
+     VAR_chacha20_decrypt_pipeline_no_handshake_in_valid := global_to_module.chacha20_decrypt_pipeline_no_handshake_in_valid;
+     -- Submodule level 0
+     VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_data := VAR_chacha20_decrypt_pipeline_no_handshake_in;
+     VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_valid := VAR_chacha20_decrypt_pipeline_no_handshake_in_valid;
+
+ -- Loop to construct simultaneous register transfers for each of the pipeline stages
+ -- LATENCY=0 is combinational Logic
+ for STAGE in 0 to ADDED_PIPELINE_LATENCY loop
+   if STAGE = 0 then
+     -- Mux in clock enable
+     VAR_CLOCK_ENABLE(0) := clk_en_internal;
+
+     -- Submodule level 0
+     VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_CLOCK_ENABLE := VAR_CLOCK_ENABLE;
+     -- chacha20_decrypt_pipeline_no_handshake_in_reg_func[chacha20_decrypt_c_l24_c102_f419] LATENCY=0
+     -- Clock enable
+     chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_CLOCK_ENABLE <= VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_CLOCK_ENABLE;
+     -- Inputs
+     chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_data <= VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_data;
+     chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_id <= VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_id;
+     chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_valid <= VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_valid;
+     -- Outputs
+     VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output := chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output;
+
+     -- Submodule level 1
+     -- CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_data_d41d[chacha20_decrypt_c_l24_c335_0341] LATENCY=0
+     VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_data_d41d_chacha20_decrypt_c_l24_c335_0341_return_output := VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output.data;
+
+     -- CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_id_d41d[chacha20_decrypt_c_l24_c453_f17c] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_id_d41d_chacha20_decrypt_c_l24_c453_f17c_return_output := VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output.id;
+
+     -- CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_valid_d41d[chacha20_decrypt_c_l24_c459_c0f0] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_valid_d41d_chacha20_decrypt_c_l24_c459_c0f0_return_output := VAR_chacha20_decrypt_pipeline_no_handshake_in_reg_func_chacha20_decrypt_c_l24_c102_f419_return_output.valid;
+
+     -- Submodule level 2
+     VAR_chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_inputs := VAR_CONST_REF_RD_chacha20_decrypt_loop_body_in_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_data_d41d_chacha20_decrypt_c_l24_c335_0341_return_output;
+     VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_valid := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_valid_d41d_chacha20_decrypt_c_l24_c459_c0f0_return_output;
+     VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_id := VAR_CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_in_reg_t_id_d41d_chacha20_decrypt_c_l24_c453_f17c_return_output;
+     -- chacha20_decrypt_loop_body[chacha20_decrypt_c_l24_c308_6c84] LATENCY=0
+     -- Inputs
+     chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_inputs <= VAR_chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_inputs;
+     -- Outputs
+     VAR_chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_return_output := chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_return_output;
+
+     -- Submodule level 3
+     VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_data := VAR_chacha20_decrypt_loop_body_chacha20_decrypt_c_l24_c308_6c84_return_output;
+     -- chacha20_decrypt_pipeline_no_handshake_out_reg_func[chacha20_decrypt_c_l24_c397_a1e6] LATENCY=0
+     -- Clock enable
+     chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_CLOCK_ENABLE <= VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_CLOCK_ENABLE;
+     -- Inputs
+     chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_data <= VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_data;
+     chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_id <= VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_id;
+     chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_valid <= VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_valid;
+     -- Outputs
+     VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output := chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output;
+
+     -- Submodule level 4
+     -- CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_id_d41d[chacha20_decrypt_c_l24_c571_cd69] LATENCY=0
+     VAR_CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_id_d41d_chacha20_decrypt_c_l24_c571_cd69_return_output := VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output.id;
+
+     -- CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_data_d41d[chacha20_decrypt_c_l24_c515_d97b] LATENCY=0
+     VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_data_d41d_chacha20_decrypt_c_l24_c515_d97b_return_output := VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output.data;
+
+     -- CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_valid_d41d[chacha20_decrypt_c_l24_c628_1388] LATENCY=0
+     VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_valid_d41d_chacha20_decrypt_c_l24_c628_1388_return_output := VAR_chacha20_decrypt_pipeline_no_handshake_out_reg_func_chacha20_decrypt_c_l24_c397_a1e6_return_output.valid;
+
+     -- Submodule level 5
+     VAR_chacha20_decrypt_pipeline_no_handshake_out := VAR_CONST_REF_RD_axis512_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_data_d41d_chacha20_decrypt_c_l24_c515_d97b_return_output;
+     VAR_chacha20_decrypt_pipeline_no_handshake_out_valid := VAR_CONST_REF_RD_uint1_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_valid_d41d_chacha20_decrypt_c_l24_c628_1388_return_output;
+     VAR_chacha20_decrypt_pipeline_no_handshake_out_id := VAR_CONST_REF_RD_uint8_t_chacha20_decrypt_pipeline_no_handshake_out_reg_t_id_d41d_chacha20_decrypt_c_l24_c571_cd69_return_output;
+   end if;
+ end loop;
+
+-- Global wires driven various places in pipeline
+if clk_en_internal='1' then
+  module_to_global.chacha20_decrypt_pipeline_no_handshake_out <= VAR_chacha20_decrypt_pipeline_no_handshake_out;
+else
+  module_to_global.chacha20_decrypt_pipeline_no_handshake_out <= axis512_t_NULL;
+end if;
+if clk_en_internal='1' then
+  module_to_global.chacha20_decrypt_pipeline_no_handshake_out_valid <= VAR_chacha20_decrypt_pipeline_no_handshake_out_valid;
+else
+  module_to_global.chacha20_decrypt_pipeline_no_handshake_out_valid <= to_unsigned(0, 1);
+end if;
+end process;
+
+end arch;
