@@ -1,0 +1,750 @@
+v 4
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/pipelinec_fifo_fwft.vhd" "9caef38aa8915671e878798e63fff4bc5e2eda7c" "20251130103255.546":
+  entity pipelinec_fifo_fwft at 5( 167) + 0 on 74;
+  architecture rtl of pipelinec_fifo_fwft at 25( 682) + 0 on 75;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/pipelinec_async_fifo_fwft.vhd" "fcf85319936eabe9c823fe7a8c4d936f1424c102" "20251130103214.465":
+  entity pipelinec_async_fifo_fwft at 6( 279) + 0 on 4;
+  architecture rtl of pipelinec_async_fifo_fwft at 28( 866) + 0 on 4;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/c_structs_pkg.pkg.vhd" "b7a7034db9d87d328e0a45f7d0b50b8a087612f3" "20251130103215.312":
+  package c_structs_pkg at 2( 1) + 0 on 11 body;
+  package body c_structs_pkg at 17517( 941059) + 0 on 12;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/clk_cross_entities.vhd" "8c378e823f7ee776fd67fcc35c7e8cfd814ad612" "20251130103335.935":
+  entity clk_cross_verify_fifo_fifo at 2( 1) + 0 on 504;
+  architecture arch of clk_cross_verify_fifo_fifo at 26( 591) + 4 on 505;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/global_wires_pkg.pkg.vhd" "4857e036bdd1162054f93730ad6845b516bff81e" "20251130103226.600":
+  package global_wires_pkg at 2( 1) + 0 on 13;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/top/top.vhd" "444b37586e03f4b1818d5d9ca04ed93480bcaa10" "20251130103336.085":
+  entity top at 1( 0) + 0 on 506;
+  architecture arch of top at 16( 272) + 0 on 507;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/verify_fifo_rd_stream_out/verify_fifo_rd_stream_out_0CLK_6f2c5aad.vhd" "01dcb459dea32b0e7f8afa6e22ad83df9c734c2c" "20251130103323.909":
+  entity verify_fifo_rd_stream_out_0clk_6f2c5aad at 6( 111) + 0 on 388;
+  architecture arch of verify_fifo_rd_stream_out_0clk_6f2c5aad at 21( 595) + 0 on 389;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/prep_auth_data/prep_auth_data_0CLK_41669ea5.vhd" "9a9e0fe7f4fc470bc710f81508d8aa80ea47e8aa" "20251130103306.407":
+  entity prep_auth_data_0clk_41669ea5 at 6( 111) + 0 on 200;
+  architecture arch of prep_auth_data_0clk_41669ea5 at 22( 574) + 0 on 201;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/poly1305_verify_decrypt/poly1305_verify_decrypt_0CLK_08de2a73.vhd" "f586bf0f01ac913cd40675e18a38991046c2fff7" "20251130103322.904":
+  entity poly1305_verify_decrypt_0clk_08de2a73 at 6( 111) + 0 on 380;
+  architecture arch of poly1305_verify_decrypt_0clk_08de2a73 at 22( 609) + 0 on 381;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/poly1305_pipeline/poly1305_pipeline_3CLK_a31693b0.vhd" "d3e811935af111008da6ec71a04051b17d88aa5b" "20251130103315.850":
+  entity poly1305_pipeline_3clk_a31693b0 at 6( 126) + 0 on 286;
+  architecture arch of poly1305_pipeline_3clk_a31693b0 at 22( 599) + 0 on 287;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_input_side/chacha20_decrypt_input_side_0CLK_3a428b31.vhd" "a5a4f4590e84427bfb7b142a9dce5c70645ab7ec" "20251130103259.926":
+  entity chacha20_decrypt_input_side_0clk_3a428b31 at 6( 111) + 0 on 118;
+  architecture arch of chacha20_decrypt_input_side_0clk_3a428b31 at 22( 625) + 0 on 119;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/wait_to_verify/wait_to_verify_0CLK_9d359dd9.vhd" "652aea7b39b112d06c4037e7b9df70a903ffa7b4" "20251130103324.191":
+  entity wait_to_verify_0clk_9d359dd9 at 6( 111) + 0 on 392;
+  architecture arch of wait_to_verify_0clk_9d359dd9 at 22( 573) + 0 on 393;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/tb/tb_0CLK_837e73b8.vhd" "5bc4e84dff0d37afb45b75ce8f47f5add8c18d7b" "20251130103331.931":
+  entity tb_0clk_837e73b8 at 6( 111) + 0 on 502;
+  architecture arch of tb_0clk_837e73b8 at 23( 567) + 0 on 503;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_pipeline_handshake/chacha20_decrypt_pipeline_handshake_0CLK_61d00b9b.vhd" "f040271c5fb84d94d94f245016cb85f5e689ea28" "20251130103256.357":
+  entity chacha20_decrypt_pipeline_handshake_0clk_61d00b9b at 6( 111) + 0 on 86;
+  architecture arch of chacha20_decrypt_pipeline_handshake_0clk_61d00b9b at 22( 656) + 0 on 87;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/verify_fifo_wr_stream_in/verify_fifo_wr_stream_in_0CLK_a5a1cd4e.vhd" "ba28fe51003a0d72ec6d26f3466b110d4af123fb" "20251130103323.760":
+  entity verify_fifo_wr_stream_in_0clk_a5a1cd4e at 6( 111) + 0 on 386;
+  architecture arch of verify_fifo_wr_stream_in_0clk_a5a1cd4e at 21( 591) + 0 on 387;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_pipeline_no_handshake/chacha20_decrypt_pipeline_no_handshake_30CLK_37747f67.vhd" "fd962dcaa62323382b5c2c2b8cca987bed1fc016" "20251130103254.444":
+  entity chacha20_decrypt_pipeline_no_handshake_30clk_37747f67 at 6( 353) + 0 on 62;
+  architecture arch of chacha20_decrypt_pipeline_no_handshake_30clk_37747f67 at 22( 912) + 0 on 63;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/poly1305_mac/poly1305_mac_0CLK_caa1d5f6.vhd" "15e99a86656a446540369498b5d4ce39599aa237" "20251130103321.432":
+  entity poly1305_mac_0clk_caa1d5f6 at 6( 111) + 0 on 370;
+  architecture arch of poly1305_mac_0clk_caa1d5f6 at 22( 565) + 0 on 371;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/strip_auth_tag/strip_auth_tag_0CLK_69e380ac.vhd" "0b5c35911c399116e3a2e76bcfea8753ecee14da" "20251130103323.538":
+  entity strip_auth_tag_0clk_69e380ac at 6( 111) + 0 on 384;
+  architecture arch of strip_auth_tag_0clk_69e380ac at 22( 572) + 0 on 385;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_output_side/chacha20_decrypt_output_side_0CLK_c26c3aac.vhd" "89497f558cdc7b9a1d6339b99fa06dcbc42c6952" "20251130103301.036":
+  entity chacha20_decrypt_output_side_0clk_c26c3aac at 6( 111) + 0 on 124;
+  architecture arch of chacha20_decrypt_output_side_0clk_c26c3aac at 22( 629) + 0 on 125;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/main/main_0CLK_fc74e538.vhd" "0d7de4d607c49512e88ba77244feb428a93400a3" "20251130103324.457":
+  entity main_0clk_fc74e538 at 6( 111) + 0 on 394;
+  architecture arch of main_0clk_fc74e538 at 20( 471) + 0 on 395;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_int33_t_int32_t/BIN_OP_PLUS_int33_t_int32_t_0CLK_de264c78.vhd" "282bda597e613375133df35e7e3bfc92402a1ec8" "20251130103330.829":
+  entity bin_op_plus_int33_t_int32_t_0clk_de264c78 at 6( 111) + 0 on 486;
+  architecture arch of bin_op_plus_int33_t_int32_t_0clk_de264c78 at 20( 495) + 0 on 487;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/UNARY_OP_NOT_uint1_t/UNARY_OP_NOT_uint1_t_0CLK_de264c78.vhd" "b237b87f7529b7df12b70e7f09537cdc376d441a" "20251130103257.010":
+  entity unary_op_not_uint1_t_0clk_de264c78 at 6( 111) + 0 on 94;
+  architecture arch of unary_op_not_uint1_t_0clk_de264c78 at 19( 450) + 0 on 95;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint1_t_uint1_t/MUX_uint1_t_uint1_t_uint1_t_0CLK_de264c78.vhd" "3f2f05d8297386accd7007add3918344e326e76a" "20251130103255.181":
+  entity mux_uint1_t_uint1_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 68;
+  architecture arch of mux_uint1_t_uint1_t_uint1_t_0clk_de264c78 at 21( 535) + 0 on 69;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_prep_auth_data_state_t_prep_auth_data_state_t/MUX_uint1_t_prep_auth_data_state_t_prep_auth_data_state_t_0CLK_de264c78.vhd" "7182fd4cf35275002c456f3dc96c9a3fd4757b2c" "20251130103301.616":
+  entity mux_uint1_t_prep_auth_data_state_t_prep_auth_data_state_t_0clk_de264c78 at 6( 111) + 0 on 130;
+  architecture arch of mux_uint1_t_prep_auth_data_state_t_prep_auth_data_state_t_0clk_de264c78 at 21( 595) + 0 on 131;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint3_t_uint3_t/BIN_OP_EQ_uint3_t_uint3_t_0CLK_de264c78.vhd" "bef8d1d11e8efe584012d0fe536023e93b39c238" "20251130103316.059":
+  entity bin_op_eq_uint3_t_uint3_t_0clk_de264c78 at 6( 111) + 0 on 288;
+  architecture arch of bin_op_eq_uint3_t_uint3_t_0clk_de264c78 at 20( 494) + 0 on 289;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l241_c21_dcd6/printf_chacha20poly1305_decrypt_tb_c_l241_c21_dcd6_0CLK_de264c78.vhd" "236ad6fdad3ff7748fb3352a106f07ce71ef493c" "20251130103330.970":
+  entity printf_chacha20poly1305_decrypt_tb_c_l241_c21_dcd6_0clk_de264c78 at 6( 111) + 0 on 488;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l241_c21_dcd6_0clk_de264c78 at 21( 577) + 0 on 489;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint8_t_uint8_t/MUX_uint1_t_uint8_t_uint8_t_0CLK_de264c78.vhd" "a40361473dba798bc4531d5fb537554b5e7ff702" "20251130103302.299":
+  entity mux_uint1_t_uint8_t_uint8_t_0clk_de264c78 at 6( 111) + 0 on 140;
+  architecture arch of mux_uint1_t_uint8_t_uint8_t_0clk_de264c78 at 21( 535) + 0 on 141;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_AND_uint1_t_uint1_t/BIN_OP_AND_uint1_t_uint1_t_0CLK_de264c78.vhd" "ec7fc21201ab239a32135b8b9472731268b47f08" "20251130103256.071":
+  entity bin_op_and_uint1_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 82;
+  architecture arch of bin_op_and_uint1_t_uint1_t_0clk_de264c78 at 20( 496) + 0 on 83;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_248_uint256_t/CONST_SR_248_uint256_t_0CLK_de264c78.vhd" "92313c1fa2474e1c359ecda9965732ea484194a8" "20251130103320.525":
+  entity const_sr_248_uint256_t_0clk_de264c78 at 6( 111) + 0 on 358;
+  architecture arch of const_sr_248_uint256_t_0clk_de264c78 at 19( 455) + 0 on 359;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_poly1305_state_t_poly1305_state_t/MUX_uint1_t_poly1305_state_t_poly1305_state_t_0CLK_de264c78.vhd" "08e3d4258fb5ebdf4f3846c14cb1d564ea5ea21f" "20251130103316.473":
+  entity mux_uint1_t_poly1305_state_t_poly1305_state_t_0clk_de264c78 at 6( 111) + 0 on 294;
+  architecture arch of mux_uint1_t_poly1305_state_t_poly1305_state_t_0clk_de264c78 at 21( 571) + 0 on 295;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_int33_t_int32_t/BIN_OP_GT_int33_t_int32_t_0CLK_1aac2328.vhd" "353dff0cfc4b82e672b46678b03d2a90f37c218e" "20251130103327.745":
+  entity bin_op_gt_int33_t_int32_t_0clk_1aac2328 at 6( 111) + 0 on 440;
+  architecture arch of bin_op_gt_int33_t_int32_t_0clk_1aac2328 at 20( 492) + 0 on 441;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/VAR_REF_RD_uint32_t_uint32_t_2_VAR_90b8/VAR_REF_RD_uint32_t_uint32_t_2_VAR_90b8_0CLK_9e8edf93.vhd" "1111dadbb00ccdeea749d57ef2bf5d8a3579b7fb" "20251130103326.668":
+  entity var_ref_rd_uint32_t_uint32_t_2_var_90b8_0clk_9e8edf93 at 6( 111) + 0 on 424;
+  architecture arch of var_ref_rd_uint32_t_uint32_t_2_var_90b8_0clk_9e8edf93 at 21( 574) + 0 on 425;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_int17_t_int32_t/BIN_OP_GT_int17_t_int32_t_0CLK_794ce60a.vhd" "e8291945b1b70b19a91a891313d9bbfd626d0add" "20251130103302.959":
+  entity bin_op_gt_int17_t_int32_t_0clk_794ce60a at 6( 111) + 0 on 150;
+  architecture arch of bin_op_gt_int17_t_int32_t_0clk_794ce60a at 20( 492) + 0 on 151;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_uint8_t_uint1_t/BIN_OP_GT_uint8_t_uint1_t_0CLK_5af1a430.vhd" "261b215fe7e668f6cadea151e29bd8bf7c92f892" "20251130103302.144":
+  entity bin_op_gt_uint8_t_uint1_t_0clk_5af1a430 at 6( 111) + 0 on 138;
+  architecture arch of bin_op_gt_uint8_t_uint1_t_0clk_5af1a430 at 20( 494) + 0 on 139;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint32_t_uint32_t/MUX_uint1_t_uint32_t_uint32_t_0CLK_de264c78.vhd" "8f560908f687a9647a7200c7cf37a6b89cfeef68" "20251130103227.112":
+  entity mux_uint1_t_uint32_t_uint32_t_0clk_de264c78 at 6( 111) + 0 on 18;
+  architecture arch of mux_uint1_t_uint32_t_uint32_t_0clk_de264c78 at 21( 542) + 0 on 19;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_64_uint128_t/CONST_SR_64_uint128_t_0CLK_de264c78.vhd" "43313881f3b3fc1b59906844ad0d90166b7f3e9f" "20251130103328.444":
+  entity const_sr_64_uint128_t_0clk_de264c78 at 6( 111) + 0 on 450;
+  architecture arch of const_sr_64_uint128_t_0clk_de264c78 at 19( 453) + 0 on 451;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t/MUX_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0CLK_de264c78.vhd" "9d89844f658de8878dcc887e6e21948583f2d3e7" "20251130103322.511":
+  entity mux_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0clk_de264c78 at 6( 111) + 0 on 374;
+  architecture arch of mux_uint1_t_poly1305_verify_state_t_poly1305_verify_state_t_0clk_de264c78 at 21( 599) + 0 on 375;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint16_t_uint5_t/BIN_OP_PLUS_uint16_t_uint5_t_0CLK_de264c78.vhd" "b9dad6be7b82047ffda61a2eddcca5f379f69894" "20251130103304.197":
+  entity bin_op_plus_uint16_t_uint5_t_0clk_de264c78 at 6( 111) + 0 on 166;
+  architecture arch of bin_op_plus_uint16_t_uint5_t_0clk_de264c78 at 20( 502) + 0 on 167;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint128_t_uint128_t/MUX_uint1_t_uint128_t_uint128_t_0CLK_de264c78.vhd" "9eb250f1b58ec69ca0f44f72c69acb4dad3f19f7" "20251130103322.635":
+  entity mux_uint1_t_uint128_t_uint128_t_0clk_de264c78 at 6( 111) + 0 on 376;
+  architecture arch of mux_uint1_t_uint128_t_uint128_t_0clk_de264c78 at 21( 549) + 0 on 377;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_128_uint256_t/CONST_SR_128_uint256_t_0CLK_de264c78.vhd" "4a8fe561d4c297c349b82f4b7a80a3bc0d607cb9" "20251130103318.626":
+  entity const_sr_128_uint256_t_0clk_de264c78 at 6( 111) + 0 on 328;
+  architecture arch of const_sr_128_uint256_t_0clk_de264c78 at 19( 455) + 0 on 329;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_64_uint256_t/CONST_SR_64_uint256_t_0CLK_de264c78.vhd" "443487f1da677541ec76c906a8d914839a97d10b" "20251130103317.615":
+  entity const_sr_64_uint256_t_0clk_de264c78 at 6( 111) + 0 on 312;
+  architecture arch of const_sr_64_uint256_t_0clk_de264c78 at 19( 453) + 0 on 313;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_uint32_t_uint5_t/BIN_OP_GT_uint32_t_uint5_t_0CLK_5af1a430.vhd" "4b20f986fed3d28fb8cd1016c523a61647cfd063" "20251130103331.219":
+  entity bin_op_gt_uint32_t_uint5_t_0clk_5af1a430 at 6( 111) + 0 on 492;
+  architecture arch of bin_op_gt_uint32_t_uint5_t_0clk_5af1a430 at 20( 497) + 0 on 493;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/poly1305_mac_loop_body/poly1305_mac_loop_body_3CLK_9ef0491b.vhd" "6eabbf7cf75335c59541b07edcc8e4af9c632a4a" "20251130103315.524":
+  entity poly1305_mac_loop_body_3clk_9ef0491b at 6( 126) + 0 on 282;
+  architecture arch of poly1305_mac_loop_body_3clk_9ef0491b at 20( 485) + 0 on 283;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/clamp/clamp_0CLK_295015b8.vhd" "d87e45207d372d46660e3260afecbe68e6c12026" "20251130103320.912":
+  entity clamp_0clk_295015b8 at 6( 111) + 0 on 364;
+  architecture arch of clamp_0clk_295015b8 at 19( 391) + 0 on 365;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_pipeline_no_handshake_in_reg_func/chacha20_decrypt_pipeline_no_handshake_in_reg_func_0CLK_b45f1687.vhd" "5a2d38e309cc7531047aeb89bcfc05ad9aba9ca8" "20251130103226.749":
+  entity chacha20_decrypt_pipeline_no_handshake_in_reg_func_0clk_b45f1687 at 6( 111) + 0 on 14;
+  architecture arch of chacha20_decrypt_pipeline_no_handshake_in_reg_func_0clk_b45f1687 at 23( 675) + 0 on 15;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_24_uint8_t/CONST_SR_24_uint8_t_0CLK_de264c78.vhd" "e2d9e47ebd7d44e0a5bfdf83b86fb691034216c2" "20251130103304.719":
+  entity const_sr_24_uint8_t_0clk_de264c78 at 6( 111) + 0 on 174;
+  architecture arch of const_sr_24_uint8_t_0clk_de264c78 at 19( 445) + 0 on 175;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_LTE_uint32_t_uint5_t/BIN_OP_LTE_uint32_t_uint5_t_0CLK_e595f783.vhd" "16de0ad4f701fcc6552c26cf40a7fbf0e54bc0cb" "20251130103328.168":
+  entity bin_op_lte_uint32_t_uint5_t_0clk_e595f783 at 6( 111) + 0 on 446;
+  architecture arch of bin_op_lte_uint32_t_uint5_t_0clk_e595f783 at 20( 499) + 0 on 447;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint8_t_144_uint8_t_144/MUX_uint1_t_uint8_t_144_uint8_t_144_0CLK_de264c78.vhd" "108d67419e3df8dbdc1a398d30f8c9f727c9e9e2" "20251130103324.888":
+  entity mux_uint1_t_uint8_t_144_uint8_t_144_0clk_de264c78 at 6( 111) + 0 on 398;
+  architecture arch of mux_uint1_t_uint8_t_144_uint8_t_144_0clk_de264c78 at 21( 524) + 0 on 399;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_48_uint16_t/CONST_SR_48_uint16_t_0CLK_de264c78.vhd" "9b4482807962069657ade86d75fd45451f623d17" "20251130103306.129":
+  entity const_sr_48_uint16_t_0clk_de264c78 at 6( 111) + 0 on 196;
+  architecture arch of const_sr_48_uint16_t_0clk_de264c78 at 19( 449) + 0 on 197;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_wait_to_verify_state_t_wait_to_verify_state_t/MUX_uint1_t_wait_to_verify_state_t_wait_to_verify_state_t_0CLK_de264c78.vhd" "2f5a90ed1034a7308f5bbc34e871f448264ef5fb" "20251130103324.055":
+  entity mux_uint1_t_wait_to_verify_state_t_wait_to_verify_state_t_0clk_de264c78 at 6( 111) + 0 on 390;
+  architecture arch of mux_uint1_t_wait_to_verify_state_t_wait_to_verify_state_t_0clk_de264c78 at 21( 595) + 0 on 391;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l266_c21_aeb9/printf_chacha20poly1305_decrypt_tb_c_l266_c21_aeb9_0CLK_de264c78.vhd" "27b6399a0785923dd5aeea505110a2f8ffcbf4a1" "20251130103331.618":
+  entity printf_chacha20poly1305_decrypt_tb_c_l266_c21_aeb9_0clk_de264c78 at 6( 111) + 0 on 498;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l266_c21_aeb9_0clk_de264c78 at 19( 507) + 0 on 499;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint32_t_uint1_t/BIN_OP_PLUS_uint32_t_uint1_t_0CLK_de264c78.vhd" "f2940044b972e4e85322778c0a5ad69129dd28a0" "20251130103259.777":
+  entity bin_op_plus_uint32_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 116;
+  architecture arch of bin_op_plus_uint32_t_uint1_t_0clk_de264c78 at 20( 502) + 0 on 117;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_0_uint128_t/CONST_SR_0_uint128_t_0CLK_de264c78.vhd" "2df48f424756b9a841c9baf310e0d7c366e282f1" "20251130103328.688":
+  entity const_sr_0_uint128_t_0clk_de264c78 at 6( 111) + 0 on 454;
+  architecture arch of const_sr_0_uint128_t_0clk_de264c78 at 19( 451) + 0 on 455;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_40_uint256_t/CONST_SR_40_uint256_t_0CLK_de264c78.vhd" "51409c69b79ac9bc2a899dd7ec28474994cd9e01" "20251130103317.233":
+  entity const_sr_40_uint256_t_0clk_de264c78 at 6( 111) + 0 on 306;
+  architecture arch of const_sr_40_uint256_t_0clk_de264c78 at 19( 453) + 0 on 307;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t/MUX_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0CLK_de264c78.vhd" "09df383b51dbf6a72818f76448408c847df5f740" "20251130103259.376":
+  entity mux_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0clk_de264c78 at 6( 111) + 0 on 110;
+  architecture arch of mux_uint1_t_chacha20_decrypt_state_t_chacha20_decrypt_state_t_0clk_de264c78 at 21( 603) + 0 on 111;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_u320_t_u320_t/MUX_uint1_t_u320_t_u320_t_0CLK_de264c78.vhd" "0ed98933880e3b2228b03d365a3057aaa50d719d" "20251130103314.219":
+  entity mux_uint1_t_u320_t_u320_t_0clk_de264c78 at 6( 111) + 0 on 266;
+  architecture arch of mux_uint1_t_u320_t_u320_t_0clk_de264c78 at 21( 489) + 0 on 267;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_uint32_t_uint32_t/BIN_OP_MINUS_uint32_t_uint32_t_0CLK_de264c78.vhd" "5ffa8de01bccdce494640e728291e60604ced3bf" "20251130103331.739":
+  entity bin_op_minus_uint32_t_uint32_t_0clk_de264c78 at 6( 111) + 0 on 500;
+  architecture arch of bin_op_minus_uint32_t_uint32_t_0clk_de264c78 at 20( 507) + 0 on 501;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint16_t_uint16_t/MUX_uint1_t_uint16_t_uint16_t_0CLK_de264c78.vhd" "f155bc87c4432ea0218f0d6ffb8ee419f0c75ebc" "20251130103255.794":
+  entity mux_uint1_t_uint16_t_uint16_t_0clk_de264c78 at 6( 111) + 0 on 78;
+  architecture arch of mux_uint1_t_uint16_t_uint16_t_0clk_de264c78 at 21( 542) + 0 on 79;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint2_t_uint2_t/BIN_OP_EQ_uint2_t_uint2_t_0CLK_de264c78.vhd" "17ed23ab9ea3262da069c96a8f80f62bf5de2e0c" "20251130103301.351":
+  entity bin_op_eq_uint2_t_uint2_t_0clk_de264c78 at 6( 111) + 0 on 126;
+  architecture arch of bin_op_eq_uint2_t_uint2_t_0clk_de264c78 at 20( 494) + 0 on 127;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_NEQ_uint8_t_uint8_t/BIN_OP_NEQ_uint8_t_uint8_t_0CLK_de264c78.vhd" "df8af15f4035d61f03d8f9e665d4849d2ba5251e" "20251130103330.695":
+  entity bin_op_neq_uint8_t_uint8_t_0clk_de264c78 at 6( 111) + 0 on 484;
+  architecture arch of bin_op_neq_uint8_t_uint8_t_0clk_de264c78 at 20( 496) + 0 on 485;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_136_uint256_t/CONST_SR_136_uint256_t_0CLK_de264c78.vhd" "5d537ccb10eff76dad65981a3b2a91e380b1dd65" "20251130103318.748":
+  entity const_sr_136_uint256_t_0clk_de264c78 at 6( 111) + 0 on 330;
+  architecture arch of const_sr_136_uint256_t_0clk_de264c78 at 19( 455) + 0 on 331;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_pipeline_FIFO/chacha20_decrypt_pipeline_FIFO_0CLK_b45f1687.vhd" "a1fe23eaa851807c923e037cf6922c85d76a71f0" "20251130103255.663":
+  entity chacha20_decrypt_pipeline_fifo_0clk_b45f1687 at 6( 111) + 0 on 76;
+  architecture arch of chacha20_decrypt_pipeline_fifo_0clk_b45f1687 at 22( 608) + 0 on 77;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_200_uint256_t/CONST_SR_200_uint256_t_0CLK_de264c78.vhd" "24c631ba682ed22fd7c67e154cc564b3351e24c7" "20251130103319.765":
+  entity const_sr_200_uint256_t_0clk_de264c78 at 6( 111) + 0 on 346;
+  architecture arch of const_sr_200_uint256_t_0clk_de264c78 at 19( 455) + 0 on 347;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_uint32_t_uint5_t/BIN_OP_MINUS_uint32_t_uint5_t_0CLK_de264c78.vhd" "88da1f82fa7717e4e08594c7e52480c4567e61c4" "20251130103329.740":
+  entity bin_op_minus_uint32_t_uint5_t_0clk_de264c78 at 6( 111) + 0 on 470;
+  architecture arch of bin_op_minus_uint32_t_uint5_t_0clk_de264c78 at 20( 504) + 0 on 471;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l249_c18_e834/printf_chacha20poly1305_decrypt_tb_c_l249_c18_e834_0CLK_de264c78.vhd" "6f6c36ef0bb108cc7ab89f25aa96fa2a4b81e12d" "20251130103331.094":
+  entity printf_chacha20poly1305_decrypt_tb_c_l249_c18_e834_0clk_de264c78 at 6( 111) + 0 on 490;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l249_c18_e834_0clk_de264c78 at 18( 475) + 0 on 491;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_axis128_t_stream_t_axis128_t_stream_t/MUX_uint1_t_axis128_t_stream_t_axis128_t_stream_t_0CLK_de264c78.vhd" "e7e7e7a70bd536fcc0cd9227446cb5ce5469f46c" "20251130103256.732":
+  entity mux_uint1_t_axis128_t_stream_t_axis128_t_stream_t_0clk_de264c78 at 6( 111) + 0 on 90;
+  architecture arch of mux_uint1_t_axis128_t_stream_t_axis128_t_stream_t_0clk_de264c78 at 21( 573) + 0 on 91;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/include/axi/axis.h/axis128_to_axis512/axis128_to_axis512_0CLK_c1f85885.vhd" "d8702b34064eae41564a3cbcb389bd68cc8160f9" "20251130103258.711":
+  entity axis128_to_axis512_0clk_c1f85885 at 6( 111) + 0 on 108;
+  architecture arch of axis128_to_axis512_0clk_c1f85885 at 22( 553) + 0 on 109;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_96_uint256_t/CONST_SR_96_uint256_t_0CLK_de264c78.vhd" "23423e28318a188608f7ce8b4c5fa9b90f66a358" "20251130103318.119":
+  entity const_sr_96_uint256_t_0clk_de264c78 at 6( 111) + 0 on 320;
+  architecture arch of const_sr_96_uint256_t_0clk_de264c78 at 19( 453) + 0 on 321;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint32_t_uint1_t/BIN_OP_EQ_uint32_t_uint1_t_0CLK_de264c78.vhd" "c4b653a645c2b60bf69b9333ee11d034a63e31f8" "20251130103324.756":
+  entity bin_op_eq_uint32_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 396;
+  architecture arch of bin_op_eq_uint32_t_uint1_t_0clk_de264c78 at 20( 497) + 0 on 397;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_152_uint256_t/CONST_SR_152_uint256_t_0CLK_de264c78.vhd" "59eaae8090ff48653a1618da8e9d75c8ff004a4d" "20251130103318.999":
+  entity const_sr_152_uint256_t_0clk_de264c78 at 6( 111) + 0 on 334;
+  architecture arch of const_sr_152_uint256_t_0clk_de264c78 at 19( 455) + 0 on 335;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_192_uint256_t/CONST_SR_192_uint256_t_0CLK_de264c78.vhd" "6920ee18e895347d9cfab87a92c17528a0ce666e" "20251130103319.638":
+  entity const_sr_192_uint256_t_0clk_de264c78 at 6( 111) + 0 on 344;
+  architecture arch of const_sr_192_uint256_t_0clk_de264c78 at 19( 455) + 0 on 345;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint128_t_stream_t_uint128_t_stream_t/MUX_uint1_t_uint128_t_stream_t_uint128_t_stream_t_0CLK_de264c78.vhd" "e85fa89a832d12c6310d2bd924bc28fa871d6514" "20251130103316.187":
+  entity mux_uint1_t_uint128_t_stream_t_uint128_t_stream_t_0clk_de264c78 at 6( 111) + 0 on 290;
+  architecture arch of mux_uint1_t_uint128_t_stream_t_uint128_t_stream_t_0clk_de264c78 at 21( 573) + 0 on 291;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint256_t_stream_t_uint256_t_stream_t/MUX_uint1_t_uint256_t_stream_t_uint256_t_stream_t_0CLK_de264c78.vhd" "7cf48c74a6900b0fe457c4589722f1d8c68be08c" "20251130103300.413":
+  entity mux_uint1_t_uint256_t_stream_t_uint256_t_stream_t_0clk_de264c78 at 6( 111) + 0 on 120;
+  architecture arch of mux_uint1_t_uint256_t_stream_t_uint256_t_stream_t_0clk_de264c78 at 21( 573) + 0 on 121;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_56_uint16_t/CONST_SR_56_uint16_t_0CLK_de264c78.vhd" "d28914a3c096ec56234faed444cfecf8c6c059ce" "20251130103306.252":
+  entity const_sr_56_uint16_t_0clk_de264c78 at 6( 111) + 0 on 198;
+  architecture arch of const_sr_56_uint16_t_0clk_de264c78 at 19( 449) + 0 on 199;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l231_c105_4dbe/printf_chacha20poly1305_decrypt_tb_c_l231_c105_4dbe_0CLK_de264c78.vhd" "7e1a49d8e67dd581fdc58a074219a715305fdf86" "20251130103330.572":
+  entity printf_chacha20poly1305_decrypt_tb_c_l231_c105_4dbe_0clk_de264c78 at 6( 111) + 0 on 482;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l231_c105_4dbe_0clk_de264c78 at 22( 613) + 0 on 483;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_224_uint256_t/CONST_SR_224_uint256_t_0CLK_de264c78.vhd" "1b0c9e914ec1ef3238f76a6e0058b7c91c974177" "20251130103320.142":
+  entity const_sr_224_uint256_t_0clk_de264c78 at 6( 111) + 0 on 352;
+  architecture arch of const_sr_224_uint256_t_0clk_de264c78 at 19( 455) + 0 on 353;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/bytes_to_uint320/bytes_to_uint320_0CLK_b3848d7a.vhd" "68f8e40f5b02a7b08b18a80c91f087021e3f322a" "20251130103308.958":
+  entity bytes_to_uint320_0clk_b3848d7a at 6( 111) + 0 on 208;
+  architecture arch of bytes_to_uint320_0clk_b3848d7a at 19( 417) + 0 on 209;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l192_c17_4941/printf_chacha20poly1305_decrypt_tb_c_l192_c17_4941_0CLK_de264c78.vhd" "8139258cb93c7640f6814fa3ee121181d4e3f71c" "20251130103328.936":
+  entity printf_chacha20poly1305_decrypt_tb_c_l192_c17_4941_0clk_de264c78 at 6( 111) + 0 on 458;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l192_c17_4941_0clk_de264c78 at 19( 509) + 0 on 459;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint16_t_uint1_t/BIN_OP_PLUS_uint16_t_uint1_t_0CLK_de264c78.vhd" "b85cd90b3e7f97d63c621f26a977a64a34341902" "20251130103255.930":
+  entity bin_op_plus_uint16_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 80;
+  architecture arch of bin_op_plus_uint16_t_uint1_t_0clk_de264c78 at 20( 502) + 0 on 81;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_32_uint16_t/CONST_SR_32_uint16_t_0CLK_de264c78.vhd" "cb9ca055723e08e9b924ecd68e730b8174c0f607" "20251130103305.867":
+  entity const_sr_32_uint16_t_0clk_de264c78 at 6( 111) + 0 on 192;
+  architecture arch of const_sr_32_uint16_t_0clk_de264c78 at 19( 449) + 0 on 193;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_0_uint96_t/CONST_SR_0_uint96_t_0CLK_de264c78.vhd" "726b3de0e3632453b5b4ef28108d549298f84ed9" "20251130103325.517":
+  entity const_sr_0_uint96_t_0clk_de264c78 at 6( 111) + 0 on 408;
+  architecture arch of const_sr_0_uint96_t_0clk_de264c78 at 19( 447) + 0 on 409;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint8_t_32_uint8_t_32/MUX_uint1_t_uint8_t_32_uint8_t_32_0CLK_de264c78.vhd" "10c81d1bc527631cc1625fa47fc9c0b84b3bdb27" "20251130103301.486":
+  entity mux_uint1_t_uint8_t_32_uint8_t_32_0clk_de264c78 at 6( 111) + 0 on 128;
+  architecture arch of mux_uint1_t_uint8_t_32_uint8_t_32_0clk_de264c78 at 21( 517) + 0 on 129;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/VAR_REF_RD_char_128_char_2_128_VAR_90b8/VAR_REF_RD_char_128_char_2_128_VAR_90b8_0CLK_b45a16e1.vhd" "d57667ab3db1b9703aa86b018c65ce7b1d3f9db9" "20251130103330.289":
+  entity var_ref_rd_char_128_char_2_128_var_90b8_0clk_b45a16e1 at 6( 111) + 0 on 478;
+  architecture arch of var_ref_rd_char_128_char_2_128_var_90b8_0clk_b45a16e1 at 21( 543) + 0 on 479;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_char_128_char_128/MUX_uint1_t_char_128_char_128_0CLK_de264c78.vhd" "e7bcace34b7d0dc75b641d865c981800e89d7359" "20251130103329.888":
+  entity mux_uint1_t_char_128_char_128_0clk_de264c78 at 6( 111) + 0 on 472;
+  architecture arch of mux_uint1_t_char_128_char_128_0clk_de264c78 at 21( 503) + 0 on 473;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_216_uint256_t/CONST_SR_216_uint256_t_0CLK_de264c78.vhd" "c8e44f488acd45a2f09b39a37eb985c3f5462ae3" "20251130103320.016":
+  entity const_sr_216_uint256_t_0clk_de264c78 at 6( 111) + 0 on 350;
+  architecture arch of const_sr_216_uint256_t_0clk_de264c78 at 19( 455) + 0 on 351;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_loop_body/chacha20_decrypt_loop_body_30CLK_d9fa0f4d.vhd" "3e8781a96fe43b3baca506dac2ac4fc99195b595" "20251130103233.054":
+  entity chacha20_decrypt_loop_body_30clk_d9fa0f4d at 6( 354) + 0 on 58;
+  architecture arch of chacha20_decrypt_loop_body_30clk_d9fa0f4d at 20( 731) + 0 on 59;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_232_uint256_t/CONST_SR_232_uint256_t_0CLK_de264c78.vhd" "7bfd57cc76528f9d842f997dbe10de25b3c935b9" "20251130103320.270":
+  entity const_sr_232_uint256_t_0clk_de264c78 at 6( 111) + 0 on 354;
+  architecture arch of const_sr_232_uint256_t_0clk_de264c78 at 19( 455) + 0 on 355;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_104_uint256_t/CONST_SR_104_uint256_t_0CLK_de264c78.vhd" "0d65fb7b84c9f271fc1a528709d14635c9c12455" "20251130103318.245":
+  entity const_sr_104_uint256_t_0clk_de264c78 at 6( 111) + 0 on 322;
+  architecture arch of const_sr_104_uint256_t_0clk_de264c78 at 19( 455) + 0 on 323;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_32_uint96_t/CONST_SR_32_uint96_t_0CLK_de264c78.vhd" "633f5cfd909b8d2df81f61f4f2e59e92c73380cf" "20251130103325.389":
+  entity const_sr_32_uint96_t_0clk_de264c78 at 6( 111) + 0 on 406;
+  architecture arch of const_sr_32_uint96_t_0clk_de264c78 at 19( 449) + 0 on 407;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_24_uint16_t/CONST_SR_24_uint16_t_0CLK_de264c78.vhd" "c2111745b8f8c8fe9c2f8f5316e4b54d8447405d" "20251130103305.734":
+  entity const_sr_24_uint16_t_0clk_de264c78 at 6( 111) + 0 on 190;
+  architecture arch of const_sr_24_uint16_t_0clk_de264c78 at 19( 449) + 0 on 191;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_8_uint8_t/CONST_SR_8_uint8_t_0CLK_de264c78.vhd" "9c5acb2c82283556685cdb15862a5533ad5f79ab" "20251130103304.467":
+  entity const_sr_8_uint8_t_0clk_de264c78 at 6( 111) + 0 on 170;
+  architecture arch of const_sr_8_uint8_t_0clk_de264c78 at 19( 443) + 0 on 171;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/type_bytes_t.h/u320_t_bytes_t.h/u320_t_to_bytes_0CLK_801a240b.vhd" "221dd44e3804f3644594cd95a78ccf7a766dce5e" "20251130103321.226":
+  entity u320_t_to_bytes_0clk_801a240b at 6( 111) + 0 on 368;
+  architecture arch of u320_t_to_bytes_0clk_801a240b at 19( 421) + 0 on 369;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_axis512_t_axis512_t/MUX_uint1_t_axis512_t_axis512_t_0CLK_de264c78.vhd" "4342d8f1b5553ec56af4b7fbd2d667c582e4703c" "20251130103259.502":
+  entity mux_uint1_t_axis512_t_axis512_t_0clk_de264c78 at 6( 111) + 0 on 112;
+  architecture arch of mux_uint1_t_axis512_t_axis512_t_0clk_de264c78 at 21( 510) + 0 on 113;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/poly1305_pipeline_out_reg_func/poly1305_pipeline_out_reg_func_0CLK_b45f1687.vhd" "a956f7134e69ed063b8f34d28aa5c84d24640a9b" "20251130103315.702":
+  entity poly1305_pipeline_out_reg_func_0clk_b45f1687 at 6( 111) + 0 on 284;
+  architecture arch of poly1305_pipeline_out_reg_func_0clk_b45f1687 at 23( 590) + 0 on 285;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint1_t_uint1_t/BIN_OP_EQ_uint1_t_uint1_t_0CLK_de264c78.vhd" "d5ee619e2da1a15f9ba15cebb09eccee64faa917" "20251130103256.604":
+  entity bin_op_eq_uint1_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 88;
+  architecture arch of bin_op_eq_uint1_t_uint1_t_0clk_de264c78 at 20( 494) + 0 on 89;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_OR_uint1_t_uint1_t/BIN_OP_OR_uint1_t_uint1_t_0CLK_de264c78.vhd" "0b1ca00c635f7756047004bc750546a98f085a3c" "20251130103257.853":
+  entity bin_op_or_uint1_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 104;
+  architecture arch of bin_op_or_uint1_t_uint1_t_0clk_de264c78 at 20( 494) + 0 on 105;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_96_uint128_t/CONST_SR_96_uint128_t_0CLK_de264c78.vhd" "0a1289b8baca1fb51f727dcd798791f737a1e84f" "20251130103328.318":
+  entity const_sr_96_uint128_t_0clk_de264c78 at 6( 111) + 0 on 448;
+  architecture arch of const_sr_96_uint128_t_0clk_de264c78 at 19( 453) + 0 on 449;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_16_uint16_t/CONST_SR_16_uint16_t_0CLK_de264c78.vhd" "d4c4cdd6c30274351494948a7d8521b345e63812" "20251130103305.614":
+  entity const_sr_16_uint16_t_0clk_de264c78 at 6( 111) + 0 on 188;
+  architecture arch of const_sr_16_uint16_t_0clk_de264c78 at 19( 449) + 0 on 189;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_80_uint256_t/CONST_SR_80_uint256_t_0CLK_de264c78.vhd" "2388c9813f95560bfb2a727d0eb43a2c49d4bfe7" "20251130103317.869":
+  entity const_sr_80_uint256_t_0clk_de264c78 at 6( 111) + 0 on 316;
+  architecture arch of const_sr_80_uint256_t_0clk_de264c78 at 19( 453) + 0 on 317;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_uint16_t_uint1_t/BIN_OP_MINUS_uint16_t_uint1_t_0CLK_de264c78.vhd" "0a5c836df60d21d0cf5208e8197fa7152f935b3f" "20251130103256.209":
+  entity bin_op_minus_uint16_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 84;
+  architecture arch of bin_op_minus_uint16_t_uint1_t_0clk_de264c78 at 20( 504) + 0 on 85;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_48_uint8_t/CONST_SR_48_uint8_t_0CLK_de264c78.vhd" "c83383425ad3fd1e53f72651e9d1cbdd55b7082b" "20251130103305.095":
+  entity const_sr_48_uint8_t_0clk_de264c78 at 6( 111) + 0 on 180;
+  architecture arch of const_sr_48_uint8_t_0clk_de264c78 at 19( 445) + 0 on 181;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l254_c17_5c2f/printf_chacha20poly1305_decrypt_tb_c_l254_c17_5c2f_0CLK_de264c78.vhd" "6cc3d93a8317cee3a32ae2ffe361310b5a416221" "20251130103331.373":
+  entity printf_chacha20poly1305_decrypt_tb_c_l254_c17_5c2f_0clk_de264c78 at 6( 111) + 0 on 494;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l254_c17_5c2f_0clk_de264c78 at 18( 475) + 0 on 495;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint1_t_stream_t_uint1_t_stream_t/MUX_uint1_t_uint1_t_stream_t_uint1_t_stream_t_0CLK_de264c78.vhd" "3dfe2ea047a7aedb425b179d63c32b77b3af705a" "20251130103322.376":
+  entity mux_uint1_t_uint1_t_stream_t_uint1_t_stream_t_0clk_de264c78 at 6( 111) + 0 on 372;
+  architecture arch of mux_uint1_t_uint1_t_stream_t_uint1_t_stream_t_0clk_de264c78 at 21( 559) + 0 on 373;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_88_uint256_t/CONST_SR_88_uint256_t_0CLK_de264c78.vhd" "43bd5bd8f342a2463cba4c98c983af330ba2dcd5" "20251130103317.993":
+  entity const_sr_88_uint256_t_0clk_de264c78 at 6( 111) + 0 on 318;
+  architecture arch of const_sr_88_uint256_t_0clk_de264c78 at 19( 453) + 0 on 319;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_160_uint256_t/CONST_SR_160_uint256_t_0CLK_de264c78.vhd" "ea270128b408c604ac258785988ca67b0356d75a" "20251130103319.127":
+  entity const_sr_160_uint256_t_0clk_de264c78 at 6( 111) + 0 on 336;
+  architecture arch of const_sr_160_uint256_t_0clk_de264c78 at 19( 455) + 0 on 337;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_56_uint256_t/CONST_SR_56_uint256_t_0CLK_de264c78.vhd" "177071a806cfcf984ba3f2a9eb1218a0677944c0" "20251130103317.489":
+  entity const_sr_56_uint256_t_0clk_de264c78 at 6( 111) + 0 on 310;
+  architecture arch of const_sr_56_uint256_t_0clk_de264c78 at 19( 453) + 0 on 311;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/VAR_REF_RD_uint8_t_144_uint8_t_2_144_VAR_90b8/VAR_REF_RD_uint8_t_144_uint8_t_2_144_VAR_90b8_0CLK_e56a0f0b.vhd" "c45aa7ae326f30d715cadaa5d90a51b460dca091" "20251130103326.388":
+  entity var_ref_rd_uint8_t_144_uint8_t_2_144_var_90b8_0clk_e56a0f0b at 6( 111) + 0 on 420;
+  architecture arch of var_ref_rd_uint8_t_144_uint8_t_2_144_var_90b8_0clk_e56a0f0b at 21( 564) + 0 on 421;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_208_uint256_t/CONST_SR_208_uint256_t_0CLK_de264c78.vhd" "9242f6eaa4217e839d6ec8092502d2c34aefaa70" "20251130103319.890":
+  entity const_sr_208_uint256_t_0clk_de264c78 at 6( 111) + 0 on 348;
+  architecture arch of const_sr_208_uint256_t_0clk_de264c78 at 19( 455) + 0 on 349;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_184_uint256_t/CONST_SR_184_uint256_t_0CLK_de264c78.vhd" "c4176f26a1964a2e84e24eaa953b4ddac4eec0c7" "20251130103319.515":
+  entity const_sr_184_uint256_t_0clk_de264c78 at 6( 111) + 0 on 342;
+  architecture arch of const_sr_184_uint256_t_0clk_de264c78 at 19( 455) + 0 on 343;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_16_uint8_t/CONST_SR_16_uint8_t_0CLK_de264c78.vhd" "b7a5104b207570ab73c3107fe68e554b65405c6a" "20251130103304.591":
+  entity const_sr_16_uint8_t_0clk_de264c78 at 6( 111) + 0 on 172;
+  architecture arch of const_sr_16_uint8_t_0clk_de264c78 at 19( 445) + 0 on 173;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_LT_uint16_t_uint7_t/BIN_OP_LT_uint16_t_uint7_t_0CLK_5af1a430.vhd" "786bacf2ebdf2d00d43c04867c2f826bb2d3a9b2" "20251130103255.449":
+  entity bin_op_lt_uint16_t_uint7_t_0clk_5af1a430 at 6( 111) + 0 on 72;
+  architecture arch of bin_op_lt_uint16_t_uint7_t_0clk_5af1a430 at 20( 497) + 0 on 73;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_uint32_t_uint1_t/BIN_OP_GT_uint32_t_uint1_t_0CLK_5af1a430.vhd" "9a8c47d6d41c8dddef6a7c1516859341aa60814a" "20251130103327.182":
+  entity bin_op_gt_uint32_t_uint1_t_0clk_5af1a430 at 6( 111) + 0 on 432;
+  architecture arch of bin_op_gt_uint32_t_uint1_t_0clk_5af1a430 at 20( 497) + 0 on 433;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l163_c65_dce4/printf_chacha20poly1305_decrypt_tb_c_l163_c65_dce4_0CLK_de264c78.vhd" "d8c257d15520c782bb6908c659f13e5ec64c31f8" "20251130103325.641":
+  entity printf_chacha20poly1305_decrypt_tb_c_l163_c65_dce4_0clk_de264c78 at 6( 111) + 0 on 410;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l163_c65_dce4_0clk_de264c78 at 21( 577) + 0 on 411;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l190_c108_b7d3/printf_chacha20poly1305_decrypt_tb_c_l190_c108_b7d3_0CLK_de264c78.vhd" "fd9c5f059378501d3c32e9697bfd05dda4962c34" "20251130103328.810":
+  entity printf_chacha20poly1305_decrypt_tb_c_l190_c108_b7d3_0clk_de264c78 at 6( 111) + 0 on 456;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l190_c108_b7d3_0clk_de264c78 at 22( 613) + 0 on 457;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint1_t_64_uint1_t_64/MUX_uint1_t_uint1_t_64_uint1_t_64_0CLK_de264c78.vhd" "307fba3b8f8eb7ced5108e90966112bc7b213190" "20251130103256.880":
+  entity mux_uint1_t_uint1_t_64_uint1_t_64_0clk_de264c78 at 6( 111) + 0 on 92;
+  architecture arch of mux_uint1_t_uint1_t_64_uint1_t_64_0clk_de264c78 at 21( 517) + 0 on 93;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/include/axi/axis.h/axis128_keep_count/axis128_keep_count_0CLK_08de2a73.vhd" "c51b15195d78caeb2fd48486b5ba57c3127b06e7" "20251130103303.964":
+  entity axis128_keep_count_0clk_08de2a73 at 6( 111) + 0 on 164;
+  architecture arch of axis128_keep_count_0clk_08de2a73 at 19( 436) + 0 on 165;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_uint16_t_uint5_t/BIN_OP_MINUS_uint16_t_uint5_t_0CLK_de264c78.vhd" "0d58cec01cadc3a01417cb22c47a778f5daab52d" "20251130103303.681":
+  entity bin_op_minus_uint16_t_uint5_t_0clk_de264c78 at 6( 111) + 0 on 160;
+  architecture arch of bin_op_minus_uint16_t_uint5_t_0clk_de264c78 at 20( 504) + 0 on 161;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_56_uint8_t/CONST_SR_56_uint8_t_0CLK_de264c78.vhd" "4d0d4c54257dd05591cceef9da5b9006803e06a6" "20251130103305.228":
+  entity const_sr_56_uint8_t_0clk_de264c78 at 6( 111) + 0 on 182;
+  architecture arch of const_sr_56_uint8_t_0clk_de264c78 at 19( 445) + 0 on 183;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_0_uint8_t/CONST_SR_0_uint8_t_0CLK_de264c78.vhd" "71d21680a91c039d11919cc0a93b85218d4727dc" "20251130103304.334":
+  entity const_sr_0_uint8_t_0clk_de264c78 at 6( 111) + 0 on 168;
+  architecture arch of const_sr_0_uint8_t_0clk_de264c78 at 19( 443) + 0 on 169;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_168_uint256_t/CONST_SR_168_uint256_t_0CLK_de264c78.vhd" "728e3df80fce02d1616413363a428f1dce3e3046" "20251130103319.254":
+  entity const_sr_168_uint256_t_0clk_de264c78 at 6( 111) + 0 on 338;
+  architecture arch of const_sr_168_uint256_t_0clk_de264c78 at 19( 455) + 0 on 339;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_0_uint16_t/CONST_SR_0_uint16_t_0CLK_de264c78.vhd" "09fd985c5da16186d2d13bfdf99c5832d79c9f62" "20251130103305.357":
+  entity const_sr_0_uint16_t_0clk_de264c78 at 6( 111) + 0 on 184;
+  architecture arch of const_sr_0_uint16_t_0clk_de264c78 at 19( 447) + 0 on 185;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l200_c21_4a74/printf_chacha20poly1305_decrypt_tb_c_l200_c21_4a74_0CLK_de264c78.vhd" "df9501c3f5db3df3a1495e2fef8833e53aa314d3" "20251130103329.614":
+  entity printf_chacha20poly1305_decrypt_tb_c_l200_c21_4a74_0clk_de264c78 at 6( 111) + 0 on 468;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l200_c21_4a74_0clk_de264c78 at 19( 507) + 0 on 469;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_72_uint256_t/CONST_SR_72_uint256_t_0CLK_de264c78.vhd" "bf04ec97c938a0f77e96e8d1299c6f4c984a07fb" "20251130103317.742":
+  entity const_sr_72_uint256_t_0clk_de264c78 at 6( 111) + 0 on 314;
+  architecture arch of const_sr_72_uint256_t_0clk_de264c78 at 19( 453) + 0 on 315;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_uint16_t_uint5_t/BIN_OP_GT_uint16_t_uint5_t_0CLK_5af1a430.vhd" "483c3b4f97c41131ebb59231024dd5254d46714c" "20251130103303.527":
+  entity bin_op_gt_uint16_t_uint5_t_0clk_5af1a430 at 6( 111) + 0 on 158;
+  architecture arch of bin_op_gt_uint16_t_uint5_t_0clk_5af1a430 at 20( 497) + 0 on 159;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_24_uint256_t/CONST_SR_24_uint256_t_0CLK_de264c78.vhd" "6c132dd6d86dc0f028d11be74ae02e6e35ab0dd6" "20251130103316.977":
+  entity const_sr_24_uint256_t_0clk_de264c78 at 6( 111) + 0 on 302;
+  architecture arch of const_sr_24_uint256_t_0clk_de264c78 at 19( 453) + 0 on 303;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint8_t_64_uint8_t_64/MUX_uint1_t_uint8_t_64_uint8_t_64_0CLK_de264c78.vhd" "ff852f8555207f1189e3d7971f3cc08b7ae1a7f6" "20251130103259.647":
+  entity mux_uint1_t_uint8_t_64_uint8_t_64_0clk_de264c78 at 6( 111) + 0 on 114;
+  architecture arch of mux_uint1_t_uint8_t_64_uint8_t_64_0clk_de264c78 at 21( 517) + 0 on 115;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint128_t_uint128_t/BIN_OP_EQ_uint128_t_uint128_t_0CLK_de264c78.vhd" "cc93760fafd7839e2400f5a36ceda3d7e7fdb1ab" "20251130103322.762":
+  entity bin_op_eq_uint128_t_uint128_t_0clk_de264c78 at 6( 111) + 0 on 378;
+  architecture arch of bin_op_eq_uint128_t_uint128_t_0clk_de264c78 at 20( 506) + 0 on 379;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_poly1305_mac_loop_body_in_t_poly1305_mac_loop_body_in_t/MUX_uint1_t_poly1305_mac_loop_body_in_t_poly1305_mac_loop_body_in_t_0CLK_de264c78.vhd" "b2239708a5d0f8e87bb77aa8be2df14afc770dea" "20251130103316.322":
+  entity mux_uint1_t_poly1305_mac_loop_body_in_t_poly1305_mac_loop_body_in_t_0clk_de264c78 at 6( 111) + 0 on 292;
+  architecture arch of mux_uint1_t_poly1305_mac_loop_body_in_t_poly1305_mac_loop_body_in_t_0clk_de264c78 at 21( 636) + 0 on 293;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_240_uint256_t/CONST_SR_240_uint256_t_0CLK_de264c78.vhd" "18a50fbcb1253a1244b3a2dd767eda361a4b609f" "20251130103320.397":
+  entity const_sr_240_uint256_t_0clk_de264c78 at 6( 111) + 0 on 356;
+  architecture arch of const_sr_240_uint256_t_0clk_de264c78 at 19( 455) + 0 on 357;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/include/axi/axis.h/axis512_to_axis128/axis512_to_axis128_0CLK_79a197f4.vhd" "b30d393adfbf5fe2034f1418a6bfa521f5ef8963" "20251130103300.554":
+  entity axis512_to_axis128_0clk_79a197f4 at 6( 111) + 0 on 122;
+  architecture arch of axis512_to_axis128_0clk_79a197f4 at 22( 553) + 0 on 123;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_48_uint256_t/CONST_SR_48_uint256_t_0CLK_de264c78.vhd" "4b617a016c42aae575d7d2590de797300975feab" "20251130103317.360":
+  entity const_sr_48_uint256_t_0clk_de264c78 at 6( 111) + 0 on 308;
+  architecture arch of const_sr_48_uint256_t_0clk_de264c78 at 19( 453) + 0 on 309;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_32_uint256_t/CONST_SR_32_uint256_t_0CLK_de264c78.vhd" "3c67207f66701da7f40cfafd9db5d5094123352b" "20251130103317.105":
+  entity const_sr_32_uint256_t_0clk_de264c78 at 6( 111) + 0 on 304;
+  architecture arch of const_sr_32_uint256_t_0clk_de264c78 at 19( 453) + 0 on 305;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_120_uint256_t/CONST_SR_120_uint256_t_0CLK_de264c78.vhd" "c18e6be540690e16083f6edf30cf078a721c68cd" "20251130103318.499":
+  entity const_sr_120_uint256_t_0clk_de264c78 at 6( 111) + 0 on 326;
+  architecture arch of const_sr_120_uint256_t_0clk_de264c78 at 19( 455) + 0 on 327;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l222_c9_d16a/printf_chacha20poly1305_decrypt_tb_c_l222_c9_d16a_0CLK_de264c78.vhd" "85b09bbf672558aae5a054dc03db53cec877a58a" "20251130103330.449":
+  entity printf_chacha20poly1305_decrypt_tb_c_l222_c9_d16a_0clk_de264c78 at 6( 111) + 0 on 480;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l222_c9_d16a_0clk_de264c78 at 19( 507) + 0 on 481;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_40_uint8_t/CONST_SR_40_uint8_t_0CLK_de264c78.vhd" "05f8bff31e918dccf9de81a3edc19c110c7daa92" "20251130103304.971":
+  entity const_sr_40_uint8_t_0clk_de264c78 at 6( 111) + 0 on 178;
+  architecture arch of const_sr_40_uint8_t_0clk_de264c78 at 19( 445) + 0 on 179;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l162_c64_85d7/printf_chacha20poly1305_decrypt_tb_c_l162_c64_85d7_0CLK_de264c78.vhd" "2c5a8829b8f707638b9c9095fa5612a521fa3eeb" "20251130103325.139":
+  entity printf_chacha20poly1305_decrypt_tb_c_l162_c64_85d7_0clk_de264c78 at 6( 111) + 0 on 402;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l162_c64_85d7_0clk_de264c78 at 26( 747) + 0 on 403;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_8_uint16_t/CONST_SR_8_uint16_t_0CLK_de264c78.vhd" "02780fdb6002ea90f5ae25fc8689fd10c99cc75c" "20251130103305.492":
+  entity const_sr_8_uint16_t_0clk_de264c78 at 6( 111) + 0 on 186;
+  architecture arch of const_sr_8_uint16_t_0clk_de264c78 at 19( 447) + 0 on 187;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_32_uint128_t/CONST_SR_32_uint128_t_0CLK_de264c78.vhd" "24cb0b2931ac91a1e17651ff101414edb94cef95" "20251130103328.565":
+  entity const_sr_32_uint128_t_0clk_de264c78 at 6( 111) + 0 on 452;
+  architecture arch of const_sr_32_uint128_t_0clk_de264c78 at 19( 453) + 0 on 453;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/axis128_early_tlast/axis128_early_tlast_0CLK_4e6656cf.vhd" "f39946f6d153e8162d1bdc4c62037ebb6b1edfa0" "20251130103323.260":
+  entity axis128_early_tlast_0clk_4e6656cf at 6( 111) + 0 on 382;
+  architecture arch of axis128_early_tlast_0clk_4e6656cf at 22( 560) + 0 on 383;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_LT_uint32_t_uint2_t/BIN_OP_LT_uint32_t_uint2_t_0CLK_5af1a430.vhd" "7620fb68fcd954327415653da838f7dd50d7e66a" "20251130103329.464":
+  entity bin_op_lt_uint32_t_uint2_t_0clk_5af1a430 at 6( 111) + 0 on 466;
+  architecture arch of bin_op_lt_uint32_t_uint2_t_0clk_5af1a430 at 20( 497) + 0 on 467;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_axis512_t_stream_t_axis512_t_stream_t/MUX_uint1_t_axis512_t_stream_t_axis512_t_stream_t_0CLK_de264c78.vhd" "1932031dcda81fba9fb415ee7a488ada0241b6c4" "20251130103257.135":
+  entity mux_uint1_t_axis512_t_stream_t_axis512_t_stream_t_0clk_de264c78 at 6( 111) + 0 on 96;
+  architecture arch of mux_uint1_t_axis512_t_stream_t_axis512_t_stream_t_0clk_de264c78 at 21( 573) + 0 on 97;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_8_uint256_t/CONST_SR_8_uint256_t_0CLK_de264c78.vhd" "4f18b85033569455c05470b06111dd4ecb40da5f" "20251130103316.726":
+  entity const_sr_8_uint256_t_0clk_de264c78 at 6( 111) + 0 on 298;
+  architecture arch of const_sr_8_uint256_t_0clk_de264c78 at 19( 451) + 0 on 299;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l160_c9_859c/printf_chacha20poly1305_decrypt_tb_c_l160_c9_859c_0CLK_de264c78.vhd" "a653a22ed1173af18a65f331e47083b8900ecbbc" "20251130103325.019":
+  entity printf_chacha20poly1305_decrypt_tb_c_l160_c9_859c_0clk_de264c78 at 6( 111) + 0 on 400;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l160_c9_859c_0clk_de264c78 at 18( 473) + 0 on 401;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_16_uint256_t/CONST_SR_16_uint256_t_0CLK_de264c78.vhd" "fa496088bece942e99cacd6bf721c2842a4c2c59" "20251130103316.849":
+  entity const_sr_16_uint256_t_0clk_de264c78 at 6( 111) + 0 on 300;
+  architecture arch of const_sr_16_uint256_t_0clk_de264c78 at 19( 453) + 0 on 301;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_64_uint96_t/CONST_SR_64_uint96_t_0CLK_de264c78.vhd" "1c5e609ad5712bbb4815672184c4c74ca9448989" "20251130103325.263":
+  entity const_sr_64_uint96_t_0clk_de264c78 at 6( 111) + 0 on 404;
+  architecture arch of const_sr_64_uint96_t_0clk_de264c78 at 19( 449) + 0 on 405;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/uint320_add/uint320_add_0CLK_10d8c973.vhd" "9866d8f539d422befa973159004db51c5239926f" "20251130103309.998":
+  entity uint320_add_0clk_10d8c973 at 6( 111) + 0 on 224;
+  architecture arch of uint320_add_0clk_10d8c973 at 20( 417) + 0 on 225;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_0_uint256_t/CONST_SR_0_uint256_t_0CLK_de264c78.vhd" "bc2cc48db48a2967698e0a12653f9f7d9cc2e935" "20251130103316.600":
+  entity const_sr_0_uint256_t_0clk_de264c78 at 6( 111) + 0 on 296;
+  architecture arch of const_sr_0_uint256_t_0clk_de264c78 at 19( 451) + 0 on 297;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_176_uint256_t/CONST_SR_176_uint256_t_0CLK_de264c78.vhd" "54767c80ec397eb2f423c778ad92a74d029de6c2" "20251130103319.382":
+  entity const_sr_176_uint256_t_0clk_de264c78 at 6( 111) + 0 on 340;
+  architecture arch of const_sr_176_uint256_t_0clk_de264c78 at 19( 455) + 0 on 341;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l168_c9_1160/printf_chacha20poly1305_decrypt_tb_c_l168_c9_1160_0CLK_de264c78.vhd" "9ce2e9b071e949ad4777cec23fdb184c4adfb366" "20251130103326.798":
+  entity printf_chacha20poly1305_decrypt_tb_c_l168_c9_1160_0clk_de264c78 at 6( 111) + 0 on 426;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l168_c9_1160_0clk_de264c78 at 19( 507) + 0 on 427;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l256_c17_86ff/printf_chacha20poly1305_decrypt_tb_c_l256_c17_86ff_0CLK_de264c78.vhd" "a53cbab0b1edfcf1acda7895bbffed156289ef1b" "20251130103331.498":
+  entity printf_chacha20poly1305_decrypt_tb_c_l256_c17_86ff_0clk_de264c78 at 6( 111) + 0 on 496;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l256_c17_86ff_0clk_de264c78 at 19( 507) + 0 on 497;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/print_aad/print_aad_0CLK_fa355561.vhd" "399540554418565071f7d55a6ebfd69ae0a9494f" "20251130103325.912":
+  entity print_aad_0clk_fa355561 at 6( 111) + 0 on 414;
+  architecture arch of print_aad_0clk_fa355561 at 20( 452) + 0 on 415;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/poly1305_pipeline_in_reg_func/poly1305_pipeline_in_reg_func_0CLK_b45f1687.vhd" "894fef34e093402ebaa0dd9562dcdbfd777f7e46" "20251130103308.477":
+  entity poly1305_pipeline_in_reg_func_0clk_b45f1687 at 6( 111) + 0 on 202;
+  architecture arch of poly1305_pipeline_in_reg_func_0clk_b45f1687 at 23( 608) + 0 on 203;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_40_uint16_t/CONST_SR_40_uint16_t_0CLK_de264c78.vhd" "82283b0771d1a1193ecf6ec29ef1de89bd97feaa" "20251130103305.994":
+  entity const_sr_40_uint16_t_0clk_de264c78 at 6( 111) + 0 on 194;
+  architecture arch of const_sr_40_uint16_t_0clk_de264c78 at 19( 449) + 0 on 195;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_144_uint256_t/CONST_SR_144_uint256_t_0CLK_de264c78.vhd" "cf397d44f958968adef9141c2870cb876aec1c1f" "20251130103318.876":
+  entity const_sr_144_uint256_t_0clk_de264c78 at 6( 111) + 0 on 332;
+  architecture arch of const_sr_144_uint256_t_0clk_de264c78 at 19( 455) + 0 on 333;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_32_uint8_t/CONST_SR_32_uint8_t_0CLK_de264c78.vhd" "ebe7369547414a9d3ae29d990f9479b3347392f2" "20251130103304.845":
+  entity const_sr_32_uint8_t_0clk_de264c78 at 6( 111) + 0 on 176;
+  architecture arch of const_sr_32_uint8_t_0clk_de264c78 at 19( 445) + 0 on 177;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_112_uint256_t/CONST_SR_112_uint256_t_0CLK_de264c78.vhd" "49a6567789ef2a6a408fd96be6b80eaa8a8f0e77" "20251130103318.372":
+  entity const_sr_112_uint256_t_0clk_de264c78 at 6( 111) + 0 on 324;
+  architecture arch of const_sr_112_uint256_t_0clk_de264c78 at 19( 455) + 0 on 325;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_decrypt_pipeline_no_handshake_out_reg_func/chacha20_decrypt_pipeline_no_handshake_out_reg_func_0CLK_b45f1687.vhd" "8636ff0c900cf0f5f9108da77fc26c6675dde81b" "20251130103254.280":
+  entity chacha20_decrypt_pipeline_no_handshake_out_reg_func_0clk_b45f1687 at 6( 111) + 0 on 60;
+  architecture arch of chacha20_decrypt_pipeline_no_handshake_out_reg_func_0clk_b45f1687 at 23( 656) + 0 on 61;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_XOR_uint8_t_uint8_t/BIN_OP_XOR_uint8_t_uint8_t_0CLK_de264c78.vhd" "899f10ce9bf0c42ea7e3c70519b1f8396fd065c5" "20251130103232.896":
+  entity bin_op_xor_uint8_t_uint8_t_0clk_de264c78 at 6( 111) + 0 on 56;
+  architecture arch of bin_op_xor_uint8_t_uint8_t_0clk_de264c78 at 20( 496) + 0 on 57;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/bit_math.h/uint8_t_array_144_t_mux2/uint8_t_array_144_t_mux2_0CLK_23f04728.vhd" "426a90df6cee76404b0b5a3d7a41c98e06af361e" "20251130103326.243":
+  entity uint8_t_array_144_t_mux2_0clk_23f04728 at 6( 111) + 0 on 418;
+  architecture arch of uint8_t_array_144_t_mux2_0clk_23f04728 at 21( 518) + 0 on 419;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_16_int32_t/CONST_SR_16_int32_t_0CLK_de264c78.vhd" "047d6111a2049d7e19e5d7c1487e0ca0e1f80e24" "20251130103302.434":
+  entity const_sr_16_int32_t_0clk_de264c78 at 6( 111) + 0 on 142;
+  architecture arch of const_sr_16_int32_t_0clk_de264c78 at 19( 443) + 0 on 143;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_31_int33_t/CONST_SR_31_int33_t_0CLK_de264c78.vhd" "c59a89a21c5ecae29959be28e1d5e39cdc1cd5bc" "20251130103327.334":
+  entity const_sr_31_int33_t_0clk_de264c78 at 6( 111) + 0 on 434;
+  architecture arch of const_sr_31_int33_t_0clk_de264c78 at 19( 443) + 0 on 435;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint5_t_uint1_t/BIN_OP_PLUS_uint5_t_uint1_t_0CLK_de264c78.vhd" "5c0ba53b548cd5824524f975eba176bb53dfc5af" "20251130103303.824":
+  entity bin_op_plus_uint5_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 162;
+  architecture arch of bin_op_plus_uint5_t_uint1_t_0clk_de264c78 at 20( 498) + 0 on 163;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_AND_uint8_t_uint4_t/BIN_OP_AND_uint8_t_uint4_t_0CLK_de264c78.vhd" "3fd8fac07166af392dd305c1b873f682a50ba996" "20251130103320.651":
+  entity bin_op_and_uint8_t_uint4_t_0clk_de264c78 at 6( 111) + 0 on 360;
+  architecture arch of bin_op_and_uint8_t_uint4_t_0clk_de264c78 at 20( 496) + 0 on 361;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_uint16_t_uint16_t/BIN_OP_GT_uint16_t_uint16_t_0CLK_380ecc95.vhd" "b6f93b1689ea3a394b997723f563e0d406abce82" "20251130103302.823":
+  entity bin_op_gt_uint16_t_uint16_t_0clk_380ecc95 at 6( 111) + 0 on 148;
+  architecture arch of bin_op_gt_uint16_t_uint16_t_0clk_380ecc95 at 20( 500) + 0 on 149;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_7_uint16_t/CONST_SR_7_uint16_t_0CLK_de264c78.vhd" "ed21338e0271c2dccf8bf8080de1609282a7925d" "20251130103254.928":
+  entity const_sr_7_uint16_t_0clk_de264c78 at 6( 111) + 0 on 64;
+  architecture arch of const_sr_7_uint16_t_0clk_de264c78 at 19( 447) + 0 on 65;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_uint31_t_uint31_t/BIN_OP_GT_uint31_t_uint31_t_0CLK_380ecc95.vhd" "ef3b55c7229d5f117d80d37510d11a7d520cb865" "20251130103327.608":
+  entity bin_op_gt_uint31_t_uint31_t_0clk_380ecc95 at 6( 111) + 0 on 438;
+  architecture arch of bin_op_gt_uint31_t_uint31_t_0clk_380ecc95 at 20( 500) + 0 on 439;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint16_t_uint16_t/BIN_OP_EQ_uint16_t_uint16_t_0CLK_de264c78.vhd" "0837fd41807a3f98327a700a2ddfe6153a641f24" "20251130103302.555":
+  entity bin_op_eq_uint16_t_uint16_t_0clk_de264c78 at 6( 111) + 0 on 144;
+  architecture arch of bin_op_eq_uint16_t_uint16_t_0clk_de264c78 at 20( 500) + 0 on 145;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/include/axi/axis.h/axis512_to_axis128_array/axis512_to_axis128_array_0CLK_4b8d8b28.vhd" "e389da4e9179ade14dc11a21340fd69f18da750f" "20251130103257.423":
+  entity axis512_to_axis128_array_0clk_4b8d8b28 at 6( 111) + 0 on 100;
+  architecture arch of axis512_to_axis128_array_0clk_4b8d8b28 at 19( 453) + 0 on 101;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_5_uint32_t/CONST_SR_5_uint32_t_0CLK_de264c78.vhd" "568ecb21ef90f39adc38b360717346f2421b2550" "20251130103327.904":
+  entity const_sr_5_uint32_t_0clk_de264c78 at 6( 111) + 0 on 442;
+  architecture arch of const_sr_5_uint32_t_0clk_de264c78 at 19( 447) + 0 on 443;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_axis128_t_stream_t_4_axis128_t_stream_t_4/MUX_uint1_t_axis128_t_stream_t_4_axis128_t_stream_t_4_0CLK_de264c78.vhd" "9ce9396accde2f03ea02bd267fec457035a89681" "20251130103257.690":
+  entity mux_uint1_t_axis128_t_stream_t_4_axis128_t_stream_t_4_0clk_de264c78 at 6( 111) + 0 on 102;
+  architecture arch of mux_uint1_t_axis128_t_stream_t_4_axis128_t_stream_t_4_0clk_de264c78 at 21( 587) + 0 on 103;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_OR_uint64_t_uint4_t/BIN_OP_OR_uint64_t_uint4_t_0CLK_de264c78.vhd" "744516dcab5bb14125b5b4f8f7c8b9c8ee6221b2" "20251130103309.095":
+  entity bin_op_or_uint64_t_uint4_t_0clk_de264c78 at 6( 111) + 0 on 210;
+  architecture arch of bin_op_or_uint64_t_uint4_t_0clk_de264c78 at 20( 498) + 0 on 211;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/include/axi/axis.h/axis128_array_to_axis512/axis128_array_to_axis512_0CLK_fcdf4ca0.vhd" "972984adc83eec41ab0fb8c6892fb95bf9b5289e" "20251130103257.987":
+  entity axis128_array_to_axis512_0clk_fcdf4ca0 at 6( 111) + 0 on 106;
+  architecture arch of axis128_array_to_axis512_0clk_fcdf4ca0 at 19( 455) + 0 on 107;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/bit_math.h/uint32_mux2/uint32_mux2_0CLK_23f04728.vhd" "285d3b89d693396dec1fb88ca81277f2b7569789" "20251130103326.531":
+  entity uint32_mux2_0clk_23f04728 at 6( 111) + 0 on 422;
+  architecture arch of uint32_mux2_0clk_23f04728 at 21( 498) + 0 on 423;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/type_bytes_t.h/chacha20_state_bytes_t.h/chacha20_state_to_bytes_0CLK_d3fba2d7.vhd" "be0bd75113dfa9a3535e206e86b9fea3e3128689" "20251130103232.649":
+  entity chacha20_state_to_bytes_0clk_d3fba2d7 at 6( 111) + 0 on 54;
+  architecture arch of chacha20_state_to_bytes_0clk_d3fba2d7 at 19( 446) + 0 on 55;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint27_t_uint1_t/BIN_OP_EQ_uint27_t_uint1_t_0CLK_de264c78.vhd" "c06d186a04c59022e678ea9eccf0b7e3e966d36b" "20251130103328.032":
+  entity bin_op_eq_uint27_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 444;
+  architecture arch of bin_op_eq_uint27_t_uint1_t_0clk_de264c78 at 20( 497) + 0 on 445;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int2_t_int2_t/BIN_OP_MINUS_int2_t_int2_t_0CLK_de264c78.vhd" "372ad1579c85172f9044c75adaf13116028ac9c7" "20251130103301.998":
+  entity bin_op_minus_int2_t_int2_t_0clk_de264c78 at 6( 111) + 0 on 136;
+  architecture arch of bin_op_minus_int2_t_int2_t_0clk_de264c78 at 20( 490) + 0 on 137;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_192_uint320_t/CONST_SR_192_uint320_t_0CLK_de264c78.vhd" "1f73256c61e98ea696044657fe6d4ea0f83507ab" "20251130103309.749":
+  entity const_sr_192_uint320_t_0clk_de264c78 at 6( 111) + 0 on 220;
+  architecture arch of const_sr_192_uint320_t_0clk_de264c78 at 19( 455) + 0 on 221;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/type_bytes_t.h/u320_t_bytes_t.h/bytes_to_u320_t_0CLK_4bbc8984.vhd" "a000d88f5a3b7da002e78056f9acfde1bcd13138" "20251130103308.784":
+  entity bytes_to_u320_t_0clk_4bbc8984 at 6( 111) + 0 on 206;
+  architecture arch of bytes_to_u320_t_0clk_4bbc8984 at 19( 418) + 0 on 207;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_2_uint32_t/CONST_SR_2_uint32_t_0CLK_de264c78.vhd" "d66781ab266aee3644d47c4f11c961b52de315f4" "20251130103329.060":
+  entity const_sr_2_uint32_t_0clk_de264c78 at 6( 111) + 0 on 460;
+  architecture arch of const_sr_2_uint32_t_0clk_de264c78 at 19( 447) + 0 on 461;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint7_t_uint1_t/BIN_OP_EQ_uint7_t_uint1_t_0CLK_de264c78.vhd" "d7c5c8ac43ee7f190f9b679c4c94d3c037d1f2ea" "20251130103301.868":
+  entity bin_op_eq_uint7_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 134;
+  architecture arch of bin_op_eq_uint7_t_uint1_t_0clk_de264c78 at 20( 494) + 0 on 135;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_256_uint320_t/CONST_SR_256_uint320_t_0CLK_de264c78.vhd" "61142752f210fba4fca66804ccc63fc76730c3c0" "20251130103309.871":
+  entity const_sr_256_uint320_t_0clk_de264c78 at 6( 111) + 0 on 222;
+  architecture arch of const_sr_256_uint320_t_0clk_de264c78 at 19( 455) + 0 on 223;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int6_t_int6_t/BIN_OP_MINUS_int6_t_int6_t_0CLK_de264c78.vhd" "45e8e14e9c4b5cc8f4c5b716e495ad05db9b6e87" "20251130103303.381":
+  entity bin_op_minus_int6_t_int6_t_0clk_de264c78 at 6( 111) + 0 on 156;
+  architecture arch of bin_op_minus_int6_t_int6_t_0clk_de264c78 at 20( 490) + 0 on 157;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int3_t_int3_t/BIN_OP_MINUS_int3_t_int3_t_0CLK_de264c78.vhd" "7d87fd5b77428c67f1bbed8e8be90c354441b887" "20251130103329.316":
+  entity bin_op_minus_int3_t_int3_t_0clk_de264c78 at 6( 111) + 0 on 464;
+  architecture arch of bin_op_minus_int3_t_int3_t_0clk_de264c78 at 20( 490) + 0 on 465;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint320_t_uint320_t/BIN_OP_PLUS_uint320_t_uint320_t_0CLK_de264c78.vhd" "faa4f795e9dc800f5998ee1f9b1cf4f3a164f0f8" "20251130103309.228":
+  entity bin_op_plus_uint320_t_uint320_t_0clk_de264c78 at 6( 111) + 0 on 212;
+  architecture arch of bin_op_plus_uint320_t_uint320_t_0clk_de264c78 at 20( 512) + 0 on 213;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int8_t_int8_t/BIN_OP_MINUS_int8_t_int8_t_0CLK_de264c78.vhd" "bbd08ac7307448dac5c65e72b50e96cf3bc983ec" "20251130103255.308":
+  entity bin_op_minus_int8_t_int8_t_0clk_de264c78 at 6( 111) + 0 on 70;
+  architecture arch of bin_op_minus_int8_t_int8_t_0clk_de264c78 at 20( 490) + 0 on 71;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_init/chacha20_init_0CLK_50a1b8d0.vhd" "a836793655b2a7b18e90058d6de8922c29d48cbe" "20251130103226.936":
+  entity chacha20_init_0clk_50a1b8d0 at 6( 111) + 0 on 16;
+  architecture arch of chacha20_init_0clk_50a1b8d0 at 21( 481) + 0 on 17;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_AND_uint8_t_uint8_t/BIN_OP_AND_uint8_t_uint8_t_0CLK_de264c78.vhd" "14b4ef4bde89a5d94ec99966ff3acca8eda3cf31" "20251130103320.781":
+  entity bin_op_and_uint8_t_uint8_t_0clk_de264c78 at 6( 111) + 0 on 362;
+  architecture arch of bin_op_and_uint8_t_uint8_t_0clk_de264c78 at 20( 496) + 0 on 363;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint30_t_uint1_t/BIN_OP_EQ_uint30_t_uint1_t_0CLK_de264c78.vhd" "384ed5cf7aba3dd4157bd581f96c858c80795d32" "20251130103329.185":
+  entity bin_op_eq_uint30_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 462;
+  architecture arch of bin_op_eq_uint30_t_uint1_t_0clk_de264c78 at 20( 497) + 0 on 463;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint1_t_16_uint1_t_16/MUX_uint1_t_uint1_t_16_uint1_t_16_0CLK_de264c78.vhd" "e32dfcb5b19b9b46bb7508dbc603ae181f019b22" "20251130103257.287":
+  entity mux_uint1_t_uint1_t_16_uint1_t_16_0clk_de264c78 at 6( 111) + 0 on 98;
+  architecture arch of mux_uint1_t_uint1_t_16_uint1_t_16_0clk_de264c78 at 21( 517) + 0 on 99;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/uint320_mod_prime/uint320_mod_prime_0CLK_461d892c.vhd" "0c3a4097e3db2e392dd199aebc6c786a6d54b511" "20251130103315.192":
+  entity uint320_mod_prime_0clk_461d892c at 6( 111) + 0 on 280;
+  architecture arch of uint320_mod_prime_0clk_461d892c at 19( 414) + 0 on 281;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/type_bytes_t.h/uint64_t_bytes_t.h/uint64_t_to_bytes_0CLK_25f4cd11.vhd" "63d3705f7b22d4f1912796c0c8a3c8469a6fb5d7" "20251130103321.080":
+  entity uint64_t_to_bytes_0clk_25f4cd11 at 6( 111) + 0 on 366;
+  architecture arch of uint64_t_to_bytes_0clk_25f4cd11 at 19( 439) + 0 on 367;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/bit_math.h/char_array_128_t_mux2/char_array_128_t_mux2_0CLK_23f04728.vhd" "6073a5852652da7c063f67869fbe0cc933553d28" "20251130103330.153":
+  entity char_array_128_t_mux2_0clk_23f04728 at 6( 111) + 0 on 476;
+  architecture arch of char_array_128_t_mux2_0clk_23f04728 at 21( 503) + 0 on 477;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/printf_chacha20poly1305_decrypt_tb_c_l42_c5_2d19/printf_chacha20poly1305_decrypt_tb_c_l42_c5_2d19_0CLK_de264c78.vhd" "25b59cf4fc271e2e0312609ff0a720ee3ba0a071" "20251130103325.765":
+  entity printf_chacha20poly1305_decrypt_tb_c_l42_c5_2d19_0clk_de264c78 at 6( 111) + 0 on 412;
+  architecture arch of printf_chacha20poly1305_decrypt_tb_c_l42_c5_2d19_0clk_de264c78 at 51( 1584) + 0 on 413;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/uint320_mul/uint320_mul_3CLK_087b5579.vhd" "443ad8095ada2e62abfa5a8ae2cfd94d4185005d" "20251130103312.943":
+  entity uint320_mul_3clk_087b5579 at 6( 170) + 0 on 260;
+  architecture arch of uint320_mul_3clk_087b5579 at 21( 498) + 0 on 261;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_0_uint320_t/CONST_SR_0_uint320_t_0CLK_de264c78.vhd" "f518965eadd50eca342f94c70f23010cd4f84c05" "20251130103309.371":
+  entity const_sr_0_uint320_t_0clk_de264c78 at 6( 111) + 0 on 214;
+  architecture arch of const_sr_0_uint320_t_0clk_de264c78 at 19( 451) + 0 on 215;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_1_uint32_t/CONST_SR_1_uint32_t_0CLK_de264c78.vhd" "ef1053d0922f27ec4021edfe5b154accb6df6007" "20251130103326.921":
+  entity const_sr_1_uint32_t_0clk_de264c78 at 6( 111) + 0 on 428;
+  architecture arch of const_sr_1_uint32_t_0clk_de264c78 at 19( 447) + 0 on 429;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_64_uint320_t/CONST_SR_64_uint320_t_0CLK_de264c78.vhd" "21b117f3865b30e35d8be4410e5a15d761e47d05" "20251130103309.503":
+  entity const_sr_64_uint320_t_0clk_de264c78 at 6( 111) + 0 on 216;
+  architecture arch of const_sr_64_uint320_t_0clk_de264c78 at 19( 453) + 0 on 217;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint11_t_uint1_t/BIN_OP_EQ_uint11_t_uint1_t_0CLK_de264c78.vhd" "992214d34d1cdbe4325e118a958b2cf292549c98" "20251130103303.245":
+  entity bin_op_eq_uint11_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 154;
+  architecture arch of bin_op_eq_uint11_t_uint1_t_0clk_de264c78 at 20( 497) + 0 on 155;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint31_t_uint1_t/BIN_OP_EQ_uint31_t_uint1_t_0CLK_de264c78.vhd" "43d24c0cd735fb725a3fe0bb5885330ee23abfaf" "20251130103327.046":
+  entity bin_op_eq_uint31_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 430;
+  architecture arch of bin_op_eq_uint31_t_uint1_t_0clk_de264c78 at 20( 497) + 0 on 431;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_128_uint320_t/CONST_SR_128_uint320_t_0CLK_de264c78.vhd" "386faeb8cf0f4e3c7fad2071db5a340c4d6e9e8d" "20251130103309.624":
+  entity const_sr_128_uint320_t_0clk_de264c78 at 6( 111) + 0 on 218;
+  architecture arch of const_sr_128_uint320_t_0clk_de264c78 at 19( 455) + 0 on 219;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_1_uint8_t/CONST_SR_1_uint8_t_0CLK_de264c78.vhd" "14b4fd7cb2e286f03265e4325775458e54b1cdbe" "20251130103301.743":
+  entity const_sr_1_uint8_t_0clk_de264c78 at 6( 111) + 0 on 132;
+  architecture arch of const_sr_1_uint8_t_0clk_de264c78 at 19( 443) + 0 on 133;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint9_t_uint1_t/BIN_OP_EQ_uint9_t_uint1_t_0CLK_de264c78.vhd" "13597e56bb7a056e0659526fbfafa68fbc5d57f1" "20251130103255.054":
+  entity bin_op_eq_uint9_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 66;
+  architecture arch of bin_op_eq_uint9_t_uint1_t_0clk_de264c78 at 20( 494) + 0 on 67;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_5_uint16_t/CONST_SR_5_uint16_t_0CLK_de264c78.vhd" "f6d622646144c15f7d434bdc4865d7b56774aea3" "20251130103303.122":
+  entity const_sr_5_uint16_t_0clk_de264c78 at 6( 111) + 0 on 152;
+  architecture arch of const_sr_5_uint16_t_0clk_de264c78 at 19( 447) + 0 on 153;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_block/chacha20_block_30CLK_e6e1d2ce.vhd" "1d38ba9bcd9711e35f323396707d9cbe6befbe04" "20251130103230.172":
+  entity chacha20_block_30clk_e6e1d2ce at 6( 354) + 0 on 50;
+  architecture arch of chacha20_block_30clk_e6e1d2ce at 20( 694) + 0 on 51;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint64_t_uint1_t/BIN_OP_PLUS_uint64_t_uint1_t_0CLK_de264c78.vhd" "0b402343e9d7d035331f41c3394d5ad82088205e" "20251130103311.362":
+  entity bin_op_plus_uint64_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 242;
+  architecture arch of bin_op_plus_uint64_t_uint1_t_0clk_de264c78 at 20( 502) + 0 on 243;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int17_t_int17_t/BIN_OP_MINUS_int17_t_int17_t_0CLK_de264c78.vhd" "09af57fa731a0c9e98e28eb379b97697cfa3d7b1" "20251130103302.684":
+  entity bin_op_minus_int17_t_int17_t_0clk_de264c78 at 6( 111) + 0 on 146;
+  architecture arch of bin_op_minus_int17_t_int17_t_0clk_de264c78 at 20( 497) + 0 on 147;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_uint64_t_uint64_t/BIN_OP_MINUS_uint64_t_uint64_t_0CLK_de264c78.vhd" "a9a1ff211091f1e0d6bf5419f18ecd20f817e32d" "20251130103314.895":
+  entity bin_op_minus_uint64_t_uint64_t_0clk_de264c78 at 6( 111) + 0 on 276;
+  architecture arch of bin_op_minus_uint64_t_uint64_t_0clk_de264c78 at 20( 507) + 0 on 277;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint64_t_uint64_t/MUX_uint1_t_uint64_t_uint64_t_0CLK_de264c78.vhd" "72becbff42961f2e61580f9af5cf19689af2ff79" "20251130103310.751":
+  entity mux_uint1_t_uint64_t_uint64_t_0clk_de264c78 at 6( 111) + 0 on 234;
+  architecture arch of mux_uint1_t_uint64_t_uint64_t_0clk_de264c78 at 21( 542) + 0 on 235;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint64_t_uint64_t/BIN_OP_PLUS_uint64_t_uint64_t_0CLK_de264c78.vhd" "9002c65c5dc69192a1ae10459c3406c6dea08a17" "20251130103310.285":
+  entity bin_op_plus_uint64_t_uint64_t_0clk_de264c78 at 6( 111) + 0 on 228;
+  architecture arch of bin_op_plus_uint64_t_uint64_t_0clk_de264c78 at 20( 505) + 0 on 229;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/type_bytes_t.h/uint64_t_bytes_t.h/bytes_to_uint64_t_0CLK_36723c85.vhd" "6d4c8930495bb031fc445b432e5c01c3a4e2ea9e" "20251130103308.643":
+  entity bytes_to_uint64_t_0clk_36723c85 at 6( 111) + 0 on 204;
+  architecture arch of bytes_to_uint64_t_0clk_36723c85 at 19( 435) + 0 on 205;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GT_uint64_t_uint64_t/BIN_OP_GT_uint64_t_uint64_t_0CLK_380ecc95.vhd" "caca278be6d881f705a885282e657516e0d9f545" "20251130103315.044":
+  entity bin_op_gt_uint64_t_uint64_t_0clk_380ecc95 at 6( 111) + 0 on 278;
+  architecture arch of bin_op_gt_uint64_t_uint64_t_0clk_380ecc95 at 20( 500) + 0 on 279;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int32_t_int32_t/BIN_OP_MINUS_int32_t_int32_t_0CLK_de264c78.vhd" "d8906a7f1119de994c2dc60859d01032d1366fa1" "20251130103327.467":
+  entity bin_op_minus_int32_t_int32_t_0clk_de264c78 at 6( 111) + 0 on 436;
+  architecture arch of bin_op_minus_int32_t_int32_t_0clk_de264c78 at 20( 497) + 0 on 437;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_LT_uint64_t_uint64_t/BIN_OP_LT_uint64_t_uint64_t_0CLK_380ecc95.vhd" "23305178ff7e4dbeacbb928964b87b1577495553" "20251130103311.226":
+  entity bin_op_lt_uint64_t_uint64_t_0clk_380ecc95 at 6( 111) + 0 on 240;
+  architecture arch of bin_op_lt_uint64_t_uint64_t_0clk_380ecc95 at 20( 500) + 0 on 241;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint64_t_uint64_t/BIN_OP_PLUS_uint64_t_uint64_t_1CLK_0320092f.vhd" "751de3a0d27d1a6cfc785c8b3ebbeb44e6589c66" "20251130103312.545":
+  entity bin_op_plus_uint64_t_uint64_t_1clk_0320092f at 6( 129) + 0 on 256;
+  architecture arch of bin_op_plus_uint64_t_uint64_t_1clk_0320092f at 21( 544) + 0 on 257;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_NEQ_uint64_t_uint1_t/BIN_OP_NEQ_uint64_t_uint1_t_0CLK_de264c78.vhd" "cea5e979680aa27533aa49016fb5ed5112c20a03" "20251130103314.089":
+  entity bin_op_neq_uint64_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 264;
+  architecture arch of bin_op_neq_uint64_t_uint1_t_0clk_de264c78 at 20( 499) + 0 on 265;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/chacha20_block_step/chacha20_block_step_3CLK_8bb6be71.vhd" "9f3d41540b80a280e6aacb537fca8ce0124703c1" "20251130103229.925":
+  entity chacha20_block_step_3clk_8bb6be71 at 6( 111) + 0 on 48;
+  architecture arch of chacha20_block_step_3clk_8bb6be71 at 20( 459) + 0 on 49;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_INFERRED_MULT_uint64_t_uint64_t/BIN_OP_INFERRED_MULT_uint64_t_uint64_t_0CLK_de264c78.vhd" "be179e9a1f3097e8db51a96cd196818e483c866b" "20251130103310.160":
+  entity bin_op_inferred_mult_uint64_t_uint64_t_0clk_de264c78 at 6( 111) + 0 on 226;
+  architecture arch of bin_op_inferred_mult_uint64_t_uint64_t_0clk_de264c78 at 20( 524) + 0 on 227;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/type_bytes_t.h/uint32_t_bytes_t.h/uint32_t_to_bytes_0CLK_a5a1cd4e.vhd" "4c43e04e53454f874c923b0f404a69fac625656d" "20251130103232.503":
+  entity uint32_t_to_bytes_0clk_a5a1cd4e at 6( 111) + 0 on 52;
+  architecture arch of uint32_t_to_bytes_0clk_a5a1cd4e at 19( 439) + 0 on 53;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint32_t_uint32_t/BIN_OP_PLUS_uint32_t_uint32_t_0CLK_de264c78.vhd" "9f5746c287fdccc19dfb13d5bf48a0f9920f9033" "20251130103227.659":
+  entity bin_op_plus_uint32_t_uint32_t_0clk_de264c78 at 6( 111) + 0 on 24;
+  architecture arch of bin_op_plus_uint32_t_uint32_t_0clk_de264c78 at 20( 505) + 0 on 25;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_AND_uint64_t_uint64_t/BIN_OP_AND_uint64_t_uint64_t_0CLK_de264c78.vhd" "ec1d4354032763e65e10be90a479f1abbb40ff3f" "20251130103313.952":
+  entity bin_op_and_uint64_t_uint64_t_0clk_de264c78 at 6( 111) + 0 on 262;
+  architecture arch of bin_op_and_uint64_t_uint64_t_0clk_de264c78 at 20( 503) + 0 on 263;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint64_t_uint64_t/BIN_OP_PLUS_uint64_t_uint64_t_1CLK_8f2211ba.vhd" "096bc7916c7cea105fb3d2af1f89a2bc6e7ddcc7" "20251130103312.740":
+  entity bin_op_plus_uint64_t_uint64_t_1clk_8f2211ba at 6( 129) + 0 on 258;
+  architecture arch of bin_op_plus_uint64_t_uint64_t_1clk_8f2211ba at 21( 544) + 0 on 259;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_LT_uint64_t_uint64_t/BIN_OP_LT_uint64_t_uint64_t_1CLK_41a2906e.vhd" "cb4f0d2cee66cdc1a522fbe32a4045d3fd148bad" "20251130103310.618":
+  entity bin_op_lt_uint64_t_uint64_t_1clk_41a2906e at 6( 129) + 0 on 232;
+  architecture arch of bin_op_lt_uint64_t_uint64_t_1clk_41a2906e at 21( 539) + 0 on 233;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint64_t_uint64_t/BIN_OP_EQ_uint64_t_uint64_t_0CLK_de264c78.vhd" "5c392d425fe77e62e36e35920681c91f4acba4d9" "20251130103314.618":
+  entity bin_op_eq_uint64_t_uint64_t_0clk_de264c78 at 6( 111) + 0 on 272;
+  architecture arch of bin_op_eq_uint64_t_uint64_t_0clk_de264c78 at 20( 500) + 0 on 273;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint64_t_uint64_t/BIN_OP_PLUS_uint64_t_uint64_t_1CLK_9ca18c4f.vhd" "dffee1e9bb2827bad25d28e147e0fd51d88b4dac" "20251130103310.888":
+  entity bin_op_plus_uint64_t_uint64_t_1clk_9ca18c4f at 6( 129) + 0 on 236;
+  architecture arch of bin_op_plus_uint64_t_uint64_t_1clk_9ca18c4f at 21( 544) + 0 on 237;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_GTE_uint64_t_uint64_t/BIN_OP_GTE_uint64_t_uint64_t_0CLK_6f2c5aad.vhd" "3c13d56021f8275f068165c1e5ab26ca23b90998" "20251130103314.750":
+  entity bin_op_gte_uint64_t_uint64_t_0clk_6f2c5aad at 6( 111) + 0 on 274;
+  architecture arch of bin_op_gte_uint64_t_uint64_t_0clk_6f2c5aad at 20( 502) + 0 on 275;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_LT_uint64_t_uint64_t/BIN_OP_LT_uint64_t_uint64_t_1CLK_ec635a74.vhd" "604d81c8c6d0023b9b881e657ba8a2aca96a2be5" "20251130103312.409":
+  entity bin_op_lt_uint64_t_uint64_t_1clk_ec635a74 at 6( 129) + 0 on 254;
+  architecture arch of bin_op_lt_uint64_t_uint64_t_1clk_ec635a74 at 21( 539) + 0 on 255;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/CONST_SR_2_uint64_t/CONST_SR_2_uint64_t_0CLK_de264c78.vhd" "6f0976c2836f956229c2db2a2dd6235605b8eed0" "20251130103314.359":
+  entity const_sr_2_uint64_t_0clk_de264c78 at 6( 111) + 0 on 268;
+  architecture arch of const_sr_2_uint64_t_0clk_de264c78 at 19( 447) + 0 on 269;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint8_t_array_144_t_uint8_t_array_144_t/MUX_uint1_t_uint8_t_array_144_t_uint8_t_array_144_t_0CLK_de264c78.vhd" "a01989328040264286cc38870535f197ab2f5fba" "20251130103326.100":
+  entity mux_uint1_t_uint8_t_array_144_t_uint8_t_array_144_t_0clk_de264c78 at 6( 111) + 0 on 416;
+  architecture arch of mux_uint1_t_uint8_t_array_144_t_uint8_t_array_144_t_0clk_de264c78 at 21( 580) + 0 on 417;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint64_t_uint64_t/BIN_OP_PLUS_uint64_t_uint64_t_1CLK_0f464748.vhd" "78f22124c46afc3e4431cbad28d443095505a0e6" "20251130103312.020":
+  entity bin_op_plus_uint64_t_uint64_t_1clk_0f464748 at 6( 132) + 0 on 250;
+  architecture arch of bin_op_plus_uint64_t_uint64_t_1clk_0f464748 at 21( 547) + 0 on 251;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_char_array_128_t_char_array_128_t/MUX_uint1_t_char_array_128_t_char_array_128_t_0CLK_de264c78.vhd" "c9f3dad734934cb07799be6915f6b6a83c75ca39" "20251130103330.021":
+  entity mux_uint1_t_char_array_128_t_char_array_128_t_0clk_de264c78 at 6( 111) + 0 on 474;
+  architecture arch of mux_uint1_t_char_array_128_t_char_array_128_t_0clk_de264c78 at 21( 559) + 0 on 475;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_PLUS_uint64_t_uint1_t/BIN_OP_PLUS_uint64_t_uint1_t_1CLK_9324e8e6.vhd" "43d04aa84d937812077947b19e9a9f30adf51f93" "20251130103311.831":
+  entity bin_op_plus_uint64_t_uint1_t_1clk_9324e8e6 at 6( 129) + 0 on 248;
+  architecture arch of bin_op_plus_uint64_t_uint1_t_1clk_9324e8e6 at 21( 541) + 0 on 249;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_INFERRED_MULT_uint64_t_uint3_t/BIN_OP_INFERRED_MULT_uint64_t_uint3_t_0CLK_de264c78.vhd" "4218f62761e44575e040807724e553afbbcddfb5" "20251130103314.487":
+  entity bin_op_inferred_mult_uint64_t_uint3_t_0clk_de264c78 at 6( 111) + 0 on 270;
+  architecture arch of bin_op_inferred_mult_uint64_t_uint3_t_0clk_de264c78 at 20( 520) + 0 on 271;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_LT_uint64_t_uint64_t/BIN_OP_LT_uint64_t_uint64_t_1CLK_eec62983.vhd" "7dca551cfdf64a4790aedbd017739e2da0b908c3" "20251130103311.696":
+  entity bin_op_lt_uint64_t_uint64_t_1clk_eec62983 at 6( 132) + 0 on 246;
+  architecture arch of bin_op_lt_uint64_t_uint64_t_1clk_eec62983 at 21( 542) + 0 on 247;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/quarter_round/quarter_round_0CLK_638872ab.vhd" "25262e56fc5ada3c90ee31835705092393305614" "20251130103228.818":
+  entity quarter_round_0clk_638872ab at 6( 111) + 0 on 38;
+  architecture arch of quarter_round_0clk_638872ab at 23( 542) + 0 on 39;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int65_t_int65_t/BIN_OP_MINUS_int65_t_int65_t_0CLK_de264c78.vhd" "1ad237b007d05db2f814dd42ee4636be6eb478d4" "20251130103311.082":
+  entity bin_op_minus_int65_t_int65_t_0clk_de264c78 at 6( 111) + 0 on 238;
+  architecture arch of bin_op_minus_int65_t_int65_t_0clk_de264c78 at 20( 497) + 0 on 239;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/quarter_round/quarter_round_1CLK_76f45219.vhd" "b9fcb5b0da388e9f3c8bfd91689fbbeebcfac0a7" "20251130103229.649":
+  entity quarter_round_1clk_76f45219 at 6( 114) + 0 on 46;
+  architecture arch of quarter_round_1clk_76f45219 at 24( 566) + 0 on 47;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int65_t_int65_t/BIN_OP_MINUS_int65_t_int65_t_1CLK_9ca18c4f.vhd" "453d0adfedc848f99e691189fb6b6afb5919bc93" "20251130103310.428":
+  entity bin_op_minus_int65_t_int65_t_1clk_9ca18c4f at 6( 129) + 0 on 230;
+  architecture arch of bin_op_minus_int65_t_int65_t_1clk_9ca18c4f at 21( 536) + 0 on 231;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int65_t_int65_t/BIN_OP_MINUS_int65_t_int65_t_1CLK_0320092f.vhd" "8160a1cabb3db11cd5b2e6fa24fc5eb74e87443e" "20251130103312.209":
+  entity bin_op_minus_int65_t_int65_t_1clk_0320092f at 6( 129) + 0 on 252;
+  architecture arch of bin_op_minus_int65_t_int65_t_1clk_0320092f at 21( 536) + 0 on 253;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_MINUS_int65_t_int65_t/BIN_OP_MINUS_int65_t_int65_t_1CLK_0f464748.vhd" "f4892f91e362e4ba0f322ea657fcab5e9115206d" "20251130103311.505":
+  entity bin_op_minus_int65_t_int65_t_1clk_0f464748 at 6( 132) + 0 on 244;
+  architecture arch of bin_op_minus_int65_t_int65_t_1clk_0f464748 at 21( 539) + 0 on 245;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da/VAR_REF_ASSIGN_uint32_t_chacha20_state_state_VAR_23da_0CLK_6481cb28.vhd" "fec2c86e86af85987333e962c4232bce3802e185" "20251130103228.467":
+  entity var_ref_assign_uint32_t_chacha20_state_state_var_23da_0clk_6481cb28 at 6( 111) + 0 on 36;
+  architecture arch of var_ref_assign_uint32_t_chacha20_state_state_var_23da_0clk_6481cb28 at 21( 592) + 0 on 37;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/VAR_REF_RD_uint32_t_chacha20_state_state_VAR_d41d/VAR_REF_RD_uint32_t_chacha20_state_state_VAR_d41d_0CLK_763c90e8.vhd" "8721a8ba3720dc0803a63417dbf3ba499eadcf9b" "20251130103227.499":
+  entity var_ref_rd_uint32_t_chacha20_state_state_var_d41d_0clk_763c90e8 at 6( 111) + 0 on 22;
+  architecture arch of var_ref_rd_uint32_t_chacha20_state_state_var_d41d_0clk_763c90e8 at 20( 547) + 0 on 23;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_XOR_uint32_t_uint32_t/BIN_OP_XOR_uint32_t_uint32_t_0CLK_de264c78.vhd" "4b7373d96964d083d8155bbc745e87c11423741b" "20251130103227.800":
+  entity bin_op_xor_uint32_t_uint32_t_0clk_de264c78 at 6( 111) + 0 on 26;
+  architecture arch of bin_op_xor_uint32_t_uint32_t_0clk_de264c78 at 20( 503) + 0 on 27;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/VAR_REF_RD_uint32_t_chacha20_state_state_VAR_d41d/VAR_REF_RD_uint32_t_chacha20_state_state_VAR_d41d_1CLK_a3137e01.vhd" "6ef87f24e52dfc3acd20b9e630d92486c75780cd" "20251130103229.485":
+  entity var_ref_rd_uint32_t_chacha20_state_state_var_d41d_1clk_a3137e01 at 6( 114) + 0 on 44;
+  architecture arch of var_ref_rd_uint32_t_chacha20_state_state_var_d41d_1clk_a3137e01 at 21( 571) + 0 on 45;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint4_t_uint2_t/BIN_OP_EQ_uint4_t_uint2_t_0CLK_de264c78.vhd" "d5fcb27649f271712b2b121c325e3f3d6caa45fe" "20251130103228.329":
+  entity bin_op_eq_uint4_t_uint2_t_0clk_de264c78 at 6( 111) + 0 on 34;
+  architecture arch of bin_op_eq_uint4_t_uint2_t_0clk_de264c78 at 20( 494) + 0 on 35;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint4_t_uint3_t/BIN_OP_EQ_uint4_t_uint3_t_0CLK_de264c78.vhd" "91c96383a6d6fe9e32b1c385bf1484f9525729e7" "20251130103228.196":
+  entity bin_op_eq_uint4_t_uint3_t_0clk_de264c78 at 6( 111) + 0 on 32;
+  architecture arch of bin_op_eq_uint4_t_uint3_t_0clk_de264c78 at 20( 494) + 0 on 33;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint4_t_uint1_t/BIN_OP_EQ_uint4_t_uint1_t_0CLK_de264c78.vhd" "ed459a68884e22f36a2e6cb095bd9dc8b97cea16" "20251130103228.064":
+  entity bin_op_eq_uint4_t_uint1_t_0clk_de264c78 at 6( 111) + 0 on 30;
+  architecture arch of bin_op_eq_uint4_t_uint1_t_0clk_de264c78 at 20( 494) + 0 on 31;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/BIN_OP_EQ_uint4_t_uint4_t/BIN_OP_EQ_uint4_t_uint4_t_0CLK_de264c78.vhd" "f43c33a81abe3a8543e27b0c341246d80ff73669" "20251130103227.932":
+  entity bin_op_eq_uint4_t_uint4_t_0clk_de264c78 at 6( 111) + 0 on 28;
+  architecture arch of bin_op_eq_uint4_t_uint4_t_0clk_de264c78 at 20( 494) + 0 on 29;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/bit_math.h/uint32_mux16/uint32_mux16_0CLK_4e6656cf.vhd" "f98fd678df99e9058f7d16016322586eb07a2e6d" "20251130103227.243":
+  entity uint32_mux16_0clk_4e6656cf at 6( 111) + 0 on 20;
+  architecture arch of uint32_mux16_0clk_4e6656cf at 35( 969) + 0 on 21;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/bit_math.h/uint32_mux16/uint32_mux16_1CLK_3b941596.vhd" "f3f5ee894fa66b195f84231c6842ea3716b55ae3" "20251130103229.214":
+  entity uint32_mux16_1clk_3b941596 at 6( 114) + 0 on 42;
+  architecture arch of uint32_mux16_1clk_3b941596 at 36( 993) + 0 on 43;
+file / "/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/built_in/MUX_uint1_t_uint32_t_uint32_t/MUX_uint1_t_uint32_t_uint32_t_1CLK_143a90d0.vhd" "b6ec4fac1acc568d7fb61a6b39f18ed30b916344" "20251130103229.063":
+  entity mux_uint1_t_uint32_t_uint32_t_1clk_143a90d0 at 6( 114) + 0 on 40;
+  architecture arch of mux_uint1_t_uint32_t_uint32_t_1clk_143a90d0 at 22( 566) + 0 on 41;
