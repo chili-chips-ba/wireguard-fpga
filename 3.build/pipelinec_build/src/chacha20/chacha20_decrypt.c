@@ -1,4 +1,4 @@
-// Instance of chacha20_decrypt_loop_body
+// Instance of chacha20_loop_body
 // requires data width converters to-from 512b wide blocks 128b bus
 // use axis128/512 stream types
 #include "axi/axis.h"
@@ -20,8 +20,8 @@ uint1_t chacha20_decrypt_poly_key_ready; // input
 stream(axis128_t) chacha20_decrypt_axis_out; // output
 uint1_t chacha20_decrypt_axis_out_ready; // input
 
-// Global instance of the chacha20_decrypt_loop_body pipeline
-GLOBAL_VALID_READY_PIPELINE_INST(chacha20_decrypt_pipeline, axis512_t, chacha20_decrypt_loop_body, chacha20_decrypt_loop_body_in_t, 64)
+// Global instance of the chacha20_loop_body pipeline
+GLOBAL_VALID_READY_PIPELINE_INST(chacha20_decrypt_pipeline, axis512_t, chacha20_loop_body, chacha20_loop_body_in_t, 64)
 
 // Two uses of the chacha20_decrypt_pipeline
 typedef enum chacha20_decrypt_state_t{
@@ -46,7 +46,7 @@ void chacha20_decrypt_input_side()
   stream(axis128_t) dwidth_conv_data_in = {0};
   chacha20_decrypt_axis_in_ready = 0;
   // Default no input into pipeline
-  stream(chacha20_decrypt_loop_body_in_t) NULL_PIPELINE_IN = {0};
+  stream(chacha20_loop_body_in_t) NULL_PIPELINE_IN = {0};
   chacha20_decrypt_pipeline_in = NULL_PIPELINE_IN;
   //  other than CSR inputs and such
   chacha20_decrypt_pipeline_in.data.key = chacha20_decrypt_key;
