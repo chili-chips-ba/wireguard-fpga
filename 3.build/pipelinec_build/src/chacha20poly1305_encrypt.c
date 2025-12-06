@@ -6,7 +6,7 @@
 // Top level IO port config, named like chacha20poly1305_encrypt_*
 #include "chacha20poly1305_encrypt.h"
 // Instance of chacha20 part of encryption
-#include "chacha20/chacha20_encrypt.c"
+#include "chacha20/chacha20.c"
 // Instance of preparing auth data part of encryption
 #include "prep_auth_data/prep_auth_data.c"
 // Instance of poly1305 part of encryption
@@ -18,33 +18,33 @@
 #pragma PART "xc7a200tffg1156-2" // Artix 7 200T
 #pragma MAIN_MHZ main 80.0
 void main(){
-    // Connect chacha20poly1305_encrypt_* input stream to chacha20_encrypt
-    chacha20_encrypt_axis_in = chacha20poly1305_encrypt_axis_in;
-    chacha20poly1305_encrypt_axis_in_ready = chacha20_encrypt_axis_in_ready;
-    chacha20_encrypt_key = chacha20poly1305_encrypt_key;
-    chacha20_encrypt_nonce = chacha20poly1305_encrypt_nonce;
+    // Connect chacha20poly1305_encrypt_* input stream to chacha20
+    chacha20_axis_in = chacha20poly1305_encrypt_axis_in;
+    chacha20poly1305_encrypt_axis_in_ready = chacha20_axis_in_ready;
+    chacha20_key = chacha20poly1305_encrypt_key;
+    chacha20_nonce = chacha20poly1305_encrypt_nonce;
 
-    // Connect chacha20_encrypt output poly key into poly1305_mac key input
-    poly1305_mac_key = chacha20_encrypt_poly_key;
-    chacha20_encrypt_poly_key_ready = poly1305_mac_key_ready;
+    // Connect chacha20 output poly key into poly1305_mac key input
+    poly1305_mac_key = chacha20_poly_key;
+    chacha20_poly_key_ready = poly1305_mac_key_ready;
 
-    // Connect chacha20_encrypt ciphertext output to both
+    // Connect chacha20 ciphertext output to both
     //  prep_auth_data input
     //  append auth tag input
     // Fork the stream by combining valids and readys
     //  default no data passing, invalidate passthrough
-    prep_auth_data_axis_in = chacha20_encrypt_axis_out;
+    prep_auth_data_axis_in = chacha20_axis_out;
     prep_auth_data_axis_in.valid = 0;
-    append_auth_tag_axis_in = chacha20_encrypt_axis_out;
+    append_auth_tag_axis_in = chacha20_axis_out;
     append_auth_tag_axis_in.valid = 0;
     //  allow pass through if both sinks are ready
     //  or if sink isnt ready (no data passing anyway)
-    chacha20_encrypt_axis_out_ready = prep_auth_data_axis_in_ready & append_auth_tag_axis_in_ready;
-    if(chacha20_encrypt_axis_out_ready | ~prep_auth_data_axis_in_ready){
-        prep_auth_data_axis_in.valid = chacha20_encrypt_axis_out.valid;
+    chacha20_axis_out_ready = prep_auth_data_axis_in_ready & append_auth_tag_axis_in_ready;
+    if(chacha20_axis_out_ready | ~prep_auth_data_axis_in_ready){
+        prep_auth_data_axis_in.valid = chacha20_axis_out.valid;
     }
-    if(chacha20_encrypt_axis_out_ready | ~append_auth_tag_axis_in_ready){
-        append_auth_tag_axis_in.valid = chacha20_encrypt_axis_out.valid;
+    if(chacha20_axis_out_ready | ~append_auth_tag_axis_in_ready){
+        append_auth_tag_axis_in.valid = chacha20_axis_out.valid;
     }
 
     // Prep auth data CSR inputs
