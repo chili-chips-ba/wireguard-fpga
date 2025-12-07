@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1764498818" />
-    <testcase name="my_first_test" classname="test_top" file="/home/nikola/ChiliChips/wireguard-fpga/3.build/pipelinec_build/generated-files-sim-pipe-dec/cocotb/test_top.py" lineno="7" time="11.99676775932312" sim_time_ns="3118.75" ratio_time="259.9658560178684" />
-  </testsuite>
-</testsuites>
