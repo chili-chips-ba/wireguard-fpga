@@ -12,7 +12,7 @@
 // Instance of poly1305 part of encryption
 #include "poly1305/poly1305_mac.c"
 // Instance of the appending auth tag part of encryption
-#include "append_auth_tag/append_auth_tag.c"
+#include "auth_tag/append_auth_tag.c"
 
 // The primary dataflow for single clock domain ChaCha20-Poly1305 encryption
 #pragma PART "xc7a200tffg1156-2" // Artix 7 200T
