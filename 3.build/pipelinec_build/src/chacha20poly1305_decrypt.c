@@ -3,9 +3,9 @@
 */
 #include "arrays.h"
 // Top level IO port config, named like chacha20poly1305_decrypt_*
-#include "chacha20poly1305_decrypt.h"
+#include "chacha20poly1305/chacha20poly1305_decrypt.h"
 // Instance of chacha20 part of decryption
-#include "chacha20/chacha20_decrypt.c"
+#include "chacha20/chacha20.c"
 // Instance of preparing auth data part of decryption
 #include "prep_auth_data/prep_auth_data.c"
 // Instance of poly1305 part of decryption
@@ -13,9 +13,9 @@
 // Instance of the poly1305 verification block
 #include "poly1305/poly1305_verify_decrypt.c"
 // Instance of strip auth tag
-#include "append_auth_tag/strip_auth_tag.c"
+#include "auth_tag/strip_auth_tag.c"
 // Instance wait to verify block 
-#include "append_auth_tag/wait_to_verify.c"
+#include "auth_tag/wait_to_verify.c"
 
 
 // The primary dataflow for single clock domain ChaCha20-Poly1305 decryption
@@ -31,39 +31,39 @@ void main(){
 
     // Poly1305 key generation and MAC connection
     // The key goes to chacha20 first to generate the Poly1305 key
-    // Corrected to use chacha20_decrypt_key/nonce based on chacha20_decrypt.c definition
-    chacha20_decrypt_key = chacha20poly1305_decrypt_key;
-    chacha20_decrypt_nonce = chacha20poly1305_decrypt_nonce;
+    // Corrected to use chacha20_key/nonce based on chacha20.c definition
+    chacha20_key = chacha20poly1305_decrypt_key;
+    chacha20_nonce = chacha20poly1305_decrypt_nonce;
 
-    // Connect chacha20_decrypt poly key output to poly1305_mac key input
-    poly1305_mac_key = chacha20_decrypt_poly_key;
-    chacha20_decrypt_poly_key_ready = poly1305_mac_key_ready;
+    // Connect chacha20 poly key output to poly1305_mac key input
+    poly1305_mac_key = chacha20_poly_key;
+    chacha20_poly_key_ready = poly1305_mac_key_ready;
 
 
     // Ciphertext stream fork
     // The stripped ciphertext stream must be forked to two consumers:
     // a) prep_auth_data (for MAC calculation)
-    // b) chacha20_decrypt (for actual decryption)
+    // b) chacha20 (for actual decryption)
 
     // Default: no data passing
     prep_auth_data_axis_in.valid = 0;
-    chacha20_decrypt_axis_in.valid = 0; 
+    chacha20_axis_in.valid = 0; 
 
     // The source (strip_auth_tag_axis_out) is ready only if both sinks are ready
-    strip_auth_tag_axis_out_ready = prep_auth_data_axis_in_ready & chacha20_decrypt_axis_in_ready; 
+    strip_auth_tag_axis_out_ready = prep_auth_data_axis_in_ready & chacha20_axis_in_ready; 
     // If a sink is not ready its allowed to see the pending valid=1 since no transfer happens anyway
     if (strip_auth_tag_axis_out.valid){
       if (strip_auth_tag_axis_out_ready | ~prep_auth_data_axis_in_ready){ 
         prep_auth_data_axis_in.valid = 1;
       }
-      if (strip_auth_tag_axis_out_ready | ~chacha20_decrypt_axis_in_ready ){
-        chacha20_decrypt_axis_in.valid = 1; 
+      if (strip_auth_tag_axis_out_ready | ~chacha20_axis_in_ready ){
+        chacha20_axis_in.valid = 1; 
       }
     }
 
     // Connect data streams
     prep_auth_data_axis_in.data = strip_auth_tag_axis_out.data;
-    chacha20_decrypt_axis_in.data = strip_auth_tag_axis_out.data;
+    chacha20_axis_in.data = strip_auth_tag_axis_out.data;
 
     // Prepare auth data and calculate MAC
     // prep_auth_data CSR inputs
@@ -86,8 +86,8 @@ void main(){
 
     // Wait to verify (buffer plaintext)
     // Connect chacha20 decrypt output (plaintext stream) to wait_to_verify input (buffering FIFO)
-    wait_to_verify_axis_in = chacha20_decrypt_axis_out; 
-    chacha20_decrypt_axis_out_ready = wait_to_verify_axis_in_ready; 
+    wait_to_verify_axis_in = chacha20_axis_out; 
+    chacha20_axis_out_ready = wait_to_verify_axis_in_ready; 
 
     // Connect poly1305_verify output (result bit) to wait_to_verify trigger input
     wait_to_verify_verify_bit = poly1305_verify_tags_match;
