@@ -4,7 +4,7 @@
 */
 #include "arrays.h"
 // Top level IO port config, named like chacha20poly1305_encrypt_*
-#include "chacha20poly1305_encrypt.h"
+#include "chacha20poly1305/chacha20poly1305_encrypt.h"
 // Instance of chacha20 part of encryption
 #include "chacha20/chacha20.c"
 // Instance of preparing auth data part of encryption
