@@ -13,9 +13,9 @@
 // Instance of the poly1305 verification block
 #include "poly1305/poly1305_verify_decrypt.c"
 // Instance of strip auth tag
-#include "append_auth_tag/strip_auth_tag.c"
+#include "auth_tag/strip_auth_tag.c"
 // Instance wait to verify block 
-#include "append_auth_tag/wait_to_verify.c"
+#include "auth_tag/wait_to_verify.c"
 
 
 // The primary dataflow for single clock domain ChaCha20-Poly1305 decryption
