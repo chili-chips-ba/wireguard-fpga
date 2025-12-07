@@ -16,27 +16,27 @@ void encrypt_dataflow(){
     //  append auth tag input
     // Fork the stream by combining valids and readys
     //  default no data passing, invalidate passthrough
-    prep_auth_data_axis_in = chacha20_axis_out;
-    prep_auth_data_axis_in.valid = 0;
+    prep_auth_data_encrypt_axis_in = chacha20_axis_out;
+    prep_auth_data_encrypt_axis_in.valid = 0;
     append_auth_tag_axis_in = chacha20_axis_out;
     append_auth_tag_axis_in.valid = 0;
     //  allow pass through if both sinks are ready
     //  or if sink isnt ready (no data passing anyway)
-    chacha20_axis_out_ready = prep_auth_data_axis_in_ready & append_auth_tag_axis_in_ready;
-    if(chacha20_axis_out_ready | ~prep_auth_data_axis_in_ready){
-        prep_auth_data_axis_in.valid = chacha20_axis_out.valid;
+    chacha20_axis_out_ready = prep_auth_data_encrypt_axis_in_ready & append_auth_tag_axis_in_ready;
+    if(chacha20_axis_out_ready | ~prep_auth_data_encrypt_axis_in_ready){
+        prep_auth_data_encrypt_axis_in.valid = chacha20_axis_out.valid;
     }
     if(chacha20_axis_out_ready | ~append_auth_tag_axis_in_ready){
         append_auth_tag_axis_in.valid = chacha20_axis_out.valid;
     }
 
     // Prep auth data CSR inputs
-    prep_auth_data_aad = chacha20poly1305_encrypt_aad;
-    prep_auth_data_aad_len = chacha20poly1305_encrypt_aad_len;
+    prep_auth_data_encrypt_aad = chacha20poly1305_encrypt_aad;
+    prep_auth_data_encrypt_aad_len = chacha20poly1305_encrypt_aad_len;
 
     // Connect prep_auth_data output to poly1305_mac input
-    poly1305_mac_data_in = prep_auth_data_axis_out;
-    prep_auth_data_axis_out_ready = poly1305_mac_data_in_ready;
+    poly1305_mac_data_in = prep_auth_data_encrypt_axis_out;
+    prep_auth_data_encrypt_axis_out_ready = poly1305_mac_data_in_ready;
 
     // Connect poly1305_mac auth tag output to append auth tag input
     append_auth_tag_auth_tag_in = poly1305_mac_auth_tag;
