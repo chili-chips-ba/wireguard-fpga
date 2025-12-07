@@ -25,15 +25,15 @@ void decrypt_dataflow(){
     // b) chacha20 (for actual decryption)
 
     // Default: no data passing
-    prep_auth_data_axis_in.valid = 0;
+    prep_auth_data_decrypt_axis_in.valid = 0;
     chacha20_axis_in.valid = 0; 
 
     // The source (strip_auth_tag_axis_out) is ready only if both sinks are ready
-    strip_auth_tag_axis_out_ready = prep_auth_data_axis_in_ready & chacha20_axis_in_ready; 
+    strip_auth_tag_axis_out_ready = prep_auth_data_decrypt_axis_in_ready & chacha20_axis_in_ready; 
     // If a sink is not ready its allowed to see the pending valid=1 since no transfer happens anyway
     if (strip_auth_tag_axis_out.valid){
-      if (strip_auth_tag_axis_out_ready | ~prep_auth_data_axis_in_ready){ 
-        prep_auth_data_axis_in.valid = 1;
+      if (strip_auth_tag_axis_out_ready | ~prep_auth_data_decrypt_axis_in_ready){ 
+        prep_auth_data_decrypt_axis_in.valid = 1;
       }
       if (strip_auth_tag_axis_out_ready | ~chacha20_axis_in_ready ){
         chacha20_axis_in.valid = 1; 
@@ -41,17 +41,17 @@ void decrypt_dataflow(){
     }
 
     // Connect data streams
-    prep_auth_data_axis_in.data = strip_auth_tag_axis_out.data;
+    prep_auth_data_decrypt_axis_in.data = strip_auth_tag_axis_out.data;
     chacha20_axis_in.data = strip_auth_tag_axis_out.data;
 
     // Prepare auth data and calculate MAC
     // prep_auth_data CSR inputs
-    prep_auth_data_aad = chacha20poly1305_decrypt_aad;
-    prep_auth_data_aad_len = chacha20poly1305_decrypt_aad_len;
+    prep_auth_data_decrypt_aad = chacha20poly1305_decrypt_aad;
+    prep_auth_data_decrypt_aad_len = chacha20poly1305_decrypt_aad_len;
 
     // Connect prep_auth_data output to poly1305_mac input
-    poly1305_mac_data_in = prep_auth_data_axis_out;
-    prep_auth_data_axis_out_ready = poly1305_mac_data_in_ready;
+    poly1305_mac_data_in = prep_auth_data_decrypt_axis_out;
+    prep_auth_data_decrypt_axis_out_ready = poly1305_mac_data_in_ready;
 
 
     // Poly1305 verification
