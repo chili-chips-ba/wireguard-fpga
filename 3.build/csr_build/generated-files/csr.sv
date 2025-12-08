@@ -709,7 +709,7 @@ module csr (
         end
     end
     assign hwif_out.uart.tx.data.value = field_storage.uart.tx.data.value;
-    assign hwif_out.uart.tx.data.swmod = decoded_reg_strb.uart.tx && decoded_req_is_wr;
+    assign hwif_out.uart.tx.data.swmod = decoded_reg_strb.uart.tx && decoded_req_is_wr && |(decoded_wr_biten[7:0]);
     // Field: csr.uart.tx_trigger.write
     always_comb begin
         automatic logic [0:0] next_c;
@@ -720,7 +720,7 @@ module csr (
             next_c = (field_storage.uart.tx_trigger.write.value & ~decoded_wr_biten[0:0]) | (decoded_wr_data[0:0] & decoded_wr_biten[0:0]);
             load_next_c = '1;
         end else begin // HW Write
-            next_c = decoded_reg_strb.uart.tx && decoded_req_is_wr;
+            next_c = decoded_reg_strb.uart.tx && decoded_req_is_wr && |(decoded_wr_biten[7:0]);
             load_next_c = '1;
         end
         field_combo.uart.tx_trigger.write.next = next_c;
