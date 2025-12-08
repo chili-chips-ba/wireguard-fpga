@@ -34,6 +34,27 @@ The _VProc_ component is wrapped up into an [`soc_cpu.VPROC`](4.sim/models/READM
 
 Shown in the diagram is the Wireguard FPGA top level component (<tt>top</tt>) with the <tt>soc_cpu.VPROC</tt> component instantiated in it as one of three possible selected devices for the soc_cpu. The IMEM write port is connected to the UART for program updates and the <tt>soc_if</tt> from  <tt>soc_cpu.VPROC</tt> is connected to the interconnect fabric (<tt>soc_fabric</tt>), just as for the two RTL components. The test bench around the top level Wireguard component has a driver for the UART (<tt>bfm_uart</tt>) and the four GMII/RGMII interfaces (including MDIO signals) coming from the Wireguard core to some verification IP (`bfm_ethernet`) to drive this signalling. This BFM implementation is based around the [_udpIpPg_](https://github.com/wyvernSemi/udpIpPg) GMII/RGMII VProc based VIP. In addtion there are MDIO slave models for reading and writing over the PHY MDIO signals from Wireguard, and these also read and write to allocated _VProc_ memory for access by _VProc_ `soc_cpu` code. MDIO registers access are displayed to the console as well, for logging purpose, displaying the name of the clause 22 register accessed. Finally the test bench generates clocks and key press resets that go to the top level's <tt>clk_rst_gen</tt> and <tt>debounce</tt> components.
 
+## VerilatorSimCtrl (interactive run control)
+
+What it does:
+- Interactive CLI inside the simulation (node 15) for `run/for/until/finish` and forces `wave.fst` flush so GTKWave sees fresh samples without restarting.
+- Opens GTKWave in a separate thread (see `GTKWAVEOPTS` and `WAVESAVEFILE` in `MakefileVProc.mk`).
+
+- Reload GTKWave to view new samples: `File -> Reload Waveform` (or `Ctrl+Shift+R`), then zoom/end to the latest time.
+
+How to enable:
+- Pass `DISABLE_SIM_CTRL=0`, e.g.:  
+  `make -f MakefileVProc.mk BUILD=ISS DISABLE_SIM_CTRL=0 rungui`
+- `DISABLE_SIM_CTRL=1` disables it (default). Instance is in `tb.sv` (node 15).
+
+Key commands at the `VerSimCtrl>` prompt:
+- `run for <N> <units>` (e.g., `run for 100 ns`, `run for 500 cycles`)
+- `run until <N> <units>` (e.g., `run until 5 us`)
+- `continue`/`c` — same as `run`
+- `finish`/`quit`/`exit` — ends simulation (`$finish`)
+- Units: `ps | ns | us | ms | s | cycle(s)`; default is cycles if omitted.
+- Each command flushes waves; in GTKWave hit reload + zoom-to-end to see the new range.
+
 ## Auto-selection of soc_cpu Component
 
 The Wireguard's top level component has the required RTL files listed in <tt>1.hw/top.filelist</tt>. This includes files for the soc_cpu, under the directory <tt>ip.cpu</tt>. The simulation build make file ([see below](#building-and-running-code)) will process the <tt>top.filelist</tt> file to generate a new local copy, having removed all references to the files under the <tt>ip.cpu</tt> directory. Since the VProc <tt>soc_cpu</tt> component is a test model, the <tt>soc_cpu.VPROC.sv</tt> HDL file is placed in <tt>4.sim/models</tt> whilst the rest of the HDL files come from the VProc and mem_model repositories (auto-checked out by the make file, if necessary). These are referenced within the make file, along with the other test models that are used in the test bench. Thus the VProc device is selected for the simulation as the CPU component.
@@ -499,8 +520,8 @@ Payload (64 bytes):
 
 - Generate a test PCAP (writes into `tools/`):
   `python tools/gen_udp_pcap.py --frames 5 --interval-us 500 --out ./tools/test_udp_rand.pcap`
-- Build fresh and run the Ethernet replay/record simulation (uses `PCAP_IN_1` default `./tools/test_udp_rand.pcap`):  
-  `make -f MakefileVProc.mk clean`  
+- Build fresh and run the Ethernet replay/record simulation (uses `PCAP_IN_1` default `./tools/test_udp_rand.pcap`):
+  `make -f MakefileVProc.mk clean`
   `make -f MakefileVProc.mk UDP_C=VUserMainPcap.cpp BUILD=ISS run`
   - Outputs of interest in `./output/`:
     - `node2_out.pcap`, `node4_out.pcap` – RX captures with corrected timestamps
