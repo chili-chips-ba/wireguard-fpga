@@ -1,70 +1,12 @@
 #define SIMULATION
 #include "chacha20poly1305_encrypt.c"
 
-// Annoying fixed array sized single string printf funcs
-// trying to match software print_hex
-#define PRINT_32_BYTES(label, array) \
-uint256_t PRINT_32_BYTES_uint = uint8_array32_be(array); \
-printf(label \
-    "%08X%08X%08X%08X%08X%08X%08X%08X\n", \
-    PRINT_32_BYTES_uint >> (8*28), \
-    PRINT_32_BYTES_uint >> (8*24), \
-    PRINT_32_BYTES_uint >> (8*20), \
-    PRINT_32_BYTES_uint >> (8*16), \
-    PRINT_32_BYTES_uint >> (8*12), \
-    PRINT_32_BYTES_uint >> (8*8), \
-    PRINT_32_BYTES_uint >> (8*4), \
-    PRINT_32_BYTES_uint >> (8*0) \
-);
-
-#define PRINT_16_BYTES(label, array) \
-uint128_t PRINT_16_BYTES_uint = uint8_array16_be(array); \
-printf(label \
-    "%08X%08X%08X%08X\n", \
-    PRINT_16_BYTES_uint >> (8*12), \
-    PRINT_16_BYTES_uint >> (8*8), \
-    PRINT_16_BYTES_uint >> (8*4), \
-    PRINT_16_BYTES_uint >> (8*0) \
-);
-
-#define PRINT_12_BYTES(label, array) \
-uint96_t PRINT_12_BYTES_uint = uint8_array12_be(array); \
-printf(label \
-    "%08X%08X%08X\n", \
-    PRINT_12_BYTES_uint >> (8*8), \
-    PRINT_12_BYTES_uint >> (8*4), \
-    PRINT_12_BYTES_uint >> (8*0) \
-);
-
-void print_aad(uint8_t aad[AAD_MAX_LEN], uint32_t aad_len)
-{
-    // 32 chars
-    printf("AAD (%u bytes): "
-        "%c%c%c%c"
-        "%c%c%c%c"
-        "%c%c%c%c"
-        "%c%c%c%c"
-        "%c%c%c%c"
-        "%c%c%c%c"
-        "%c%c%c%c"
-        "%c%c%c%c"
-        "\n",
-        aad_len,
-        aad[0], aad[1], aad[2], aad[3],
-        aad[4], aad[5], aad[6], aad[7],
-        aad[8], aad[9], aad[10], aad[11],
-        aad[12], aad[13], aad[14], aad[15],
-        aad[16], aad[17], aad[18], aad[19],
-        aad[20], aad[21], aad[22], aad[23],
-        aad[24], aad[25], aad[26], aad[27],
-        aad[28], aad[29], aad[30], aad[31]
-    );
-}
+#include "chacha20poly1305/tb.h"
 
 // CSR values available all at once do not need to be static=registers
 // Streaming inputs data is done as shift register
-#pragma MAIN tb
-stream(axis128_t) tb()
+#pragma MAIN encrypt_tb
+stream(axis128_t) encrypt_tb()
 {
     // Test vectors
     uint8_t key[CHACHA20_KEY_SIZE] = {
@@ -73,22 +15,11 @@ stream(axis128_t) tb()
         0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
         0x98, 0x99, 0x9a, 0x9b, 0x9c, 0x9d, 0x9e, 0x9f};
 
-    /*uint8_t key[CHACHA20_KEY_SIZE] = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};*/
-
     uint8_t nonce[CHACHA20_NONCE_SIZE] = {
         0x07, 0x00, 0x00, 0x00, 0x40, 0x41, 0x42, 0x43,
         0x44, 0x45, 0x46, 0x47};
 
-    /*uint8_t nonce[CHACHA20_NONCE_SIZE] = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00};*/
-
     #define AAD_TEST_STR "Additional authenticated data"
-    //#define AAD_TEST_STR ""
     uint8_t aad[AAD_MAX_LEN] = AAD_TEST_STR;
     uint32_t aad_len = strlen(AAD_TEST_STR);
 
@@ -108,9 +39,9 @@ stream(axis128_t) tb()
     };
 
     // Expected ciphertext and auth tag output from running software main.c demo
-    #define CIPHERTEXT_MAX_SIZE (PLAINTEXT_TEST_STR_MAX_SIZE + POLY1305_AUTH_TAG_SIZE)
+    #define CIPHERTEXT_OUT_MAX_SIZE (PLAINTEXT_TEST_STR_MAX_SIZE + POLY1305_AUTH_TAG_SIZE)
     #define CIPHERTEXT0_SIZE (64 + POLY1305_AUTH_TAG_SIZE)
-    uint8_t expected_ciphertext0[CIPHERTEXT_MAX_SIZE] = {
+    uint8_t expected_ciphertext0[CIPHERTEXT_OUT_MAX_SIZE] = {
         // Ciphertext:
         0xd7, 0x1e, 0x85, 0x31, 0x6e, 0xdd, 0x03, 0xf2, 
         0x5c, 0xae, 0xc6, 0xb8, 0x5e, 0xe8, 0x7a, 0xdd,
@@ -125,7 +56,7 @@ stream(axis128_t) tb()
         0xdf, 0x5c, 0xb9, 0x47, 0x74, 0x42, 0x12, 0x3f
     };
     #define CIPHERTEXT1_SIZE (80 + POLY1305_AUTH_TAG_SIZE)
-    uint8_t expected_ciphertext1[CIPHERTEXT_MAX_SIZE] = {
+    uint8_t expected_ciphertext1[CIPHERTEXT_OUT_MAX_SIZE] = {
         // Ciphertext:
         0xcf, 0x12, 0x99, 0x38, 0x6d, 0x94, 0x2e, 0xdf, 
         0x56, 0xc2, 0xe6, 0x88, 0x16, 0xf5, 0x62, 0xcb, 
@@ -141,7 +72,7 @@ stream(axis128_t) tb()
         0x07, 0xc7, 0xe3, 0x1f, 0x0f, 0xeb, 0x4b, 0x61, 
         0xea, 0x2d, 0xd2, 0xa4, 0x59, 0x7c, 0xae, 0xe9
     };
-    uint8_t expected_ciphertexts[NUM_PLAINTEXT_TEST_STRS][CIPHERTEXT_MAX_SIZE] = {
+    uint8_t expected_ciphertexts[NUM_PLAINTEXT_TEST_STRS][CIPHERTEXT_OUT_MAX_SIZE] = {
         expected_ciphertext0,
         expected_ciphertext1
     };
@@ -165,10 +96,10 @@ stream(axis128_t) tb()
     // Encrypt:
     if(cycle_counter == 0)
     {
-        printf("=== ChaCha20-Poly1305 AEAD Test ===\n");
+        printf("=== ChaCha20-Poly1305 Encryption Test ===\n");
         // Print test inputs
-        PRINT_32_BYTES("Key: ", key)
-        PRINT_12_BYTES("Nonce: ", nonce)
+        PRINT_32_BYTES("Encrypt Key: ", key)
+        PRINT_12_BYTES("Encrypt Nonce: ", nonce)
         print_aad(aad, aad_len);
         // Init regs with first test string
         plaintext = plaintexts[input_packet_count];
@@ -196,9 +127,9 @@ stream(axis128_t) tb()
         chacha20poly1305_encrypt_axis_in.valid = 1;
         if(chacha20poly1305_encrypt_axis_in.valid & chacha20poly1305_encrypt_axis_in_ready)
         {
-            PRINT_16_BYTES("Plaintext next 16 bytes: ", chacha20poly1305_encrypt_axis_in.data.tdata)
+            PRINT_16_BYTES("Encrypt: Input Plaintext next 16 bytes: ", chacha20poly1305_encrypt_axis_in.data.tdata)
             if(chacha20poly1305_encrypt_axis_in.data.tlast){
-                printf("End of plaintext for test %d\n", input_packet_count);
+                printf("Encrypt: End of input plaintext for test %d\n", input_packet_count);
                 plaintext_remaining = 0;
                 input_packet_count += 1;
                 if(input_packet_count < NUM_PLAINTEXT_TEST_STRS)
@@ -219,7 +150,7 @@ stream(axis128_t) tb()
     static uint32_t output_packet_count;
     static uint32_t ciphertext_size;
     static uint32_t ciphertext_remaining;
-    static uint8_t expected_ciphertext[CIPHERTEXT_MAX_SIZE];
+    static uint8_t expected_ciphertext[CIPHERTEXT_OUT_MAX_SIZE];
 
     // Check encrypted ciphertext output:
     if(cycle_counter == 0)
@@ -228,7 +159,7 @@ stream(axis128_t) tb()
         expected_ciphertext = expected_ciphertexts[output_packet_count];
         ciphertext_size = ciphertext_lens[output_packet_count];
         ciphertext_remaining = ciphertext_size;
-        printf("Checking ciphertext for test string %d...\n", output_packet_count);
+        printf("Encrypt: Checking ciphertext for test string %d...\n", output_packet_count);
     }
 
     // Stream ciphertext out of dut
@@ -236,7 +167,7 @@ stream(axis128_t) tb()
     if(chacha20poly1305_encrypt_axis_out.valid & chacha20poly1305_encrypt_axis_out_ready)
     {
         // Print ciphertext as it flows out of dut
-        PRINT_16_BYTES("Ciphertext next 16 bytes: ", chacha20poly1305_encrypt_axis_out.data.tdata)
+        PRINT_16_BYTES("Encrypt: Output Ciphertext next 16 bytes: ", chacha20poly1305_encrypt_axis_out.data.tdata)
         // compare to expected_ciphertext and shift
         for(int32_t i = 0; i<16; i+=1)
         {
@@ -245,21 +176,21 @@ stream(axis128_t) tb()
                 if(chacha20poly1305_encrypt_axis_out.data.tdata[i] != expected_ciphertext[i])
                 {
                     uint32_t ciphertext_pos = (ciphertext_size-ciphertext_remaining) + i;
-                    printf("ERROR: Ciphertext mismatch at byte[%d]. expected 0x%X got 0x%X\n", 
+                    printf("ERROR: Encrypt: Ciphertext mismatch at byte[%d]. expected 0x%X got 0x%X\n", 
                            ciphertext_pos, expected_ciphertext[i], chacha20poly1305_encrypt_axis_out.data.tdata[i]);
                 }
             }
         }
         // Too much data?
         if(ciphertext_remaining == 0){
-            printf("ERROR: Extra ciphertext output!\n");
+            printf("ERROR: Encrypt: Extra ciphertext output!\n");
         }
         // Too little data? Or more to come?
         if(chacha20poly1305_encrypt_axis_out.data.tlast){
             if(ciphertext_remaining > 16){
-                printf("ERROR: Early end to ciphertext output!\n");
+                printf("ERROR: Encrypt: Early end to ciphertext output!\n");
             }else{
-                printf("Test %d DONE!\n", output_packet_count);
+                printf("Encrypt: Test %d DONE!\n", output_packet_count);
                 ciphertext_remaining = 0;
                 output_packet_count += 1;
                 if(output_packet_count < NUM_PLAINTEXT_TEST_STRS)
@@ -268,12 +199,12 @@ stream(axis128_t) tb()
                     expected_ciphertext = expected_ciphertexts[output_packet_count];
                     ciphertext_size = ciphertext_lens[output_packet_count];
                     ciphertext_remaining = ciphertext_size;
-                    printf("Checking ciphertext for next test string %d...\n", output_packet_count);
+                    printf("Encrypt: Checking ciphertext for next test string %d...\n", output_packet_count);
                 }
             }
         }else{
             ciphertext_remaining -= 16;
-            ARRAY_SHIFT_DOWN(expected_ciphertext, CIPHERTEXT_MAX_SIZE, 16)
+            ARRAY_SHIFT_DOWN(expected_ciphertext, CIPHERTEXT_OUT_MAX_SIZE, 16)
         }   
     }
 
