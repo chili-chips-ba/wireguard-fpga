@@ -31,8 +31,8 @@ stream(poly1305_auth_tag_uint_t) PPCAT(POLY_MAC_INST,_auth_tag); // output
 uint1_t PPCAT(POLY_MAC_INST,_auth_tag_ready); // input
 
 // FSM that uses pipeline iteratively to compute poly1305 MAC
-#pragma MAIN poly1305_mac
-void poly1305_mac(){
+MAIN(POLY_MAC_INST)
+void POLY_MAC_INST(){
   poly1305_mac_fsm_t fsm_out = poly1305_mac_fsm(
     PPCAT(POLY_MAC_INST,_key),
     PPCAT(POLY_MAC_INST,_data_in),

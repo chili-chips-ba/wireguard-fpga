@@ -28,8 +28,8 @@ uint1_t PPCAT(CHACHA_INST,_axis_out_ready); // input
 GLOBAL_VALID_READY_PIPELINE_INST(PPCAT(CHACHA_INST,_pipeline), axis512_t, chacha20_loop_body, chacha20_loop_body_in_t, 64)
 
 // Instance of FSM to control pipeline
-#pragma MAIN chacha20
-void chacha20(){
+MAIN(CHACHA_INST)
+void CHACHA_INST(){
   chacha20_fsm_t fsm_out = chacha20_fsm(
     PPCAT(CHACHA_INST,_key),
     PPCAT(CHACHA_INST,_nonce),
