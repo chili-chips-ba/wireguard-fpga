@@ -10,7 +10,7 @@
 # Command line modifiable variables
 # --------------------------------------------
 
-USER_C           = VUserMain0.cpp
+USER_C           =              # user sources for libuser (UDP nodes)
 USRCODEDIR       = $(CURDIR)/usercode
 OPTFLAG          = -g
 TIMINGOPT        = --timing
@@ -19,9 +19,10 @@ TOPFILELIST      = top.filelist
 SOCCPUMATCH      = ip.cpu
 USRSIMOPTS       =
 USRCFLAGS        =
-WAVESAVEFILE     = waves.gtkw
+WAVESAVEFILE     = wave.CSR_ETHERNET_TEST.gtkw
 BUILD            = DEFAULT
 TIMEOUTUS        = 10000
+DISABLE_SIM_CTRL = 1
 
 # --------------------------------------------
 # Global exported environment variables
@@ -39,11 +40,29 @@ export BLD_DIR HW_SRC SIM_DIR TB_NAME
 # --------------------------------------------
 
 # Location of VProc and memory model libraries
-COSIMDIR         = $(CURDIR)/models/cosim
-UDPDIR           = $(CURDIR)/models/udpIpPg
-UDP_C            = VUserMainUdp.cpp
-UDPCODEDIR       = $(CURDIR)/usercode
+COSIMDIR       = $(CURDIR)/models/cosim
+UDPDIR         = $(CURDIR)/models/udpIpPg
+UDP_C          = VUserMainUdp.cpp
+UDPCODEDIR     = $(CURDIR)/usercode
 
+# VProc external dependency (for VerilatorSimCtrl)
+VPROC_REPO     = https://github.com/wyvernSemi/vproc.git
+VLIB           = $(CURDIR)/libvproc.a
+VPROCDIR       = $(CURDIR)/../../vproc
+VPROCMKFILE    = makefile.verilator
+VPROCVERSION   = VERSION_1_12_2
+AUX_C          = VerilatorSimCtrl.cpp
+AUXDIR         = $(VPROCDIR)/verilator/src
+
+# Memory model (required by VProc build)
+MEMMODEL_REPO  = https://github.com/wyvernSemi/mem_model.git
+MEMMODELDIR    = $(CURDIR)/../../mem_model
+MEM_C          = mem.c mem_model.c
+MEMVERSION     = VERSION_1_0_0
+
+# VProc user code (rv32 ISS + VSC) lives in models/rv32/usercode
+VPROC_USRCDIR  = $(CURDIR)/models/rv32/usercode
+VPROC_USER_C   = VUserMain0.cpp VUserMainVSC.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp
 
 # --------------------------------------------
 # RV32 ISS variables
@@ -65,8 +84,11 @@ ifeq ("$(BUILD)", "ISS")
     RV32WINFILES = getopt.c
   endif
 
-  USER_C         = VUserMain0.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp $(RV32WINFILES)
-  USRCODEDIR     = $(CURDIR)/models/rv32/usercode
+  # VProc ISS build: rv32 user code for node0 + VSC (node15) built into libvproc
+  VPROC_USER_C   := $(VPROC_USER_C) $(RV32WINFILES)
+
+  # UDP BFMs (nodes 1-4) stay in libuser from usercode/
+  UDP_C          = VUserMainUdp.cpp
 
   RV32DIR        = $(CURDIR)/models/rv32
   RV32INCLOPTS   = -I$(RV32DIR)/include
@@ -83,7 +105,7 @@ C++              = g++
 CPPSTD           = -std=c++20
 
 # C/C++ include paths for VProc, memory model and user code
-INCLPATHS        = -I$(USRCODEDIR) -I$(UDPCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR)/include $(RV32INCLOPTS)
+INCLPATHS        = -I$(USRCODEDIR) -I$(UDPCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR)/include -I$(VPROCDIR)/code -I$(VPROCDIR)/verilator/src -I$(MEMMODELDIR)/src -I$(VPROC_USRCDIR) $(RV32INCLOPTS)
 DEFS             = -DVERILATOR -DVPROC_SV -DVPROC
 
 VOBJDIR          = $(CURDIR)/obj
@@ -99,6 +121,32 @@ VOBJS            = $(addprefix $(VOBJDIR)/,                   \
 
 USERLIB          = libuser.a
 
+# Rule to build object file temporary directory
+$(VOBJDIR):
+	@mkdir $(VOBJDIR)
+
+# Rule to build user C sources
+$(VOBJDIR)/%.o: $(USRCODEDIR)/%.c
+	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build user C++ sources
+$(VOBJDIR)/%.o: $(USRCODEDIR)/%.cpp
+	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build UDP user C sources
+$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.c
+	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build UDP user C++ sources
+$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.cpp
+	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# Rule to build library of user code
+# Note: delete existing archive first to avoid stale objects (e.g. switching UDP_C)
+$(USERLIB): $(VOBJDIR) $(VOBJS)
+	@rm -f $(USERLIB)
+	@ar crs $(USERLIB) $(VOBJS)
+
 ifeq ("$(OSTYPE)", "Linux")
   COSIMLDOPT     = -lcosimlnx
   UDPLDOPT       = -ludplnx
@@ -108,23 +156,26 @@ else
 endif
 
 WARNOPTS       = -Wall models/config.vlt
+USRCDEFS      = -DMEM_MODEL_DEFAULT_ENDIAN=1
 
 # --------------------------------------------
 # Simulation variables
 # --------------------------------------------
 
-TBFILELIST       = $(TB_NAME).filelist
+TBFILELIST    = $(TB_NAME).filelist
 
 WORKDIR          = output
 
-SIMOPTS          = --cc                                       \
-                   --timescale-override 1ps/1ps               \
-                   --exe versimSV.cpp                         \
-                   -sv                                        \
-                   $(TRACEOPTS) $(TIMINGOPT) $(USRSIMOPTS)    \
-                   -GRUN_SIM_US=$(TIMEOUTUS)                  \
-                   -Mdir $(WORKDIR)                           \
-                   -Wno-WIDTH
+SIMOPTS       = --cc                                          \
+                --timescale-override 1ps/1ps                  \
+                --exe versimSV.cpp                            \
+                -sv                                           \
+                $(TRACEOPTS) $(TIMINGOPT) $(USRSIMOPTS)       \
+                -GRUN_SIM_US=$(TIMEOUTUS)                     \
+                -GDISABLE_SIM_CTRL=$(DISABLE_SIM_CTRL)        \
+                $(VPROCDIR)/verilator/verilator_sim_ctrl.sv   \
+                -Mdir $(WORKDIR)                              \
+                -Wno-WIDTH
 
 SIMDEFS          = +define+VPROC_BYTE_ENABLE                  \
                    +define+SIM_ONLY                           \
@@ -132,7 +183,7 @@ SIMDEFS          = +define+VPROC_BYTE_ENABLE                  \
 #                   +define+SDRAM_DEBUG                       \
 #                   +define+UART_BFM_DEBUG
 
-SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR) -I$(UDPDIR)
+SIMINCLPATHS     = -I$(CURDIR) -I$(COSIMDIR) -I$(UDPDIR)/verilator -I$(VPROCDIR) -I$(VPROCDIR)/verilator -I$(MEMMODELDIR)
 SIMCFLAGS        = -std=c++20 -Wno-attributes $(USRCFLAGS)
 
 # Get OS type
@@ -171,36 +222,27 @@ SPC =
 
 all: $(TOPFILELIST) $(SIMEXE)
 
-# Rule to build object file temporary directory
-$(VOBJDIR):
-	@mkdir $(VOBJDIR)
-
-# Rule to build user C sources
-$(VOBJDIR)/%.o: $(USRCODEDIR)/%.c
-	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
-
-# Rule to build user C++ sources
-$(VOBJDIR)/%.o: $(USRCODEDIR)/%.cpp
-	@$(C++) -c -fPIC $(OPTFLAGS) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
-
-# Rule to build UDP user C sources
-$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.c
-	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
-
-# Rule to build UDP user C++ sources
-$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.cpp
-	@$(C++) -c -fPIC $(OPTFLAGS) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
-
-# Rule to build library of user code
-# Note: delete existing archive first to avoid stale objects (e.g. switching UDP_C)
-$(USERLIB): $(VOBJDIR) $(VOBJS)
-	@rm -f $(USERLIB)
-	@ar crs $(USERLIB) $(VOBJS)
+#
+# Call VProc's Verilator test makefile to compile library into
+# this directory, including the memory model code and user code.
+#
+$(VLIB): $(VPROCDIR) $(MEMMODELDIR) $(addprefix $(VPROC_USRCDIR)/,$(VPROC_USER_C))
+	@make --no-print-directory -C $(VPROCDIR)/test        \
+              -f $(VPROCMKFILE) ARCHFLAG=$(OPTFLAG)           \
+              USRFLAGS="$(INCLPATHS) $(USRCDEFS) $(USRFLAGS)" \
+              USRCDIR=$(VPROC_USRCDIR)                        \
+              USER_C="$(VPROC_USER_C)"                        \
+              MEMMODELDIR=$(MEMMODELDIR)/src                  \
+              MEM_C="$(MEM_C)"                                \
+              AUXDIR=$(AUXDIR)                                \
+              AUX_C="$(AUX_C)"                                \
+              TESTDIR=$(CURDIR)                               \
+              $(VLIB)
 
 #
 # Compile simulation C++ code
 #
-compile: $(USERLIB)
+compile: $(USERLIB) $(VLIB)
 	@verilator     $(WARNOPTS)                            \
 	               -F $(TOPFILELIST)                      \
                    -F $(TBFILELIST)                       \
@@ -212,9 +254,9 @@ compile: $(USERLIB)
 	   -CFLAGS    "$(SIMCFLAGS)"                          \
 	   -LDFLAGS   "$(SIMLDFLAGS)                          \
 	               -Wl,-whole-archive                     \
-	               -L$(COSIMDIR)/lib $(COSIMLDOPT)        \
-	               -L$(UDPDIR)/lib $(UDPLDOPT)            \
+	               -L$(CURDIR) -lvproc                    \
 	               -L$(CURDIR) -luser                     \
+	               -L$(UDPDIR)/lib $(UDPLDOPT)            \
 	               -Wl,-no-whole-archive                  \
 	               -ldl $(RV32LDOPTS)"
 
@@ -228,6 +270,14 @@ $(SIMEXE): compile
 # So soc_cpu.VPROC can be used instead
 $(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST)
 	@sed -e "/$(SOCCPUMATCH)/d" $< > $@
+
+# Check out VProc repo if not at expected location
+$(VPROCDIR):
+	@git clone --depth 1 --branch $(VPROCVERSION) $(VPROC_REPO) $(VPROCDIR) --recursive
+
+# Check out memory model repo if not at expected location
+$(MEMMODELDIR):
+	@git clone --depth 1 --branch $(MEMVERSION) $(MEMMODEL_REPO) $(MEMMODELDIR) --recursive
 
 xml2stems: $(TOPFILELIST)
 	@verilator                                            \
@@ -269,18 +319,18 @@ help:
 	@$(info make -f MakefileVProc.mk clean         clean previous build artefacts)
 	@$(info )
 	@$(info Command line configurable variables:)
-	@$(info $(SPC) $(SPC) USER_C:       list of user source code files for soc_cpu (default VUserMain0.cpp))
-	@$(info $(SPC) $(SPC) UDP_C:        list of user source code files for udpIpPg modules (default VUserMainUdp.cpp))
-	@$(info $(SPC) $(SPC) USRCODEDIR:   directory containing user source code (default $$(CURDIR)/usercode))
-	@$(info $(SPC) $(SPC) OPTFLAG:      Optimisation flag for user VProc code (default -g))
-	@$(info $(SPC) $(SPC) TIMINGOPT:    Verilator timing flags (default --timing))
-	@$(info $(SPC) $(SPC) TRACEOPTS:    Verilator trace flags (default --trace-fst --trace-structs))
-	@$(info $(SPC) $(SPC) TOPFILELIST:  RTL file list name (default top.filelist))
-	@$(info $(SPC) $(SPC) SOCCPUMATCH:  string to match for soc_cpu filtering in h/w file list (default ip.cpu))
-	@$(info $(SPC) $(SPC) USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank))
-	@$(info $(SPC) $(SPC) WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw))
-	@$(info $(SPC) $(SPC) BUILD:        Select build type from DEFAULT or ISS (default DEFAULT))
-	@$(info $(SPC) $(SPC) TIMEOUTUS:    Test bench timeout period in microseconds (default 15000))
+	@$(info $(SPC) $(SPC) USER_C:           list of user source code files (default VUserMain0.cpp))
+	@$(info $(SPC) $(SPC) USRCODEDIR:       directory containing user source code (default $$(CURDIR)/usercode))
+	@$(info $(SPC) $(SPC) OPTFLAG:          Optimisation flag for VProc code (default -g))
+	@$(info $(SPC) $(SPC) TIMINGOPT:        Verilator timing flags (default --timing))
+	@$(info $(SPC) $(SPC) TRACEOPTS:        Verilator trace flags (default --trace-fst --trace-structs))
+	@$(info $(SPC) $(SPC) TOPFILELIST:      RTL file list name (default top.filelist))
+	@$(info $(SPC) $(SPC) SOCCPUMATCH:      string to match for soc_cpu filtering in h/w file list (default ip.cpu))
+	@$(info $(SPC) $(SPC) USRSIMOPTS:       additional Verilator flags, such as setting generics (default blank))
+	@$(info $(SPC) $(SPC) WAVESAVEFILE:     name of .gtkw file to use when displaying waveforms (default waves.gtkw))
+	@$(info $(SPC) $(SPC) BUILD:            Select build type from DEFAULT or ISS (default DEFAULT))
+	@$(info $(SPC) $(SPC) TIMEOUTUS:        Test bench timeout period in microseconds (default 15000))
+	@$(info $(SPC) $(SPC) DISABLE_SIM_CTRL: Disable/enable Verilator simulation control (default disabled))
 	@$(info )
 
 #======================================================
