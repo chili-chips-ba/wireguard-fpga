@@ -48,3 +48,9 @@ tb.stems
 3.build/pipelinec_build/generated-files-sim-pipe/*
 3.build/pipelinec_build/generated-files-verilog/*
 3.build/pipelinec_build/*.py
+
+3.build/pipelinec_build/generated-files-sim-comb-dec/*
+3.build/pipelinec_build/generated-files-sim-pipe-dec/*
+3.build/pipelinec_build/generated-files-verilog/*
+
+3.build/wirevenv/

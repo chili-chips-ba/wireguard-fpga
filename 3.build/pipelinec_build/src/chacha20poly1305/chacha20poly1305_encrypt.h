@@ -1,8 +1,8 @@
 #pragma once
 #include "compiler.h"
-#include "chacha20/chacha20.h"
-#include "prep_auth_data/prep_auth_data.h"
-#include "poly1305/poly1305.h"
+#include "../chacha20/chacha20.h"
+#include "../prep_auth_data/prep_auth_data.h"
+#include "../poly1305/poly1305.h"
 
 #ifndef SIMULATION
 // Flattened top level ports with AXIS style manager/subordinate naming
