@@ -15,8 +15,8 @@ void decrypt_dataflow(){
     chacha20_nonce = chacha20poly1305_decrypt_nonce;
 
     // Connect chacha20 poly key output to poly1305_mac key input
-    poly1305_mac_key = chacha20_poly_key;
-    chacha20_poly_key_ready = poly1305_mac_key_ready;
+    poly1305_mac_decrypt_key = chacha20_poly_key;
+    chacha20_poly_key_ready = poly1305_mac_decrypt_key_ready;
 
 
     // Ciphertext stream fork
@@ -50,8 +50,8 @@ void decrypt_dataflow(){
     prep_auth_data_decrypt_aad_len = chacha20poly1305_decrypt_aad_len;
 
     // Connect prep_auth_data output to poly1305_mac input
-    poly1305_mac_data_in = prep_auth_data_decrypt_axis_out;
-    prep_auth_data_decrypt_axis_out_ready = poly1305_mac_data_in_ready;
+    poly1305_mac_decrypt_data_in = prep_auth_data_decrypt_axis_out;
+    prep_auth_data_decrypt_axis_out_ready = poly1305_mac_decrypt_data_in_ready;
 
 
     // Poly1305 verification
@@ -59,8 +59,8 @@ void decrypt_dataflow(){
     poly1305_verify_auth_tag = strip_auth_tag_auth_tag_out; 
     strip_auth_tag_auth_tag_out_ready = poly1305_verify_auth_tag_ready;
 
-    poly1305_verify_calc_tag = poly1305_mac_auth_tag;
-    poly1305_mac_auth_tag_ready = poly1305_verify_calc_tag_ready;
+    poly1305_verify_calc_tag = poly1305_mac_decrypt_auth_tag;
+    poly1305_mac_decrypt_auth_tag_ready = poly1305_verify_calc_tag_ready;
 
 
     // Wait to verify (buffer plaintext)
