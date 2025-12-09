@@ -313,6 +313,12 @@ The **wyvernSemi**'s wisdom and contribution made a great deal of difference -- 
  <img width="115" alt="wyvernSemi-Logo" src="https://github.com/user-attachments/assets/94858fce-081a-43b4-a593-d7d79ef38e13">
 </p>
 
+If it was not for Julian Kemmerer's unreserved support to help us absorb the finesse of typing C to get the gates, be it by guiding and mentoring, or by doing it himself, our two cryptography blocks, the meat of this project, would not have been lifted from Linux and pushed through **PipelineC**. Thank you Mr.OpensourceHLS 🙏. 
+
+<p align="center">
+ <img width="50%" src="0.doc/artwork/pipelineC.logo.png">
+</p>
+
 ### Public posts:
 - [2025-10-12](https://www.linkedin.com/pulse/wireguard-fpga-advanced-co-simulation-verification-case-southwell-z64ce)
 - [2025-06-07](https://www.linkedin.com/posts/simon-southwell-7684482_had-a-great-time-at-the-fpga-conference-europe-activity-7347534737554505729-pWYJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJv-TcBSi_5ff0VNMrInrT-xg44YF3jnyU)
