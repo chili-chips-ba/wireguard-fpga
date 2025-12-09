@@ -17,7 +17,7 @@ While working on the _Blackwire_, we have touched multiple sections, and focused
 
 ## Back to the Future
 To make the hardware Wireguard truly accessible in the genuine spirit of open-source movement, this project implements it:
--	for an [inexpensive hardware platform](https://www.alinx.com/en/detail/611) with four 1000Base-T ports
+-	for an [inexpensive hardware platform](https://www.en.alinx.com/Product/FPGA-Development-Boards/Artix-7/AX7201.html) with four 1000Base-T ports
 -	in a self-sufficient way, i.e. w/o requiring PC host
 -	using a commodity Artix7 FPGA
 -	which is supported by open-source tools  
