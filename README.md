@@ -313,7 +313,7 @@ The **wyvernSemi**'s wisdom and contribution made a great deal of difference -- 
  <img width="115" alt="wyvernSemi-Logo" src="https://github.com/user-attachments/assets/94858fce-081a-43b4-a593-d7d79ef38e13">
 </p>
 
-If it was not for Julian Kemmerer's unreserved support to help us absorb the finesse of typing C to get the gates, be it by guiding and mentoring, or by doing it himself, our two cryptography blocks, the meat of this project, would not have been lifted from Linux and pushed through **PipelineC**. Thank you Mr.OpensourceHLS 🙏. 
+If it was not for **Julian Kemmerer's** unreserved support helping us move our two cryptography blocks from C to gates, be it by guiding and mentoring, or by doing it himself, the meat of this project would not have been so easily pushed through to hardware using `PipelineC`. Thank you Mr.OpensourceHLS 🙏. 
 
 <p align="center">
  <img width="50%" src="0.doc/artwork/pipelineC.logo.png">
