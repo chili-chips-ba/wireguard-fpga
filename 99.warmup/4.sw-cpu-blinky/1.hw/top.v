@@ -3,6 +3,8 @@ module top(
     input        clk_p,
     input        clk_n,
     input        rst_n,
+    output 	     uart_tx,
+    input  	     uart_rx,
     output [1:0] led
 );
 
@@ -84,8 +86,8 @@ wire eth_gtx_rst;
     picosoc_noflash soc (
         .clk         (sys_clk),
         .resetn      (resetn),
-        .ser_tx      (dummy_tx),
-        .ser_rx      (dummy_rx),
+        .ser_tx      (uart_tx),
+        .ser_rx      (uart_rx),
         .iomem_valid (iomem_valid),
         .iomem_ready (iomem_ready),
         .iomem_wstrb (iomem_wstrb),
