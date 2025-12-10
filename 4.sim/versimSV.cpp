@@ -25,6 +25,21 @@
 
 double sc_time_stamp() { return 0; }
 
+#ifndef NO_TRACE
+static bool           do_flush = true;
+
+//-----------------------------------------
+// Flush FST wave output for use externally
+//-----------------------------------------
+
+void flushfst()
+{
+   do_flush = true;
+}
+#else
+void flushfst() {}
+#endif
+
 //----------------------------------------
 int main(int argc, char** argv, char**) {
    // Setup context, defaults, and parse command line
@@ -57,6 +72,16 @@ int main(int argc, char** argv, char**) {
    // Simulate until $finish
    long long int t0 = 0;
    while (!contextp->gotFinish()) {
+      
+      // If an outstanding external request to flush, do so now and clear request
+#ifndef NO_TRACE
+      if (do_flush)
+      {
+          m_trace->flush();
+          do_flush = false;
+      }
+#endif
+           
       // Evaluate model
       topp->eval();
 #ifndef NO_TRACE

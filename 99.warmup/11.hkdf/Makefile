@@ -12,7 +12,7 @@ CFLAGS =
 # ** ----------------------------------------------------------------
 # ** Set directory for rng sources
 SOURCE_DIR = $(CURDIR)
-BLAKE_DIR = $(SOURCE_DIR)/../blake2s_rv32
+BLAKE_DIR = $(SOURCE_DIR)/../BLAKE2s/rv32
 
 # ** Build target for generating Verilog hex file from the ELF binary
 hex: $(SOURCE_DIR)/main.elf

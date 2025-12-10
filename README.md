@@ -17,7 +17,7 @@ While working on the _Blackwire_, we have touched multiple sections, and focused
 
 ## Back to the Future
 To make the hardware Wireguard truly accessible in the genuine spirit of open-source movement, this project implements it:
--	for an [inexpensive hardware platform](https://www.alinx.com/en/detail/611) with four 1000Base-T ports
+-	for an [inexpensive hardware platform](https://www.en.alinx.com/Product/FPGA-Development-Boards/Artix-7/AX7201.html) with four 1000Base-T ports
 -	in a self-sufficient way, i.e. w/o requiring PC host
 -	using a commodity Artix7 FPGA
 -	which is supported by open-source tools  
@@ -52,6 +52,8 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 **[Ref9]** [Alex's Ethernet Stack](https://github.com/alexforencich/verilog-ethernet)
 
 **[Ref10]** [Amina's ADASEC-SDN](https://github.com/etf-tk-sdn/ADASEC-SDN)
+
+**[Ref11]** [High-performance Switches and Routers](https://books.google.ba/books?id=kzstoFdvZ2sC&printsec=frontcover&redir_esc=y#v=onepage&q&f=false)
 
 # Project Outline
 
@@ -112,7 +114,7 @@ Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not s
 
 It it in this take that we start creating hardware Datapath and hardening Wireguard encryption protocols, all using Vivado and Xilinx primitives.
 
-- [ ] Integration of collected RTL blocks into a coherent HW system that implements the basic Wireguard datapath for a handful of manually pre-configured channels.
+- [x] Integration of collected RTL blocks into a coherent HW system that implements the basic Wireguard datapath for a handful of manually pre-configured channels.
   - Corundum FPGA-based NIC and platform for opensource Ethernet development [Ref3]
   -	IP Core for **ChaCha20-Poly1305** [Ref4] -- Definitely in hardware from the get-go
     - https://github.com/Goshik92/FpgaCha
@@ -125,7 +127,7 @@ It it in this take that we start creating hardware Datapath and hardening Wiregu
   - _blake2_ module for hashing (we'll most likely do it in software)
     - https://github.com/secworks/blake2
       
-- [ ] Timing closure. Resolution of FPGA device utilization and routing congestion issues
+- [x] Timing closure. Resolution of FPGA device utilization and routing congestion issues
 - [X] Creation of cocoTB DV in the CI/CD environmenT, and representative test cases for datapath simulation
 
 ## Take3
@@ -139,7 +141,7 @@ This work package is about hardware/software codesign and integration. The firmw
   - SW must not participate in the bulk datapath transfers
   - SW may however intercept the low-frequency management packets
 
-- [ ]	SW design for on-chip processor (Part 2)
+- [x]	SW design for on-chip processor (Part 2)
   - KMM function -- Key Management Module
 
 - [X] HW/SW Integration
@@ -148,7 +150,7 @@ This work package is about hardware/software codesign and integration. The firmw
 **VPN Tunnel: Session initialization, maintenance, and secure closure**
 
 This is about managing the bring-up, maintenance and tear-down of VPN tunnels between two devices.
-- [ ] Session Initialization: Starting the handshake process to establish secure communication with another device
+- [x] Session Initialization: Starting the handshake process to establish secure communication with another device
 - [ ] Session Maintenance: Keeping the session active through the regular exchange of control messages, which allows detection and recovery from problems such as connection interruptions
 - [ ] Session Closure: Securely close the VPN tunnel when communication is no longer needed, ensuring that all temporary keys and sensitive data are deleted
 
@@ -159,13 +161,13 @@ This is about managing the bring-up, maintenance and tear-down of VPN tunnels be
 
 - [ ] Performance testing. HW/SW profiling, updates and enhancements to ensure the design indeed operates at close to the wire speed on all preconfigured channels
 
-- [ ] Porting to openXC7 [Ref8] using [SV2V](https://github.com/zachjs/sv2v), in the GoCD CI/CD setting 
+- [x] Porting to openXC7 [Ref8] using [SV2V](https://github.com/zachjs/sv2v), in the GoCD CI/CD setting 
   - This is challenging, as openXC7 has thus far been crashing for NES SV
 
-- [ ] Timing closure with openXC7
+- [x] Timing closure with openXC7
   - This is definitely challenging, given that openXC7 is currently without accurate timing-driven STA
 
-- [ ] Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
+- [x] Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
       
 - [x] Creation and maintenance of an attractive and well-documented Github repo, to entice community interest
       
@@ -309,6 +311,12 @@ The **wyvernSemi**'s wisdom and contribution made a great deal of difference -- 
 
 <p align="center">
  <img width="115" alt="wyvernSemi-Logo" src="https://github.com/user-attachments/assets/94858fce-081a-43b4-a593-d7d79ef38e13">
+</p>
+
+If it was not for **Julian Kemmerer's** unreserved support helping us move our two cryptography blocks from C to gates, be it by guiding and mentoring, or by doing it himself, the meat of this project would not have been so easily pushed through to hardware using `PipelineC`. Thank you Mr.OpensourceHLS 🙏. 
+
+<p align="center">
+ <img width="50%" src="0.doc/artwork/pipelineC.logo.png">
 </p>
 
 ### Public posts:
