@@ -360,8 +360,8 @@ poly1305_mac_fsm_t poly1305_mac_fsm(
     stream(axis128_t) data_in,
     uint1_t ready_for_auth_tag_out,
     u320_t from_pipeline,
-    uint1_t from_pipeline_valid
-    //uint1_t ready_for_to_pipeline
+    uint1_t from_pipeline_valid,
+    uint1_t ready_for_to_pipeline
 ){
   poly1305_mac_fsm_t o;
   // Default not ready for incoming poly key
@@ -412,7 +412,7 @@ poly1305_mac_fsm_t poly1305_mac_fsm(
     }
   }else if(state == START_ITER){
     // Ready to take an input data block
-    o.ready_for_data_in = 1;
+    o.ready_for_data_in = ready_for_to_pipeline;
     // Put 'a' and data block into pipeline
     o.to_pipeline.block_bytes = data_in.data.tdata;
     o.to_pipeline.a = a;
