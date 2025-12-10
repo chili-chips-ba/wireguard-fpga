@@ -19,7 +19,8 @@
 module tb #(
    parameter int RUN_SIM_US     = 10000,
    parameter int ETH_START_NODE = 1,
-   parameter int MDIO_BUFF_ADDR = 32'h50000000
+   parameter int MDIO_BUFF_ADDR = 32'h50000000,
+   parameter int DISABLE_SIM_CTRL = 1
 )();
    glbl glbl();
 
@@ -239,6 +240,22 @@ module tb #(
       // LEDs
       .led     (led)
    );
+
+
+// //--------------------------------------------------------------
+// Instantiation of Verilator simulation control
+// //--------------------------------------------------------------
+
+  verilator_sim_ctrl
+  #(
+     .NODE                    (15),
+     .CLK_PERIOD_PS           (HALF_CLK_P_PERIOD_PS * 2),
+     .DISABLE_SIM_CTRL        (DISABLE_SIM_CTRL)
+  ) simctrl
+  (
+    .clk                      (clk_p),
+    .cycle_count              ()
+  );
 
 //--------------------------------------------------------------
 // Ethernet UDP/IPv4 BFM
