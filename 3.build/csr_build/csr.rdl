@@ -1,12 +1,297 @@
-addrmap csr {
-   name = "csr";
-   desc = "WireGuard FPGA CSR";
+   addrmap csr {
+      name = "csr";
+      desc = "WireGuard FPGA CSR";
 
-   littleendian;
-   default accesswidth = 32;
-   default regwidth = 32;
-   default alignment = 4;
-   addressing = compact;
+      littleendian;
+      default accesswidth = 32;
+      default regwidth = 32;
+      default alignment = 4;
+      addressing = compact;
+
+      regfile dpe {
+      name = "csr.dpe";
+      desc = "Data Plane Engine CSR";
+      
+      external regfile routing_table {
+         name = "csr.dpe.routing_table";
+         desc = "Routing Table";
+         
+         reg {
+            name = "csr.dpe.routing_table[0..63].ip";
+            desc = "IP Address";
+            
+            field {
+               name = "csr.dpe.routing_table[0..63].ip.ip[31:0]";
+               sw = rw;
+               hw = r;
+            } ip[31:0];
+         } ip;
+         
+         reg {
+            name = "csr.dpe.routing_table[0..63].mask";
+            desc = "Subnet Mask";
+            
+            field {
+               name = "csr.dpe.routing_table[0..63].mask.mask[31:0]";
+               sw = rw;
+               hw = r;
+            } mask[31:0];
+         } mask;
+         
+         reg {
+            name = "csr.dpe.routing_table[0..63].peer_idx";
+            desc = "WireGuard Peer Index";
+            
+            field {
+               name = "csr.dpe.routing_table[0..63].peer_idx.peer_idx[5:0]";
+               sw = rw;
+               hw = r;
+            } peer_idx[5:0];
+         } peer_idx;
+         
+         reg {
+            name = "csr.dpe.routing_table[0..63].dst";
+            desc = "Destination Interface";
+            
+            field {
+               name = "csr.dpe.routing_table[0..63].dst.dst[2:0]";
+               sw = rw;
+               hw = r;
+            } dst[2:0];
+         } dst;
+      } routing_table[64];
+      
+      reg {
+         name = "csr.dpe.fcr";
+         desc = "DPE Flow Control Register";
+
+         field {
+            name = "csr.dpe.fcr.pause";
+            desc = "Pauses DPE";
+            sw = rw;
+            hw = r;
+         } pause[1:1] = 0;
+
+         field {
+            name = "csr.dpe.fcr.idle";
+            desc = "Indicates that all stages of DPE have been succesfully paused";
+            sw = r;
+            hw = w;
+         } idle[0:0] = 0;
+      } fcr;
+      
+      /*
+      regfile cryptokey_table {
+         name = "csr.dpe.cryptokey_table";
+         desc = "Cryptokey Table";
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].local_ip";
+            desc = "Local IP Address";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].local_ip.ip[31:0]";
+               sw = rw;
+               hw = r;
+            } ip[31:0];
+         } local_ip;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].local_port";
+            desc = "Local UDP Port";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].local_port.port[15:0]";
+               sw = rw;
+               hw = r;
+            } port[15:0];
+         } local_port;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].local_id";
+            desc = "Local ID";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].local_id.id[31:0]";
+               sw = rw;
+               hw = r;
+            } id[31:0];
+         } local_id;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].remote_ip";
+            desc = "Remote IP Address";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].remote_ip.ip[31:0]";
+               sw = rw;
+               hw = r;
+            } ip[31:0];
+         } remote_ip;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].remote_port";
+            desc = "Remote UDP Port";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].remote_port.port[15:0]";
+               sw = rw;
+               hw = r;
+            } port[15:0];
+         } remote_port;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].remote_id";
+            desc = "Remote ID";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].remote_id.id[31:0]";
+               sw = rw;
+               hw = r;
+            } id[31:0];
+         } remote_id;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_127_96";
+            desc = "Encryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_127_96.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } encrypt_key_127_96;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_95_64";
+            desc = "Encryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_95_64.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } encrypt_key_95_64;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_63_32";
+            desc = "Encryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_63_32.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } encrypt_key_63_32;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_31_0";
+            desc = "Encryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_31_0.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } encrypt_key_31_0;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_127_96";
+            desc = "Decryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_127_96.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } decrypt_key_127_96;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_95_64";
+            desc = "Decryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_95_64.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } decrypt_key_95_64;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_63_32";
+            desc = "Decryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_63_32.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } decrypt_key_63_32;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_31_0";
+            desc = "Decryption Key";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_31_0.key[31:0]";
+               sw = rw;
+               hw = r;
+            } key[31:0];
+         } decrypt_key_31_0;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].send_cnt_63_32";
+            desc = "Sender Counter";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].send_cnt_63_32.cnt[31:0]";
+               sw = rw;
+               hw = rw;
+               we;
+            } cnt[31:0];
+         } send_cnt_63_32;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].send_cnt_31_0";
+            desc = "Sender Counter";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].send_cnt_31_0.cnt[31:0]";
+               sw = rw;
+               hw = rw;
+               we;
+            } cnt[31:0];
+         } send_cnt_31_0;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].recv_cnt_63_32";
+            desc = "Receiver Counter";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].recv_cnt_63_32.cnt[31:0]";
+               sw = rw;
+               hw = rw;
+               we;
+            } cnt[31:0];
+         } recv_cnt_63_32;
+         
+         reg {
+            name = "csr.dpe.cryptokey_table[0..63].recv_cnt_31_0";
+            desc = "Receiver Counter";
+            
+            field {
+               name = "csr.dpe.cryptokey_table[0..63].recv_cnt_31_0.cnt[31:0]";
+               sw = rw;
+               hw = rw;
+               we;
+            } cnt[31:0];
+         } recv_cnt_31_0;
+         
+      } cryptokey_table[64];
+      */
+
+
+   } dpe;
 
    regfile cpu_fifo {
       name = "csr.cpu_fifo";
@@ -413,288 +698,7 @@ addrmap csr {
       } mac_31_0;
    } ethernet[4];
 
-   regfile dpe {
-      name = "csr.dpe";
-      desc = "Data Plane Engine CSR";
 
-      reg {
-         name = "csr.dpe.fcr";
-         desc = "DPE Flow Control Register";
-
-         field {
-            name = "csr.dpe.fcr.pause";
-            desc = "Pauses DPE";
-            sw = rw;
-            hw = r;
-         } pause[1:1] = 0;
-
-         field {
-            name = "csr.dpe.fcr.idle";
-            desc = "Indicates that all stages of DPE have been succesfully paused";
-            sw = r;
-            hw = w;
-         } idle[0:0] = 0;
-      } fcr;
-      
-      /*
-      regfile cryptokey_table {
-         name = "csr.dpe.cryptokey_table";
-         desc = "Cryptokey Table";
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].local_ip";
-            desc = "Local IP Address";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].local_ip.ip[31:0]";
-               sw = rw;
-               hw = r;
-            } ip[31:0];
-         } local_ip;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].local_port";
-            desc = "Local UDP Port";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].local_port.port[15:0]";
-               sw = rw;
-               hw = r;
-            } port[15:0];
-         } local_port;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].local_id";
-            desc = "Local ID";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].local_id.id[31:0]";
-               sw = rw;
-               hw = r;
-            } id[31:0];
-         } local_id;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].remote_ip";
-            desc = "Remote IP Address";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].remote_ip.ip[31:0]";
-               sw = rw;
-               hw = r;
-            } ip[31:0];
-         } remote_ip;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].remote_port";
-            desc = "Remote UDP Port";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].remote_port.port[15:0]";
-               sw = rw;
-               hw = r;
-            } port[15:0];
-         } remote_port;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].remote_id";
-            desc = "Remote ID";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].remote_id.id[31:0]";
-               sw = rw;
-               hw = r;
-            } id[31:0];
-         } remote_id;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_127_96";
-            desc = "Encryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_127_96.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } encrypt_key_127_96;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_95_64";
-            desc = "Encryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_95_64.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } encrypt_key_95_64;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_63_32";
-            desc = "Encryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_63_32.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } encrypt_key_63_32;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].encrypt_key_31_0";
-            desc = "Encryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].encrypt_key_31_0.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } encrypt_key_31_0;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_127_96";
-            desc = "Decryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_127_96.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } decrypt_key_127_96;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_95_64";
-            desc = "Decryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_95_64.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } decrypt_key_95_64;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_63_32";
-            desc = "Decryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_63_32.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } decrypt_key_63_32;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].decrypt_key_31_0";
-            desc = "Decryption Key";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].decrypt_key_31_0.key[31:0]";
-               sw = rw;
-               hw = r;
-            } key[31:0];
-         } decrypt_key_31_0;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].send_cnt_63_32";
-            desc = "Sender Counter";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].send_cnt_63_32.cnt[31:0]";
-               sw = rw;
-               hw = rw;
-               we;
-            } cnt[31:0];
-         } send_cnt_63_32;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].send_cnt_31_0";
-            desc = "Sender Counter";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].send_cnt_31_0.cnt[31:0]";
-               sw = rw;
-               hw = rw;
-               we;
-            } cnt[31:0];
-         } send_cnt_31_0;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].recv_cnt_63_32";
-            desc = "Receiver Counter";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].recv_cnt_63_32.cnt[31:0]";
-               sw = rw;
-               hw = rw;
-               we;
-            } cnt[31:0];
-         } recv_cnt_63_32;
-         
-         reg {
-            name = "csr.dpe.cryptokey_table[0..63].recv_cnt_31_0";
-            desc = "Receiver Counter";
-            
-            field {
-               name = "csr.dpe.cryptokey_table[0..63].recv_cnt_31_0.cnt[31:0]";
-               sw = rw;
-               hw = rw;
-               we;
-            } cnt[31:0];
-         } recv_cnt_31_0;
-         
-      } cryptokey_table[64];
-      
-      regfile routing_table {
-         name = "csr.dpe.routing_table";
-         desc = "Routing Table";
-         
-         reg {
-            name = "csr.dpe.routing_table[0..63].ip";
-            desc = "IP Address";
-            
-            field {
-               name = "csr.dpe.routing_table[0..63].ip.ip[31:0]";
-               sw = rw;
-               hw = r;
-            } ip[31:0];
-         } ip;
-         
-         reg {
-            name = "csr.dpe.routing_table[0..63].mask";
-            desc = "Subnet Mask";
-            
-            field {
-               name = "csr.dpe.routing_table[0..63].mask.mask[31:0]";
-               sw = rw;
-               hw = r;
-            } mask[31:0];
-         } mask;
-         
-         reg {
-            name = "csr.dpe.routing_table[0..63].peer_idx";
-            desc = "WireGuard Peer Index";
-            
-            field {
-               name = "csr.dpe.routing_table[0..63].peer_idx.peer_idx[5:0]";
-               sw = rw;
-               hw = r;
-            } peer_idx[5:0];
-         } peer_idx;
-         
-         reg {
-            name = "csr.dpe.routing_table[0..63].dst";
-            desc = "Destination Interface";
-            
-            field {
-               name = "csr.dpe.routing_table[0..63].dst.dst[2:0]";
-               sw = rw;
-               hw = r;
-            } dst[2:0];
-         } dst;
-      } routing_table[64];
-      */
-   } dpe;
 
    reg {
       name = "csr.hw_id";

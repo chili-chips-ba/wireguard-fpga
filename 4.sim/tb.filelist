@@ -11,6 +11,7 @@ ${SIM_DIR}/models/udpIpPg/bfm_ethernet.sv
 ${SIM_DIR}/models/soc_cpu.VPROC.sv
 ${SIM_DIR}/models/bfm_uart.sv
 ${SIM_DIR}/models/bfm_phy_mdio.sv
+${SIM_DIR}/models/bfm_egress.sv
 
 #---Xilinx primitives
 ${SIM_DIR}/models/no-change/glbl.v
