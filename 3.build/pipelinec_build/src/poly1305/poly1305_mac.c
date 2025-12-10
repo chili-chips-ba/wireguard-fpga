@@ -14,10 +14,13 @@ for (size_t i = 0; i < blocks; i++)
 #define POLY_MAC_INST poly1305_mac
 #endif
 
+#ifndef POLY_EXCLUDES_PIPELINE
 // Declare poly1305_mac_loop_body pipeline to use (with valid bit)
 // TODO can declare as harder to meet timing GLOBAL_FUNCTION that doesnt add IO regs
 #include "global_func_inst.h"
 GLOBAL_PIPELINE_INST_W_VALID_ID(PPCAT(POLY_MAC_INST,_pipeline), u320_t, poly1305_mac_loop_body, poly1305_mac_loop_body_in_t)
+uint1_t PPCAT(POLY_MAC_INST,_pipeline_in_ready) = 1;
+#endif
 
 // Global input and output wires for FSM
 // 32-byte key (r || s) input
@@ -38,7 +41,8 @@ void POLY_MAC_INST(){
     PPCAT(POLY_MAC_INST,_data_in),
     PPCAT(POLY_MAC_INST,_auth_tag_ready),
     PPCAT(POLY_MAC_INST,_pipeline_out),
-    PPCAT(POLY_MAC_INST,_pipeline_out_valid)
+    PPCAT(POLY_MAC_INST,_pipeline_out_valid),
+    PPCAT(POLY_MAC_INST,_pipeline_in_ready)
   );
   PPCAT(POLY_MAC_INST,_key_ready) = fsm_out.ready_for_key;
   PPCAT(POLY_MAC_INST,_data_in_ready) = fsm_out.ready_for_data_in;

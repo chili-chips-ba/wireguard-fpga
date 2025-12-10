@@ -24,8 +24,10 @@ uint1_t PPCAT(CHACHA_INST,_poly_key_ready); // input
 stream(axis128_t) PPCAT(CHACHA_INST,_axis_out); // output
 uint1_t PPCAT(CHACHA_INST,_axis_out_ready); // input
 
+#ifndef CHACHA_EXCLUDES_PIPELINE
 // Global instance of the chacha20_loop_body pipeline
 GLOBAL_VALID_READY_PIPELINE_INST(PPCAT(CHACHA_INST,_pipeline), axis512_t, chacha20_loop_body, chacha20_loop_body_in_t, 64)
+#endif
 
 // Instance of FSM to control pipeline
 MAIN(CHACHA_INST)
