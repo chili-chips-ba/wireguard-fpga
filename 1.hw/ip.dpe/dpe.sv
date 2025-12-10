@@ -32,6 +32,8 @@ module dpe
 );
    import dpe_pkg::*;
 
+   localparam int ENTRY_COUNT = 64; 
+   
    dpe_if                     muxed_1 (.clk(from_cpu.clk), .rst(from_cpu.rst));
    dpe_if                     muxed_2 (.clk(from_cpu.clk), .rst(from_cpu.rst));
 
@@ -48,10 +50,10 @@ module dpe
    );
 
 // DPE dummy switch
-   dpe_dummy_switch switch (
-      .inp                   (muxed_1),
-      .outp                  (muxed_2)
-   );
+//   dpe_dummy_switch switch (
+//      .inp                   (muxed_1),
+//      .outp                  (muxed_2)
+//   );
 
 // DPE demultiplexer
    dpe_demultiplexer demux (
@@ -62,4 +64,17 @@ module dpe
       .to_eth_3              (to_eth_3),
       .to_eth_4              (to_eth_4)
    );
+
+
+// DPE egress Engine
+   dpe_egress_ip_lookup #(
+      .ENTRY_COUNT(ENTRY_COUNT)
+   ) u_egress (
+      .s_axis   (muxed_1),
+      .m_axis   (muxed_2),
+
+      .hwif_out (from_csr.dpe.routing_table),
+      .hwif_in  (to_csr.dpe.routing_table)
+   );
+
 endmodule

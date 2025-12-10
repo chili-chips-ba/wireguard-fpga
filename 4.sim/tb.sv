@@ -338,6 +338,28 @@ assign gmii[3].txd  = e4_txd;
       .uart_tx  (uart_rx)  //o
    );
 
+
+// Simulation: filling the routing_table
+/*
+   logic dut_sys_clk;
+   logic dut_sys_rst;
+   csr_pkg::csr__dpe__routing_table__external__out_t bfm_req_data [64];
+   csr_pkg::csr__dpe__routing_table__external__in_t  bfm_rsp_data [64];
+
+//--------------------------------------------------------------
+// model of EGRESS
+//--------------------------------------------------------------
+   bfm_egress #(
+      .ENTRY_COUNT(64)
+   ) u_bfm_egress (
+      .clk     (dut_sys_clk),      
+      .rst     (dut_sys_rst),
+      .csr_req (bfm_req_data),
+      .csr_rsp (bfm_rsp_data)
+   );
+
+*/
+
 //--------------------------------------------------------------
 // Error monitor
 //--------------------------------------------------------------
