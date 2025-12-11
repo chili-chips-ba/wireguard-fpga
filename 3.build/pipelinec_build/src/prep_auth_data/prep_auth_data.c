@@ -24,26 +24,32 @@ encode_le64(lengths + 8, plaintext_len);
 #include "arrays.h"
 #include "prep_auth_data.h"
 
+#ifndef PREP_AUTH_DATA_INST
+#define PREP_AUTH_DATA_INST prep_auth_data
+#endif
+
 // Additional authenticated data input wires
 // TODO AAD is unused, could be removed
-uint8_t prep_auth_data_aad[AAD_MAX_LEN];
-uint8_t prep_auth_data_aad_len;
+uint8_t PPCAT(PREP_AUTH_DATA_INST,_aad)[AAD_MAX_LEN];
+uint8_t PPCAT(PREP_AUTH_DATA_INST,_aad_len);
 // Input stream of ciphertext
-stream(axis128_t) prep_auth_data_axis_in; // input
-uint1_t prep_auth_data_axis_in_ready; // output
+stream(axis128_t) PPCAT(PREP_AUTH_DATA_INST,_axis_in); // input
+uint1_t PPCAT(PREP_AUTH_DATA_INST,_axis_in_ready); // output
 // Output stream of authenticated data
-stream(axis128_t) prep_auth_data_axis_out; // output
-uint1_t prep_auth_data_axis_out_ready; // input
+stream(axis128_t) PPCAT(PREP_AUTH_DATA_INST,_axis_out); // output
+uint1_t PPCAT(PREP_AUTH_DATA_INST,_axis_out_ready); // input
 
-#pragma MAIN prep_auth_data
-void prep_auth_data()
+MAIN(PREP_AUTH_DATA_INST)
+void PREP_AUTH_DATA_INST()
 {
   prep_auth_data_fsm_t fsm_out = prep_auth_data_fsm(
-    prep_auth_data_aad,
-    prep_auth_data_aad_len,
-    prep_auth_data_axis_in,
-    prep_auth_data_axis_out_ready
+    PPCAT(PREP_AUTH_DATA_INST,_aad),
+    PPCAT(PREP_AUTH_DATA_INST,_aad_len),
+    PPCAT(PREP_AUTH_DATA_INST,_axis_in),
+    PPCAT(PREP_AUTH_DATA_INST,_axis_out_ready)
   );
-  prep_auth_data_axis_in_ready = fsm_out.ready_for_axis_in;
-  prep_auth_data_axis_out = fsm_out.axis;
+  PPCAT(PREP_AUTH_DATA_INST,_axis_in_ready) = fsm_out.ready_for_axis_in;
+  PPCAT(PREP_AUTH_DATA_INST,_axis_out) = fsm_out.axis;
 }
+
+#undef PREP_AUTH_DATA_INST
