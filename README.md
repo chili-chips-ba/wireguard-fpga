@@ -51,9 +51,11 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 
 **[Ref9]** [Alex's Ethernet Stack](https://github.com/alexforencich/verilog-ethernet)
 
-**[Ref10]** [Amina's ADASEC-SDN](https://github.com/etf-tk-sdn/ADASEC-SDN)
+**[Ref10]** [High-performance Switches and Routers](https://books.google.ba/books?id=kzstoFdvZ2sC&printsec=frontcover&redir_esc=y#v=onepage&q&f=false)
 
-**[Ref11]** [High-performance Switches and Routers](https://books.google.ba/books?id=kzstoFdvZ2sC&printsec=frontcover&redir_esc=y#v=onepage&q&f=false)
+**[Ref11]** [Amina's ADASEC-SDN](https://github.com/etf-tk-sdn/ADASEC-SDN)
+
+
 
 # Project Outline
 
