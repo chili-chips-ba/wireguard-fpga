@@ -322,6 +322,7 @@ If it was not for **Julian Kemmerer's** unreserved support helping us move our t
 </p>
 
 ### Public posts:
+- [2025-12-11](https://www.linkedin.com/posts/chili-chips_wireguard-fpga-opensource-activity-7404799997201833985-Hh-j?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJv-TcBSi_5ff0VNMrInrT-xg44YF3jnyU)
 - [2025-10-12](https://www.linkedin.com/pulse/wireguard-fpga-advanced-co-simulation-verification-case-southwell-z64ce)
 - [2025-06-07](https://www.linkedin.com/posts/simon-southwell-7684482_had-a-great-time-at-the-fpga-conference-europe-activity-7347534737554505729-pWYJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJv-TcBSi_5ff0VNMrInrT-xg44YF3jnyU)
 - [2025-05-17](https://www.linkedin.com/posts/chili-chips_opensource-wireguard-fpga-activity-7329738780876197888-ljJR?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJv-TcBSi_5ff0VNMrInrT-xg44YF3jnyU)
