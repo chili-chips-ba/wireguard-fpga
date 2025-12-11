@@ -1,9 +1,9 @@
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
-  <img width="200", src="0.doc/artwork/wireguard-fpga.logo.png">
-  <img width="150", src="0.doc/artwork/ethernet-cable.png">
-  <img width="200", src="0.doc/artwork/wireguard-fpga.logo.png">
+  <img width="20%", src="0.doc/artwork/wireguard-fpga.logo.png">
+  <img width="10%", src="0.doc/artwork/ethernet-cable.png">
+  <img width="20%", src="0.doc/artwork/wireguard-fpga.logo.png">
 </p>
 
 With traditional solutions (such as OpenVPN / IPSec) starting to run out of steam, Wireguard is increasingly coming to the forefront as a modern, secure data tunneling and encryption method, one that's also easier to manage than the incumbents. Both software and hardware implementations of Wireguard already exist. However, the software performance is far below the speed of wire. Existing hardware approaches are both prohibitively expensive and based on proprietary, closed-source IP blocks and tools.<br> 
@@ -84,12 +84,17 @@ The Phase2 continuation project is therefore also in the plans, to maximize effi
 ## HW/SW Partitioning
 Since the WireGuard node essentially functions as an IP router with WireGuard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the WireGuard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully implemented in RTL on an FPGA.
 
-![HWSWPartitioning](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
-
+<p align="center">
+  <img width="80%" src="0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp">
+</p>
+ 
 In the HW/SW partitioning diagram, we can observe two types of network traffic: control traffic, which originates from the control plane and goes toward the external network (and vice versa), and data traffic, which arrives from the external network and, after processing in the data plane, returns to the external network. Specifically, control traffic represents WireGuard protocol handshake messages, while data traffic consists of end-user traffic, either encrypted or in plaintext, depending on the perspective.
 
 ## Hardware Architecture and Theory of Operation
-![HWArchitecture](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
+
+<p align="center">
+  <img width="90%" src="0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp">
+</p>
 
 The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
 
@@ -114,7 +119,10 @@ _ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracke
 The details of hardware architecture can be found in the [README.md](./1.hw/README.md) in the `1.hw/` directory.
 
 ## Software Architecture and Theory of Operation
-![SWArchitecture](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
+
+<p align="center">
+  <img width="60%" src="0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp">
+</p>
 
 The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the WireGuard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
 - [Curve25519](http://cr.yp.to/ecdh.html) - an ECDH algorithm implementation for establishing a shared secret using a public-private key pair between two remote parties connected via an insecure channel, such as the Internet
@@ -140,7 +148,9 @@ To illustrate the operation of the system as a whole, we have prepared a step-by
 - 10.9.0.2 - WireGuard peer B
 - 10.10.0.1 - the end-user host at site B
 
-![ExampleToplogy](./0.doc/Wireguard/wireguard-fpga-muxed-Example-Topology.webp)
+<p align="center">
+  <img width="70%" src="0.doc/Wireguard/wireguard-fpga-muxed-Example-Topology.webp">
+</p>
 
 The detailed analysis can be found in the [README.md](./1.hw/README.md#hwsw-working-together-as-a-coherent-system) in the `1.hw/` directory.
 
@@ -162,7 +172,7 @@ The [Wireguard FPGA test bench](4.sim/README.md) aims to have a flexible approac
 The figure below shows an oveview block diagram of the test bench HDL.
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/98cb3a19-11c7-4470-a4e1-41c503429e14" width=600>
+   <img src="https://github.com/user-attachments/assets/98cb3a19-11c7-4470-a4e1-41c503429e14" width=600>
 </p>
 
 More details on the architecture and usage of the Wireguard test bench can be found in the [README.md](4.sim/README.md) in the `4.sim` directory.
@@ -309,13 +319,13 @@ We are grateful to **NLnet Foundation** for their sponsorship of this developmen
 
 <p align="center">
    <img src="https://github.com/chili-chips-ba/openeye/assets/67533663/18e7db5c-8c52-406b-a58e-8860caa327c2">
-   <img width="115" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
+   <img width="20%" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
 </p>
 
 The **wyvernSemi**'s wisdom and contribution made a great deal of difference -- Thank you, we are honored to have you on the project.
 
 <p align="center">
- <img width="115" alt="wyvernSemi-Logo" src="https://github.com/user-attachments/assets/94858fce-081a-43b4-a593-d7d79ef38e13">
+ <img width="15%" alt="wyvernSemi-Logo" src="https://github.com/user-attachments/assets/94858fce-081a-43b4-a593-d7d79ef38e13">
 </p>
 
 If it was not for **Julian Kemmerer's** unreserved support helping us move our two cryptography blocks from C to gates, be it by guiding and mentoring, or by doing it himself, the meat of this project would not have been so easily pushed through to hardware using `PipelineC`. Thank you Mr.OpensourceHLS 🙏. 
