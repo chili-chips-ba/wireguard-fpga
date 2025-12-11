@@ -25,7 +25,7 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 
 <p align="center">
   <img width="600" src="0.doc/Alinx/ALINX7201x2.jpg">
-  <img width="500" src="0.doc/Alinx/AX7201.jpg">
+  <img width="500" src="0.doc/Alinx/AX7201.png">
 </p>
 
 ## References
