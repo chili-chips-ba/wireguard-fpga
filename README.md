@@ -340,7 +340,7 @@ We are grateful to **NLnet Foundation** for their sponsorship of this developmen
 The **wyvernSemi**'s wisdom and contribution made a great deal of difference -- Thank you, we are honored to have you on the project.
 
 <p align="center">
- <img width="15%" alt="wyvernSemi-Logo" src="https://github.com/user-attachments/assets/94858fce-081a-43b4-a593-d7d79ef38e13">
+   <img width="15%" alt="wyvernSemi-Logo" src="0.doc/artwork/VProc.logo.png">
 </p>
 
 If it was not for **Julian Kemmerer's** unreserved support helping us move our two cryptography blocks from C to gates, be it by guiding and mentoring, or by doing it himself, the meat of this project would not have been so easily pushed through to hardware using `PipelineC`. Thank you Mr.OpensourceHLS 🙏. 
