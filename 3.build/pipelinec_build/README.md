@@ -222,15 +222,7 @@ The module uses a simple two-state FSM to sequence the Ciphertext pass-through a
     <img width="700" src="./doc/chacha20poly1305_decrypt.png">
 </p>
 
-The design scheme for the decryptor can be seen above. Unlike the *encryption* we now have both *ciphertext* and the *authentication tag* as inputs to our module. The inputs first go inside the *strip_auth_tag* block, since both *ciphertext* and *authentication tag* come in one after the other in one stream, we have to separate them, and then pass them on to the next blocks. From there we pass the *authentication tag* to the *poly1305_verify* block and *ciphertext* is passed to *prep_auth_data* and *chacha20_decrypt*. The *prep_auth_data* block ... (insert what the block does). As a result the block outputs *auth_data* which along with *poly1305_key* goes into the *poly1305_mac* block.
-
-In the table below we showcase the bus size of each signal passed between our decryption blocks:
-| 128b AXIS bus |128b bus | 1b bus | 256b bus |
-|:--:|:--:|:--:|:--:|
-|input ciphertext + auth_tag | auth_tag | verify_bit | poly1305_key |
-| ciphertext | calculated_tag | is_verified | |
-| auth_data | |||
-| plaintext |
+The picture above presents the *Decryption* block. We can see right away that this block uses a couple more blocks than it's encryption counterpart. Still, it uses the same *chacha20_pipeline_shared* and *poly305_pipeline_shared* blocks that we described in the previous section. In this section we will showcase in detail the remaining four blocks that are used for the *decryption*: *strip_auth_tag*, *prep_auth_tag*, *poly1305_verify* and *wait_to_verify*.
 
 
 ## strip_auth_tag
