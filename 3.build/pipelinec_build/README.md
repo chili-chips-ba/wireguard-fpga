@@ -1,7 +1,7 @@
 # Encryption and Decryption using PipelineC
 
-In this segement we will present the design behind the implemented *chacha20poly1305* encryptor and decryptor
-
+In this section we will present the architecture of our *chacha20poly1305 encryption* and *decryption*. Both *encryption* and *decryption* have been built with [PipelineC](https://github.com/JulianKemmerer/PipelineC).
+For both *encryption* and *decryption* we will present a diagram that showcases how everything is connected together, after which we will explain each block in detail.
 
 
 # Encryption
@@ -10,35 +10,58 @@ In this segement we will present the design behind the implemented *chacha20poly
     <img width="700" src="./doc/Encryption.png">
 </p>
 
+In this section we will present the *encryption* block's structure. The architecture is displayed on the graph above. The goal of the *encryption* block is to take *plaintext* as it's input, the block will cyphere the input text and output the encrypted text. Alongside the encrypted text, as the output of this block we also have the authentiaction tag, both the tag and the encrypted text are streamed one after the other (first the ciphertext and then the tag).
+As the graph above shows, the *encryption* is consisted of four blocks: *chacha20_pipeline_shared*, prep_auth_data*, *poly1305_pipeline_shared* and *append_auth_tag*. TThe *chacha20_pipeline_shared* and *poly1305_pipeline_shared* blocks are used in both *encryption* and *decryption*, that's why these blocks are pipelines shared between the two blocks. Both pipelines have a multiplexer on their respected inputs and choose which inputs they will take. This way we manage to save space by having only one block instead of having two blocks each.
+A detailed description of each block used for the *encryption* is given bellow.
+We will prsent the two shared blocks in this section, since they are the same for decryption we will only describe them once.
 
 
-## chacha20
 
-The `chacha20` module implements the core **ChaCha20 stream cipher** logic for encryption, decryption, and key-stream generation in the context of the larger ChaCha20-Poly1305 construction.
+## chacha20_pipeline_shared
 
-This block performs two main responsibilities in sequence:
+The `chacha20_pipeline_shared` module implements resource sharing for the highly complex and resource-intensive ChaCha20 block function. Since the core calculation logic for encryption and decryption is identical (both rely on generating a keystream), this module instantiates a single, shared hardware pipeline (`chacha20_pipeline`) and multiplexes two independent client interfaces (Encrypt and Decrypt) onto it.
 
-1.  **Poly1305 Key Generation:** It first generates a 32-byte (256-bit) one-time Poly1305 key by running the ChaCha20 block function with the initial counter set to 0 and the input plaintext/ciphertext data set to zero. This key is immediately streamed out via `chacha20_poly_key`.
-2.  **Data Processing (Encrypt/Decrypt):** After key generation, it switches state to process the main data stream. It takes 128-bit (16-byte) blocks of input data (`chacha20_axis_in`), applies the ChaCha20 block function to generate the keystream for each 64-byte block, and XORs the keystream with the input data to produce the output data (`chacha20_axis_out`).
+The main function, `chacha20_sharing_mux`, manages the round-robin scheduling for inputs and the demultiplexing of results based on a transaction ID.
 
-### Internal Architecture
+### Shared Pipeline Architecture
 
-This module utilizes a **Finite State Machine (FSM)** (`chacha20_fsm`) to manage the two states (POLY\_KEY generation and PLAINTEXT/CIPHERTEXT processing). It controls data flow in and out of a highly parallelized ChaCha20 core.
+To enable sharing, the core `chacha20_loop_body` pipeline is wrapped to include a 1-bit identification tag (`is_encrypt`):
 
-* **Pipelined Core:** It instantiates the `chacha20_loop_body` function as a **Global Valid-Ready Pipeline (`chacha20_pipeline`)**. This core executes the 20-round ChaCha20 block function (`chacha20_block`), which is fully unrolled into 10 pairs of step functions (`chacha20_block_step`) to maximize throughput for hardware synthesis.
-* **Data Width Conversion:** The module uses helper functions (`axis128_to_axis512` and `axis512_to_axis128`) to convert the input and output streams between the 128-bit AXI stream interface (for external I/O) and the 512-bit (64-byte) block size required by the ChaCha20 core.
+$$\text{Pipeline Input}: (\mathbf{data}, \mathbf{is\_encrypt})$$
+$$\text{Pipeline Output}: (\mathbf{result}, \mathbf{is\_encrypt})$$
 
-### Inputs and Outputs
+This tag is propagated through all 64 stages of the pipeline to ensure that the result is correctly routed back to the requestor upon exit.
 
-| Port Name | Direction | Data Type | Description |
+### Global Interfaces
+
+The module exposes two distinct, named interfaces, which allow the separate Encrypt and Decrypt FSMs to access the shared pipeline transparently:
+
+| Interface Name | Direction | Type | Description |
 | :--- | :--- | :--- | :--- |
-| `chacha20_key` | Input (CSR) | `uint8_t[32]` | The 256-bit secret key. |
-| `chacha20_nonce` | Input (CSR) | `uint8_t[12]` | The 96-bit nonce/IV. |
-| `chacha20_axis_in` | Input (Stream) | `stream(axis128_t)` | The input plaintext (for encryption) or ciphertext (for decryption). |
-| `chacha20_poly_key` | Output (Stream) | `stream(poly1305_key_uint_t)` | The 256-bit key derived from the first ChaCha20 block output (counter 0). |
-| `chacha20_axis_out` | Output (Stream) | `stream(axis128_t)` | The resulting ciphertext or plaintext stream. |
+| `chacha20_encrypt_pipeline_in` | Input | `stream(chacha20_loop_body_in_t)` | Input stream for encryption requests. |
+| `chacha20_encrypt_pipeline_out` | Output | `stream(axis512_t)` | Output stream for encryption results (the 512-bit keystream block). |
+| `chacha20_decrypt_pipeline_in` | Input | `stream(chacha20_loop_body_in_t)` | Input stream for decryption requests. |
+| `chacha20_decrypt_pipeline_out` | Output | `stream(axis512_t)` | Output stream for decryption results. |
 
+### Sharing and Muxing Logic (`chacha20_sharing_mux`)
 
+The core logic manages two operations: **Input Multiplexing** and **Output Demultiplexing**.
+
+#### 1. Input Multiplexing (Round-Robin Scheduling)
+
+The input selection is handled by a static flip-flop (`is_encrypt`) which alternates between the two request streams on every cycle:
+* The `chacha20_pipeline_in` data structure is populated with data from either `chacha20_encrypt_pipeline_in` or `chacha20_decrypt_pipeline_in` based on the current state of `is_encrypt`.
+* The `is_encrypt` tag is set on the shared pipeline input to identify the owner of the transaction.
+* The ready signal from the shared pipeline (`chacha20_pipeline_in_ready`) is routed back to the currently selected input stream (`_in_ready`).
+* The static variable `is_encrypt` is **toggled** (`~is_encrypt`) every clock cycle, ensuring a fair round-robin scheduling policy, regardless of whether the selected input stream had valid data.
+
+#### 2. Output Demultiplexing (ID-based Routing)
+
+The output from the shared pipeline is routed based on the `is_encrypt` tag that was preserved throughout the pipeline stages:
+* When a valid result emerges from the shared pipeline (`chacha20_pipeline_out.valid`), the module checks `chacha20_pipeline_out.data.is_encrypt`.
+* If the tag is **1**, the result is routed to `chacha20_encrypt_pipeline_out`.
+* If the tag is **0**, the result is routed to `chacha20_decrypt_pipeline_out`.
+* The ready signal for the shared pipeline (`chacha20_pipeline_out_ready`) is asserted only when the corresponding target output stream is ready to accept the data, correctly applying back-pressure.
 
 ## prep_auth_data
 
@@ -108,49 +131,53 @@ The FSM uses a static `counter` to track remaining AAD bytes or accumulated Ciph
 * **Next State:** Transitions back to `IDLE` upon a successful transfer of the `LENGTHS` block.
 
 
-## poly1305_mac
+## poly1305_pipeline_shared
 
-The `poly1305_mac` module is the core computational unit responsible for calculating the 16-byte Poly1305 authentication tag (MAC). It operates as a Finite State Machine (FSM) that orchestrates the data flow, key clamping, iterative accumulation, and final reduction, utilizing a high-performance, dedicated pipeline for the core arithmetic operation.
+The `poly1305_pipeline_shared` module (implemented by the `poly1305_mac_sharing_mux` function) enables area-efficient reuse of the high-latency, 320-bit Poly1305 MAC loop body pipeline. Since the iterative accumulation logic is identical for both encryption and decryption operations, a single hardware resource is instantiated and dynamically shared between the two cryptographic paths.
 
-### Architecture and Pipelining
+The core mechanism involves embedding a 1-bit transaction ID (referred to as `id` or implicitly `is_encrypt`) into the transaction envelope.
 
-The module is designed around the iterative structure of Poly1305, where the 320-bit accumulator $\mathbf{a}$ feeds back into the pipeline for the next calculation:
+### Shared Pipeline Architecture
 
-$$\mathbf{a_{i+1}} = \text{poly1305\_mac\_loop\_body}(\mathbf{m_i}, \mathbf{r}, \mathbf{a_i})$$
+The module uses the `GLOBAL_PIPELINE_INST_W_VALID_ID` macro, which automatically wraps the `poly1305_mac_loop_body` core function to include a dedicated ID bit that propagates through the pipeline. This bit identifies the original requestor (Encrypt or Decrypt).
 
-This inner loop is implemented as a high-performance hardware pipeline (`poly1305_pipeline`) to achieve a high operating frequency. The FSM manages the handshaking and sequential feeding of data blocks into this pipeline.
-
-
-
-### Inputs and Outputs
-
-The module manages two input streams (Key and Data) and one output stream (Authentication Tag).
-
-| Port Name | Direction | Type | Description |
+| Pipeline Component | Data Width | ID Included | Description |
 | :--- | :--- | :--- | :--- |
-| `poly1305_mac_key` | Input | `stream(poly1305_key_uint_t)` (256 bits) | The 32-byte key stream ($\mathbf{r} || \mathbf{s}$). Read once per MAC sequence. |
-| `poly1305_mac_key_ready` | Output | `uint1_t` | Ready signal for the key input stream. |
-| `poly1305_mac_data_in` | Input | `stream(axis128_t)` | 16-byte wide AXI stream of authenticated data blocks ($\mathbf{m_i}$). |
-| `poly1305_mac_data_in_ready` | Output | `uint1_t` | Ready signal for the data input stream. |
-| `poly1305_mac_auth_tag` | Output | `stream(poly1305_auth_tag_uint_t)` (128 bits) | The final 16-byte authentication tag output. |
-| `poly1305_mac_auth_tag_ready` | Input | `uint1_t` | Handshake signal from the consumer indicating readiness to accept the tag. |
+| **Input (`_in`)** | `poly1305_mac_loop_body_in_t` | Yes (`_in_id`) | Contains block bytes, $\mathbf{r}$ key, and previous accumulator $\mathbf{a}$. |
+| **Output (`_out`)** | `u320_t` | Yes (`_out_id`) | The resulting 320-bit accumulator $\mathbf{a}_{i+1}$ value. |
 
-### Finite State Machine (FSM)
+### Global Interfaces
 
-The FSM controls the sequence of operations, ensuring correct pipeline synchronization and key handling.
+The sharing module presents four distinct, synchronous global interfaces to hide the sharing mechanism from the client FSMs:
 
-| State | FSM Action | Pipeline Interaction | Next State Conditions |
+| Port Name | Direction | Data Type | Role |
 | :--- | :--- | :--- | :--- |
-| **KEY\_SETUP** | Initializes the accumulator $\mathbf{a}$ to $\mathbf{0}$ and waits for the 32-byte key ($\mathbf{r} || \mathbf{s}$). Upon key receipt, it performs **clamping** on the $\mathbf{r}$ component (zeroing specific bits as per the Poly1305 specification). | Idle. | Key received and processed. $\rightarrow \text{DATA\_LOOP}$ |
-| **DATA\_LOOP** | Asserts `poly1305_mac_data_in_ready` and consumes the next 16-byte block ($\mathbf{m_i}$). Checks for the end-of-stream signal (`tlast`). | Sends the current state $(\mathbf{m_i}, \mathbf{r}, \mathbf{a})$ to the pipeline and asserts `to_pipeline_valid`. | Data block read successfully. $\rightarrow \text{PIPELINE\_WAIT}$ |
-| **PIPELINE\_WAIT** | Waits for the pipeline to finish computation, signaled by `poly1305\_pipeline\_out\_valid`. This ensures the iterative dependency is respected. | Receives the new accumulator value ($\mathbf{a_{i+1}}$) and stores it in the static $\mathbf{a}$ register. | Pipeline output is valid. $\rightarrow \text{DATA\_LOOP}$ (if more blocks) or $\rightarrow \text{FINALIZE\_START}$ (if last block was processed). |
-| **FINALIZE\_START** | Initiates the final calculation, which is the addition of the clamped key component $\mathbf{s}$: $$\mathbf{t} = ((\mathbf{a} \bmod 2^{130} - 5) \bmod 2^{128}) + \mathbf{s}$$ This step results in the final 16-byte MAC. | Idle. Uses the final value of $\mathbf{a}$. | Final calculation complete (occurs over a single cycle). $\rightarrow \text{OUTPUT\_TAG}$ |
-| **OUTPUT\_TAG** | Asserts `auth_tag_valid` and outputs the final tag (`poly1305_mac_auth_tag`). | Idle. | Consumer asserts `auth_tag_ready`. $\rightarrow \text{KEY\_SETUP}$ (Ready for a new MAC sequence). |
+| `poly1305_mac_encrypt_pipeline_in` | Input | `poly1305_mac_loop_body_in_t` | Input from the Encryption MAC FSM. |
+| `poly1305_mac_decrypt_pipeline_in` | Input | `poly1305_mac_loop_body_in_t` | Input from the Decryption/Verification MAC FSM. |
+| `poly1305_mac_encrypt_pipeline_out` | Output | `u320_t` | Output to the Encryption MAC FSM (new $\mathbf{a}$). |
+| `poly1305_mac_decrypt_pipeline_out` | Output | `u320_t` | Output to the Decryption/Verification MAC FSM (new $\mathbf{a}$). |
 
+### Sharing and Muxing Logic (`poly1305_mac_sharing_mux`)
+
+The sharing logic manages the input selection via a round-robin approach and the output routing via the embedded ID.
+
+#### 1. Input Multiplexing (Round-Robin)
+
+* **Scheduler:** A static register (`is_encrypt`) toggles every clock cycle, defining which client interface is selected to drive the shared pipeline input.
+* **Data Injection:** Data from the selected stream (`_encrypt_in` or `_decrypt_in`) is passed to the shared pipeline input (`poly1305_mac_pipeline_in`).
+* **ID Tagging:** The `is_encrypt` register value is explicitly written to the shared pipeline's ID port (`poly1305_mac_pipeline_in_id`).
+* **Ready Signal:** The ready signals for both input streams (`_in_ready`) are **unconditionally asserted (`= 1`)**. This relies on the surrounding FSM logic to handle synchronization and back-pressure, operating in a highly optimized push-based manner.
+
+#### 2. Output Demultiplexing (ID-Based Routing)
+
+* When a valid result emerges from the shared pipeline (`poly1305_mac_pipeline_out_valid`), the `poly1305_mac_pipeline_out_id` is inspected.
+* If the ID matches the Encrypt tag (1), the result (`u320_t`) is routed to `poly1305_mac_encrypt_pipeline_out`.
+* If the ID matches the Decrypt tag (0), the result is routed to `poly1305_mac_decrypt_pipeline_out`.
+* The valid signal for the corresponding output stream is asserted. Back-pressure handling for the shared pipeline is implicitly managed by the output receiver's readiness, ensuring no data is dropped.
 
 ## append_auth_tag
 
-The `append_auth_tag` module is responsible for the final stage of the ChaCha20-Poly1305 dencryption process. Its sole function is to stream the received Ciphertext data from the core, and upon completion, append the 16-byte Poly1305 Authentication Tag (MAC) as the final AXI word.
+The `append_auth_tag` module is responsible for the final stage of the ChaCha20-Poly1305 encryption process. Its sole function is to stream the received Ciphertext data from the core, and upon completion, append the 16-byte Poly1305 Authentication Tag (MAC) as the final AXI word.
 
 This ensures the combined stream is correctly structured for the consumer as the Ciphertext followed by the MAC. The module manages the critical `tlast` signal to accurately mark the end of the entire authenticated message.
 
@@ -255,6 +282,45 @@ The input data passes through the `axis128_early_tlast` function:
 
 
 
+## prep_auth_data
+
+The `prep_auth_data` module (implemented by the `prep_auth_data_fsm` function) is a critical component for constructing the required input stream for the Poly1305 Message Authentication Code (MAC) calculation, adhering strictly to the format defined in RFC 8439.
+
+The module receives the fixed Additional Authenticated Data (AAD) and the streaming Ciphertext, and then generates a single, contiguous AXI stream that Poly1305 must process.
+
+### Poly1305 Authenticated Data Format
+
+The module outputs a single AXI stream with the following structure, ensuring all intermediate blocks ($\text{AAD}^*$ and $\text{Ciphertext}^*$) are zero-padded to the next 16-byte boundary:
+
+$$\text{Authenticated Stream} = \text{AAD}^* || \text{Ciphertext}^* || \text{Lengths}$$
+
+Where:
+* **$\text{AAD}^*$**: The AAD, followed by the zero-padding needed to reach a multiple of 16 bytes.
+* **$\text{Ciphertext}^*$**: The Ciphertext, followed by the zero-padding needed to reach a multiple of 16 bytes.
+* **$\text{Lengths}$**: A fixed 16-byte block containing two 64-bit little-endian integers: the actual AAD length, followed by the actual Ciphertext length.
+
+### Inputs and Outputs
+
+| Port Name | Direction | Type | Description |
+| :--- | :--- | :--- | :--- |
+| `_aad` | Input | `uint8_t[AAD_MAX_LEN]` | The AAD block (read once). |
+| `_aad_len` | Input | `uint8_t` | The length of the AAD block. |
+| `_axis_in` | Input | `stream(axis128_t)` | Input AXI stream carrying the Ciphertext. |
+| `_axis_in_ready` | Output | `uint1_t` | Indicates readiness to consume Ciphertext. |
+| `_axis_out` | Output | `stream(axis128_t)` | Output AXI stream carrying the Poly1305 authenticated data. |
+| `_axis_out_ready` | Input | `uint1_t` | Readiness signal from the Poly1305 core. |
+
+### Finite State Machine (FSM) Description
+
+The FSM uses a 16-byte block-based approach for streaming and a static counter to track the true length of the Ciphertext.
+
+| State | Action and Logic | Counter Management | Transition Condition |
+| :--- | :--- | :--- | :--- |
+| **IDLE** | Waits for the first valid word of the incoming Ciphertext stream (`_axis_in.valid`). Initializes internal state. | Resets `counter` to 0. | Input valid. $\rightarrow \text{AAD\_STATE}$ (if `aad_len > 0`) or $\rightarrow \text{CIPHERTEXT}$ (if `aad_len == 0$). |
+| **AAD\_STATE** | Streams out AAD data from the internal `aad_reg`. Output `tkeep` is fully asserted (16 bytes). Zero-padding occurs implicitly by shifting out 16 bytes per cycle until the total length is exhausted. | `counter` is initialized with `aad_len` and decremented by 16 upon each successful transfer. | `counter \le 16` and the last block transfer completes. $\rightarrow \text{CIPHERTEXT}$ |
+| **CIPHERTEXT** | Passes the incoming Ciphertext stream to the output. **Crucially, the input `tlast` is suppressed (`tlast=0`) and the output stream data is explicitly zero-filled where the input `tkeep` is low.** | `counter` accumulates the *actual* byte count of the Ciphertext using `axis128_keep_count`. | Input `tlast` is observed. $\rightarrow \text{LENGTHS}$ |
+| **LENGTHS** | Outputs a single, final 16-byte AXI word containing the AAD length (64-bit LE) and the accumulated Ciphertext length (64-bit LE). | Not managed. | Output transfer completes. $\rightarrow \text{IDLE}$ |
+
 ## poly1305_verify_decrypt
 
 The `poly1305_verify_decrypt` module is the final arbiter in the authentication process for ChaCha20-Poly1305. Its sole responsibility is to receive the Authentication Tag provided with the incoming message (`poly1305_verify_auth_tag`) and the tag calculated locally by the `poly1305_mac` module (`poly1305_verify_calc_tag`). It performs a single, atomic 128-bit comparison to determine if the message is authentic, outputting a 1-bit match result.
@@ -286,9 +352,6 @@ The FSM sequentially consumes the two input tags and then performs the compariso
 | **TAKE\_CALC\_TAG** | Asserts readiness for the locally Calculated Tag (`poly1305_verify_calc_tag_ready = 1`). | On valid data transfer, reads and registers the calculated tag (`calc_tag_reg`). | Successful transfer. $\rightarrow \text{COMPARE\_TAGS}$ |
 | **COMPARE\_TAGS** | Performs the 128-bit equality check: `tags_match_reg = (auth_tag_reg == calc_tag_reg)`. This operation is combinatorial and completes in a single clock cycle. | No I/O handshake is needed in this state, as it uses internal registers. | Unconditional transition. $\rightarrow \text{OUTPUT\_COMPARE\_RESULT}$ |
 | **OUTPUT\_COMPARE\_RESULT** | Outputs the result stored in `tags_match_reg` and asserts the output stream valid signal. | Waits until the consumer asserts `poly1305_verify_tags_match_ready`. | Successful output transfer. $\rightarrow \text{TAKE\_AUTH\_TAG}$ (Reset for next transaction). |
-
-
-
 
 ## wait_to_verify
 
