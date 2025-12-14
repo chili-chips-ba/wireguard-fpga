@@ -1,0 +1,77 @@
+============================================================
+SV2V Module Extraction Report
+============================================================
+
+EXTRACTED MODULES:
+  - ethernet_phy (30 lines)
+  - sync_fifo_ram (80 lines)
+  - clk_rst_gen (64 lines)
+  - picorv32 (1498 lines)
+  - picorv32_pcpi_mul (129 lines)
+  - picorv32_pcpi_fast_mul (93 lines)
+  - picorv32_pcpi_div (85 lines)
+  - imem (1209 lines)
+  - fpga_pll_125M (54 lines)
+  - fpga_pll_80M (54 lines)
+  - csr (632 lines)
+  - top (2611 lines)
+
+MISSING EXPECTED MODULES:
+  - dpe_pkg (package)
+  - soc_pkg (package)
+  - csr_pkg (package)
+  - dpe_if (interface)
+  - soc_if (interface)
+  - gmii_if (interface)
+  - ethernet_mac (module)
+  - cpu_fifo (module)
+  - soc_fabric (module)
+  - soc_ram (module)
+  - soc_csr (module)
+  - uart (module)
+  - dpe_if_skid_buffer (module)
+  - dpe (module)
+  - dpe_demultiplexer (module)
+  - dpe_multiplexer (module)
+  - dpe_dummy_switch (module)
+  - soc_cpu (module)
+
+INLINED INSTANCES (in generate blocks):
+  - from_cpu
+  - from_eth_1
+  - from_eth_2
+  - from_eth_3
+  - from_eth_4
+  - to_cpu
+  - to_eth_1
+  - to_eth_2
+  - to_eth_3
+  - to_eth_4
+  - bus_cpu
+  - bus_uart
+  - bus_dmem
+  - bus_csr
+  - u_cpu
+  - u_fabric
+  - u_dmem
+  - u_uart
+  - u_cpu_fifo
+  - u_dpe
+  - u_eth_1
+  - u_eth_2
+  - u_eth_3
+  - u_eth_4
+
+WARNINGS:
+  ! Module 'ethernet_mac' not found as standalone
+  ! Module 'soc_fabric' not found as standalone
+  ! Module 'soc_ram' not found as standalone
+  ! Module 'soc_csr' not found as standalone
+  ! Module 'dpe_if_skid_buffer' not found as standalone
+  ! Module 'dpe_demultiplexer' not found as standalone
+  ! Module 'dpe_multiplexer' not found as standalone
+  ! Module 'dpe_dummy_switch' not found as standalone
+  ! Module 'soc_cpu' not found as standalone
+
+============================================================
+END OF REPORT
