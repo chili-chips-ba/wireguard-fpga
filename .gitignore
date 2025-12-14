@@ -54,3 +54,4 @@ tb.stems
 3.build/pipelinec_build/generated-files-verilog/*
 
 3.build/wirevenv/
+/3.build/hw_build.openXC7/chipdb
