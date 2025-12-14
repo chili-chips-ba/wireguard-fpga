@@ -19,7 +19,7 @@ implementation for WireGuard, including hashing, key derivation, and HMAC constr
 
 ## Implementation Notes
 
-- Implements the official BLAKE2s compression function and permutation.
+- Implements the official BLAKE2s compression function and permutation (based on: "A clean & simple implementation of BLAKE2b and [BLAKE2s](https://github.com/mjosaarinen/blake2_mjosref) hash functions -- written while writing the RFC.")
 - Uses explicit bitwise operations (XOR, shifts, rotations) and 32-bit arithmetic.
 - Little-endian data handling is implemented manually for portability.
 - No dynamic memory allocation.
