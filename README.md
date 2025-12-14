@@ -1,14 +1,29 @@
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
-  <img width="200", src="0.doc/artwork/wireguard-fpga.logo.png">
-  <img width="150", src="0.doc/artwork/ethernet-cable.png">
-  <img width="200", src="0.doc/artwork/wireguard-fpga.logo.png">
+  <img width="20%", src="0.doc/artwork/wireguard-fpga.logo.png">
+  <img width="10%", src="0.doc/artwork/ethernet-cable.png">
+  <img width="20%", src="0.doc/artwork/wireguard-fpga.logo.png">
 </p>
 
-With traditional solutions (such as OpenVPN / IPSec) starting to run out of steam, Wireguard is increasingly coming to the forefront as a modern, secure data tunneling and encryption method, one that's also easier to manage than the incumbents. Both software and hardware implementations of Wireguard already exist. However, the software performance is far below the speed of wire. Existing hardware approaches are both prohibitively expensive and based on proprietary, closed-source IP blocks and tools.<br> 
+With traditional solutions (such as OpenVPN / IPSec) starting to run out of steam, Wireguard is increasingly coming to the forefront as a modern, secure data tunneling and encryption method, one that's also easier to manage than the incumbents. Both software and hardware implementations of Wireguard already exist. However, the software performance is far below the speed of wire. The existing hardware approaches are both prohibitively expensive and based on proprietary, closed-source IP blocks and tools.<br> 
 
-- The intent of this project is to bridge these gaps with an FPGA open-source implementation of Wireguard, written in SystemVerilog HDL.
+This project aims to bridge these gaps with an `open-source, FPGA-based` implementation of Wireguard. It puts to work multiple open-source technologies:
+
+   ⭐ **PipelineC** HLS
+ 
+   ⭐ **PeakRDL** CSR
+ 
+   ⭐ **RISC-V** CPU
+ 
+   ⭐ **VProc** CoSim
+ 
+   ⭐ **OpenXC7** PNR
+
+   ⭐ **SV2V** SystemVerilog-to-Verilog HDL converter
+   
+and taps into ⭐ **Verilog-Ethernet** open-source IP library in order to compose a coherent hardware-software SOC for secure networking.
+
 
 ## A Glimpse into History 
 We have contributed to the **Blackwire** project, which is a 100Gbps hardware implementation of Wireguard switch based on AMD/Xilinx-proprietary AlveoU50 PC-accelerator card (SmartNIC form-factor), and implementable only with proprietary Vivado toolchain. 
@@ -79,9 +94,136 @@ The Phase2 continuation project is therefore also in the plans, to maximize effi
 6) Financial resources
     - Given that this is a complex, multi-disciplinary dev effort, the available funding may not be sufficient to bring it to completion. _Blackwire_, despite a larger allocated budget, ended up with funding crisis and abrupt cessation of dev activities.
 
+
+# Design Blueprint (WIP)
+## HW/SW Partitioning
+Since the WireGuard node essentially functions as an IP router with WireGuard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the WireGuard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully implemented in RTL on an FPGA.
+
+<p align="center">
+  <img width="80%" src="0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp">
+</p>
+ 
+In the HW/SW partitioning diagram, we can observe two types of network traffic: control traffic, which originates from the control plane and goes toward the external network (and vice versa), and data traffic, which arrives from the external network and, after processing in the data plane, returns to the external network. Specifically, control traffic represents WireGuard protocol handshake messages, while data traffic consists of end-user traffic, either encrypted or in plaintext, depending on the perspective.
+
+## Hardware Architecture and Theory of Operation
+
+<p align="center">
+  <img width="90%" src="0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp">
+</p>
+
+The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
+
+The soft CPU is equipped with a Boot ROM and a DDR3 SDRAM controller for interfacing with off-chip memory. External memory is exclusively used for control plane processes and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
+
+The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation:
+- _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)
+- _1G MAC_ - execution of the 1G Ethernet protocol (framing, flow control, FCS, etc.)
+- _Rx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
+- _Per-Packet Round Robin Multiplexer_ - servicing Rx FIFOs on a per-packet basis using a round-robin algorithm
+- _Header Parser_ - extraction of WireGuard-related information from packet headers (IP addresses, UDP ports, WireGuard message type, peer ID, etc.)
+- _Wireguard/UDP Packet Disassembler_ - decapsulation of the payload from the Wireguard data packet for decryption of tunneled traffic
+- _ChaCha20-Poly1305 Decryptor_ - decryption and authentication of tunneled traffic
+- _IP Lookup Engine_ - routing/forwarding table lookup, mapping packets to the appropriate WireGuard peer, and making packet accept/reject decisions
+- _ChaCha20-Poly1305 Encryptor_ - encryption and authentication of traffic to be tunneled
+- _Wireguard/UDP Packet Assembler_ - encapsulation of the encrypted packet into a WireGuard data packet for tunneling to the remote peer
+- _Per-Packet Demultiplexer_ - forwarding packets to Tx FIFOs based on packet type and destination
+- _Tx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
+
+_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
+
+The details of hardware architecture can be found in the [README.md](./1.hw/README.md) in the `1.hw/` directory.
+
+## Software Architecture and Theory of Operation
+
+<p align="center">
+  <img width="60%" src="0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp">
+</p>
+
+The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the WireGuard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
+- [Curve25519](http://cr.yp.to/ecdh.html) - an ECDH algorithm implementation for establishing a shared secret using a public-private key pair between two remote parties connected via an insecure channel, such as the Internet
+- ChaCha20-Poly1305 - an AEAD algorithm implementation for encryption and authentication of static keys and nonce values to prevent replay attacks
+- XChaCha20-Poly1305 - a XAEAD algorithm implementation for encrypting and authenticating nonce values in Cookie Replay messages to mitigate potential DoS attacks
+- [BLAKE2s](https://www.blake2.net) - an implementation of the BLAKE2s hash function for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
+- RNG - a random number generator used to initialize the DH key generator and generate peer identifiers
+- Timer - timers for rekey, retry, and keepalive procedures
+- [HKDF](https://eprint.iacr.org/2010/264) - an implementation of the algorithm for expanding the ECDH result
+- RTC - a real-time clock used to generate the TAI64N timestamp
+- [SipHash](https://en.wikipedia.org/wiki/SipHash) - a simple non-cryptographic function used for implementing a hashtable for fast lookup of decrypted static public keys of remote peers
+- Routing DB Updater - a subsystem for maintaining the cryptokey routing table content and deploying it to the data plane via the HAL/CSR interface
+- ICMP - implementing basic ICMP protocol functions (echo request/reply, TTL exceeded, etc.)
+- CLI - a USB/UART-based command-line interface for configuring the WireGuard node (setting the local IP address, remote peer IP addresses, network addresses, keys, etc.)
+- HAL/CSR Driver - a CSR-based abstraction for data plane components with an interface for reading/writing the corresponding registers
+
+The details of software architecture can be found in the [README.md](./2.sw/README.md) in the `2.sw/` directory.
+
+## HW/SW Working Together as a Coherent System
+To illustrate the operation of the system as a whole, we have prepared a step-by-step analysis of packets processing based on the capture of real WireGuard traffic. The experimental topology consists of four nodes:
+- 10.10.0.2 - the end-user host at site A
+- 10.9.0.1 - WireGuard peer A
+- 10.9.0.2 - WireGuard peer B
+- 10.10.0.1 - the end-user host at site B
+
+<p align="center">
+  <img width="70%" src="0.doc/Wireguard/wireguard-fpga-muxed-Example-Topology.webp">
+</p>
+
+The detailed analysis can be found in the [README.md](./1.hw/README.md#hwsw-working-together-as-a-coherent-system) in the `1.hw/` directory.
+
+## Simulation Test Bench
+
+The [Wireguard FPGA test bench](4.sim/README.md) aims to have a flexible approach to simulation which allows a common test environment to be used whilst selecting between alternative CPU components, one of which uses the [_VProc_ virtual processor](https://github.com/wyvernSemi/vproc) co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32, IBEX or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times. The test bench has the following features:
+
+* A [_VProc_](https://github.com/wyvernSemi/vproc) virtual processor based [`soc_cpu.VPROC`](4.sim/models/README.md#soc-cpu-vproc) component
+  * [Selectable](4.sim/README.md#auto-selection-of-soc_cpu-component) between this or an RTL softcore
+  * Can run natively compiled test code
+  * Can run the application compiled natively with the [auto-generated co-sim HAL](3.build/README.md#co-simulation-hal)
+  * Can run RISC-V compiled code using the [rv32 RISC-V ISS model](4.sim/models/rv32/README.md)
+* Uses a C [sparse memory model](https://github.com/wyvernSemi/mem_model)
+  * An [HDL component](4.sim/models/cosim/README.md) instantiated in logic gives logic access to this memory
+  * An API is provided to _VProc_ running code for direct access
+* The [_udpIpPg VIP_](https://github.com/wyvernSemi/udpIpPg) is used to drive the logic's four ethernet ports in a four port [`bfm_ethernet`](4.sim/models/README.md#bfm_phy_ethernet) block.
+  * An [MDIO slave interface](4.sim/models/README.md#bfm_phy_mdio) is also provided that maps *mem_model* memory areas to the registers with instantiated *mem_model* components
+
+The figure below shows an oveview block diagram of the test bench HDL.
+
+<p align="center">
+   <img src="https://github.com/user-attachments/assets/98cb3a19-11c7-4470-a4e1-41c503429e14" width=600>
+</p>
+
+More details on the architecture and usage of the Wireguard test bench can be found in the [README.md](4.sim/README.md) in the `4.sim` directory.
+
+## Co-simulation HAL
+
+The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#co-simulation-hal), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#co-simulation-hal) in the `3.build/` directory.
+
+## Lab Test and Validation Setup
+TODO
+
+## Shared Linux Server with tools
+**WIP**
+
+### Tool Versions
+#### Simulation
+* _Verilator_ **v5.024**
+* _VProc_ **v1.12.2**
+* _Mem Model_ **v1.0.0**
+* _rv32_ ISS **v1.1.4**
+* _udpIpPg_ **v1.0.3**
+
+
+## Build process
+### Hardware
+TODO
+### Software
+TODO
+
+## CPU Live debug and reload
+TODO
+
+---
 # Project Execution Plan / Tracking
 
-This project is WIP at the moment. The checkmarks below indicate our status. Until all checkmarks are in place, anything you get from here is w/o guaranty -- Use at own risk, as you see fit, and don't blame us if it is not working 🌤️
+This project in the final wrap up phase. The checkmarks below indicate status. Until all checkmarks are in place, anything you get from here is w/o guaranty -- Use at own risk, as you see fit, and don't blame us if it is not working 🌤️
 
 ## Take1
 **Board bring up. In-depth review of Wireguard ecosystem and prior art. Design Blueprint**
@@ -184,120 +326,6 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 - [ ] Develop software components for management of data flow within VPN tunnels
 
 
-# Design Blueprint (WIP)
-## HW/SW Partitioning
-Since the WireGuard node essentially functions as an IP router with WireGuard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the WireGuard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully implemented in RTL on an FPGA.
-
-![HWSWPartitioning](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW-SW-Partitioning.webp)
-
-In the HW/SW partitioning diagram, we can observe two types of network traffic: control traffic, which originates from the control plane and goes toward the external network (and vice versa), and data traffic, which arrives from the external network and, after processing in the data plane, returns to the external network. Specifically, control traffic represents WireGuard protocol handshake messages, while data traffic consists of end-user traffic, either encrypted or in plaintext, depending on the perspective.
-
-## Hardware Architecture and Theory of Operation
-![HWArchitecture](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
-
-The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
-
-The soft CPU is equipped with a Boot ROM and a DDR3 SDRAM controller for interfacing with off-chip memory. External memory is exclusively used for control plane processes and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
-
-The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation:
-- _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)
-- _1G MAC_ - execution of the 1G Ethernet protocol (framing, flow control, FCS, etc.)
-- _Rx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
-- _Per-Packet Round Robin Multiplexer_ - servicing Rx FIFOs on a per-packet basis using a round-robin algorithm
-- _Header Parser_ - extraction of WireGuard-related information from packet headers (IP addresses, UDP ports, WireGuard message type, peer ID, etc.)
-- _Wireguard/UDP Packet Disassembler_ - decapsulation of the payload from the Wireguard data packet for decryption of tunneled traffic
-- _ChaCha20-Poly1305 Decryptor_ - decryption and authentication of tunneled traffic
-- _IP Lookup Engine_ - routing/forwarding table lookup, mapping packets to the appropriate WireGuard peer, and making packet accept/reject decisions
-- _ChaCha20-Poly1305 Encryptor_ - encryption and authentication of traffic to be tunneled
-- _Wireguard/UDP Packet Assembler_ - encapsulation of the encrypted packet into a WireGuard data packet for tunneling to the remote peer
-- _Per-Packet Demultiplexer_ - forwarding packets to Tx FIFOs based on packet type and destination
-- _Tx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
-
-_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
-
-The details of hardware architecture can be found in the [README.md](./1.hw/README.md) in the `1.hw/` directory.
-
-## Software Architecture and Theory of Operation
-![SWArchitecture](./0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
-
-The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the WireGuard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
-- [Curve25519](http://cr.yp.to/ecdh.html) - an ECDH algorithm implementation for establishing a shared secret using a public-private key pair between two remote parties connected via an insecure channel, such as the Internet
-- ChaCha20-Poly1305 - an AEAD algorithm implementation for encryption and authentication of static keys and nonce values to prevent replay attacks
-- XChaCha20-Poly1305 - a XAEAD algorithm implementation for encrypting and authenticating nonce values in Cookie Replay messages to mitigate potential DoS attacks
-- [BLAKE2s](https://www.blake2.net) - an implementation of the BLAKE2s hash function for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
-- RNG - a random number generator used to initialize the DH key generator and generate peer identifiers
-- Timer - timers for rekey, retry, and keepalive procedures
-- [HKDF](https://eprint.iacr.org/2010/264) - an implementation of the algorithm for expanding the ECDH result
-- RTC - a real-time clock used to generate the TAI64N timestamp
-- [SipHash](https://en.wikipedia.org/wiki/SipHash) - a simple non-cryptographic function used for implementing a hashtable for fast lookup of decrypted static public keys of remote peers
-- Routing DB Updater - a subsystem for maintaining the cryptokey routing table content and deploying it to the data plane via the HAL/CSR interface
-- ICMP - implementing basic ICMP protocol functions (echo request/reply, TTL exceeded, etc.)
-- CLI - a USB/UART-based command-line interface for configuring the WireGuard node (setting the local IP address, remote peer IP addresses, network addresses, keys, etc.)
-- HAL/CSR Driver - a CSR-based abstraction for data plane components with an interface for reading/writing the corresponding registers
-
-The details of software architecture can be found in the [README.md](./2.sw/README.md) in the `2.sw/` directory.
-
-## HW/SW Working Together as a Coherent System
-To illustrate the operation of the system as a whole, we have prepared a step-by-step analysis of packets processing based on the capture of real WireGuard traffic. The experimental topology consists of four nodes:
-- 10.10.0.2 - the end-user host at site A
-- 10.9.0.1 - WireGuard peer A
-- 10.9.0.2 - WireGuard peer B
-- 10.10.0.1 - the end-user host at site B
-
-![ExampleToplogy](./0.doc/Wireguard/wireguard-fpga-muxed-Example-Topology.webp)
-
-The detailed analysis can be found in the [README.md](./1.hw/README.md#hwsw-working-together-as-a-coherent-system) in the `1.hw/` directory.
-
-## Simulation Test Bench
-
-The [Wireguard FPGA test bench](4.sim/README.md) aims to have a flexible approach to simulation which allows a common test environment to be used whilst selecting between alternative CPU components, one of which uses the [_VProc_ virtual processor](https://github.com/wyvernSemi/vproc) co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32, IBEX or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times. The test bench has the following features:
-
-* A [_VProc_](https://github.com/wyvernSemi/vproc) virtual processor based [`soc_cpu.VPROC`](4.sim/models/README.md#soc-cpu-vproc) component
-  * [Selectable](4.sim/README.md#auto-selection-of-soc_cpu-component) between this or an RTL softcore
-  * Can run natively compiled test code
-  * Can run the application compiled natively with the [auto-generated co-sim HAL](3.build/README.md#co-simulation-hal)
-  * Can run RISC-V compiled code using the [rv32 RISC-V ISS model](4.sim/models/rv32/README.md)
-* Uses a C [sparse memory model](https://github.com/wyvernSemi/mem_model)
-  * An [HDL component](4.sim/models/cosim/README.md) instantiated in logic gives logic access to this memory
-  * An API is provided to _VProc_ running code for direct access
-* The [_udpIpPg VIP_](https://github.com/wyvernSemi/udpIpPg) is used to drive the logic's four ethernet ports in a four port [`bfm_ethernet`](4.sim/models/README.md#bfm_phy_ethernet) block.
-  * An [MDIO slave interface](4.sim/models/README.md#bfm_phy_mdio) is also provided that maps *mem_model* memory areas to the registers with instantiated *mem_model* components
-
-The figure below shows an oveview block diagram of the test bench HDL.
-
-<p align="center">
-<img src="https://github.com/user-attachments/assets/98cb3a19-11c7-4470-a4e1-41c503429e14" width=600>
-</p>
-
-More details on the architecture and usage of the Wireguard test bench can be found in the [README.md](4.sim/README.md) in the `4.sim` directory.
-
-## Co-simulation HAL
-
-The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#co-simulation-hal), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#co-simulation-hal) in the `3.build/` directory.
-
-## Lab Test and Validation Setup
-TODO
-
-## Shared Linux Server with tools
-**WIP**
-
-### Tool Versions
-#### Simulation
-* _Verilator_ **v5.024**
-* _VProc_ **v1.12.2**
-* _Mem Model_ **v1.0.0**
-* _rv32_ ISS **v1.1.4**
-* _udpIpPg_ **v1.0.3**
-
-## Build process
-### Hardware
-TODO
-### Software
-TODO
-
-## CPU Live debug and reload
-TODO
-
 ## Closing Notes
 TODO
 
@@ -306,13 +334,13 @@ We are grateful to **NLnet Foundation** for their sponsorship of this developmen
 
 <p align="center">
    <img src="https://github.com/chili-chips-ba/openeye/assets/67533663/18e7db5c-8c52-406b-a58e-8860caa327c2">
-   <img width="115" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
+   <img width="20%" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
 </p>
 
 The **wyvernSemi**'s wisdom and contribution made a great deal of difference -- Thank you, we are honored to have you on the project.
 
 <p align="center">
- <img width="115" alt="wyvernSemi-Logo" src="https://github.com/user-attachments/assets/94858fce-081a-43b4-a593-d7d79ef38e13">
+   <img width="15%" alt="wyvernSemi-Logo" src="0.doc/artwork/VProc.logo.png">
 </p>
 
 If it was not for **Julian Kemmerer's** unreserved support helping us move our two cryptography blocks from C to gates, be it by guiding and mentoring, or by doing it himself, the meat of this project would not have been so easily pushed through to hardware using `PipelineC`. Thank you Mr.OpensourceHLS 🙏. 
