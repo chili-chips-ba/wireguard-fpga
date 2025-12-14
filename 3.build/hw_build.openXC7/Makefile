@@ -114,10 +114,18 @@ CONV_TIMESTAMP = $(CONV_DIR)/.conversion_timestamp
 EXTRACT_TIMESTAMP = $(EXTRACTED_DIR)/.extraction_timestamp
 
 # =============================================================================
+# SV2V INSTALLATION CHECK AND GUIDANCE
+# =============================================================================
+
+# Check if sv2v is available
+SV2V := $(shell which sv2v 2>/dev/null)
+STACK := $(shell which stack 2>/dev/null)
+
+# =============================================================================
 # PHONY TARGETS
 # =============================================================================
 
-.PHONY: all convert extract check-env check-sv2v check-sources \
+.PHONY: all convert extract check-env check-sv2v install-sv2v check-sources \
         clean clean-converted clean-all info help show-converted show-expected
 
 # =============================================================================
@@ -139,17 +147,134 @@ convert: $(EXTRACT_TIMESTAMP)
 extract: $(EXTRACT_TIMESTAMP)
 
 # =============================================================================
-# ENVIRONMENT CHECKS
+# SV2V INSTALLATION AND CHECKS
 # =============================================================================
 
 check-sv2v:
-	@which sv2v > /dev/null 2>&1 || \
-	{ echo "ERROR: sv2v not found!"; \
-	  echo "Install with: cargo install sv2v"; \
-	  echo "Or from: https://github.com/zachjs/sv2v"; \
-	  exit 1; }
-	@echo "✓ sv2v found: $$(which sv2v)"
-	@sv2v --version 2>/dev/null || echo "  (version unknown)"
+ifndef SV2V
+	@echo "================================================================"
+	@echo "ERROR: sv2v not found!"
+	@echo "================================================================"
+	@echo "sv2v is required to convert SystemVerilog to Verilog."
+	@echo ""
+	@echo "RECOMMENDED METHOD - Build from source with Stack:"
+	@echo "================================================================"
+	@echo ""
+	@echo "Quick install:"
+	@echo "  make install-sv2v"
+	@echo ""
+	@echo "Manual installation steps:"
+	@echo "1. Install Stack (Haskell build tool):"
+	@echo "   curl -sSL https://get.haskellstack.org/ | sh"
+	@echo ""
+	@echo "2. Clone and build sv2v:"
+	@echo "   git clone https://github.com/zachjs/sv2v.git"
+	@echo "   cd sv2v"
+	@echo "   make"
+	@echo ""
+	@echo "3. Install to ~/.local/bin:"
+	@echo "   stack install"
+	@echo ""
+	@echo "4. Ensure ~/.local/bin is in PATH:"
+	@echo "   export PATH=\"\$$HOME/.local/bin:\$$PATH\""
+	@echo "   echo 'export PATH=\"\$$HOME/.local/bin:\$$PATH\"' >> ~/.bashrc"
+	@echo ""
+	@echo "================================================================"
+	@echo "ALTERNATIVE METHODS:"
+	@echo "================================================================"
+	@echo ""
+	@echo "Method 2 - Using Cargo (Rust):"
+	@echo "   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+	@echo "   source \$$HOME/.cargo/env"
+	@echo "   cargo install sv2v"
+	@echo ""
+	@echo "Method 3 - Using apt (Ubuntu/Debian, if available):"
+	@echo "   sudo apt update"
+	@echo "   sudo apt install sv2v"
+	@echo ""
+	@echo "================================================================"
+	@echo "After installation, verify with:"
+	@echo "  sv2v --version"
+	@echo "================================================================"
+	@exit 1
+else
+	@echo "✓ sv2v found: $(SV2V)"
+	@sv2v --version 2>/dev/null || echo "  (version info not available)"
+endif
+
+# Automated sv2v installation using Stack
+install-sv2v:
+	@echo "================================================================"
+	@echo "Installing sv2v from source using Stack"
+	@echo "================================================================"
+	@echo ""
+ifndef STACK
+	@echo "Step 1: Installing Stack (Haskell build tool)..."
+	@echo "----------------------------------------------------------------"
+	@curl -sSL https://get.haskellstack.org/ | sh
+	@echo ""
+	@echo "✓ Stack installed. Reloading environment..."
+	@export PATH="$$HOME/.local/bin:$$PATH"
+else
+	@echo "✓ Stack already installed: $(STACK)"
+	@$(STACK) --version
+	@echo ""
+endif
+	@echo "Step 2: Cloning sv2v repository..."
+	@echo "----------------------------------------------------------------"
+	@if [ ! -d "sv2v-build" ]; then \
+		git clone https://github.com/zachjs/sv2v.git sv2v-build; \
+	else \
+		echo "sv2v-build directory already exists, using existing clone..."; \
+	fi
+	@echo ""
+	@echo "Step 3: Building sv2v (this may take 10-20 minutes)..."
+	@echo "----------------------------------------------------------------"
+	@echo "Stack will download and compile GHC and all dependencies."
+	@echo "Please be patient..."
+	@echo ""
+	@cd sv2v-build && make
+	@echo ""
+	@echo "Step 4: Installing sv2v to ~/.local/bin..."
+	@echo "----------------------------------------------------------------"
+	@cd sv2v-build && stack install
+	@echo ""
+	@echo "Step 5: Configuring PATH..."
+	@echo "----------------------------------------------------------------"
+	@if ! grep -q 'export PATH="$$HOME/.local/bin:$$PATH"' ~/.bashrc; then \
+		echo 'export PATH="$$HOME/.local/bin:$$PATH"' >> ~/.bashrc; \
+		echo "✓ Added ~/.local/bin to PATH in ~/.bashrc"; \
+	else \
+		echo "✓ ~/.local/bin already in PATH"; \
+	fi
+	@echo ""
+	@echo "================================================================"
+	@echo "✓ sv2v installation complete!"
+	@echo "================================================================"
+	@echo ""
+	@echo "Installation details:"
+	@echo "  Binary location: ~/.local/bin/sv2v"
+	@echo "  Source code:     $(CURDIR)/sv2v-build/"
+	@echo ""
+	@echo "Verify installation:"
+	@echo "  source ~/.bashrc"
+	@echo "  sv2v --version"
+	@echo ""
+	@echo "Or use immediately:"
+	@echo "  export PATH=\"\$$HOME/.local/bin:\$$PATH\""
+	@echo "  sv2v --version"
+	@echo ""
+	@echo "To uninstall sv2v:"
+	@echo "  rm -f ~/.local/bin/sv2v"
+	@echo "  rm -rf $(CURDIR)/sv2v-build/"
+	@echo "================================================================"
+	@echo ""
+	@echo "You can now run: make convert"
+	@echo "================================================================"
+
+# =============================================================================
+# ENVIRONMENT CHECKS
+# =============================================================================
 
 check-env:
 	@echo "Checking environment..."
@@ -271,6 +396,10 @@ $(EXTRACT_TIMESTAMP): $(CONV_TIMESTAMP)
 	fi
 	@touch $@
 
+# =============================================================================
+# SYNTHESIS
+# =============================================================================
+
 $(BUILD_ARTIFACTS)/top.json: $(EXTRACT_TIMESTAMP) $(IMEM_INIT)
 	@echo "================================================================"
 	@echo "Synthesis stage (Yosys)"
@@ -287,7 +416,7 @@ $(BUILD_ARTIFACTS)/top.json: $(EXTRACT_TIMESTAMP) $(IMEM_INIT)
 	@echo "✓ Synthesis complete: $@"
 
 # =============================================================================
-# PLACE AND ROUTE
+# CHIPDB GENERATION
 # =============================================================================
 
 $(CHIPDB)/$(PART).bin:
@@ -302,6 +431,10 @@ $(CHIPDB)/$(PART).bin:
 	bbasm -l $(PART).bba $(CHIPDB)/$(PART).bin
 	rm -f $(PART).bba
 	@echo "✓ Chipdb generated: $@"
+
+# =============================================================================
+# PLACE AND ROUTE
+# =============================================================================
 
 $(BUILD_ARTIFACTS)/top.fasm: $(BUILD_ARTIFACTS)/top.json $(CHIPDB)/$(PART).bin
 	@echo "================================================================"
@@ -339,6 +472,7 @@ top.bit: $(BUILD_ARTIFACTS)/top.frames
 	@echo "SUCCESS! Bitstream created: $(BUILD_ARTIFACTS)/top.bit"
 	@echo "================================================================"
 	@ls -lh $(BUILD_ARTIFACTS)/top.bit
+
 # =============================================================================
 # UTILITY TARGETS
 # =============================================================================
@@ -357,6 +491,8 @@ clean-converted:
 clean-all: clean clean-converted
 	@echo "Cleaning chipdb..."
 	@rm -rf $(CHIPDB)
+	@echo "Cleaning sv2v build directory..."
+	@rm -rf sv2v-build
 	@echo "✓ All cleaned!"
 
 show-converted:
@@ -417,6 +553,7 @@ info:
 	@echo "Available targets:"
 	@echo "  all              - Build complete bitstream (top.bit)"
 	@echo "  convert          - Convert SV to V only"
+	@echo "  install-sv2v     - Install sv2v from source (requires internet)"
 	@echo "  check-env        - Verify openXC7 environment"
 	@echo "  check-sources    - Verify all source files exist"
 	@echo "  check-sv2v       - Verify sv2v installation"
@@ -424,7 +561,7 @@ info:
 	@echo "  show-expected    - List expected modules"
 	@echo "  clean            - Remove build artifacts"
 	@echo "  clean-converted  - Remove converted files"
-	@echo "  clean-all        - Remove everything (incl. chipdb)"
+	@echo "  clean-all        - Remove everything (incl. chipdb & sv2v)"
 	@echo "  info             - Show this information"
 	@echo "================================================================"
 
