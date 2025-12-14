@@ -77,6 +77,60 @@ Additionally, `MakefileSW` supports running a Python script `imem.UART.py` to pr
 make -f MakefileSW program
 ```
 
-## HW Compilation
+## HW Compilation - Vivado
 
-Hardware synthesis is currently supported through the Vivado GUI, using the prepared [project file](/3.build/hw_build.Vivado/wireguard.xpr) located at `3.build/hw_build.Vivado`.
+The main hardware synthesis/PnR tool is Vivado Desing Suite, using the prepared [project file](/3.build/hw_build.Vivado/wireguard.xpr) project located at `3.build/hw_build.Vivado`.
+
+## HW Compilation - openXC7
+
+// explain the process
+
+### Test example
+
+In this section, we present a simple test example to illustrate the differences between two FPGA toolchains. First, the design is synthesized and routed using Vivado, serving as a reference implementation. The same example is then processed using the openXC7 toolchain, allowing a direct comparison of synthesis and place-and-route results, as well as highlighting key differences in workflow and outputs.
+
+Note: Complete hardware is synthesised and routed, but [application](https://github.com/chili-chips-ba/wireguard-fpga/blob/main/2.sw/app/main.cpp) running on the processor is simply testing ICMP and ARP.
+
+#### Vivado
+Build duration (synthesis + PnR): 8 minutes
+
+##### Test result:
+<img width="1401" height="556" alt="image" src="https://github.com/user-attachments/assets/4ddf11f0-bbcc-4d05-a056-c4bd6afb5585" />
+
+- Putty: App is running, ICMP and ARP logs can be seen.
+- PowerShell: All 4 messages are received successfully - no faulty packets.
+- Wireshark: Ping request/replies can be seen.
+
+#### openXC7
+Build duration (synthesis + PnR): 1 minute
+
+To support openXC7, besides multiple minor changes, 2 main Xilinx primitives needed to be adapted/removed:
+
+- IOBUFGDS (adapted: IOBUFDS + BUFG): [(openXC7/nextpnr-xilinx) Missing primitive support - IOBUFGDS](https://github.com/chili-chips-ba/wireguard-fpga/issues/36)
+- BUFGMUX (removed): [(openXC7/nextpnr-xilinx) Missing primitive support - BUFGMUX](https://github.com/chili-chips-ba/wireguard-fpga/issues/35)
+
+##### Test result 1:
+<img width="1537" height="675" alt="image" src="https://github.com/user-attachments/assets/474b38a8-311e-43b2-84ff-cf4a3f8ab31e" />
+
+- Putty: App is running, ICMP and ARP logs can be seen.
+- PowerShell: All 4 messages are received successfully - no faulty packets.
+- Wireshark: Ping request/replies can be seen.
+
+##### Test result 2:
+<img width="1188" height="635" alt="image" src="https://github.com/user-attachments/assets/cb022fef-55d3-4513-b416-ee52fdef2085" />
+
+- Putty: App is running, ICMP and ARP logs can be seen.
+- PowerShell: No messages are received successfully - all packets are faulty.
+- Wireshark: Ping request can be seen - no replies.
+
+##### Test result 3:
+<img width="1544" height="473" alt="image" src="https://github.com/user-attachments/assets/c9d5c51f-b2b0-43ce-899f-45b7df54d6b6" />
+
+- Putty: App is running, ICMP and ARP logs can be seen.
+- PowerShell: Only 1 message is received successfully - 3 faulty packets.
+- Wireshark: Ping request/replies can be seen.
+ 
+#### Key difference
+The main reason for this behaviour difference is the missing BUFGMUX primitive. This can be really problematic in many cases, because for the clock selection LUT would have to be used instead of BUFGMUX (clock doesn't go through clock network), which will certainly lead to delays.
+
+The delays can be seen in the examples above, which is the reason why some requests don't have adequate replies!
