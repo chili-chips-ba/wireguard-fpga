@@ -21,3 +21,4 @@ during cryptographic operations and protocol handling.
 - Delay accuracy depends on the configured CPU clock frequency.
 - Designed for bare-metal environments without an operating system.
 - Blocking implementation (busy-wait).
+- **Successfully tested on the hardware.**
