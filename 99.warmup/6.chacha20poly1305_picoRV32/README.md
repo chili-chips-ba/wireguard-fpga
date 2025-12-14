@@ -1,4 +1,4 @@
-# ChaCha20 + Poly1305 lib
+# ChaCha20-Poly1305 lib
 
 This component implements the ChaCha20–Poly1305 authenticated encryption
 algorithm (AEAD) as specified in RFC 8439.
