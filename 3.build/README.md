@@ -82,8 +82,171 @@ make -f MakefileSW program
 The main hardware synthesis/PnR tool is Vivado Desing Suite, using the prepared [project file](/3.build/hw_build.Vivado/wireguard.xpr) project located at `3.build/hw_build.Vivado`.
 
 ## HW Compilation - openXC7
+### openXC7 Installation
 
-// explain the process
+Complete installation instructions for the openXC7 toolchain are available here:
+https://github.com/chili-chips-ba/openeye-CamSI/blob/main/3.build/openXC7/README.md
+
+The openXC7 toolchain provides open-source FPGA synthesis and place-and-route tools for Xilinx 7-series FPGAs, including:
+- **Yosys** - RTL synthesis
+- **nextpnr-xilinx** - Place and route
+- **Project X-Ray** - FPGA bitstream generation tools
+
+Make sure to source the environment setup script before building:
+```bash
+source /opt/openxc7/setup_env.sh
+```
+
+### sv2v Installation
+
+The SystemVerilog to Verilog converter (`sv2v`) is required to convert the project's SystemVerilog files to pure Verilog.
+
+**Automated installation:**
+```bash
+cd wireguard-fpga/3.build/hw_build.openXC7
+make install-sv2v
+```
+
+This will:
+1. Install Stack (Haskell build tool)
+2. Clone the sv2v repository
+3. Build sv2v from source
+4. Install to `~/.local/bin/`
+5. Configure your PATH
+
+After installation, reload your environment:
+```bash
+source ~/.bashrc
+sv2v --version
+```
+
+Manual verification:
+```bash
+make check-sv2v
+```
+
+---
+
+### Build Process
+
+#### Step 1: Build Software (Firmware)
+
+**IMPORTANT:** The software must be built first to generate the `imem.INIT.vh` file required by the hardware build.
+
+#### Step 2: Convert SystemVerilog to Verilog
+
+Navigate to the hardware build directory:
+```bash
+cd wireguard-fpga/3.build/hw_build.openXC7
+```
+
+Run the conversion:
+```bash
+make convert
+```
+
+This performs two operations:
+1. **Batch conversion** - All SystemVerilog files are processed together (preserves dependencies)
+2. **Module extraction** - The unified output is split into individual Verilog module files
+
+Output is generated in:
+- `converted/all_converted.v` - Unified Verilog output
+- `converted/extracted/*.v` - Individual module files
+
+**Verify conversion:**
+```bash
+make show-converted
+```
+
+---
+
+#### Step 3: Build Bitstream
+
+**Full build (synthesis → place & route → bitstream):**
+```bash
+make all
+```
+
+This executes the complete FPGA build flow:
+1. **Yosys synthesis** - Converts RTL to gate-level netlist
+2. **Chipdb generation** - Creates device database (first run only)
+3. **nextpnr-xilinx** - Place and route
+4. **Bitstream generation** - Creates `build_artifacts/top.bit`
+
+**Output:**
+```
+build_artifacts/top.bit
+```
+
+---
+
+#### Additional Commands
+
+The Makefile provides many utility targets. View all available options:
+
+```bash
+make help
+```
+
+---
+
+#### Troubleshooting
+
+#### Environment not set up
+```
+ERROR: Please run: source /opt/openxc7/setup_env.sh
+```
+**Solution:** Source the environment script before running make.
+
+### sv2v not found
+```
+ERROR: sv2v not found!
+```
+**Solution:** Run `make install-sv2v` or install manually.
+
+#### Missing imem.INIT.vh
+```
+ERROR: imem.INIT.vh not found
+```
+**Solution:** Build the software first (`make -f MakefileSW` from `3.build/`).
+
+#### Quick Start Summary
+
+```bash
+# 1. Install openXC7 toolchain
+# (See: https://github.com/chili-chips-ba/openeye-CamSI/blob/main/3.build/openXC7/README.md)
+
+# 2. Install sv2v
+cd wireguard-fpga/3.build/hw_build.openXC7
+make install-sv2v
+source ~/.bashrc
+
+# 3. Build software
+cd ../
+make -f MakefileSW
+
+# 4. Build hardware
+cd hw_build.openXC7
+source /opt/openxc7/setup_env.sh
+make all
+
+# Result: build_artifacts/top.bit
+```
+
+---
+
+#### Notes
+
+- **First build** will take longer due to chipdb generation for the xc7a200tfbg484-2 device
+- **Chipdb is cached** and reused for subsequent builds
+- **Conversion is incremental** - only re-runs if source files change
+- The build uses **~24 SystemVerilog modules** converted to Verilog plus **~14 pure Verilog modules** from external libraries
+- **Total source files:** ~38 modules + packages/interfaces
+
+---
+
+For openXC7 toolchain issues, refer to the main installation guide:
+https://github.com/chili-chips-ba/openeye-CamSI/blob/main/3.build/openXC7/README.md
 
 ### Test example
 
