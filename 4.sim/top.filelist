@@ -63,6 +63,8 @@ ${HW_SRC}/ip.dpe/dpe_multiplexer.sv
 ${HW_SRC}/ip.dpe/dpe_demultiplexer.sv
 ${HW_SRC}/ip.dpe/dpe_dummy_switch.sv
 #${HW_SRC}/ip.dpe/dpe_wg_disassembler.sv
+${HW_SRC}/ip.dpe/dpe_egress_ip_lookup.sv
+${HW_SRC}/ip.dpe/dpe_route_mem.sv
 
 #---TOP
 ${HW_SRC}/top.sv
