@@ -269,7 +269,7 @@ Build duration (synthesis + PnR): 1 minute
 
 To support openXC7, besides multiple minor changes, 2 main Xilinx primitives needed to be adapted/removed:
 
-- IOBUFGDS (adapted: IOBUFDS + BUFG): [(openXC7/nextpnr-xilinx) Missing primitive support - IOBUFGDS](https://github.com/chili-chips-ba/wireguard-fpga/issues/36)
+- IBUFGDS (adapted: IBUFDS + BUFG): [(openXC7/nextpnr-xilinx) Missing primitive support - IBUFGDS](https://github.com/chili-chips-ba/wireguard-fpga/issues/36)
 - BUFGMUX (removed): [(openXC7/nextpnr-xilinx) Missing primitive support - BUFGMUX](https://github.com/chili-chips-ba/wireguard-fpga/issues/35)
 
 ##### Test result 1:
