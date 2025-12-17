@@ -2,7 +2,7 @@
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
   <img width="20%", src="0.doc/artwork/wireguardfpga.hex.svg">
-  <img width="10%", src="0.doc/artwork/ethernet-cable.png">
+  <img width="16%", src="0.doc/artwork/ethernet-cable.png">
   <img width="20%", src="0.doc/artwork/wireguardfpga.hex.svg">
 </p>
 
