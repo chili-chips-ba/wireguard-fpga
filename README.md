@@ -196,25 +196,10 @@ More details on the architecture and usage of the Wireguard test bench can be fo
 
 The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#co-simulation-hal), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#co-simulation-hal) in the `3.build/` directory.
 
-## Lab Test and Validation Setup
-TODO
-
-## Shared Linux Server with tools
-**WIP**
-
-### Tool Versions
-#### Simulation
-* _Verilator_ **v5.024**
-* _VProc_ **v1.12.2**
-* _Mem Model_ **v1.0.0**
-* _rv32_ ISS **v1.1.4**
-* _udpIpPg_ **v1.0.3**
-
-
 ## Build process
-### Hardware
-TODO
-### Software
+The details of the build process can be found in the [README.md](./3.build/README.md) in the `3.build/` directory.
+
+## Lab Test and Validation Setup
 TODO
 
 ## CPU Live debug and reload
