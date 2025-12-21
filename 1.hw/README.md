@@ -1,9 +1,9 @@
 ## Hardware Architecture and Theory of Operation
-![HWArchitecture](../0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp)
+![HWArchitecture](../0.doc/Wireguard/wireguard-fpga-Architecture-HW.webp)
 
 The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
 
-The soft CPU is equipped with a Boot ROM and a DDR3 SDRAM controller for interfacing with off-chip memory. External memory is exclusively used for control plane processes and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
+The soft CPU is equipped with a on-chip instruction memory (IMEM) and data memory (DMEM). The connection between the control and data planes is established through a CSR-based HAL.
 
 The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation:
 - _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)
@@ -11,11 +11,9 @@ The data plane consists of several IP cores, including data plane engine (DPE) a
 - _Rx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
 - _Per-Packet Round Robin Multiplexer_ - servicing Rx FIFOs on a per-packet basis using a round-robin algorithm
 - _Header Parser_ - extraction of WireGuard-related information from packet headers (IP addresses, UDP ports, WireGuard message type, peer ID, etc.)
-- _Wireguard/UDP Packet Disassembler_ - decapsulation of the payload from the WireGuard data packet for decryption of tunneled traffic
-- _ChaCha20-Poly1305 Decryptor_ - decryption and authentication of tunneled traffic
-- _IP Lookup Engine_ - routing/forwarding table lookup, mapping packets to the appropriate WireGuard peer, and making packet accept/reject decisions
-- _ChaCha20-Poly1305 Encryptor_ - encryption and authentication of traffic to be tunneled
-- _Wireguard/UDP Packet Assembler_ - encapsulation of the encrypted packet into a WireGuard data packet for tunneling to the remote peer
+- _Wireguard Decryptor_ - decapsulation of the payload from the WireGuard data packet and decryption and authentication of tunneled traffic
+- _Ingress/Egress IP Lookup Engines_ - routing/forwarding table lookup, mapping packets to the appropriate WireGuard peer, and making packet accept/reject decisions
+- _Wireguard Encryptor_ - encryption, authentication and encapsulation of the encrypted packet into a WireGuard data packet for tunneling to the remote peer
 - _Per-Packet Demultiplexer_ - forwarding packets to Tx FIFOs based on packet type and destination
 - _Tx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
 
