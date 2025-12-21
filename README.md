@@ -108,7 +108,7 @@ In the HW/SW partitioning diagram, we can observe two types of network traffic: 
 ## Hardware Architecture and Theory of Operation
 
 <p align="center">
-  <img width="90%" src="0.doc/Wireguard/wireguard-fpga-muxed-Architecture-HW.webp">
+  <img width="90%" src="0.doc/Wireguard/wireguard-fpga-Architecture-HW.webp">
 </p>
 
 The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
@@ -201,6 +201,10 @@ The details of the build process can be found in the [README.md](./3.build/READM
 
 ## Lab Test and Validation Setup
 TODO
+
+<p align="center">
+  <img width="70%" src="0.doc/Wireguard/wireguard-fpga-Test-Topology.webp">
+</p>
 
 ## CPU Live debug and reload
 TODO
