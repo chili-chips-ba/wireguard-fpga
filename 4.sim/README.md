@@ -20,6 +20,7 @@
   * [_udpIpPg_ Software](#udpippg-software)
   + [System-Level Ethernet Simulation](#system-level-ethernet-simulation)
 * [Co-simulation HAL](#co-simulation-hal)
+* [Tool Versions](#tool-versions)
 * [References](#references)
 
 ## Introduction
@@ -575,6 +576,13 @@ void WGMAIN (void)
 ```
 
 The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `3.build/sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 80MHz that the test bench uses for the `soc_cpu`. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `3.build/sysrdl_cosim.py`.
+
+## Tool Versions
+* _Verilator_ **v5.024**
+* _VProc_ **v1.12.2**
+* _Mem Model_ **v1.0.0**
+* _rv32_ ISS **v1.1.4**
+* _udpIpPg_ **v1.0.3**
 
 Finally, the
 
