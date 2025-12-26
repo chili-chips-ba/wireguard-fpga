@@ -1,6 +1,10 @@
 #ifndef TWEETNACL_X25519_H
 #define TWEETNACL_X25519_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /**
@@ -25,5 +29,9 @@ int x25519_scalarmult_base(uint8_t *q, const uint8_t *n);
  * @return 0 on success
  */
 int x25519_scalarmult(uint8_t *q, const uint8_t *n, const uint8_t *p);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TWEETNACL_X25519_H */

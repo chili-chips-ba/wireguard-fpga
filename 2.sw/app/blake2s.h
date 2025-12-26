@@ -4,6 +4,10 @@
 #ifndef BLAKE2S_H
 #define BLAKE2S_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 #include "string_bare.h"
@@ -42,5 +46,9 @@ int hash(void *out, size_t outlen,     // return buffer for digest
 // HMAC using BLAKE2s as the underlying hash.
 int hmac(uint8_t *out, const uint8_t *in, const uint8_t *key, 
     const size_t inlen, const size_t keylen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

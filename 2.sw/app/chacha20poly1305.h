@@ -6,6 +6,10 @@
 #ifndef CHACHA20POLY1305_H
 #define CHACHA20POLY1305_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -58,5 +62,9 @@ int chacha20poly1305_decrypt(
     const uint8_t *auth_tag,
     const uint8_t *aad,
     size_t aad_len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CHACHA20POLY1305_H

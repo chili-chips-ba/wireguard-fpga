@@ -1,10 +1,14 @@
 #ifndef HKDF_H
 #define HKDF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
-#include "../BLAKE2s/rv32/blake2s.h"
+#include "blake2s.h"
 #include "string_bare.h"
 
 /* Noise uses 32-byte hashes (BLAKE2s-256) */
@@ -20,5 +24,9 @@ void kdf(
     uint8_t *third_dst, size_t third_len,
     const uint8_t *data, size_t data_len,
     const uint8_t chaining_key[NOISE_HASH_LEN]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // HKDF_H

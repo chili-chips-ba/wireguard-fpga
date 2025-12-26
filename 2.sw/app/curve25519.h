@@ -1,6 +1,10 @@
 #ifndef CURVE25519_H
 #define CURVE25519_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 /**
@@ -21,5 +25,9 @@ int curve25519_generate_public_key(uint8_t public_key[32], const uint8_t private
  * @return 0 on success, -1 on error
  */
 int curve25519_compute_shared_secret(uint8_t shared_secret[32], const uint8_t private_key[32], const uint8_t public_key[32]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CURVE25519_H */

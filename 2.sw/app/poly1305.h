@@ -6,6 +6,10 @@
 #ifndef POLY1305_H
 #define POLY1305_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -27,5 +31,9 @@ void poly1305_mac(uint8_t *auth_tag, const uint8_t *key, const uint8_t *message,
  * @return 1 if tags match, 0 otherwise
  */
 int poly1305_verify(const uint8_t *received_auth_tag, const uint8_t *calucalted_auth_tag);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // POLY1305_H

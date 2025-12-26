@@ -6,6 +6,10 @@
 #ifndef CHACHA20_H
 #define CHACHA20_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -47,5 +51,9 @@ void chacha20_encrypt(uint8_t *out, const uint8_t *in, size_t length, const uint
 #define chacha20_decrypt chacha20_encrypt
 
 void chacha20_block(chacha20_state *state, chacha20_state *output);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CHACHA20_H

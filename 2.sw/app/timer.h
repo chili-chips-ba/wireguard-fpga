@@ -1,6 +1,10 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define CPU_FREQ_HZ 80000000UL  // 80 MHz CPU clock
@@ -9,5 +13,9 @@
 
 void delay_us(uint32_t us);
 void delay_ms(uint32_t ms);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // TIMER_H
