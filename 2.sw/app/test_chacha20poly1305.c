@@ -8,14 +8,12 @@
 #include <stdint.h>
 #include "wireguard.h"
 
-#define reg_gpio (*(volatile uint32_t *)0x03000000)
+#define reg_gpio (*(volatile uint32_t*)0x03000000)
 #define LED0 (1 << 0)
 
-void delay(uint32_t count)
-{
+void delay(uint32_t count) {
     volatile uint32_t i;
-    for (i = 0; i < count; i++)
-        ;
+    for (i = 0; i < count; i++);
 }
 
 int main(void)
@@ -64,10 +62,10 @@ int main(void)
 
     if (ret == 0)
     {
-        reg_gpio |= LED0; // encryption succesfull
+        reg_gpio |= LED0; //encryption succesfull
     }
 
-    /*
+	/*
     // Verify
     decrypted[plaintext_len] = '\0'; // Null-terminate for printing
     //printf("Decrypted (%zu bytes): \"%s\"\n\n", plaintext_len, decrypted);
@@ -139,7 +137,7 @@ int main(void)
         //printf("SECURITY WARNING: Tampered tag was accepted!\n");
         //printf("Test FAILED\n");
     }
-     */
+	 */
 
     return 0;
 }

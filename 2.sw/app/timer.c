@@ -1,5 +1,12 @@
 #include "timer.h"
 
+// static uint32_t rdcycle(void)
+// {
+//     uint32_t cycles;
+//     __asm__ __volatile__("rdcycle %0" : "=r"(cycles));
+//     return cycles;
+// }
+
 static uint32_t rdcycle(void)
 {
     uint32_t cycles;

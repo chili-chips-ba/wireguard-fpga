@@ -4,14 +4,12 @@
 #include <stdint.h>
 #include "blake2s.h"
 
-#define reg_gpio (*(volatile uint32_t *)0x03000000)
+#define reg_gpio (*(volatile uint32_t*)0x03000000)
 #define LED0 (1 << 0)
 
-void delay(uint32_t count)
-{
+void delay(uint32_t count) {
     volatile uint32_t i;
-    for (i = 0; i < count; i++)
-        ;
+    for (i = 0; i < count; i++);
 }
 
 // Deterministic sequences (Fibonacci generator).
@@ -101,11 +99,9 @@ int main(int argc, char **argv)
     uint8_t out[32];
     int pass = 1;
 
-    if (blake2s_selftest() != 0)
-        pass = 0;
+    if (blake2s_selftest() != 0) pass = 0;
 
-    struct
-    {
+    struct {
         const char *input;
         const uint8_t expected[32];
     } tests[] = {
@@ -113,44 +109,47 @@ int main(int argc, char **argv)
         {
             "", // empty string
             {0x69, 0x21, 0x7a, 0x30, 0x79, 0x90, 0x80, 0x94,
-             0xe1, 0x11, 0x21, 0xd0, 0x42, 0x35, 0x4a, 0x7c,
-             0x1f, 0x55, 0xb6, 0x48, 0x2c, 0xa1, 0xa5, 0x1e,
-             0x1b, 0x25, 0x0d, 0xfd, 0x1e, 0xd0, 0xee, 0xf9}},
-        {"abc",
-         {0x50, 0x8c, 0x5e, 0x8c, 0x32, 0x7c, 0x14, 0xe2,
-          0xe1, 0xa7, 0x2b, 0xa3, 0x4e, 0xeb, 0x45, 0x2f,
-          0x37, 0x45, 0x8b, 0x20, 0x9e, 0xd6, 0x3a, 0x29,
-          0x4d, 0x99, 0x9b, 0x4c, 0x86, 0x67, 0x59, 0x82}}};
+            0xe1, 0x11, 0x21, 0xd0, 0x42, 0x35, 0x4a, 0x7c,
+            0x1f, 0x55, 0xb6, 0x48, 0x2c, 0xa1, 0xa5, 0x1e,
+            0x1b, 0x25, 0x0d, 0xfd, 0x1e, 0xd0, 0xee, 0xf9}
+        },
+        {
+            "abc",
+            {0x50, 0x8c, 0x5e, 0x8c, 0x32, 0x7c, 0x14, 0xe2,
+            0xe1, 0xa7, 0x2b, 0xa3, 0x4e, 0xeb, 0x45, 0x2f,
+            0x37, 0x45, 0x8b, 0x20, 0x9e, 0xd6, 0x3a, 0x29,
+            0x4d, 0x99, 0x9b, 0x4c, 0x86, 0x67, 0x59, 0x82}
+        }
+    };
 
     size_t num_tests = sizeof(tests) / sizeof(tests[0]);
 
-    for (size_t i = 0; i < num_tests; i++)
+    for (size_t i = 0; i < num_tests; i++) 
     {
         const char *msg = tests[i].input;
         const uint8_t *expected = tests[i].expected;
 
         // Compute hash
-        hash(out, 32, NULL, 0, msg, strlen(msg));
+        hash(out, 32, NULL, 0, msg, strlen(msg)); 
 
         // Compare
         int ok = 1;
-        for (int j = 0; j < 32; j++)
+        for (int j = 0; j < 32; j++) 
         {
-            if (out[j] != expected[j])
+            if (out[j] != expected[j]) 
             {
                 ok = 0;
                 break;
             }
         }
 
-        if (!ok)
-            pass = 0;
+        if (!ok) pass = 0;
     }
 
-    if (pass)
+    if (pass) 
     {
-        reg_gpio |= LED0; // hashing successful
+        reg_gpio |= LED0; //hashing successful
     }
-
+    
     return 0;
 }
