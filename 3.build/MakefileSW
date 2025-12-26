@@ -8,10 +8,10 @@ SW_SRC  := $(BLD_DIR)/../2.sw
 SW_APP  := $(SW_SRC)/app
 SW_TESTS := $(SW_SRC)/tests
 
-#SW_MAIN := $(SW_APP)
+SW_MAIN := $(SW_APP)
 #SW_MAIN := $(SW_TESTS)/csr_uart_test
 #SW_MAIN := $(SW_TESTS)/csr_gpio_test
-SW_MAIN := $(SW_TESTS)/csr_ethernet_test
+#SW_MAIN := $(SW_TESTS)/csr_ethernet_test
 #SW_MAIN := $(SW_TESTS)/csr_test
 
 CSR_BLD := $(BLD_DIR)/csr_build/generated-files
@@ -56,11 +56,20 @@ $(SW_APP)/assert.h \
 $(CSR_BLD)/wireguard_regs.h \
 $(CSR_BLD)/csr_hw.h \
 $(CSR_BLD)/csr.h \
-$(SW_APP)/uart.h           $(SW_APP)/uart.c \
-$(SW_APP)/ethernet.h       $(SW_APP)/ethernet.c \
-$(SW_APP)/network.h        $(SW_APP)/network.c \
-$(SW_APP)/string_bare.h    $(SW_APP)/string_bare.c \
-$(SW_APP)/wireguard_libs.h $(SW_APP)/wireguard_libs.cpp \
+$(SW_APP)/uart.h                 $(SW_APP)/uart.c \
+$(SW_APP)/ethernet.h             $(SW_APP)/ethernet.c \
+$(SW_APP)/network.h              $(SW_APP)/network.c \
+$(SW_APP)/string_bare.h          $(SW_APP)/string_bare.c \
+$(SW_APP)/chacha20.h             $(SW_APP)/chacha20.c \
+$(SW_APP)/poly1305.h             $(SW_APP)/poly1305.c \
+$(SW_APP)/chacha20poly1305.h     $(SW_APP)/chacha20poly1305.c \
+$(SW_APP)/curve25519.h           $(SW_APP)/curve25519.c \
+$(SW_APP)/tweetnacl_x25519.h     $(SW_APP)/tweetnacl_x25519.c \
+$(SW_APP)/blake2s.h              $(SW_APP)/blake2s.c \
+$(SW_APP)/hkdf.h                 $(SW_APP)/hkdf.c \
+$(SW_APP)/random.h               $(SW_APP)/random.c \
+$(SW_APP)/timer.h                $(SW_APP)/timer.c \
+$(SW_APP)/wireguard_libs.h       $(SW_APP)/wireguard_libs.cpp \
 $(SW_MAIN)/main.cpp
 	$(CROSS)g++ \
    $(CFLAGS) \
@@ -82,6 +91,15 @@ $(SW_MAIN)/main.cpp
    $(SW_APP)/ethernet.c \
    $(SW_APP)/network.c \
    $(SW_APP)/string_bare.c \
+   $(SW_APP)/chacha20.c \
+   $(SW_APP)/poly1305.c \
+   $(SW_APP)/chacha20poly1305.c \
+   $(SW_APP)/curve25519.c \
+   $(SW_APP)/tweetnacl_x25519.c \
+   $(SW_APP)/blake2s.c \
+   $(SW_APP)/hkdf.c \
+   $(SW_APP)/random.c \
+   $(SW_APP)/timer.c \
    $(SW_APP)/wireguard_libs.cpp \
    $(SW_MAIN)/main.cpp \
    -lgcc
