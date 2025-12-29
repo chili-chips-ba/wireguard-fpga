@@ -50,10 +50,10 @@ module dpe
    );
 
 // DPE dummy switch
-//   dpe_dummy_switch switch (
-//      .inp                   (muxed_1),
-//      .outp                  (muxed_2)
-//   );
+   dpe_dummy_switch switch (
+      .inp                   (muxed_1),
+      .outp                  (muxed_2)
+   );
 
 // DPE demultiplexer
    dpe_demultiplexer demux (
@@ -67,14 +67,14 @@ module dpe
 
 
 // DPE egress Engine
-   dpe_egress_ip_lookup #(
-      .ENTRY_COUNT(ENTRY_COUNT)
-   ) u_egress (
-      .s_axis   (muxed_1),
-      .m_axis   (muxed_2),
+//   dpe_egress_ip_lookup #(
+//      .ENTRY_COUNT(ENTRY_COUNT)
+//   ) u_egress (
+//      .s_axis   (muxed_1),
+//      .m_axis   (muxed_2),
 
-      .hwif_out (from_csr.dpe.routing_table),
-      .hwif_in  (to_csr.dpe.routing_table)
-   );
+//      .hwif_out (from_csr.dpe.routing_table),
+//      .hwif_in  (to_csr.dpe.routing_table)
+//   );
 
 endmodule
