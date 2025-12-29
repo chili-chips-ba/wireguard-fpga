@@ -43,6 +43,28 @@ void uart_send_hex (volatile csr_vp_t* csr, unsigned int val, int digits) {
 }
 
 /**********************************************************************
+ * Function:    uart_send_hex_bytes()
+ *
+ * Description: Converts a byte array into ASCII hexadecimal
+ *              representation and sends it over UART.
+ *              Each byte is transmitted as two HEX characters
+ *
+ * Returns:     None
+ **********************************************************************/
+void uart_send_hex_bytes(volatile csr_vp_t* csr, const uint8_t *data, int len)
+{
+    const char hex[] = "0123456789ABCDEF";
+    for (int i = 0; i < len; i++)
+    {
+        uint8_t b = data[i];
+        uart_send_char(csr, hex[b >> 4]);    // high nibble
+        uart_send_char(csr, hex[b & 0xF]);   // low nibble
+    }
+    uart_send_char(csr, '\r');
+    uart_send_char(csr, '\n');
+}
+
+/**********************************************************************
  * Function:    uart_send_dec()
  *
  * Description: Converts 0-255 decimal value to a string of
