@@ -222,33 +222,33 @@ While the board we're using is low cost, it is also not particularly known in th
 
 Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not support High-Performance (HP) I/O. Consequently, we cannot push its I/O beyond 600MHz, nor its core logic beyond 100 MHz. 
 
-- [x] Familiarization with HW platform
+- [x]✔ Familiarization with HW platform
   - Create our first FPGA program that blinks LEDs
   - Verify pinouts and connectivity using simple test routines
   - Generate a few Ethernet test patterns 
 
-- [x] Familiarization with SW platform
+- [x]✔ Familiarization with SW platform
   - Initial bring up of embedded CPU within a _cookie-cutter_ SOC, such as [Ref5]
   - Design and test a simple SW interface to rudimentary HW Ethernet datapath
 
-- [x] Detailed analysis and comparisons of:
+- [x]✔ Detailed analysis and comparisons of:
   - Wireguard [White Papers](https://www.ndss-symposium.org/wp-content/uploads/2017/09/ndss2017_04A-3_Donenfeld_paper.pdf)
   - existing implementations in software [Ref1]
   - vs. _Blackwire_ hardware implementation [Ref2]
   - [cryptographic algorithms](https://eprint.iacr.org/2018/080.pdf) used for Wireguard, esp. **ChaCha20** for encryption, **Poly1305** for authentication [Ref4] and, to a lesser extent, _Curve25519_ for key exchange and _blake2_ for hashing
   
-- [x] Identification and assimilation of prior art and building IP blocks, in particular **Corundum** [Ref3] and, to a lesser extent, _10GE Switch_ [Ref7] 
+- [x]✔ Identification and assimilation of prior art and building IP blocks, in particular **Corundum** [Ref3] and, to a lesser extent, _10GE Switch_ [Ref7] 
 
-- [x] Architecture/uArch Design. HW/SW Partitioning. Verification Plan
+- [x]✔ Architecture/uArch Design. HW/SW Partitioning. Verification Plan
 
-- [x] Creation of sufficient initial documentation for project divide-and-conquer across a multi-disciplinary team of half a dozen developers
+- [x]✔ Creation of sufficient initial documentation for project divide-and-conquer across a multi-disciplinary team of half a dozen developers
 
 ## Take2
 **Implementation of a basic, statically pre-configured Wireguard link**
 
 It it in this take that we start creating hardware Datapath and hardening Wireguard encryption protocols, all using Vivado and Xilinx primitives.
 
-- [x] Integration of collected RTL blocks into a coherent HW system that implements the basic Wireguard datapath for a handful of manually pre-configured channels.
+- [x]✔ Integration of collected RTL blocks into a coherent HW system that implements the basic Wireguard datapath for a handful of manually pre-configured channels.
   - Corundum FPGA-based NIC and platform for opensource Ethernet development [Ref3]
   -	IP Core for **ChaCha20-Poly1305** [Ref4] -- Definitely in hardware from the get-go
     - https://github.com/Goshik92/FpgaCha
@@ -261,30 +261,30 @@ It it in this take that we start creating hardware Datapath and hardening Wiregu
   - _blake2_ module for hashing (we'll most likely do it in software)
     - https://github.com/secworks/blake2
       
-- [x] Timing closure. Resolution of FPGA device utilization and routing congestion issues
-- [X] Creation of cocoTB DV in the CI/CD environmenT, and representative test cases for datapath simulation
+- [x]✔ Timing closure. Resolution of FPGA device utilization and routing congestion issues
+- [X]✔ Creation of cocoTB DV in the CI/CD environmenT, and representative test cases for datapath simulation
 
 ## Take3
 **Development and integration of embedded management software (Control Plane)**
 
 This work package is about hardware/software codesign and integration. The firmware will run on a soft RISC V processor, inside the FPGA. Our vanilla SOC is at this point starting to be customized to Wireguard needs. This work can to some extent go on in parallel with hardware activities of Take2. 
 
-- [X]	SW design for on-chip processor (Part 1)
+- [X]✔	SW design for on-chip processor (Part 1)
   - Code is to be written in the bare-metal C with, as necessary, a few sections in Assembly
   - SW is responsible for configuration and management of hardware blocks
   - SW must not participate in the bulk datapath transfers
   - SW may however intercept the low-frequency management packets
 
-- [x]	SW design for on-chip processor (Part 2)
+- [x]✔	SW design for on-chip processor (Part 2)
   - KMM function -- Key Management Module
 
-- [X] HW/SW Integration
+- [X]✔ HW/SW Integration
 
 ## Take4
 **VPN Tunnel: Session initialization, maintenance, and secure closure**
 
 This is about managing the bring-up, maintenance and tear-down of VPN tunnels between two devices.
-- [x] Session Initialization: Starting the handshake process to establish secure communication with another device
+- [x]✔ Session Initialization: Starting the handshake process to establish secure communication with another device
 - [ ] Session Maintenance: Keeping the session active through the regular exchange of control messages, which allows detection and recovery from problems such as connection interruptions
 - [ ] Session Closure: Securely close the VPN tunnel when communication is no longer needed, ensuring that all temporary keys and sensitive data are deleted
 
@@ -295,17 +295,17 @@ This is about managing the bring-up, maintenance and tear-down of VPN tunnels be
 
 - [ ] Performance testing. HW/SW profiling, updates and enhancements to ensure the design indeed operates at close to the wire speed on all preconfigured channels
 
-- [x] Porting to openXC7 [Ref8] using [SV2V](https://github.com/zachjs/sv2v), in the GoCD CI/CD setting 
+- [x]✔ Porting to openXC7 [Ref8] using [SV2V](https://github.com/zachjs/sv2v), in the GoCD CI/CD setting 
   - This is challenging, as openXC7 has thus far been crashing for NES SV
 
-- [x] Timing closure with openXC7
+- [x]✔ Timing closure with openXC7
   - This is definitely challenging, given that openXC7 is currently without accurate timing-driven STA
 
-- [x] Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
+- [x]✔ Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
       
-- [x] Creation and maintenance of an attractive and well-documented Github repo, to entice community interest
+- [x]✔ Creation and maintenance of an attractive and well-documented Github repo, to entice community interest
       
-- [ ] Ongoing documentation updates and CI/CD script maintenance to keep it valid in the light of inevitable design mutations compared to the original Design Blueprint.
+- [x]✔ Ongoing documentation updates and CI/CD script maintenance to keep it valid in the light of inevitable design mutations compared to the original Design Blueprint.
 
 
 ## Take6 (time-permitting Bonus)
@@ -318,6 +318,7 @@ The objective of this optional deliverable is to ensure stable and efficient lin
 
 ## Closing Notes
 TODO
+
 
 ### Acknowledgements
 We are grateful to **NLnet Foundation** for their sponsorship of this development activity.
