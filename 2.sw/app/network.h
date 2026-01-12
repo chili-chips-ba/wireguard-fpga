@@ -74,14 +74,16 @@ typedef struct {
    uint8_t  sequence[2];
 } net_hdr_icmp_t;
 
-uint16_t       net_calculate_checksum  (const uint8_t *data, size_t len);
+uint8_t        net_str_parse_ip        (const char*       str,
+                                        ip_t*             ip);
+uint16_t       net_calculate_checksum  (const uint8_t* data, size_t len);
 net_protocol_t net_parse_packet_header (eth_raw_packet_t* packet);
-uint8_t        net_process_arp         (net_config_t*     config, 
-                                        net_arp_cache_t*  arp_cache, 
-                                        eth_raw_packet_t* rx_packet, 
+uint8_t        net_process_arp         (net_config_t*     config,
+                                        net_arp_cache_t*  arp_cache,
+                                        eth_raw_packet_t* rx_packet,
                                         eth_raw_packet_t* tx_packet);
-uint8_t        net_process_icmp        (net_config_t*     config, 
-                                        eth_raw_packet_t* rx_packet, 
+uint8_t        net_process_icmp        (net_config_t*     config,
+                                        eth_raw_packet_t* rx_packet,
                                         eth_raw_packet_t* tx_packet);
 
 #ifdef __cplusplus

@@ -7,7 +7,7 @@ module csr (
 
         input wire s_cpuif_req,
         input wire s_cpuif_req_is_wr,
-        input wire [7:0] s_cpuif_addr,
+        input wire [13:0] s_cpuif_addr,
         input wire [31:0] s_cpuif_wr_data,
         input wire [31:0] s_cpuif_wr_biten,
         output wire s_cpuif_req_stall_wr,
@@ -27,7 +27,7 @@ module csr (
     //--------------------------------------------------------------------------
     logic cpuif_req;
     logic cpuif_req_is_wr;
-    logic [7:0] cpuif_addr;
+    logic [13:0] cpuif_addr;
     logic [31:0] cpuif_wr_data;
     logic [31:0] cpuif_wr_biten;
     logic cpuif_req_stall_wr;
@@ -54,10 +54,29 @@ module csr (
     assign s_cpuif_wr_err = cpuif_wr_err;
 
     logic cpuif_req_masked;
+    logic external_req;
+    logic external_pending;
+    logic external_wr_ack;
+    logic external_rd_ack;
+    always_ff @(posedge clk) begin
+        if(rst) begin
+            external_pending <= '0;
+        end else begin
+            if(external_req & ~external_wr_ack & ~external_rd_ack) external_pending <= '1;
+            else if(external_wr_ack | external_rd_ack) external_pending <= '0;
+            `ifndef SYNTHESIS
+                assert(!external_wr_ack || (external_pending | external_req))
+                    else $error("An external wr_ack strobe was asserted when no external request was active");
+                assert(!external_rd_ack || (external_pending | external_req))
+                    else $error("An external rd_ack strobe was asserted when no external request was active");
+            `endif
+        end
+    end
 
     // Read & write latencies are balanced. Stalls not required
-    assign cpuif_req_stall_rd = '0;
-    assign cpuif_req_stall_wr = '0;
+    // except if external
+    assign cpuif_req_stall_rd = external_pending;
+    assign cpuif_req_stall_wr = external_pending;
     assign cpuif_req_masked = cpuif_req
                             & !(!cpuif_req_is_wr & cpuif_req_stall_rd)
                             & !(cpuif_req_is_wr & cpuif_req_stall_wr);
@@ -98,49 +117,65 @@ module csr (
             logic mac_47_32;
             logic mac_31_0;
         } ethernet[4];
+        logic hw_id;
+        logic hw_version;
         struct {
             logic fcr;
         } dpe;
-        logic hw_id;
-        logic hw_version;
+        logic routing_table;
+        logic cryptokey_table;
     } decoded_reg_strb_t;
     decoded_reg_strb_t decoded_reg_strb;
+    logic decoded_strb_is_external;
+
+    logic [13:0] decoded_addr;
+
     logic decoded_req;
     logic decoded_req_is_wr;
     logic [31:0] decoded_wr_data;
     logic [31:0] decoded_wr_biten;
 
     always_comb begin
-        decoded_reg_strb.cpu_fifo.rx.data_31_0 = cpuif_req_masked & (cpuif_addr == 8'h0);
-        decoded_reg_strb.cpu_fifo.rx.data_63_32 = cpuif_req_masked & (cpuif_addr == 8'h4);
-        decoded_reg_strb.cpu_fifo.rx.data_95_64 = cpuif_req_masked & (cpuif_addr == 8'h8);
-        decoded_reg_strb.cpu_fifo.rx.data_127_96 = cpuif_req_masked & (cpuif_addr == 8'hc);
-        decoded_reg_strb.cpu_fifo.rx.control = cpuif_req_masked & (cpuif_addr == 8'h10);
-        decoded_reg_strb.cpu_fifo.rx.trigger = cpuif_req_masked & (cpuif_addr == 8'h14);
-        decoded_reg_strb.cpu_fifo.rx.status = cpuif_req_masked & (cpuif_addr == 8'h18);
-        decoded_reg_strb.cpu_fifo.tx.data_31_0 = cpuif_req_masked & (cpuif_addr == 8'h1c);
-        decoded_reg_strb.cpu_fifo.tx.data_63_32 = cpuif_req_masked & (cpuif_addr == 8'h20);
-        decoded_reg_strb.cpu_fifo.tx.data_95_64 = cpuif_req_masked & (cpuif_addr == 8'h24);
-        decoded_reg_strb.cpu_fifo.tx.data_127_96 = cpuif_req_masked & (cpuif_addr == 8'h28);
-        decoded_reg_strb.cpu_fifo.tx.control = cpuif_req_masked & (cpuif_addr == 8'h2c);
-        decoded_reg_strb.cpu_fifo.tx.trigger = cpuif_req_masked & (cpuif_addr == 8'h30);
-        decoded_reg_strb.cpu_fifo.tx.status = cpuif_req_masked & (cpuif_addr == 8'h34);
-        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 8'h38);
-        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 8'h3c);
-        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 8'h40);
-        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 8'h44);
-        decoded_reg_strb.gpio = cpuif_req_masked & (cpuif_addr == 8'h48);
+        automatic logic is_external;
+        is_external = '0;
+        decoded_reg_strb.cpu_fifo.rx.data_31_0 = cpuif_req_masked & (cpuif_addr == 14'h0);
+        decoded_reg_strb.cpu_fifo.rx.data_63_32 = cpuif_req_masked & (cpuif_addr == 14'h4);
+        decoded_reg_strb.cpu_fifo.rx.data_95_64 = cpuif_req_masked & (cpuif_addr == 14'h8);
+        decoded_reg_strb.cpu_fifo.rx.data_127_96 = cpuif_req_masked & (cpuif_addr == 14'hc);
+        decoded_reg_strb.cpu_fifo.rx.control = cpuif_req_masked & (cpuif_addr == 14'h10);
+        decoded_reg_strb.cpu_fifo.rx.trigger = cpuif_req_masked & (cpuif_addr == 14'h14);
+        decoded_reg_strb.cpu_fifo.rx.status = cpuif_req_masked & (cpuif_addr == 14'h18);
+        decoded_reg_strb.cpu_fifo.tx.data_31_0 = cpuif_req_masked & (cpuif_addr == 14'h1c);
+        decoded_reg_strb.cpu_fifo.tx.data_63_32 = cpuif_req_masked & (cpuif_addr == 14'h20);
+        decoded_reg_strb.cpu_fifo.tx.data_95_64 = cpuif_req_masked & (cpuif_addr == 14'h24);
+        decoded_reg_strb.cpu_fifo.tx.data_127_96 = cpuif_req_masked & (cpuif_addr == 14'h28);
+        decoded_reg_strb.cpu_fifo.tx.control = cpuif_req_masked & (cpuif_addr == 14'h2c);
+        decoded_reg_strb.cpu_fifo.tx.trigger = cpuif_req_masked & (cpuif_addr == 14'h30);
+        decoded_reg_strb.cpu_fifo.tx.status = cpuif_req_masked & (cpuif_addr == 14'h34);
+        decoded_reg_strb.uart.rx = cpuif_req_masked & (cpuif_addr == 14'h38);
+        decoded_reg_strb.uart.rx_trigger = cpuif_req_masked & (cpuif_addr == 14'h3c);
+        decoded_reg_strb.uart.tx = cpuif_req_masked & (cpuif_addr == 14'h40);
+        decoded_reg_strb.uart.tx_trigger = cpuif_req_masked & (cpuif_addr == 14'h44);
+        decoded_reg_strb.gpio = cpuif_req_masked & (cpuif_addr == 14'h48);
         for(int i0=0; i0<4; i0++) begin
-            decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 8'h4c + (8)'(i0) * 8'hc);
-            decoded_reg_strb.ethernet[i0].mac_47_32 = cpuif_req_masked & (cpuif_addr == 8'h50 + (8)'(i0) * 8'hc);
-            decoded_reg_strb.ethernet[i0].mac_31_0 = cpuif_req_masked & (cpuif_addr == 8'h54 + (8)'(i0) * 8'hc);
+            decoded_reg_strb.ethernet[i0].status = cpuif_req_masked & (cpuif_addr == 14'h4c + (14)'(i0) * 14'hc);
+            decoded_reg_strb.ethernet[i0].mac_47_32 = cpuif_req_masked & (cpuif_addr == 14'h50 + (14)'(i0) * 14'hc);
+            decoded_reg_strb.ethernet[i0].mac_31_0 = cpuif_req_masked & (cpuif_addr == 14'h54 + (14)'(i0) * 14'hc);
         end
-        decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 8'h7c);
-        decoded_reg_strb.hw_id = cpuif_req_masked & (cpuif_addr == 8'h80);
-        decoded_reg_strb.hw_version = cpuif_req_masked & (cpuif_addr == 8'h84);
+        decoded_reg_strb.hw_id = cpuif_req_masked & (cpuif_addr == 14'h7c);
+        decoded_reg_strb.hw_version = cpuif_req_masked & (cpuif_addr == 14'h80);
+        decoded_reg_strb.dpe.fcr = cpuif_req_masked & (cpuif_addr == 14'h84);
+        decoded_reg_strb.routing_table = cpuif_req_masked & (cpuif_addr >= 14'h400) & (cpuif_addr <= 14'h400 + 14'h3ff);
+        is_external |= cpuif_req_masked & (cpuif_addr >= 14'h400) & (cpuif_addr <= 14'h400 + 14'h3ff);
+        decoded_reg_strb.cryptokey_table = cpuif_req_masked & (cpuif_addr >= 14'h2000) & (cpuif_addr <= 14'h2000 + 14'h1dff);
+        is_external |= cpuif_req_masked & (cpuif_addr >= 14'h2000) & (cpuif_addr <= 14'h2000 + 14'h1dff);
+        decoded_strb_is_external = is_external;
+        external_req = is_external;
     end
 
     // Pass down signals to next stage
+    assign decoded_addr = cpuif_addr;
+
     assign decoded_req = cpuif_req_masked;
     assign decoded_req_is_wr = cpuif_req_is_wr;
     assign decoded_wr_data = cpuif_wr_data;
@@ -830,6 +865,11 @@ module csr (
         end
         assign hwif_out.ethernet[i0].mac_31_0.mac.value = field_storage.ethernet[i0].mac_31_0.mac.value;
     end
+    assign hwif_out.hw_id.PRODUCT.value = 16'hcaca;
+    assign hwif_out.hw_id.VENDOR.value = 16'hccba;
+    assign hwif_out.hw_version.PATCH.value = 16'h0;
+    assign hwif_out.hw_version.MINOR.value = 8'h0;
+    assign hwif_out.hw_version.MAJOR.value = 8'h1;
     // Field: csr.dpe.fcr.pause
     always_comb begin
         automatic logic [0:0] next_c;
@@ -853,29 +893,53 @@ module csr (
         end
     end
     assign hwif_out.dpe.fcr.pause.value = field_storage.dpe.fcr.pause.value;
-    assign hwif_out.hw_id.PRODUCT.value = 16'hcaca;
-    assign hwif_out.hw_id.VENDOR.value = 16'hccae;
-    assign hwif_out.hw_version.PATCH.value = 16'h0;
-    assign hwif_out.hw_version.MINOR.value = 8'h2;
-    assign hwif_out.hw_version.MAJOR.value = 8'h0;
+    assign hwif_out.routing_table.req = decoded_reg_strb.routing_table;
+    assign hwif_out.routing_table.addr = decoded_addr[9:0];
+    assign hwif_out.routing_table.req_is_wr = decoded_req_is_wr;
+    assign hwif_out.routing_table.wr_data = decoded_wr_data;
+    assign hwif_out.routing_table.wr_biten = decoded_wr_biten;
+    assign hwif_out.cryptokey_table.req = decoded_reg_strb.cryptokey_table;
+    assign hwif_out.cryptokey_table.addr = decoded_addr[12:0];
+    assign hwif_out.cryptokey_table.req_is_wr = decoded_req_is_wr;
+    assign hwif_out.cryptokey_table.wr_data = decoded_wr_data;
+    assign hwif_out.cryptokey_table.wr_biten = decoded_wr_biten;
 
     //--------------------------------------------------------------------------
     // Write response
     //--------------------------------------------------------------------------
-    assign cpuif_wr_ack = decoded_req & decoded_req_is_wr;
+    always_comb begin
+        automatic logic wr_ack;
+        wr_ack = '0;
+        wr_ack |= hwif_in.routing_table.wr_ack;
+        wr_ack |= hwif_in.cryptokey_table.wr_ack;
+        external_wr_ack = wr_ack;
+    end
+    assign cpuif_wr_ack = external_wr_ack | (decoded_req & decoded_req_is_wr & ~decoded_strb_is_external);
     // Writes are always granted with no error response
     assign cpuif_wr_err = '0;
 
     //--------------------------------------------------------------------------
     // Readback
     //--------------------------------------------------------------------------
+    logic readback_external_rd_ack_c;
+    always_comb begin
+        automatic logic rd_ack;
+        rd_ack = '0;
+        rd_ack |= hwif_in.routing_table.rd_ack;
+        rd_ack |= hwif_in.cryptokey_table.rd_ack;
+        readback_external_rd_ack_c = rd_ack;
+    end
+
+    logic readback_external_rd_ack;
+
+    assign readback_external_rd_ack = readback_external_rd_ack_c;
 
     logic readback_err;
     logic readback_done;
     logic [31:0] readback_data;
 
     // Assign readback values to a flattened array
-    logic [31:0] readback_array[34];
+    logic [31:0] readback_array[36];
     assign readback_array[0][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_31_0 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_31_0.tdata.value : '0;
     assign readback_array[1][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_63_32 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_63_32.tdata.value : '0;
     assign readback_array[2][31:0] = (decoded_reg_strb.cpu_fifo.rx.data_95_64 && !decoded_req_is_wr) ? field_storage.cpu_fifo.rx.data_95_64.tdata.value : '0;
@@ -930,26 +994,29 @@ module csr (
         assign readback_array[i0 * 3 + 20][31:16] = '0;
         assign readback_array[i0 * 3 + 21][31:0] = (decoded_reg_strb.ethernet[i0].mac_31_0 && !decoded_req_is_wr) ? field_storage.ethernet[i0].mac_31_0.mac.value : '0;
     end
-    assign readback_array[31][0:0] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? hwif_in.dpe.fcr.idle.next : '0;
-    assign readback_array[31][1:1] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? field_storage.dpe.fcr.pause.value : '0;
-    assign readback_array[31][31:2] = '0;
-    assign readback_array[32][15:0] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hcaca : '0;
-    assign readback_array[32][31:16] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hccae : '0;
-    assign readback_array[33][15:0] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 16'h0 : '0;
-    assign readback_array[33][23:16] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h2 : '0;
-    assign readback_array[33][31:24] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h0 : '0;
+    assign readback_array[31][15:0] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hcaca : '0;
+    assign readback_array[31][31:16] = (decoded_reg_strb.hw_id && !decoded_req_is_wr) ? 16'hccba : '0;
+    assign readback_array[32][15:0] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 16'h0 : '0;
+    assign readback_array[32][23:16] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h0 : '0;
+    assign readback_array[32][31:24] = (decoded_reg_strb.hw_version && !decoded_req_is_wr) ? 8'h1 : '0;
+    assign readback_array[33][0:0] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? hwif_in.dpe.fcr.idle.next : '0;
+    assign readback_array[33][1:1] = (decoded_reg_strb.dpe.fcr && !decoded_req_is_wr) ? field_storage.dpe.fcr.pause.value : '0;
+    assign readback_array[33][31:2] = '0;
+    assign readback_array[34] = hwif_in.routing_table.rd_ack ? hwif_in.routing_table.rd_data : '0;
+    assign readback_array[35] = hwif_in.cryptokey_table.rd_ack ? hwif_in.cryptokey_table.rd_data : '0;
 
     // Reduce the array
     always_comb begin
         automatic logic [31:0] readback_data_var;
-        readback_done = decoded_req & ~decoded_req_is_wr;
+        readback_done = decoded_req & ~decoded_req_is_wr & ~decoded_strb_is_external;
         readback_err = '0;
         readback_data_var = '0;
-        for(int i=0; i<34; i++) readback_data_var |= readback_array[i];
+        for(int i=0; i<36; i++) readback_data_var |= readback_array[i];
         readback_data = readback_data_var;
     end
 
-    assign cpuif_rd_ack = readback_done;
+    assign external_rd_ack = readback_external_rd_ack;
+    assign cpuif_rd_ack = readback_done | readback_external_rd_ack;
     assign cpuif_rd_data = readback_data;
     assign cpuif_rd_err = readback_err;
 endmodule

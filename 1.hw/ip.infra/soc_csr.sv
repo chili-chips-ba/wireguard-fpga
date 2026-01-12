@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024-2025 Chili.CHIPS*ba
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -23,13 +23,16 @@ module soc_csr
    output csr_pkg::csr__out_t hwif_out
 );
    logic [31:0]               s_cpuif_wr_biten;
+   logic                      s_cpuif_rd_ack;
+   logic                      s_cpuif_wr_ack;
 
    assign s_cpuif_wr_biten[31:24] = bus.we[3] ? '1 : '0;
    assign s_cpuif_wr_biten[23:16] = bus.we[2] ? '1 : '0;
    assign s_cpuif_wr_biten[15:8]  = bus.we[1] ? '1 : '0;
    assign s_cpuif_wr_biten[7:0]   = bus.we[0] ? '1 : '0;
 
-   assign bus.rdy = 1'b1;
+   //assign bus.rdy = 1'b1;
+   assign bus.rdy = s_cpuif_rd_ack | s_cpuif_wr_ack;
 
    csr csr_inst (
       .clk                  (bus.clk),
@@ -42,10 +45,10 @@ module soc_csr
       .s_cpuif_wr_biten     (s_cpuif_wr_biten),
       .s_cpuif_req_stall_wr (),
       .s_cpuif_req_stall_rd (),
-      .s_cpuif_rd_ack       (),
+      .s_cpuif_rd_ack       (s_cpuif_rd_ack),
       .s_cpuif_rd_err       (),
       .s_cpuif_rd_data      (bus.rdat),
-      .s_cpuif_wr_ack       (),
+      .s_cpuif_wr_ack       (s_cpuif_wr_ack),
       .s_cpuif_wr_err       (),
 
       .hwif_in              (hwif_in),

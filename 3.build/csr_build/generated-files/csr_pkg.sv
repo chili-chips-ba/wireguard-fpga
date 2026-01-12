@@ -4,8 +4,10 @@
 package csr_pkg;
 
     localparam CSR_DATA_WIDTH = 32;
-    localparam CSR_MIN_ADDR_WIDTH = 8;
-    localparam CSR_SIZE = 'h88;
+    localparam CSR_MIN_ADDR_WIDTH = 14;
+    localparam CSR_SIZE = 'h3e00;
+
+    
 
     typedef struct {
         logic next;
@@ -175,11 +177,25 @@ package csr_pkg;
     } csr__dpe__in_t;
 
     typedef struct {
+        logic rd_ack;
+        logic [31:0] rd_data;
+        logic wr_ack;
+    } csr__routing_table__external__in_t;
+
+    typedef struct {
+        logic rd_ack;
+        logic [31:0] rd_data;
+        logic wr_ack;
+    } csr__cryptokey_table__external__in_t;
+
+    typedef struct {
         csr__cpu_fifo__in_t cpu_fifo;
         csr__uart__in_t uart;
         csr__gpio__in_t gpio;
         csr__ethernet__in_t ethernet[4];
         csr__dpe__in_t dpe;
+        csr__routing_table__external__in_t routing_table;
+        csr__cryptokey_table__external__in_t cryptokey_table;
     } csr__in_t;
 
     typedef struct {
@@ -356,18 +372,6 @@ package csr_pkg;
     } csr__ethernet__out_t;
 
     typedef struct {
-        logic value;
-    } csr__dpe__fcr__pause__out_t;
-
-    typedef struct {
-        csr__dpe__fcr__pause__out_t pause;
-    } csr__dpe__fcr__out_t;
-
-    typedef struct {
-        csr__dpe__fcr__out_t fcr;
-    } csr__dpe__out_t;
-
-    typedef struct {
         logic [15:0] value;
     } csr__hw_id__PRODUCT__out_t;
 
@@ -399,12 +403,42 @@ package csr_pkg;
     } csr__hw_version__out_t;
 
     typedef struct {
+        logic value;
+    } csr__dpe__fcr__pause__out_t;
+
+    typedef struct {
+        csr__dpe__fcr__pause__out_t pause;
+    } csr__dpe__fcr__out_t;
+
+    typedef struct {
+        csr__dpe__fcr__out_t fcr;
+    } csr__dpe__out_t;
+
+    typedef struct {
+        logic req;
+        logic [9:0] addr;
+        logic req_is_wr;
+        logic [31:0] wr_data;
+        logic [31:0] wr_biten;
+    } csr__routing_table__external__out_t;
+
+    typedef struct {
+        logic req;
+        logic [12:0] addr;
+        logic req_is_wr;
+        logic [31:0] wr_data;
+        logic [31:0] wr_biten;
+    } csr__cryptokey_table__external__out_t;
+
+    typedef struct {
         csr__cpu_fifo__out_t cpu_fifo;
         csr__uart__out_t uart;
         csr__gpio__out_t gpio;
         csr__ethernet__out_t ethernet[4];
-        csr__dpe__out_t dpe;
         csr__hw_id__out_t hw_id;
         csr__hw_version__out_t hw_version;
+        csr__dpe__out_t dpe;
+        csr__routing_table__external__out_t routing_table;
+        csr__cryptokey_table__external__out_t cryptokey_table;
     } csr__out_t;
 endpackage

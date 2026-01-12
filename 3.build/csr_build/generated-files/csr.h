@@ -422,6 +422,45 @@ typedef struct __attribute__ ((__packed__)) {
     csr__ethernet__mac_31_0_t mac_31_0;
 } csr__ethernet_t;
 
+// Reg - csr::hw_id
+#define CSR__HW_ID__PRODUCT_bm 0xffff
+#define CSR__HW_ID__PRODUCT_bp 0
+#define CSR__HW_ID__PRODUCT_bw 16
+#define CSR__HW_ID__PRODUCT_reset 0xcaca
+#define CSR__HW_ID__VENDOR_bm 0xffff0000
+#define CSR__HW_ID__VENDOR_bp 16
+#define CSR__HW_ID__VENDOR_bw 16
+#define CSR__HW_ID__VENDOR_reset 0xccba
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t PRODUCT :16;
+        uint32_t VENDOR :16;
+    } f;
+    uint32_t w;
+} csr__hw_id_t;
+
+// Reg - csr::hw_version
+#define CSR__HW_VERSION__PATCH_bm 0xffff
+#define CSR__HW_VERSION__PATCH_bp 0
+#define CSR__HW_VERSION__PATCH_bw 16
+#define CSR__HW_VERSION__PATCH_reset 0x0
+#define CSR__HW_VERSION__MINOR_bm 0xff0000
+#define CSR__HW_VERSION__MINOR_bp 16
+#define CSR__HW_VERSION__MINOR_bw 8
+#define CSR__HW_VERSION__MINOR_reset 0x0
+#define CSR__HW_VERSION__MAJOR_bm 0xff000000
+#define CSR__HW_VERSION__MAJOR_bp 24
+#define CSR__HW_VERSION__MAJOR_bw 8
+#define CSR__HW_VERSION__MAJOR_reset 0x1
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t PATCH :16;
+        uint32_t MINOR :8;
+        uint32_t MAJOR :8;
+    } f;
+    uint32_t w;
+} csr__hw_version_t;
+
 // Reg - csr::dpe::fcr
 #define CSR__DPE__FCR__IDLE_bm 0x1
 #define CSR__DPE__FCR__IDLE_bp 0
@@ -445,44 +484,441 @@ typedef struct __attribute__ ((__packed__)) {
     csr__dpe__fcr_t fcr;
 } csr__dpe_t;
 
-// Reg - csr::hw_id
-#define CSR__HW_ID__PRODUCT_bm 0xffff
-#define CSR__HW_ID__PRODUCT_bp 0
-#define CSR__HW_ID__PRODUCT_bw 16
-#define CSR__HW_ID__PRODUCT_reset 0xcaca
-#define CSR__HW_ID__VENDOR_bm 0xffff0000
-#define CSR__HW_ID__VENDOR_bp 16
-#define CSR__HW_ID__VENDOR_bw 16
-#define CSR__HW_ID__VENDOR_reset 0xccae
+// Reg - csr::routing_table::entry::ip
+#define CSR__ROUTING_TABLE__ENTRY__IP__IP_bm 0xffffffff
+#define CSR__ROUTING_TABLE__ENTRY__IP__IP_bp 0
+#define CSR__ROUTING_TABLE__ENTRY__IP__IP_bw 32
 typedef union {
     struct __attribute__ ((__packed__)) {
-        uint32_t PRODUCT :16;
-        uint32_t VENDOR :16;
+        uint32_t ip :32;
     } f;
     uint32_t w;
-} csr__hw_id_t;
+} csr__routing_table__entry__ip_t;
 
-// Reg - csr::hw_version
-#define CSR__HW_VERSION__PATCH_bm 0xffff
-#define CSR__HW_VERSION__PATCH_bp 0
-#define CSR__HW_VERSION__PATCH_bw 16
-#define CSR__HW_VERSION__PATCH_reset 0x0
-#define CSR__HW_VERSION__MINOR_bm 0xff0000
-#define CSR__HW_VERSION__MINOR_bp 16
-#define CSR__HW_VERSION__MINOR_bw 8
-#define CSR__HW_VERSION__MINOR_reset 0x2
-#define CSR__HW_VERSION__MAJOR_bm 0xff000000
-#define CSR__HW_VERSION__MAJOR_bp 24
-#define CSR__HW_VERSION__MAJOR_bw 8
-#define CSR__HW_VERSION__MAJOR_reset 0x0
+// Reg - csr::routing_table::entry::mask
+#define CSR__ROUTING_TABLE__ENTRY__MASK__MASK_bm 0xffffffff
+#define CSR__ROUTING_TABLE__ENTRY__MASK__MASK_bp 0
+#define CSR__ROUTING_TABLE__ENTRY__MASK__MASK_bw 32
 typedef union {
     struct __attribute__ ((__packed__)) {
-        uint32_t PATCH :16;
-        uint32_t MINOR :8;
-        uint32_t MAJOR :8;
+        uint32_t mask :32;
     } f;
     uint32_t w;
-} csr__hw_version_t;
+} csr__routing_table__entry__mask_t;
+
+// Reg - csr::routing_table::entry::peer_idx
+#define CSR__ROUTING_TABLE__ENTRY__PEER_IDX__PEER_IDX_bm 0x3f
+#define CSR__ROUTING_TABLE__ENTRY__PEER_IDX__PEER_IDX_bp 0
+#define CSR__ROUTING_TABLE__ENTRY__PEER_IDX__PEER_IDX_bw 6
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t peer_idx :6;
+        uint32_t :26;
+    } f;
+    uint32_t w;
+} csr__routing_table__entry__peer_idx_t;
+
+// Reg - csr::routing_table::entry::dst
+#define CSR__ROUTING_TABLE__ENTRY__DST__DST_bm 0x7
+#define CSR__ROUTING_TABLE__ENTRY__DST__DST_bp 0
+#define CSR__ROUTING_TABLE__ENTRY__DST__DST_bw 3
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t dst :3;
+        uint32_t :29;
+    } f;
+    uint32_t w;
+} csr__routing_table__entry__dst_t;
+
+// Regfile - csr::routing_table::entry
+typedef struct __attribute__ ((__packed__)) {
+    csr__routing_table__entry__ip_t ip;
+    csr__routing_table__entry__mask_t mask;
+    csr__routing_table__entry__peer_idx_t peer_idx;
+    csr__routing_table__entry__dst_t dst;
+} csr__routing_table__entry_t;
+
+// Regfile - csr::routing_table
+typedef struct __attribute__ ((__packed__)) {
+    csr__routing_table__entry_t entry[64];
+} csr__routing_table_t;
+
+// Reg - csr::cryptokey_table::entry::local_mac_47_32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_47_32__MAC_bm 0xffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_47_32__MAC_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_47_32__MAC_bw 16
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_47_32__MAC_reset 0x0
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t mac :16;
+        uint32_t :16;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__local_mac_47_32_t;
+
+// Reg - csr::cryptokey_table::entry::local_mac_31_0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_31_0__MAC_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_31_0__MAC_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_31_0__MAC_bw 32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_31_0__MAC_reset 0x0
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t mac :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__local_mac_31_0_t;
+
+// Reg - csr::cryptokey_table::entry::local_ip
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_IP__IP_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_IP__IP_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_IP__IP_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t ip :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__local_ip_t;
+
+// Reg - csr::cryptokey_table::entry::local_port
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_PORT__PORT_bm 0xffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_PORT__PORT_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_PORT__PORT_bw 16
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t port :16;
+        uint32_t :16;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__local_port_t;
+
+// Reg - csr::cryptokey_table::entry::local_id
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_ID__ID_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_ID__ID_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_ID__ID_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t id :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__local_id_t;
+
+// Reg - csr::cryptokey_table::entry::remote_mac_47_32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_47_32__MAC_bm 0xffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_47_32__MAC_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_47_32__MAC_bw 16
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_47_32__MAC_reset 0x0
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t mac :16;
+        uint32_t :16;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__remote_mac_47_32_t;
+
+// Reg - csr::cryptokey_table::entry::remote_mac_31_0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_31_0__MAC_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_31_0__MAC_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_31_0__MAC_bw 32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_31_0__MAC_reset 0x0
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t mac :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__remote_mac_31_0_t;
+
+// Reg - csr::cryptokey_table::entry::remote_ip
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_IP__IP_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_IP__IP_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_IP__IP_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t ip :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__remote_ip_t;
+
+// Reg - csr::cryptokey_table::entry::remote_port
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_PORT__PORT_bm 0xffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_PORT__PORT_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_PORT__PORT_bw 16
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t port :16;
+        uint32_t :16;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__remote_port_t;
+
+// Reg - csr::cryptokey_table::entry::remote_id
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_ID__ID_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_ID__ID_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_ID__ID_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t id :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__remote_id_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_255_224
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_255_224__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_255_224__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_255_224__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_255_224_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_223_192
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_223_192__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_223_192__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_223_192__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_223_192_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_191_160
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_191_160__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_191_160__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_191_160__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_191_160_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_159_128
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_159_128__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_159_128__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_159_128__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_159_128_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_127_96
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_127_96__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_127_96__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_127_96__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_127_96_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_95_64
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_95_64__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_95_64__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_95_64__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_95_64_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_63_32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_63_32__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_63_32__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_63_32__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_63_32_t;
+
+// Reg - csr::cryptokey_table::entry::encrypt_key_31_0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_31_0__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_31_0__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__ENCRYPT_KEY_31_0__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__encrypt_key_31_0_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_255_224
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_255_224__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_255_224__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_255_224__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_255_224_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_223_192
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_223_192__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_223_192__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_223_192__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_223_192_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_191_160
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_191_160__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_191_160__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_191_160__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_191_160_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_159_128
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_159_128__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_159_128__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_159_128__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_159_128_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_127_96
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_127_96__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_127_96__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_127_96__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_127_96_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_95_64
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_95_64__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_95_64__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_95_64__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_95_64_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_63_32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_63_32__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_63_32__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_63_32__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_63_32_t;
+
+// Reg - csr::cryptokey_table::entry::decrypt_key_31_0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_31_0__KEY_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_31_0__KEY_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__DECRYPT_KEY_31_0__KEY_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t key :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__decrypt_key_31_0_t;
+
+// Reg - csr::cryptokey_table::entry::send_cnt_63_32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__SEND_CNT_63_32__CNT_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__SEND_CNT_63_32__CNT_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__SEND_CNT_63_32__CNT_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t cnt :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__send_cnt_63_32_t;
+
+// Reg - csr::cryptokey_table::entry::send_cnt_31_0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__SEND_CNT_31_0__CNT_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__SEND_CNT_31_0__CNT_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__SEND_CNT_31_0__CNT_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t cnt :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__send_cnt_31_0_t;
+
+// Reg - csr::cryptokey_table::entry::recv_cnt_63_32
+#define CSR__CRYPTOKEY_TABLE__ENTRY__RECV_CNT_63_32__CNT_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__RECV_CNT_63_32__CNT_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__RECV_CNT_63_32__CNT_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t cnt :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__recv_cnt_63_32_t;
+
+// Reg - csr::cryptokey_table::entry::recv_cnt_31_0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__RECV_CNT_31_0__CNT_bm 0xffffffff
+#define CSR__CRYPTOKEY_TABLE__ENTRY__RECV_CNT_31_0__CNT_bp 0
+#define CSR__CRYPTOKEY_TABLE__ENTRY__RECV_CNT_31_0__CNT_bw 32
+typedef union {
+    struct __attribute__ ((__packed__)) {
+        uint32_t cnt :32;
+    } f;
+    uint32_t w;
+} csr__cryptokey_table__entry__recv_cnt_31_0_t;
+
+// Regfile - csr::cryptokey_table::entry
+typedef struct __attribute__ ((__packed__)) {
+    csr__cryptokey_table__entry__local_mac_47_32_t local_mac_47_32;
+    csr__cryptokey_table__entry__local_mac_31_0_t local_mac_31_0;
+    csr__cryptokey_table__entry__local_ip_t local_ip;
+    csr__cryptokey_table__entry__local_port_t local_port;
+    csr__cryptokey_table__entry__local_id_t local_id;
+    csr__cryptokey_table__entry__remote_mac_47_32_t remote_mac_47_32;
+    csr__cryptokey_table__entry__remote_mac_31_0_t remote_mac_31_0;
+    csr__cryptokey_table__entry__remote_ip_t remote_ip;
+    csr__cryptokey_table__entry__remote_port_t remote_port;
+    csr__cryptokey_table__entry__remote_id_t remote_id;
+    csr__cryptokey_table__entry__encrypt_key_255_224_t encrypt_key_255_224;
+    csr__cryptokey_table__entry__encrypt_key_223_192_t encrypt_key_223_192;
+    csr__cryptokey_table__entry__encrypt_key_191_160_t encrypt_key_191_160;
+    csr__cryptokey_table__entry__encrypt_key_159_128_t encrypt_key_159_128;
+    csr__cryptokey_table__entry__encrypt_key_127_96_t encrypt_key_127_96;
+    csr__cryptokey_table__entry__encrypt_key_95_64_t encrypt_key_95_64;
+    csr__cryptokey_table__entry__encrypt_key_63_32_t encrypt_key_63_32;
+    csr__cryptokey_table__entry__encrypt_key_31_0_t encrypt_key_31_0;
+    csr__cryptokey_table__entry__decrypt_key_255_224_t decrypt_key_255_224;
+    csr__cryptokey_table__entry__decrypt_key_223_192_t decrypt_key_223_192;
+    csr__cryptokey_table__entry__decrypt_key_191_160_t decrypt_key_191_160;
+    csr__cryptokey_table__entry__decrypt_key_159_128_t decrypt_key_159_128;
+    csr__cryptokey_table__entry__decrypt_key_127_96_t decrypt_key_127_96;
+    csr__cryptokey_table__entry__decrypt_key_95_64_t decrypt_key_95_64;
+    csr__cryptokey_table__entry__decrypt_key_63_32_t decrypt_key_63_32;
+    csr__cryptokey_table__entry__decrypt_key_31_0_t decrypt_key_31_0;
+    csr__cryptokey_table__entry__send_cnt_63_32_t send_cnt_63_32;
+    csr__cryptokey_table__entry__send_cnt_31_0_t send_cnt_31_0;
+    csr__cryptokey_table__entry__recv_cnt_63_32_t recv_cnt_63_32;
+    csr__cryptokey_table__entry__recv_cnt_31_0_t recv_cnt_31_0;
+} csr__cryptokey_table__entry_t;
+
+// Regfile - csr::cryptokey_table
+typedef struct __attribute__ ((__packed__)) {
+    csr__cryptokey_table__entry_t entry[64];
+} csr__cryptokey_table_t;
 
 // Addrmap - csr
 typedef struct __attribute__ ((__packed__)) {
@@ -490,9 +926,13 @@ typedef struct __attribute__ ((__packed__)) {
     csr__uart_t uart;
     csr__gpio_t gpio;
     csr__ethernet_t ethernet[4];
-    csr__dpe_t dpe;
     csr__hw_id_t hw_id;
     csr__hw_version_t hw_version;
+    csr__dpe_t dpe;
+    uint8_t RESERVED_88_3ff[0x378];
+    csr__routing_table_t routing_table;
+    uint8_t RESERVED_800_1fff[0x1800];
+    csr__cryptokey_table_t cryptokey_table;
 } csr_t;
 
 // Addrmap - wireguard
@@ -505,7 +945,7 @@ typedef struct __attribute__ ((__packed__)) {
 } wireguard_t;
 
 
-static_assert(sizeof(wireguard_t) == 0x20000088, "Packing error");
+static_assert(sizeof(wireguard_t) == 0x20003e00, "Packing error");
 
 #ifdef __cplusplus
 }

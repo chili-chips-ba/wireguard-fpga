@@ -344,6 +344,7 @@ class Listener(RDLListener) :
           child_name      = child.get_path_segment()
           child_type      = child.type_name
           type_prefix     = type[:-4]
+          child_addr = hex(child.raw_address_offset)
 
           if child.is_array :
 
@@ -355,10 +356,12 @@ class Listener(RDLListener) :
             array_dimension = str(child.array_dimensions[0])
 
             print("        for(int idx = 0; idx < " + array_dimension + "; idx++)\n        {")
-            print("            " + child_name + "[idx] = new " + type_prefix + "_" + child_type + "_vp_t (base_addr +")
+            print("            " + child_name + "[idx] = new " + type_prefix + "_" + child_type + "_vp_t (base_addr + " + child_addr + "/4 + ")
+            """
             if size_list :
-              for element in size_list :
+              for element in size_list :                
                 print("                                                                                   " + element + " +");
+            """
             print("                                                                                   idx * sizeof(" + type_prefix + "_" + child_type + "_t)/4);")
             print("        };\n")
 
@@ -366,8 +369,9 @@ class Listener(RDLListener) :
             ptr_list.append("    " + type_prefix + "_" + child_type + "_vp_t* " + child_name + "[" + array_dimension + "];")
 
           else :
-
-            print("        " + child_name +" = new " + type_prefix + "_" + child_type + "_vp_t (base_addr", end='')
+            #print("        " + child_name +" = new " + type_prefix + "_" + child_type + "_vp_t (base_addr", end='')
+            print("        " + child_name +" = new " + type_prefix + "_" + child_type + "_vp_t (base_addr + " + child_addr + "/4", end='')
+            """
             if size_list :
               print(" +")
               for element in size_list :
@@ -378,7 +382,8 @@ class Listener(RDLListener) :
                   print(" + ")
               print("                                                                                    );")
             else:
-              print(");")
+            """
+            print(");")
 
             size_list.append("sizeof(" + type_prefix + "_" + child_type + "_t)/4")
             ptr_list.append("    " + type_prefix + "_" + child_type + "_vp_t* " + child_name + ";")

@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024-2025 Chili.CHIPS*ba
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description:
-//   - UART library
+//   UART library
 //==========================================================================
 
 #include "uart.h"
@@ -23,7 +23,7 @@
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_char (volatile csr_vp_t* csr, char c) {
+void uart_send_char(volatile csr_vp_t* csr, char c) {
    // wait for HW "not busy", then send the byte/character
    while (csr->uart->tx->busy());
    csr->uart->tx->data(c);
@@ -37,7 +37,7 @@ void uart_send_char (volatile csr_vp_t* csr, char c) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex (volatile csr_vp_t* csr, unsigned int val, int digits) {
+void uart_send_hex(volatile csr_vp_t* csr, unsigned int val, int digits) {
    for (int i = (4*digits) - 4; i >= 0; i -= 4)
       uart_send_char(csr, "0123456789ABCDEF"[(val >> i) % 16]);
 }
@@ -51,41 +51,38 @@ void uart_send_hex (volatile csr_vp_t* csr, unsigned int val, int digits) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex_bytes(volatile csr_vp_t* csr, const uint8_t *data, int len)
-{
-    const char hex[] = "0123456789ABCDEF";
-    for (int i = 0; i < len; i++)
-    {
-        uint8_t b = data[i];
-        uart_send_char(csr, hex[b >> 4]);    // high nibble
-        uart_send_char(csr, hex[b & 0xF]);   // low nibble
-    }
-    uart_send_char(csr, '\r');
-    uart_send_char(csr, '\n');
+void uart_send_hex_bytes(volatile csr_vp_t* csr, const uint8_t *data, int len) {
+   const char hex[] = "0123456789ABCDEF";
+   for (int i = 0; i < len; i++)
+   {
+      uint8_t b = data[i];
+      uart_send_char(csr, hex[b >> 4]);    // high nibble
+      uart_send_char(csr, hex[b & 0xF]);   // low nibble
+   }
 }
 
 /**********************************************************************
  * Function:    uart_send_dec()
  *
- * Description: Converts 0-255 decimal value to a string of
+ * Description: Converts decimal value to a string of
  *              ASCII characters and sends them to UART
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_dec(volatile csr_vp_t* csr, uint16_t val) {
+void uart_send_dec(volatile csr_vp_t* csr, uint32_t val) {
    if (val == 0) {
       uart_send_char(csr, '0');
       return;
    }
 
-   uint16_t divisor = 1;
+   uint32_t divisor = 1;
 
    while (divisor <= val / 10) {
       divisor *= 10;
    }
 
    while (divisor > 0) {
-      uint16_t digit = val / divisor;
+      uint32_t digit = val / divisor;
       uart_send_char(csr, digit + '0');
       val -= digit * divisor;
       divisor /= 10;
@@ -99,7 +96,7 @@ void uart_send_dec(volatile csr_vp_t* csr, uint16_t val) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send (volatile csr_vp_t* csr, const char *s) {
+void uart_send(volatile csr_vp_t* csr, const char *s) {
    while (*s) uart_send_char(csr, *(s++));
 }
 
@@ -158,7 +155,7 @@ uint8_t uart_recv(volatile csr_vp_t* csr, char *s) {
       // if SOP received, ignore RX;
       if ((uart_rx & UART_RX_DATA) == UART_SOP)
          return 0;
-      
+
       // otherwise, keep reading from UART until user enters <ENTER>,
       //  or allocated buffer is exhausted
       //  (UART_RXBUF_SIZE-1) opens space to append NULL
@@ -166,15 +163,20 @@ uint8_t uart_recv(volatile csr_vp_t* csr, char *s) {
       while (i < UART_RXBUF_SIZE-1) {
          // Store received character
          *s = (char)(uart_rx & UART_RX_DATA);
-         
+
          // <CR> or <CR><LF> indicates end of user input
-         // Ignore <LF> and exit
+         // Append <LF> and exit
          if (*s == '\n') {
+            s++;
+            i++;
             break;
          // On <CR> echo back <CR><LF> and exit
          } else if (*s == '\r') {
             uart_send_char(csr, '\r');
             uart_send_char(csr, '\n');
+            *s = '\n';
+            s++;
+            i++;
             break;
          } else {
             // On <BS> or <DEL> remove previously received
@@ -186,13 +188,13 @@ uint8_t uart_recv(volatile csr_vp_t* csr, char *s) {
                   uart_send_char(csr, '\b');
                   uart_send_char(csr, ' ');
                   uart_send_char(csr, '\b');
-               }               
+               }
             // otherwise, echo back and append received character
             } else {
                uart_send_char(csr, *s);
                s++;
                i++;
-            }            
+            }
          }
 
          // wait for HW to collect one byte/character
@@ -206,10 +208,10 @@ uint8_t uart_recv(volatile csr_vp_t* csr, char *s) {
             uart_rx = csr->uart->rx->full();
          } while (!(uart_rx & UART_RX_VALID));
       };
-      
+
       // Append NULL
       *s = '\0';
-      
+
       return i;
    } else {
       return 0;

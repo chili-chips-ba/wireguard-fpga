@@ -11,6 +11,7 @@ extern "C" {
 #endif
 
 #include <stddef.h> /* For size_t */
+#include <stdint.h> /* For uint8_t, uint32_t */
 
 /**
  * @brief Fill memory with a constant byte
@@ -58,6 +59,39 @@ size_t strlen(const char *str);
  * @return int < 0 if s1 < s2, 0 if s1 = s2, > 0 if s1 > s2
  */
 int strcmp(const void *s1, const void *s2);
+
+/**
+ * @brief Parse uint32_t from string
+ *
+ * @param str Pointer to the null-terminated string
+ * @param value Pointer to store the parsed uint32_t
+ * @param min Minimum acceptable value
+ * @param max Maximum acceptable value
+ * @return uint8_t 1 if successful, 0 otherwise
+ */
+uint8_t str_parse_uint32(const char* str, uint32_t* value, uint32_t min, uint32_t max);
+
+/**
+ * @brief Parse uint8_t from string
+ *
+ * @param str Pointer to the null-terminated string
+ * @param value Pointer to store the parsed uint8_t
+ * @param min Minimum acceptable value
+ * @param max Maximum acceptable value
+ * @return uint8_t 1 if successful, 0 otherwise
+ */
+uint8_t str_parse_uint8(const char* str, uint8_t* value, uint8_t min, uint8_t max);
+
+/**
+ * @brief Parse hexadecimal uint32_t from string
+ *
+ * @param str Pointer to the null-terminated string
+ * @param value Pointer to store the parsed uint32_t
+ * @param min Minimum acceptable value
+ * @param max Maximum acceptable value
+ * @return uint8_t 1 if successful, 0 otherwise
+ */
+uint8_t str_parse_hex(const char* str, uint32_t* value, uint32_t min, uint32_t max);
 
 #ifdef __cplusplus
 }

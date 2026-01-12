@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024-2025 Chili.CHIPS*ba
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -127,8 +127,8 @@ module top (
 //=================================
 // CPU Subsystem
 //=================================
-   localparam          NUM_WORDS_IMEM = 8192; //=> 32kB InstructionRAM
-   localparam          NUM_WORDS_DMEM = 8192; //=> 32kB DataRAM
+   localparam          NUM_WORDS_IMEM = 16384; //=> 64kB InstructionRAM
+   localparam          NUM_WORDS_DMEM = 16384; //=> 64kB DataRAM
 
    soc_if              bus_cpu       (.arst_n(sys_rst_n), .clk(sys_clk));
    soc_if              bus_uart      (.arst_n(sys_rst_n), .clk(sys_clk));

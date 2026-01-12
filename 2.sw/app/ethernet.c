@@ -11,7 +11,7 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description:
-//   - Ethernet library
+//   Ethernet library
 //==========================================================================
 
 #include "ethernet.h"
@@ -28,20 +28,20 @@ uint32_t eth_send_packet (volatile csr_vp_t* csr, eth_raw_packet_t* packet) {
    uint32_t empty;
    if (csr->cpu_fifo->rx->status->tready()) {
       i = 0;
-      
+
       csr->cpu_fifo->rx->control->tuser_dst(packet->dst);
       csr->cpu_fifo->rx->control->tuser_src(packet->src);
       csr->cpu_fifo->rx->control->tuser_bypass_stage(packet->bypass_stage);
       csr->cpu_fifo->rx->control->tuser_bypass_all(packet->bypass_all);
-         
+
       while (1) {
          csr->cpu_fifo->rx->data_31_0->tdata(*((uint32_t*)(packet->payload + i)));
          csr->cpu_fifo->rx->data_63_32->tdata(*((uint32_t*)(packet->payload + i + 4)));
          csr->cpu_fifo->rx->data_95_64->tdata(*((uint32_t*)(packet->payload + i + 8)));
          csr->cpu_fifo->rx->data_127_96->tdata(*((uint32_t*)(packet->payload + i + 12)));
-         
+
          i += 16;
-         
+
          if (i < packet->len) {
             csr->cpu_fifo->rx->control->tkeep(0xFFFF);
             csr->cpu_fifo->rx->control->tlast(0);
@@ -81,7 +81,7 @@ uint32_t eth_receive_packet (volatile csr_vp_t* csr, eth_raw_packet_t* packet) {
             *((uint32_t*)(packet->payload + len + 8)) = csr->cpu_fifo->tx->data_95_64->tdata();
             *((uint32_t*)(packet->payload + len + 12)) = csr->cpu_fifo->tx->data_127_96->tdata();
          }
-         
+
          if (csr->cpu_fifo->tx->control->tlast()) {
             keep = csr->cpu_fifo->tx->control->tkeep();
             while (keep & 1) {
