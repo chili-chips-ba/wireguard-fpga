@@ -8,9 +8,9 @@
     <dt>Absolute Address:</dt><dd id="_AbsAddr" class="address"></dd>
     <div id="_AbsAddrDetails"></div>
     <dt>Base Offset:</dt><dd class="address">0x20000000</dd>
-    <dt>Size:</dt><dd class="address">0x88</dd>
+    <dt>Size:</dt><dd class="address">0x3e00</dd>
     
-    <dt>Source:</dt><dd><a href="https://github.com/chili-chips-ba/wireguard-fpga/blob/main/3.build/csr_build/csr.rdl#L1" target="_blank">csr.rdl</a></dd>
+    <dt>Source:</dt><dd><a href="https://github.com/chili-chips-ba/wireguard-fpga/blob/main/3.build/csr_build/csr.rdl#L17" target="_blank">csr.rdl</a></dd>
     
 </dl>
 <h2>Description</h2>
@@ -28,7 +28,7 @@
         <th></th>
     </tr>
     <tr id="cpu_fifo">
-        <td class="address">0x00</td>
+        <td class="address">0x0000</td>
         <td><a href="?p=wireguard.csr.cpu_fifo" data-id="4" onclick="onClickNodeLink(event); return(false)">cpu_fifo</a></td>
         <td>csr.cpu_fifo</td>
         <td>
@@ -36,7 +36,7 @@
         </td>
     </tr>
     <tr id="uart">
-        <td class="address">0x38</td>
+        <td class="address">0x0038</td>
         <td><a href="?p=wireguard.csr.uart" data-id="21" onclick="onClickNodeLink(event); return(false)">uart</a></td>
         <td>csr.uart</td>
         <td>
@@ -44,7 +44,7 @@
         </td>
     </tr>
     <tr id="gpio">
-        <td class="address">0x48</td>
+        <td class="address">0x0048</td>
         <td><a href="?p=wireguard.csr.gpio" data-id="26" onclick="onClickNodeLink(event); return(false)">gpio</a></td>
         <td>csr.gpio</td>
         <td>
@@ -52,35 +52,63 @@
         </td>
     </tr>
     <tr id="ethernet">
-        <td class="address">0x4C</td>
+        <td class="address">0x004C</td>
         <td><a href="?p=wireguard.csr.ethernet" data-id="27" onclick="onClickNodeLink(event); return(false)">ethernet[4]</a></td>
         <td>csr.ethernet[0..3]</td>
         <td>
             <a class="headerlink" href="#ethernet" title="Permalink to this row"></a>
         </td>
     </tr>
-    <tr id="dpe">
-        <td class="address">0x7C</td>
-        <td><a href="?p=wireguard.csr.dpe" data-id="31" onclick="onClickNodeLink(event); return(false)">dpe</a></td>
-        <td>csr.dpe</td>
-        <td>
-            <a class="headerlink" href="#dpe" title="Permalink to this row"></a>
-        </td>
-    </tr>
     <tr id="hw_id">
-        <td class="address">0x80</td>
-        <td><a href="?p=wireguard.csr.hw_id" data-id="33" onclick="onClickNodeLink(event); return(false)">hw_id</a></td>
+        <td class="address">0x007C</td>
+        <td><a href="?p=wireguard.csr.hw_id" data-id="31" onclick="onClickNodeLink(event); return(false)">hw_id</a></td>
         <td>csr.hw_id</td>
         <td>
             <a class="headerlink" href="#hw_id" title="Permalink to this row"></a>
         </td>
     </tr>
     <tr id="hw_version">
-        <td class="address">0x84</td>
-        <td><a href="?p=wireguard.csr.hw_version" data-id="34" onclick="onClickNodeLink(event); return(false)">hw_version</a></td>
+        <td class="address">0x0080</td>
+        <td><a href="?p=wireguard.csr.hw_version" data-id="32" onclick="onClickNodeLink(event); return(false)">hw_version</a></td>
         <td>csr.hw_version</td>
         <td>
             <a class="headerlink" href="#hw_version" title="Permalink to this row"></a>
+        </td>
+    </tr>
+    <tr id="dpe">
+        <td class="address">0x0084</td>
+        <td><a href="?p=wireguard.csr.dpe" data-id="33" onclick="onClickNodeLink(event); return(false)">dpe</a></td>
+        <td>csr.dpe</td>
+        <td>
+            <a class="headerlink" href="#dpe" title="Permalink to this row"></a>
+        </td>
+    </tr>
+    <tr class="reserved-addr">
+    <td class="address">0x0088</td>
+    <td>-</td>
+    <td>-</td>
+    <td></td>
+</tr>
+    <tr id="routing_table">
+        <td class="address">0x0400</td>
+        <td><a href="?p=wireguard.csr.routing_table" data-id="35" onclick="onClickNodeLink(event); return(false)">routing_table</a></td>
+        <td>csr.routing_table</td>
+        <td>
+            <a class="headerlink" href="#routing_table" title="Permalink to this row"></a>
+        </td>
+    </tr>
+    <tr class="reserved-addr">
+    <td class="address">0x0800</td>
+    <td>-</td>
+    <td>-</td>
+    <td></td>
+</tr>
+    <tr id="cryptokey_table">
+        <td class="address">0x2000</td>
+        <td><a href="?p=wireguard.csr.cryptokey_table" data-id="41" onclick="onClickNodeLink(event); return(false)">cryptokey_table</a></td>
+        <td>csr.cryptokey_table</td>
+        <td>
+            <a class="headerlink" href="#cryptokey_table" title="Permalink to this row"></a>
         </td>
     </tr>
 </table>

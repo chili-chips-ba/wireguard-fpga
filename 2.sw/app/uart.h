@@ -19,7 +19,7 @@ extern "C" {
 void    uart_send_char      (volatile csr_vp_t* csr, char c);
 void    uart_send_hex       (volatile csr_vp_t* csr, unsigned int val, int digits);
 void    uart_send_hex_bytes (volatile csr_vp_t* csr, const uint8_t *data, int len);
-void    uart_send_dec       (volatile csr_vp_t* csr, uint16_t val);
+void    uart_send_dec       (volatile csr_vp_t* csr, uint32_t val);
 void    uart_send           (volatile csr_vp_t* csr, const char *s);
 void    uart_send_ip        (volatile csr_vp_t* csr, const uint8_t *ip);
 void    uart_send_mac       (volatile csr_vp_t* csr, const uint8_t *mac);

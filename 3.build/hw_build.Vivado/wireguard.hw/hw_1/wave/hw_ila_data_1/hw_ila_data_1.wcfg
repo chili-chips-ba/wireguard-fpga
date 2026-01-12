@@ -3,27 +3,101 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="E:/GoogleDrive/Projekti/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.hw/hw_1/wave/hw_ila_data_1/hw_ila_data_1.wdb" id="1">
+      <db_ref path="/home/enio/Projects/ChiliChips/wireguard-fpga/3.build/hw_build.Vivado/wireguard.hw/hw_1/wave/hw_ila_data_1/hw_ila_data_1.wdb" id="1">
          <top_modules>
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="60,249"></ZoomStartTime>
-      <ZoomEndTime time="72,550"></ZoomEndTime>
-      <Cursor1Time time="71,161"></Cursor1Time>
+      <ZoomStartTime time="0"></ZoomStartTime>
+      <ZoomEndTime time="16"></ZoomEndTime>
+      <Cursor1Time time="0"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="286"></NameColumnWidth>
-      <ValueColumnWidth column_width="90"></ValueColumnWidth>
+      <ValueColumnWidth column_width="78"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="1" />
-   <wave_markers>
-   </wave_markers>
-   <wvobject fp_name="uart_rx_IBUF" type="logic">
+   <WVObjectSize size="11" />
+   <wvobject type="array" fp_name="u_soc_csr/bus\\.addr">
       <obj_property name="DisplayName">FullPathName</obj_property>
-      <obj_property name="ElementShortName">uart_rx_IBUF</obj_property>
-      <obj_property name="ObjectShortName">uart_rx_IBUF</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/bus\\.addr[31:2]</obj_property>
+      <obj_property name="ObjectShortName">bus\\.addr[31:2]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="u_soc_csr/bus\\.rdat">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/bus\\.rdat[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bus\\.rdat[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="u_soc_csr/bus\\.rdy">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/bus\\.rdy</obj_property>
+      <obj_property name="ObjectShortName">bus\\.rdy</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="u_soc_csr/bus\\.vld">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/bus\\.vld</obj_property>
+      <obj_property name="ObjectShortName">bus\\.vld</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="u_soc_csr/bus\\.wdat">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/bus\\.wdat[31:0]</obj_property>
+      <obj_property name="ObjectShortName">bus\\.wdat[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="u_soc_csr/bus\\.we">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/bus\\.we[3:0]</obj_property>
+      <obj_property name="ObjectShortName">bus\\.we[3:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="u_soc_csr/hwif_in[routing_table][rd_ack]">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/hwif_in[routing_table][rd_ack]</obj_property>
+      <obj_property name="ObjectShortName">hwif_in[routing_table][rd_ack]</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="u_soc_csr/hwif_in[routing_table][wr_ack]">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/hwif_in[routing_table][wr_ack]</obj_property>
+      <obj_property name="ObjectShortName">hwif_in[routing_table][wr_ack]</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="u_soc_csr/hwif_out[routing_table][addr]">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/hwif_out[routing_table][addr][9:0]</obj_property>
+      <obj_property name="ObjectShortName">hwif_out[routing_table][addr][9:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="u_soc_csr/hwif_out[routing_table][req_is_wr]">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/hwif_out[routing_table][req_is_wr]</obj_property>
+      <obj_property name="ObjectShortName">hwif_out[routing_table][req_is_wr]</obj_property>
+      <obj_property name="LABELRADIX">true</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="u_soc_csr/hwif_out[routing_table][wr_data]">
+      <obj_property name="DisplayName">FullPathName</obj_property>
+      <obj_property name="ElementShortName">u_soc_csr/hwif_out[routing_table][wr_data][31:0]</obj_property>
+      <obj_property name="ObjectShortName">hwif_out[routing_table][wr_data][31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
       <obj_property name="LABELRADIX">true</obj_property>
       <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
    </wvobject>

@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2025 Chili.CHIPS*ba
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -12,32 +12,28 @@
 //--------------------------------------------------------------------------
 // Description:
 //   WireGuard C++ standard library
-//
 //==========================================================================
 
 #include "wireguard_libs.h"
 
 #ifndef VPROC
 
-char heap_memory[2048];
+char heap_memory[32768];
 int heap_memory_used = 0;
 
-void* malloc(int size)
-{
+void* malloc(int size) {
    char* p = heap_memory + heap_memory_used;
    heap_memory_used += size;
-   if (heap_memory_used > 2048)
+   if (heap_memory_used > 32768)
       asm volatile ("ebreak");
    return p;
 }
 
-void* operator new(unsigned int size)
-{
+void* operator new(unsigned int size) {
    return malloc(size);
 }
 
-void operator delete(void* p)
-{
+void operator delete(void* p) {
    // Dummy delete
 }
 

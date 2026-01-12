@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024 Chili.CHIPS*ba
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
 //==========================================================================
 // Linker script. It instructs GCC where to place Code and Data sections, 
 // or how to map them to the physical memory resources. It must be aligned
@@ -68,16 +68,16 @@ MEMORY {
 #if TCM
 
     #if HARVARD
-       IMEM (xr!w) : ORIGIN = 0x00000000, LENGTH = 32K /* Instruction space */
+       IMEM (xr!w) : ORIGIN = 0x00000000, LENGTH = 64K /* Instruction space */
        /* Largest memory resources are external Flash (LENGTH=8M) and external
           SDRAM (LENGTH=8MB)*/
 
-       DMEM (rw!x) : ORIGIN = 0x10000000, LENGTH = 32K /* Data space */
+       DMEM (rw!x) : ORIGIN = 0x10000000, LENGTH = 64K /* Data space */
        /* ORIGIN=256MB */
 
     #else
     /* VON-NEUMANN: Common Instruction & Data space -- Not yet in RTL*/
-        MEM (rwx)  : ORIGIN = 0x00000000, LENGTH = 64K 
+        MEM (rwx)  : ORIGIN = 0x00000000, LENGTH = 128K 
     #endif   
 
 //---------------------------------------------------

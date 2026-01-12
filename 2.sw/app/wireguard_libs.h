@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-extern char heap_memory[2048];
+extern char heap_memory[32768];
 extern int heap_memory_used;
 
 void* malloc(int size);

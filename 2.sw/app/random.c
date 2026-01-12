@@ -1,3 +1,19 @@
+//==========================================================================
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
+//--------------------------------------------------------------------------
+//                      PROPRIETARY INFORMATION
+//
+// The information contained in this file is the property of CHILI CHIPS LLC.
+// Except as specifically authorized in writing by CHILI CHIPS LLC, the holder
+// of this file: (1) shall keep all information contained herein confidential;
+// and (2) shall protect the same in whole or in part from disclosure and
+// dissemination to all third parties; and (3) shall use the same for operation
+// and maintenance purposes only.
+//--------------------------------------------------------------------------
+// Description:
+//   Random number generation library
+//==========================================================================
+
 #include "random.h"
 #include "uart.h"
 
@@ -12,7 +28,7 @@ static uint32_t rdcycle(void)
 // Inline function to cause a small delay
 static void small_delay(void)
 {
-    for (volatile int i = 0; i < 1000; i++) 
+    for (volatile int i = 0; i < 1000; i++)
     {
         asm volatile("nop");
     }
@@ -27,7 +43,7 @@ static void small_delay(void)
 void random_32bytes(uint8_t *out)
 {
     uint32_t cycles[16];
-    for (uint8_t i = 0; i < 16; i++) 
+    for (uint8_t i = 0; i < 16; i++)
     {
         uint32_t temp = rdcycle();
         temp ^= temp >> 7;
@@ -47,7 +63,7 @@ void random_32bytes(uint8_t *out)
     hash(out, 32, NULL, 0, input, sizeof(input));
 
     memset(cycles, 0, sizeof(cycles));
-    memset(input, 0, sizeof(input)); 
+    memset(input, 0, sizeof(input));
 }
 
 /*

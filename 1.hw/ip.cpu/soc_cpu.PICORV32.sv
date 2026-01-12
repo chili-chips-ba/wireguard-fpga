@@ -135,7 +135,7 @@ module soc_cpu #(
       .ENABLE_REGS_DUALPORT (1),
       .ENABLE_REGS_16_31    (1),
       .ENABLE_PCPI          (0),
-      .ENABLE_COUNTERS      (0),
+      .ENABLE_COUNTERS      (1),
       .ENABLE_COUNTERS64    (0),
 `ifdef DEBUGTRACE
       .ENABLE_TRACE         (1),

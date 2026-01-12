@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024-2025 Chili.CHIPS*ba
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
 //--------------------------------------------------------------------------
 //                      PROPRIETARY INFORMATION
 //
@@ -11,10 +11,49 @@
 // and maintenance purposes only.
 //--------------------------------------------------------------------------
 // Description:
-//   - Network protocol stack library
+//   Network protocol stack library
 //==========================================================================
 
 #include "network.h"
+
+/**********************************************************************
+ * Function:    net_str_parse_ip()
+ *
+ * Description: Parses IP address from string (xxx.xxx.xxx.xxx)
+ *
+ * Returns:     1 if successful, 0 otherwise
+ * write function without using scanf sscanf from stdlib
+ **********************************************************************/
+uint8_t net_str_parse_ip(const char* str, ip_t *ip) {
+   int part = 0;
+   int value = 0;
+   ip_t temp_ip = {0, 0, 0, 0};
+   while (*str != '\n' && *str != '\0') {
+      if (*str >= '0' && *str <= '9') {
+         value = value * 10 + (*str - '0');
+         if (value > 255) {
+            return 0; // Invalid value
+         }
+      } else if (*str == '.') {
+         if (part >= 3) {
+            return 0; // Too many parts
+         }
+         temp_ip[part++] = (uint8_t)value;
+         value = 0;
+      } else {
+         return 0; // Invalid character
+      }
+      str++;
+   }
+   if (part != 3) {
+      return 0; // Not enough parts
+   }
+   (*ip)[0] = temp_ip[0];
+   (*ip)[1] = temp_ip[1];
+   (*ip)[2] = temp_ip[2];
+   (*ip)[3] = (uint8_t)value;
+   return 1; // Success
+}
 
 /**********************************************************************
  * Function:    net_calculate_checksum()
@@ -78,9 +117,9 @@ net_protocol_t net_parse_packet_header (eth_raw_packet_t* packet) {
  *               - processing ARP reply, and updating ARP cache
  * Returns:     1 if ARP reply is generated, 0 otherwise
  **********************************************************************/
-uint8_t net_process_arp (net_config_t*     config, 
-                         net_arp_cache_t*  arp_cache, 
-                         eth_raw_packet_t* rx_packet, 
+uint8_t net_process_arp (net_config_t*     config,
+                         net_arp_cache_t*  arp_cache,
+                         eth_raw_packet_t* rx_packet,
                          eth_raw_packet_t* tx_packet) {
    // Get Ethernet and ARP headers to RX and TX packets
    net_hdr_eth_t* rx_hdr_eth = (net_hdr_eth_t*)(rx_packet->payload);
@@ -136,8 +175,8 @@ uint8_t net_process_arp (net_config_t*     config,
  *               - processing ICMP Echo, and generating Echo reply
  * Returns:     1 if ICMP Echo reply is generated, 0 otherwise
  **********************************************************************/
-uint8_t net_process_icmp (net_config_t*     config, 
-                          eth_raw_packet_t* rx_packet, 
+uint8_t net_process_icmp (net_config_t*     config,
+                          eth_raw_packet_t* rx_packet,
                           eth_raw_packet_t* tx_packet) {
    // Get Ethernet, IPv4 and ICMP headers to RX and TX packets
    net_hdr_eth_t* rx_hdr_eth = (net_hdr_eth_t*)(rx_packet->payload);
@@ -186,7 +225,7 @@ uint8_t net_process_icmp (net_config_t*     config,
       tx_hdr_icmp->id[1] = rx_hdr_icmp->id[1];
       tx_hdr_icmp->sequence[0] = rx_hdr_icmp->sequence[0];
       tx_hdr_icmp->sequence[1] = rx_hdr_icmp->sequence[1];
-      memcpy(tx_packet->payload + sizeof(net_hdr_eth_t) + sizeof(net_hdr_ipv4_t) + sizeof(net_hdr_icmp_t), 
+      memcpy(tx_packet->payload + sizeof(net_hdr_eth_t) + sizeof(net_hdr_ipv4_t) + sizeof(net_hdr_icmp_t),
              rx_packet->payload + sizeof(net_hdr_eth_t) + sizeof(net_hdr_ipv4_t) + sizeof(net_hdr_icmp_t), rx_packet->len - 42);
       checksum = net_calculate_checksum((uint8_t*)tx_hdr_icmp, rx_packet->len - 34);
       tx_hdr_icmp->checksum[0] = (checksum >> 8) & 0xFF;

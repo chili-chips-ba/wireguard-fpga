@@ -1,7 +1,18 @@
-/**
- * @file poly1305.c
- * @brief Simple implementation of Poly1305 MAC algorithm
- */
+//==========================================================================
+// Copyright (C) 2024-2026 Chili.CHIPS*ba
+//--------------------------------------------------------------------------
+//                      PROPRIETARY INFORMATION
+//
+// The information contained in this file is the property of CHILI CHIPS LLC.
+// Except as specifically authorized in writing by CHILI CHIPS LLC, the holder
+// of this file: (1) shall keep all information contained herein confidential;
+// and (2) shall protect the same in whole or in part from disclosure and
+// dissemination to all third parties; and (3) shall use the same for operation
+// and maintenance purposes only.
+//--------------------------------------------------------------------------
+// Description:
+//   Poly1305 library
+//==========================================================================
 
 #include "poly1305.h"
 #include "string_bare.h"
