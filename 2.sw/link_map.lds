@@ -1,5 +1,5 @@
 //==========================================================================
-// Copyright (C) 2024-2026 Chili.CHIPS*ba
+// Copyright (C) 2026 Chili.CHIPS*ba
 //==========================================================================
 // Linker script. It instructs GCC where to place Code and Data sections, 
 // or how to map them to the physical memory resources. It must be aligned

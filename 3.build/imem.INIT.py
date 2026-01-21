@@ -1,5 +1,5 @@
 #=============================================================
-# Copyright (C) 2024 Chili.CHIPS*ba
+# Copyright (C) 2026 Chili.CHIPS*ba
 #-------------------------------------------------------------
 # Script that generates Verilog IMEM contents file for the
 # compiled RISC-V 'C' program

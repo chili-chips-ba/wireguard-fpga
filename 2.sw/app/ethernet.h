@@ -24,6 +24,8 @@ typedef struct {
 #define DPE_ADDR_ETH_2       2
 #define DPE_ADDR_ETH_3       3
 #define DPE_ADDR_ETH_4       4
+#define DPE_ADDR_MCAST_13    5
+#define DPE_ADDR_MCAST_24    6
 #define DPE_ADDR_BCAST       7
 
 uint32_t eth_send_packet     (volatile csr_vp_t* csr, eth_raw_packet_t* packet);
