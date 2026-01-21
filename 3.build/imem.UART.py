@@ -1,5 +1,5 @@
 #=============================================================
-# Copyright (C) 2024-2025 Chili.CHIPS*ba
+# Copyright (C) 2026 Chili.CHIPS*ba
 #-------------------------------------------------------------
 # Script that sends to UART contents to write into IMEM file
 #  for the compiled RISC-V 'C' program

@@ -1,13 +1,13 @@
 Archive member included to satisfy reference by file (symbol)
 
 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
-                              /tmp/ccyRuJEI.ltrans0.ltrans.o (__ashldi3)
+                              /tmp/ccOjKXD4.ltrans0.ltrans.o (__ashldi3)
 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
-                              /tmp/ccyRuJEI.ltrans0.ltrans.o (__mulsi3)
+                              /tmp/ccOjKXD4.ltrans0.ltrans.o (__mulsi3)
 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
-                              /tmp/ccyRuJEI.ltrans0.ltrans.o (__muldi3)
+                              /tmp/ccOjKXD4.ltrans0.ltrans.o (__muldi3)
 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-                              /tmp/ccyRuJEI.ltrans0.ltrans.o (__udivsi3)
+                              /tmp/ccOjKXD4.ltrans0.ltrans.o (__udivsi3)
 
 There are no discarded input sections
 
@@ -24,47 +24,47 @@ Linker script and memory map
                 0x00000200                        _STACK_SIZE = 0x200
                 0x00000000                        . = ORIGIN (IMEM)
 
-.text           0x00000000     0x67e4
+.text           0x00000000     0x69cc
                 0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x00000000       0x74 /tmp/ccqtc9cQ.o
+ .text          0x00000000       0x74 /tmp/ccDDQIyT.o
                 0x00000000                _boot_crt
- .text          0x00000074     0x2f04 /tmp/ccyRuJEI.ltrans0.ltrans.o
-                0x0000241c                memset
-                0x00002600                memcpy
- .text.startup  0x00002f78     0x265c /tmp/ccyRuJEI.ltrans0.ltrans.o
-                0x00002f78                main
- .text          0x000055d4       0x38 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
-                0x000055d4                __ashldi3
- .text          0x0000560c       0x24 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
-                0x0000560c                __mulsi3
- .text          0x00005630       0x8c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
-                0x00005630                __muldi3
- .text          0x000056bc       0xb4 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-                0x000056bc                __divsi3
-                0x000056c4                __hidden___udivsi3
-                0x000056c4                __udivsi3
-                0x0000570c                __umodsi3
-                0x00005740                __modsi3
+ .text          0x00000074     0x3008 /tmp/ccOjKXD4.ltrans0.ltrans.o
+                0x00002520                memset
+                0x00002704                memcpy
+ .text.startup  0x0000307c     0x2660 /tmp/ccOjKXD4.ltrans0.ltrans.o
+                0x0000307c                main
+ .text          0x000056dc       0x38 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+                0x000056dc                __ashldi3
+ .text          0x00005714       0x24 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+                0x00005714                __mulsi3
+ .text          0x00005738       0x8c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+                0x00005738                __muldi3
+ .text          0x000057c4       0xb4 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+                0x000057c4                __divsi3
+                0x000057cc                __hidden___udivsi3
+                0x000057cc                __udivsi3
+                0x00005814                __umodsi3
+                0x00005848                __modsi3
  *(.rodata .rodata.*)
  .rodata.str1.4
-                0x00005770      0xeba /tmp/ccyRuJEI.ltrans0.ltrans.o
-                                0xec6 (size before relaxing)
- *fill*         0x0000662a        0x6 
- .rodata        0x00006630      0x1b4 /tmp/ccyRuJEI.ltrans0.ltrans.o
+                0x00005878      0xf5a /tmp/ccOjKXD4.ltrans0.ltrans.o
+                                0xf66 (size before relaxing)
+ *fill*         0x000067d2        0x6 
+ .rodata        0x000067d8      0x1f4 /tmp/ccOjKXD4.ltrans0.ltrans.o
  *(.srodata .srodata.*)
-                0x000067e4                        . = ALIGN (0x4)
-                0x000067e4                        _text_end = .
-                0x000067e4                        _idata_start = _text_end
+                0x000069cc                        . = ALIGN (0x4)
+                0x000069cc                        _text_end = .
+                0x000069cc                        _idata_start = _text_end
 
 .rela.dyn       0x00000000        0x0
- .rela.text     0x00000000        0x0 /tmp/ccqtc9cQ.o
+ .rela.text     0x00000000        0x0 /tmp/ccDDQIyT.o
 
-.data           0x10000000        0x0 load address 0x000067e4
+.data           0x10000000        0x0 load address 0x000069cc
                 0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x10000000        0x0 /tmp/ccqtc9cQ.o
- .data          0x10000000        0x0 /tmp/ccyRuJEI.ltrans0.ltrans.o
+ .data          0x10000000        0x0 /tmp/ccDDQIyT.o
+ .data          0x10000000        0x0 /tmp/ccOjKXD4.ltrans0.ltrans.o
  .data          0x10000000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
  .data          0x10000000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
  .data          0x10000000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
@@ -75,23 +75,23 @@ Linker script and memory map
                 0x10000000                        . = ALIGN (0x4)
                 0x10000000                        _data_end = .
 
-.bss            0x10000000     0x8c28 load address 0x000067e4
+.bss            0x10000000     0x8c28 load address 0x000069cc
                 0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x10000000        0x0 /tmp/ccqtc9cQ.o
- .bss           0x10000000     0x8c24 /tmp/ccyRuJEI.ltrans0.ltrans.o
+ .bss           0x10000000        0x0 /tmp/ccDDQIyT.o
+ .bss           0x10000000     0x8c24 /tmp/ccOjKXD4.ltrans0.ltrans.o
  .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
  .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
  .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
  .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
  *(.sbss .sbss.*)
- .sbss          0x10008c24        0x4 /tmp/ccyRuJEI.ltrans0.ltrans.o
+ .sbss          0x10008c24        0x4 /tmp/ccOjKXD4.ltrans0.ltrans.o
  *(COMMON)
                 0x10008c28                        . = ALIGN (0x4)
                 0x10008c28                        _bss_end = .
                 0x10008c30                        . = ALIGN (0x10)
 
-.heap           0x10008c28      0x408 load address 0x0000f40c
+.heap           0x10008c28      0x408 load address 0x0000f5f4
                 0x10008c28                        _heap_start = .
                 0x10009028                        . = (. + _HEAP_SIZE)
  *fill*         0x10008c28      0x400 
@@ -107,32 +107,32 @@ Linker script and memory map
                 0x10010000                        . = (. + _STACK_SIZE)
  *fill*         0x1000fe00      0x200 
                 0x1000fe00                        _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/ccqtc9cQ.o
-LOAD /tmp/ccGnDiVi.o
-LOAD /tmp/ccyRuJEI.ltrans0.ltrans.o
-LOAD /tmp/ccK5iSip.o
-LOAD /tmp/ccSHluzt.o
-LOAD /tmp/ccgeC6C2.o
-LOAD /tmp/ccWkC1yZ.o
-LOAD /tmp/cckYy0tA.o
-LOAD /tmp/cc2ruuws.o
-LOAD /tmp/cc05UUDX.o
-LOAD /tmp/ccrXdKTd.o
-LOAD /tmp/ccXlz67W.o
-LOAD /tmp/ccdArYZy.o
-LOAD /tmp/ccmrDlzb.o
-LOAD /tmp/ccGqIJKs.o
-LOAD /tmp/cce7rJ5A.o
-LOAD /tmp/ccWHEITw.o
+LOAD /tmp/ccDDQIyT.o
+LOAD /tmp/cciQoT06.o
+LOAD /tmp/ccOjKXD4.ltrans0.ltrans.o
+LOAD /tmp/cck7OrEB.o
+LOAD /tmp/ccLcsfc6.o
+LOAD /tmp/cc5jTFka.o
+LOAD /tmp/ccRRux9T.o
+LOAD /tmp/ccNvlNbR.o
+LOAD /tmp/cc8wLeAI.o
+LOAD /tmp/ccSVklEM.o
+LOAD /tmp/ccGveUMP.o
+LOAD /tmp/ccEBIlev.o
+LOAD /tmp/cckwtZg6.o
+LOAD /tmp/ccUI7Ut1.o
+LOAD /tmp/ccM4jCuo.o
+LOAD /tmp/ccGg1xFy.o
+LOAD /tmp/ccJHvVC4.o
 LOAD /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a
 OUTPUT(/home/enio/Projects/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
 
 .riscv.attributes
                 0x00000000       0x1c
  .riscv.attributes
-                0x00000000       0x1a /tmp/ccqtc9cQ.o
+                0x00000000       0x1a /tmp/ccDDQIyT.o
  .riscv.attributes
-                0x0000001a       0x1c /tmp/ccyRuJEI.ltrans0.ltrans.o
+                0x0000001a       0x1c /tmp/ccOjKXD4.ltrans0.ltrans.o
  .riscv.attributes
                 0x00000036       0x1c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
  .riscv.attributes
@@ -143,7 +143,7 @@ OUTPUT(/home/enio/Projects/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf e
                 0x00000088       0x1a /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
 
 .comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/ccyRuJEI.ltrans0.ltrans.o
+ .comment       0x00000000       0x22 /tmp/ccOjKXD4.ltrans0.ltrans.o
                                  0x23 (size before relaxing)
  .comment       0x00000022       0x23 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
  .comment       0x00000022       0x23 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)

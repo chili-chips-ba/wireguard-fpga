@@ -2,7 +2,7 @@
 ###################################################################
 # Python script to generate WireGuard HAL co-sim adapter layer
 #
-# Copyright (C) 2025 Chili.CHIPS*ba
+# Copyright (C) 2026 Chili.CHIPS*ba
 #
 # options:
 #   -h, --help            show this help message and exit

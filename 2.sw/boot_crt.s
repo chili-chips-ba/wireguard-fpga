@@ -1,5 +1,5 @@
 #==========================================================================
-# Copyright (C) 2024 Chili.CHIPS*ba
+# Copyright (C) 2026 Chili.CHIPS*ba
 #==========================================================================
 # Startup Assembly program, acting as a minimal CRT (C Run Time).
 # Needed due to the 'bare-metal' (aka "freestanding") nature of our CPU 
