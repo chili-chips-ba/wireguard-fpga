@@ -1,7 +1,7 @@
-/* Code using a poly1305_mac_loop_body pipeline to evaluate: 
+/* Code using a poly1305_mac_loop_body compute to evaluate: 
 for (size_t i = 0; i < blocks; i++)
 {
-  // 'a' feeds back into the pipeline/next iteration
+  // 'a' feeds back into the compute/next iteration
   a = poly1305_mac_loop_body(block_bytes, r, a);
 }
 */
@@ -14,12 +14,16 @@ for (size_t i = 0; i < blocks; i++)
 #define POLY_MAC_INST poly1305_mac
 #endif
 
-#ifndef POLY_EXCLUDES_PIPELINE
-// Declare poly1305_mac_loop_body pipeline to use (with valid bit)
-// TODO can declare as harder to meet timing GLOBAL_FUNCTION that doesnt add IO regs
-#include "global_func_inst.h"
-GLOBAL_PIPELINE_INST_W_VALID_ID(PPCAT(POLY_MAC_INST,_pipeline), u320_t, poly1305_mac_loop_body, poly1305_mac_loop_body_in_t)
-uint1_t PPCAT(POLY_MAC_INST,_pipeline_in_ready) = 1;
+#ifndef POLY_EXCLUDES_COMPUTE
+// Declare poly1305_mac_loop_body compute module to use
+// Multi cycle path with valid ready handshake
+#include "mcp.h"
+GLOBAL_VALID_READY_MCP_INST(PPCAT(POLY_MAC_INST,_compute), u320_t, poly1305_mac_loop_body, poly1305_mac_loop_body_in_t, 4)
+// Old pipelined version with just valid bit (not using new stream() types either)
+//// TODO can declare as harder to meet timing GLOBAL_FUNCTION that doesnt add IO regs
+//#include "global_func_inst.h"
+//GLOBAL_PIPELINE_INST_W_VALID_ID(PPCAT(POLY_MAC_INST,_compute), u320_t, poly1305_mac_loop_body, poly1305_mac_loop_body_in_t)
+//uint1_t PPCAT(POLY_MAC_INST,_compute_in_ready) = 1;
 #endif
 
 // Global input and output wires for FSM
@@ -33,22 +37,23 @@ uint1_t PPCAT(POLY_MAC_INST,_data_in_ready);
 stream(poly1305_auth_tag_uint_t) PPCAT(POLY_MAC_INST,_auth_tag); // output
 uint1_t PPCAT(POLY_MAC_INST,_auth_tag_ready); // input
 
-// FSM that uses pipeline iteratively to compute poly1305 MAC
+// FSM that uses compute iteratively to compute poly1305 MAC
 MAIN(POLY_MAC_INST)
 void POLY_MAC_INST(){
   poly1305_mac_fsm_t fsm_out = poly1305_mac_fsm(
     PPCAT(POLY_MAC_INST,_key),
     PPCAT(POLY_MAC_INST,_data_in),
     PPCAT(POLY_MAC_INST,_auth_tag_ready),
-    PPCAT(POLY_MAC_INST,_pipeline_out),
-    PPCAT(POLY_MAC_INST,_pipeline_out_valid),
-    PPCAT(POLY_MAC_INST,_pipeline_in_ready)
+    PPCAT(POLY_MAC_INST,_compute_out.data),
+    PPCAT(POLY_MAC_INST,_compute_out.valid),
+    PPCAT(POLY_MAC_INST,_compute_in_ready)
   );
   PPCAT(POLY_MAC_INST,_key_ready) = fsm_out.ready_for_key;
   PPCAT(POLY_MAC_INST,_data_in_ready) = fsm_out.ready_for_data_in;
   PPCAT(POLY_MAC_INST,_auth_tag) = fsm_out.auth_tag;
-  PPCAT(POLY_MAC_INST,_pipeline_in) = fsm_out.to_pipeline;
-  PPCAT(POLY_MAC_INST,_pipeline_in_valid) = fsm_out.to_pipeline_valid;
+  PPCAT(POLY_MAC_INST,_compute_in.data) = fsm_out.to_compute;
+  PPCAT(POLY_MAC_INST,_compute_in.valid) = fsm_out.to_compute_valid;
+  PPCAT(POLY_MAC_INST,_compute_out_ready) = 1;
 }
 
 /* Test synthesis
