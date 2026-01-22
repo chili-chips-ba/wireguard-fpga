@@ -412,20 +412,6 @@ poly1305_mac_fsm_t poly1305_mac_fsm(
       // Then start per block iterations
       state = START_ITER; 
     }
-  }else if(state == START_ITER){
-    // Ready to take an input data block
-    o.ready_for_data_in = ready_for_to_compute;
-    // Put 'a' and data block into compute
-    o.to_compute.block_bytes = data_in.data.tdata;
-    o.to_compute.a = a;
-    o.to_compute.r = r;
-    o.to_compute_valid = data_in.valid & o.ready_for_data_in;
-    // Record if this is the last block
-    is_last_block = data_in.data.tlast;
-    // And then wait for the output once input into compute happens
-    if(o.to_compute_valid & o.ready_for_data_in){
-      state = FINISH_ITER;
-    }
   }else if(state == FINISH_ITER){
     // Wait for 'a' data out of compute
     if(from_compute_valid){
@@ -454,6 +440,23 @@ poly1305_mac_fsm_t poly1305_mac_fsm(
     o.auth_tag.valid = 1;
     if(o.auth_tag.valid & ready_for_auth_tag_out){
       state = IDLE;
+    }
+  }
+  // Same cycle transition from finish->start iter in one cycle
+  // latency reduction = throughput increase in this case...
+  if(state == START_ITER){
+    // Ready to take an input data block
+    o.ready_for_data_in = ready_for_to_compute;
+    // Put 'a' and data block into compute
+    o.to_compute.block_bytes = data_in.data.tdata;
+    o.to_compute.a = a;
+    o.to_compute.r = r;
+    o.to_compute_valid = data_in.valid & o.ready_for_data_in;
+    // Record if this is the last block
+    is_last_block = data_in.data.tlast;
+    // And then wait for the output once input into compute happens
+    if(o.to_compute_valid & o.ready_for_data_in){
+      state = FINISH_ITER;
     }
   }
   return o;
