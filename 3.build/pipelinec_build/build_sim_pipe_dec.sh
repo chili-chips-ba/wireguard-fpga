@@ -2,4 +2,4 @@
 
 rm -rf ./generated-files-sim-pipe-dec/*
 rm ./*.py
-$PIPELINEC ./src/chacha20poly1305_decrypt_tb.c --out_dir ./generated-files-sim-pipe-dec --sim --cocotb --ghdl --run 250
+$PIPELINEC ./src/chacha20poly1305_decrypt_tb.c --out_dir ./generated-files-sim-pipe-dec --sim --cocotb --ghdl --run 175
