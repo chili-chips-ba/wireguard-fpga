@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 ## Hardware Architecture and Theory of Operation
 ![HWArchitecture](../0.doc/Wireguard/wireguard-fpga-Architecture-HW.webp)
 
