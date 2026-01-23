@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # Egress IP Lookup Engine
 
 The Egress IP Lookup Engine is part of the data-plane pipeline. Its primary function is to perform routing table lookups based on the destination IPv4 address and to augment packet metadata before forwarding the packet to the next pipeline stage. The routing table is configured and updated by the control-plane CPU through a CSR interface.

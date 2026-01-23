@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # curve25519 (x25519) lib
 
 This component provides a minimal Curve25519 (X25519) implementation used for

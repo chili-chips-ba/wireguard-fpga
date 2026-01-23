@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # BLAKE2s lib
 
 This component provides a compact and self-contained reference implementation of the
