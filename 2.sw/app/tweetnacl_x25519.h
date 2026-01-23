@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 TweetNaCl
+//
+// SPDX-License-Identifier: MIT
+
 #ifndef TWEETNACL_X25519_H
 #define TWEETNACL_X25519_H
 

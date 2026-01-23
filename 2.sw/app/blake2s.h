@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
+
 // blake2s.h
 // BLAKE2s Hashing Context and API Prototypes
 

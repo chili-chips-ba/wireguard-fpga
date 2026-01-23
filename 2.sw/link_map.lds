@@ -1,5 +1,7 @@
-//==========================================================================
-// Copyright (C) 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
+
 //==========================================================================
 // Linker script. It instructs GCC where to place Code and Data sections, 
 // or how to map them to the physical memory resources. It must be aligned
