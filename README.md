@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS, 2026
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
