@@ -23,6 +23,7 @@ typedef struct u320_t
 {
     uint64_t limbs[5]; // 64-bit limbs
 } u320_t;
+DECL_STREAM_TYPE(u320_t)
 
 // print a u320_t
 void print_u320(u320_t x){
@@ -295,6 +296,7 @@ typedef struct poly1305_mac_loop_body_in_t{
     u320_t r;
     u320_t a;
 } poly1305_mac_loop_body_in_t;
+DECL_STREAM_TYPE(poly1305_mac_loop_body_in_t)
 u320_t poly1305_mac_loop_body(
     poly1305_mac_loop_body_in_t inputs
 ){  
@@ -337,12 +339,12 @@ int32_t poly1305_verify(uint8_t tag1[TAG_SIZE], uint8_t tag2[TAG_SIZE])
     return tag1==tag2; // pipelinec built in
 }
 
-// FSM that uses pipeline iteratively to compute poly1305 MAC
+// FSM that uses compute iteratively to compute poly1305 MAC
 typedef enum poly1305_state_t{
     // TODO can combine states for lower per block latency
     IDLE, // Wait for poly1305_key
-    START_ITER, // Put data into pipeline
-    FINISH_ITER, // Wait for data out of pipeline
+    START_ITER, // Put data into compute
+    FINISH_ITER, // Wait for data out of compute
     A_PLUS_S, // Add s to a final step before output
     OUTPUT_AUTH_TAG // Output the auth tag
 } poly1305_state_t;
@@ -350,18 +352,18 @@ typedef struct poly1305_mac_fsm_t{
     uint1_t ready_for_key;
     uint1_t ready_for_data_in;
     stream(poly1305_auth_tag_uint_t) auth_tag;
-    poly1305_mac_loop_body_in_t to_pipeline;
-    uint1_t to_pipeline_valid;
-    //uint1_t ready_for_from_pipeline;
+    poly1305_mac_loop_body_in_t to_compute;
+    uint1_t to_compute_valid;
+    //uint1_t ready_for_from_compute;
 }poly1305_mac_fsm_t;
 poly1305_mac_fsm_t poly1305_mac_fsm(
     // Inputs
     stream(poly1305_key_uint_t) key,
     stream(axis128_t) data_in,
     uint1_t ready_for_auth_tag_out,
-    u320_t from_pipeline,
-    uint1_t from_pipeline_valid,
-    uint1_t ready_for_to_pipeline
+    u320_t from_compute,
+    uint1_t from_compute_valid,
+    uint1_t ready_for_to_compute
 ){
   poly1305_mac_fsm_t o;
   // Default not ready for incoming poly key
@@ -371,10 +373,10 @@ poly1305_mac_fsm_t poly1305_mac_fsm(
   // Default not outputting an auth tag
   o.auth_tag.data = 0;
   o.auth_tag.valid = 0;
-  // Default nothing into pipeline
-  poly1305_mac_loop_body_in_t pipeline_null_inputs = {0};
-  o.to_pipeline = pipeline_null_inputs;
-  o.to_pipeline_valid = 0;
+  // Default nothing into compute
+  poly1305_mac_loop_body_in_t compute_null_inputs = {0};
+  o.to_compute = compute_null_inputs;
+  o.to_compute_valid = 0;
 
   // The FSM
   static poly1305_state_t state;
@@ -410,24 +412,10 @@ poly1305_mac_fsm_t poly1305_mac_fsm(
       // Then start per block iterations
       state = START_ITER; 
     }
-  }else if(state == START_ITER){
-    // Ready to take an input data block
-    o.ready_for_data_in = ready_for_to_pipeline;
-    // Put 'a' and data block into pipeline
-    o.to_pipeline.block_bytes = data_in.data.tdata;
-    o.to_pipeline.a = a;
-    o.to_pipeline.r = r;
-    o.to_pipeline_valid = data_in.valid & o.ready_for_data_in;
-    // Record if this is the last block
-    is_last_block = data_in.data.tlast;
-    // And then wait for the output once input into pipeline happens
-    if(o.to_pipeline_valid & o.ready_for_data_in){
-      state = FINISH_ITER;
-    }
   }else if(state == FINISH_ITER){
-    // Wait for 'a' data out of pipeline
-    if(from_pipeline_valid){
-      a = from_pipeline;
+    // Wait for 'a' data out of compute
+    if(from_compute_valid){
+      a = from_compute;
       // print 'a' every block
       //print_u320(a);
       // if last block do final step
@@ -452,6 +440,23 @@ poly1305_mac_fsm_t poly1305_mac_fsm(
     o.auth_tag.valid = 1;
     if(o.auth_tag.valid & ready_for_auth_tag_out){
       state = IDLE;
+    }
+  }
+  // Same cycle transition from finish->start iter in one cycle
+  // latency reduction = throughput increase in this case...
+  if(state == START_ITER){
+    // Ready to take an input data block
+    o.ready_for_data_in = ready_for_to_compute;
+    // Put 'a' and data block into compute
+    o.to_compute.block_bytes = data_in.data.tdata;
+    o.to_compute.a = a;
+    o.to_compute.r = r;
+    o.to_compute_valid = data_in.valid & o.ready_for_data_in;
+    // Record if this is the last block
+    is_last_block = data_in.data.tlast;
+    // And then wait for the output once input into compute happens
+    if(o.to_compute_valid & o.ready_for_data_in){
+      state = FINISH_ITER;
     }
   }
   return o;

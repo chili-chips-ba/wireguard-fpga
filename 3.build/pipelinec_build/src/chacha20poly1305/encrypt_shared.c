@@ -13,7 +13,7 @@
 #include "../prep_auth_data/prep_auth_data.c"
 // Instance of poly1305 part of encryption
 #define POLY_MAC_INST poly1305_mac_encrypt
-#define POLY_EXCLUDES_PIPELINE
+#define POLY_EXCLUDES_COMPUTE
 #include "../poly1305/poly1305_mac.c"
 // Instance of the appending auth tag part of encryption
 #include "../auth_tag/append_auth_tag.c"
