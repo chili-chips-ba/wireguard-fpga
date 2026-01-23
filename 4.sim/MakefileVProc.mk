@@ -1,10 +1,7 @@
-###################################################################
-# Makefile for virtual processor WireGuard top level test bench
-# code in Verilator
-#
 # Copyright (C) 2024 - 2025 Chili.CHIPS*ba
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba, 2024-2025
 #
-###################################################################
+# SPDX-License-Identifier: BSD-3-Clause
 
 # --------------------------------------------
 # Command line modifiable variables

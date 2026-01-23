@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba, 2024-2025
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 ## WireGuard Test Scripts
 
 Here are the scripts for testing certain functionalities of the complete build (HW + SW) and for debugging:
