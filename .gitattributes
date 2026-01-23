@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS, 2026
+#
+# SPDX-License-Identifier: CC0-1.0
+
 0.doc/** linguist-vendored=true
 0.doc/**/*.vho linguist-detectable=false
 0.doc/**/*.vhd linguist-detectable=false
