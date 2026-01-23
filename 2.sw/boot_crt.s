@@ -1,5 +1,7 @@
-#==========================================================================
-# Copyright (C) 2026 Chili.CHIPS*ba
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+# 
+# SPDX-License-Identifier: BSD-3-Clause
+
 #==========================================================================
 # Startup Assembly program, acting as a minimal CRT (C Run Time).
 # Needed due to the 'bare-metal' (aka "freestanding") nature of our CPU 

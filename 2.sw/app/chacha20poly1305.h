@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
+
 /**
  * @file chacha20poly1305.h
  * @brief ChaCha20-Poly1305 AEAD implementation
