@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba, 2024-2025
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 ### always-comb
 Checks that there are no occurrences of `always @*`. Use `always_comb` instead. See [Style: combinational-logic].
 
