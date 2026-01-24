@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2010 Micron Technology, Inc.
+//
+// SPDX-License-Identifier: MIT
+
 // Testbench for Micron SDR SDRAM Verilog models
 
 `timescale 1ns / 1ps

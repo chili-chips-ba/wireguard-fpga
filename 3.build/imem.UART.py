@@ -1,6 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 #=============================================================
-# Copyright (C) 2026 Chili.CHIPS*ba
-#-------------------------------------------------------------
 # Script that sends to UART contents to write into IMEM file
 #  for the compiled RISC-V 'C' program
 #=============================================================

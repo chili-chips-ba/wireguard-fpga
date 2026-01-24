@@ -1,5 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+SPDX-FileCopyrightText: 2026 Simon Southwell
 
 SPDX-License-Identifier: BSD-3-Clause
 -->

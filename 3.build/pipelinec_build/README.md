@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # Encryption and Decryption using PipelineC
 
 In this section we will present the architecture of our *chacha20poly1305 encryption* and *decryption*. Both *encryption* and *decryption* have been built with [PipelineC](https://github.com/JulianKemmerer/PipelineC).

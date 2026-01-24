@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Simon Southwell
+# 
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 #
 # Example RISC-V assembly program
 #

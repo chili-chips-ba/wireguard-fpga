@@ -1,5 +1,4 @@
-# Copyright (C) 2024 - 2025 Chili.CHIPS*ba
-# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba, 2024-2025
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
 #
 # SPDX-License-Identifier: BSD-3-Clause
 

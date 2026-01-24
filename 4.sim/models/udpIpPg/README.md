@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+SPDX-FileCopyrightText: 2026 Simon Southwell
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # The udpIpPg Ethernet UDP/IPV4 Driver VIP
 
 The ethernet driving BFM is based around the open-source the UDP/IPv4 packet generator ([_udpPgIp_](https://github.com/wyvernSemi/udpIpPg)) model. This, like [`soc_cpu.VPROC`](../README.md#soc_cpuvproc) is also constructed around _VProc_, with the packet generation being done within a C++ program running on VProc. To drive the actual GMII signalling, the ports are memory mapped into _VProc_ space, and ports set/read in delta-time, advancing a tick at the end of this process. Since the _udpIpPg_ program is running on _VProc_, the software has access to the [_mem_model_](https://github.com/wyvernSemi/mem_model) address space and can access data between itself and the `soc_cpu.VPROC` module, closing the verification end-to-end loop on data generation and reception. 
