@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2026 Julian Kammerer
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /* Code using a poly1305_mac_loop_body pipeline to evaluate: 
 for (size_t i = 0; i < blocks; i++)
 {

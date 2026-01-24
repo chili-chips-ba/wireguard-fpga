@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
+
 module fpga_pll_80M (
 	clk,
 	rst_n,

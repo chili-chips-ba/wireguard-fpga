@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+SPDX-FileCopyrightText: 2026 Simon Southwell
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # _VProc_ and _mem_model_ Co-simulation Components
 
 The _VProc_ virtual processor and the _mem_model_ sparse memory mode components form the heart of the co-simulation for the Wireguard FPGA top level simulation test bench. The `soc_cpu.VProc` is based on the virtual processor and the memory used by the running programs has access to the memory model's space. Logic can also access the memeory model's address space with an provide HDl component. This component is also used in the ethernet interface driver block, and the code running on the _udpIpPg_ VIP's _VProc_ also has access to the same memory via the API. Thus, these components are tied together tightly.

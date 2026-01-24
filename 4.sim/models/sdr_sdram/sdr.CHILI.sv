@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2010 Micron Technology, Inc.
+//
+// SPDX-License-Identifier: MIT
+
 //--------------------------------------------------------------------------
 // Improved by Chili.CHIPS (2023/24)
 //------------------------------------------------------------------------
