@@ -204,17 +204,14 @@ More details on the architecture and usage of the Wireguard test bench can be fo
 The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#co-simulation-hal), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#co-simulation-hal) in the `3.build/` directory.
 
 ## Build process
-The details of the build process can be found in the [README.md](./3.build/README.md) in the `3.build/` directory.
+The details of the build process can be found in the [README.md](3.build/README.md) in the `3.build/` directory.
 
 ## Lab Test and Validation Setup
-TODO
+The figure illustrates a test topology consisting of two remote hosts, A and B, connected in a VPN implemented using two WireGuard-FPGA nodes interconnected over a public network. An additional node in the public network is included to demonstrate traffic encryption. Detailed instructions for configuring the WireGuard-FPGA nodes are provided in [README.md](6.test/README.md).
 
 <p align="center">
   <img width="70%" src="0.doc/Wireguard/wireguard-fpga-Test-Topology.webp">
 </p>
-
-## CPU Live debug and reload
-TODO
 
 ---
 # Project Execution Plan / Tracking
