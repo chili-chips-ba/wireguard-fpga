@@ -7,10 +7,10 @@ SPDX-License-Identifier: BSD-3-Clause
 ## Lab Test and Validation Setup
 
 After connecting the Alinx AX7201 boards with cables according to the topology, the FPGA must programmed as described in
-[build process](3.build#hw-compilation---vivado).
+[build process](../3.build/README.md#hw-compilation---vivado).
 
 <p align="center">
-  <img width="70%" src="0.doc/Wireguard/wireguard-fpga-Test-Topology.webp">
+  <img width="70%" src="../0.doc/Wireguard/wireguard-fpga-Test-Topology.webp">
 </p>
 
 The AX7201 board provides a USB UART interface, which is used as the WireGuard CLI. A connection to the CLI can be established using a serial terminal application such as minicom:
@@ -22,7 +22,7 @@ minicom -D /dev/ttyUSB0
 Once connected to the CLI, the FPGA can be reset (or reconfigured). This will generate a welcome message on the terminal, as shown in the figure below.
 
 <p align="center">
-  <img width="70%" src="0.doc/Wireguard/wireguard_cli.png">
+  <img width="70%" src="../0.doc/Wireguard/wireguard_cli.png">
 </p>
 
 We will now go through the steps to configure the WireGuard-FPGA nodes using the CLI.
@@ -188,7 +188,7 @@ ping 192.168.1.99
 The image shows the first encrypted packet (ICMP Echo Request) captured on the node 192.168.1.1.
 
 <p align="center">
-  <img width="70%" src="0.doc/Wireguard/wireguard_test_wireshark.png">
+  <img width="70%" src="../0.doc/Wireguard/wireguard_test_wireshark.png">
 </p>
 
 ## WireGuard Test Scripts
@@ -199,3 +199,4 @@ Here are the scripts for testing certain functionalities of the complete build (
 - `busr.UART.py` - Used for reading data from the DMEM/CSR address space (as described in the [UART Data Flow](/1.hw/README.md#uart-data-flow)). Includes an example of reading the GPIO register.
 - `busw.UART.py` - Used for writing data to the DMEM/CSR address space (as described in the [UART Data Flow](/1.hw/README.md#uart-data-flow)). Includes an example of writing to the GPIO register.
 - `dump_packet.UART.py` - For reading an entire Ethernet packet (structure `eth_raw_packet_t`) from DMEM, including both hexadecimal and textual display of the payload.
+
