@@ -207,7 +207,7 @@ The Wireguard control and status register harware abstraction layer (HAL) softwa
 The details of the build process can be found in the [README.md](3.build/README.md) in the `3.build/` directory.
 
 ## Lab Test and Validation Setup
-The figure illustrates a test topology consisting of two remote hosts, A and B, connected in a VPN implemented using two WireGuard-FPGA nodes interconnected over a public network. An additional node in the public network is included to demonstrate traffic encryption. Detailed instructions for configuring the WireGuard-FPGA nodes are provided in [README.md](6.test/README.md).
+The figure illustrates a test topology consisting of two remote hosts, A and B, connected in a VPN implemented using two WireGuard-FPGA nodes interconnected over a public network. An additional node in the public network is included to demonstrate traffic encryption. Detailed instructions for configuring the WireGuard-FPGA nodes are provided in [README.md](6.test/README.md) in the `6.test/` directory.
 
 <p align="center">
   <img width="70%" src="0.doc/Wireguard/wireguard-fpga-Test-Topology.webp">
