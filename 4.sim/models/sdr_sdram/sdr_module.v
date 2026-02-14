@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2010 Micron Technology, Inc.
+//
+// SPDX-License-Identifier: MIT
+
 `timescale 1ns / 100ps
 
 module sdr_module (Dq, Addr, Ba, Clk, Cke, Cs_n, Ras_n, Cas_n, We_n, Dqm);

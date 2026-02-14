@@ -1,9 +1,7 @@
-#=============================================================
 # Copyright (C) 2024-2025 Chili.CHIPS*ba
-#-------------------------------------------------------------
-# Script that dumps Ethernet packet 
-# (eth_raw_packet_t) from DMEM via UART
-#=============================================================
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba, 2024-2025
+#
+# SPDX-License-Identifier: BSD-3-Clause
 
 import textwrap
 import serial

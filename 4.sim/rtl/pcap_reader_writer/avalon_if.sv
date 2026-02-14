@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Amina Tankovic
+//
+// SPDX-License-Identifier: MIT
+
 interface avalon_if #
 (
     parameter DATA_WIDTH = 512,
@@ -37,3 +41,4 @@ interface avalon_if #
        input    empty
    );
 endinterface
+

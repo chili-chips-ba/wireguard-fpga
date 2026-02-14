@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2026 Julian Kammerer
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // The primary dataflow for single clock domain ChaCha20-Poly1305 encryption
 #pragma MAIN_MHZ encrypt_dataflow 80.0
 void encrypt_dataflow(){

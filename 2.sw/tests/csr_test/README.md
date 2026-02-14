@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # Sanity Test for CSR HAL: GPIO, UART, Ethernet
 
 This test program is designed to verify the basic functionality of the CSR HAL for GPIO, UART and Ethernet interfaces.

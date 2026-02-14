@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2025 Amina Tankovic
+//
+// SPDX-License-Identifier: MIT
+
 interface axis_if #
 (
     parameter DATA_WIDTH = 512,
@@ -34,3 +38,4 @@ interface axis_if #
         input    keep
     );
 endinterface
+

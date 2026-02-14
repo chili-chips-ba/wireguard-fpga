@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # ChaCha20-Poly1305 lib
 
 This component implements the ChaCha20–Poly1305 authenticated encryption

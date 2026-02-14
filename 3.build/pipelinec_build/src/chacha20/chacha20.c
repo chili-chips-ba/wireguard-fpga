@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2026 Julian Kammerer
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // Instance of chacha20_loop_body
 // requires data width converters to-from 512b wide blocks 128b bus
 // use axis128/512 stream types

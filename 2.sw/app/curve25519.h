@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
+
 #ifndef CURVE25519_H
 #define CURVE25519_H
 

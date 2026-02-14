@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2014 Chris Shucksmith
+// SPDX-FileCopyrightText: 2025 Amina Tankovic
+//
+// SPDX-License-Identifier: MIT
+
 `timescale 1ps / 1ps
 `define NULL 0
 

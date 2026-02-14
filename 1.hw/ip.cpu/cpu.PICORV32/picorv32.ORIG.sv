@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2015 Clifford Wolf
+//
+// SPDX-License-Identifier: MIT
+
 /*
  *  PicoRV32 -- A Small RISC-V (RV32I) Processor Core
  *

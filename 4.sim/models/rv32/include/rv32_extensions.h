@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2021 Simon Southwell
+// 
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 // *** AUTOMATICALLY GENERATED FILE. DO NOT EDIT! ***
 

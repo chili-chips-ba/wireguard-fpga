@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 //=====================================================================
 //
 // VProcIrqClass.h                                       Date: 2024/4/2

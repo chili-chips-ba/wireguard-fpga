@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2010 Micron Technology, Inc.
+//
+// SPDX-License-Identifier: MIT
+
 /**************************************************************************
 *
 *    File Name:  sdr.v

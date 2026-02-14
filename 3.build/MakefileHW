@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+# 
+# SPDX-License-Identifier: BSD-3-Clause
+
+VIVADO      := vivado
+BLD_DIR     := $(CURDIR)
+HW_BLD      := $(BLD_DIR)/hw_build.Vivado
+PROJECT     := $(HW_BLD)/wireguard.xpr
+BITFILE     := $(HW_BLD)/wireguard.runs/impl_1/top.bit
+BUILD_TCL   := $(HW_BLD)/build_bitstream.tcl
+PROGRAM_TCL := $(HW_BLD)/program_fpga.tcl
+
+.PHONY: all bit program clean
+
+all: bit
+
+bit: $(BITFILE)
+
+$(BITFILE): $(PROJECT) $(BUILD_TCL)
+	cd $(HW_BLD) && \
+	$(VIVADO) \
+		-mode batch \
+		-nolog \
+		-nojournal \
+		-notrace \
+		-source $(notdir $(BUILD_TCL))
+
+program: $(BITFILE) $(PROGRAM_TCL)
+	cd $(HW_BLD) && \
+	vivado \
+		-mode batch \
+		-nolog \
+		-nojournal \
+		-notrace \
+		-source $(notdir $(PROGRAM_TCL))
+
+clean:
+	rm -rf \
+		$(HW_BLD)/*.jou \
+		$(HW_BLD)/*.log \
+		$(HW_BLD)/.Xil \
+		$(HW_BLD)/*.cache \
+		$(HW_BLD)/*.hw \
+		$(HW_BLD)/*.runs
+

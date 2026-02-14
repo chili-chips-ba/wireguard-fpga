@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // ====================================================================
 //
 // SystemVerilog side Virtual Processor, for running host

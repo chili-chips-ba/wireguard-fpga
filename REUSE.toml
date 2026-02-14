@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+# 
+# SPDX-License-Identifier: BSD-3-Clause
+
+version = 1
+
+[[annotations]]
+path = ["0.doc/**", "3.build/csr_build/generated-files/html/**", "3.build/hw_build.openXC7/build_artifacts/**", "3.build/hw_build.openXC7/converted/**", "3.build/hw_build.Vivado/**", "3.build/sw_build/**", "3.build/pipelinec_build/**" , "4.sim/**.gtkw", "4.sim/**.fst", "4.sim/**.ron", "4.sim/**.pcap", "99.warmup/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Chili.CHIPS*ba"
+SPDX-License-Identifier = "BSD-3-Clause"

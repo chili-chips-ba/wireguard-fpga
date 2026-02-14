@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba, 2024-2025
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 # Define the absolute or relative path to the 1.hw folder
 hw_folder="../1.hw"
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // ====================================================================
 //
 // User defined Extra definitions for verilog compilation
