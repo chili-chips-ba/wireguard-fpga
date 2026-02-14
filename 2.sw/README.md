@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # Software Architecture and Theory of Operation
 ![SWArchitecture](../0.doc/Wireguard/wireguard-fpga-muxed-Architecture-SW.webp)
 

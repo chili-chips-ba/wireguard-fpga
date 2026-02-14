@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2026 Julian Kammerer
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // Append the auth tag after the ciphertext
 #include "arrays.h"
 

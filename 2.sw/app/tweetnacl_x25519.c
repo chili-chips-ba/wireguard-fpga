@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 TweetNaCl
+//
+// SPDX-License-Identifier: MIT
+
 /*
  * X25519 from TweetNaCl (public domain)
  *

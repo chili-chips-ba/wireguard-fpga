@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
+
 /**
  * @file string_bare.h
  * @brief Bare metal string.h implementation

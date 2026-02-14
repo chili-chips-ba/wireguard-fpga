@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# SPDX-License-Identifier: MIT
+
 """
 Generates an AXI Stream arbitrated mux wrapper with the specified number of ports
 """

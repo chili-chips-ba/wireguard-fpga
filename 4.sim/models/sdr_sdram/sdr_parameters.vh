@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+// SPDX-FileCopyrightText: 2010 Micron Technology, Inc.
+//
+// SPDX-License-Identifier: MIT
+
 /****************************************************************************************
 *
 *   Disclaimer   This software code and all associated documentation, comments or other

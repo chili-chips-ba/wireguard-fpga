@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # Wireguard FPGA Build
 
 The build process for the WireGuard project consists of three steps:
@@ -79,7 +85,19 @@ make -f MakefileSW program
 
 ## HW Compilation - Vivado
 
-The main hardware synthesis/PnR tool is Vivado Desing Suite, using the prepared [project file](/3.build/hw_build.Vivado/wireguard.xpr) project located at `3.build/hw_build.Vivado`.
+The main hardware synthesis/PnR tool is Vivado Design Suite, using the prepared [project file](/3.build/hw_build.Vivado/wireguard.xpr) project located at `3.build/hw_build.Vivado`.
+
+To run synthesis, place-and-route (PnR), and generate the FPGA bitfile, execute:
+
+```
+make -f MakefileHW
+```
+
+After the bitfile has been successfully generated, the FPGA device can be programmed using:
+
+```
+make -f MakefileHW program
+```
 
 ## HW Compilation - openXC7
 ### openXC7 Installation

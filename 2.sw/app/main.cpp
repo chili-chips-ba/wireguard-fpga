@@ -1,14 +1,40 @@
-//==========================================================================
-// Copyright (C) 2024-2026 Chili.CHIPS*ba
-//--------------------------------------------------------------------------
-//                      PROPRIETARY INFORMATION
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
 //
-// The information contained in this file is the property of CHILI CHIPS LLC.
-// Except as specifically authorized in writing by CHILI CHIPS LLC, the holder
-// of this file: (1) shall keep all information contained herein confidential;
-// and (2) shall protect the same in whole or in part from disclosure and
-// dissemination to all third parties; and (3) shall use the same for operation
-// and maintenance purposes only.
+// SPDX-License-Identifier: BSD-3-Clause
+
+//========================================================================== 
+// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation   
+//--------------------------------------------------------------------------
+//                   Copyright (C) 2026 Chili.CHIPS*ba
+// 
+// Redistribution and use in source and binary forms, with or without 
+// modification, are permitted provided that the following conditions 
+// are met:
+//
+// 1. Redistributions of source code must retain the above copyright 
+// notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright 
+// notice, this list of conditions and the following disclaimer in the 
+// documentation and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its 
+// contributors may be used to endorse or promote products derived
+// from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS 
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
+// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//              https://opensource.org/license/bsd-3-clause
 //--------------------------------------------------------------------------
 // Description:
 //   Main program for WireGuard FPGA
@@ -243,6 +269,32 @@ void show_network(volatile csr_vp_t* csr, net_config_t* config) {
    uart_send_ip(csr, config->def_gw);
    uart_send(csr, "\r\n  Default interface: ");
    uart_send_dec(csr, config->def_if);
+   switch (config->def_if) {
+      case 0:
+         uart_send(csr, " [0....]");
+         break;
+      case 1:
+         uart_send(csr, " [.1...]");
+         break;
+      case 2:
+         uart_send(csr, " [..2..]");
+         break;
+      case 3:
+         uart_send(csr, " [...3.]");
+         break;
+      case 4:
+         uart_send(csr, " [....4]");
+         break;
+      case 5:
+         uart_send(csr, " [.1.3.]");
+         break;
+      case 6:
+         uart_send(csr, " [..2.4]");
+         break;
+      case 7:
+         uart_send(csr, " [.1234]");
+         break;
+   }
    uart_send(csr, "\r\n");
 }
 
@@ -278,12 +330,11 @@ void config_network(volatile csr_vp_t* csr, net_config_t* config) {
    while (!uart_recv(csr, uart_rx_data));
    net_str_parse_ip(uart_rx_data, &config->def_gw);
 
-   uart_send(csr, "  Default interface (0-3) [");
+   uart_send(csr, "  Default interface (0-7) [");
    uart_send_dec(csr, config->def_if);
    uart_send(csr, "]: ");
    while (!uart_recv(csr, uart_rx_data));
-   str_parse_uint8(uart_rx_data, &config->def_if, 0, 3);
-
+   str_parse_uint8(uart_rx_data, &config->def_if, 0, 7);
    uart_send(csr, "Network configuration updated.\r\n");
 
    show_network(csr, config);
@@ -308,8 +359,34 @@ void show_routes_entry(volatile csr_vp_t* csr, int i) {
    uart_send_dec(csr, peer_idx);
 
    uint32_t dst = csr->routing_table->entry[i]->dst->dst();
-   uart_send(csr, ", Dst: ");
+   uart_send(csr, ", Destination interface: ");
    uart_send_dec(csr, dst);
+   switch (dst) {
+      case 0:
+         uart_send(csr, " [0....]");
+         break;
+      case 1:
+         uart_send(csr, " [.1...]");
+         break;
+      case 2:
+         uart_send(csr, " [..2..]");
+         break;
+      case 3:
+         uart_send(csr, " [...3.]");
+         break;
+      case 4:
+         uart_send(csr, " [....4]");
+         break;
+      case 5:
+         uart_send(csr, " [.1.3.]");
+         break;
+      case 6:
+         uart_send(csr, " [..2.4]");
+         break;
+      case 7:
+         uart_send(csr, " [.1234]");
+         break;
+   }
 
    uart_send(csr, "\r\n");
 }
@@ -361,12 +438,12 @@ void config_routes(volatile csr_vp_t* csr) {
    while (!uart_recv(csr, uart_rx_data));
    str_parse_uint32(uart_rx_data, &peer_idx, 0, 63);
 
-   uart_send(csr, "  Dst (0-3) [");
+   uart_send(csr, "  Destination interface (0-7) [");
    uint32_t dst = csr->routing_table->entry[entry_idx]->dst->dst();
    uart_send_dec(csr, dst);
    uart_send(csr, "]: ");
    while (!uart_recv(csr, uart_rx_data));
-   str_parse_uint32(uart_rx_data, &dst, 0, 3);
+   str_parse_uint32(uart_rx_data, &dst, 0, 7);
 
    // Update routing table entry
    uip = ((uint32_t)ip[0] << 24) | ((uint32_t)ip[1] << 16) | ((uint32_t)ip[2] << 8) | (uint32_t)ip[3];
@@ -453,7 +530,7 @@ void show_cryptokeys(volatile csr_vp_t* csr) {
    while (!csr->dpe->fcr->idle());
 
    uart_send(csr, "Cryptokey table:\r\n");
-   for (int i = 0; i < 64; i++) {
+   for (int i = 1; i < 64; i++) {
       show_cryptokeys_entry(csr, i);
    }
 
@@ -467,10 +544,10 @@ void config_cryptokeys(volatile csr_vp_t* csr) {
    while (!csr->dpe->fcr->idle());
 
    uart_send(csr, "Enter new cryptokey table entry:\r\n");
-   uart_send(csr, "  Entry index (0-63) [0]: ");
+   uart_send(csr, "  Entry index (1-63) [1]: ");
    while (!uart_recv(csr, uart_rx_data));
-   uint32_t entry_idx = 0;
-   str_parse_uint32(uart_rx_data, &entry_idx, 0, 63);
+   uint32_t entry_idx = 1;
+   str_parse_uint32(uart_rx_data, &entry_idx, 1, 63);
 
    uart_send(csr, "  Local MAC address [");
    uint32_t local_mac_47_32 = csr->cryptokey_table->entry[entry_idx]->local_mac_47_32->mac();
@@ -863,4 +940,3 @@ int main(void) {
 
    return 0;
 }
-

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /*
  * Verilog side UDP/IPv4 packet generator, built around VProc
  *

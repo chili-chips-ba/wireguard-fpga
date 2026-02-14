@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+# SPDX-FileCopyrightText: 2024 Simon Southwell
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 if [ "$FNAME" != "" ]
 then
   FNAME=$1

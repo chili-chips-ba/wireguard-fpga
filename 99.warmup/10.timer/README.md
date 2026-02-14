@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # Timer lib
 
 This component provides simple delay utilities based on the RISC-V cycle counter (`rdcycle`).  

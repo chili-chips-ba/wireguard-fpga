@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+
+SPDX-License-Identifier: BSD-3-Clause
+-->
+
 # ChaCha20-Poly1305 (x86) lib
 
 This is the **x86-specific implementation** of the ChaCha20–Poly1305 AEAD library.

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 // $Header: /devl/xcs/repo/env/Databases/CAEInterfaces/verunilibs/data/unisims/IBUFGDS.v,v 1.8 2007/07/26 23:22:55 fphillip Exp $
 ///////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 1995/2004 Xilinx, Inc.

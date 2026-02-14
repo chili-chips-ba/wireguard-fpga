@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 // -----------------------------------------------------------------------------
 //  Title      : Veriog memory model for simulations
 //  Project    : UNKNOWN

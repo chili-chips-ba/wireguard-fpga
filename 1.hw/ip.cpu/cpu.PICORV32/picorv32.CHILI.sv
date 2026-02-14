@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2015 Clifford Wolf
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: MIT
+
 /*
 --------------------------------------------------------------------------
  Improved by Chili.CHIPS (2023/24)

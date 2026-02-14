@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 # Makefile for wireguard-fpga openXC7 build
 # Using sv2v batch conversion with post-extraction
 #
@@ -26,7 +30,7 @@ PART = xc7a200tfbg484-2
 
 # Project directories (Makefile is in 3.build/hw_build.openXC7/)
 CURR_DIR := $(CURDIR)
-HW_DIR = 1.hw
+HW_DIR = ../../1.hw
 BUILD_DIR_ROOT = ..
 
 # Conversion output directories

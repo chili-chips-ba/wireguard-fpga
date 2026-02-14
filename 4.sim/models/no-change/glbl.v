@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
+
 // verilator lint_off UNDRIVEN
 // verilator lint_off UNUSEDSIGNAL
 
