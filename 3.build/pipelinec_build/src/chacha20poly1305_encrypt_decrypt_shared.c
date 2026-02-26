@@ -9,7 +9,9 @@
 // The shared parts between encrypt and decrypt
 // the two big compute pipelines
 #include "chacha20/chacha20_pipeline_shared.c"
-#include "poly1305/poly1305_pipeline_shared.c"
+// Actually Poly1305 isnt that big, better to not-share pipeline resources
+// and get throughput improvement from MCP instead
+//#include "poly1305/poly1305_pipeline_shared.c"
 
 // The encrypt and decrypt specifics part of the shared design
 #include "chacha20poly1305/encrypt_shared.c"
