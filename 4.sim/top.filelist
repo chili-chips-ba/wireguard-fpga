@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
-# 
+#
 # SPDX-License-Identifier: BSD-3-Clause
 
 #==========================================================================
@@ -55,6 +55,7 @@ ${HW_SRC}/ip.infra/uart.sv
 ${HW_SRC}/ip.infra/sync_fifo_ram.sv
 #${HW_SRC}/ip.infra/sync_fifo_srl.sv
 ${HW_SRC}/ip.infra/dpe_if_skid_buffer.sv
+${HW_SRC}/ip.infra/tdp_ram.sv
 
 #---CPU
 +incdir+${BLD_DIR}/sw_build
@@ -67,8 +68,6 @@ ${HW_SRC}/ip.dpe/dpe_multiplexer.sv
 ${HW_SRC}/ip.dpe/dpe_demultiplexer.sv
 ${HW_SRC}/ip.dpe/dpe_dummy_switch.sv
 #${HW_SRC}/ip.dpe/dpe_wg_disassembler.sv
-${HW_SRC}/ip.dpe/dpe_egress_ip_lookup.sv
-${HW_SRC}/ip.dpe/dpe_route_mem.sv
 
 #---TOP
 ${HW_SRC}/top.sv

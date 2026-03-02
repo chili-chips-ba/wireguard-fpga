@@ -299,10 +299,10 @@ static int read_binary(const char *exec_fname, uint32_t load_addr)
     // Open program file ready for loading
     if ((bin_fp = fopen(exec_fname, "rb")) == NULL)
     {
-        fprintf(stderr, "*** read_binary(): Unable to open file %s for reading\n", exec_fname); 
+        fprintf(stderr, "*** read_binary(): Unable to open file %s for reading\n", exec_fname);
         return 1;
     }
-    
+
     for (int idx = 0; 1; idx++)
     {
         if ((c = fgetc(bin_fp)) != EOF)
@@ -320,7 +320,7 @@ static int read_binary(const char *exec_fname, uint32_t load_addr)
             {
                 pCpu->write_mem(load_addr + (idx & ~0x3U), *word & ((1 << (load_addr & 0x3)*8)-1), MEM_WR_ACCESS_INSTR, fault);
             }
-            
+
             // Exit loop
             break;
         }
