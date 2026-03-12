@@ -16,7 +16,7 @@ With traditional solutions (such as OpenVPN / IPSec) starting to run out of stea
 
 This project aims to bridge these gaps with an `open-source, FPGA-based` implementation of Wireguard. It puts to work multiple open-source technologies:
 
-   ⭐ **PipelineC** HLS
+   ⭐ **PipelineC** HLS-like
  
    ⭐ **PeakRDL** CSR
  
