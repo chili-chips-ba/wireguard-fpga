@@ -4,6 +4,9 @@ SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
 SPDX-License-Identifier: BSD-3-Clause
 -->
 
+[![NLnet Foundation](https://img.shields.io/badge/funded%20by-NLnet%20Foundation-74AA00)](https://nlnet.nl/)
+[![GitHub stars](https://img.shields.io/github/stars/chili-chips-ba/wireguard-fpga?style=social)](https://github.com/chili-chips-ba/wireguard-fpga/stargazers)
+
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
 <p align="center">
