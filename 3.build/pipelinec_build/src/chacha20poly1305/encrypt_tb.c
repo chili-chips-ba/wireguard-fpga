@@ -8,6 +8,7 @@
 // CSR values available all at once do not need to be static=registers
 // Streaming inputs data is done as shift register
 #pragma MAIN encrypt_tb
+#pragma FUNC_WIRES encrypt_tb
 stream(axis128_t) encrypt_tb()
 {
     // Test vectors
