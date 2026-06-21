@@ -388,3 +388,8 @@ The FSM controls the read enable of the FIFO and manages the timing of the verif
 | **OUTPUT\_PLAINTEXT** | **Condition:** This state is only entered once the verification bit is received. **Data Release:** FIFO Read Enable is asserted (`verify_fifo_out_ready = wait_to_verify_axis_out_ready`), allowing the plaintext to stream out. | Outputs the static verification result (`tags_match_reg`) via `wait_to_verify_is_verified_out`, synchronized with the plaintext stream valid signal. | When the output stream is valid and accepted (`wait_to_verify_axis_out.valid & wait_to_verify_axis_out_ready`) AND the stream's `tlast` signal is observed. $\rightarrow$ `WAIT_TO_VERIFY_BIT` (Reset for next transaction). |
 
 **Security Note:** If the verification result (`tags_match_reg`) is 0 in the `OUTPUT_PLAINTEXT` state, the plaintext stream is still ready to output, but the accompanying signal `wait_to_verify_is_verified_out` will be 0. If the zero does occur the system will drop the output plaintext.
+
+## Additional Info:
+- [2026-06-05 Claude session](https://claude.ai/share/61743ff1-921b-419f-9294-edb48b317038)
+
+### End-of-Document
