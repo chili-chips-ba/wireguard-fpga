@@ -265,6 +265,12 @@ def chacha20_fsm(
     dwidth_conv_data_in: axis128_t = axis128_null()
     o.ready_for_axis_in = 0
     # Default no input into pipeline
+    # NOTE: kept via intermediate vars rather than `o.to_pipeline = ...null()` /
+    # `o.poly_key = ...null()` directly -- the direct form now elaborates without error
+    # (PipelineC compound-init-helper fix) but silently miscompiles here (wrong ciphertext
+    # bytes in sim), likely because these fields are later both wholesale-reassigned in one
+    # FSM branch and partially/conditionally overwritten per-element in others. Revert to
+    # the direct form once that PipelineC compiler bug is fixed.
     null_pipeline_in: chacha20_loop_body_stream_t = chacha20_loop_body_stream_null()
     o.to_pipeline = null_pipeline_in
     #  other than CSR inputs and such

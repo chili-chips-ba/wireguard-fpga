@@ -67,8 +67,7 @@ def axis128_early_tlast(
         # (so we can know if it is last)
         | stream_in.valid
     )
-    axis128_zero: axis128_t = axis128_null()
-    o.axis_out = axis128_zero
+    o.axis_out = axis128_null()
     o.next_axis_out_is_tlast = 0
     if buff_to_out_connected:
         o.axis_out = buffer_reg
