@@ -7,7 +7,7 @@ poly1305_verify_<wire> (prefix differs slightly, connections unchanged).
 """
 import pypeline_env  # noqa: F401
 
-from enum import IntEnum
+from enum import auto
 
 from pypeline import (
     MAIN,
@@ -38,11 +38,11 @@ tags_match_ready: Wire[uint1_t]  # input
 
 
 @enum
-class poly1305_verify_state_t(IntEnum):
-    TAKE_AUTH_TAG = 0  # take auth_tag and place it into a register
-    TAKE_CALC_TAG = 1  # take calculated tag and place it into a reg
-    COMPARE_TAGS = 2  # compare the two tags ("==") and place res in reg
-    OUTPUT_COMPARE_RESULT = 3  # output the compare value
+class poly1305_verify_state_t:
+    TAKE_AUTH_TAG = auto()  # take auth_tag and place it into a register
+    TAKE_CALC_TAG = auto()  # take calculated tag and place it into a reg
+    COMPARE_TAGS = auto()  # compare the two tags ("==") and place res in reg
+    OUTPUT_COMPARE_RESULT = auto()  # output the compare value
 
 
 @MAIN

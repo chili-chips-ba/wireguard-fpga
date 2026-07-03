@@ -8,7 +8,7 @@ chacha20_decrypt.py, the C chacha20.c equivalents).
 """
 import pypeline_env  # noqa: F401
 
-from enum import IntEnum
+from enum import auto
 
 from pypeline import (
     NamedTuple,
@@ -222,9 +222,9 @@ def chacha20_loop_body(inputs: chacha20_loop_body_in_t) -> axis512_frag_t:
 
 # Two uses of the chacha20_pipeline
 @enum
-class chacha20_state_t(IntEnum):
-    POLY_KEY = 0
-    PLAINTEXT = 1
+class chacha20_state_t:
+    POLY_KEY = auto()
+    PLAINTEXT = auto()
 
 
 # Data width converters to-from 512b wide blocks and the 128b bus

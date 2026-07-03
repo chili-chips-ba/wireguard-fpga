@@ -9,7 +9,7 @@ make_stream_fifo instance in its own MAIN with verify_fifo_* wires.
 """
 import pypeline_env  # noqa: F401
 
-from enum import IntEnum
+from enum import auto
 
 from pypeline import (
     MAIN,
@@ -55,11 +55,11 @@ def verify_fifo():
 
 
 @enum
-class wait_to_verify_state_t(IntEnum):
+class wait_to_verify_state_t:
     # Place the input plaintext into fifo until verify bit arrives
-    WAIT_TO_VERIFY_BIT = 0
+    WAIT_TO_VERIFY_BIT = auto()
     # once verify bit arrives output plaintext and verify bit
-    OUTPUT_PLAINTEXT = 1
+    OUTPUT_PLAINTEXT = auto()
 
 
 @MAIN
