@@ -143,28 +143,29 @@ def encrypt_tb() -> axis128_t:
 
     # Stream ciphertext out of dut (testbench always ready)
     chacha20poly1305_encrypt_ports.axis_out_ready = 1
-    out_s: axis128_t = chacha20poly1305_encrypt_ports.axis_out
-    if out_s.valid:
+    if chacha20poly1305_encrypt_ports.axis_out.valid:
         # Print ciphertext as it flows out of dut
-        out_chunk: uint128_t = array_to_uint_be(out_s.data.frag.data)
+        out_chunk: uint128_t = array_to_uint_be(
+            chacha20poly1305_encrypt_ports.axis_out.data.frag.data
+        )
         sim_print(
             f"Encrypt: Output Ciphertext next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}"
         )
         # compare to expected_ciphertext and shift
         for i in range(16):
             if ciphertext_remaining > i:
-                if out_s.data.frag.data[i] != expected_ciphertext[i]:
+                if chacha20poly1305_encrypt_ports.axis_out.data.frag.data[i] != expected_ciphertext[i]:
                     ciphertext_pos: uint32_t = (
                         ciphertext_size - ciphertext_remaining
                     ) + i
                     sim_print(
-                        f"ERROR: Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(out_s.data.frag.data[i])}"
+                        f"ERROR: Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(chacha20poly1305_encrypt_ports.axis_out.data.frag.data[i])}"
                     )
         # Too much data?
         if ciphertext_remaining == 0:
             sim_print("ERROR: Encrypt: Extra ciphertext output!")
         # Too little data? Or more to come?
-        if out_s.data.eod[0]:
+        if chacha20poly1305_encrypt_ports.axis_out.data.eod[0]:
             if ciphertext_remaining > 16:
                 sim_print("ERROR: Encrypt: Early end to ciphertext output!")
             else:
