@@ -73,11 +73,14 @@ def chacha20poly1305_decrypt_io_wires():
     chacha20poly1305_decrypt_ports.aad = uint_to_array_le(decrypt_aad, 8)
     chacha20poly1305_decrypt_ports.aad_len = decrypt_aad_len
     # Convert the axis128 stream wire to flattened output multiple wires
-    axis_out_s: axis128_t = chacha20poly1305_decrypt_ports.axis_out
-    decrypt_m_axis_tdata = array_to_uint_le(axis_out_s.data.frag.data)
-    decrypt_m_axis_tkeep = array_to_uint_le(axis_out_s.data.frag.keep)
-    decrypt_m_axis_tlast = axis_out_s.data.eod[0]
-    decrypt_m_axis_tvalid = axis_out_s.valid
+    decrypt_m_axis_tdata = array_to_uint_le(
+        chacha20poly1305_decrypt_ports.axis_out.data.frag.data
+    )
+    decrypt_m_axis_tkeep = array_to_uint_le(
+        chacha20poly1305_decrypt_ports.axis_out.data.frag.keep
+    )
+    decrypt_m_axis_tlast = chacha20poly1305_decrypt_ports.axis_out.data.eod[0]
+    decrypt_m_axis_tvalid = chacha20poly1305_decrypt_ports.axis_out.valid
     chacha20poly1305_decrypt_ports.axis_out_ready = decrypt_m_axis_tready
 
     # Connect the parallel verification output wire

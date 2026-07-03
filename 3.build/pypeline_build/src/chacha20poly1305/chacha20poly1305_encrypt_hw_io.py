@@ -70,9 +70,12 @@ def chacha20poly1305_encrypt_io_wires():
     chacha20poly1305_encrypt_ports.aad = uint_to_array_le(encrypt_aad, 8)
     chacha20poly1305_encrypt_ports.aad_len = encrypt_aad_len
     # Convert the axis128 stream wire to flattened output multiple wires
-    axis_out_s: axis128_t = chacha20poly1305_encrypt_ports.axis_out
-    encrypt_m_axis_tdata = array_to_uint_le(axis_out_s.data.frag.data)
-    encrypt_m_axis_tkeep = array_to_uint_le(axis_out_s.data.frag.keep)
-    encrypt_m_axis_tlast = axis_out_s.data.eod[0]
-    encrypt_m_axis_tvalid = axis_out_s.valid
+    encrypt_m_axis_tdata = array_to_uint_le(
+        chacha20poly1305_encrypt_ports.axis_out.data.frag.data
+    )
+    encrypt_m_axis_tkeep = array_to_uint_le(
+        chacha20poly1305_encrypt_ports.axis_out.data.frag.keep
+    )
+    encrypt_m_axis_tlast = chacha20poly1305_encrypt_ports.axis_out.data.eod[0]
+    encrypt_m_axis_tvalid = chacha20poly1305_encrypt_ports.axis_out.valid
     chacha20poly1305_encrypt_ports.axis_out_ready = encrypt_m_axis_tready

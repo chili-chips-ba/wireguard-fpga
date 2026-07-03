@@ -40,10 +40,9 @@ def decrypt_dataflow():
     # b) chacha20 (for actual decryption)
 
     # Default: no data passing
-    strip_axis_out_s: axis128_t = strip_auth_tag.axis_out
-    prep_axis_in_s: axis128_t = strip_axis_out_s
+    prep_axis_in_s: axis128_t = strip_auth_tag.axis_out
     prep_axis_in_s.valid = 0
-    chacha_axis_in_s: axis128_t = strip_axis_out_s
+    chacha_axis_in_s: axis128_t = strip_auth_tag.axis_out
     chacha_axis_in_s.valid = 0
 
     # The source (strip_auth_tag_axis_out) is ready only if both sinks are ready
@@ -52,7 +51,7 @@ def decrypt_dataflow():
     )
     # If a sink is not ready its allowed to see the pending valid=1
     # since no transfer happens anyway
-    if strip_axis_out_s.valid:
+    if strip_auth_tag.axis_out.valid:
         if strip_axis_out_ready_s | ~prep_auth_data_decrypt.axis_in_ready:
             prep_axis_in_s.valid = 1
         if strip_axis_out_ready_s | ~chacha20_decrypt.axis_in_ready:

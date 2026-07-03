@@ -33,10 +33,9 @@ def encrypt_dataflow():
     #  append auth tag input
     # Fork the stream by combining valids and readys
     #  default no data passing, invalidate passthrough
-    chacha_axis_out_s: axis128_t = chacha20_encrypt.axis_out
-    prep_axis_in_s: axis128_t = chacha_axis_out_s
+    prep_axis_in_s: axis128_t = chacha20_encrypt.axis_out
     prep_axis_in_s.valid = 0
-    append_axis_in_s: axis128_t = chacha_axis_out_s
+    append_axis_in_s: axis128_t = chacha20_encrypt.axis_out
     append_axis_in_s.valid = 0
     #  allow pass through if both sinks are ready
     #  or if sink isnt ready (no data passing anyway)
@@ -44,9 +43,9 @@ def encrypt_dataflow():
         prep_auth_data_encrypt.axis_in_ready & append_auth_tag.axis_in_ready
     )
     if chacha_axis_out_ready_s | ~prep_auth_data_encrypt.axis_in_ready:
-        prep_axis_in_s.valid = chacha_axis_out_s.valid
+        prep_axis_in_s.valid = chacha20_encrypt.axis_out.valid
     if chacha_axis_out_ready_s | ~append_auth_tag.axis_in_ready:
-        append_axis_in_s.valid = chacha_axis_out_s.valid
+        append_axis_in_s.valid = chacha20_encrypt.axis_out.valid
     prep_auth_data_encrypt.axis_in = prep_axis_in_s
     append_auth_tag.axis_in = append_axis_in_s
     chacha20_encrypt.axis_out_ready = chacha_axis_out_ready_s

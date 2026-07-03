@@ -146,10 +146,11 @@ def decrypt_tb() -> axis128_t:
 
     # Testbench is ready to receive plaintext
     chacha20poly1305_decrypt_ports.axis_out_ready = 1
-    out_s: axis128_t = chacha20poly1305_decrypt_ports.axis_out
-    if out_s.valid:
+    if chacha20poly1305_decrypt_ports.axis_out.valid:
         # Print plaintext as it flows out of dut
-        out_chunk: uint128_t = array_to_uint_be(out_s.data.frag.data)
+        out_chunk: uint128_t = array_to_uint_be(
+            chacha20poly1305_decrypt_ports.axis_out.data.frag.data
+        )
         sim_print(
             f"Decrypt: Output Plaintext next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}"
         )
@@ -157,19 +158,19 @@ def decrypt_tb() -> axis128_t:
         # Compare to expected plaintext and shift expected array
         for i in range(16):
             if plaintext_remaining_out > i:
-                if out_s.data.frag.data[i] != plaintext_out_expected[i]:
+                if chacha20poly1305_decrypt_ports.axis_out.data.frag.data[i] != plaintext_out_expected[i]:
                     plaintext_pos: uint32_t = (
                         plaintext_out_size - plaintext_remaining_out
                     ) + i
                     sim_print(
-                        f"ERROR: Decrypt: Plaintext mismatch at byte[{plaintext_pos}]. expected {hex(plaintext_out_expected[i])} got {hex(out_s.data.frag.data[i])}"
+                        f"ERROR: Decrypt: Plaintext mismatch at byte[{plaintext_pos}]. expected {hex(plaintext_out_expected[i])} got {hex(chacha20poly1305_decrypt_ports.axis_out.data.frag.data[i])}"
                     )
 
         # Too much data?
         if plaintext_remaining_out == 0:
             sim_print("ERROR: Decrypt: Extra Plaintext output!")
         # Handle stream end
-        if out_s.data.eod[0]:
+        if chacha20poly1305_decrypt_ports.axis_out.data.eod[0]:
             if plaintext_remaining_out > 16:
                 sim_print("ERROR: Decrypt: Early end to Plaintext output!")
             else:
