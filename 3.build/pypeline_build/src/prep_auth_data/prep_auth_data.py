@@ -9,7 +9,7 @@ prep_auth_data_decrypt.py, the C prep_auth_data.c equivalents).
 """
 import pypeline_env  # noqa: F401
 
-from enum import IntEnum
+from enum import auto
 
 from pypeline import (
     NamedTuple,
@@ -31,11 +31,11 @@ from aead_types import (
 
 
 @enum
-class prep_auth_data_state_t(IntEnum):
-    IDLE = 0
-    AAD_STATE = 1
-    CIPHERTEXT = 2
-    LENGTHS = 3
+class prep_auth_data_state_t:
+    IDLE = auto()
+    AAD_STATE = auto()
+    CIPHERTEXT = auto()
+    LENGTHS = auto()
 
 
 @struct

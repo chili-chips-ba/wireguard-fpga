@@ -13,7 +13,7 @@ against).
 """
 import pypeline_env  # noqa: F401
 
-from enum import IntEnum
+from enum import auto
 
 from pypeline import (
     NamedTuple,
@@ -233,13 +233,13 @@ def poly1305_mac_loop_body(inputs: poly1305_mac_loop_body_in_t) -> u320_t:
 
 # FSM that uses compute iteratively to compute poly1305 MAC
 @enum
-class poly1305_state_t(IntEnum):
+class poly1305_state_t:
     # TODO can combine states for lower per block latency
-    IDLE = 0  # Wait for poly1305_key
-    START_ITER = 1  # Put data into compute
-    FINISH_ITER = 2  # Wait for data out of compute
-    A_PLUS_S = 3  # Add s to a final step before output
-    OUTPUT_AUTH_TAG = 4  # Output the auth tag
+    IDLE = auto()  # Wait for poly1305_key
+    START_ITER = auto()  # Put data into compute
+    FINISH_ITER = auto()  # Wait for data out of compute
+    A_PLUS_S = auto()  # Add s to a final step before output
+    OUTPUT_AUTH_TAG = auto()  # Output the auth tag
 
 
 @struct

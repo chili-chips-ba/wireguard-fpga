@@ -6,7 +6,7 @@ Wire names elaborate as append_auth_tag_<wire> to match the C globals.
 """
 import pypeline_env  # noqa: F401
 
-from enum import IntEnum
+from enum import auto
 
 from pypeline import (
     MAIN,
@@ -37,9 +37,9 @@ axis_out_ready: Wire[uint1_t]  # input
 
 
 @enum
-class append_auth_tag_state_t(IntEnum):
-    CIPHERTEXT = 0
-    AUTH_TAG = 1
+class append_auth_tag_state_t:
+    CIPHERTEXT = auto()
+    AUTH_TAG = auto()
 
 
 @MAIN
