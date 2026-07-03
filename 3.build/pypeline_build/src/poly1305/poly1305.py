@@ -270,8 +270,7 @@ def poly1305_mac_fsm(
     o.auth_tag.data = 0
     o.auth_tag.valid = 0
     # Default nothing into compute
-    compute_null_inputs: poly1305_mac_loop_body_in_t = poly1305_mac_loop_body_in_null()
-    o.to_compute = compute_null_inputs
+    o.to_compute = poly1305_mac_loop_body_in_null()
     o.to_compute_valid = 0
 
     # The FSM
