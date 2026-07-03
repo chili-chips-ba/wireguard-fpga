@@ -62,14 +62,7 @@ def prep_auth_data_fsm(
     # Default not ready for incoming data
     o.ready_for_axis_in = 0
     # Default not outputting data
-    # NOTE: kept via intermediate var rather than `o.axis = axis128_null()` directly --
-    # the direct form now elaborates without error (PipelineC compound-init-helper fix)
-    # but silently miscompiles here (wrong ciphertext bytes in sim), likely because this
-    # struct is later both wholesale-reassigned (`o.axis = axis_in`) in one branch and
-    # partially/conditionally overwritten per-element in others. Revert to the direct
-    # form once that PipelineC compiler bug is fixed.
-    axis128_zero: axis128_t = axis128_null()
-    o.axis = axis128_zero
+    o.axis = axis128_null()
 
     if state == prep_auth_data_state_t.IDLE:
         # Wait for incoming ciphertext
