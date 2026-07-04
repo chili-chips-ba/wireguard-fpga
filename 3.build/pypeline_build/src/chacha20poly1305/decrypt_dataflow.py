@@ -15,7 +15,7 @@ import poly1305_verify_decrypt
 import strip_auth_tag
 import wait_to_verify
 
-from aead_types import axis128_t
+from aead_types import axis128_2broadcast
 
 
 @MAIN(80.0)
@@ -38,29 +38,13 @@ def decrypt_dataflow():
     # The stripped ciphertext stream must be forked to two consumers:
     # a) prep_auth_data (for MAC calculation)
     # b) chacha20 (for actual decryption)
-
-    # Default: no data passing
-    prep_axis_in_s: axis128_t = strip_auth_tag.axis_out
-    prep_axis_in_s.valid = 0
-    chacha_axis_in_s: axis128_t = strip_auth_tag.axis_out
-    chacha_axis_in_s.valid = 0
-
-    # The source (strip_auth_tag_axis_out) is ready only if both sinks are ready
-    strip_axis_out_ready_s: uint1_t = (
-        prep_auth_data_decrypt.axis_in_ready & chacha20_decrypt.axis_in_ready
-    )
-    # If a sink is not ready its allowed to see the pending valid=1
-    # since no transfer happens anyway
-    if strip_auth_tag.axis_out.valid:
-        if strip_axis_out_ready_s | ~prep_auth_data_decrypt.axis_in_ready:
-            prep_axis_in_s.valid = 1
-        if strip_axis_out_ready_s | ~chacha20_decrypt.axis_in_ready:
-            chacha_axis_in_s.valid = 1
-
-    # Connect data streams
-    prep_auth_data_decrypt.axis_in = prep_axis_in_s
-    chacha20_decrypt.axis_in = chacha_axis_in_s
-    strip_auth_tag.axis_out_ready = strip_axis_out_ready_s
+    sink_ready_s: uint1_t[2]
+    sink_ready_s[0] = prep_auth_data_decrypt.axis_in_ready
+    sink_ready_s[1] = chacha20_decrypt.axis_in_ready
+    bcast = axis128_2broadcast(strip_auth_tag.axis_out, sink_ready_s)
+    prep_auth_data_decrypt.axis_in = bcast.axis_out[0]
+    chacha20_decrypt.axis_in = bcast.axis_out[1]
+    strip_auth_tag.axis_out_ready = bcast.axis_in_ready
 
     # Prepare auth data and calculate MAC
     # prep_auth_data CSR inputs
