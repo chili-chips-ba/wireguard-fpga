@@ -29,6 +29,7 @@ from pypeline import (
     concat,
     array_to_uint_le,
     uint_to_array_le,
+    make_type_from_bytes,
 )
 from stream.stream import make_stream_t
 
@@ -82,22 +83,8 @@ def clamp(r: u8_16_t) -> u8_16_t:
     return o
 
 
-# Bytes to u320_t, little-endian per 64b limb (C bytes_to_u320_t built-in)
-@hw_func
-def bytes_to_uint320(src: uint8_t[U320_NBYTES]) -> u320_t:
-    rv: u320_t
-    for i in range(U320_NLIMBS):
-        rv.limbs[i] = concat(
-            src[i * 8 + 7],
-            src[i * 8 + 6],
-            src[i * 8 + 5],
-            src[i * 8 + 4],
-            src[i * 8 + 3],
-            src[i * 8 + 2],
-            src[i * 8 + 1],
-            src[i * 8 + 0],
-        )
-    return rv
+# Bytes to u320_t, little-endian per 64b limb.
+bytes_to_uint320 = make_type_from_bytes(u320_t)
 
 
 # 16-byte (zero-extended) variant used for the r/s key halves.

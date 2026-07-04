@@ -20,9 +20,10 @@ from pypeline import (
     uint1_t,
     uint8_t,
     uint32_t,
-    concat,
     rotl,
     array_to_uint_le,
+    make_type_to_bytes,
+    make_type_from_bytes,
 )
 from stream.stream import make_stream_t
 from axi.axis import make_dwidth_widen, make_dwidth_narrow
@@ -48,6 +49,13 @@ from aead_types import (
 @struct
 class chacha20_state(NamedTuple):
     state: uint32_t[CHACHA20_STATE_NWORDS]
+
+
+# Generic byte <-> word-array conversions (little-endian), replacing what used
+# to be hand-written concat()/bit-slicing loops per use site.
+chacha20_state_to_bytes = make_type_to_bytes(chacha20_state)  # keystream serialization
+_key_words_from_bytes = make_type_from_bytes(uint32_t[CHACHA20_KEY_SIZE // 4])
+_nonce_words_from_bytes = make_type_from_bytes(uint32_t[CHACHA20_NONCE_SIZE // 4])
 
 
 # The ChaCha20 quarter round function.
@@ -143,22 +151,17 @@ def chacha20_init(
     state.state[3] = 0x6B206574
 
     # Key (bytes packed little-endian into words)
+    key_words = _key_words_from_bytes(key)
     for i in range(CHACHA20_KEY_SIZE // 4):
-        state.state[4 + i] = concat(
-            key[(i * 4) + 3], key[(i * 4) + 2], key[(i * 4) + 1], key[(i * 4) + 0]
-        )
+        state.state[4 + i] = key_words[i]
 
     # Counter
     state.state[12] = counter
 
     # Nonce
+    nonce_words = _nonce_words_from_bytes(nonce)
     for i in range(CHACHA20_NONCE_SIZE // 4):
-        state.state[13 + i] = concat(
-            nonce[(i * 4) + 3],
-            nonce[(i * 4) + 2],
-            nonce[(i * 4) + 1],
-            nonce[(i * 4) + 0],
-        )
+        state.state[13 + i] = nonce_words[i]
 
     return state
 
@@ -199,17 +202,12 @@ def chacha20_loop_body(inputs: chacha20_loop_body_in_t) -> axis512_frag_t:
     block = chacha20_block(state)
 
     # Output passes through tkeep/tlast; data bytes are input XOR keystream.
-    # Keystream block state words serialize to bytes little-endian per word
-    # (C chacha20_state_to_bytes).
+    # Keystream block state words serialize to bytes little-endian per word.
+    keystream: uint8_t[CHACHA20_BLOCK_SIZE] = chacha20_state_to_bytes(block)
     axis_out: axis512_frag_t = inputs.axis_in
     # TODO partial in data, i.e. partial tkeep
-    for i in range(CHACHA20_STATE_NWORDS):
-        word: uint32_t = block.state[i]
-        for j in range(4):
-            keystream_byte: uint8_t = word[j * 8 + 7 : j * 8]
-            axis_out.frag.data[i * 4 + j] = (
-                inputs.axis_in.frag.data[i * 4 + j] ^ keystream_byte
-            )
+    for i in range(CHACHA20_BLOCK_SIZE):
+        axis_out.frag.data[i] = inputs.axis_in.frag.data[i] ^ keystream[i]
     return axis_out
 
 
