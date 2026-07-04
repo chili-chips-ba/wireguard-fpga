@@ -12,7 +12,7 @@ from pypeline import uint1_t, uint8_t, make_uint_t
 from kept_data_bus import make_kept_data_bus_t
 from ndarray import make_ndarray_fragment_t
 from stream.stream import make_stream_t
-from axi.axis import make_keep_count
+from axi.axis import make_keep_count, make_axis_broadcast_interlock
 
 # ChaCha20 sizes
 CHACHA20_STATE_NWORDS = 16
@@ -55,6 +55,10 @@ uint1_stream_t = make_stream_t(uint1_t)
 
 # C axis128_keep_count
 axis128_keep_count = make_keep_count(axis128_bus_t, 16)
+
+# Combinational 2-way broadcast/fork of an axis128_t stream (shared by the
+# encrypt/decrypt dataflows' ciphertext-stream forks)
+axis128_2broadcast, axis128_2broadcast_t = make_axis_broadcast_interlock(axis128_t, 2)
 
 
 # Zero-valued compound-init helpers (C `... = {0}` initializers).

@@ -13,7 +13,7 @@ import prep_auth_data_encrypt
 import poly1305_mac_encrypt
 import append_auth_tag
 
-from aead_types import axis128_t
+from aead_types import axis128_2broadcast
 
 
 @MAIN(80.0)
@@ -31,24 +31,13 @@ def encrypt_dataflow():
     # Connect chacha20 ciphertext output to both
     #  prep_auth_data input
     #  append auth tag input
-    # Fork the stream by combining valids and readys
-    #  default no data passing, invalidate passthrough
-    prep_axis_in_s: axis128_t = chacha20_encrypt.axis_out
-    prep_axis_in_s.valid = 0
-    append_axis_in_s: axis128_t = chacha20_encrypt.axis_out
-    append_axis_in_s.valid = 0
-    #  allow pass through if both sinks are ready
-    #  or if sink isnt ready (no data passing anyway)
-    chacha_axis_out_ready_s: uint1_t = (
-        prep_auth_data_encrypt.axis_in_ready & append_auth_tag.axis_in_ready
-    )
-    if chacha_axis_out_ready_s | ~prep_auth_data_encrypt.axis_in_ready:
-        prep_axis_in_s.valid = chacha20_encrypt.axis_out.valid
-    if chacha_axis_out_ready_s | ~append_auth_tag.axis_in_ready:
-        append_axis_in_s.valid = chacha20_encrypt.axis_out.valid
-    prep_auth_data_encrypt.axis_in = prep_axis_in_s
-    append_auth_tag.axis_in = append_axis_in_s
-    chacha20_encrypt.axis_out_ready = chacha_axis_out_ready_s
+    sink_ready_s: uint1_t[2]
+    sink_ready_s[0] = prep_auth_data_encrypt.axis_in_ready
+    sink_ready_s[1] = append_auth_tag.axis_in_ready
+    bcast = axis128_2broadcast(chacha20_encrypt.axis_out, sink_ready_s)
+    prep_auth_data_encrypt.axis_in = bcast.axis_out[0]
+    append_auth_tag.axis_in = bcast.axis_out[1]
+    chacha20_encrypt.axis_out_ready = bcast.axis_in_ready
 
     # Prep auth data CSR inputs
     prep_auth_data_encrypt.aad = chacha20poly1305_encrypt_ports.aad
