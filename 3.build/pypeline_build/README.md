@@ -86,6 +86,10 @@ Conventions vs the C sources:
   are not followed for hardware elaboration).
 - MAINs compute into locals and drive each global wire exactly once at the end
   (a function may not both read and write the same wire).
-
-`PYPELINE_ISSUES.md` logs the compiler bug found during this port (fixed in
-PipelineC) plus the language paper cuts and their idiomatic workarounds.
+- Cross-module wire references (`module.wire`) support nested field/array
+  access (`module.wire.field`, `other_module.wire.arr[i]`) directly, at
+  arbitrary depth. An earlier version of this port avoided that syntax (a
+  compiler limitation at the time restricted cross-module access to whole
+  wires only), staging a local copy of the wire first purely to read/write
+  its fields; that limitation is fixed upstream and the local-copy workaround
+  has been removed.
