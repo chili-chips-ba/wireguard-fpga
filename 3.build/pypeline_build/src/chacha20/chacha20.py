@@ -76,8 +76,6 @@ def make_quarter_round(a, b, c, d):
 
         return o
 
-    quarter_round.__name__ = f"quarter_round_{a}_{b}_{c}_{d}"
-    quarter_round.__qualname__ = quarter_round.__name__
     return quarter_round
 
 
