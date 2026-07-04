@@ -15,18 +15,7 @@ from pypeline import PART
 
 PART("xc7a200tffg1156-2")  # Artix 7 200T
 
-# All hardware modules must be imported by this top file
-# (sub-module imports are not followed for hardware elaboration)
-import aead_types  # noqa: F401
-import chacha20  # noqa: F401
-import chacha20_decrypt  # noqa: F401
-import prep_auth_data  # noqa: F401
-import prep_auth_data_decrypt  # noqa: F401
-import poly1305  # noqa: F401
-import poly1305_mac_decrypt  # noqa: F401
-import poly1305_verify_decrypt  # noqa: F401
-import strip_auth_tag  # noqa: F401
-import wait_to_verify  # noqa: F401
-import chacha20poly1305_decrypt_ports  # noqa: F401
+# Hardware modules are discovered transitively through each other's own
+# imports; only the modules not otherwise reachable need listing here.
 import chacha20poly1305_decrypt_hw_io  # noqa: F401
 import decrypt_dataflow  # noqa: F401
