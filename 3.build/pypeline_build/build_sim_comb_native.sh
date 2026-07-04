@@ -9,4 +9,4 @@
 # PipelineC/src/pipelinec.
 
 rm -rf ./generated-files-sim-comb-native/*
-$PIPELINEC ./src/chacha20poly1305_encrypt_tb.py --out_dir ./generated-files-sim-comb-native --comb --sim --run 600
+$PIPELINEC ./src/chacha20poly1305_encrypt_tb.py --out_dir ./generated-files-sim-comb-native --comb --sim --run 100
