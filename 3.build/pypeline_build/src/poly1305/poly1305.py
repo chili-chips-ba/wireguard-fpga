@@ -1,10 +1,10 @@
 # pyright: reportInvalidTypeForm=none
 """Poly1305 MAC (RFC 8439) 320-bit limb math + the FSM that iterates the
-per-block compute.
+per-block compute, plus poly1305_mac_instance (FSM + private multi-cycle-path
+compute combined) which each dataflow core instantiates directly, once per
+direction.
 
-Pypeline port of ../pipelinec_build/src/poly1305/poly1305.h (the per-instance
-wire declarations + MCP compute instance live in poly1305_mac_encrypt.py /
-poly1305_mac_decrypt.py, the C poly1305_mac.c equivalents).
+Pypeline port of ../pipelinec_build/src/poly1305/poly1305.h and poly1305_mac.c.
 
 The limb math is a bit-exact translation of the C: including the schoolbook
 multiply's truncating 64x64 products (only addition carries propagate between
@@ -21,6 +21,7 @@ from pypeline import (
     enum,
     hw_func,
     Reg,
+    Feedback,
     uint1_t,
     uint8_t,
     uint32_t,
@@ -32,6 +33,7 @@ from pypeline import (
     make_type_from_bytes,
 )
 from stream.stream import make_stream_t
+from multi_cycle_path import make_valid_ready_mcp
 
 from aead_types import (
     POLY1305_BLOCK_SIZE,
@@ -327,4 +329,53 @@ def poly1305_mac_fsm(
         # And then wait for the output once input into compute happens
         if o.to_compute_valid & o.ready_for_data_in:
             state = poly1305_state_t.FINISH_ITER
+    return o
+
+
+@struct
+class poly1305_mac_stream_out_t(NamedTuple):
+    key_ready: uint1_t
+    data_in_ready: uint1_t
+    auth_tag: poly1305_auth_tag_stream_t
+
+
+# One full poly1305_mac instance: poly1305_mac_fsm plus its own private
+# poly1305_mac_loop_body multi-cycle-path compute, combined into a single
+# callable (replaces what used to be two MAINs -- an FSM and a compute
+# instance -- joined by global wires). Meant to be called once per direction
+# (encrypt, decrypt) from that direction's dataflow core; each call site gets
+# its own independent compute + FSM hardware state.
+compute_mcp, _compute_mcp_t = make_valid_ready_mcp(poly1305_mac_loop_body, 4)
+
+
+@hw_func
+def poly1305_mac_instance(
+    key: poly1305_key_stream_t,
+    data_in: axis128_t,
+    auth_tag_ready: uint1_t,
+) -> poly1305_mac_stream_out_t:
+    o: poly1305_mac_stream_out_t
+
+    compute_in_ready: Feedback[uint1_t]
+    compute_out: Feedback[u320_stream_t]
+
+    fsm_out = poly1305_mac_fsm(
+        key,
+        data_in,
+        auth_tag_ready,
+        compute_out.data,
+        compute_out.valid,
+        compute_in_ready,
+    )
+    o.key_ready = fsm_out.ready_for_key
+    o.data_in_ready = fsm_out.ready_for_data_in
+    o.auth_tag = fsm_out.auth_tag
+
+    compute_in_s: poly1305_mac_loop_body_stream_t
+    compute_in_s.data = fsm_out.to_compute
+    compute_in_s.valid = fsm_out.to_compute_valid
+    compute_result = compute_mcp(compute_in_s, 1)
+    compute_out = compute_result.stream_out
+    compute_in_ready = compute_result.ready_for_stream_in
+
     return o

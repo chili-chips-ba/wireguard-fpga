@@ -1,11 +1,15 @@
 # pyright: reportInvalidTypeForm=none
 """Shared ChaCha20 compute pipeline for the encrypt+decrypt shared design.
 
-Replaces the encrypt vs decrypt specific pipeline instances with one shared
-pipeline just named chacha20_pipeline. The pipeline takes the same input and
-output as before but wrapped with an ID for is-encrypt vs decrypt, plus
-round-robin muxing logic at the pipeline input and ID-based demuxing at the
-output.
+Combines what used to be three separate MAINs (a pipeline instance, a
+round-robin mux/demux arbiter FSM, and two per-direction FSM wrapper MAINs)
+into: one merged MAIN owning the arbitrated pipeline (a genuinely shared
+resource crossing the otherwise-independent encrypt and decrypt dataflow
+graphs, so it stays a separate always-running process rather than being
+inlined into either), plus two plain per-direction functions matching
+chacha20's ordinary chacha20_stream_out_t interface so they can be passed to
+make_encrypt_dataflow_core/make_decrypt_dataflow_core exactly like
+chacha20.chacha20_instance is for the standalone (non-shared) builds.
 
 Pypeline port of ../pipelinec_build/src/chacha20/chacha20_pipeline_shared.c
 (wire names elaborate as chacha20_pipeline_shared_<wire>).
@@ -19,7 +23,9 @@ from pypeline import (
     hw_func,
     Wire,
     Reg,
+    Feedback,
     uint1_t,
+    uint8_t,
 )
 from stream.stream import make_stream_t
 from stream.stream_pipeline import make_stream_pipeline
@@ -29,13 +35,14 @@ from chacha20 import (
     chacha20_loop_body_in_t,
     chacha20_loop_body_stream_t,
     chacha20_loop_body_in_null,
-    chacha20_loop_body_stream_null,
 )
 
 from aead_types import (
+    CHACHA20_KEY_SIZE,
+    CHACHA20_NONCE_SIZE,
+    axis128_t,
     axis512_frag_t,
     axis512_t,
-    axis512_frag_null,
     axis512_null,
 )
 
@@ -79,27 +86,13 @@ def chacha_shared_pipeline(
     return outputs
 
 
-# The one shared pipeline instance
-# (C GLOBAL_VALID_READY_PIPELINE_INST(chacha20_pipeline,
-#  chacha_shared_pipeline_out_t, chacha_shared_pipeline,
-#  chacha_shared_pipeline_in_t, 64))
-pipeline_in: Wire[chacha_shared_pipeline_in_stream_t]
-pipeline_in_ready: Wire[uint1_t]
-pipeline_out: Wire[chacha_shared_pipeline_out_stream_t]
-pipeline_out_ready: Wire[uint1_t]
-
-pipeline_func, pipeline_result_t = make_stream_pipeline(chacha_shared_pipeline, 64)
+pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha_shared_pipeline, 64)
 
 
-@MAIN
-def chacha20_pipeline():
-    result = pipeline_func(pipeline_in, pipeline_out_ready)
-    pipeline_out = result.stream_out
-    pipeline_in_ready = result.ready_for_stream_in
-
-
-# Expose global interface that looks like individual pipelines with names
-# including encrypt vs decrypt
+# Externally-exposed interface: looks like individual per-direction pipelines.
+# This is the one deliberately-surviving Wire boundary in the whole refactor
+# -- a genuinely arbitrated resource shared across the otherwise-independent
+# encrypt and decrypt dataflow graphs, not leftover wiring style.
 encrypt_pipeline_in: Wire[chacha20_loop_body_stream_t]
 encrypt_pipeline_in_ready: Wire[uint1_t]
 decrypt_pipeline_in: Wire[chacha20_loop_body_stream_t]
@@ -110,9 +103,15 @@ decrypt_pipeline_out: Wire[axis512_t]
 decrypt_pipeline_out_ready: Wire[uint1_t]
 
 
-# Muxing logic at input and output of pipeline
+# The pipeline instance plus its round-robin input mux / ID-based output
+# demux, combined into one MAIN (used to be two: chacha20_pipeline +
+# chacha20_sharing_mux, joined by pipeline_in/pipeline_in_ready/pipeline_out/
+# pipeline_out_ready global wires).
 @MAIN
-def chacha20_sharing_mux():
+def chacha20_pipeline_shared():
+    pipeline_in_ready: Feedback[uint1_t]
+    pipeline_out: Feedback[chacha_shared_pipeline_out_stream_t]
+
     # Default no data flowing (locals, driven onto wires once at the end)
     pipeline_in_s: chacha_shared_pipeline_in_stream_t = (
         chacha_shared_pipeline_in_stream_null()
@@ -148,9 +147,68 @@ def chacha20_sharing_mux():
             pipeline_out_ready_s = decrypt_pipeline_out_ready
 
     # Drive output wires
-    pipeline_in = pipeline_in_s
-    pipeline_out_ready = pipeline_out_ready_s
     encrypt_pipeline_out = encrypt_pipeline_out_s
     encrypt_pipeline_in_ready = encrypt_pipeline_in_ready_s
     decrypt_pipeline_out = decrypt_pipeline_out_s
     decrypt_pipeline_in_ready = decrypt_pipeline_in_ready_s
+
+    result = pipeline_func(pipeline_in_s, pipeline_out_ready_s)
+    pipeline_out = result.stream_out
+    pipeline_in_ready = result.ready_for_stream_in
+
+
+# Per-direction FSM wrappers: same chacha20.chacha20_fsm as
+# chacha20.chacha20_instance uses, but talking to the shared pipeline's
+# exposed wires above instead of owning a private pipeline. Same external
+# signature/struct (chacha20.chacha20_stream_out_t) as chacha20_instance, so
+# either can be passed to make_encrypt_dataflow_core/make_decrypt_dataflow_core.
+@hw_func
+def chacha20_encrypt_shared(
+    key: uint8_t[CHACHA20_KEY_SIZE],
+    nonce: uint8_t[CHACHA20_NONCE_SIZE],
+    axis_in: axis128_t,
+    poly_key_ready: uint1_t,
+    axis_out_ready: uint1_t,
+) -> chacha20.chacha20_stream_out_t:
+    o: chacha20.chacha20_stream_out_t
+    fsm_out = chacha20.chacha20_fsm(
+        key,
+        nonce,
+        axis_in,
+        poly_key_ready,
+        axis_out_ready,
+        encrypt_pipeline_in_ready,
+        encrypt_pipeline_out,
+    )
+    o.axis_in_ready = fsm_out.ready_for_axis_in
+    o.poly_key = fsm_out.poly_key
+    o.axis_out = fsm_out.axis
+    encrypt_pipeline_in = fsm_out.to_pipeline
+    encrypt_pipeline_out_ready = fsm_out.ready_for_from_pipeline
+    return o
+
+
+@hw_func
+def chacha20_decrypt_shared(
+    key: uint8_t[CHACHA20_KEY_SIZE],
+    nonce: uint8_t[CHACHA20_NONCE_SIZE],
+    axis_in: axis128_t,
+    poly_key_ready: uint1_t,
+    axis_out_ready: uint1_t,
+) -> chacha20.chacha20_stream_out_t:
+    o: chacha20.chacha20_stream_out_t
+    fsm_out = chacha20.chacha20_fsm(
+        key,
+        nonce,
+        axis_in,
+        poly_key_ready,
+        axis_out_ready,
+        decrypt_pipeline_in_ready,
+        decrypt_pipeline_out,
+    )
+    o.axis_in_ready = fsm_out.ready_for_axis_in
+    o.poly_key = fsm_out.poly_key
+    o.axis_out = fsm_out.axis
+    decrypt_pipeline_in = fsm_out.to_pipeline
+    decrypt_pipeline_out_ready = fsm_out.ready_for_from_pipeline
+    return o

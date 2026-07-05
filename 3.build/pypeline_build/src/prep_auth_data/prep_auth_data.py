@@ -3,9 +3,9 @@
 prepare the stream to be authenticated by Poly1305:
 AAD || padding || ciphertext || padding || AAD length || ciphertext length
 
-Pypeline port of ../pipelinec_build/src/prep_auth_data/prep_auth_data.h
-(per-instance wires + MAIN live in prep_auth_data_encrypt.py /
-prep_auth_data_decrypt.py, the C prep_auth_data.c equivalents).
+Pypeline port of ../pipelinec_build/src/prep_auth_data/prep_auth_data.h and
+prep_auth_data.c. prep_auth_data_fsm is instantiated directly, once per
+direction, by each dataflow core.
 """
 import pypeline_env  # noqa: F401
 

@@ -10,8 +10,9 @@ import pypeline_env  # noqa: F401
 from enum import auto
 
 from pypeline import (
-    MAIN,
-    Wire,
+    NamedTuple,
+    struct,
+    hw_func,
     Reg,
     enum,
     uint1_t,
@@ -24,18 +25,6 @@ from aead_types import (
     uint1_stream_null,
 )
 
-# Input auth_tag
-auth_tag: Wire[poly1305_auth_tag_stream_t]  # input
-auth_tag_ready: Wire[uint1_t]  # output
-
-# Input calc_tag
-calc_tag: Wire[poly1305_auth_tag_stream_t]  # input
-calc_tag_ready: Wire[uint1_t]  # output
-
-# Output stream is_verified/tags_match bit
-tags_match: Wire[uint1_stream_t]  # output
-tags_match_ready: Wire[uint1_t]  # input
-
 
 @enum
 class poly1305_verify_state_t:
@@ -45,8 +34,20 @@ class poly1305_verify_state_t:
     OUTPUT_COMPARE_RESULT = auto()  # output the compare value
 
 
-@MAIN
-def poly1305_verify_decrypt():
+@struct
+class poly1305_verify_decrypt_out_t(NamedTuple):
+    auth_tag_ready: uint1_t
+    calc_tag_ready: uint1_t
+    tags_match: uint1_stream_t
+
+
+@hw_func
+def poly1305_verify_decrypt(
+    auth_tag: poly1305_auth_tag_stream_t,
+    calc_tag: poly1305_auth_tag_stream_t,
+    tags_match_ready: uint1_t,
+) -> poly1305_verify_decrypt_out_t:
+    o: poly1305_verify_decrypt_out_t
     # Define static variables
     state: Reg[poly1305_verify_state_t]
 
@@ -57,23 +58,23 @@ def poly1305_verify_decrypt():
     # Reg to hold compare result
     tags_match_reg: Reg[uint1_t]
 
-    auth_tag_ready_s: uint1_t = 0
-    calc_tag_ready_s: uint1_t = 0
-    tags_match_s: uint1_stream_t = uint1_stream_null()
+    o.auth_tag_ready = 0
+    o.calc_tag_ready = 0
+    o.tags_match = uint1_stream_null()
 
     if state == poly1305_verify_state_t.TAKE_AUTH_TAG:
         # Ready to take the input tag
-        auth_tag_ready_s = 1
+        o.auth_tag_ready = 1
 
-        if auth_tag.valid & auth_tag_ready_s:
+        if auth_tag.valid & o.auth_tag_ready:
             # Copy data to the register
             auth_tag_reg = auth_tag.data
             state = poly1305_verify_state_t.TAKE_CALC_TAG
     elif state == poly1305_verify_state_t.TAKE_CALC_TAG:
         # Ready to take the calculated tag
-        calc_tag_ready_s = 1
+        o.calc_tag_ready = 1
 
-        if calc_tag.valid & calc_tag_ready_s:
+        if calc_tag.valid & o.calc_tag_ready:
             calc_tag_reg = calc_tag.data
             state = poly1305_verify_state_t.COMPARE_TAGS
     elif state == poly1305_verify_state_t.COMPARE_TAGS:
@@ -84,15 +85,12 @@ def poly1305_verify_decrypt():
         state = poly1305_verify_state_t.OUTPUT_COMPARE_RESULT
     else:  # state == poly1305_verify_state_t.OUTPUT_COMPARE_RESULT
         # Output result stored in register via local stream
-        tags_match_s.data = tags_match_reg
-        tags_match_s.valid = 1
+        o.tags_match.data = tags_match_reg
+        o.tags_match.valid = 1
 
-        if tags_match_ready & tags_match_s.valid:
+        if tags_match_ready & o.tags_match.valid:
             # Successful output transfer
             # Reset the FSM for the next verification
             state = poly1305_verify_state_t.TAKE_AUTH_TAG
 
-    # Drive output wires
-    auth_tag_ready = auth_tag_ready_s
-    calc_tag_ready = calc_tag_ready_s
-    tags_match = tags_match_s
+    return o
