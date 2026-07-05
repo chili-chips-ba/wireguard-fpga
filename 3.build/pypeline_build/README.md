@@ -21,8 +21,9 @@ checkout).
 ./build_sim_pipe_dec.sh     # Pipelined sim, decrypt TB      -> generated-files-sim-pipe-dec/ (hours!)
 ./build_sim_pipe_shared.sh  # Pipelined sim, shared TB       -> generated-files-sim-pipe-shared/ (hours!)
 ```
-Pass criteria: no `ERROR` lines anywhere in the output, and per side both
-`Test 0 DONE!` and `Test 1 DONE!` prints. The `_pipe` variants run real
+Pass criteria: no `ERROR` lines anywhere in the output, and per side
+`Test 0 DONE!` / `Test 1 DONE!` / `Test 2 DONE!` prints (one per string in
+`tb_common.py`'s `PLAINTEXT_TEST_STRS`). The `_pipe` variants run real
 autopipelining through the synthesis tool first (like the C
 `build_sim_pipe*.sh`), which is what takes hours.
 
@@ -65,12 +66,100 @@ src/
     chacha20poly1305_decrypt_ports.py / chacha20poly1305_decrypt_hw_io.py
     encrypt_dataflow.py / decrypt_dataflow.py            standalone wiring MAINs (80 MHz)
     encrypt_dataflow_shared.py / decrypt_dataflow_shared.py  shared-design duplicates
-    tb_common.py                test vectors (plain Python data)
+    tb_common.py                 test strings + on-the-fly generated expected ciphertext/tag
+    aead_ref_model.py            pure-Python (no pypeline/hardware dependency) reference
+                                  model tb_common.py calls to generate those vectors —
+                                  see "Test Vectors" below
     encrypt_tb.py / decrypt_tb.py   synthesizable testbench MAINs
   chacha20poly1305_encrypt.py / _tb.py                    tops (hw / sim)
   chacha20poly1305_decrypt.py / _tb.py
   chacha20poly1305_encrypt_decrypt_shared.py / _tb.py
 ```
+
+## Test Vectors
+
+`tb_common.py` no longer hardcodes expected ciphertext/tag bytes. It defines
+`KEY`/`NONCE`/`AAD_TEST_STR`/`PLAINTEXT_TEST_STRS` (plain Python data — add or
+remove a string from `PLAINTEXT_TEST_STRS` and everything else, including
+`NUM_PLAINTEXT_TEST_STRS` and both testbenches' array sizes/loop bounds,
+follows automatically) and calls `aead_ref_model.generate_encrypt_vector(...)`
+per string to compute the expected ciphertext+tag at elaboration time.
+
+`aead_ref_model.py` is a standalone reference model — it does not import
+`pypeline`/`chacha20.py`/`poly1305.py` or call into the hardware design at
+all, so the DUT is never used to validate itself. It uses the `cryptography`
+package for standard ChaCha20, plus a from-scratch transcription of this
+design's own Poly1305 limb math (see below for why that math itself is
+non-standard). It deliberately reproduces the *current* hardware's behavior,
+including the deviation from RFC 8439 described next — not the spec-correct
+behavior.
+
+### Known issue: ciphertext length is rounded up, not exact (framing bug)
+
+`encrypt_tb.py`'s input-streaming loop marks all 16 AXI-stream lanes "kept"
+on every beat, even the final partial one, only zero-filling the unused
+`data` bytes — it never clears `keep`. `chacha20.py`'s `chacha20_loop_body`
+XORs the full 64-byte block regardless of `keep` (there's a
+`# TODO partial in data, i.e. partial tkeep` marking this unfinished), and
+`prep_auth_data.py`'s length accumulator sums `axis128_keep_count(...)`,
+which is therefore always the *padded* count. Net effect: ciphertext output
+is `ceil(len(plaintext)/16)*16` bytes, not `len(plaintext)`, with the extra
+tail bytes being real ChaCha20 keystream (XOR of zero padding). AAD is
+unaffected — it's correctly zero-padded to 16 bytes for the MAC only, with
+the true `aad_len` in the length field. `aead_ref_model.py` reproduces this
+rounding faithfully so today's vectors keep matching; fixing `chacha20.py` /
+`prep_auth_data.py` to respect `keep` properly should be paired with
+simplifying `generate_encrypt_vector()`'s framing to match (drop the
+round-up, use the true length in the Poly1305 length field).
+
+### Known issue: Poly1305's 320-bit multiply is not RFC 8439-correct (a real crypto bug, not just a test-vector quirk)
+
+`poly1305.py`'s `uint320_mul` (ported line-for-line from
+`../pipelinec_build/src/poly1305/poly1305.h`, so **this bug is in the
+original C too, not something introduced by the pypeline port**) computes
+each 64×64-bit limb-pair product and keeps only its low 64 bits — the high
+64 bits of every partial product are silently discarded, with just the small
+addition-overflow carry propagating to the next limb:
+
+```python
+product: uint64_t = a.limbs[i] * b.limbs[j]   # truncated to 64 bits!
+...
+temp.limbs[i + j] = low                        # high word of the product is lost
+```
+
+A correct 320-bit (or any sufficiently wide) schoolbook multiply must carry
+the *full* 128-bit product of each 64×64-bit limb pair into position
+`i+j` (low half) **and** `i+j+1` (high half). Dropping the high half outright
+is not a rounding/precision tradeoff — it silently produces a different,
+incorrect large-integer result whenever any single limb×limb product
+exceeds 64 bits, which happens routinely once the Poly1305 accumulator grows
+across more than a couple of blocks (confirmed while building
+`aead_ref_model.py`: a straight, RFC-8439-correct big-integer Poly1305
+implementation, validated against the official RFC 8439 §2.5.2/§2.8.2 test
+vectors, does **not** reproduce this design's tags at all).
+
+Net effect: **the Poly1305 tag this hardware computes is not the standard,
+cryptographically-specified Poly1305 MAC** — it's a different (and weaker/
+unvalidated) computation that happens to be internally self-consistent
+between this design's own encrypt and decrypt paths, but would not
+interoperate with any spec-compliant ChaCha20-Poly1305 peer, and has no
+external security analysis behind it. `aead_ref_model.py`'s `uint320_mul`
+intentionally mirrors this exact truncation (with one subtlety already fixed
+there: `uint320_mod_prime`'s `mul5.limbs[0] = (high_bits >> 2) * 5` step can
+itself overflow 64 bits and must be masked mod 2⁶⁴ to match — C's `uint64_t`
+does this wrapping implicitly, so it wasn't obvious from reading the C alone)
+purely so today's test vectors keep matching; it is not an endorsement of the
+math being correct.
+
+**To fix:** `uint320_mul` needs to compute and propagate the full 128-bit
+product per limb pair (e.g. split each `a.limbs[i] * b.limbs[j]` into
+high/low 64-bit halves and add the high half into `temp.limbs[i+j+1]`, with
+carry propagation extended accordingly), in both
+`../pipelinec_build/src/poly1305/poly1305.h` and this pypeline
+`poly1305.py`. After that fix, `aead_ref_model.py`'s `uint320_mul` should be
+simplified to a straightforward correct multiply (or replaced with Python's
+native arbitrary-precision integers) to match, and the hardcoded/generated
+test vectors will change since the tags will differ from today's.
 
 Conventions vs the C sources:
 
