@@ -1,7 +1,12 @@
 """Shared test vectors for the encrypt/decrypt testbenches (plain Python data,
-no hardware). Values copied from ../pipelinec_build/src/chacha20poly1305/
-{encrypt_tb.c,decrypt_tb.c} (originally from the software main.c demo).
+no hardware). KEY/NONCE/AAD/plaintext strings match
+../pipelinec_build/src/chacha20poly1305/{encrypt_tb.c,decrypt_tb.c}; the
+expected ciphertext+tag for each plaintext is generated on the fly by
+aead_ref_model.py instead of being hardcoded, so adding/removing a test
+string is the only edit ever needed here.
 """
+
+from aead_ref_model import generate_encrypt_vector
 
 # Test vectors
 KEY = list(range(0x80, 0xA0))  # 0x80, 0x81, ... 0x9f
@@ -13,58 +18,36 @@ AAD_MAX_LEN = 32
 AAD_LEN = len(AAD_TEST_STR)  # 29
 AAD = list(AAD_TEST_STR.encode()) + [0] * (AAD_MAX_LEN - AAD_LEN)
 
-NUM_PLAINTEXT_TEST_STRS = 2
 PLAINTEXT_TEST_STR_MAX_SIZE = 128
 PLAINTEXT_TEST_STRS = [
     "Hello CHILIChips - Wireguard team, let's test this aead!",
     "PipelineC is the best HDL around :) Let's go CHILIChips Wireguard team!",
+    "Thanks Claude for helping CHILIChips Wireguard + Pypeline!",
 ]
-PLAINTEXT_LENS = [len(s) for s in PLAINTEXT_TEST_STRS]  # 57, 72
+assert all(len(s) <= PLAINTEXT_TEST_STR_MAX_SIZE for s in PLAINTEXT_TEST_STRS)
+NUM_PLAINTEXT_TEST_STRS = len(PLAINTEXT_TEST_STRS)
+PLAINTEXT_LENS = [len(s) for s in PLAINTEXT_TEST_STRS]  # 56, 71, 58
 PLAINTEXTS = [
     list(s.encode()) + [0] * (PLAINTEXT_TEST_STR_MAX_SIZE - len(s))
     for s in PLAINTEXT_TEST_STRS
 ]
 
-# Expected ciphertext and auth tag output from running software main.c demo
+# Expected ciphertext and auth tag output, generated on the fly (see
+# aead_ref_model.py) to match the current chacha20poly1305 hardware's
+# behavior -- which pads the final AXI-stream beat with zeros but marks it
+# fully "kept", so ciphertext length is rounded up to the next 16-byte
+# boundary rather than exactly len(plaintext) (a deviation from RFC 8439 to
+# be fixed in a future task).
 POLY1305_AUTH_TAG_SIZE = 16
 CIPHERTEXT_OUT_MAX_SIZE = PLAINTEXT_TEST_STR_MAX_SIZE + POLY1305_AUTH_TAG_SIZE
 
-_EXPECTED_CIPHERTEXT0 = [
-    # Ciphertext:
-    0xD7, 0x1E, 0x85, 0x31, 0x6E, 0xDD, 0x03, 0xF2,
-    0x5C, 0xAE, 0xC6, 0xB8, 0x5E, 0xE8, 0x7A, 0xDD,
-    0xE1, 0xED, 0xA8, 0x68, 0x60, 0x73, 0x0B, 0xB9,
-    0xA8, 0xEB, 0xA2, 0xE3, 0x75, 0xF6, 0x66, 0xC4,
-    0x23, 0xB2, 0xEB, 0x54, 0xC9, 0xFA, 0x79, 0x58,
-    0x98, 0xAE, 0xD7, 0x7C, 0x8E, 0xFB, 0x26, 0x80,
-    0x1C, 0x77, 0x92, 0x0F, 0xDB, 0x08, 0x09, 0x6E,
-    0x60, 0xA4, 0x85, 0xCF, 0x11, 0xB8, 0x1B, 0x59,
-    # Auth Tag:
-    0x5D, 0xA8, 0x7D, 0x6A, 0x2D, 0x03, 0xC9, 0xBA,
-    0xDF, 0x5C, 0xB9, 0x47, 0x74, 0x42, 0x12, 0x3F,
+_AAD_BYTES = AAD_TEST_STR.encode()
+_GENERATED = [
+    generate_encrypt_vector(bytes(KEY), bytes(NONCE), _AAD_BYTES, s.encode())
+    for s in PLAINTEXT_TEST_STRS
 ]
-CIPHERTEXT0_SIZE = 64 + POLY1305_AUTH_TAG_SIZE  # 80
-
-_EXPECTED_CIPHERTEXT1 = [
-    # Ciphertext:
-    0xCF, 0x12, 0x99, 0x38, 0x6D, 0x94, 0x2E, 0xDF,
-    0x56, 0xC2, 0xE6, 0x88, 0x16, 0xF5, 0x62, 0xCB,
-    0xE1, 0xA2, 0xED, 0x4C, 0x7D, 0x21, 0x26, 0x9A,
-    0x91, 0xAA, 0xB1, 0xF5, 0x3A, 0xF7, 0x6D, 0xC1,
-    0x6E, 0xA4, 0xE2, 0x18, 0xE0, 0xEB, 0x2A, 0x0C,
-    0xCB, 0xFA, 0xD5, 0x60, 0xDA, 0x98, 0x1A, 0xA1,
-    0x39, 0x4D, 0xF1, 0x06, 0xD7, 0x19, 0x1E, 0x6F,
-    0x37, 0xCD, 0xF7, 0xAA, 0x76, 0xCD, 0x7A, 0x2B,
-    0x98, 0x91, 0xB0, 0x3A, 0x23, 0x74, 0xCF, 0xAC,
-    0xEC, 0x6A, 0xDE, 0xC3, 0x4E, 0x66, 0x69, 0x78,
-    # Auth Tag:
-    0x07, 0xC7, 0xE3, 0x1F, 0x0F, 0xEB, 0x4B, 0x61,
-    0xEA, 0x2D, 0xD2, 0xA4, 0x59, 0x7C, 0xAE, 0xE9,
-]
-CIPHERTEXT1_SIZE = 80 + POLY1305_AUTH_TAG_SIZE  # 96
-
 EXPECTED_CIPHERTEXTS = [
-    _EXPECTED_CIPHERTEXT0 + [0] * (CIPHERTEXT_OUT_MAX_SIZE - len(_EXPECTED_CIPHERTEXT0)),
-    _EXPECTED_CIPHERTEXT1 + [0] * (CIPHERTEXT_OUT_MAX_SIZE - len(_EXPECTED_CIPHERTEXT1)),
+    list(ct) + [0] * (CIPHERTEXT_OUT_MAX_SIZE - ct_len)
+    for ct, ct_len in _GENERATED
 ]
-CIPHERTEXT_LENS = [CIPHERTEXT0_SIZE, CIPHERTEXT1_SIZE]
+CIPHERTEXT_LENS = [ct_len for _, ct_len in _GENERATED]
