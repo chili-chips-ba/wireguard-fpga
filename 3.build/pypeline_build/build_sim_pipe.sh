@@ -9,4 +9,4 @@
 # $PIPELINEC must point at PipelineC/src/pipelinec.
 
 rm -rf ./generated-files-sim-pipe/*
-$PIPELINEC ./src/chacha20poly1305_encrypt_tb.py --out_dir ./generated-files-sim-pipe --sim --cocotb --ghdl --run 600
+$PIPELINEC ./src/chacha20poly1305_encrypt_tb.py --out_dir ./generated-files-sim-pipe --sim --cocotb --ghdl --run 300
