@@ -8,11 +8,9 @@ Wire names elaborate as strip_auth_tag_<wire> to match the C globals.
 import pypeline_env  # noqa: F401
 
 from pypeline import (
-    MAIN,
     NamedTuple,
     struct,
     hw_func,
-    Wire,
     Reg,
     Feedback,
     uint1_t,
@@ -25,16 +23,6 @@ from aead_types import (
     poly1305_auth_tag_stream_t,
     poly1305_auth_tag_stream_null,
 )
-
-# Input stream of ciphertext followed by appended auth tag
-axis_in: Wire[axis128_t]  # input
-axis_in_ready: Wire[uint1_t]  # output
-# Output stream of ciphertext
-axis_out: Wire[axis128_t]  # output
-axis_out_ready: Wire[uint1_t]  # input
-# Output auth tag output
-auth_tag_out: Wire[poly1305_auth_tag_stream_t]  # output
-auth_tag_out_ready: Wire[uint1_t]  # input
 
 
 @struct
@@ -86,36 +74,45 @@ def axis128_early_tlast(
     return o
 
 
-@MAIN
-def strip_auth_tag():
+@struct
+class strip_auth_tag_out_t(NamedTuple):
+    axis_in_ready: uint1_t
+    axis_out: axis128_t
+    auth_tag_out: poly1305_auth_tag_stream_t
+
+
+@hw_func
+def strip_auth_tag(
+    axis_in: axis128_t,
+    axis_out_ready: uint1_t,
+    auth_tag_out_ready: uint1_t,
+) -> strip_auth_tag_out_t:
+    o: strip_auth_tag_out_t
     ready_for_axis_in: Feedback[uint1_t]
 
     early_tlast = axis128_early_tlast(axis_in, ready_for_axis_in)
 
     # Ready for axis into early module
-    axis_in_ready_s: uint1_t = early_tlast.ready_for_axis_in
+    o.axis_in_ready = early_tlast.ready_for_axis_in
     # stream coming out of early module
     stream_in: axis128_t = early_tlast.axis_out
 
     # Default passing input axis data to ciphertext output
-    axis_out_s: axis128_t = stream_in
+    o.axis_out = stream_in
     ready_for_axis_in = axis_out_ready
 
     # With override to use the early tlast for ciphertext tlast
-    axis_out_s.data.eod[0] = early_tlast.next_axis_out_is_tlast
+    o.axis_out.data.eod[0] = early_tlast.next_axis_out_is_tlast
     # and not passing data to auth tag out
-    auth_tag_out_s: poly1305_auth_tag_stream_t = poly1305_auth_tag_stream_null()
+    o.auth_tag_out = poly1305_auth_tag_stream_null()
 
     # If this is last input cycle then it's auth tag
     if stream_in.valid & stream_in.data.eod[0]:
         # not passing ciphertext output
-        axis_out_s.valid = 0
+        o.axis_out.valid = 0
         # Connect to auth tag output
-        auth_tag_out_s.data = array_to_uint_le(stream_in.data.frag.data)
-        auth_tag_out_s.valid = stream_in.valid
+        o.auth_tag_out.data = array_to_uint_le(stream_in.data.frag.data)
+        o.auth_tag_out.valid = stream_in.valid
         ready_for_axis_in = auth_tag_out_ready
 
-    # Drive output wires
-    axis_in_ready = axis_in_ready_s
-    axis_out = axis_out_s
-    auth_tag_out = auth_tag_out_s
+    return o

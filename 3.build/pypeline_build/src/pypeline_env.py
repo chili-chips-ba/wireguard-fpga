@@ -8,8 +8,8 @@ Adds to sys.path:
   - the PipelineC repo's src/ (the `pypeline` module) and include/pypeline/
     (stream/, axi/, kept_data_bus, ndarray, multi_cycle_path, ...)
   - this tree's subdirectories, so modules import with flat names
-    (`import chacha20`, `import poly1305_mac_encrypt`, ...) while files keep
-    the same directory layout as ../pipelinec_build/src/.
+    (`import chacha20`, `import poly1305`, ...) while files keep the same
+    directory layout as ../pipelinec_build/src/.
 
 The PipelineC repo is located via $PIPELINEC (path to <repo>/src/pipelinec,
 same env var the build scripts use), falling back to the sibling checkout.

@@ -1,10 +1,10 @@
 # pyright: reportInvalidTypeForm=none
 """ChaCha20 core (RFC 8439): state struct, block function pipeline, and the
-input/output FSMs that drive the per-block pipeline.
+input/output FSMs that drive the per-block pipeline, plus chacha20_instance
+(FSM + private pipeline combined) which each dataflow core instantiates
+directly, once per direction.
 
-Pypeline port of ../pipelinec_build/src/chacha20/chacha20.h (the per-instance
-wire declarations + pipeline instance live in chacha20_encrypt.py /
-chacha20_decrypt.py, the C chacha20.c equivalents).
+Pypeline port of ../pipelinec_build/src/chacha20/chacha20.h and chacha20.c.
 """
 import pypeline_env  # noqa: F401
 
@@ -26,6 +26,7 @@ from pypeline import (
     make_type_from_bytes,
 )
 from stream.stream import make_stream_t
+from stream.stream_pipeline import make_stream_pipeline
 from axi.axis import make_dwidth_widen, make_dwidth_narrow
 
 from aead_types import (
@@ -343,5 +344,56 @@ def chacha20_fsm(
     block_to_out = axis512_to_axis128(block_to_out_axis_in, ready_for_axis_out)
     o.axis = block_to_out.narrow_out
     block_to_out_axis_in_ready = block_to_out.wide_in_ready  # FEEDBACK
+
+    return o
+
+
+@struct
+class chacha20_stream_out_t(NamedTuple):
+    axis_in_ready: uint1_t
+    poly_key: poly1305_key_stream_t
+    axis_out: axis128_t
+
+
+# One full chacha20 instance: chacha20_fsm plus its own private
+# chacha20_loop_body pipeline, combined into a single callable (replaces what
+# used to be two MAINs -- an FSM and a pipeline instance -- joined by global
+# wires). Meant to be called once per direction (encrypt, decrypt) from that
+# direction's dataflow core; each call site gets its own independent pipeline
+# + FSM hardware state, same as any other function call in pypeline.
+pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha20_loop_body, 64)
+
+
+@hw_func
+def chacha20_instance(
+    key: uint8_t[CHACHA20_KEY_SIZE],
+    nonce: uint8_t[CHACHA20_NONCE_SIZE],
+    axis_in: axis128_t,
+    poly_key_ready: uint1_t,
+    axis_out_ready: uint1_t,
+) -> chacha20_stream_out_t:
+    o: chacha20_stream_out_t
+
+    pipeline_in_ready: Feedback[uint1_t]
+    pipeline_out: Feedback[axis512_t]
+
+    fsm_out = chacha20_fsm(
+        key,
+        nonce,
+        axis_in,
+        poly_key_ready,
+        axis_out_ready,
+        pipeline_in_ready,
+        pipeline_out,
+    )
+    o.axis_in_ready = fsm_out.ready_for_axis_in
+    o.poly_key = fsm_out.poly_key
+    o.axis_out = fsm_out.axis
+
+    pipeline_result = pipeline_func(
+        fsm_out.to_pipeline, fsm_out.ready_for_from_pipeline
+    )
+    pipeline_out = pipeline_result.stream_out
+    pipeline_in_ready = pipeline_result.ready_for_stream_in
 
     return o

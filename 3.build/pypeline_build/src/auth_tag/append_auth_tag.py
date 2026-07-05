@@ -9,8 +9,9 @@ import pypeline_env  # noqa: F401
 from enum import auto
 
 from pypeline import (
-    MAIN,
-    Wire,
+    NamedTuple,
+    struct,
+    hw_func,
     Reg,
     enum,
     uint1_t,
@@ -25,16 +26,6 @@ from aead_types import (
     poly1305_auth_tag_stream_t,
 )
 
-# Input stream of ciphertext
-axis_in: Wire[axis128_t]  # input
-axis_in_ready: Wire[uint1_t]  # output
-# Input of auth tag output from poly1305_mac
-auth_tag_in: Wire[poly1305_auth_tag_stream_t]  # input
-auth_tag_in_ready: Wire[uint1_t]  # output
-# Output stream of ciphertext followed by appended auth tag
-axis_out: Wire[axis128_t]  # output
-axis_out_ready: Wire[uint1_t]  # input
-
 
 @enum
 class append_auth_tag_state_t:
@@ -42,24 +33,35 @@ class append_auth_tag_state_t:
     AUTH_TAG = auto()
 
 
-@MAIN
-def append_auth_tag():
+@struct
+class append_auth_tag_out_t(NamedTuple):
+    axis_in_ready: uint1_t
+    auth_tag_in_ready: uint1_t
+    axis_out: axis128_t
+
+
+@hw_func
+def append_auth_tag(
+    axis_in: axis128_t,
+    auth_tag_in: poly1305_auth_tag_stream_t,
+    axis_out_ready: uint1_t,
+) -> append_auth_tag_out_t:
+    o: append_auth_tag_out_t
     state: Reg[append_auth_tag_state_t]
 
-    # Locals for the wires this MAIN drives (single wire assignment at the end)
     # Default not ready for incoming data
-    axis_in_ready_s: uint1_t = 0
-    auth_tag_in_ready_s: uint1_t = 0
+    o.axis_in_ready = 0
+    o.auth_tag_in_ready = 0
     # Default not outputting data
-    axis_out_s: axis128_t = axis128_null()
+    o.axis_out = axis128_null()
 
     if state == append_auth_tag_state_t.CIPHERTEXT:
         # Pass through ciphertext
-        axis_out_s = axis_in
-        axis_in_ready_s = axis_out_ready
+        o.axis_out = axis_in
+        o.axis_in_ready = axis_out_ready
         # Except for tlast since adding extra actual last auth tag cycle next
-        axis_out_s.data.eod[0] = 0
-        if axis_in.data.eod[0] & axis_in.valid & axis_in_ready_s:
+        o.axis_out.data.eod[0] = 0
+        if axis_in.data.eod[0] & axis_in.valid & o.axis_in_ready:
             state = append_auth_tag_state_t.AUTH_TAG
     else:  # if state == append_auth_tag_state_t.AUTH_TAG
         # Insert auth tag as new last cycle
@@ -67,15 +69,12 @@ def append_auth_tag():
             auth_tag_in.data, 8
         )
         for i in range(POLY1305_AUTH_TAG_SIZE):
-            axis_out_s.data.frag.data[i] = tag_bytes[i]
-            axis_out_s.data.frag.keep[i] = 1
-        axis_out_s.data.eod[0] = 1
-        axis_out_s.valid = auth_tag_in.valid
-        auth_tag_in_ready_s = axis_out_ready
-        if axis_out_s.valid & axis_out_ready:
+            o.axis_out.data.frag.data[i] = tag_bytes[i]
+            o.axis_out.data.frag.keep[i] = 1
+        o.axis_out.data.eod[0] = 1
+        o.axis_out.valid = auth_tag_in.valid
+        o.auth_tag_in_ready = axis_out_ready
+        if o.axis_out.valid & axis_out_ready:
             state = append_auth_tag_state_t.CIPHERTEXT
 
-    # Drive output wires
-    axis_in_ready = axis_in_ready_s
-    auth_tag_in_ready = auth_tag_in_ready_s
-    axis_out = axis_out_s
+    return o
