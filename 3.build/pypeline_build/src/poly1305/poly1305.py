@@ -4,12 +4,16 @@ per-block compute, plus poly1305_mac_instance (FSM + private multi-cycle-path
 compute combined) which each dataflow core instantiates directly, once per
 direction.
 
-Pypeline port of ../pipelinec_build/src/poly1305/poly1305.h and poly1305_mac.c.
-
-The limb math is a bit-exact translation of the C: including the schoolbook
-multiply's truncating 64x64 products (only addition carries propagate between
-limbs, matching the reference software implementation this design validates
-against).
+Pypeline port of ../pipelinec_build/src/poly1305/poly1305.h and poly1305_mac.c
+-- with the limb math fixed to be RFC 8439-correct, deliberately diverging
+from the C original, which (as of this writing) still has its historical bugs:
+truncating 64x64 limb products in uint320_mul, and a uint320_mod_prime that
+used a wrong below-2^130 mask (0x3FFFFFFFFFF instead of 0x3) and discarded
+limbs 3/4 outright instead of folding them. The fixed math here matches a
+big-integer Poly1305 reference and the official RFC 8439 test vectors (see
+../chacha20poly1305/aead_ref_model.py, which validates the expected testbench
+vectors against the `cryptography` package and the RFC 8439 2.8.2
+known-answer test).
 """
 import pypeline_env  # noqa: F401
 
@@ -46,10 +50,11 @@ from aead_types import (
 U320_NLIMBS = 5
 U320_NBYTES = 40
 uint320_t = make_uint_t(320)
+uint128_t = make_uint_t(128)
 
-# 2^130 - 1 mask for limbs[2] (bits above 2^130 within the third limb)
-_MASK = 0x3FFFFFFFFFF
-_NOT_MASK = (~_MASK) & 0xFFFFFFFFFFFFFFFF
+# 2^130 is bit 2 of limb 2, so within limb 2 the bits below 2^130 are just
+# the low two
+_MASK = 0x3
 
 
 # Structure to hold a 320-bit unsigned integer for Poly1305 calculations
@@ -113,51 +118,61 @@ def uint320_add(a: u320_t, b: u320_t) -> u320_t:
     return rv
 
 
-# Multiply two u320_t values (schoolbook, C-exact truncating 64x64 products)
+# Multiply two u320_t values (schoolbook, result truncated to 320 bits)
 @hw_func
 def uint320_mul(a: u320_t, b: u320_t) -> u320_t:
     temp: u320_t = u320_null()
 
-    # Schoolbook multiplication algorithm
+    # Schoolbook multiplication: each 64x64 limb-pair product is a full
+    # 128-bit value whose low half accumulates into limb i+j and whose high
+    # half carries into limb i+j+1 (via `carry` on the next j iteration).
+    # acc's three terms sum to at most 2^128 - 1, so uint128_t holds the
+    # accumulation exactly.
     for i in range(U320_NLIMBS):
         carry: uint64_t = 0
         for j in range(U320_NLIMBS - i):
-            product: uint64_t = a.limbs[i] * b.limbs[j]
-            old_value: uint64_t = temp.limbs[i + j]
-
-            # Add previous value and carry
-            low: uint64_t = product + old_value
-            high: uint64_t = low < product
-            low = low + carry
-            high = high + (low < carry)
-
-            temp.limbs[i + j] = low
-            carry = high
+            acc: uint128_t = (a.limbs[i] * b.limbs[j]) + temp.limbs[i + j] + carry
+            temp.limbs[i + j] = acc  # low 64 bits
+            carry = acc >> 64  # high 64 bits
 
     res: u320_t = temp
     return res
 
 
-# Reduce a u320_t modulo 2^130 - 5
+# One partial-reduction pass folding the bits at/above 2^130 back into the
+# low bits: x = q*2^130 + rem  =>  x == rem + 5*q (mod 2^130 - 5)
+@hw_func
+def uint320_fold(v: u320_t) -> u320_t:
+    # rem = v mod 2^130
+    rem: u320_t = v
+    rem.limbs[2] = v.limbs[2] & _MASK
+    rem.limbs[3] = 0
+    rem.limbs[4] = 0
+    # q = v >> 130 (fits in 3 limbs)
+    q0: uint64_t = (v.limbs[2] >> 2) | (v.limbs[3] << 62)
+    q1: uint64_t = (v.limbs[3] >> 2) | (v.limbs[4] << 62)
+    q2: uint64_t = v.limbs[4] >> 2
+    # mul5 = 5*q, carrying between limbs (each q_i*5 is up to 67 bits)
+    mul5: u320_t = u320_null()
+    p: uint128_t = q0 * 5
+    mul5.limbs[0] = p
+    p = (q1 * 5) + (p >> 64)
+    mul5.limbs[1] = p
+    p = (q2 * 5) + (p >> 64)
+    mul5.limbs[2] = p
+    mul5.limbs[3] = p >> 64
+    rv: u320_t = uint320_add(rem, mul5)
+    return rv
+
+
+# Reduce a u320_t modulo 2^130 - 5 (full reduction, any 320-bit input)
 @hw_func
 def uint320_mod_prime(a: u320_t) -> u320_t:
-    v: u320_t = a
-    # First, handle the high bits (greater than or equal to 2^130)
-    high_bits: uint64_t = v.limbs[2] & _NOT_MASK
-    if high_bits or v.limbs[3] or v.limbs[4]:
-        # We have bits above 2^130, need to reduce
-
-        # Clear high bits
-        v.limbs[2] = v.limbs[2] & _MASK
-        v.limbs[3] = 0
-        v.limbs[4] = 0
-
-        # Multiply high bits by 5 and add to low bits
-        mul5: u320_t = u320_null()
-        mul5.limbs[0] = (high_bits >> 2) * 5
-
-        # Add to original value
-        v = uint320_add(v, mul5)
+    # Three folds bring any 320-bit value strictly below 2^130:
+    #   320 bits -> < 2^193 -> < 2^130 + 2^66 -> < 2^130
+    v: u320_t = uint320_fold(a)
+    v = uint320_fold(v)
+    v = uint320_fold(v)
 
     # Check if result is still >= 2^130 - 5
     if (

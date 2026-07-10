@@ -2,9 +2,11 @@
 """Synthesizable testbench for the standalone encrypt design.
 
 Pypeline port of ../pipelinec_build/src/chacha20poly1305/encrypt_tb.c.
-Streams the test plaintexts into the DUT wires and checks the ciphertext +
-auth tag stream coming out, printing "ERROR: ..." on any mismatch and
-"Encrypt: Test N DONE!" per passing packet.
+Streams the test plaintexts into the DUT wires (with exact tkeep, partial on
+the final word of each packet) and checks the ciphertext + auth tag stream
+coming out — data bytes, the exact per-lane keep pattern, and packet framing
+(eod only on the appended auth tag word) — printing "ERROR: ..." on any
+mismatch and "Encrypt: Test N DONE!" per passing packet.
 """
 import pypeline_env  # noqa: F401
 
@@ -12,6 +14,7 @@ from pypeline import (
     MAIN,
     wires,
     Reg,
+    uint1_t,
     uint8_t,
     uint32_t,
     sim_print,
@@ -39,8 +42,10 @@ from tb_common import (
     PLAINTEXT_TEST_STR_MAX_SIZE,
     PLAINTEXTS,
     PLAINTEXT_LENS,
-    CIPHERTEXT_OUT_MAX_SIZE,
+    POLY1305_AUTH_TAG_SIZE,
+    CIPHERTEXT_MAX_SIZE,
     EXPECTED_CIPHERTEXTS,
+    EXPECTED_TAGS,
     CIPHERTEXT_LENS,
 )
 
@@ -58,8 +63,11 @@ def encrypt_tb() -> axis128_t:
         PLAINTEXTS
     )
     plaintext_lens: uint32_t[NUM_PLAINTEXT_TEST_STRS] = PLAINTEXT_LENS
-    expected_ciphertexts: uint8_t[NUM_PLAINTEXT_TEST_STRS][CIPHERTEXT_OUT_MAX_SIZE] = (
+    expected_ciphertexts: uint8_t[NUM_PLAINTEXT_TEST_STRS][CIPHERTEXT_MAX_SIZE] = (
         EXPECTED_CIPHERTEXTS
+    )
+    expected_tags: uint8_t[NUM_PLAINTEXT_TEST_STRS][POLY1305_AUTH_TAG_SIZE] = (
+        EXPECTED_TAGS
     )
     ciphertext_lens: uint32_t[NUM_PLAINTEXT_TEST_STRS] = CIPHERTEXT_LENS
 
@@ -97,10 +105,10 @@ def encrypt_tb() -> axis128_t:
     axis_in_s: axis128_t = axis128_null()
     # Have valid data if there is more plaintext to send
     if plaintext_remaining > 0:
-        # Up to 16 bytes of plaintext onto axis128
-        # padded with zeros if needed
+        # Up to 16 bytes of plaintext onto axis128: keep marks exactly the
+        # valid lanes (partial on the final word), non-kept data lanes zero
         for i in range(16):
-            axis_in_s.data.frag.keep[i] = 1
+            axis_in_s.data.frag.keep[i] = plaintext_remaining > i
             axis_in_s.data.frag.data[i] = 0
             if plaintext_remaining > i:
                 axis_in_s.data.frag.data[i] = plaintext[i]
@@ -131,60 +139,83 @@ def encrypt_tb() -> axis128_t:
     output_packet_count: Reg[uint32_t]
     ciphertext_size: Reg[uint32_t]
     ciphertext_remaining: Reg[uint32_t]
-    expected_ciphertext: Reg[uint8_t[CIPHERTEXT_OUT_MAX_SIZE]]
+    expected_ciphertext: Reg[uint8_t[CIPHERTEXT_MAX_SIZE]]
+    expected_tag: Reg[uint8_t[POLY1305_AUTH_TAG_SIZE]]
 
     # Check encrypted ciphertext output:
     if cycle_counter == 0:
         # Init regs for first test string
         expected_ciphertext = expected_ciphertexts[output_packet_count]
+        expected_tag = expected_tags[output_packet_count]
         ciphertext_size = ciphertext_lens[output_packet_count]
         ciphertext_remaining = ciphertext_size
         sim_print(f"Encrypt: Checking ciphertext for test string {output_packet_count}...")
 
     # Stream ciphertext out of dut (testbench always ready)
     chacha20poly1305_encrypt_ports.axis_out_ready = 1
-    if chacha20poly1305_encrypt_ports.axis_out.valid:
-        # Print ciphertext as it flows out of dut
-        out_chunk: uint128_t = array_to_uint_be(
-            chacha20poly1305_encrypt_ports.axis_out.data.frag.data
-        )
+    out_axis: axis128_t = chacha20poly1305_encrypt_ports.axis_out
+    if out_axis.valid:
+        # Print output as it flows out of dut
+        out_chunk: uint128_t = array_to_uint_be(out_axis.data.frag.data)
         sim_print(
-            f"Encrypt: Output Ciphertext next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}"
+            f"Encrypt: Output Ciphertext/Tag next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}"
         )
-        # compare to expected_ciphertext and shift
-        for i in range(16):
-            if ciphertext_remaining > i:
-                if chacha20poly1305_encrypt_ports.axis_out.data.frag.data[i] != expected_ciphertext[i]:
-                    ciphertext_pos: uint32_t = (
-                        ciphertext_size - ciphertext_remaining
-                    ) + i
+        if ciphertext_remaining > 0:
+            # Expecting a ciphertext word: keep marks exactly the remaining
+            # bytes (partial on the final word of an odd-length ciphertext)
+            # and eod is never set here (the auth tag word is still to come)
+            for i in range(16):
+                expected_keep: uint1_t = ciphertext_remaining > i
+                if out_axis.data.frag.keep[i] != expected_keep:
+                    # lane index as a fixed-width value: a bare {i} literal's
+                    # width would vary across the unrolled iterations, giving
+                    # each printf instance a different port width
+                    lane: uint8_t = i
                     sim_print(
-                        f"ERROR: Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(chacha20poly1305_encrypt_ports.axis_out.data.frag.data[i])}"
+                        f"ERROR: Encrypt: Ciphertext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.data.frag.keep[i]}"
                     )
-        # Too much data?
-        if ciphertext_remaining == 0:
-            sim_print("ERROR: Encrypt: Extra ciphertext output!")
-        # Too little data? Or more to come?
-        if chacha20poly1305_encrypt_ports.axis_out.data.eod[0]:
+                if expected_keep:
+                    if out_axis.data.frag.data[i] != expected_ciphertext[i]:
+                        ciphertext_pos: uint32_t = (
+                            ciphertext_size - ciphertext_remaining
+                        ) + i
+                        sim_print(
+                            f"ERROR: Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(out_axis.data.frag.data[i])}"
+                        )
+            if out_axis.data.eod[0]:
+                sim_print("ERROR: Encrypt: Early end to ciphertext output (before auth tag)!")
             if ciphertext_remaining > 16:
-                sim_print("ERROR: Encrypt: Early end to ciphertext output!")
+                ciphertext_remaining = ciphertext_remaining - 16
+                # ARRAY_SHIFT_DOWN(expected_ciphertext, CIPHERTEXT_MAX_SIZE, 16)
+                for i in range(CIPHERTEXT_MAX_SIZE - 16):
+                    expected_ciphertext[i] = expected_ciphertext[i + 16]
             else:
-                sim_print(f"Encrypt: Test {output_packet_count} DONE!")
+                # Final (possibly partial) ciphertext word: auth tag is next
                 ciphertext_remaining = 0
-                output_packet_count = output_packet_count + 1
-                if output_packet_count < NUM_PLAINTEXT_TEST_STRS:
-                    # Reset for next test string
-                    expected_ciphertext = expected_ciphertexts[output_packet_count]
-                    ciphertext_size = ciphertext_lens[output_packet_count]
-                    ciphertext_remaining = ciphertext_size
-                    sim_print(
-                        f"Encrypt: Checking ciphertext for next test string {output_packet_count}..."
-                    )
         else:
-            ciphertext_remaining = ciphertext_remaining - 16
-            # ARRAY_SHIFT_DOWN(expected_ciphertext, CIPHERTEXT_OUT_MAX_SIZE, 16)
-            for i in range(CIPHERTEXT_OUT_MAX_SIZE - 16):
-                expected_ciphertext[i] = expected_ciphertext[i + 16]
+            # Expecting the auth tag word: all 16 lanes kept, ends the packet
+            for i in range(POLY1305_AUTH_TAG_SIZE):
+                # fixed-width lane index for printing (see ciphertext loop)
+                tag_lane: uint8_t = i
+                if ~out_axis.data.frag.keep[i]:
+                    sim_print(f"ERROR: Encrypt: Auth tag keep not set at lane {tag_lane}!")
+                if out_axis.data.frag.data[i] != expected_tag[i]:
+                    sim_print(
+                        f"ERROR: Encrypt: Auth tag mismatch at byte[{tag_lane}]. expected {hex(expected_tag[i])} got {hex(out_axis.data.frag.data[i])}"
+                    )
+            if ~out_axis.data.eod[0]:
+                sim_print("ERROR: Encrypt: Auth tag word missing end of packet!")
+            sim_print(f"Encrypt: Test {output_packet_count} DONE!")
+            output_packet_count = output_packet_count + 1
+            if output_packet_count < NUM_PLAINTEXT_TEST_STRS:
+                # Reset for next test string
+                expected_ciphertext = expected_ciphertexts[output_packet_count]
+                expected_tag = expected_tags[output_packet_count]
+                ciphertext_size = ciphertext_lens[output_packet_count]
+                ciphertext_remaining = ciphertext_size
+                sim_print(
+                    f"Encrypt: Checking ciphertext for next test string {output_packet_count}..."
+                )
 
     cycle_counter = cycle_counter + 1
 

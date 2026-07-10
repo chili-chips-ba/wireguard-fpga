@@ -8,4 +8,4 @@
 # encrypt design testbench. $PIPELINEC must point at PipelineC/src/pipelinec.
 
 rm -rf ./generated-files-sim-comb/*
-$PIPELINEC ./src/chacha20poly1305_encrypt_tb.py --out_dir ./generated-files-sim-comb --comb --sim --cocotb --ghdl --run 150
+$PIPELINEC ./src/chacha20poly1305_encrypt_tb.py --out_dir ./generated-files-sim-comb --comb --sim --cocotb --ghdl --run 400
