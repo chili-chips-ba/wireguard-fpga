@@ -202,13 +202,16 @@ def chacha20_loop_body(inputs: chacha20_loop_body_in_t) -> axis512_frag_t:
     state = chacha20_init(inputs.key, inputs.nonce, inputs.counter)
     block = chacha20_block(state)
 
-    # Output passes through tkeep/tlast; data bytes are input XOR keystream.
+    # Output passes through tkeep/tlast; kept data bytes are input XOR
+    # keystream, non-kept (padding) lanes are forced to zero so partial final
+    # blocks never leak raw keystream bytes downstream.
     # Keystream block state words serialize to bytes little-endian per word.
     keystream: uint8_t[CHACHA20_BLOCK_SIZE] = chacha20_state_to_bytes(block)
     axis_out: axis512_frag_t = inputs.axis_in
-    # TODO partial in data, i.e. partial tkeep
     for i in range(CHACHA20_BLOCK_SIZE):
-        axis_out.frag.data[i] = inputs.axis_in.frag.data[i] ^ keystream[i]
+        axis_out.frag.data[i] = 0
+        if inputs.axis_in.frag.keep[i]:
+            axis_out.frag.data[i] = inputs.axis_in.frag.data[i] ^ keystream[i]
     return axis_out
 
 

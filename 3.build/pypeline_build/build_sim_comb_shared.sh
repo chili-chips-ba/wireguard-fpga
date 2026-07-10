@@ -10,4 +10,4 @@
 # NOTE: this sim takes much longer than the standalone ones.
 
 rm -rf ./generated-files-sim-comb-shared/*
-$PIPELINEC ./src/chacha20poly1305_encrypt_decrypt_shared_tb.py --out_dir ./generated-files-sim-comb-shared --comb --sim --cocotb --ghdl --run 220
+$PIPELINEC ./src/chacha20poly1305_encrypt_decrypt_shared_tb.py --out_dir ./generated-files-sim-comb-shared --comb --sim --cocotb --ghdl --run 650
