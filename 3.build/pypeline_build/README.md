@@ -1,11 +1,16 @@
 # pypeline_build — ChaCha20-Poly1305 AEAD in Pypeline
 
 Pypeline (Python front-end for PipelineC) port of the C designs in
-`../pipelinec_build/`. Same three design variants, same synthesizable
-testbenches, same Artix-7 xc7a200tffg1156-2 @ 80 MHz target — but with the C
-originals' Poly1305 math and ciphertext-length bugs fixed, so this port is
-RFC 8439-conformant and its tags/ciphertext lengths deliberately differ from
-the (still-unfixed) C designs (see "Test Vectors" below).
+`../pipelinec_build/`. Same three design variants, same Artix-7
+xc7a200tffg1156-2 @ 80 MHz target — but with the C originals' Poly1305 math
+and ciphertext-length bugs fixed, so this port is RFC 8439-conformant and its
+tags/ciphertext lengths deliberately differ from the (still-unfixed) C
+designs (see "Test Vectors" below).
+
+Each of the three design variants has **two testbench styles**: a
+synthesizable-style testbench (fixed vectors, compiles through cocotb/GHDL or
+real hardware) and a non-synthesizable testbench (`@sim_input`/`@sim_output`,
+on-the-fly random vectors, native sim only) — see "Testbench Styles" below.
 
 The `$PIPELINEC` environment variable must point to the PipelineC executable
 (`<PipelineC repo>/src/pipelinec`) before running any build script — both the
@@ -15,25 +20,44 @@ checkout).
 
 ## Build Commands
 
-**Native Pypeline sim (fastest — no cocotb/GHDL, Pypeline's own Python
-simulator, zero pipeline stages):**
+**Native Pypeline sim — non-synthesizable testbench (fastest to iterate on;
+`@sim_input`/`@sim_output`, on-the-fly random vectors — see "Testbench
+Styles" below):**
 ```bash
 ./build_sim_comb_native.sh         # Combinational sim, encrypt TB  -> generated-files-sim-comb-native/
 ./build_sim_comb_dec_native.sh     # Combinational sim, decrypt TB  -> generated-files-sim-comb-dec-native/
 ./build_sim_comb_shared_native.sh  # Combinational sim, shared TB   -> generated-files-sim-comb-shared-native/
 ```
-These don't invoke GHDL/cocotb or generate real VHDL at all, so they're the
-quickest correctness check while iterating on the `.py` sources — run these
-first, before the slower variants below.
+These don't invoke GHDL/cocotb or generate real VHDL at all, and this
+testbench style has no cocotb/GHDL or `_pipe` equivalent (see "Testbench
+Styles" below for why) — this is the only way to run it. Pass criteria: no
+`ERROR` lines, and per side one `Test N DONE!` print per randomly generated
+packet (`tb_common_sim.NUM_RANDOM_PACKETS`, currently 10, `Test 0 DONE!` …
+`Test 9 DONE!`), plus one extra decrypt-side `Test 10 DONE!` for the
+tampered-tag negative packet. The RNG seed in use is printed at the start of
+each run (`tb_common_sim.DEFAULT_SEED` by default) so a failing run's exact
+vectors can be reproduced.
 
-**Simulate with cocotb + GHDL (the designs' acceptance tests):**
+**Native Pypeline sim — synthesizable-style testbench (fixed vectors; no
+cocotb/GHDL, Pypeline's own Python simulator, zero pipeline stages):**
 ```bash
-./build_sim_comb.sh         # Combinational sim, encrypt TB  -> generated-files-sim-comb/
-./build_sim_comb_dec.sh     # Combinational sim, decrypt TB  -> generated-files-sim-comb-dec/
-./build_sim_comb_shared.sh  # Combinational sim, shared TB   -> generated-files-sim-comb-shared/ (slow!)
-./build_sim_pipe.sh         # Pipelined sim, encrypt TB      -> generated-files-sim-pipe/ (hours!)
-./build_sim_pipe_dec.sh     # Pipelined sim, decrypt TB      -> generated-files-sim-pipe-dec/ (hours!)
-./build_sim_pipe_shared.sh  # Pipelined sim, shared TB       -> generated-files-sim-pipe-shared/ (hours!)
+./build_syn_tb_comb_native.sh         # Combinational sim, encrypt TB  -> generated-files-syn-tb-comb-native/
+./build_syn_tb_comb_dec_native.sh     # Combinational sim, decrypt TB  -> generated-files-syn-tb-comb-dec-native/
+./build_syn_tb_comb_shared_native.sh  # Combinational sim, shared TB   -> generated-files-syn-tb-comb-shared-native/
+```
+Quickest correctness check for the synthesizable-style testbench while
+iterating on the `.py` sources — run these before the slower cocotb/GHDL
+variants below.
+
+**Simulate with cocotb + GHDL (the designs' acceptance tests — synthesizable-style
+testbench only, see "Testbench Styles" below):**
+```bash
+./build_syn_tb_comb.sh         # Combinational sim, encrypt TB  -> generated-files-syn-tb-comb/
+./build_syn_tb_comb_dec.sh     # Combinational sim, decrypt TB  -> generated-files-syn-tb-comb-dec/
+./build_syn_tb_comb_shared.sh  # Combinational sim, shared TB   -> generated-files-syn-tb-comb-shared/ (slow!)
+./build_syn_tb_pipe.sh         # Pipelined sim, encrypt TB      -> generated-files-syn-tb-pipe/ (hours!)
+./build_syn_tb_pipe_dec.sh     # Pipelined sim, decrypt TB      -> generated-files-syn-tb-pipe-dec/ (hours!)
+./build_syn_tb_pipe_shared.sh  # Pipelined sim, shared TB       -> generated-files-syn-tb-pipe-shared/ (hours!)
 ```
 Pass criteria: no `ERROR` lines anywhere in the output, and per side one
 `Test N DONE!` print per string in `tb_common.py`'s `PLAINTEXT_TEST_STRS`
@@ -89,15 +113,66 @@ src/
     encrypt_dataflow_shared.py / decrypt_dataflow_shared.py  shared design: instantiate the
                                  same factory with chacha20_pipeline_shared's
                                  chacha20_encrypt_shared / chacha20_decrypt_shared
-    tb_common.py                 test strings + on-the-fly generated expected ciphertext/tag
+    tb_common.py                 synthesizable-style testbench's fixed 8-string vectors,
+                                  computed once at elaboration time
+    tb_common_sim.py             non-synthesizable testbench's shared support: fixed
+                                  KEY/NONCE/AAD + on-the-fly random-packet-length helper
+                                  (no precomputed vectors — those are generated lazily,
+                                  per packet, during simulation)
     aead_ref_model.py            pure-Python (no pypeline/hardware dependency) reference
-                                  model tb_common.py calls to generate those vectors —
-                                  see "Test Vectors" below
-    encrypt_tb.py / decrypt_tb.py   synthesizable testbench MAINs
-  chacha20poly1305_encrypt.py / _tb.py                    tops (hw / sim)
-  chacha20poly1305_decrypt.py / _tb.py
-  chacha20poly1305_encrypt_decrypt_shared.py / _tb.py
+                                  model both tb_common.py and tb_common_sim.py call to
+                                  generate vectors — see "Test Vectors" below
+    encrypt_syn_tb.py / decrypt_syn_tb.py   synthesizable-style testbench MAINs (fixed
+                                  vectors, cocotb/GHDL/pipe-compatible)
+    encrypt_tb.py / decrypt_tb.py           non-synthesizable testbench MAINs
+                                  (@sim_input/@sim_output, on-the-fly random vectors,
+                                  native sim only) — see "Testbench Styles" below
+  chacha20poly1305_encrypt.py / _tb.py / _syn_tb.py                    tops (hw / sim non-synth / sim synth)
+  chacha20poly1305_decrypt.py / _tb.py / _syn_tb.py
+  chacha20poly1305_encrypt_decrypt_shared.py / _tb.py / _syn_tb.py
 ```
+
+## Testbench Styles: Synthesizable vs Non-Synthesizable
+
+Each of the three design variants has two independent testbenches, sharing
+the same DUT-facing `*_ports.py` wires but differing entirely in how
+stimulus is generated and outputs checked:
+
+- **Synthesizable-style** (`encrypt_syn_tb.py`/`decrypt_syn_tb.py`, driven by
+  the `_syn_tb.py` tops): a `@MAIN` hardware state machine streams/checks a
+  fixed batch of test vectors — 8 plaintext strings, chosen to cover the
+  partial-final-word and block-boundary corner cases — computed once via
+  `aead_ref_model.py` at elaboration time and baked into fixed-size
+  `Reg[uint8_t[N]]` hardware register arrays (`tb_common.py`). Because this
+  testbench is itself synthesizable Pypeline, it can run through cocotb+GHDL
+  against real generated VHDL, or through real autopipelining (`_pipe`
+  builds) — these are the designs' acceptance tests.
+- **Non-synthesizable** (`encrypt_tb.py`/`decrypt_tb.py`, driven by the plain
+  `_tb.py` tops): uses Pypeline's `@sim_input`/`@sim_output` decorators to
+  generate stimulus and check outputs as arbitrary Python, live,
+  cycle-by-cycle during simulation. Each run generates 10 random-length
+  (1-1024 byte) packets per direction on the fly — a few pinned to the same
+  corner-case lengths as the fixed vectors, the rest uniform-random — calling
+  `aead_ref_model.py` lazily, once per packet, right when that packet's
+  random plaintext is generated (`tb_common_sim.py`), rather than batching
+  everything up front. No fixed-size arrays, no elaboration-time
+  pre-baking — packets can be any length. The decrypt side adds an 11th
+  packet with a deliberately bit-flipped tag (reject-path coverage,
+  mirroring the synthesizable variant's fixed tampered-tag packet). The RNG
+  is seeded by default (`tb_common_sim.DEFAULT_SEED`) and the seed is printed
+  at the start of each run, so a failing run's exact vectors are
+  reproducible.
+
+  `@sim_input`/`@sim_output` calls are entirely invisible to the hardware
+  elaborator — skipped unconditionally, whether or not `--sim` is passed —
+  so this style **only runs under Pypeline's native `--sim` mode**. Routing
+  it through `--cocotb --ghdl` would first generate real VHDL with every
+  `@sim_input`/`@sim_output` call site stripped out, leaving no stimulus
+  generation or output checking left anywhere; the same reasoning rules out
+  a `_pipe` (real-autopipelining) variant, since `_pipe` builds are
+  exclusively cocotb+GHDL runs against post-autopipelining VHDL in this
+  repo. Use this style for fast iteration and broader random coverage; use
+  the synthesizable style for the cocotb/GHDL and `_pipe` acceptance tests.
 
 ## Wiring Style: Old vs New
 
@@ -180,6 +255,8 @@ extra build-time search, not a functional regression.
 
 ## Test Vectors
 
+### Synthesizable-style Testbench
+
 `tb_common.py` no longer hardcodes expected ciphertext/tag bytes. It defines
 `KEY`/`NONCE`/`AAD_TEST_STR`/`PLAINTEXT_TEST_STRS` (plain Python data — add or
 remove a string from `PLAINTEXT_TEST_STRS` and everything else, including
@@ -209,6 +286,36 @@ deliberately corrupted auth tag (`tb_common.TAMPERED_TAG`) as an extra final
 packet: the DUT must still emit that packet's plaintext but with
 `is_verified_out` low — exercising the Poly1305 verify path's reject case,
 which the all-valid vectors never hit.
+
+### Test Vectors — Non-synthesizable Testbench
+
+`tb_common_sim.py` reuses the same fixed `KEY`/`NONCE`/`AAD` as
+`tb_common.py`, but does not precompute any ciphertext/tag vectors — instead
+it holds `NUM_RANDOM_PACKETS = 10`, the `PACKET_LEN_MIN`/`PACKET_LEN_MAX`
+range (1-1024 bytes), the stratified `CORNER_CASE_LENS` list (`[16, 17, 64,
+128]`, matching the synthesizable variant's coverage of the partial-final-
+word and block-boundary cases) and `DEFAULT_SEED`. `encrypt_tb.py`/
+`decrypt_tb.py` call `next_packet_length(rng, packet_idx)` and
+`aead_ref_model.generate_encrypt_vector(...)` live, during simulation, right
+when each packet's random plaintext is generated: the first
+`len(CORNER_CASE_LENS)` packets each run are pinned to those lengths
+(guaranteed every run), the rest are uniform-random over
+`[PACKET_LEN_MIN, PACKET_LEN_MAX]`.
+
+The decrypt testbench's 11th packet mirrors the synthesizable variant's
+tampered-tag negative test: a genuinely valid packet (fresh random
+plaintext, real ciphertext+tag from the reference model) with one tag bit
+flipped after generation — the DUT must still emit that packet's plaintext
+but with `is_verified_out` low.
+
+The RNG (`random.Random(seed)`) is seeded by default
+(`tb_common_sim.DEFAULT_SEED`); the seed actually used is printed via
+`sim_print` at the start of each run, so a failing run's exact packet
+lengths/content can be reproduced by re-seeding with the same value. Unlike
+the fixed-vector synthesizable testbench, the exact bytes streamed differ
+every run (only the pinned corner-case lengths and packet/test count are
+constant) — the `ERROR`-free / `Test N DONE!` convention itself is the fixed,
+diffable pass criterion here, not any particular byte sequence.
 
 ### Fixed: exact ciphertext length via real `keep` handling (was: rounded up to 16 bytes)
 
