@@ -5,8 +5,11 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 # Combinational (zero pipeline stages) native Pypeline sim (no cocotb/ghdl) of
-# the standalone decrypt design testbench. $PIPELINEC must point at
+# the standalone decrypt design's non-synthesizable testbench
+# (@sim_input/@sim_output, 10 on-the-fly random packets up to 1024 bytes plus
+# 1 tampered-tag negative packet -- only native sim can run this style, see
+# chacha20poly1305_decrypt_tb.py). $PIPELINEC must point at
 # PipelineC/src/pipelinec.
 
 rm -rf ./generated-files-sim-comb-dec-native/*
-$PIPELINEC ./src/chacha20poly1305_decrypt_tb.py --out_dir ./generated-files-sim-comb-dec-native --comb --sim --run 400
+$PIPELINEC ./src/chacha20poly1305_decrypt_tb.py --out_dir ./generated-files-sim-comb-dec-native --comb --sim --run 1350

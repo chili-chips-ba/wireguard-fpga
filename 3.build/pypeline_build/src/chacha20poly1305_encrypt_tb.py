@@ -1,11 +1,14 @@
 # pyright: reportInvalidTypeForm=none
-"""Simulation top for the standalone encrypt design + its testbench.
+"""Simulation top for the standalone encrypt design + its non-synthesizable
+testbench (@sim_input/@sim_output, 10 on-the-fly random packets). For the
+synthesizable-style variant (fixed 8-string vectors), see
+chacha20poly1305_encrypt_syn_tb.py.
 
-Pypeline port of ../pipelinec_build/src/chacha20poly1305_encrypt_tb.c.
-(The C #define SIMULATION -> here: the flattened hardware IO module
-chacha20poly1305_encrypt_hw_io is simply not imported.)
+Only runs under native --sim (no cocotb/GHDL, no real autopipelining):
+@sim_input/@sim_output calls are elaborated away entirely for any real-VHDL
+path, so this variant has no cocotb/pipe equivalent.
 
-Build/sim (from pypeline_build/): ./build_sim_comb.sh
+Build/sim (from pypeline_build/): ./build_sim_comb_native.sh
 """
 import sys, os
 

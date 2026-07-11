@@ -1,11 +1,15 @@
 # pyright: reportInvalidTypeForm=none
 """Simulation top for the shared encrypt+decrypt design — both the encrypt
-and decrypt side testbenches running at the same time against the design
-sharing one ChaCha20 compute pipeline.
+and decrypt side non-synthesizable testbenches (@sim_input/@sim_output,
+on-the-fly random vectors) running at the same time against the design
+sharing one ChaCha20 compute pipeline. For the synthesizable-style variant
+(fixed 8-string vectors), see chacha20poly1305_encrypt_decrypt_shared_syn_tb.py.
 
-Pypeline port of ../pipelinec_build/src/chacha20poly1305_encrypt_decrypt_shared_tb.c.
+Only runs under native --sim (no cocotb/GHDL, no real autopipelining):
+@sim_input/@sim_output calls are elaborated away entirely for any real-VHDL
+path, so this variant has no cocotb/pipe equivalent.
 
-Build/sim (from pypeline_build/): ./build_sim_comb_shared.sh
+Build/sim (from pypeline_build/): ./build_sim_comb_shared_native.sh
 """
 import sys, os
 
