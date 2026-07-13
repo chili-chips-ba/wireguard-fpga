@@ -364,7 +364,7 @@ class chacha20_stream_out_t(NamedTuple):
 # wires). Meant to be called once per direction (encrypt, decrypt) from that
 # direction's dataflow core; each call site gets its own independent pipeline
 # + FSM hardware state, same as any other function call in pypeline.
-pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha20_loop_body, 64)
+pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha20_loop_body)
 
 
 @hw_func

@@ -86,7 +86,7 @@ def chacha_shared_pipeline(
     return outputs
 
 
-pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha_shared_pipeline, 64)
+pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha_shared_pipeline)
 
 
 # Externally-exposed interface: looks like individual per-direction pipelines.
