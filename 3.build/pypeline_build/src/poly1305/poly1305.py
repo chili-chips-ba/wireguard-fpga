@@ -360,7 +360,7 @@ class poly1305_mac_stream_out_t(NamedTuple):
 # instance -- joined by global wires). Meant to be called once per direction
 # (encrypt, decrypt) from that direction's dataflow core; each call site gets
 # its own independent compute + FSM hardware state.
-compute_mcp, _compute_mcp_t = make_valid_ready_mcp(poly1305_mac_loop_body, 4)
+compute_mcp, _compute_mcp_t = make_valid_ready_mcp(poly1305_mac_loop_body, 5)
 
 
 @hw_func
