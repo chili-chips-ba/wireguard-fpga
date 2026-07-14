@@ -23,6 +23,9 @@ def main():
     parser.add_argument("--sim", action="store_true", help="Enable running simulation. If omitted, builds final Verilog.")
     parser.add_argument("--syn_tb", action="store_true", help="Select synthesizable test bench (_syn_tb_). Otherwise non-syn (_sim_) style.")
     parser.add_argument("--native", action="store_true", help="Select native python build/sim. Otherwise normal cocotb ghdl style vhdl sim.")
+    
+    # Continue Option (dest used to bypass Python's reserved keyword limit)
+    parser.add_argument("--continue", dest="continue_build", action="store_true", help="Skip clearing out the output directory and continue with existing files.")
 
     args = parser.parse_args()
 
@@ -43,7 +46,7 @@ def main():
         print("WARNING: $PIPELINEC environment variable not set. Falling back to 'pipelinec' in PATH.")
         pipelinec_bin = "pipelinec"
 
-    # 2. Map Cycle Counts (Derived from original scripts)
+    # 2. Map Cycle Counts
     # Map key: (design_short, is_syn_tb, is_comb) -> run cycles
     run_cycles = {
         ("dec", False, True): "1350",   # standalone decrypt, non-syn tb, comb native
@@ -57,9 +60,8 @@ def main():
     # 3. Construct Build Parameters
     if not args.sim:
         # --- VERILOG BUILD PATH ---
-        # Default behavior with no args generates final shared verilog 
         dir_suffix = design_name if design_name != "encrypt_decrypt_shared" else "shared"
-        out_dir = f"./build.py-generated-files-verilog-{dir_suffix}"
+        out_dir = f"./generated-files-verilog-{dir_suffix}"
         src_file = f"./src/chacha20poly1305_{design_name}.py"
         
         cmd = [
@@ -75,7 +77,7 @@ def main():
         src_file = f"./src/chacha20poly1305_{design_name}_{tb_type}.py"
         
         # Construct directory name based on flags
-        dir_parts = ["build.py-generated-files"]
+        dir_parts = ["generated-files"]
         dir_parts.append("syn-tb" if args.syn_tb else "sim")
         dir_parts.append("comb" if args.comb else "pipe")
         dir_parts.append(design_short)
@@ -92,27 +94,31 @@ def main():
         if not args.native:
             cmd.extend(["--cocotb", "--ghdl"])
             
-        # Look up run cycles. If a novel combination is used (e.g., enc), fallback to 'dec' equivalents or a default.
         cycle_key = (design_short if design_short != "enc" else "dec", args.syn_tb, args.comb)
-        cycles = run_cycles.get(cycle_key, "1000") # Default to 1000 if not mapped
+        cycles = run_cycles.get(cycle_key, "1000")
         cmd.extend(["--run", cycles])
 
-    # 4. Execute standard directory cleanup and pipelinec command
+    # 4. Execute directory management and pipelinec command
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)
-    # Replicating `rm -rf ./<dir>/*`
-    for filename in os.listdir(out_dir):
-        file_path = os.path.join(out_dir, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print(f'Failed to delete {file_path}. Reason: {e}')
+    
+    if args.continue_build:
+        print("--> --continue active: Skipping output directory cleanup.")
+    else:
+        print("--> Clearing output directory...")
+        # Replicating `rm -rf ./<dir>/*`
+        for filename in os.listdir(out_dir):
+            file_path = os.path.join(out_dir, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(f'Failed to delete {file_path}. Reason: {e}')
 
     cmd_str = " ".join(cmd)
-    print(f"--- Running Command ---\n{cmd_str}\n")
+    print(f"\n--- Running Command ---\n{cmd_str}\n")
     
     try:
         subprocess.run(cmd_str, shell=True, check=True)
