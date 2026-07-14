@@ -24,9 +24,9 @@ checkout).
 `@sim_input`/`@sim_output`, on-the-fly random vectors — see "Testbench
 Styles" below):**
 ```bash
-./build_sim_comb_native.sh         # Combinational sim, encrypt TB  -> generated-files-sim-comb-native/
-./build_sim_comb_dec_native.sh     # Combinational sim, decrypt TB  -> generated-files-sim-comb-dec-native/
-./build_sim_comb_shared_native.sh  # Combinational sim, shared TB   -> generated-files-sim-comb-shared-native/
+./build.py --enc --sim --comb --native     # Combinational sim, encrypt TB  -> generated-files-sim-comb-enc-native/
+./build.py --dec --sim --comb --native     # Combinational sim, decrypt TB  -> generated-files-sim-comb-dec-native/
+./build.py --shared --sim --comb --native  # Combinational sim, shared TB   -> generated-files-sim-comb-shared-native/
 ```
 These don't invoke GHDL/cocotb or generate real VHDL at all, and this
 testbench style has no cocotb/GHDL or `_pipe` equivalent (see "Testbench
@@ -41,9 +41,9 @@ vectors can be reproduced.
 **Native Pypeline sim — synthesizable-style testbench (fixed vectors; no
 cocotb/GHDL, Pypeline's own Python simulator, zero pipeline stages):**
 ```bash
-./build_syn_tb_comb_native.sh         # Combinational sim, encrypt TB  -> generated-files-syn-tb-comb-native/
-./build_syn_tb_comb_dec_native.sh     # Combinational sim, decrypt TB  -> generated-files-syn-tb-comb-dec-native/
-./build_syn_tb_comb_shared_native.sh  # Combinational sim, shared TB   -> generated-files-syn-tb-comb-shared-native/
+./build.py --enc --sim --syn_tb --comb --native     # Combinational sim, encrypt TB  -> generated-files-syn-tb-comb-enc-native/
+./build.py --dec --sim --syn_tb --comb --native     # Combinational sim, decrypt TB  -> generated-files-syn-tb-comb-dec-native/
+./build.py --shared --sim --syn_tb --comb --native  # Combinational sim, shared TB   -> generated-files-syn-tb-comb-shared-native/
 ```
 Quickest correctness check for the synthesizable-style testbench while
 iterating on the `.py` sources — run these before the slower cocotb/GHDL
@@ -52,12 +52,12 @@ variants below.
 **Simulate with cocotb + GHDL (the designs' acceptance tests — synthesizable-style
 testbench only, see "Testbench Styles" below):**
 ```bash
-./build_syn_tb_comb.sh         # Combinational sim, encrypt TB  -> generated-files-syn-tb-comb/
-./build_syn_tb_comb_dec.sh     # Combinational sim, decrypt TB  -> generated-files-syn-tb-comb-dec/
-./build_syn_tb_comb_shared.sh  # Combinational sim, shared TB   -> generated-files-syn-tb-comb-shared/ (slow!)
-./build_syn_tb_pipe.sh         # Pipelined sim, encrypt TB      -> generated-files-syn-tb-pipe/ (hours!)
-./build_syn_tb_pipe_dec.sh     # Pipelined sim, decrypt TB      -> generated-files-syn-tb-pipe-dec/ (hours!)
-./build_syn_tb_pipe_shared.sh  # Pipelined sim, shared TB       -> generated-files-syn-tb-pipe-shared/ (hours!)
+./build.py --enc --sim --syn_tb --comb     # Combinational sim, encrypt TB  -> generated-files-syn-tb-comb-enc/
+./build.py --dec --sim --syn_tb --comb     # Combinational sim, decrypt TB  -> generated-files-syn-tb-comb-dec/
+./build.py --shared --sim --syn_tb --comb  # Combinational sim, shared TB   -> generated-files-syn-tb-comb-shared/ (slow!)
+./build.py --enc --sim --syn_tb            # Pipelined sim, encrypt TB      -> generated-files-syn-tb-pipe-enc/ (hours!)
+./build.py --dec --sim --syn_tb            # Pipelined sim, decrypt TB      -> generated-files-syn-tb-pipe-dec/ (hours!)
+./build.py --shared --sim --syn_tb         # Pipelined sim, shared TB       -> generated-files-syn-tb-pipe-shared/ (hours!)
 ```
 Pass criteria: no `ERROR` lines anywhere in the output, and per side one
 `Test N DONE!` print per string in `tb_common.py`'s `PLAINTEXT_TEST_STRS`
@@ -70,9 +70,9 @@ New" below for why that takes noticeably longer here than in the C design.
 
 **Generate Verilog (for FPGA synthesis):**
 ```bash
-./build_verilog.sh          # Standalone encrypt -> generated-files-verilog/
-./build_verilog_decrypt.sh  # Standalone decrypt -> generated-files-verilog-decrypt/
-./build_verilog_shared.sh   # Shared encrypt+decrypt -> generated-files-verilog-shared/
+./build.py --enc      # Standalone encrypt     -> generated-files-verilog-encrypt/
+./build.py --dec      # Standalone decrypt     -> generated-files-verilog-decrypt/
+./build.py --shared   # Shared encrypt+decrypt -> generated-files-verilog-shared/
 ```
 
 ## Source Layout (mirrors ../pipelinec_build/src/)
