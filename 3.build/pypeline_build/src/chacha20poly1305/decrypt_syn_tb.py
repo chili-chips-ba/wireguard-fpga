@@ -30,6 +30,7 @@ from pypeline import (
     sim_assert,
     sim_print,
     array_to_uint_be,
+    hex,
 )
 
 import chacha20poly1305_decrypt_ports
