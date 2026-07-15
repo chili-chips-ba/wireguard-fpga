@@ -15,11 +15,13 @@ import pypeline_env  # noqa: F401
 
 from pypeline import (
     MAIN,
+    Wire,
     wires,
     Reg,
     uint1_t,
     uint8_t,
     uint32_t,
+    sim_assert,
     sim_print,
     array_to_uint_be,
 )
@@ -51,6 +53,23 @@ from tb_common import (
     EXPECTED_TAGS,
     CIPHERTEXT_LENS,
 )
+
+
+# Sticky (stays 1 forever once set) and one clock cycle delayed relative to the
+# "Test N DONE!" print that marks completion -- read by top-level *_syn_tb.py files
+# to decide when to call sim_finish(). This testbench doesn't call sim_finish()
+# directly since the shared build runs it alongside decrypt_syn_tb() in one
+# simulation, and only the top-level file knows whether it needs to wait for one or
+# both testbenches. Sticky (rather than a one-cycle pulse) so the shared build's
+# checker can correctly wait for both flags even though encrypt/decrypt finish at
+# different cycle counts. The one-cycle delay (see encrypt_all_done_reg below --
+# this Wire mirrors its *previous*-cycle value, not its newly-written value) gives
+# the completing cycle's own "Test N DONE!" print process a full clock edge to
+# flush before a finish-checker's std.env.finish can possibly preempt it -- VHDL
+# gives no ordering guarantee between different processes triggered by the same
+# clock edge, confirmed empirically (without this delay, the final packet's DONE
+# print was sometimes lost from the GHDL sim log).
+encrypt_all_done: Wire[uint1_t]
 
 
 # CSR values available all at once do not need to be static=registers
@@ -85,6 +104,13 @@ def encrypt_syn_tb() -> axis128_t:
     plaintext: Reg[uint8_t[PLAINTEXT_TEST_STR_MAX_SIZE]]
     plaintext_remaining: Reg[uint32_t]
     cycle_counter: Reg[uint32_t]
+    encrypt_all_done_reg: Reg[uint1_t]
+
+    # Drive the Wire from the sticky reg's *previous*-cycle value (read here,
+    # before encrypt_all_done_reg is possibly written later in this same
+    # execution) -- see encrypt_all_done's declaration above for why this
+    # one-cycle delay matters.
+    encrypt_all_done = encrypt_all_done_reg
 
     # Encrypt:
     if cycle_counter == 0:
@@ -169,24 +195,26 @@ def encrypt_syn_tb() -> axis128_t:
             # and eod is never set here (the auth tag word is still to come)
             for i in range(16):
                 expected_keep: uint1_t = ciphertext_remaining > i
-                if out_axis.data.frag.keep[i] != expected_keep:
-                    # lane index as a fixed-width value: a bare {i} literal's
-                    # width would vary across the unrolled iterations, giving
-                    # each printf instance a different port width
-                    lane: uint8_t = i
-                    sim_print(
-                        f"ERROR: Encrypt: Ciphertext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.data.frag.keep[i]}"
-                    )
+                # lane index as a fixed-width value: a bare {i} literal's width
+                # would vary across the unrolled iterations, giving each
+                # sim_assert instance a different port width
+                lane: uint8_t = i
+                sim_assert(
+                    out_axis.data.frag.keep[i] == expected_keep,
+                    f"Encrypt: Ciphertext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.data.frag.keep[i]}",
+                )
                 if expected_keep:
-                    if out_axis.data.frag.data[i] != expected_ciphertext[i]:
-                        ciphertext_pos: uint32_t = (
-                            ciphertext_size - ciphertext_remaining
-                        ) + i
-                        sim_print(
-                            f"ERROR: Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(out_axis.data.frag.data[i])}"
-                        )
-            if out_axis.data.eod[0]:
-                sim_print("ERROR: Encrypt: Early end to ciphertext output (before auth tag)!")
+                    ciphertext_pos: uint32_t = (
+                        ciphertext_size - ciphertext_remaining
+                    ) + i
+                    sim_assert(
+                        out_axis.data.frag.data[i] == expected_ciphertext[i],
+                        f"Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(out_axis.data.frag.data[i])}",
+                    )
+            sim_assert(
+                ~out_axis.data.eod[0],
+                "Encrypt: Early end to ciphertext output (before auth tag)!",
+            )
             if ciphertext_remaining > 16:
                 ciphertext_remaining = ciphertext_remaining - 16
                 # ARRAY_SHIFT_DOWN(expected_ciphertext, CIPHERTEXT_MAX_SIZE, 16)
@@ -200,14 +228,18 @@ def encrypt_syn_tb() -> axis128_t:
             for i in range(POLY1305_AUTH_TAG_SIZE):
                 # fixed-width lane index for printing (see ciphertext loop)
                 tag_lane: uint8_t = i
-                if ~out_axis.data.frag.keep[i]:
-                    sim_print(f"ERROR: Encrypt: Auth tag keep not set at lane {tag_lane}!")
-                if out_axis.data.frag.data[i] != expected_tag[i]:
-                    sim_print(
-                        f"ERROR: Encrypt: Auth tag mismatch at byte[{tag_lane}]. expected {hex(expected_tag[i])} got {hex(out_axis.data.frag.data[i])}"
-                    )
-            if ~out_axis.data.eod[0]:
-                sim_print("ERROR: Encrypt: Auth tag word missing end of packet!")
+                sim_assert(
+                    out_axis.data.frag.keep[i],
+                    f"Encrypt: Auth tag keep not set at lane {tag_lane}!",
+                )
+                sim_assert(
+                    out_axis.data.frag.data[i] == expected_tag[i],
+                    f"Encrypt: Auth tag mismatch at byte[{tag_lane}]. expected {hex(expected_tag[i])} got {hex(out_axis.data.frag.data[i])}",
+                )
+            sim_assert(
+                out_axis.data.eod[0],
+                "Encrypt: Auth tag word missing end of packet!",
+            )
             sim_print(f"Encrypt: Test {output_packet_count} DONE!")
             output_packet_count = output_packet_count + 1
             if output_packet_count < NUM_PLAINTEXT_TEST_STRS:
@@ -219,6 +251,11 @@ def encrypt_syn_tb() -> axis128_t:
                 sim_print(
                     f"Encrypt: Checking ciphertext for next test string {output_packet_count}..."
                 )
+            else:
+                # All packets checked -- signal completion (sticky; see
+                # encrypt_all_done's declaration above). The top-level file
+                # decides when it's safe to actually call sim_finish().
+                encrypt_all_done_reg = 1
 
     cycle_counter = cycle_counter + 1
 

@@ -21,11 +21,13 @@ import pypeline_env  # noqa: F401
 
 from pypeline import (
     MAIN,
+    Wire,
     wires,
     Reg,
     uint1_t,
     uint8_t,
     uint32_t,
+    sim_assert,
     sim_print,
     array_to_uint_be,
 )
@@ -74,6 +76,12 @@ EXPECTED_PLAINTEXT_LENS = PLAINTEXT_LENS + [PLAINTEXT_LENS[0]]
 EXPECTED_VERIFIED = [1] * NUM_PLAINTEXT_TEST_STRS + [0]
 
 
+# Sticky and one clock cycle delayed relative to the completing "Test N DONE!" print
+# -- see encrypt_syn_tb.py's matching Wire declaration for the full explanation (why
+# this testbench doesn't call sim_finish() itself, why sticky, why delayed).
+decrypt_all_done: Wire[uint1_t]
+
+
 # CSR values available all at once do not need to be static=registers
 # Streaming inputs data is done as shift register
 @MAIN
@@ -106,6 +114,11 @@ def decrypt_syn_tb() -> axis128_t:
     ciphertext_remaining_in: Reg[uint32_t]
     input_tag: Reg[uint8_t[POLY1305_AUTH_TAG_SIZE]]
     cycle_counter: Reg[uint32_t]
+    decrypt_all_done_reg: Reg[uint1_t]
+
+    # Drive the Wire from the sticky reg's *previous*-cycle value -- see
+    # encrypt_syn_tb.py's matching comment for why this one-cycle delay matters.
+    decrypt_all_done = decrypt_all_done_reg
 
     # Initialize/Reset Logic
     if cycle_counter == 0:
@@ -201,36 +214,38 @@ def decrypt_syn_tb() -> axis128_t:
         )
 
         # The verification result rides alongside the whole output packet
-        if chacha20poly1305_decrypt_ports.is_verified_out != expected_verified:
-            sim_print(
-                f"ERROR: Decrypt: is_verified mismatch. expected {expected_verified} got {chacha20poly1305_decrypt_ports.is_verified_out}"
-            )
+        sim_assert(
+            chacha20poly1305_decrypt_ports.is_verified_out == expected_verified,
+            f"Decrypt: is_verified mismatch. expected {expected_verified} got {chacha20poly1305_decrypt_ports.is_verified_out}",
+        )
 
         # Compare keep pattern (partial on the final word) and, for kept
         # lanes, the data bytes to the expected plaintext
         for i in range(16):
             expected_keep: uint1_t = plaintext_remaining_out > i
-            if out_axis.data.frag.keep[i] != expected_keep:
-                # lane index as a fixed-width value: a bare {i} literal's
-                # width would vary across the unrolled iterations, giving
-                # each printf instance a different port width
-                lane: uint8_t = i
-                sim_print(
-                    f"ERROR: Decrypt: Plaintext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.data.frag.keep[i]}"
-                )
+            # lane index as a fixed-width value: a bare {i} literal's width
+            # would vary across the unrolled iterations, giving each
+            # sim_assert instance a different port width
+            lane: uint8_t = i
+            sim_assert(
+                out_axis.data.frag.keep[i] == expected_keep,
+                f"Decrypt: Plaintext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.data.frag.keep[i]}",
+            )
             if expected_keep:
-                if out_axis.data.frag.data[i] != plaintext_out_expected[i]:
-                    plaintext_pos: uint32_t = (
-                        plaintext_out_size - plaintext_remaining_out
-                    ) + i
-                    sim_print(
-                        f"ERROR: Decrypt: Plaintext mismatch at byte[{plaintext_pos}]. expected {hex(plaintext_out_expected[i])} got {hex(out_axis.data.frag.data[i])}"
-                    )
+                plaintext_pos: uint32_t = (
+                    plaintext_out_size - plaintext_remaining_out
+                ) + i
+                sim_assert(
+                    out_axis.data.frag.data[i] == plaintext_out_expected[i],
+                    f"Decrypt: Plaintext mismatch at byte[{plaintext_pos}]. expected {hex(plaintext_out_expected[i])} got {hex(out_axis.data.frag.data[i])}",
+                )
 
         # Handle stream end
         if out_axis.data.eod[0]:
-            if plaintext_remaining_out > 16:
-                sim_print("ERROR: Decrypt: Early end to Plaintext output!")
+            sim_assert(
+                plaintext_remaining_out <= 16,
+                "Decrypt: Early end to Plaintext output!",
+            )
             sim_print(f"Decrypt: Test {output_packet_count} DONE!")
             output_packet_count = output_packet_count + 1
             if output_packet_count < NUM_PACKETS:
@@ -242,14 +257,21 @@ def decrypt_syn_tb() -> axis128_t:
                 sim_print(
                     f"Decrypt: Checking plaintext for next test string {output_packet_count}..."
                 )
+            else:
+                # All packets checked -- signal completion (sticky; see
+                # decrypt_all_done's declaration above). The top-level file
+                # decides when it's safe to actually call sim_finish().
+                decrypt_all_done_reg = 1
         else:
+            sim_assert(
+                plaintext_remaining_out > 16,
+                "Decrypt: Plaintext word missing end of packet!",
+            )
             if plaintext_remaining_out > 16:
                 plaintext_remaining_out = plaintext_remaining_out - 16
                 # ARRAY_SHIFT_DOWN(plaintext_out_expected, PLAINTEXT_MAX_SIZE, 16)
                 for i in range(PLAINTEXT_MAX_SIZE - 16):
                     plaintext_out_expected[i] = plaintext_out_expected[i + 16]
-            else:
-                sim_print("ERROR: Decrypt: Plaintext word missing end of packet!")
 
     cycle_counter = cycle_counter + 1
 
