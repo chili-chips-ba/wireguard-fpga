@@ -21,7 +21,7 @@ import random
 
 import pypeline_env  # noqa: F401
 
-from pypeline import MAIN, wires, uint8_t, sim_input, sim_output, sim_print
+from pypeline import MAIN, wires, uint8_t, sim_input, sim_output, sim_print, hex
 
 import chacha20poly1305_encrypt_ports
 
