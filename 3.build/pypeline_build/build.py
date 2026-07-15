@@ -46,18 +46,7 @@ def main():
         print("WARNING: $PIPELINEC environment variable not set. Falling back to 'pipelinec' in PATH.")
         pipelinec_bin = "pipelinec"
 
-    # 2. Map Cycle Counts
-    # Map key: (design_short, is_syn_tb, is_comb) -> run cycles
-    run_cycles = {
-        ("dec", False, True): "1350",   # standalone decrypt, non-syn tb, comb native
-        ("shared", False, True): "2400",# shared, non-syn tb, comb native
-        ("dec", True, True): "380",     # standalone decrypt, syn tb, comb
-        ("shared", True, True): "600",  # shared, syn tb, comb
-        ("dec", True, False): "900",    # standalone decrypt, syn tb, pipelined
-        ("shared", True, False): "1200",# shared, syn tb, pipelined
-    }
-    
-    # 3. Construct Build Parameters
+    # 2. Construct Build Parameters
     if not args.sim:
         # --- VERILOG BUILD PATH ---
         dir_suffix = design_name if design_name != "encrypt_decrypt_shared" else "shared"
@@ -94,11 +83,14 @@ def main():
         if not args.native:
             cmd.extend(["--cocotb", "--ghdl"])
             
-        cycle_key = (design_short if design_short != "enc" else "dec", args.syn_tb, args.comb)
-        cycles = run_cycles.get(cycle_key, "1000")
-        cmd.extend(["--run", cycles])
+        # Every testbench (syn_tb and non-syn_tb alike) now calls sim_finish()
+        # once all packets are checked (see src/chacha20poly1305/
+        # encrypt_syn_tb.py / decrypt_syn_tb.py / encrypt_tb.py / decrypt_tb.py
+        # and their *_finish_checker MAINs), so simulation always self-
+        # terminates -- no more hand-tuned --run cycle counts to guess.
+        cmd.extend(["--run", "all"])
 
-    # 4. Execute directory management and pipelinec command
+    # 3. Execute directory management and pipelinec command
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)
     

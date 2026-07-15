@@ -15,7 +15,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pypeline_env  # noqa: F401
 
-from pypeline import PART
+from pypeline import MAIN, PART, sim_finish, sim_output
 
 PART("xc7a200tffg1156-2")  # Artix 7 200T
 
@@ -23,3 +23,17 @@ PART("xc7a200tffg1156-2")  # Artix 7 200T
 # imports; only the modules not otherwise reachable need listing here.
 import decrypt_dataflow  # noqa: F401
 import decrypt_tb  # noqa: F401
+
+
+# decrypt_tb.check_out()'s _dec_state dict is plain Python state, invisible
+# to the elaborator -- see chacha20poly1305_encrypt_tb.py's matching checker
+# for why this is safe.
+@sim_output
+def check_done():
+    if decrypt_tb._dec_state["out_packet_idx"] >= decrypt_tb.NUM_TOTAL_PACKETS:
+        sim_finish()
+
+
+@MAIN
+def decrypt_tb_finish_checker():
+    check_done()

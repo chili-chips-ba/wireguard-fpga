@@ -15,7 +15,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pypeline_env  # noqa: F401
 
-from pypeline import PART
+from pypeline import MAIN, PART, sim_finish
 
 PART("xc7a200tffg1156-2")  # Artix 7 200T
 
@@ -23,3 +23,12 @@ PART("xc7a200tffg1156-2")  # Artix 7 200T
 # imports; only the modules not otherwise reachable need listing here.
 import decrypt_dataflow  # noqa: F401
 import decrypt_syn_tb  # noqa: F401
+
+
+# decrypt_syn_tb() only signals completion via its decrypt_all_done Wire, rather
+# than calling sim_finish() itself -- see decrypt_syn_tb.py and
+# chacha20poly1305_encrypt_syn_tb.py's matching checker for why.
+@MAIN
+def decrypt_syn_tb_finish_checker():
+    if decrypt_syn_tb.decrypt_all_done:
+        sim_finish()

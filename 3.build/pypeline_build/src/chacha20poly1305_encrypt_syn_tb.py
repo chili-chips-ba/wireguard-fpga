@@ -15,7 +15,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pypeline_env  # noqa: F401
 
-from pypeline import PART
+from pypeline import MAIN, PART, sim_finish
 
 PART("xc7a200tffg1156-2")  # Artix 7 200T
 
@@ -23,3 +23,13 @@ PART("xc7a200tffg1156-2")  # Artix 7 200T
 # imports; only the modules not otherwise reachable need listing here.
 import encrypt_dataflow  # noqa: F401
 import encrypt_syn_tb  # noqa: F401
+
+
+# encrypt_syn_tb() only signals completion via its encrypt_all_done Wire, rather
+# than calling sim_finish() itself, so that the shared build (which runs it
+# alongside decrypt_syn_tb() in one simulation) can wait for both testbenches --
+# see encrypt_syn_tb.py. For this solo build only encrypt's own flag matters.
+@MAIN
+def encrypt_syn_tb_finish_checker():
+    if encrypt_syn_tb.encrypt_all_done:
+        sim_finish()
