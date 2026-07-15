@@ -147,7 +147,8 @@ def encrypt_syn_tb() -> axis128_t:
         if axis_in_s.valid & chacha20poly1305_encrypt_ports.axis_in_ready:
             in_chunk: uint128_t = array_to_uint_be(axis_in_s.data.frag.data)
             sim_print(
-                f"Encrypt: Input Plaintext next 16 bytes: {hex(in_chunk[127:96])}{hex(in_chunk[95:64])}{hex(in_chunk[63:32])}{hex(in_chunk[31:0])}"
+                f"Encrypt: Input Plaintext next 16 bytes: {hex(in_chunk[127:96])}{hex(in_chunk[95:64])}{hex(in_chunk[63:32])}{hex(in_chunk[31:0])}",
+                debug=True,
             )
             if axis_in_s.data.eod[0]:
                 sim_print(f"Encrypt: End of input plaintext for test {input_packet_count}")
@@ -188,7 +189,8 @@ def encrypt_syn_tb() -> axis128_t:
         # Print output as it flows out of dut
         out_chunk: uint128_t = array_to_uint_be(out_axis.data.frag.data)
         sim_print(
-            f"Encrypt: Output Ciphertext/Tag next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}"
+            f"Encrypt: Output Ciphertext/Tag next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}",
+            debug=True,
         )
         if ciphertext_remaining > 0:
             # Expecting a ciphertext word: keep marks exactly the remaining

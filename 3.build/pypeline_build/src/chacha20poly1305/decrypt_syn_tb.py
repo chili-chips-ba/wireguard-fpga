@@ -155,7 +155,8 @@ def decrypt_syn_tb() -> axis128_t:
         if axis_in_s.valid & chacha20poly1305_decrypt_ports.axis_in_ready:
             in_chunk: uint128_t = array_to_uint_be(axis_in_s.data.frag.data)
             sim_print(
-                f"Decrypt: Input Ciphertext next 16 bytes: {hex(in_chunk[127:96])}{hex(in_chunk[95:64])}{hex(in_chunk[63:32])}{hex(in_chunk[31:0])}"
+                f"Decrypt: Input Ciphertext next 16 bytes: {hex(in_chunk[127:96])}{hex(in_chunk[95:64])}{hex(in_chunk[63:32])}{hex(in_chunk[31:0])}",
+                debug=True,
             )
             if ciphertext_remaining_in > 16:
                 ciphertext_remaining_in = ciphertext_remaining_in - 16
@@ -211,7 +212,8 @@ def decrypt_syn_tb() -> axis128_t:
         # Print plaintext as it flows out of dut
         out_chunk: uint128_t = array_to_uint_be(out_axis.data.frag.data)
         sim_print(
-            f"Decrypt: Output Plaintext next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}"
+            f"Decrypt: Output Plaintext next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}",
+            debug=True,
         )
 
         # The verification result rides alongside the whole output packet
