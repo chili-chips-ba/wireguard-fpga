@@ -15,7 +15,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pypeline_env  # noqa: F401
 
-from pypeline import MAIN, PART, sim_finish, sim_output
+from pypeline import MAIN, PART, sim_finish, sim_output, wires
 
 PART("xc7a200tffg1156-2")  # Artix 7 200T
 
@@ -37,6 +37,11 @@ def check_done():
         sim_finish()
 
 
+# @wires: nothing here to actually synthesize/measure a path delay for -- see
+# chacha20poly1305_encrypt_syn_tb.py's matching checker comment (this variant
+# never reaches real synthesis anyway, per the module docstring, but marking
+# it keeps the pattern consistent with the syn_tb checkers).
 @MAIN
+@wires
 def encrypt_tb_finish_checker():
     check_done()

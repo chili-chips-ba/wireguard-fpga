@@ -15,7 +15,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pypeline_env  # noqa: F401
 
-from pypeline import MAIN, PART, sim_finish
+from pypeline import MAIN, PART, sim_finish, wires
 
 PART("xc7a200tffg1156-2")  # Artix 7 200T
 
@@ -29,7 +29,18 @@ import encrypt_syn_tb  # noqa: F401
 # than calling sim_finish() itself, so that the shared build (which runs it
 # alongside decrypt_syn_tb() in one simulation) can wait for both testbenches --
 # see encrypt_syn_tb.py. For this solo build only encrypt's own flag matters.
+#
+# @wires (#pragma FUNC_WIRES): this checker is pure control-flow around
+# sim_finish() -- a void, simulation-only builtin with no real output -- so it
+# has nothing to actually synthesize/measure a path delay for either; without
+# @wires it was still sent through real per-function synthesis for
+# pre-pipelining path-delay estimation (see LOGIC_IS_ZERO_DELAY in SYN.py,
+# which checks parser_state.func_marked_wires -- what @wires sets -- before
+# ever reaching the is_c_built_in/IS_SIM_CTRL_FUNC_NAME check that only
+# applies to the sim_finish() submodule instance itself, not its containing
+# MAIN).
 @MAIN
+@wires
 def encrypt_syn_tb_finish_checker():
     if encrypt_syn_tb.encrypt_all_done:
         sim_finish()
