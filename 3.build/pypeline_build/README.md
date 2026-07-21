@@ -195,6 +195,37 @@ stimulus is generated and outputs checked:
   needed. Use this style for fast iteration and broader random coverage; use
   the synthesizable style for the cocotb/GHDL acceptance tests.
 
+## Native vs VHDL Cycle-Accuracy Check (`pypeline_sim_debug.py`)
+
+`encrypt_syn_tb.py`/`decrypt_syn_tb.py` tag their per-word data prints —
+each 16-byte chunk of input plaintext/ciphertext and output
+ciphertext/plaintext — with `sim_print(..., debug=True)`. Each tagged print
+sits inside the same `valid & ready`-gated, register-driven block that
+drives the rest of that testbench's checking logic, not inside any
+pipelined combinational region, satisfying `pypeline_sim_debug.py`'s rules
+for probes used in a pipelined (non-`--comb`) compare.
+
+This lets the pipelined syn_tb builds be run through `pypeline_sim_debug.py`
+that compares the native
+latency-emulated simulation against the real cocotb+GHDL VHDL simulation —
+both post-autopipelining, cycle by cycle:
+
+```bash
+pypeline_sim_debug.py ./src/chacha20poly1305_encrypt_syn_tb.py --sim --run all
+pypeline_sim_debug.py ./src/chacha20poly1305_decrypt_syn_tb.py --sim --run all
+pypeline_sim_debug.py ./src/chacha20poly1305_encrypt_decrypt_shared_syn_tb.py --sim --run all
+```
+
+Each run does a full synthesis build first (both the native and VHDL sides
+need the real, discovered pipeline latencies), then diffs the two runs'
+`debug=True`-tagged lines cycle by cycle, reporting the first cycle where
+they disagree. Agreement here confirms the native simulator's emulated
+per-stage latencies actually match the real autopipelined VHDL timing, not
+just that both eventually produce the same final output — a check the
+ordinary `sim_assert`-based pass/fail criteria above can't provide on their
+own, since assertions on final output data don't catch a data word arriving
+correct but on the wrong cycle.
+
 ## Test Vectors
 
 ### Synthesizable-style Testbench
@@ -229,7 +260,7 @@ packet: the DUT must still emit that packet's plaintext but with
 `is_verified_out` low — exercising the Poly1305 verify path's reject case,
 which the all-valid vectors never hit.
 
-### Test Vectors — Non-synthesizable Testbench
+### Non-synthesizable Testbench
 
 `tb_common_sim.py` reuses the same fixed `KEY`/`NONCE`/`AAD` as
 `tb_common.py`, but does not precompute any ciphertext/tag vectors — instead
