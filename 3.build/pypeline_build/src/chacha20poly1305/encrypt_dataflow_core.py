@@ -12,7 +12,14 @@ chacha20.make_quarter_round/stream.make_stream_pipeline).
 """
 import pypeline_env  # noqa: F401
 
-from pypeline import hw_func, struct, NamedTuple, Feedback, uint1_t, uint8_t
+from pypeline import (
+    hw_func,
+    struct,
+    NamedTuple,
+    Feedback,
+    uint1_t,
+    uint8_t,
+)
 
 import prep_auth_data
 import poly1305
