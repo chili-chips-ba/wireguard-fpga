@@ -41,10 +41,10 @@ def main():
         design_name = "encrypt_decrypt_shared"
         design_short = "shared"
 
-    pipelinec_bin = os.environ.get("PIPELINEC")
+    pipelinec_bin = os.environ.get("PYPELINEC")
     if not pipelinec_bin:
-        print("WARNING: $PIPELINEC environment variable not set. Falling back to 'pipelinec' in PATH.")
-        pipelinec_bin = "pipelinec"
+        print("WARNING: $PYPELINEC environment variable not set. Falling back to 'pypelinec' in PATH.")
+        pipelinec_bin = "pypelinec"
 
     # 2. Construct Build Parameters
     if not args.sim:

@@ -11,7 +11,7 @@ Adds to sys.path:
     (`import chacha20`, `import poly1305`, ...) while files keep the same
     directory layout as ../pipelinec_build/src/.
 
-The PipelineC repo is located via $PIPELINEC (path to <repo>/src/pipelinec,
+The PipelineC repo is located via $PYPELINEC (path to <repo>/src/pypelinec,
 same env var the build scripts use), falling back to the sibling checkout.
 """
 
@@ -27,7 +27,7 @@ def _add(path):
         sys.path.insert(0, path)
 
 
-_pipelinec_exe = os.environ.get("PIPELINEC")
+_pipelinec_exe = os.environ.get("PYPELINEC")
 if _pipelinec_exe:
     _repo = os.path.dirname(os.path.dirname(os.path.abspath(_pipelinec_exe)))
 else:
