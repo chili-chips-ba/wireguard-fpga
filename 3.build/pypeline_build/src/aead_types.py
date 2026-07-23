@@ -11,7 +11,8 @@ import pypeline_env  # noqa: F401
 from pypeline import uint1_t, uint8_t, make_uint_t
 from kept_data_bus import make_kept_data_bus_t
 from ndarray import make_ndarray_fragment_t
-from stream.stream import make_stream_t
+from interface.interface import make_interface_feedback_type, make_interface_type
+from stream.stream import make_stream_interface
 from axi.axis import make_keep_count, make_axis_broadcast_interlock
 
 # ChaCha20 sizes
@@ -41,24 +42,37 @@ poly1305_auth_tag_uint_t = uint128_t
 # 128b AXIS bus: 16 byte lanes (C axis128_t / stream(axis128_t))
 axis128_bus_t = make_kept_data_bus_t(uint8_t, 16)
 axis128_frag_t = make_ndarray_fragment_t(axis128_bus_t, 1)  # C axis128_t
-axis128_t = make_stream_t(axis128_frag_t)  # C stream(axis128_t)
+axis128_if = make_stream_interface(axis128_frag_t)  # C stream(axis128_t)
+axis128_t = make_interface_type(axis128_if)  # feedforward half (data+valid)
+axis128_fb_t = make_interface_feedback_type(axis128_if)  # reverse half (ready)
 
 # 512b AXIS bus: 64 byte lanes (C axis512_t / stream(axis512_t))
 axis512_bus_t = make_kept_data_bus_t(uint8_t, 64)
 axis512_frag_t = make_ndarray_fragment_t(axis512_bus_t, 1)  # C axis512_t
-axis512_t = make_stream_t(axis512_frag_t)  # C stream(axis512_t)
+axis512_if = make_stream_interface(axis512_frag_t)  # C stream(axis512_t)
+axis512_t = make_interface_type(axis512_if)
+axis512_fb_t = make_interface_feedback_type(axis512_if)
 
 # Scalar streams (C DECL_STREAM_TYPE(...))
-poly1305_key_stream_t = make_stream_t(poly1305_key_uint_t)
-poly1305_auth_tag_stream_t = make_stream_t(poly1305_auth_tag_uint_t)
-uint1_stream_t = make_stream_t(uint1_t)
+poly1305_key_stream_if = make_stream_interface(poly1305_key_uint_t)
+poly1305_key_stream_t = make_interface_type(poly1305_key_stream_if)
+poly1305_key_stream_fb_t = make_interface_feedback_type(poly1305_key_stream_if)
+
+poly1305_auth_tag_stream_if = make_stream_interface(poly1305_auth_tag_uint_t)
+poly1305_auth_tag_stream_t = make_interface_type(poly1305_auth_tag_stream_if)
+poly1305_auth_tag_stream_fb_t = make_interface_feedback_type(poly1305_auth_tag_stream_if)
+
+uint1_stream_if = make_stream_interface(uint1_t)
+uint1_stream_t = make_interface_type(uint1_stream_if)
+uint1_stream_fb_t = make_interface_feedback_type(uint1_stream_if)
 
 # C axis128_keep_count
 axis128_keep_count = make_keep_count(axis128_bus_t, 16)
 
-# Combinational 2-way broadcast/fork of an axis128_t stream (shared by the
-# encrypt/decrypt dataflows' ciphertext-stream forks)
-axis128_2broadcast, axis128_2broadcast_t = make_axis_broadcast_interlock(axis128_t, 2)
+# Combinational 2-way broadcast/fork of an axis128 stream (shared by the
+# encrypt/decrypt dataflows' ciphertext-stream forks). `axis_out` is an array
+# interface port: two independently back-pressured copies of the input.
+axis128_2broadcast, axis128_2broadcast_t = make_axis_broadcast_interlock(axis128_if, 2)
 
 
 # Zero-valued compound-init helpers (C `... = {0}` initializers).

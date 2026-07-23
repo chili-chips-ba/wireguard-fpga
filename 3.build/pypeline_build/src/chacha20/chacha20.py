@@ -25,7 +25,13 @@ from pypeline import (
     make_type_to_bytes,
     make_type_from_bytes,
 )
-from stream.stream import make_stream_t
+from interface.interface import (
+    interface,
+    make_interface_feedback_type,
+    make_interface_type,
+)
+from interface.interface_func import make_hw_func_from_interface_func
+from stream.stream import make_stream_interface
 from stream.stream_pipeline import make_stream_pipeline
 from axi.axis import make_dwidth_widen, make_dwidth_narrow
 
@@ -35,10 +41,16 @@ from aead_types import (
     CHACHA20_NONCE_SIZE,
     CHACHA20_BLOCK_SIZE,
     POLY1305_KEY_SIZE,
+    axis128_if,
     axis128_t,
+    axis128_fb_t,
     axis512_frag_t,
+    axis512_if,
     axis512_t,
+    axis512_fb_t,
+    poly1305_key_stream_if,
     poly1305_key_stream_t,
+    poly1305_key_stream_fb_t,
     axis128_null,
     axis512_null,
     axis512_frag_null,
@@ -178,7 +190,9 @@ class chacha20_loop_body_in_t(NamedTuple):
     counter: uint32_t
 
 
-chacha20_loop_body_stream_t = make_stream_t(chacha20_loop_body_in_t)
+chacha20_loop_body_stream_if = make_stream_interface(chacha20_loop_body_in_t)
+chacha20_loop_body_stream_t = make_interface_type(chacha20_loop_body_stream_if)
+chacha20_loop_body_stream_fb_t = make_interface_feedback_type(chacha20_loop_body_stream_if)
 
 
 def chacha20_loop_body_in_null():
@@ -234,12 +248,13 @@ axis512_to_axis128, _, _ = make_dwidth_narrow(uint8_t, 16, 4)
 
 @struct
 class chacha20_fsm_t(NamedTuple):
-    # Outputs
-    ready_for_axis_in: uint1_t
-    poly_key: poly1305_key_stream_t
-    axis: axis128_t
+    # One field per port: input ports return their reverse half, output ports
+    # return their feedforward half (the other half is an arg of the same name).
+    axis_in: axis128_fb_t
+    poly_key_out: poly1305_key_stream_t
+    axis_out: axis128_t
     to_pipeline: chacha20_loop_body_stream_t
-    ready_for_from_pipeline: uint1_t
+    from_pipeline: axis512_fb_t
 
 
 @hw_func
@@ -248,9 +263,9 @@ def chacha20_fsm(
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
     axis_in: axis128_t,
-    ready_for_poly_key_out: uint1_t,
-    ready_for_axis_out: uint1_t,
-    to_pipeline_ready: uint1_t,
+    poly_key_out: poly1305_key_stream_fb_t,
+    axis_out: axis128_fb_t,
+    to_pipeline: chacha20_loop_body_stream_fb_t,
     from_pipeline: axis512_t,
 ) -> chacha20_fsm_t:
     o: chacha20_fsm_t
@@ -263,7 +278,7 @@ def chacha20_fsm(
     block_count: Reg[uint32_t]
     # Default no input into width conversion
     dwidth_conv_data_in: axis128_t = axis128_null()
-    o.ready_for_axis_in = 0
+    o.axis_in.ready = 0
     # Default no input into pipeline
     o.to_pipeline = chacha20_loop_body_stream_null()
     #  other than CSR inputs and such
@@ -271,20 +286,20 @@ def chacha20_fsm(
     o.to_pipeline.data.nonce = nonce
     o.to_pipeline.data.counter = block_count
     # Default not outputting poly key
-    o.poly_key = poly1305_key_stream_null()
+    o.poly_key_out = poly1305_key_stream_null()
 
     # Convert input axis to 512b
     # Input axis into dwidth conv default gated until in plaintext state
     if input_side_state == chacha20_state_t.PLAINTEXT:
         dwidth_conv_data_in = axis_in
-    block_in_ready: Feedback[uint1_t]
+    block_in_ready: Feedback[axis512_fb_t]
     in_to_block = axis128_to_axis512(dwidth_conv_data_in, block_in_ready)
     block_in_stream: axis512_t = in_to_block.wide_out
     # Default not ready for incoming blocks
-    block_in_ready = 0
+    block_in_ready = axis512_fb_t(ready=0)
     # Input axis into dwidth conv default gated until in plaintext state
     if input_side_state == chacha20_state_t.PLAINTEXT:
-        o.ready_for_axis_in = in_to_block.narrow_in_ready
+        o.axis_in = in_to_block.narrow_in
 
     if input_side_state == chacha20_state_t.POLY_KEY:
         # Wait for incoming plaintext
@@ -296,15 +311,15 @@ def chacha20_fsm(
                 o.to_pipeline.data.axis_in.frag.keep[i] = 1
             o.to_pipeline.valid = 1
             # Wait until data accepted into pipeline
-            if to_pipeline_ready:
+            if to_pipeline.ready:
                 block_count = block_count + 1
                 # then allow a packet of plaintext to flow into the pipeline
                 input_side_state = chacha20_state_t.PLAINTEXT
     else:  # if input_side_state == chacha20_state_t.PLAINTEXT:
         o.to_pipeline.data.axis_in = block_in_stream.data
         o.to_pipeline.valid = block_in_stream.valid
-        block_in_ready = to_pipeline_ready  # FEEDBACK
-        if o.to_pipeline.valid & to_pipeline_ready:
+        block_in_ready = axis512_fb_t(ready=to_pipeline.ready)  # FEEDBACK
+        if o.to_pipeline.valid & to_pipeline.ready:
             block_count = block_count + 1
             # if this was last block into pipeline then reset counter and poly key next
             if o.to_pipeline.data.axis_in.eod[0]:
@@ -317,10 +332,10 @@ def chacha20_fsm(
     # Pipeline output demuxing FSM
     output_side_state: Reg[chacha20_state_t]
     # Default not ready for pipeline output
-    o.ready_for_from_pipeline = 0
+    o.from_pipeline.ready = 0
     # Default no block going out
     block_to_out_axis_in: axis512_t = axis512_null()
-    block_to_out_axis_in_ready: Feedback[uint1_t]
+    block_to_out_axis_in_ready: Feedback[axis512_fb_t]
     if output_side_state == chacha20_state_t.POLY_KEY:
         # Wait for the poly key cycle of data to come out of the pipeline
         # it goes out the poly1305_key output stream
@@ -328,34 +343,27 @@ def chacha20_fsm(
         poly_key_bytes: uint8_t[POLY1305_KEY_SIZE]
         for i in range(POLY1305_KEY_SIZE):
             poly_key_bytes[i] = from_pipeline.data.frag.data[i]
-        o.poly_key.data = array_to_uint_le(poly_key_bytes)
-        o.poly_key.valid = from_pipeline.valid
-        o.ready_for_from_pipeline = ready_for_poly_key_out
+        o.poly_key_out.data = array_to_uint_le(poly_key_bytes)
+        o.poly_key_out.valid = from_pipeline.valid
+        o.from_pipeline.ready = poly_key_out.ready
         # When output of key happens move on to plaintext
-        if o.poly_key.valid & ready_for_poly_key_out:
+        if o.poly_key_out.valid & poly_key_out.ready:
             output_side_state = chacha20_state_t.PLAINTEXT
     else:  # if output_side_state == chacha20_state_t.PLAINTEXT
         # Wait for the last cycle of ciphertext data to come out of the pipeline
         block_to_out_axis_in = from_pipeline
-        o.ready_for_from_pipeline = block_to_out_axis_in_ready
-        if from_pipeline.valid & o.ready_for_from_pipeline:
+        o.from_pipeline.ready = block_to_out_axis_in_ready.ready
+        if from_pipeline.valid & o.from_pipeline.ready:
             # If this was last block then reset state
             if from_pipeline.data.eod[0]:
                 output_side_state = chacha20_state_t.POLY_KEY
 
     # Convert pipeline output 512b block stream to 128b
-    block_to_out = axis512_to_axis128(block_to_out_axis_in, ready_for_axis_out)
-    o.axis = block_to_out.narrow_out
-    block_to_out_axis_in_ready = block_to_out.wide_in_ready  # FEEDBACK
+    block_to_out = axis512_to_axis128(block_to_out_axis_in, axis_out)
+    o.axis_out = block_to_out.narrow_out
+    block_to_out_axis_in_ready = block_to_out.wide_in  # FEEDBACK
 
     return o
-
-
-@struct
-class chacha20_stream_out_t(NamedTuple):
-    axis_in_ready: uint1_t
-    poly_key: poly1305_key_stream_t
-    axis_out: axis128_t
 
 
 # One full chacha20 instance: chacha20_fsm plus its own private
@@ -367,36 +375,33 @@ class chacha20_stream_out_t(NamedTuple):
 pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha20_loop_body)
 
 
-@hw_func
-def chacha20_instance(
+@interface
+class chacha20_ports(NamedTuple):
+    """The two output ports of a chacha20 instance."""
+
+    poly_key_out: poly1305_key_stream_if
+    axis_out: axis128_if
+
+
+# An interface function: only the feedforward direction is written. The FSM and
+# its private pipeline form a loop (the FSM consumes `from_pipeline`, which the
+# pipeline -- called after it -- produces), so the generated wiring places a
+# Feedback on the feedforward edge as well as on the reverse edge. That is
+# exactly the pipeline_out / pipeline_in_ready pair this used to thread by hand.
+def chacha20_instance_wiring(
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
-    axis_in: axis128_t,
-    poly_key_ready: uint1_t,
-    axis_out_ready: uint1_t,
-) -> chacha20_stream_out_t:
-    o: chacha20_stream_out_t
+    axis_in: axis128_if,
+) -> chacha20_ports:
+    fsm_out = chacha20_fsm(key, nonce, axis_in, pipe.stream_out)
+    pipe = pipeline_func(fsm_out.to_pipeline)
+    return chacha20_ports(poly_key_out=fsm_out.poly_key_out, axis_out=fsm_out.axis_out)
 
-    pipeline_in_ready: Feedback[uint1_t]
-    pipeline_out: Feedback[axis512_t]
 
-    fsm_out = chacha20_fsm(
-        key,
-        nonce,
-        axis_in,
-        poly_key_ready,
-        axis_out_ready,
-        pipeline_in_ready,
-        pipeline_out,
-    )
-    o.axis_in_ready = fsm_out.ready_for_axis_in
-    o.poly_key = fsm_out.poly_key
-    o.axis_out = fsm_out.axis
-
-    pipeline_result = pipeline_func(
-        fsm_out.to_pipeline, fsm_out.ready_for_from_pipeline
-    )
-    pipeline_out = pipeline_result.stream_out
-    pipeline_in_ready = pipeline_result.ready_for_stream_in
-
-    return o
+# chacha20_stream_out_t stays the one contract shared with the
+# chacha20_{encrypt,decrypt}_shared variants, so a dataflow core can call
+# either. Fields: .axis_in (reverse half of the input port), .poly_key_out,
+# .axis_out (feedforward halves of the output ports).
+chacha20_instance, chacha20_stream_out_t = make_hw_func_from_interface_func(
+    chacha20_instance_wiring
+)

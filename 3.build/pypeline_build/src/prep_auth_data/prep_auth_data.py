@@ -26,6 +26,7 @@ import aead_types
 from aead_types import (
     AAD_MAX_LEN,
     axis128_t,
+    axis128_fb_t,
     axis128_null,
 )
 
@@ -41,8 +42,8 @@ class prep_auth_data_state_t:
 @struct
 class prep_auth_data_fsm_t(NamedTuple):
     # Outputs
-    ready_for_axis_in: uint1_t
-    axis: axis128_t
+    axis_in: axis128_fb_t  # input port's reverse half
+    axis: axis128_t  # output port's feedforward half
 
 
 @hw_func
@@ -51,7 +52,7 @@ def prep_auth_data_fsm(
     aad: uint8_t[AAD_MAX_LEN],
     aad_len: uint8_t,
     axis_in: axis128_t,
-    ready_for_axis_out: uint1_t,
+    axis: axis128_fb_t,
 ) -> prep_auth_data_fsm_t:
     o: prep_auth_data_fsm_t
     # FSM that adds leading and trailing bytes around the ciphertext stream
@@ -60,7 +61,7 @@ def prep_auth_data_fsm(
     counter: Reg[uint16_t]
 
     # Default not ready for incoming data
-    o.ready_for_axis_in = 0
+    o.axis_in.ready = 0
     # Default not outputting data
     o.axis = axis128_null()
 
@@ -90,7 +91,7 @@ def prep_auth_data_fsm(
         o.axis.valid = 1
 
         # Count AAD bytes as xfer happens
-        if o.axis.valid & ready_for_axis_out:
+        if o.axis.valid & axis.ready:
             # More AAD bytes?
             if counter > 16:
                 # Prepare next AAD bytes to be at bottom of the array
@@ -105,7 +106,7 @@ def prep_auth_data_fsm(
     elif state == prep_auth_data_state_t.CIPHERTEXT:
         # Pass through ciphertext
         o.axis = axis_in
-        o.ready_for_axis_in = ready_for_axis_out
+        o.axis_in.ready = axis.ready
         # last cycle of ciphertext is not the last cycle of output stream
         o.axis.data.eod[0] = 0
         # Data needs to be padded to 16 bytes with zeros
@@ -116,7 +117,7 @@ def prep_auth_data_fsm(
                 o.axis.data.frag.data[i] = 0
 
         # Count ciphertext length as xfer happens
-        if axis_in.valid & o.ready_for_axis_in:
+        if axis_in.valid & o.axis_in.ready:
             counter = counter + aead_types.axis128_keep_count(axis_in.data.frag)
             # As last cycle on input ciphertext passes, move to next state
             if axis_in.data.eod[0]:
@@ -140,6 +141,6 @@ def prep_auth_data_fsm(
         o.axis.valid = 1
 
         # As xfer happens, go back to idle
-        if o.axis.valid & ready_for_axis_out:
+        if o.axis.valid & axis.ready:
             state = prep_auth_data_state_t.IDLE
     return o

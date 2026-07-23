@@ -24,8 +24,10 @@ from stream.stream_fifo import make_stream_fifo
 
 from aead_types import (
     axis128_t,
+    axis128_fb_t,
     axis128_frag_t,
     uint1_stream_t,
+    uint1_stream_fb_t,
 )
 
 # C GLOBAL_STREAM_FIFO(axis128_t, verify_fifo, 128)
@@ -42,17 +44,17 @@ class wait_to_verify_state_t:
 
 @struct
 class wait_to_verify_out_t(NamedTuple):
-    axis_in_ready: uint1_t
-    verify_bit_ready: uint1_t
+    axis_in: axis128_fb_t
+    verify_bit: uint1_stream_fb_t
     axis_out: axis128_t
-    is_verified_out: uint1_t
+    is_verified_out: uint1_t  # plain sideband, no reverse companion
 
 
 @hw_func
 def wait_to_verify(
     axis_in: axis128_t,
     verify_bit: uint1_stream_t,
-    axis_out_ready: uint1_t,
+    axis_out: axis128_fb_t,
 ) -> wait_to_verify_out_t:
     o: wait_to_verify_out_t
     state: Reg[wait_to_verify_state_t]
@@ -61,21 +63,21 @@ def wait_to_verify(
 
     # verify_fifo <-> this FSM's own mutual dependency (fifo's read data/ready
     # feed the FSM, which in turn drives the fifo's write data/read-enable)
-    verify_fifo_in_ready: Feedback[uint1_t]
+    verify_fifo_in_ready: Feedback[axis128_fb_t]
     verify_fifo_out: Feedback[axis128_t]
 
     # Write side of FIFO
     # the data+valid for input stream (aka fifo write data, write enable)
     verify_fifo_in_s: axis128_t = axis_in
     # the ready signal for the input stream (aka fifo not full signal)
-    o.axis_in_ready = verify_fifo_in_ready
+    o.axis_in = verify_fifo_in_ready
 
     # Read side of FIFO
     # the data+valid for output stream (aka fifo read data, not empty signal)
     o.axis_out = verify_fifo_out
 
     # Default not ready for the single verify bit input
-    o.verify_bit_ready = 0
+    o.verify_bit.ready = 0
     # Default FIFO Read Enable is set by FSM
     verify_fifo_out_ready_s: uint1_t = 0
     # Default output valid/tlast for stream is 0
@@ -92,7 +94,7 @@ def wait_to_verify(
 
         # Wait for verify bit
         # Be ready to accept the single bit
-        o.verify_bit_ready = 1
+        o.verify_bit.ready = 1
 
         if verify_bit.valid:
             # Capture the result and signal reception
@@ -102,7 +104,7 @@ def wait_to_verify(
             state = wait_to_verify_state_t.OUTPUT_PLAINTEXT
     else:  # if state == wait_to_verify_state_t.OUTPUT_PLAINTEXT
         # Plaintext output
-        verify_fifo_out_ready_s = axis_out_ready
+        verify_fifo_out_ready_s = axis_out.ready
         # Valid only if FIFO is not empty
         o.axis_out.valid = verify_fifo_out.valid
 
@@ -111,17 +113,18 @@ def wait_to_verify(
         o.is_verified_out = tags_match_reg
 
         # Check for successful consumption of the last packet
-        if o.axis_out.valid & axis_out_ready:
+        if o.axis_out.valid & axis_out.ready:
             # If output is consumed, check for tlast
             if o.axis_out.data.eod[0]:
                 # End of buffered plaintext, reset the FSM
                 state = wait_to_verify_state_t.WAIT_TO_VERIFY_BIT
 
         # Input ready's are disconnected in this state
-        o.verify_bit_ready = 0
+        o.verify_bit.ready = 0
 
-    fifo_result = verify_fifo_func(verify_fifo_out_ready_s, verify_fifo_in_s)
+    verify_fifo_out_rev: axis128_fb_t = axis128_fb_t(ready=verify_fifo_out_ready_s)
+    fifo_result = verify_fifo_func(verify_fifo_in_s, verify_fifo_out_rev)
     verify_fifo_out = fifo_result.out_stream
-    verify_fifo_in_ready = fifo_result.in_ready
+    verify_fifo_in_ready = fifo_result.in_stream
 
     return o
