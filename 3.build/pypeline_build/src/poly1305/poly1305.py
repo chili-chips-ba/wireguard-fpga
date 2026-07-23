@@ -36,15 +36,27 @@ from pypeline import (
     uint_to_array_le,
     make_type_from_bytes,
 )
-from stream.stream import make_stream_t
+from interface.interface import (
+    interface,
+    make_interface_feedback_type,
+    make_interface_type,
+)
+from interface.interface_func import make_hw_func_from_interface_func
+from stream.stream import make_stream_interface
 from multi_cycle_path import make_valid_ready_mcp
 
 from aead_types import (
     POLY1305_BLOCK_SIZE,
     POLY1305_KEY_SIZE,
+    axis128_if,
     axis128_t,
+    axis128_fb_t,
+    poly1305_key_stream_if,
     poly1305_key_stream_t,
+    poly1305_key_stream_fb_t,
+    poly1305_auth_tag_stream_if,
     poly1305_auth_tag_stream_t,
+    poly1305_auth_tag_stream_fb_t,
 )
 
 U320_NLIMBS = 5
@@ -63,7 +75,9 @@ class u320_t(NamedTuple):
     limbs: uint64_t[U320_NLIMBS]  # 64-bit limbs
 
 
-u320_stream_t = make_stream_t(u320_t)
+u320_stream_if = make_stream_interface(u320_t)
+u320_stream_t = make_interface_type(u320_stream_if)
+u320_stream_fb_t = make_interface_feedback_type(u320_stream_if)
 
 
 def u320_null():
@@ -203,7 +217,11 @@ class poly1305_mac_loop_body_in_t(NamedTuple):
     a: u320_t
 
 
-poly1305_mac_loop_body_stream_t = make_stream_t(poly1305_mac_loop_body_in_t)
+poly1305_mac_loop_body_stream_if = make_stream_interface(poly1305_mac_loop_body_in_t)
+poly1305_mac_loop_body_stream_t = make_interface_type(poly1305_mac_loop_body_stream_if)
+poly1305_mac_loop_body_stream_fb_t = make_interface_feedback_type(
+    poly1305_mac_loop_body_stream_if
+)
 
 
 def poly1305_mac_loop_body_in_null():
@@ -248,11 +266,11 @@ class poly1305_state_t:
 
 @struct
 class poly1305_mac_fsm_t(NamedTuple):
-    ready_for_key: uint1_t
-    ready_for_data_in: uint1_t
+    key: poly1305_key_stream_fb_t
+    data_in: axis128_fb_t
     auth_tag: poly1305_auth_tag_stream_t
-    to_compute: poly1305_mac_loop_body_in_t
-    to_compute_valid: uint1_t
+    to_compute: poly1305_mac_loop_body_stream_t
+    from_compute: u320_stream_fb_t
 
 
 @hw_func
@@ -260,22 +278,24 @@ def poly1305_mac_fsm(
     # Inputs
     key: poly1305_key_stream_t,
     data_in: axis128_t,
-    ready_for_auth_tag_out: uint1_t,
-    from_compute: u320_t,
-    from_compute_valid: uint1_t,
-    ready_for_to_compute: uint1_t,
+    auth_tag: poly1305_auth_tag_stream_fb_t,
+    from_compute: u320_stream_t,
+    to_compute: poly1305_mac_loop_body_stream_fb_t,
 ) -> poly1305_mac_fsm_t:
     o: poly1305_mac_fsm_t
+    # The compute result is consumed the cycle it arrives (as before, when this
+    # port had no ready at all).
+    o.from_compute.ready = 1
     # Default not ready for incoming poly key
-    o.ready_for_key = 0
+    o.key.ready = 0
     # Default not ready for incoming data
-    o.ready_for_data_in = 0
+    o.data_in.ready = 0
     # Default not outputting an auth tag
     o.auth_tag.data = 0
     o.auth_tag.valid = 0
     # Default nothing into compute
-    o.to_compute = poly1305_mac_loop_body_in_null()
-    o.to_compute_valid = 0
+    o.to_compute.data = poly1305_mac_loop_body_in_null()
+    o.to_compute.valid = 0
 
     # The FSM
     state: Reg[poly1305_state_t]
@@ -291,8 +311,8 @@ def poly1305_mac_fsm(
         r = u320_zero  # Initialize r to 0
         s = u320_zero  # Initialize s to 0
         # Wait for poly1305_key
-        o.ready_for_key = 1
-        if key.valid & o.ready_for_key:
+        o.key.ready = 1
+        if key.valid & o.key.ready:
             key_bytes: uint8_t[POLY1305_KEY_SIZE] = uint_to_array_le(key.data, 8)
             # Split key into r and s
             r_bytes: u8_16_t  # r part of the key
@@ -309,8 +329,8 @@ def poly1305_mac_fsm(
             state = poly1305_state_t.START_ITER
     elif state == poly1305_state_t.FINISH_ITER:
         # Wait for 'a' data out of compute
-        if from_compute_valid:
-            a = from_compute
+        if from_compute.valid:
+            a = from_compute.data
             # if last block do final step
             if is_last_block:
                 state = poly1305_state_t.A_PLUS_S
@@ -326,32 +346,25 @@ def poly1305_mac_fsm(
         # First 16 bytes of 'a' are the output
         o.auth_tag.data = concat(a.limbs[1], a.limbs[0])
         o.auth_tag.valid = 1
-        if o.auth_tag.valid & ready_for_auth_tag_out:
+        if o.auth_tag.valid & auth_tag.ready:
             state = poly1305_state_t.IDLE
 
     # Same cycle transition from finish->start iter in one cycle
     # latency reduction = throughput increase in this case...
     if state == poly1305_state_t.START_ITER:
         # Ready to take an input data block
-        o.ready_for_data_in = ready_for_to_compute
+        o.data_in.ready = to_compute.ready
         # Put 'a' and data block into compute
-        o.to_compute.block_bytes = data_in.data.frag.data
-        o.to_compute.a = a
-        o.to_compute.r = r
-        o.to_compute_valid = data_in.valid & o.ready_for_data_in
+        o.to_compute.data.block_bytes = data_in.data.frag.data
+        o.to_compute.data.a = a
+        o.to_compute.data.r = r
+        o.to_compute.valid = data_in.valid & o.data_in.ready
         # Record if this is the last block
         is_last_block = data_in.data.eod[0]
         # And then wait for the output once input into compute happens
-        if o.to_compute_valid & o.ready_for_data_in:
+        if o.to_compute.valid & o.data_in.ready:
             state = poly1305_state_t.FINISH_ITER
     return o
-
-
-@struct
-class poly1305_mac_stream_out_t(NamedTuple):
-    key_ready: uint1_t
-    data_in_ready: uint1_t
-    auth_tag: poly1305_auth_tag_stream_t
 
 
 # One full poly1305_mac instance: poly1305_mac_fsm plus its own private
@@ -363,34 +376,29 @@ class poly1305_mac_stream_out_t(NamedTuple):
 compute_mcp, _compute_mcp_t = make_valid_ready_mcp(poly1305_mac_loop_body, 5)
 
 
-@hw_func
-def poly1305_mac_instance(
-    key: poly1305_key_stream_t,
-    data_in: axis128_t,
-    auth_tag_ready: uint1_t,
-) -> poly1305_mac_stream_out_t:
-    o: poly1305_mac_stream_out_t
+@interface
+class poly1305_mac_ports(NamedTuple):
+    """The single output port of a poly1305_mac instance."""
 
-    compute_in_ready: Feedback[uint1_t]
-    compute_out: Feedback[u320_stream_t]
+    auth_tag: poly1305_auth_tag_stream_if
 
-    fsm_out = poly1305_mac_fsm(
-        key,
-        data_in,
-        auth_tag_ready,
-        compute_out.data,
-        compute_out.valid,
-        compute_in_ready,
-    )
-    o.key_ready = fsm_out.ready_for_key
-    o.data_in_ready = fsm_out.ready_for_data_in
-    o.auth_tag = fsm_out.auth_tag
 
-    compute_in_s: poly1305_mac_loop_body_stream_t
-    compute_in_s.data = fsm_out.to_compute
-    compute_in_s.valid = fsm_out.to_compute_valid
-    compute_result = compute_mcp(compute_in_s, 1)
-    compute_out = compute_result.stream_out
-    compute_in_ready = compute_result.ready_for_stream_in
+# An interface function: only the feedforward direction is written. The FSM and
+# its private multi-cycle compute form a loop (the FSM consumes `from_compute`,
+# which the compute -- called after it -- produces), so the generated wiring
+# places a Feedback on the feedforward edge as well as the reverse edge --
+# exactly the compute_out / compute_in_ready pair this used to thread by hand.
+def poly1305_mac_instance_wiring(
+    key: poly1305_key_stream_if,
+    data_in: axis128_if,
+) -> poly1305_mac_ports:
+    fsm_out = poly1305_mac_fsm(key, data_in, compute.stream_out)
+    compute = compute_mcp(fsm_out.to_compute)
+    return poly1305_mac_ports(auth_tag=fsm_out.auth_tag)
 
-    return o
+
+# Fields: .key / .data_in (reverse halves of the input ports), .auth_tag
+# (feedforward half of the output port).
+poly1305_mac_instance, poly1305_mac_stream_out_t = make_hw_func_from_interface_func(
+    poly1305_mac_instance_wiring
+)

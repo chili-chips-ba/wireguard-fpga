@@ -21,7 +21,9 @@ from pypeline import (
 from aead_types import (
     poly1305_auth_tag_uint_t,
     poly1305_auth_tag_stream_t,
+    poly1305_auth_tag_stream_fb_t,
     uint1_stream_t,
+    uint1_stream_fb_t,
     uint1_stream_null,
 )
 
@@ -36,8 +38,8 @@ class poly1305_verify_state_t:
 
 @struct
 class poly1305_verify_decrypt_out_t(NamedTuple):
-    auth_tag_ready: uint1_t
-    calc_tag_ready: uint1_t
+    auth_tag: poly1305_auth_tag_stream_fb_t
+    calc_tag: poly1305_auth_tag_stream_fb_t
     tags_match: uint1_stream_t
 
 
@@ -45,7 +47,7 @@ class poly1305_verify_decrypt_out_t(NamedTuple):
 def poly1305_verify_decrypt(
     auth_tag: poly1305_auth_tag_stream_t,
     calc_tag: poly1305_auth_tag_stream_t,
-    tags_match_ready: uint1_t,
+    tags_match: uint1_stream_fb_t,
 ) -> poly1305_verify_decrypt_out_t:
     o: poly1305_verify_decrypt_out_t
     # Define static variables
@@ -58,23 +60,23 @@ def poly1305_verify_decrypt(
     # Reg to hold compare result
     tags_match_reg: Reg[uint1_t]
 
-    o.auth_tag_ready = 0
-    o.calc_tag_ready = 0
+    o.auth_tag.ready = 0
+    o.calc_tag.ready = 0
     o.tags_match = uint1_stream_null()
 
     if state == poly1305_verify_state_t.TAKE_AUTH_TAG:
         # Ready to take the input tag
-        o.auth_tag_ready = 1
+        o.auth_tag.ready = 1
 
-        if auth_tag.valid & o.auth_tag_ready:
+        if auth_tag.valid & o.auth_tag.ready:
             # Copy data to the register
             auth_tag_reg = auth_tag.data
             state = poly1305_verify_state_t.TAKE_CALC_TAG
     elif state == poly1305_verify_state_t.TAKE_CALC_TAG:
         # Ready to take the calculated tag
-        o.calc_tag_ready = 1
+        o.calc_tag.ready = 1
 
-        if calc_tag.valid & o.calc_tag_ready:
+        if calc_tag.valid & o.calc_tag.ready:
             calc_tag_reg = calc_tag.data
             state = poly1305_verify_state_t.COMPARE_TAGS
     elif state == poly1305_verify_state_t.COMPARE_TAGS:
@@ -88,7 +90,7 @@ def poly1305_verify_decrypt(
         o.tags_match.data = tags_match_reg
         o.tags_match.valid = 1
 
-        if tags_match_ready & o.tags_match.valid:
+        if tags_match.ready & o.tags_match.valid:
             # Successful output transfer
             # Reset the FSM for the next verification
             state = poly1305_verify_state_t.TAKE_AUTH_TAG

@@ -362,16 +362,16 @@ function call already instantiates a hardware submodule, with each call site
 getting its own independent state — no global wires required. The current
 source uses this directly:
 
-- **Direct calls chained with `Feedback[T]`**: `encrypt_dataflow_core.py`/
+- **Direct calls, with the backward edges generated**: `encrypt_dataflow_core.py`/
   `decrypt_dataflow_core.py` call `chacha_func`, `prep_auth_data.prep_auth_data_fsm`,
   `poly1305.poly1305_mac_instance`, `append_auth_tag.append_auth_tag` (etc. for
-  decrypt) directly, chaining struct fields from one call into the next
-  call's arguments. Data flows forward through the chain but backpressure
-  (`ready`) flows backward, so wherever a downstream call's `ready` output is
-  needed as an upstream call's input, a `Feedback[T]` local — a same-cycle
-  combinational signal whose driving assignment textually follows its first
-  read — declares that signal before either call, lets both calls happen,
-  then drives it from the result.
+  decrypt) directly, chaining struct fields from one call into the next call's
+  arguments. Data flows forward through the chain but backpressure (`ready`)
+  flows backward, so wherever a downstream call's reverse output is needed as
+  an upstream call's input, a `Feedback[T]` local — a same-cycle combinational
+  signal whose driving assignment textually follows its first read — is needed.
+  Both cores used to declare those by hand; they are now interface functions
+  and the pass emits them (see *The dataflow cores* below).
 - **FSM+datapath merges**: `chacha20.chacha20_instance`,
   `poly1305.poly1305_mac_instance`, and `wait_to_verify.wait_to_verify` each
   merge what used to be an FSM `@MAIN` and a datapath `@MAIN` into one
@@ -398,6 +398,109 @@ source uses this directly:
   genuinely arbitrated resource shared across two otherwise-independent
   dataflow graphs (encrypt and decrypt don't call each other or share any
   other state) — not an artifact of the old wiring style.
+
+### Interface ports and generated reverse wiring
+
+Handshake ports are now declared as the two halves of a Pypeline `@interface`
+(`include/pypeline/interface/interface.py`): plain fields travel feedforward,
+`Feedback[T]` fields travel reverse. A port's two halves share the **same
+name** across a function's args and its return struct — an input port takes
+its feedforward half as an arg and returns its reverse half, an output port
+does the reverse. This replaced the old `ready_for_<name>` naming convention,
+which this design had already outgrown (`chacha20_fsm` mixed
+`ready_for_from_pipeline` with `to_pipeline_ready`). Shared stream types live
+in `aead_types.py` as `axis128_if` / `axis128_t` / `axis128_fb_t` triples.
+
+`chacha20_instance` and `poly1305_mac_instance` are no longer hand-written.
+Each is an **interface function**: the body names only the feedforward
+direction, and the reverse wiring is generated. The FSM and its private
+pipeline/compute form a loop — the FSM consumes a value the pipeline produces,
+and the pipeline is called after it — so the generated wiring places a
+`Feedback` on the *feedforward* edge as well as the reverse edge, reproducing
+exactly the `pipeline_out` / `pipeline_in_ready` pair these used to thread by
+hand:
+
+```python
+def chacha20_instance_wiring(key, nonce, axis_in: axis128_if) -> chacha20_ports:
+    fsm_out = chacha20_fsm(key, nonce, axis_in, pipe.stream_out)
+    pipe = pipeline_func(fsm_out.to_pipeline)
+    return chacha20_ports(poly_key_out=fsm_out.poly_key_out,
+                          axis_out=fsm_out.axis_out)
+```
+
+The FSMs themselves stay hand-written: their reverse signals are computed from
+state, which is not forwardable wiring. Only the merge layer is generated.
+`chacha20_{encrypt,decrypt}_shared` keep the same
+`chacha20.chacha20_stream_out_t` contract as `chacha20_instance`, so a
+dataflow core can still be handed either.
+
+### The dataflow cores
+
+`encrypt_dataflow_core.py` and `decrypt_dataflow_core.py` are the two files
+that hand-threaded the most `Feedback` in this design, and both are now
+interface functions. The decrypt body is the whole graph:
+
+```python
+def decrypt_dataflow_core(axis_in: axis128_if, key, nonce, aad, aad_len
+                          ) -> decrypt_dataflow_core_ports:
+    strip  = strip_auth_tag.strip_auth_tag(axis_in)
+    bcast  = axis128_2broadcast(strip.axis_out)
+    chacha = chacha_func(key, nonce, bcast.axis_out[1])
+    prep   = prep_auth_data.prep_auth_data_fsm(aad, aad_len, bcast.axis_out[0])
+    mac    = poly1305.poly1305_mac_instance(chacha.poly_key_out, prep.axis)
+    verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
+        strip.auth_tag_out, mac.auth_tag)
+    wtv    = wait_to_verify.wait_to_verify(chacha.axis_out, verify.tags_match)
+    return decrypt_dataflow_core_ports(axis_out=wtv.axis_out,
+                                       is_verified_out=wtv.is_verified_out)
+```
+
+Nine `Feedback` declarations are generated from that (six for encrypt). Three
+things beyond plain chaining show up here:
+
+- **Fan-out** goes through `axis128_2broadcast`, whose `axis_out` is an
+  **array interface port** (`axis_t[2]` paired with `axis_fb_t[2]`). Each fork
+  is back-pressured independently and the reverse array is assembled for you,
+  so the hand-built `sink_ready_s: uint1_t[2]` arrays are gone.
+- **Plain values pass through** untouched: `key`, `nonce`, `aad`, `aad_len`
+  get no reverse companion, and `is_verified_out` is a plain field riding in
+  the same return bundle as the `axis_out` interface port.
+- **Factory parameterization still works.** Both cores are factories over
+  `chacha_func`, so the generated module names fold in that parameter — the
+  standalone and shared builds instantiate four distinct cores from two
+  factories without a canonical-name collision.
+
+The four `@MAIN`s (`{encrypt,decrypt}_dataflow{,_shared}.py`) then cross back
+out of the implied-feedback world by hand, which is what a top level always
+does — the DUT-facing `Wire`s in `chacha20poly1305_*_ports.py` are still flat
+scalars driven by the testbench and the hardware top:
+
+```python
+axis_out_rev: axis128_fb_t = axis128_fb_t(ready=ports.axis_out_ready)
+r = decrypt_dataflow_core(
+    ports.axis_in, ports.key, ports.nonce, ports.aad, ports.aad_len,
+    axis_out_rev,                             # reverse half of the output port
+)
+ports.axis_in_ready = r.axis_in.ready         # implied feedback -> explicit
+ports.axis_out = r.axis_out
+ports.is_verified_out = r.is_verified_out
+```
+
+(The reverse half is built into a local rather than inline: a struct constructor
+elaborates only as a whole assignment's right-hand side, not nested in a call's
+arguments.)
+
+Everything the cores instantiate — `strip_auth_tag`, `prep_auth_data_fsm`,
+`append_auth_tag`, `wait_to_verify`, `poly1305_verify_decrypt` — kept its
+hand-written body and changed only its port declarations, since each computes
+its ready from state. Declaring one half of a port and not the other is now a
+hard error naming the port; it used to be half-recognized and fail much later
+with an unrecognizable message.
+
+One caveat worth knowing: interface port names become VHDL identifiers, so
+they can collide with enum literals (a port named `poly_key` collided with the
+`POLY_KEY` member of `chacha20_state_t`; it is now `poly_key_out`). Native sim
+and elaboration do not catch this — only real synthesis does.
 
 ## Conventions vs the C sources:
 

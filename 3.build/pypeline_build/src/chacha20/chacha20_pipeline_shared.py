@@ -27,7 +27,8 @@ from pypeline import (
     uint1_t,
     uint8_t,
 )
-from stream.stream import make_stream_t
+from interface.interface import make_interface_feedback_type, make_interface_type
+from stream.stream import make_stream_interface
 from stream.stream_pipeline import make_stream_pipeline
 
 import chacha20
@@ -41,9 +42,11 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     axis128_t,
+    axis128_fb_t,
     axis512_frag_t,
     axis512_t,
     axis512_null,
+    poly1305_key_stream_fb_t,
 )
 
 
@@ -61,8 +64,13 @@ class chacha_shared_pipeline_out_t(NamedTuple):
     is_encrypt: uint1_t
 
 
-chacha_shared_pipeline_in_stream_t = make_stream_t(chacha_shared_pipeline_in_t)
-chacha_shared_pipeline_out_stream_t = make_stream_t(chacha_shared_pipeline_out_t)
+chacha_shared_pipeline_in_stream_if = make_stream_interface(chacha_shared_pipeline_in_t)
+chacha_shared_pipeline_in_stream_t = make_interface_type(chacha_shared_pipeline_in_stream_if)
+chacha_shared_pipeline_out_stream_if = make_stream_interface(chacha_shared_pipeline_out_t)
+chacha_shared_pipeline_out_stream_t = make_interface_type(chacha_shared_pipeline_out_stream_if)
+chacha_shared_pipeline_out_stream_fb_t = make_interface_feedback_type(
+    chacha_shared_pipeline_out_stream_if
+)
 
 
 def chacha_shared_pipeline_in_stream_null():
@@ -152,9 +160,11 @@ def chacha20_pipeline_shared():
     decrypt_pipeline_out = decrypt_pipeline_out_s
     decrypt_pipeline_in_ready = decrypt_pipeline_in_ready_s
 
-    result = pipeline_func(pipeline_in_s, pipeline_out_ready_s)
+    pipeline_out_rev: chacha_shared_pipeline_out_stream_fb_t
+    pipeline_out_rev.ready = pipeline_out_ready_s
+    result = pipeline_func(pipeline_in_s, pipeline_out_rev)
     pipeline_out = result.stream_out
-    pipeline_in_ready = result.ready_for_stream_in
+    pipeline_in_ready = result.stream_in.ready
 
 
 # Per-direction FSM wrappers: same chacha20.chacha20_fsm as
@@ -167,24 +177,27 @@ def chacha20_encrypt_shared(
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
     axis_in: axis128_t,
-    poly_key_ready: uint1_t,
-    axis_out_ready: uint1_t,
+    poly_key_out: poly1305_key_stream_fb_t,
+    axis_out: axis128_fb_t,
 ) -> chacha20.chacha20_stream_out_t:
     o: chacha20.chacha20_stream_out_t
+    to_pipe_rev: chacha20.chacha20_loop_body_stream_fb_t
+    to_pipe_rev.ready = encrypt_pipeline_in_ready
+    from_pipe_fwd: axis512_t = encrypt_pipeline_out
     fsm_out = chacha20.chacha20_fsm(
         key,
         nonce,
         axis_in,
-        poly_key_ready,
-        axis_out_ready,
-        encrypt_pipeline_in_ready,
-        encrypt_pipeline_out,
+        poly_key_out,
+        axis_out,
+        to_pipe_rev,
+        from_pipe_fwd,
     )
-    o.axis_in_ready = fsm_out.ready_for_axis_in
-    o.poly_key = fsm_out.poly_key
-    o.axis_out = fsm_out.axis
+    o.axis_in = fsm_out.axis_in
+    o.poly_key_out = fsm_out.poly_key_out
+    o.axis_out = fsm_out.axis_out
     encrypt_pipeline_in = fsm_out.to_pipeline
-    encrypt_pipeline_out_ready = fsm_out.ready_for_from_pipeline
+    encrypt_pipeline_out_ready = fsm_out.from_pipeline.ready
     return o
 
 
@@ -193,22 +206,25 @@ def chacha20_decrypt_shared(
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
     axis_in: axis128_t,
-    poly_key_ready: uint1_t,
-    axis_out_ready: uint1_t,
+    poly_key_out: poly1305_key_stream_fb_t,
+    axis_out: axis128_fb_t,
 ) -> chacha20.chacha20_stream_out_t:
     o: chacha20.chacha20_stream_out_t
+    to_pipe_rev: chacha20.chacha20_loop_body_stream_fb_t
+    to_pipe_rev.ready = decrypt_pipeline_in_ready
+    from_pipe_fwd: axis512_t = decrypt_pipeline_out
     fsm_out = chacha20.chacha20_fsm(
         key,
         nonce,
         axis_in,
-        poly_key_ready,
-        axis_out_ready,
-        decrypt_pipeline_in_ready,
-        decrypt_pipeline_out,
+        poly_key_out,
+        axis_out,
+        to_pipe_rev,
+        from_pipe_fwd,
     )
-    o.axis_in_ready = fsm_out.ready_for_axis_in
-    o.poly_key = fsm_out.poly_key
-    o.axis_out = fsm_out.axis
+    o.axis_in = fsm_out.axis_in
+    o.poly_key_out = fsm_out.poly_key_out
+    o.axis_out = fsm_out.axis_out
     decrypt_pipeline_in = fsm_out.to_pipeline
-    decrypt_pipeline_out_ready = fsm_out.ready_for_from_pipeline
+    decrypt_pipeline_out_ready = fsm_out.from_pipeline.ready
     return o

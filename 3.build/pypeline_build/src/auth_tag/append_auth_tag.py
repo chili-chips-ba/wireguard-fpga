@@ -22,8 +22,10 @@ from pypeline import (
 from aead_types import (
     POLY1305_AUTH_TAG_SIZE,
     axis128_t,
+    axis128_fb_t,
     axis128_null,
     poly1305_auth_tag_stream_t,
+    poly1305_auth_tag_stream_fb_t,
 )
 
 
@@ -35,8 +37,8 @@ class append_auth_tag_state_t:
 
 @struct
 class append_auth_tag_out_t(NamedTuple):
-    axis_in_ready: uint1_t
-    auth_tag_in_ready: uint1_t
+    axis_in: axis128_fb_t
+    auth_tag_in: poly1305_auth_tag_stream_fb_t
     axis_out: axis128_t
 
 
@@ -44,24 +46,24 @@ class append_auth_tag_out_t(NamedTuple):
 def append_auth_tag(
     axis_in: axis128_t,
     auth_tag_in: poly1305_auth_tag_stream_t,
-    axis_out_ready: uint1_t,
+    axis_out: axis128_fb_t,
 ) -> append_auth_tag_out_t:
     o: append_auth_tag_out_t
     state: Reg[append_auth_tag_state_t]
 
     # Default not ready for incoming data
-    o.axis_in_ready = 0
-    o.auth_tag_in_ready = 0
+    o.axis_in.ready = 0
+    o.auth_tag_in.ready = 0
     # Default not outputting data
     o.axis_out = axis128_null()
 
     if state == append_auth_tag_state_t.CIPHERTEXT:
         # Pass through ciphertext
         o.axis_out = axis_in
-        o.axis_in_ready = axis_out_ready
+        o.axis_in.ready = axis_out.ready
         # Except for tlast since adding extra actual last auth tag cycle next
         o.axis_out.data.eod[0] = 0
-        if axis_in.data.eod[0] & axis_in.valid & o.axis_in_ready:
+        if axis_in.data.eod[0] & axis_in.valid & o.axis_in.ready:
             state = append_auth_tag_state_t.AUTH_TAG
     else:  # if state == append_auth_tag_state_t.AUTH_TAG
         # Insert auth tag as new last cycle
@@ -73,8 +75,8 @@ def append_auth_tag(
             o.axis_out.data.frag.keep[i] = 1
         o.axis_out.data.eod[0] = 1
         o.axis_out.valid = auth_tag_in.valid
-        o.auth_tag_in_ready = axis_out_ready
-        if o.axis_out.valid & axis_out_ready:
+        o.auth_tag_in.ready = axis_out.ready
+        if o.axis_out.valid & axis_out.ready:
             state = append_auth_tag_state_t.CIPHERTEXT
 
     return o
