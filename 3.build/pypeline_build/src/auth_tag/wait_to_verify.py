@@ -123,7 +123,7 @@ def wait_to_verify(
         o.verify_bit.ready = 0
 
     verify_fifo_out_rev: axis128_fb_t = axis128_fb_t(ready=verify_fifo_out_ready_s)
-    fifo_result = verify_fifo_func(verify_fifo_in_s, verify_fifo_out_rev)
+    fifo_result = verify_fifo_func(in_stream=verify_fifo_in_s, out_stream=verify_fifo_out_rev)
     verify_fifo_out = fifo_result.out_stream
     verify_fifo_in_ready = fifo_result.in_stream
 

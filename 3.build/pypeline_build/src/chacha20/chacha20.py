@@ -295,7 +295,7 @@ def chacha20_fsm(
     if input_side_state == chacha20_state_t.PLAINTEXT:
         dwidth_conv_data_in = axis_in_if
     block_in_ready: Feedback[axis512_fb_t]
-    in_to_block = axis128_to_axis512(dwidth_conv_data_in, block_in_ready)
+    in_to_block = axis128_to_axis512(narrow_in=dwidth_conv_data_in, wide_out=block_in_ready)
     block_in_stream: axis512_t = in_to_block.wide_out
     # Default not ready for incoming blocks
     block_in_ready = axis512_fb_t(ready=0)
@@ -361,7 +361,7 @@ def chacha20_fsm(
                 output_side_state = chacha20_state_t.POLY_KEY
 
     # Convert pipeline output 512b block stream to 128b
-    block_to_out = axis512_to_axis128(block_to_out_axis_in, axis_out_if)
+    block_to_out = axis512_to_axis128(wide_in=block_to_out_axis_in, narrow_out=axis_out_if)
     o.axis_out_if = block_to_out.narrow_out
     block_to_out_axis_in_ready = block_to_out.wide_in  # FEEDBACK
 
@@ -395,8 +395,10 @@ def chacha20_instance_wiring(
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
     axis_in_if: axis128_intrf,
 ) -> chacha20_ports:
-    fsm_out = chacha20_fsm(key, nonce, axis_in_if, pipe.stream_out)
-    pipe = pipeline_func(fsm_out.to_pipeline_if)
+    fsm_out = chacha20_fsm(
+        key=key, nonce=nonce, axis_in_if=axis_in_if, from_pipeline_if=pipe.stream_out
+    )
+    pipe = pipeline_func(stream_in=fsm_out.to_pipeline_if)
     return chacha20_ports(key_if=fsm_out.key_if, axis_out_if=fsm_out.axis_out_if)
 
 

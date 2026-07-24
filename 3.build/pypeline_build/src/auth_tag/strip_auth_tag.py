@@ -92,7 +92,7 @@ def strip_auth_tag(
     o: strip_auth_tag_out_t
     early_out_ready: Feedback[axis128_fb_t]
 
-    early_tlast = axis128_early_tlast(axis_in, early_out_ready)
+    early_tlast = axis128_early_tlast(stream_in=axis_in, axis_out=early_out_ready)
 
     # Ready for axis into early module
     o.axis_in = early_tlast.stream_in

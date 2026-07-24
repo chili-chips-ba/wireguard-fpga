@@ -60,20 +60,24 @@ def make_decrypt_dataflow_core(chacha_func):
     ) -> decrypt_dataflow_core_ports:
         # strip_auth_tag splits ciphertext+tag into stripped-ciphertext + tag,
         # and the stripped ciphertext forks to the MAC calculation and chacha20
-        strip = strip_auth_tag.strip_auth_tag(axis_in_if)
-        bcast = axis128_2broadcast(strip.axis_out)
+        strip = strip_auth_tag.strip_auth_tag(axis_in=axis_in_if)
+        bcast = axis128_2broadcast(axis_in=strip.axis_out)
         # chacha20 decrypts (keystream XOR); its poly key seeds poly1305_mac
-        chacha = chacha_func(key, nonce, bcast.axis_out[1])
+        chacha = chacha_func(key=key, nonce=nonce, axis_in_if=bcast.axis_out[1])
         # prep_auth_data frames AAD+ciphertext+lengths for the MAC
-        prep = prep_auth_data.prep_auth_data_fsm(aad, aad_len, bcast.axis_out[0])
+        prep = prep_auth_data.prep_auth_data_fsm(
+            aad=aad, aad_len=aad_len, axis_in=bcast.axis_out[0]
+        )
         # poly1305_mac recomputes the tag from the poly key + the framed data
-        mac = poly1305.poly1305_mac_instance(chacha.key_if, prep.axis)
+        mac = poly1305.poly1305_mac_instance(key_if=chacha.key_if, data_in_if=prep.axis)
         # ...which is compared against the tag stripped off the input
         verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
-            strip.auth_tag_out, mac.auth_tag_if
+            auth_tag=strip.auth_tag_out, calc_tag=mac.auth_tag_if
         )
         # wait_to_verify buffers the plaintext until the match bit arrives
-        wtv = wait_to_verify.wait_to_verify(chacha.axis_out_if, verify.tags_match)
+        wtv = wait_to_verify.wait_to_verify(
+            axis_in=chacha.axis_out_if, verify_bit=verify.tags_match
+        )
         return decrypt_dataflow_core_ports(
             axis_out_if=wtv.axis_out, is_verified_out=wtv.is_verified_out
         )
