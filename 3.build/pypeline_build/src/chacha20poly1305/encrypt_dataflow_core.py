@@ -30,25 +30,25 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_if,
+    axis128_intrf,
     axis128_2broadcast,
 )
 
 
 @interface
 class encrypt_dataflow_core_ports(NamedTuple):
-    axis_out: axis128_if
+    axis_out_if: axis128_intrf
 
 
 def make_encrypt_dataflow_core(chacha_func):
-    """chacha_func(key, nonce, axis_in, poly_key_out, axis_out) ->
+    """chacha_func(key, nonce, axis_in_if, key_if, axis_out_if) ->
     chacha20.chacha20_ports -- either chacha20.chacha20_instance (owns its own
     private pipeline) or a shared-pipeline instance such as
     chacha20_pipeline_shared.chacha20_encrypt_shared (uses the arbitrated
     shared pipeline)."""
 
     def encrypt_dataflow_core(
-        axis_in: axis128_if,
+        axis_in_if: axis128_intrf,
         key: uint8_t[CHACHA20_KEY_SIZE],
         nonce: uint8_t[CHACHA20_NONCE_SIZE],
         aad: uint8_t[AAD_MAX_LEN],
@@ -56,14 +56,14 @@ def make_encrypt_dataflow_core(chacha_func):
     ) -> encrypt_dataflow_core_ports:
         # chacha20 encrypts; its ciphertext forks to both the MAC calculation
         # and the final output, and its poly key seeds poly1305_mac
-        chacha = chacha_func(key, nonce, axis_in)
-        bcast = axis128_2broadcast(chacha.axis_out)
+        chacha = chacha_func(key, nonce, axis_in_if)
+        bcast = axis128_2broadcast(chacha.axis_out_if)
         # prep_auth_data frames AAD+ciphertext+lengths for the MAC
         prep = prep_auth_data.prep_auth_data_fsm(aad, aad_len, bcast.axis_out[0])
         # poly1305_mac computes the tag from the poly key + the framed data
-        mac = poly1305.poly1305_mac_instance(chacha.poly_key_out, prep.axis)
+        mac = poly1305.poly1305_mac_instance(chacha.key_if, prep.axis)
         # append_auth_tag appends the tag onto the other ciphertext fork
-        append = append_auth_tag.append_auth_tag(bcast.axis_out[1], mac.auth_tag)
-        return encrypt_dataflow_core_ports(axis_out=append.axis_out)
+        append = append_auth_tag.append_auth_tag(bcast.axis_out[1], mac.auth_tag_if)
+        return encrypt_dataflow_core_ports(axis_out_if=append.axis_out)
 
     return make_hw_func_from_interface_func(encrypt_dataflow_core)
