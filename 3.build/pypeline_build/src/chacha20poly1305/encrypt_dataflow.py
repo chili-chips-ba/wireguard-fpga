@@ -33,5 +33,5 @@ def encrypt_dataflow():
         chacha20poly1305_encrypt_ports.aad_len,
         axis_out_rev,  # reverse half of the output port
     )
-    chacha20poly1305_encrypt_ports.axis_in_ready = r.axis_in.ready
-    chacha20poly1305_encrypt_ports.axis_out = r.axis_out
+    chacha20poly1305_encrypt_ports.axis_in_ready = r.axis_in_if.ready
+    chacha20poly1305_encrypt_ports.axis_out = r.axis_out_if

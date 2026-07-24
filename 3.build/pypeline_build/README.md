@@ -408,8 +408,13 @@ name** across a function's args and its return struct — an input port takes
 its feedforward half as an arg and returns its reverse half, an output port
 does the reverse. This replaced the old `ready_for_<name>` naming convention,
 which this design had already outgrown (`chacha20_fsm` mixed
-`ready_for_from_pipeline` with `to_pipeline_ready`). Shared stream types live
-in `aead_types.py` as `axis128_if` / `axis128_t` / `axis128_fb_t` triples.
+`ready_for_from_pipeline` with `to_pipeline_ready`). Every such shared-name
+port variable carries a `_if` suffix (`axis_in_if`, `axis_out_if`, `key_if`,
+`to_pipeline_if`, ...) so the same identifier appearing on both the arg side
+and the return side reads as *one bidirectional port*, not two same-named
+directional signals — the `@interface` TYPE itself instead gets an `_intrf`
+suffix, so the two never collide. Shared stream types live in `aead_types.py`
+as `axis128_intrf` / `axis128_t` / `axis128_fb_t` triples.
 
 `chacha20_instance` and `poly1305_mac_instance` are no longer hand-written.
 Each is an **interface function**: the body names only the feedforward
@@ -421,11 +426,11 @@ exactly the `pipeline_out` / `pipeline_in_ready` pair these used to thread by
 hand:
 
 ```python
-def chacha20_instance_wiring(key, nonce, axis_in: axis128_if) -> chacha20_ports:
-    fsm_out = chacha20_fsm(key, nonce, axis_in, pipe.stream_out)
-    pipe = pipeline_func(fsm_out.to_pipeline)
-    return chacha20_ports(poly_key_out=fsm_out.poly_key_out,
-                          axis_out=fsm_out.axis_out)
+def chacha20_instance_wiring(key, nonce, axis_in_if: axis128_intrf) -> chacha20_ports:
+    fsm_out = chacha20_fsm(key, nonce, axis_in_if, pipe.stream_out)
+    pipe = pipeline_func(fsm_out.to_pipeline_if)
+    return chacha20_ports(key_if=fsm_out.key_if,
+                          axis_out_if=fsm_out.axis_out_if)
 ```
 
 The FSMs themselves stay hand-written: their reverse signals are computed from
@@ -441,17 +446,17 @@ that hand-threaded the most `Feedback` in this design, and both are now
 interface functions. The decrypt body is the whole graph:
 
 ```python
-def decrypt_dataflow_core(axis_in: axis128_if, key, nonce, aad, aad_len
+def decrypt_dataflow_core(axis_in_if: axis128_intrf, key, nonce, aad, aad_len
                           ) -> decrypt_dataflow_core_ports:
-    strip  = strip_auth_tag.strip_auth_tag(axis_in)
+    strip  = strip_auth_tag.strip_auth_tag(axis_in_if)
     bcast  = axis128_2broadcast(strip.axis_out)
     chacha = chacha_func(key, nonce, bcast.axis_out[1])
     prep   = prep_auth_data.prep_auth_data_fsm(aad, aad_len, bcast.axis_out[0])
-    mac    = poly1305.poly1305_mac_instance(chacha.poly_key_out, prep.axis)
+    mac    = poly1305.poly1305_mac_instance(chacha.key_if, prep.axis)
     verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
-        strip.auth_tag_out, mac.auth_tag)
-    wtv    = wait_to_verify.wait_to_verify(chacha.axis_out, verify.tags_match)
-    return decrypt_dataflow_core_ports(axis_out=wtv.axis_out,
+        strip.auth_tag_out, mac.auth_tag_if)
+    wtv    = wait_to_verify.wait_to_verify(chacha.axis_out_if, verify.tags_match)
+    return decrypt_dataflow_core_ports(axis_out_if=wtv.axis_out,
                                        is_verified_out=wtv.is_verified_out)
 ```
 
@@ -481,8 +486,8 @@ r = decrypt_dataflow_core(
     ports.axis_in, ports.key, ports.nonce, ports.aad, ports.aad_len,
     axis_out_rev,                             # reverse half of the output port
 )
-ports.axis_in_ready = r.axis_in.ready         # implied feedback -> explicit
-ports.axis_out = r.axis_out
+ports.axis_in_ready = r.axis_in_if.ready      # implied feedback -> explicit
+ports.axis_out = r.axis_out_if
 ports.is_verified_out = r.is_verified_out
 ```
 
@@ -499,8 +504,8 @@ with an unrecognizable message.
 
 One caveat worth knowing: interface port names become VHDL identifiers, so
 they can collide with enum literals (a port named `poly_key` collided with the
-`POLY_KEY` member of `chacha20_state_t`; it is now `poly_key_out`). Native sim
-and elaboration do not catch this — only real synthesis does.
+`POLY_KEY` member of `chacha20_state_t`; it is now `key_if`). Native sim and
+elaboration do not catch this — only real synthesis does.
 
 ## Conventions vs the C sources:
 

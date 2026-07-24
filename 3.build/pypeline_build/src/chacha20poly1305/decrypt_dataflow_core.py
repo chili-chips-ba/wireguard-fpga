@@ -33,26 +33,26 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_if,
+    axis128_intrf,
     axis128_2broadcast,
 )
 
 
 @interface
 class decrypt_dataflow_core_ports(NamedTuple):
-    axis_out: axis128_if
+    axis_out_if: axis128_intrf
     is_verified_out: uint1_t  # plain sideband, no reverse companion
 
 
 def make_decrypt_dataflow_core(chacha_func):
-    """chacha_func(key, nonce, axis_in, poly_key_out, axis_out) ->
+    """chacha_func(key, nonce, axis_in_if, key_if, axis_out_if) ->
     chacha20.chacha20_ports -- either chacha20.chacha20_instance (owns its own
     private pipeline) or a shared-pipeline instance such as
     chacha20_pipeline_shared.chacha20_decrypt_shared (uses the arbitrated
     shared pipeline)."""
 
     def decrypt_dataflow_core(
-        axis_in: axis128_if,
+        axis_in_if: axis128_intrf,
         key: uint8_t[CHACHA20_KEY_SIZE],
         nonce: uint8_t[CHACHA20_NONCE_SIZE],
         aad: uint8_t[AAD_MAX_LEN],
@@ -60,22 +60,22 @@ def make_decrypt_dataflow_core(chacha_func):
     ) -> decrypt_dataflow_core_ports:
         # strip_auth_tag splits ciphertext+tag into stripped-ciphertext + tag,
         # and the stripped ciphertext forks to the MAC calculation and chacha20
-        strip = strip_auth_tag.strip_auth_tag(axis_in)
+        strip = strip_auth_tag.strip_auth_tag(axis_in_if)
         bcast = axis128_2broadcast(strip.axis_out)
         # chacha20 decrypts (keystream XOR); its poly key seeds poly1305_mac
         chacha = chacha_func(key, nonce, bcast.axis_out[1])
         # prep_auth_data frames AAD+ciphertext+lengths for the MAC
         prep = prep_auth_data.prep_auth_data_fsm(aad, aad_len, bcast.axis_out[0])
         # poly1305_mac recomputes the tag from the poly key + the framed data
-        mac = poly1305.poly1305_mac_instance(chacha.poly_key_out, prep.axis)
+        mac = poly1305.poly1305_mac_instance(chacha.key_if, prep.axis)
         # ...which is compared against the tag stripped off the input
         verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
-            strip.auth_tag_out, mac.auth_tag
+            strip.auth_tag_out, mac.auth_tag_if
         )
         # wait_to_verify buffers the plaintext until the match bit arrives
-        wtv = wait_to_verify.wait_to_verify(chacha.axis_out, verify.tags_match)
+        wtv = wait_to_verify.wait_to_verify(chacha.axis_out_if, verify.tags_match)
         return decrypt_dataflow_core_ports(
-            axis_out=wtv.axis_out, is_verified_out=wtv.is_verified_out
+            axis_out_if=wtv.axis_out, is_verified_out=wtv.is_verified_out
         )
 
     return make_hw_func_from_interface_func(decrypt_dataflow_core)
