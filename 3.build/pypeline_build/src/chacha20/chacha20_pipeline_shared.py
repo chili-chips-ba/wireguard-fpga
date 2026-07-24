@@ -162,7 +162,7 @@ def chacha20_pipeline_shared():
 
     pipeline_out_rev: chacha_shared_pipeline_out_stream_fb_t
     pipeline_out_rev.ready = pipeline_out_ready_s
-    result = pipeline_func(pipeline_in_s, pipeline_out_rev)
+    result = pipeline_func(stream_in=pipeline_in_s, stream_out=pipeline_out_rev)
     pipeline_out = result.stream_out
     pipeline_in_ready = result.stream_in.ready
 
@@ -185,13 +185,13 @@ def chacha20_encrypt_shared(
     to_pipe_rev.ready = encrypt_pipeline_in_ready
     from_pipe_fwd: axis512_t = encrypt_pipeline_out
     fsm_out = chacha20.chacha20_fsm(
-        key,
-        nonce,
-        axis_in_if,
-        key_if,
-        axis_out_if,
-        to_pipe_rev,
-        from_pipe_fwd,
+        key=key,
+        nonce=nonce,
+        axis_in_if=axis_in_if,
+        key_if=key_if,
+        axis_out_if=axis_out_if,
+        to_pipeline_if=to_pipe_rev,
+        from_pipeline_if=from_pipe_fwd,
     )
     o.axis_in_if = fsm_out.axis_in_if
     o.key_if = fsm_out.key_if
@@ -214,13 +214,13 @@ def chacha20_decrypt_shared(
     to_pipe_rev.ready = decrypt_pipeline_in_ready
     from_pipe_fwd: axis512_t = decrypt_pipeline_out
     fsm_out = chacha20.chacha20_fsm(
-        key,
-        nonce,
-        axis_in_if,
-        key_if,
-        axis_out_if,
-        to_pipe_rev,
-        from_pipe_fwd,
+        key=key,
+        nonce=nonce,
+        axis_in_if=axis_in_if,
+        key_if=key_if,
+        axis_out_if=axis_out_if,
+        to_pipeline_if=to_pipe_rev,
+        from_pipeline_if=from_pipe_fwd,
     )
     o.axis_in_if = fsm_out.axis_in_if
     o.key_if = fsm_out.key_if

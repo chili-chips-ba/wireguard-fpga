@@ -427,11 +427,19 @@ hand:
 
 ```python
 def chacha20_instance_wiring(key, nonce, axis_in_if: axis128_intrf) -> chacha20_ports:
-    fsm_out = chacha20_fsm(key, nonce, axis_in_if, pipe.stream_out)
-    pipe = pipeline_func(fsm_out.to_pipeline_if)
+    fsm_out = chacha20_fsm(
+        key=key, nonce=nonce, axis_in_if=axis_in_if, from_pipeline_if=pipe.stream_out
+    )
+    pipe = pipeline_func(stream_in=fsm_out.to_pipeline_if)
     return chacha20_ports(key_if=fsm_out.key_if,
                           axis_out_if=fsm_out.axis_out_if)
 ```
+
+Calls inside an interface function body accept keyword arguments like any other
+Pypeline call — bound by the callee's own parameter names, positional and
+keyword args may mix, and only a callee's feedforward parameters are
+caller-suppliable (the reverse half of an output port, e.g. `pipeline_func`'s
+`stream_out`, is synthesized by the pass and cannot be named at the call site).
 
 The FSMs themselves stay hand-written: their reverse signals are computed from
 state, which is not forwardable wiring. Only the merge layer is generated.
@@ -448,14 +456,16 @@ interface functions. The decrypt body is the whole graph:
 ```python
 def decrypt_dataflow_core(axis_in_if: axis128_intrf, key, nonce, aad, aad_len
                           ) -> decrypt_dataflow_core_ports:
-    strip  = strip_auth_tag.strip_auth_tag(axis_in_if)
-    bcast  = axis128_2broadcast(strip.axis_out)
-    chacha = chacha_func(key, nonce, bcast.axis_out[1])
-    prep   = prep_auth_data.prep_auth_data_fsm(aad, aad_len, bcast.axis_out[0])
-    mac    = poly1305.poly1305_mac_instance(chacha.key_if, prep.axis)
+    strip  = strip_auth_tag.strip_auth_tag(axis_in=axis_in_if)
+    bcast  = axis128_2broadcast(axis_in=strip.axis_out)
+    chacha = chacha_func(key=key, nonce=nonce, axis_in_if=bcast.axis_out[1])
+    prep   = prep_auth_data.prep_auth_data_fsm(
+        aad=aad, aad_len=aad_len, axis_in=bcast.axis_out[0])
+    mac    = poly1305.poly1305_mac_instance(key_if=chacha.key_if, data_in_if=prep.axis)
     verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
-        strip.auth_tag_out, mac.auth_tag_if)
-    wtv    = wait_to_verify.wait_to_verify(chacha.axis_out_if, verify.tags_match)
+        auth_tag=strip.auth_tag_out, calc_tag=mac.auth_tag_if)
+    wtv    = wait_to_verify.wait_to_verify(
+        axis_in=chacha.axis_out_if, verify_bit=verify.tags_match)
     return decrypt_dataflow_core_ports(axis_out_if=wtv.axis_out,
                                        is_verified_out=wtv.is_verified_out)
 ```

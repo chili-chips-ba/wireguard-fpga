@@ -392,8 +392,10 @@ def poly1305_mac_instance_wiring(
     key_if: poly1305_key_stream_intrf,
     data_in_if: axis128_intrf,
 ) -> poly1305_mac_ports:
-    fsm_out = poly1305_mac_fsm(key_if, data_in_if, compute.stream_out)
-    compute = compute_mcp(fsm_out.to_compute_if)
+    fsm_out = poly1305_mac_fsm(
+        key_if=key_if, data_in_if=data_in_if, from_compute_if=compute.stream_out
+    )
+    compute = compute_mcp(stream_in=fsm_out.to_compute_if)
     return poly1305_mac_ports(auth_tag_if=fsm_out.auth_tag_if)
 
 
