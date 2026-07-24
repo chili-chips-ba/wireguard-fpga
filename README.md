@@ -81,6 +81,7 @@ To make the hardware Wireguard truly accessible in the genuine spirit of open-so
 
 **[Ref12]** [opencryptohw](https://github.com/IObundle/iob-soc-opencryptohw)
 
+**[Ref13]** [Pypeline Native Sim](https://github.com/JulianKemmerer/PipelineC/blob/master/examples/pypeline/chacha20poly1305/pypeline_sim_and_wireguard.md)
 
 # Project Outline
 
