@@ -57,17 +57,17 @@ def make_encrypt_dataflow_core(chacha_func):
         # chacha20 encrypts; its ciphertext forks to both the MAC calculation
         # and the final output, and its poly key seeds poly1305_mac
         chacha = chacha_func(key=key, nonce=nonce, axis_in_if=axis_in_if)
-        bcast = axis128_2broadcast(axis_in=chacha.axis_out_if)
+        bcast = axis128_2broadcast(axis_in_if=chacha.axis_out_if)
         # prep_auth_data frames AAD+ciphertext+lengths for the MAC
         prep = prep_auth_data.prep_auth_data_fsm(
-            aad=aad, aad_len=aad_len, axis_in=bcast.axis_out[0]
+            aad=aad, aad_len=aad_len, axis_in_if=bcast.axis_out_if[0]
         )
         # poly1305_mac computes the tag from the poly key + the framed data
-        mac = poly1305.poly1305_mac_instance(key_if=chacha.key_if, data_in_if=prep.axis)
+        mac = poly1305.poly1305_mac_instance(key_if=chacha.key_if, data_in_if=prep.axis_if)
         # append_auth_tag appends the tag onto the other ciphertext fork
         append = append_auth_tag.append_auth_tag(
-            axis_in=bcast.axis_out[1], auth_tag_in=mac.auth_tag_if
+            axis_in_if=bcast.axis_out_if[1], auth_tag_in_if=mac.auth_tag_if
         )
-        return encrypt_dataflow_core_ports(axis_out_if=append.axis_out)
+        return encrypt_dataflow_core_ports(axis_out_if=append.axis_out_if)
 
     return make_hw_func_from_interface_func(encrypt_dataflow_core)

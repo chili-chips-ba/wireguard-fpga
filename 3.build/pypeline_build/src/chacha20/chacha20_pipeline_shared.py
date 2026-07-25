@@ -27,7 +27,6 @@ from pypeline import (
     uint1_t,
     uint8_t,
 )
-from interface.interface import make_interface_feedback_type, make_interface_type
 from stream.stream import make_stream_interface
 from stream.stream_pipeline import make_stream_pipeline
 
@@ -65,20 +64,20 @@ class chacha_shared_pipeline_out_t(NamedTuple):
 
 
 chacha_shared_pipeline_in_stream_intrf = make_stream_interface(chacha_shared_pipeline_in_t)
-chacha_shared_pipeline_in_stream_t = make_interface_type(chacha_shared_pipeline_in_stream_intrf)
+chacha_shared_pipeline_in_stream_t = chacha_shared_pipeline_in_stream_intrf.fwd_t
 chacha_shared_pipeline_out_stream_intrf = make_stream_interface(chacha_shared_pipeline_out_t)
-chacha_shared_pipeline_out_stream_t = make_interface_type(chacha_shared_pipeline_out_stream_intrf)
-chacha_shared_pipeline_out_stream_fb_t = make_interface_feedback_type(
-    chacha_shared_pipeline_out_stream_intrf
-)
+chacha_shared_pipeline_out_stream_t = chacha_shared_pipeline_out_stream_intrf.fwd_t
+chacha_shared_pipeline_out_stream_fb_t = chacha_shared_pipeline_out_stream_intrf.fb_t
 
 
 def chacha_shared_pipeline_in_stream_null():
     return chacha_shared_pipeline_in_stream_t(
-        data=chacha_shared_pipeline_in_t(
-            data=chacha20_loop_body_in_null(), is_encrypt=0
+        stream=chacha_shared_pipeline_in_stream_t.typeof("stream")(
+            data=chacha_shared_pipeline_in_t(
+                data=chacha20_loop_body_in_null(), is_encrypt=0
+            ),
+            valid=0,
         ),
-        valid=0,
     )
 
 
@@ -132,26 +131,26 @@ def chacha20_pipeline_shared():
 
     # Input side state toggles round robin
     is_encrypt: Reg[uint1_t]
-    pipeline_in_s.data.is_encrypt = is_encrypt
+    pipeline_in_s.stream.data.is_encrypt = is_encrypt
     if is_encrypt:
-        pipeline_in_s.data.data = encrypt_pipeline_in.data
-        pipeline_in_s.valid = encrypt_pipeline_in.valid
+        pipeline_in_s.stream.data.data = encrypt_pipeline_in.stream.data
+        pipeline_in_s.stream.valid = encrypt_pipeline_in.stream.valid
         encrypt_pipeline_in_ready_s = pipeline_in_ready
     else:
-        pipeline_in_s.data.data = decrypt_pipeline_in.data
-        pipeline_in_s.valid = decrypt_pipeline_in.valid
+        pipeline_in_s.stream.data.data = decrypt_pipeline_in.stream.data
+        pipeline_in_s.stream.valid = decrypt_pipeline_in.stream.valid
         decrypt_pipeline_in_ready_s = pipeline_in_ready
     is_encrypt = ~is_encrypt
 
     # Output side muxing based on id flag out of pipeline
-    if pipeline_out.valid:
-        if pipeline_out.data.is_encrypt:
-            encrypt_pipeline_out_s.data = pipeline_out.data.data
-            encrypt_pipeline_out_s.valid = pipeline_out.valid
+    if pipeline_out.stream.valid:
+        if pipeline_out.stream.data.is_encrypt:
+            encrypt_pipeline_out_s.stream.data = pipeline_out.stream.data.data
+            encrypt_pipeline_out_s.stream.valid = pipeline_out.stream.valid
             pipeline_out_ready_s = encrypt_pipeline_out_ready
         else:
-            decrypt_pipeline_out_s.data = pipeline_out.data.data
-            decrypt_pipeline_out_s.valid = pipeline_out.valid
+            decrypt_pipeline_out_s.stream.data = pipeline_out.stream.data.data
+            decrypt_pipeline_out_s.stream.valid = pipeline_out.stream.valid
             pipeline_out_ready_s = decrypt_pipeline_out_ready
 
     # Drive output wires
@@ -162,9 +161,9 @@ def chacha20_pipeline_shared():
 
     pipeline_out_rev: chacha_shared_pipeline_out_stream_fb_t
     pipeline_out_rev.ready = pipeline_out_ready_s
-    result = pipeline_func(stream_in=pipeline_in_s, stream_out=pipeline_out_rev)
-    pipeline_out = result.stream_out
-    pipeline_in_ready = result.stream_in.ready
+    result = pipeline_func(stream_in_if=pipeline_in_s, stream_out_if=pipeline_out_rev)
+    pipeline_out = result.stream_out_if
+    pipeline_in_ready = result.stream_in_if.ready
 
 
 # Per-direction FSM wrappers: same chacha20.chacha20_fsm as

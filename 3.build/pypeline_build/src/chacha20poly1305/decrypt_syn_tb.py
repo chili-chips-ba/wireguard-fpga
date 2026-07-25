@@ -146,14 +146,14 @@ def decrypt_syn_tb() -> axis128_t:
         # Ciphertext words: keep marks exactly the remaining bytes (partial
         # on the final word), eod never set (the auth tag word follows)
         for i in range(16):
-            axis_in_s.data.frag.keep[i] = ciphertext_remaining_in > i
-            axis_in_s.data.frag.data[i] = 0
+            axis_in_s.stream.data.frag.keep[i] = ciphertext_remaining_in > i
+            axis_in_s.stream.data.frag.data[i] = 0
             if ciphertext_remaining_in > i:
-                axis_in_s.data.frag.data[i] = ciphertext_in_stream[i]
-        axis_in_s.data.eod[0] = 0
-        axis_in_s.valid = 1
-        if axis_in_s.valid & chacha20poly1305_decrypt_ports.axis_in_ready:
-            in_chunk: uint128_t = array_to_uint_be(axis_in_s.data.frag.data)
+                axis_in_s.stream.data.frag.data[i] = ciphertext_in_stream[i]
+        axis_in_s.stream.data.eod[0] = 0
+        axis_in_s.stream.valid = 1
+        if axis_in_s.stream.valid & chacha20poly1305_decrypt_ports.axis_in_ready:
+            in_chunk: uint128_t = array_to_uint_be(axis_in_s.stream.data.frag.data)
             sim_print(
                 f"Decrypt: Input Ciphertext next 16 bytes: {hex(in_chunk[127:96])}{hex(in_chunk[95:64])}{hex(in_chunk[63:32])}{hex(in_chunk[31:0])}",
                 debug=True,
@@ -169,12 +169,12 @@ def decrypt_syn_tb() -> axis128_t:
     elif input_packet_count < NUM_PACKETS:
         # Auth tag word: all 16 lanes kept, ends the input packet
         for i in range(POLY1305_AUTH_TAG_SIZE):
-            axis_in_s.data.frag.keep[i] = 1
-            axis_in_s.data.frag.data[i] = input_tag[i]
-        axis_in_s.data.eod[0] = 1
-        axis_in_s.valid = 1
-        if axis_in_s.valid & chacha20poly1305_decrypt_ports.axis_in_ready:
-            tag_chunk: uint128_t = array_to_uint_be(axis_in_s.data.frag.data)
+            axis_in_s.stream.data.frag.keep[i] = 1
+            axis_in_s.stream.data.frag.data[i] = input_tag[i]
+        axis_in_s.stream.data.eod[0] = 1
+        axis_in_s.stream.valid = 1
+        if axis_in_s.stream.valid & chacha20poly1305_decrypt_ports.axis_in_ready:
+            tag_chunk: uint128_t = array_to_uint_be(axis_in_s.stream.data.frag.data)
             sim_print(
                 f"Decrypt: Input Auth Tag: {hex(tag_chunk[127:96])}{hex(tag_chunk[95:64])}{hex(tag_chunk[63:32])}{hex(tag_chunk[31:0])}"
             )
@@ -208,9 +208,9 @@ def decrypt_syn_tb() -> axis128_t:
     # Testbench is ready to receive plaintext
     chacha20poly1305_decrypt_ports.axis_out_ready = 1
     out_axis: axis128_t = chacha20poly1305_decrypt_ports.axis_out
-    if out_axis.valid:
+    if out_axis.stream.valid:
         # Print plaintext as it flows out of dut
-        out_chunk: uint128_t = array_to_uint_be(out_axis.data.frag.data)
+        out_chunk: uint128_t = array_to_uint_be(out_axis.stream.data.frag.data)
         sim_print(
             f"Decrypt: Output Plaintext next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}",
             debug=True,
@@ -231,20 +231,20 @@ def decrypt_syn_tb() -> axis128_t:
             # sim_assert instance a different port width
             lane: uint8_t = i
             sim_assert(
-                out_axis.data.frag.keep[i] == expected_keep,
-                f"Decrypt: Plaintext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.data.frag.keep[i]}",
+                out_axis.stream.data.frag.keep[i] == expected_keep,
+                f"Decrypt: Plaintext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.stream.data.frag.keep[i]}",
             )
             if expected_keep:
                 plaintext_pos: uint32_t = (
                     plaintext_out_size - plaintext_remaining_out
                 ) + i
                 sim_assert(
-                    out_axis.data.frag.data[i] == plaintext_out_expected[i],
-                    f"Decrypt: Plaintext mismatch at byte[{plaintext_pos}]. expected {hex(plaintext_out_expected[i])} got {hex(out_axis.data.frag.data[i])}",
+                    out_axis.stream.data.frag.data[i] == plaintext_out_expected[i],
+                    f"Decrypt: Plaintext mismatch at byte[{plaintext_pos}]. expected {hex(plaintext_out_expected[i])} got {hex(out_axis.stream.data.frag.data[i])}",
                 )
 
         # Handle stream end
-        if out_axis.data.eod[0]:
+        if out_axis.stream.data.eod[0]:
             sim_assert(
                 plaintext_remaining_out <= 16,
                 "Decrypt: Early end to Plaintext output!",
