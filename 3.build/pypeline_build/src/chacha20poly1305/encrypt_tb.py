@@ -65,8 +65,10 @@ def _build_axis_word(chunk: bytes, eod: int) -> axis128_t:
         data[i] = b
         keep[i] = 1
     return axis128_t(
-        data=axis128_frag_t(frag=axis128_bus_t(data=data, keep=keep), eod=[eod]),
-        valid=1,
+        stream=axis128_t.typeof("stream")(
+            data=axis128_frag_t(frag=axis128_bus_t(data=data, keep=keep), eod=[eod]),
+            valid=1,
+        )
     )
 
 
@@ -136,7 +138,7 @@ def report_new_packets():
 @sim_output
 def check_out():
     out = chacha20poly1305_encrypt_ports.axis_out
-    if not out.valid:
+    if not out.stream.valid:
         return
 
     idx = _enc_state["out_packet_idx"]
@@ -154,20 +156,20 @@ def check_out():
         n = len(remaining)
         for i in range(16):
             expected_keep = 1 if i < n else 0
-            got_keep = out.data.frag.keep[i]
+            got_keep = out.stream.data.frag.keep[i]
             if got_keep != expected_keep:
                 sim_print(
                     f"ERROR: Encrypt: Ciphertext keep mismatch at lane {i} packet {idx}. expected {expected_keep} got {got_keep}"
                 )
             if expected_keep:
                 expected_byte = remaining[i]
-                got_byte = out.data.frag.data[i]
+                got_byte = out.stream.data.frag.data[i]
                 if got_byte != expected_byte:
                     pos = len(pkt["ciphertext"]) - n + i
                     sim_print(
                         f"ERROR: Encrypt: Ciphertext mismatch at byte[{pos}] packet {idx}. expected {hex(expected_byte)} got {hex(got_byte)}"
                     )
-        if out.data.eod[0]:
+        if out.stream.data.eod[0]:
             sim_print(f"ERROR: Encrypt: Early end to ciphertext output packet {idx} (before auth tag)!")
         if n > 16:
             _enc_state["out_remaining"] = remaining[16:]
@@ -177,13 +179,13 @@ def check_out():
     else:
         tag = pkt["tag"]
         for i in range(16):
-            if not out.data.frag.keep[i]:
+            if not out.stream.data.frag.keep[i]:
                 sim_print(f"ERROR: Encrypt: Auth tag keep not set at lane {i} packet {idx}!")
-            if out.data.frag.data[i] != tag[i]:
+            if out.stream.data.frag.data[i] != tag[i]:
                 sim_print(
-                    f"ERROR: Encrypt: Auth tag mismatch at byte[{i}] packet {idx}. expected {hex(tag[i])} got {hex(out.data.frag.data[i])}"
+                    f"ERROR: Encrypt: Auth tag mismatch at byte[{i}] packet {idx}. expected {hex(tag[i])} got {hex(out.stream.data.frag.data[i])}"
                 )
-        if not out.data.eod[0]:
+        if not out.stream.data.eod[0]:
             sim_print(f"ERROR: Encrypt: Auth tag word missing end of packet {idx}!")
         sim_print(f"Encrypt: Test {idx} DONE!")
         _enc_state["out_packet_idx"] = idx + 1

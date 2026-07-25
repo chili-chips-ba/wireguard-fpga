@@ -138,19 +138,19 @@ def encrypt_syn_tb() -> axis128_t:
         # Up to 16 bytes of plaintext onto axis128: keep marks exactly the
         # valid lanes (partial on the final word), non-kept data lanes zero
         for i in range(16):
-            axis_in_s.data.frag.keep[i] = plaintext_remaining > i
-            axis_in_s.data.frag.data[i] = 0
+            axis_in_s.stream.data.frag.keep[i] = plaintext_remaining > i
+            axis_in_s.stream.data.frag.data[i] = 0
             if plaintext_remaining > i:
-                axis_in_s.data.frag.data[i] = plaintext[i]
-        axis_in_s.data.eod[0] = plaintext_remaining <= 16
-        axis_in_s.valid = 1
-        if axis_in_s.valid & chacha20poly1305_encrypt_ports.axis_in_ready:
-            in_chunk: uint128_t = array_to_uint_be(axis_in_s.data.frag.data)
+                axis_in_s.stream.data.frag.data[i] = plaintext[i]
+        axis_in_s.stream.data.eod[0] = plaintext_remaining <= 16
+        axis_in_s.stream.valid = 1
+        if axis_in_s.stream.valid & chacha20poly1305_encrypt_ports.axis_in_ready:
+            in_chunk: uint128_t = array_to_uint_be(axis_in_s.stream.data.frag.data)
             sim_print(
                 f"Encrypt: Input Plaintext next 16 bytes: {hex(in_chunk[127:96])}{hex(in_chunk[95:64])}{hex(in_chunk[63:32])}{hex(in_chunk[31:0])}",
                 debug=True,
             )
-            if axis_in_s.data.eod[0]:
+            if axis_in_s.stream.data.eod[0]:
                 sim_print(f"Encrypt: End of input plaintext for test {input_packet_count}")
                 plaintext_remaining = 0
                 input_packet_count = input_packet_count + 1
@@ -185,9 +185,9 @@ def encrypt_syn_tb() -> axis128_t:
     # Stream ciphertext out of dut (testbench always ready)
     chacha20poly1305_encrypt_ports.axis_out_ready = 1
     out_axis: axis128_t = chacha20poly1305_encrypt_ports.axis_out
-    if out_axis.valid:
+    if out_axis.stream.valid:
         # Print output as it flows out of dut
-        out_chunk: uint128_t = array_to_uint_be(out_axis.data.frag.data)
+        out_chunk: uint128_t = array_to_uint_be(out_axis.stream.data.frag.data)
         sim_print(
             f"Encrypt: Output Ciphertext/Tag next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}",
             debug=True,
@@ -203,19 +203,19 @@ def encrypt_syn_tb() -> axis128_t:
                 # sim_assert instance a different port width
                 lane: uint8_t = i
                 sim_assert(
-                    out_axis.data.frag.keep[i] == expected_keep,
-                    f"Encrypt: Ciphertext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.data.frag.keep[i]}",
+                    out_axis.stream.data.frag.keep[i] == expected_keep,
+                    f"Encrypt: Ciphertext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.stream.data.frag.keep[i]}",
                 )
                 if expected_keep:
                     ciphertext_pos: uint32_t = (
                         ciphertext_size - ciphertext_remaining
                     ) + i
                     sim_assert(
-                        out_axis.data.frag.data[i] == expected_ciphertext[i],
-                        f"Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(out_axis.data.frag.data[i])}",
+                        out_axis.stream.data.frag.data[i] == expected_ciphertext[i],
+                        f"Encrypt: Ciphertext mismatch at byte[{ciphertext_pos}]. expected {hex(expected_ciphertext[i])} got {hex(out_axis.stream.data.frag.data[i])}",
                     )
             sim_assert(
-                ~out_axis.data.eod[0],
+                ~out_axis.stream.data.eod[0],
                 "Encrypt: Early end to ciphertext output (before auth tag)!",
             )
             if ciphertext_remaining > 16:
@@ -232,15 +232,15 @@ def encrypt_syn_tb() -> axis128_t:
                 # fixed-width lane index for printing (see ciphertext loop)
                 tag_lane: uint8_t = i
                 sim_assert(
-                    out_axis.data.frag.keep[i],
+                    out_axis.stream.data.frag.keep[i],
                     f"Encrypt: Auth tag keep not set at lane {tag_lane}!",
                 )
                 sim_assert(
-                    out_axis.data.frag.data[i] == expected_tag[i],
-                    f"Encrypt: Auth tag mismatch at byte[{tag_lane}]. expected {hex(expected_tag[i])} got {hex(out_axis.data.frag.data[i])}",
+                    out_axis.stream.data.frag.data[i] == expected_tag[i],
+                    f"Encrypt: Auth tag mismatch at byte[{tag_lane}]. expected {hex(expected_tag[i])} got {hex(out_axis.stream.data.frag.data[i])}",
                 )
             sim_assert(
-                out_axis.data.eod[0],
+                out_axis.stream.data.eod[0],
                 "Encrypt: Auth tag word missing end of packet!",
             )
             sim_print(f"Encrypt: Test {output_packet_count} DONE!")
