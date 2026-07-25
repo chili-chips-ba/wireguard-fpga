@@ -31,7 +31,7 @@ from aead_types import (
     nonce_uint_t,
     aad_uint_t,
     uint128_t,
-    axis128_t,
+    axis128_intrf,
 )
 
 # Top level input wires
@@ -58,7 +58,7 @@ encrypt_m_axis_tready: Input[uint1_t]
 @wires
 def chacha20poly1305_encrypt_io_wires():
     # Convert flattened multiple input wires to the axis128 stream wire
-    axis_in_s: axis128_t
+    axis_in_s: axis128_intrf.fwd_t
     axis_in_s.stream.data.frag.data = uint_to_array_le(encrypt_s_axis_tdata, 8)
     axis_in_s.stream.data.frag.keep = uint_to_array_le(encrypt_s_axis_tkeep, 1)
     axis_in_s.stream.data.eod[0] = encrypt_s_axis_tlast

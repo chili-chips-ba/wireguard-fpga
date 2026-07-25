@@ -18,11 +18,9 @@ from pypeline import (
 )
 
 from aead_types import (
-    axis128_t,
-    axis128_fb_t,
+    axis128_intrf,
     axis128_null,
-    poly1305_auth_tag_stream_t,
-    poly1305_auth_tag_stream_fb_t,
+    poly1305_auth_tag_stream_intrf,
     poly1305_auth_tag_stream_null,
 )
 
@@ -30,21 +28,21 @@ from aead_types import (
 @struct
 class axis128_early_tlast_t(NamedTuple):
     # Outputs
-    axis_out_if: axis128_t  # output port's feedforward half
+    axis_out_if: axis128_intrf.fwd_t  # output port's feedforward half
     next_axis_out_is_tlast: uint1_t  # plain sideband, no reverse companion
-    stream_in_if: axis128_fb_t  # input port's reverse half
+    stream_in_if: axis128_intrf.fb_t  # input port's reverse half
 
 
 @hw_func
 def axis128_early_tlast(
     # Inputs
-    stream_in_if: axis128_t,
-    axis_out_if: axis128_fb_t,
+    stream_in_if: axis128_intrf.fwd_t,
+    axis_out_if: axis128_intrf.fb_t,
 ) -> axis128_early_tlast_t:
     o: axis128_early_tlast_t  # outputs
 
     # Output comes via the buffer reg
-    buffer_reg: Reg[axis128_t]
+    buffer_reg: Reg[axis128_intrf.fwd_t]
 
     # Stop data from flowing buffer -> out
     # until we can determine if last is next
@@ -78,30 +76,30 @@ def axis128_early_tlast(
 
 @struct
 class strip_auth_tag_out_t(NamedTuple):
-    axis_in_if: axis128_fb_t
-    axis_out_if: axis128_t
-    auth_tag_out_if: poly1305_auth_tag_stream_t
+    axis_in_if: axis128_intrf.fb_t
+    axis_out_if: axis128_intrf.fwd_t
+    auth_tag_out_if: poly1305_auth_tag_stream_intrf.fwd_t
 
 
 @hw_func
 def strip_auth_tag(
-    axis_in_if: axis128_t,
-    axis_out_if: axis128_fb_t,
-    auth_tag_out_if: poly1305_auth_tag_stream_fb_t,
+    axis_in_if: axis128_intrf.fwd_t,
+    axis_out_if: axis128_intrf.fb_t,
+    auth_tag_out_if: poly1305_auth_tag_stream_intrf.fb_t,
 ) -> strip_auth_tag_out_t:
     o: strip_auth_tag_out_t
-    early_out_ready: Feedback[axis128_fb_t]
+    early_out_ready: Feedback[axis128_intrf.fb_t]
 
     early_tlast = axis128_early_tlast(stream_in_if=axis_in_if, axis_out_if=early_out_ready)
 
     # Ready for axis into early module
     o.axis_in_if = early_tlast.stream_in_if
     # stream coming out of early module
-    stream_in: axis128_t = early_tlast.axis_out_if
+    stream_in: axis128_intrf.fwd_t = early_tlast.axis_out_if
 
     # Default passing input axis data to ciphertext output
     o.axis_out_if = stream_in
-    early_out_ready = axis128_fb_t(ready=axis_out_if.ready)
+    early_out_ready = axis_out_if  # same fb_t type, no need to rebuild from .ready
 
     # With override to use the early tlast for ciphertext tlast
     o.axis_out_if.stream.data.eod[0] = early_tlast.next_axis_out_is_tlast
@@ -115,6 +113,6 @@ def strip_auth_tag(
         # Connect to auth tag output
         o.auth_tag_out_if.stream.data = array_to_uint_le(stream_in.stream.data.frag.data)
         o.auth_tag_out_if.stream.valid = stream_in.stream.valid
-        early_out_ready = axis128_fb_t(ready=auth_tag_out_if.ready)
+        early_out_ready = axis128_intrf.fb_t(ready=auth_tag_out_if.ready)
 
     return o

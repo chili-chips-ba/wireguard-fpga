@@ -42,28 +42,16 @@ poly1305_auth_tag_uint_t = uint128_t
 axis128_bus_t = make_kept_data_bus_t(uint8_t, 16)
 axis128_frag_t = make_ndarray_fragment_t(axis128_bus_t, 1)  # C axis128_t
 axis128_intrf = make_stream_interface(axis128_frag_t)  # C stream(axis128_t)
-axis128_t = axis128_intrf.fwd_t  # feedforward half ({stream: {data, valid}})
-axis128_fb_t = axis128_intrf.fb_t  # reverse half (ready)
 
 # 512b AXIS bus: 64 byte lanes (C axis512_t / stream(axis512_t))
 axis512_bus_t = make_kept_data_bus_t(uint8_t, 64)
 axis512_frag_t = make_ndarray_fragment_t(axis512_bus_t, 1)  # C axis512_t
 axis512_intrf = make_stream_interface(axis512_frag_t)  # C stream(axis512_t)
-axis512_t = axis512_intrf.fwd_t
-axis512_fb_t = axis512_intrf.fb_t
 
 # Scalar streams (C DECL_STREAM_TYPE(...))
 poly1305_key_stream_intrf = make_stream_interface(poly1305_key_uint_t)
-poly1305_key_stream_t = poly1305_key_stream_intrf.fwd_t
-poly1305_key_stream_fb_t = poly1305_key_stream_intrf.fb_t
-
 poly1305_auth_tag_stream_intrf = make_stream_interface(poly1305_auth_tag_uint_t)
-poly1305_auth_tag_stream_t = poly1305_auth_tag_stream_intrf.fwd_t
-poly1305_auth_tag_stream_fb_t = poly1305_auth_tag_stream_intrf.fb_t
-
 uint1_stream_intrf = make_stream_interface(uint1_t)
-uint1_stream_t = uint1_stream_intrf.fwd_t
-uint1_stream_fb_t = uint1_stream_intrf.fb_t
 
 # C axis128_keep_count
 axis128_keep_count = make_keep_count(axis128_bus_t, 16)
@@ -84,7 +72,9 @@ def axis128_frag_null():
 
 
 def axis128_null():
-    return axis128_t(stream=axis128_t.typeof("stream")(data=axis128_frag_null(), valid=0))
+    return axis128_intrf.fwd_t(
+        stream=axis128_intrf.stream_t(data=axis128_frag_null(), valid=0)
+    )
 
 
 def axis512_frag_null():
@@ -94,18 +84,24 @@ def axis512_frag_null():
 
 
 def axis512_null():
-    return axis512_t(stream=axis512_t.typeof("stream")(data=axis512_frag_null(), valid=0))
+    return axis512_intrf.fwd_t(
+        stream=axis512_intrf.stream_t(data=axis512_frag_null(), valid=0)
+    )
 
 
 def poly1305_key_stream_null():
-    return poly1305_key_stream_t(stream=poly1305_key_stream_t.typeof("stream")(data=0, valid=0))
+    return poly1305_key_stream_intrf.fwd_t(
+        stream=poly1305_key_stream_intrf.stream_t(data=0, valid=0)
+    )
 
 
 def poly1305_auth_tag_stream_null():
-    return poly1305_auth_tag_stream_t(
-        stream=poly1305_auth_tag_stream_t.typeof("stream")(data=0, valid=0)
+    return poly1305_auth_tag_stream_intrf.fwd_t(
+        stream=poly1305_auth_tag_stream_intrf.stream_t(data=0, valid=0)
     )
 
 
 def uint1_stream_null():
-    return uint1_stream_t(stream=uint1_stream_t.typeof("stream")(data=0, valid=0))
+    return uint1_stream_intrf.fwd_t(
+        stream=uint1_stream_intrf.stream_t(data=0, valid=0)
+    )

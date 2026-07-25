@@ -31,7 +31,7 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_t,
+    axis128_intrf,
     axis128_frag_t,
     axis128_bus_t,
     axis128_null,
@@ -57,15 +57,15 @@ _dec_state = {
 }
 
 
-def _build_axis_word(chunk: bytes, eod: int) -> axis128_t:
+def _build_axis_word(chunk: bytes, eod: int) -> axis128_intrf.fwd_t:
     # Functional (non-mutating) construction -- see encrypt_tb.py.
     data = [0] * 16
     keep = [0] * 16
     for i, b in enumerate(chunk):
         data[i] = b
         keep[i] = 1
-    return axis128_t(
-        stream=axis128_t.typeof("stream")(
+    return axis128_intrf.fwd_t(
+        stream=axis128_intrf.stream_t(
             data=axis128_frag_t(frag=axis128_bus_t(data=data, keep=keep), eod=[eod]),
             valid=1,
         )
@@ -105,7 +105,7 @@ def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
 
 
 @sim_input
-def drive_in_word() -> axis128_t:
+def drive_in_word() -> axis128_intrf.fwd_t:
     if _dec_state["rng"] is None:
         _dec_state["rng"] = random.Random(common.DEFAULT_SEED)
 
@@ -223,7 +223,7 @@ def check_out():
 
 @MAIN
 @wires
-def decrypt_tb() -> axis128_t:
+def decrypt_tb() -> axis128_intrf.fwd_t:
     key: uint8_t[CHACHA20_KEY_SIZE] = common.KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = common.NONCE
     aad: uint8_t[AAD_MAX_LEN] = common.AAD

@@ -45,14 +45,8 @@ from aead_types import (
     POLY1305_BLOCK_SIZE,
     POLY1305_KEY_SIZE,
     axis128_intrf,
-    axis128_t,
-    axis128_fb_t,
     poly1305_key_stream_intrf,
-    poly1305_key_stream_t,
-    poly1305_key_stream_fb_t,
     poly1305_auth_tag_stream_intrf,
-    poly1305_auth_tag_stream_t,
-    poly1305_auth_tag_stream_fb_t,
 )
 
 U320_NLIMBS = 5
@@ -72,8 +66,6 @@ class u320_t(NamedTuple):
 
 
 u320_stream_intrf = make_stream_interface(u320_t)
-u320_stream_t = u320_stream_intrf.fwd_t
-u320_stream_fb_t = u320_stream_intrf.fb_t
 
 
 def u320_null():
@@ -214,8 +206,6 @@ class poly1305_mac_loop_body_in_t(NamedTuple):
 
 
 poly1305_mac_loop_body_stream_intrf = make_stream_interface(poly1305_mac_loop_body_in_t)
-poly1305_mac_loop_body_stream_t = poly1305_mac_loop_body_stream_intrf.fwd_t
-poly1305_mac_loop_body_stream_fb_t = poly1305_mac_loop_body_stream_intrf.fb_t
 
 
 def poly1305_mac_loop_body_in_null():
@@ -260,21 +250,21 @@ class poly1305_state_t:
 
 @struct
 class poly1305_mac_fsm_t(NamedTuple):
-    key_if: poly1305_key_stream_fb_t
-    data_in_if: axis128_fb_t
-    auth_tag_if: poly1305_auth_tag_stream_t
-    to_compute_if: poly1305_mac_loop_body_stream_t
-    from_compute_if: u320_stream_fb_t
+    key_if: poly1305_key_stream_intrf.fb_t
+    data_in_if: axis128_intrf.fb_t
+    auth_tag_if: poly1305_auth_tag_stream_intrf.fwd_t
+    to_compute_if: poly1305_mac_loop_body_stream_intrf.fwd_t
+    from_compute_if: u320_stream_intrf.fb_t
 
 
 @hw_func
 def poly1305_mac_fsm(
     # Inputs
-    key_if: poly1305_key_stream_t,
-    data_in_if: axis128_t,
-    auth_tag_if: poly1305_auth_tag_stream_fb_t,
-    from_compute_if: u320_stream_t,
-    to_compute_if: poly1305_mac_loop_body_stream_fb_t,
+    key_if: poly1305_key_stream_intrf.fwd_t,
+    data_in_if: axis128_intrf.fwd_t,
+    auth_tag_if: poly1305_auth_tag_stream_intrf.fb_t,
+    from_compute_if: u320_stream_intrf.fwd_t,
+    to_compute_if: poly1305_mac_loop_body_stream_intrf.fb_t,
 ) -> poly1305_mac_fsm_t:
     o: poly1305_mac_fsm_t
     # The compute result is consumed the cycle it arrives (as before, when this

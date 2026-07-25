@@ -10,7 +10,7 @@ from pypeline import MAIN
 import chacha20poly1305_encrypt_ports
 import chacha20
 
-from aead_types import axis128_fb_t
+from aead_types import axis128_intrf
 from encrypt_dataflow_core import make_encrypt_dataflow_core
 
 encrypt_dataflow_core, encrypt_dataflow_core_t = make_encrypt_dataflow_core(
@@ -24,7 +24,7 @@ def encrypt_dataflow():
     # ordinary hw_func here, so the reverse halves go in as arguments and come
     # back out as named return fields, and are unpacked onto the design's
     # flat DUT-facing port wires.
-    axis_out_rev: axis128_fb_t = axis128_fb_t(ready=chacha20poly1305_encrypt_ports.axis_out_ready)
+    axis_out_rev: axis128_intrf.fb_t = axis128_intrf.fb_t(ready=chacha20poly1305_encrypt_ports.axis_out_ready)
     r = encrypt_dataflow_core(
         axis_in_if=chacha20poly1305_encrypt_ports.axis_in,
         key=chacha20poly1305_encrypt_ports.key,

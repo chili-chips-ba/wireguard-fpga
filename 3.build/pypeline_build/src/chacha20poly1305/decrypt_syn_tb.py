@@ -42,7 +42,7 @@ from aead_types import (
     uint96_t,
     uint128_t,
     uint256_t,
-    axis128_t,
+    axis128_intrf,
     axis128_null,
 )
 from tb_common import (
@@ -87,7 +87,7 @@ decrypt_all_done: Wire[uint1_t]
 # Streaming inputs data is done as shift register
 @MAIN
 @wires
-def decrypt_syn_tb() -> axis128_t:
+def decrypt_syn_tb() -> axis128_intrf.fwd_t:
     # Test vectors
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = NONCE
@@ -141,7 +141,7 @@ def decrypt_syn_tb() -> axis128_t:
         sim_print(f"Decrypting test string {input_packet_count}...")
 
     # Stream ciphertext + auth tag into dut
-    axis_in_s: axis128_t = axis128_null()
+    axis_in_s: axis128_intrf.fwd_t = axis128_null()
     if ciphertext_remaining_in > 0:
         # Ciphertext words: keep marks exactly the remaining bytes (partial
         # on the final word), eod never set (the auth tag word follows)
@@ -207,7 +207,7 @@ def decrypt_syn_tb() -> axis128_t:
 
     # Testbench is ready to receive plaintext
     chacha20poly1305_decrypt_ports.axis_out_ready = 1
-    out_axis: axis128_t = chacha20poly1305_decrypt_ports.axis_out
+    out_axis: axis128_intrf.fwd_t = chacha20poly1305_decrypt_ports.axis_out
     if out_axis.stream.valid:
         # Print plaintext as it flows out of dut
         out_chunk: uint128_t = array_to_uint_be(out_axis.stream.data.frag.data)

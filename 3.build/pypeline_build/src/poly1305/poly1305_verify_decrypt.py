@@ -20,10 +20,8 @@ from pypeline import (
 
 from aead_types import (
     poly1305_auth_tag_uint_t,
-    poly1305_auth_tag_stream_t,
-    poly1305_auth_tag_stream_fb_t,
-    uint1_stream_t,
-    uint1_stream_fb_t,
+    poly1305_auth_tag_stream_intrf,
+    uint1_stream_intrf,
     uint1_stream_null,
 )
 
@@ -38,16 +36,16 @@ class poly1305_verify_state_t:
 
 @struct
 class poly1305_verify_decrypt_out_t(NamedTuple):
-    auth_tag_if: poly1305_auth_tag_stream_fb_t
-    calc_tag_if: poly1305_auth_tag_stream_fb_t
-    tags_match_if: uint1_stream_t
+    auth_tag_if: poly1305_auth_tag_stream_intrf.fb_t
+    calc_tag_if: poly1305_auth_tag_stream_intrf.fb_t
+    tags_match_if: uint1_stream_intrf.fwd_t
 
 
 @hw_func
 def poly1305_verify_decrypt(
-    auth_tag_if: poly1305_auth_tag_stream_t,
-    calc_tag_if: poly1305_auth_tag_stream_t,
-    tags_match_if: uint1_stream_fb_t,
+    auth_tag_if: poly1305_auth_tag_stream_intrf.fwd_t,
+    calc_tag_if: poly1305_auth_tag_stream_intrf.fwd_t,
+    tags_match_if: uint1_stream_intrf.fb_t,
 ) -> poly1305_verify_decrypt_out_t:
     o: poly1305_verify_decrypt_out_t
     # Define static variables
