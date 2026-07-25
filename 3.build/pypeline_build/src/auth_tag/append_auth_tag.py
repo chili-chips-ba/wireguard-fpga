@@ -21,11 +21,9 @@ from pypeline import (
 
 from aead_types import (
     POLY1305_AUTH_TAG_SIZE,
-    axis128_t,
-    axis128_fb_t,
+    axis128_intrf,
     axis128_null,
-    poly1305_auth_tag_stream_t,
-    poly1305_auth_tag_stream_fb_t,
+    poly1305_auth_tag_stream_intrf,
 )
 
 
@@ -37,16 +35,16 @@ class append_auth_tag_state_t:
 
 @struct
 class append_auth_tag_out_t(NamedTuple):
-    axis_in_if: axis128_fb_t
-    auth_tag_in_if: poly1305_auth_tag_stream_fb_t
-    axis_out_if: axis128_t
+    axis_in_if: axis128_intrf.fb_t
+    auth_tag_in_if: poly1305_auth_tag_stream_intrf.fb_t
+    axis_out_if: axis128_intrf.fwd_t
 
 
 @hw_func
 def append_auth_tag(
-    axis_in_if: axis128_t,
-    auth_tag_in_if: poly1305_auth_tag_stream_t,
-    axis_out_if: axis128_fb_t,
+    axis_in_if: axis128_intrf.fwd_t,
+    auth_tag_in_if: poly1305_auth_tag_stream_intrf.fwd_t,
+    axis_out_if: axis128_intrf.fb_t,
 ) -> append_auth_tag_out_t:
     o: append_auth_tag_out_t
     state: Reg[append_auth_tag_state_t]

@@ -25,8 +25,7 @@ from pypeline import (
 import aead_types
 from aead_types import (
     AAD_MAX_LEN,
-    axis128_t,
-    axis128_fb_t,
+    axis128_intrf,
     axis128_null,
 )
 
@@ -42,8 +41,8 @@ class prep_auth_data_state_t:
 @struct
 class prep_auth_data_fsm_t(NamedTuple):
     # Outputs
-    axis_in_if: axis128_fb_t  # input port's reverse half
-    axis_if: axis128_t  # output port's feedforward half
+    axis_in_if: axis128_intrf.fb_t  # input port's reverse half
+    axis_if: axis128_intrf.fwd_t  # output port's feedforward half
 
 
 @hw_func
@@ -51,8 +50,8 @@ def prep_auth_data_fsm(
     # Inputs
     aad: uint8_t[AAD_MAX_LEN],
     aad_len: uint8_t,
-    axis_in_if: axis128_t,
-    axis_if: axis128_fb_t,
+    axis_in_if: axis128_intrf.fwd_t,
+    axis_if: axis128_intrf.fb_t,
 ) -> prep_auth_data_fsm_t:
     o: prep_auth_data_fsm_t
     # FSM that adds leading and trailing bytes around the ciphertext stream

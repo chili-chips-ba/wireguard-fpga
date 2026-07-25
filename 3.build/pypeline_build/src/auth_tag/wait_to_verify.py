@@ -4,7 +4,7 @@ then stream it out alongside the verification result.
 
 Pypeline port of ../pipelinec_build/src/auth_tag/wait_to_verify.c.
 Wire names elaborate as wait_to_verify_<wire> to match the C globals;
-the C GLOBAL_STREAM_FIFO(axis128_t, verify_fifo, 128) becomes a
+the C GLOBAL_STREAM_FIFO(axis128_intrf.fwd_t, verify_fifo, 128) becomes a
 make_stream_fifo instance in its own MAIN with verify_fifo_* wires.
 """
 import pypeline_env  # noqa: F401
@@ -23,14 +23,12 @@ from pypeline import (
 from stream.stream_fifo import make_stream_fifo
 
 from aead_types import (
-    axis128_t,
-    axis128_fb_t,
+    axis128_intrf,
     axis128_frag_t,
-    uint1_stream_t,
-    uint1_stream_fb_t,
+    uint1_stream_intrf,
 )
 
-# C GLOBAL_STREAM_FIFO(axis128_t, verify_fifo, 128)
+# C GLOBAL_STREAM_FIFO(axis128_intrf.fwd_t, verify_fifo, 128)
 verify_fifo_func, _verify_fifo_t = make_stream_fifo(axis128_frag_t, 128)
 
 
@@ -44,17 +42,17 @@ class wait_to_verify_state_t:
 
 @struct
 class wait_to_verify_out_t(NamedTuple):
-    axis_in_if: axis128_fb_t
-    verify_bit_if: uint1_stream_fb_t
-    axis_out_if: axis128_t
+    axis_in_if: axis128_intrf.fb_t
+    verify_bit_if: uint1_stream_intrf.fb_t
+    axis_out_if: axis128_intrf.fwd_t
     is_verified_out: uint1_t  # plain sideband, no reverse companion
 
 
 @hw_func
 def wait_to_verify(
-    axis_in_if: axis128_t,
-    verify_bit_if: uint1_stream_t,
-    axis_out_if: axis128_fb_t,
+    axis_in_if: axis128_intrf.fwd_t,
+    verify_bit_if: uint1_stream_intrf.fwd_t,
+    axis_out_if: axis128_intrf.fb_t,
 ) -> wait_to_verify_out_t:
     o: wait_to_verify_out_t
     state: Reg[wait_to_verify_state_t]
@@ -63,12 +61,12 @@ def wait_to_verify(
 
     # verify_fifo <-> this FSM's own mutual dependency (fifo's read data/ready
     # feed the FSM, which in turn drives the fifo's write data/read-enable)
-    verify_fifo_in_ready: Feedback[axis128_fb_t]
-    verify_fifo_out: Feedback[axis128_t]
+    verify_fifo_in_ready: Feedback[axis128_intrf.fb_t]
+    verify_fifo_out: Feedback[axis128_intrf.fwd_t]
 
     # Write side of FIFO
     # the data+valid for input stream (aka fifo write data, write enable)
-    verify_fifo_in_s: axis128_t = axis_in_if
+    verify_fifo_in_s: axis128_intrf.fwd_t = axis_in_if
     # the ready signal for the input stream (aka fifo not full signal)
     o.axis_in_if = verify_fifo_in_ready
 
@@ -122,7 +120,7 @@ def wait_to_verify(
         # Input ready's are disconnected in this state
         o.verify_bit_if.ready = 0
 
-    verify_fifo_out_rev: axis128_fb_t = axis128_fb_t(ready=verify_fifo_out_ready_s)
+    verify_fifo_out_rev: axis128_intrf.fb_t = axis128_intrf.fb_t(ready=verify_fifo_out_ready_s)
     fifo_result = verify_fifo_func(
         in_stream_if=verify_fifo_in_s, out_stream_if=verify_fifo_out_rev
     )
