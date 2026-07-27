@@ -19,7 +19,7 @@ from pypeline import (
 
 from aead_types import (
     axis128_intrf,
-    axis128_null,
+    axis128_stream_null,
     poly1305_auth_tag_stream_intrf,
     poly1305_auth_tag_stream_null,
 )
@@ -55,7 +55,7 @@ def axis128_early_tlast(
         # (so we can know if it is last)
         | stream_in_if.stream.valid
     )
-    o.axis_out_if = axis128_null()
+    o.axis_out_if.stream = axis128_stream_null()
     o.next_axis_out_is_tlast = 0
     if buff_to_out_connected:
         o.axis_out_if.stream = buffer_reg
@@ -88,9 +88,11 @@ def strip_auth_tag(
     auth_tag_out_if: poly1305_auth_tag_stream_intrf.fb_t,
 ) -> strip_auth_tag_out_t:
     o: strip_auth_tag_out_t
-    early_out_ready: Feedback[axis128_intrf.fb_t]
+    early_out_ready: Feedback[uint1_t]
 
-    early_tlast = axis128_early_tlast(stream_in_if=axis_in_if, axis_out_if=early_out_ready)
+    early_tlast = axis128_early_tlast(
+        stream_in_if=axis_in_if, axis_out_if=axis128_intrf.fb_t(ready=early_out_ready)
+    )
 
     # Ready for axis into early module
     o.axis_in_if = early_tlast.stream_in_if
@@ -98,13 +100,13 @@ def strip_auth_tag(
     stream_in: axis128_intrf.stream_t = early_tlast.axis_out_if.stream
 
     # Default passing input axis data to ciphertext output
-    o.axis_out_if = axis128_intrf.fwd_t(stream=stream_in)
-    early_out_ready = axis_out_if  # same fb_t type, no need to rebuild from .ready
+    o.axis_out_if.stream = stream_in
+    early_out_ready = axis_out_if.ready
 
     # With override to use the early tlast for ciphertext tlast
     o.axis_out_if.stream.data.eod[0] = early_tlast.next_axis_out_is_tlast
     # and not passing data to auth tag out
-    o.auth_tag_out_if = poly1305_auth_tag_stream_null()
+    o.auth_tag_out_if.stream = poly1305_auth_tag_stream_null()
 
     # If this is last input cycle then it's auth tag
     if stream_in.valid & stream_in.data.eod[0]:
@@ -113,6 +115,6 @@ def strip_auth_tag(
         # Connect to auth tag output
         o.auth_tag_out_if.stream.data = array_to_uint_le(stream_in.data.frag.data)
         o.auth_tag_out_if.stream.valid = stream_in.valid
-        early_out_ready = axis128_intrf.fb_t(ready=auth_tag_out_if.ready)
+        early_out_ready = auth_tag_out_if.ready
 
     return o

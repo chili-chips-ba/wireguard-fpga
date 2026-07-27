@@ -19,13 +19,13 @@ from aead_types import (
     axis128_intrf,
 )
 
-axis_in: Wire[axis128_intrf.fwd_t]  # input
+axis_in: Wire[axis128_intrf.stream_t]  # input
 axis_in_ready: Wire[uint1_t]  # output
 key: Wire[uint8_t[CHACHA20_KEY_SIZE]]  # input
 nonce: Wire[uint8_t[CHACHA20_NONCE_SIZE]]  # input
 aad: Wire[uint8_t[AAD_MAX_LEN]]  # input
 aad_len: Wire[uint8_t]  # input
-axis_out: Wire[axis128_intrf.fwd_t]  # output
+axis_out: Wire[axis128_intrf.stream_t]  # output
 axis_out_ready: Wire[uint1_t]  # input
 
 # Parallel output (verification result)

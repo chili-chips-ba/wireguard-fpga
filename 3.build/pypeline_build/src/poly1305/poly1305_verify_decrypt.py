@@ -60,7 +60,7 @@ def poly1305_verify_decrypt(
 
     o.auth_tag_if.ready = 0
     o.calc_tag_if.ready = 0
-    o.tags_match_if = uint1_stream_null()
+    o.tags_match_if.stream = uint1_stream_null()
 
     if state == poly1305_verify_state_t.TAKE_AUTH_TAG:
         # Ready to take the input tag
