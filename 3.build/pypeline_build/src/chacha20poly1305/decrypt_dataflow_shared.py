@@ -27,14 +27,14 @@ def decrypt_dataflow_shared():
     # ordinary hw_func here, so the reverse halves go in as arguments and come
     # back out as named return fields, and are unpacked onto the design's
     # flat DUT-facing port wires.
-    axis_out_rev: axis128_intrf.fb_t = axis128_intrf.fb_t(ready=chacha20poly1305_decrypt_ports.axis_out_ready)
     r = decrypt_dataflow_core(
         axis_in_if=chacha20poly1305_decrypt_ports.axis_in,
         key=chacha20poly1305_decrypt_ports.key,
         nonce=chacha20poly1305_decrypt_ports.nonce,
         aad=chacha20poly1305_decrypt_ports.aad,
         aad_len=chacha20poly1305_decrypt_ports.aad_len,
-        axis_out_if=axis_out_rev,  # reverse half of the output port
+        # reverse half of the output port, constructed inline
+        axis_out_if=axis128_intrf.fb_t(ready=chacha20poly1305_decrypt_ports.axis_out_ready),
     )
     chacha20poly1305_decrypt_ports.axis_in_ready = r.axis_in_if.ready
     chacha20poly1305_decrypt_ports.axis_out = r.axis_out_if
