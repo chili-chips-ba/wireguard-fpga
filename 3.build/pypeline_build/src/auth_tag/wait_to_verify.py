@@ -61,18 +61,18 @@ def wait_to_verify(
 
     # verify_fifo <-> this FSM's own mutual dependency (fifo's read data/ready
     # feed the FSM, which in turn drives the fifo's write data/read-enable)
-    verify_fifo_in_ready: Feedback[axis128_intrf.fb_t]
-    verify_fifo_out: Feedback[axis128_intrf.fwd_t]
+    verify_fifo_in_ready: Feedback[uint1_t]
+    verify_fifo_out: Feedback[axis128_intrf.stream_t]
 
     # Write side of FIFO
     # the data+valid for input stream (aka fifo write data, write enable)
     verify_fifo_in_s: axis128_intrf.stream_t = axis_in_if.stream
     # the ready signal for the input stream (aka fifo not full signal)
-    o.axis_in_if = verify_fifo_in_ready
+    o.axis_in_if.ready = verify_fifo_in_ready
 
     # Read side of FIFO
     # the data+valid for output stream (aka fifo read data, not empty signal)
-    o.axis_out_if = verify_fifo_out
+    o.axis_out_if.stream = verify_fifo_out
 
     # Default not ready for the single verify bit input
     o.verify_bit_if.ready = 0
@@ -104,7 +104,7 @@ def wait_to_verify(
         # Plaintext output
         verify_fifo_out_ready_s = axis_out_if.ready
         # Valid only if FIFO is not empty
-        o.axis_out_if.stream.valid = verify_fifo_out.stream.valid
+        o.axis_out_if.stream.valid = verify_fifo_out.valid
 
         # Verified bit output
         # Synchronize with stream valid
@@ -124,7 +124,7 @@ def wait_to_verify(
         in_stream_if=axis128_intrf.fwd_t(stream=verify_fifo_in_s),
         out_stream_if=axis128_intrf.fb_t(ready=verify_fifo_out_ready_s),
     )
-    verify_fifo_out = fifo_result.out_stream_if
-    verify_fifo_in_ready = fifo_result.in_stream_if
+    verify_fifo_out = fifo_result.out_stream_if.stream
+    verify_fifo_in_ready = fifo_result.in_stream_if.ready
 
     return o

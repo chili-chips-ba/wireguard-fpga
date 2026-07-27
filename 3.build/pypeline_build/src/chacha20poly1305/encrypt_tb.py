@@ -62,7 +62,7 @@ _snk = AxisSimSink(axis128_intrf, 16, scoreboard=_scoreboard)
 
 
 @sim_input
-def drive_in_word() -> axis128_intrf.fwd_t:
+def drive_in_word() -> axis128_intrf.stream_t:
     if _enc_state["rng"] is None:
         _enc_state["rng"] = random.Random(common.DEFAULT_SEED)
 
@@ -86,7 +86,7 @@ def drive_in_word() -> axis128_intrf.fwd_t:
     # same-cycle combinational function of this cycle's axis_in.valid), so
     # it already holds a stable value at the start of the cycle -- safe to
     # read directly here to decide whether this word was accepted.
-    return _src.step(chacha20poly1305_encrypt_ports.axis_in_ready)
+    return _src.step(chacha20poly1305_encrypt_ports.axis_in_ready).stream
 
 
 @sim_output
@@ -112,7 +112,7 @@ def report_new_packets():
 
 @sim_output
 def check_out():
-    _snk.step(chacha20poly1305_encrypt_ports.axis_out)
+    _snk.step(axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out))
     result = _snk.check_nowait()
     if result is None:
         return
@@ -152,4 +152,4 @@ def encrypt_tb() -> axis128_intrf.fwd_t:
     check_out()
 
     # dummy return so nothing optimizes away
-    return chacha20poly1305_encrypt_ports.axis_out
+    return axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out)

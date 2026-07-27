@@ -71,10 +71,8 @@ def axis128_frag_null():
     )
 
 
-def axis128_null():
-    return axis128_intrf.fwd_t(
-        stream=axis128_intrf.stream_t(data=axis128_frag_null(), valid=0)
-    )
+def axis128_stream_null():
+    return axis128_intrf.stream_t(data=axis128_frag_null(), valid=0)
 
 
 def axis512_frag_null():
@@ -83,25 +81,17 @@ def axis512_frag_null():
     )
 
 
-def axis512_null():
-    return axis512_intrf.fwd_t(
-        stream=axis512_intrf.stream_t(data=axis512_frag_null(), valid=0)
-    )
+def axis512_stream_null():
+    return axis512_intrf.stream_t(data=axis512_frag_null(), valid=0)
 
 
 def poly1305_key_stream_null():
-    return poly1305_key_stream_intrf.fwd_t(
-        stream=poly1305_key_stream_intrf.stream_t(data=0, valid=0)
-    )
+    return poly1305_key_stream_intrf.stream_t(data=0, valid=0)
 
 
 def poly1305_auth_tag_stream_null():
-    return poly1305_auth_tag_stream_intrf.fwd_t(
-        stream=poly1305_auth_tag_stream_intrf.stream_t(data=0, valid=0)
-    )
+    return poly1305_auth_tag_stream_intrf.stream_t(data=0, valid=0)
 
 
 def uint1_stream_null():
-    return uint1_stream_intrf.fwd_t(
-        stream=uint1_stream_intrf.stream_t(data=0, valid=0)
-    )
+    return uint1_stream_intrf.stream_t(data=0, valid=0)

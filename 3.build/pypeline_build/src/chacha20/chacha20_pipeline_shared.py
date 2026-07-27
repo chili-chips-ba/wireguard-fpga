@@ -43,7 +43,7 @@ from aead_types import (
     axis128_intrf,
     axis512_frag_t,
     axis512_intrf,
-    axis512_null,
+    axis512_stream_null,
     poly1305_key_stream_intrf,
 )
 
@@ -67,13 +67,11 @@ chacha_shared_pipeline_out_stream_intrf = make_stream_interface(chacha_shared_pi
 
 
 def chacha_shared_pipeline_in_stream_null():
-    return chacha_shared_pipeline_in_stream_intrf.fwd_t(
-        stream=chacha_shared_pipeline_in_stream_intrf.stream_t(
-            data=chacha_shared_pipeline_in_t(
-                data=chacha20_loop_body_in_null(), is_encrypt=0
-            ),
-            valid=0,
+    return chacha_shared_pipeline_in_stream_intrf.stream_t(
+        data=chacha_shared_pipeline_in_t(
+            data=chacha20_loop_body_in_null(), is_encrypt=0
         ),
+        valid=0,
     )
 
 
@@ -95,14 +93,16 @@ pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha_shared_pipeline)
 # Externally-exposed interface: looks like individual per-direction pipelines.
 # This is the one deliberately-surviving Wire boundary in the whole refactor
 # -- a genuinely arbitrated resource shared across the otherwise-independent
-# encrypt and decrypt dataflow graphs, not leftover wiring style.
-encrypt_pipeline_in: Wire[chacha20_loop_body_stream_intrf.fwd_t]
+# encrypt and decrypt dataflow graphs, not leftover wiring style. Plain
+# stream_t (paired with a separate ready Wire) rather than .fwd_t, since a
+# global Wire is not itself a port.
+encrypt_pipeline_in: Wire[chacha20_loop_body_stream_intrf.stream_t]
 encrypt_pipeline_in_ready: Wire[uint1_t]
-decrypt_pipeline_in: Wire[chacha20_loop_body_stream_intrf.fwd_t]
+decrypt_pipeline_in: Wire[chacha20_loop_body_stream_intrf.stream_t]
 decrypt_pipeline_in_ready: Wire[uint1_t]
-encrypt_pipeline_out: Wire[axis512_intrf.fwd_t]
+encrypt_pipeline_out: Wire[axis512_intrf.stream_t]
 encrypt_pipeline_out_ready: Wire[uint1_t]
-decrypt_pipeline_out: Wire[axis512_intrf.fwd_t]
+decrypt_pipeline_out: Wire[axis512_intrf.stream_t]
 decrypt_pipeline_out_ready: Wire[uint1_t]
 
 
@@ -113,53 +113,53 @@ decrypt_pipeline_out_ready: Wire[uint1_t]
 @MAIN
 def chacha20_pipeline_shared():
     pipeline_in_ready: Feedback[uint1_t]
-    pipeline_out: Feedback[chacha_shared_pipeline_out_stream_intrf.fwd_t]
+    pipeline_out: Feedback[chacha_shared_pipeline_out_stream_intrf.stream_t]
 
     # Default no data flowing (locals, driven onto wires once at the end)
     pipeline_in_s: chacha_shared_pipeline_in_stream_intrf.stream_t = (
-        chacha_shared_pipeline_in_stream_null().stream
+        chacha_shared_pipeline_in_stream_null()
     )  # into pipeline
     pipeline_out_ready_s: uint1_t = 0  # from pipeline
-    encrypt_pipeline_out_s: axis512_intrf.stream_t = axis512_null().stream  # to encrypt
+    encrypt_pipeline_out_s: axis512_intrf.stream_t = axis512_stream_null()  # to encrypt
     encrypt_pipeline_in_ready_s: uint1_t = 0  # from encrypt
-    decrypt_pipeline_out_s: axis512_intrf.stream_t = axis512_null().stream  # to decrypt
+    decrypt_pipeline_out_s: axis512_intrf.stream_t = axis512_stream_null()  # to decrypt
     decrypt_pipeline_in_ready_s: uint1_t = 0  # from decrypt
 
     # Input side state toggles round robin
     is_encrypt: Reg[uint1_t]
     pipeline_in_s.data.is_encrypt = is_encrypt
     if is_encrypt:
-        pipeline_in_s.data.data = encrypt_pipeline_in.stream.data
-        pipeline_in_s.valid = encrypt_pipeline_in.stream.valid
+        pipeline_in_s.data.data = encrypt_pipeline_in.data
+        pipeline_in_s.valid = encrypt_pipeline_in.valid
         encrypt_pipeline_in_ready_s = pipeline_in_ready
     else:
-        pipeline_in_s.data.data = decrypt_pipeline_in.stream.data
-        pipeline_in_s.valid = decrypt_pipeline_in.stream.valid
+        pipeline_in_s.data.data = decrypt_pipeline_in.data
+        pipeline_in_s.valid = decrypt_pipeline_in.valid
         decrypt_pipeline_in_ready_s = pipeline_in_ready
     is_encrypt = ~is_encrypt
 
     # Output side muxing based on id flag out of pipeline
-    if pipeline_out.stream.valid:
-        if pipeline_out.stream.data.is_encrypt:
-            encrypt_pipeline_out_s.data = pipeline_out.stream.data.data
-            encrypt_pipeline_out_s.valid = pipeline_out.stream.valid
+    if pipeline_out.valid:
+        if pipeline_out.data.is_encrypt:
+            encrypt_pipeline_out_s.data = pipeline_out.data.data
+            encrypt_pipeline_out_s.valid = pipeline_out.valid
             pipeline_out_ready_s = encrypt_pipeline_out_ready
         else:
-            decrypt_pipeline_out_s.data = pipeline_out.stream.data.data
-            decrypt_pipeline_out_s.valid = pipeline_out.stream.valid
+            decrypt_pipeline_out_s.data = pipeline_out.data.data
+            decrypt_pipeline_out_s.valid = pipeline_out.valid
             pipeline_out_ready_s = decrypt_pipeline_out_ready
 
     # Drive output wires
-    encrypt_pipeline_out = axis512_intrf.fwd_t(stream=encrypt_pipeline_out_s)
+    encrypt_pipeline_out = encrypt_pipeline_out_s
     encrypt_pipeline_in_ready = encrypt_pipeline_in_ready_s
-    decrypt_pipeline_out = axis512_intrf.fwd_t(stream=decrypt_pipeline_out_s)
+    decrypt_pipeline_out = decrypt_pipeline_out_s
     decrypt_pipeline_in_ready = decrypt_pipeline_in_ready_s
 
     result = pipeline_func(
         stream_in_if=chacha_shared_pipeline_in_stream_intrf.fwd_t(stream=pipeline_in_s),
         stream_out_if=chacha_shared_pipeline_out_stream_intrf.fb_t(ready=pipeline_out_ready_s),
     )
-    pipeline_out = result.stream_out_if
+    pipeline_out = result.stream_out_if.stream
     pipeline_in_ready = result.stream_in_if.ready
 
 
@@ -177,7 +177,7 @@ def chacha20_encrypt_shared(
     axis_out_if: axis128_intrf.fb_t,
 ) -> chacha20.chacha20_stream_out_t:
     o: chacha20.chacha20_stream_out_t
-    from_pipe_fwd: axis512_intrf.stream_t = encrypt_pipeline_out.stream
+    from_pipe_fwd: axis512_intrf.stream_t = encrypt_pipeline_out
     fsm_out = chacha20.chacha20_fsm(
         key=key,
         nonce=nonce,
@@ -192,7 +192,7 @@ def chacha20_encrypt_shared(
     o.axis_in_if = fsm_out.axis_in_if
     o.key_if = fsm_out.key_if
     o.axis_out_if = fsm_out.axis_out_if
-    encrypt_pipeline_in = fsm_out.to_pipeline_if
+    encrypt_pipeline_in = fsm_out.to_pipeline_if.stream
     encrypt_pipeline_out_ready = fsm_out.from_pipeline_if.ready
     return o
 
@@ -206,7 +206,7 @@ def chacha20_decrypt_shared(
     axis_out_if: axis128_intrf.fb_t,
 ) -> chacha20.chacha20_stream_out_t:
     o: chacha20.chacha20_stream_out_t
-    from_pipe_fwd: axis512_intrf.stream_t = decrypt_pipeline_out.stream
+    from_pipe_fwd: axis512_intrf.stream_t = decrypt_pipeline_out
     fsm_out = chacha20.chacha20_fsm(
         key=key,
         nonce=nonce,
@@ -221,6 +221,6 @@ def chacha20_decrypt_shared(
     o.axis_in_if = fsm_out.axis_in_if
     o.key_if = fsm_out.key_if
     o.axis_out_if = fsm_out.axis_out_if
-    decrypt_pipeline_in = fsm_out.to_pipeline_if
+    decrypt_pipeline_in = fsm_out.to_pipeline_if.stream
     decrypt_pipeline_out_ready = fsm_out.from_pipeline_if.ready
     return o

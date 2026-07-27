@@ -22,7 +22,7 @@ from pypeline import (
 from aead_types import (
     POLY1305_AUTH_TAG_SIZE,
     axis128_intrf,
-    axis128_null,
+    axis128_stream_null,
     poly1305_auth_tag_stream_intrf,
 )
 
@@ -53,7 +53,7 @@ def append_auth_tag(
     o.axis_in_if.ready = 0
     o.auth_tag_in_if.ready = 0
     # Default not outputting data
-    o.axis_out_if = axis128_null()
+    o.axis_out_if.stream = axis128_stream_null()
 
     if state == append_auth_tag_state_t.CIPHERTEXT:
         # Pass through ciphertext

@@ -96,7 +96,7 @@ def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
 
 
 @sim_input
-def drive_in_word() -> axis128_intrf.fwd_t:
+def drive_in_word() -> axis128_intrf.stream_t:
     if _dec_state["rng"] is None:
         _dec_state["rng"] = random.Random(common.DEFAULT_SEED)
 
@@ -122,7 +122,7 @@ def drive_in_word() -> axis128_intrf.fwd_t:
     # same-cycle combinational function of this cycle's axis_in.valid), so it
     # already holds a stable value at the start of the cycle -- safe to read
     # directly here to decide whether this word was accepted.
-    return _src.step(chacha20poly1305_decrypt_ports.axis_in_ready)
+    return _src.step(chacha20poly1305_decrypt_ports.axis_in_ready).stream
 
 
 @sim_output
@@ -154,7 +154,7 @@ def check_out():
     # its duration), so sampling it once when the frame completes below is
     # equivalent to checking every beat.
     got_verified = chacha20poly1305_decrypt_ports.is_verified_out
-    _snk.step(out)
+    _snk.step(axis128_intrf.fwd_t(stream=out))
     result = _snk.check_nowait()
     if result is None:
         return
@@ -201,4 +201,4 @@ def decrypt_tb() -> axis128_intrf.fwd_t:
     check_out()
 
     # dummy return so nothing optimizes away
-    return chacha20poly1305_decrypt_ports.axis_out
+    return axis128_intrf.fwd_t(stream=chacha20poly1305_decrypt_ports.axis_out)

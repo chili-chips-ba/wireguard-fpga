@@ -26,7 +26,7 @@ import aead_types
 from aead_types import (
     AAD_MAX_LEN,
     axis128_intrf,
-    axis128_null,
+    axis128_stream_null,
 )
 
 
@@ -62,7 +62,7 @@ def prep_auth_data_fsm(
     # Default not ready for incoming data
     o.axis_in_if.ready = 0
     # Default not outputting data
-    o.axis_if = axis128_null()
+    o.axis_if.stream = axis128_stream_null()
 
     if state == prep_auth_data_state_t.IDLE:
         # Wait for incoming ciphertext

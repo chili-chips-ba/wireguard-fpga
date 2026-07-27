@@ -41,8 +41,8 @@ from aead_types import (
     axis512_frag_t,
     axis512_intrf,
     poly1305_key_stream_intrf,
-    axis128_null,
-    axis512_null,
+    axis128_stream_null,
+    axis512_stream_null,
     axis512_frag_null,
     poly1305_key_stream_null,
 )
@@ -193,11 +193,9 @@ def chacha20_loop_body_in_null():
 
 
 def chacha20_loop_body_stream_null():
-    return chacha20_loop_body_stream_intrf.fwd_t(
-        stream=chacha20_loop_body_stream_intrf.stream_t(
-            data=chacha20_loop_body_in_null(),
-            valid=0,
-        ),
+    return chacha20_loop_body_stream_intrf.stream_t(
+        data=chacha20_loop_body_in_null(),
+        valid=0,
     )
 
 
@@ -269,29 +267,29 @@ def chacha20_fsm(
     input_side_state: Reg[chacha20_state_t]
     block_count: Reg[uint32_t]
     # Default no input into width conversion
-    dwidth_conv_data_in: axis128_intrf.stream_t = axis128_null().stream
+    dwidth_conv_data_in: axis128_intrf.stream_t = axis128_stream_null()
     o.axis_in_if.ready = 0
     # Default no input into pipeline
-    o.to_pipeline_if = chacha20_loop_body_stream_null()
+    o.to_pipeline_if.stream = chacha20_loop_body_stream_null()
     #  other than CSR inputs and such
     o.to_pipeline_if.stream.data.key = key
     o.to_pipeline_if.stream.data.nonce = nonce
     o.to_pipeline_if.stream.data.counter = block_count
     # Default not outputting poly key
-    o.key_if = poly1305_key_stream_null()
+    o.key_if.stream = poly1305_key_stream_null()
 
     # Convert input axis to 512b
     # Input axis into dwidth conv default gated until in plaintext state
     if input_side_state == chacha20_state_t.PLAINTEXT:
         dwidth_conv_data_in = axis_in_if.stream
-    block_in_ready: Feedback[axis512_intrf.fb_t]
+    block_in_ready: Feedback[uint1_t]
     in_to_block = axis128_to_axis512(
         narrow_in_if=axis128_intrf.fwd_t(stream=dwidth_conv_data_in),
-        wide_out_if=block_in_ready,
+        wide_out_if=axis512_intrf.fb_t(ready=block_in_ready),
     )
     block_in_stream: axis512_intrf.stream_t = in_to_block.wide_out_if.stream
     # Default not ready for incoming blocks
-    block_in_ready = axis512_intrf.fb_t(ready=0)
+    block_in_ready = 0
     # Input axis into dwidth conv default gated until in plaintext state
     if input_side_state == chacha20_state_t.PLAINTEXT:
         o.axis_in_if = in_to_block.narrow_in_if
@@ -313,7 +311,7 @@ def chacha20_fsm(
     else:  # if input_side_state == chacha20_state_t.PLAINTEXT:
         o.to_pipeline_if.stream.data.axis_in = block_in_stream.data
         o.to_pipeline_if.stream.valid = block_in_stream.valid
-        block_in_ready = axis512_intrf.fb_t(ready=to_pipeline_if.ready)  # FEEDBACK
+        block_in_ready = to_pipeline_if.ready  # FEEDBACK
         if o.to_pipeline_if.stream.valid & to_pipeline_if.ready:
             block_count = block_count + 1
             # if this was last block into pipeline then reset counter and poly key next
@@ -329,8 +327,8 @@ def chacha20_fsm(
     # Default not ready for pipeline output
     o.from_pipeline_if.ready = 0
     # Default no block going out
-    block_to_out_axis_in: axis512_intrf.stream_t = axis512_null().stream
-    block_to_out_axis_in_ready: Feedback[axis512_intrf.fb_t]
+    block_to_out_axis_in: axis512_intrf.stream_t = axis512_stream_null()
+    block_to_out_axis_in_ready: Feedback[uint1_t]
     if output_side_state == chacha20_state_t.POLY_KEY:
         # Wait for the poly key cycle of data to come out of the pipeline
         # it goes out the poly1305_key output stream
@@ -347,7 +345,7 @@ def chacha20_fsm(
     else:  # if output_side_state == chacha20_state_t.PLAINTEXT
         # Wait for the last cycle of ciphertext data to come out of the pipeline
         block_to_out_axis_in = from_pipeline_if.stream
-        o.from_pipeline_if.ready = block_to_out_axis_in_ready.ready
+        o.from_pipeline_if.ready = block_to_out_axis_in_ready
         if from_pipeline_if.stream.valid & o.from_pipeline_if.ready:
             # If this was last block then reset state
             if from_pipeline_if.stream.data.eod[0]:
@@ -359,7 +357,7 @@ def chacha20_fsm(
         narrow_out_if=axis_out_if,
     )
     o.axis_out_if = block_to_out.narrow_out_if
-    block_to_out_axis_in_ready = block_to_out.wide_in_if  # FEEDBACK
+    block_to_out_axis_in_ready = block_to_out.wide_in_if.ready  # FEEDBACK
 
     return o
 
