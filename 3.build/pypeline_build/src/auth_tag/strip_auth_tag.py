@@ -42,11 +42,11 @@ def axis128_early_tlast(
     o: axis128_early_tlast_t  # outputs
 
     # Output comes via the buffer reg
-    buffer_reg: Reg[axis128_intrf.fwd_t]
+    buffer_reg: Reg[axis128_intrf.stream_t]
 
     # Stop data from flowing buffer -> out
     # until we can determine if last is next
-    buffer_is_tlast: uint1_t = buffer_reg.stream.valid & buffer_reg.stream.data.eod[0]
+    buffer_is_tlast: uint1_t = buffer_reg.valid & buffer_reg.data.eod[0]
     buff_to_out_connected: uint1_t = (
         # Connect if the buffer itself is tlast
         # (kinda corner case for single word packet)
@@ -58,18 +58,18 @@ def axis128_early_tlast(
     o.axis_out_if = axis128_null()
     o.next_axis_out_is_tlast = 0
     if buff_to_out_connected:
-        o.axis_out_if = buffer_reg
+        o.axis_out_if.stream = buffer_reg
         o.next_axis_out_is_tlast = stream_in_if.stream.valid & stream_in_if.stream.data.eod[0]
 
     # Outgoing transfer clears buffer valid
     if o.axis_out_if.stream.valid & axis_out_if.ready:
-        buffer_reg.stream.valid = 0
+        buffer_reg.valid = 0
 
     # Ready for input data if room in buffer
-    o.stream_in_if.ready = ~buffer_reg.stream.valid
+    o.stream_in_if.ready = ~buffer_reg.valid
     # Incoming transfer puts data into buffer
     if stream_in_if.stream.valid & o.stream_in_if.ready:
-        buffer_reg = stream_in_if
+        buffer_reg = stream_in_if.stream
 
     return o
 
