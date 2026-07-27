@@ -18,6 +18,13 @@ the same "ERROR: ..." / "Decrypt: Test N DONE!" convention as the
 synthesizable variant, so the same "no ERROR lines, N DONE lines" pass
 criterion applies (N = tb_common_sim.NUM_RANDOM_PACKETS, plus one more for
 the tamper packet).
+
+The hand-rolled two-phase (ciphertext-then-tag) input shift register, per-lane
+output checker, and ad hoc dict-of-expected-packets this testbench used to
+maintain are now the shared `AxisSimSource`/`AxisSimSink`/`Scoreboard`
+testbench library (see PipelineC's include/pypeline/axi/axis_sim.py) -- only
+the genuinely wireguard-specific bits (lazy packet generation, is_verified
+reporting) remain here.
 """
 import random
 
@@ -32,10 +39,8 @@ from aead_types import (
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
     axis128_intrf,
-    axis128_frag_t,
-    axis128_bus_t,
-    axis128_null,
 )
+from axi.axis_sim import AxisSimSource, AxisSimSink, Scoreboard
 from aead_ref_model import generate_encrypt_vector
 import tb_common_sim as common
 
@@ -47,29 +52,15 @@ _dec_state = {
     "rng": None,
     "announced": False,
     "in_packet_idx": 0,
-    "in_started": False,
-    "in_ciphertext_remaining": None,  # bytes still to stream, or None
-    "in_tag_remaining": None,  # bytes (the 16-byte tag word), or None
-    "packets": [],  # [{"plaintext","ciphertext","tag","expected_verified"}, ...]
+    "gen_log": [],  # [(plaintext_len, expected_verified), ...] for reporting only
     "printed_gen_count": 0,
-    "out_packet_idx": 0,
-    "out_remaining": None,  # bytes of plaintext still to check
+    "out_packet_idx": 0,  # count of packets checked so far; read externally by
+    # chacha20poly1305_decrypt_tb.py's finish-checker to know when to sim_finish()
 }
 
-
-def _build_axis_word(chunk: bytes, eod: int) -> axis128_intrf.fwd_t:
-    # Functional (non-mutating) construction -- see encrypt_tb.py.
-    data = [0] * 16
-    keep = [0] * 16
-    for i, b in enumerate(chunk):
-        data[i] = b
-        keep[i] = 1
-    return axis128_intrf.fwd_t(
-        stream=axis128_intrf.stream_t(
-            data=axis128_frag_t(frag=axis128_bus_t(data=data, keep=keep), eod=[eod]),
-            valid=1,
-        )
-    )
+_scoreboard = Scoreboard()
+_src = AxisSimSource(axis128_intrf, 16)
+_snk = AxisSimSink(axis128_intrf, 16, scoreboard=_scoreboard)
 
 
 def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
@@ -109,39 +100,29 @@ def drive_in_word() -> axis128_intrf.fwd_t:
     if _dec_state["rng"] is None:
         _dec_state["rng"] = random.Random(common.DEFAULT_SEED)
 
-    if _dec_state["in_packet_idx"] >= NUM_TOTAL_PACKETS:
-        return axis128_null()
-
-    if not _dec_state["in_started"]:
-        pkt = _generate_packet(_dec_state["rng"], _dec_state["in_packet_idx"])
-        _dec_state["packets"].append(pkt)
-        _dec_state["in_ciphertext_remaining"] = pkt["ciphertext"]
-        _dec_state["in_tag_remaining"] = None
-        _dec_state["in_started"] = True
-
-    if _dec_state["in_ciphertext_remaining"] is not None:
-        remaining = _dec_state["in_ciphertext_remaining"]
-        chunk = remaining[:16]
-        # Ciphertext words never carry eod -- the tag word follows.
-        word = _build_axis_word(chunk, eod=0)
-        # axis_in_ready is Reg-driven downstream -- stable at cycle start.
-        if chacha20poly1305_decrypt_ports.axis_in_ready:
-            if len(remaining) <= 16:
-                pkt = _dec_state["packets"][_dec_state["in_packet_idx"]]
-                _dec_state["in_ciphertext_remaining"] = None
-                _dec_state["in_tag_remaining"] = pkt["tag"]
-            else:
-                _dec_state["in_ciphertext_remaining"] = remaining[16:]
-        return word
-
-    # Tag phase: one full 16-byte word, all lanes kept, eod set.
-    tag = _dec_state["in_tag_remaining"]
-    word = _build_axis_word(tag, eod=1)
-    if chacha20poly1305_decrypt_ports.axis_in_ready:
-        _dec_state["in_tag_remaining"] = None
-        _dec_state["in_started"] = False
+    if _dec_state["in_packet_idx"] < NUM_TOTAL_PACKETS and _src.idle():
+        idx = _dec_state["in_packet_idx"]
+        pkt = _generate_packet(_dec_state["rng"], idx)
+        _dec_state["gen_log"].append((len(pkt["plaintext"]), pkt["expected_verified"]))
+        _scoreboard.expect(
+            pkt["plaintext"], idx=idx, expected_verified=pkt["expected_verified"]
+        )
+        # The auth tag must always start on a fresh beat, never merged into a
+        # partial final ciphertext beat -- pad the ciphertext up to the lane
+        # width first, marking the padding not-kept via keep_mask (see
+        # make_axis_byte_source's use_keep_mask docstring for why).
+        ciphertext = pkt["ciphertext"]
+        pad_len = (-len(ciphertext)) % 16
+        frame = ciphertext + bytes(pad_len) + pkt["tag"]
+        keep_mask = [1] * len(ciphertext) + [0] * pad_len + [1] * len(pkt["tag"])
+        _src.send(frame, keep_mask=keep_mask)
         _dec_state["in_packet_idx"] += 1
-    return word
+
+    # axis_in_ready is Reg-driven downstream (buffer-occupancy-based, not a
+    # same-cycle combinational function of this cycle's axis_in.valid), so it
+    # already holds a stable value at the start of the cycle -- safe to read
+    # directly here to decide whether this word was accepted.
+    return _src.step(chacha20poly1305_decrypt_ports.axis_in_ready)
 
 
 @sim_output
@@ -158,67 +139,46 @@ def announce():
 
 @sim_output
 def report_new_packets():
-    while _dec_state["printed_gen_count"] < len(_dec_state["packets"]):
+    while _dec_state["printed_gen_count"] < len(_dec_state["gen_log"]):
         idx = _dec_state["printed_gen_count"]
-        pkt = _dec_state["packets"][idx]
-        tamper_note = "" if pkt["expected_verified"] else " [tampered tag, expect reject]"
-        sim_print(
-            f"Decrypt: Generated packet {idx} ({len(pkt['plaintext'])} bytes){tamper_note}"
-        )
+        length, expected_verified = _dec_state["gen_log"][idx]
+        tamper_note = "" if expected_verified else " [tampered tag, expect reject]"
+        sim_print(f"Decrypt: Generated packet {idx} ({length} bytes){tamper_note}")
         _dec_state["printed_gen_count"] += 1
 
 
 @sim_output
 def check_out():
     out = chacha20poly1305_decrypt_ports.axis_out
-    if not out.stream.valid:
-        return
-
-    idx = _dec_state["out_packet_idx"]
-    if idx >= len(_dec_state["packets"]):
-        sim_print(f"ERROR: Decrypt: unexpected output before packet {idx} was generated!")
-        return
-    pkt = _dec_state["packets"][idx]
-
-    expected_verified = pkt["expected_verified"]
+    # is_verified_out rides alongside the whole output packet (constant for
+    # its duration), so sampling it once when the frame completes below is
+    # equivalent to checking every beat.
     got_verified = chacha20poly1305_decrypt_ports.is_verified_out
-    if got_verified != expected_verified:
+    _snk.step(out)
+    result = _snk.check_nowait()
+    if result is None:
+        return
+
+    idx = result.get("idx", "?")
+    if not result["passed"]:
+        if "error" in result:
+            sim_print(f"ERROR: Decrypt: {result['error']} (packet {idx})")
+        else:
+            expected, got = result["expected"], result["got"]
+            n = min(len(expected), len(got))
+            first_diff = next((i for i in range(n) if expected[i] != got[i]), n)
+            sim_print(
+                f"ERROR: Decrypt: Plaintext mismatch packet {idx}. expected {len(expected)} bytes got {len(got)} bytes, first differing byte[{first_diff}]"
+            )
+
+    expected_verified = result.get("expected_verified")
+    if expected_verified is not None and got_verified != expected_verified:
         sim_print(
             f"ERROR: Decrypt: is_verified mismatch packet {idx}. expected {expected_verified} got {got_verified}"
         )
 
-    if _dec_state["out_remaining"] is None:
-        _dec_state["out_remaining"] = pkt["plaintext"]
-
-    remaining = _dec_state["out_remaining"]
-    n = len(remaining)
-    for i in range(16):
-        expected_keep = 1 if i < n else 0
-        got_keep = out.stream.data.frag.keep[i]
-        if got_keep != expected_keep:
-            sim_print(
-                f"ERROR: Decrypt: Plaintext keep mismatch at lane {i} packet {idx}. expected {expected_keep} got {got_keep}"
-            )
-        if expected_keep:
-            expected_byte = remaining[i]
-            got_byte = out.stream.data.frag.data[i]
-            if got_byte != expected_byte:
-                pos = len(pkt["plaintext"]) - n + i
-                sim_print(
-                    f"ERROR: Decrypt: Plaintext mismatch at byte[{pos}] packet {idx}. expected {hex(expected_byte)} got {hex(got_byte)}"
-                )
-
-    if out.stream.data.eod[0]:
-        if n > 16:
-            sim_print(f"ERROR: Decrypt: Early end to Plaintext output packet {idx}!")
-        sim_print(f"Decrypt: Test {idx} DONE!")
-        _dec_state["out_packet_idx"] = idx + 1
-        _dec_state["out_remaining"] = None
-    else:
-        if n > 16:
-            _dec_state["out_remaining"] = remaining[16:]
-        else:
-            sim_print(f"ERROR: Decrypt: Plaintext word missing end of packet {idx}!")
+    sim_print(f"Decrypt: Test {idx} DONE!")
+    _dec_state["out_packet_idx"] += 1
 
 
 @MAIN

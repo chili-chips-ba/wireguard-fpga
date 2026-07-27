@@ -16,6 +16,13 @@ when that packet's random plaintext is generated (aead_ref_model.py, RFC
 Printing follows the same "ERROR: ..." / "Encrypt: Test N DONE!" convention
 as the synthesizable variant, so the same "no ERROR lines, N DONE lines"
 pass criterion applies (N = tb_common_sim.NUM_RANDOM_PACKETS).
+
+The hand-rolled input shift register, per-lane output checker, and ad hoc
+dict-of-expected-packets this testbench used to maintain are now the shared
+`AxisSimSource`/`AxisSimSink`/`Scoreboard` testbench library (see
+PipelineC's include/pypeline/axi/axis_sim.py) -- only the genuinely
+wireguard-specific bits (lazy packet generation, the reference ciphertext+tag
+computation) remain here.
 """
 import random
 
@@ -30,10 +37,8 @@ from aead_types import (
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
     axis128_intrf,
-    axis128_frag_t,
-    axis128_bus_t,
-    axis128_null,
 )
+from axi.axis_sim import AxisSimSource, AxisSimSink, Scoreboard
 from aead_ref_model import generate_encrypt_vector
 import tb_common_sim as common
 
@@ -45,31 +50,15 @@ _enc_state = {
     "rng": None,
     "announced": False,
     "in_packet_idx": 0,
-    "in_plaintext": None,  # bytes remaining to stream for the current packet
-    "packets": [],  # [{"plaintext","ciphertext","tag"}, ...] as generated
+    "gen_log": [],  # plaintext lengths, in generation order (for reporting only)
     "printed_gen_count": 0,
-    "out_packet_idx": 0,
-    "out_remaining": None,  # bytes of ciphertext still to check
-    "out_tag_phase": False,
+    "out_packet_idx": 0,  # count of packets checked so far; read externally by
+    # chacha20poly1305_encrypt_tb.py's finish-checker to know when to sim_finish()
 }
 
-
-def _build_axis_word(chunk: bytes, eod: int) -> axis128_intrf.fwd_t:
-    # Functional (non-mutating) construction: @sim_input/@sim_output bodies
-    # run as plain Python, without the struct-field-mutation AST rewrite
-    # @MAIN/@hw_func bodies get, so build a fresh struct rather than
-    # mutating axis128_null()'s (immutable) result in place.
-    data = [0] * 16
-    keep = [0] * 16
-    for i, b in enumerate(chunk):
-        data[i] = b
-        keep[i] = 1
-    return axis128_intrf.fwd_t(
-        stream=axis128_intrf.stream_t(
-            data=axis128_frag_t(frag=axis128_bus_t(data=data, keep=keep), eod=[eod]),
-            valid=1,
-        )
-    )
+_scoreboard = Scoreboard()
+_src = AxisSimSource(axis128_intrf, 16)
+_snk = AxisSimSink(axis128_intrf, 16, scoreboard=_scoreboard)
 
 
 @sim_input
@@ -77,41 +66,27 @@ def drive_in_word() -> axis128_intrf.fwd_t:
     if _enc_state["rng"] is None:
         _enc_state["rng"] = random.Random(common.DEFAULT_SEED)
 
-    if _enc_state["in_packet_idx"] >= common.NUM_RANDOM_PACKETS:
-        return axis128_null()
-
-    if _enc_state["in_plaintext"] is None:
+    if _enc_state["in_packet_idx"] < common.NUM_RANDOM_PACKETS and _src.idle():
         # Starting a new packet: pick its length (stratified corner cases
         # first, then uniform-random), generate random plaintext, and
         # compute the reference ciphertext+tag right now, once, lazily.
-        length = common.next_packet_length(_enc_state["rng"], _enc_state["in_packet_idx"])
+        idx = _enc_state["in_packet_idx"]
+        length = common.next_packet_length(_enc_state["rng"], idx)
         plaintext = bytes(_enc_state["rng"].randrange(256) for _ in range(length))
         aad_bytes = bytes(common.AAD[: common.AAD_LEN])
         ciphertext, tag = generate_encrypt_vector(
             bytes(common.KEY), bytes(common.NONCE), aad_bytes, plaintext
         )
-        _enc_state["packets"].append(
-            {"plaintext": plaintext, "ciphertext": ciphertext, "tag": tag}
-        )
-        _enc_state["in_plaintext"] = plaintext
-
-    remaining = _enc_state["in_plaintext"]
-    chunk = remaining[:16]
-    eod = 1 if len(remaining) <= 16 else 0
-    word = _build_axis_word(chunk, eod)
+        _enc_state["gen_log"].append(length)
+        _scoreboard.expect(ciphertext + tag, idx=idx)
+        _src.send(plaintext)
+        _enc_state["in_packet_idx"] += 1
 
     # axis_in_ready is Reg-driven downstream (buffer-occupancy-based, not a
     # same-cycle combinational function of this cycle's axis_in.valid), so
     # it already holds a stable value at the start of the cycle -- safe to
     # read directly here to decide whether this word was accepted.
-    if chacha20poly1305_encrypt_ports.axis_in_ready:
-        if len(remaining) <= 16:
-            _enc_state["in_plaintext"] = None
-            _enc_state["in_packet_idx"] += 1
-        else:
-            _enc_state["in_plaintext"] = remaining[16:]
-
-    return word
+    return _src.step(chacha20poly1305_encrypt_ports.axis_in_ready)
 
 
 @sim_output
@@ -128,69 +103,33 @@ def announce():
 
 @sim_output
 def report_new_packets():
-    while _enc_state["printed_gen_count"] < len(_enc_state["packets"]):
+    while _enc_state["printed_gen_count"] < len(_enc_state["gen_log"]):
         idx = _enc_state["printed_gen_count"]
-        length = len(_enc_state["packets"][idx]["plaintext"])
+        length = _enc_state["gen_log"][idx]
         sim_print(f"Encrypt: Generated packet {idx} ({length} bytes)")
         _enc_state["printed_gen_count"] += 1
 
 
 @sim_output
 def check_out():
-    out = chacha20poly1305_encrypt_ports.axis_out
-    if not out.stream.valid:
+    _snk.step(chacha20poly1305_encrypt_ports.axis_out)
+    result = _snk.check_nowait()
+    if result is None:
         return
 
-    idx = _enc_state["out_packet_idx"]
-    if idx >= len(_enc_state["packets"]):
-        sim_print(f"ERROR: Encrypt: unexpected output before packet {idx} was generated!")
-        return
-    pkt = _enc_state["packets"][idx]
-
-    if _enc_state["out_remaining"] is None:
-        _enc_state["out_remaining"] = pkt["ciphertext"]
-        _enc_state["out_tag_phase"] = False
-
-    if not _enc_state["out_tag_phase"]:
-        remaining = _enc_state["out_remaining"]
-        n = len(remaining)
-        for i in range(16):
-            expected_keep = 1 if i < n else 0
-            got_keep = out.stream.data.frag.keep[i]
-            if got_keep != expected_keep:
-                sim_print(
-                    f"ERROR: Encrypt: Ciphertext keep mismatch at lane {i} packet {idx}. expected {expected_keep} got {got_keep}"
-                )
-            if expected_keep:
-                expected_byte = remaining[i]
-                got_byte = out.stream.data.frag.data[i]
-                if got_byte != expected_byte:
-                    pos = len(pkt["ciphertext"]) - n + i
-                    sim_print(
-                        f"ERROR: Encrypt: Ciphertext mismatch at byte[{pos}] packet {idx}. expected {hex(expected_byte)} got {hex(got_byte)}"
-                    )
-        if out.stream.data.eod[0]:
-            sim_print(f"ERROR: Encrypt: Early end to ciphertext output packet {idx} (before auth tag)!")
-        if n > 16:
-            _enc_state["out_remaining"] = remaining[16:]
+    idx = result.get("idx", "?")
+    if not result["passed"]:
+        if "error" in result:
+            sim_print(f"ERROR: Encrypt: {result['error']} (packet {idx})")
         else:
-            _enc_state["out_remaining"] = b""
-            _enc_state["out_tag_phase"] = True
-    else:
-        tag = pkt["tag"]
-        for i in range(16):
-            if not out.stream.data.frag.keep[i]:
-                sim_print(f"ERROR: Encrypt: Auth tag keep not set at lane {i} packet {idx}!")
-            if out.stream.data.frag.data[i] != tag[i]:
-                sim_print(
-                    f"ERROR: Encrypt: Auth tag mismatch at byte[{i}] packet {idx}. expected {hex(tag[i])} got {hex(out.stream.data.frag.data[i])}"
-                )
-        if not out.stream.data.eod[0]:
-            sim_print(f"ERROR: Encrypt: Auth tag word missing end of packet {idx}!")
-        sim_print(f"Encrypt: Test {idx} DONE!")
-        _enc_state["out_packet_idx"] = idx + 1
-        _enc_state["out_remaining"] = None
-        _enc_state["out_tag_phase"] = False
+            expected, got = result["expected"], result["got"]
+            n = min(len(expected), len(got))
+            first_diff = next((i for i in range(n) if expected[i] != got[i]), n)
+            sim_print(
+                f"ERROR: Encrypt: Ciphertext/Tag mismatch packet {idx}. expected {len(expected)} bytes got {len(got)} bytes, first differing byte[{first_diff}]"
+            )
+    sim_print(f"Encrypt: Test {idx} DONE!")
+    _enc_state["out_packet_idx"] += 1
 
 
 @MAIN

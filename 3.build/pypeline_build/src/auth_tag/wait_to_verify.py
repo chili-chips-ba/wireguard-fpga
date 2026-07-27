@@ -66,7 +66,7 @@ def wait_to_verify(
 
     # Write side of FIFO
     # the data+valid for input stream (aka fifo write data, write enable)
-    verify_fifo_in_s: axis128_intrf.fwd_t = axis_in_if
+    verify_fifo_in_s: axis128_intrf.stream_t = axis_in_if.stream
     # the ready signal for the input stream (aka fifo not full signal)
     o.axis_in_if = verify_fifo_in_ready
 
@@ -120,9 +120,9 @@ def wait_to_verify(
         # Input ready's are disconnected in this state
         o.verify_bit_if.ready = 0
 
-    verify_fifo_out_rev: axis128_intrf.fb_t = axis128_intrf.fb_t(ready=verify_fifo_out_ready_s)
     fifo_result = verify_fifo_func(
-        in_stream_if=verify_fifo_in_s, out_stream_if=verify_fifo_out_rev
+        in_stream_if=axis128_intrf.fwd_t(stream=verify_fifo_in_s),
+        out_stream_if=axis128_intrf.fb_t(ready=verify_fifo_out_ready_s),
     )
     verify_fifo_out = fifo_result.out_stream_if
     verify_fifo_in_ready = fifo_result.in_stream_if

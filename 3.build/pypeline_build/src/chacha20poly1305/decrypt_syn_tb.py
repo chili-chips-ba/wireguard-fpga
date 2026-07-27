@@ -16,6 +16,16 @@ the is_verified_out flag), printing "ERROR: ..." on any mismatch and
 The final packet is a negative test: test string 0's ciphertext replayed
 with a corrupted tag (tb_common.TAMPERED_TAG). The DUT must still emit that
 packet's plaintext but with is_verified_out low.
+
+The per-lane keep/eod/shift-register bookkeeping this testbench used to
+hand-roll is now the shared `make_axis_byte_source`/`make_axis_byte_sink`
+testbench library (see PipelineC's include/pypeline/axi/axis.py) -- only the
+genuinely wireguard-specific bits (which test string is loaded, matching the
+expected plaintext, is_verified reporting) remain here. The auth tag must
+always start on a fresh beat (never merged into a partial final ciphertext
+beat), so a non-block-aligned ciphertext is padded up to the lane width
+first, with `byte_source`'s `use_keep_mask=True` marking the real ciphertext
+bytes (and the tag) as kept and the padding bytes as not-kept.
 """
 import pypeline_env  # noqa: F401
 
@@ -23,6 +33,7 @@ from pypeline import (
     MAIN,
     Wire,
     wires,
+    Feedback,
     Reg,
     uint1_t,
     uint8_t,
@@ -43,8 +54,8 @@ from aead_types import (
     uint128_t,
     uint256_t,
     axis128_intrf,
-    axis128_null,
 )
+from axi.axis import make_axis_byte_source, make_axis_byte_sink
 from tb_common import (
     KEY,
     NONCE,
@@ -68,13 +79,53 @@ from tb_common import (
 # is_verified_out low).
 NUM_PACKETS = NUM_PLAINTEXT_TEST_STRS + 1
 PLAINTEXT_MAX_SIZE = PLAINTEXT_TEST_STR_MAX_SIZE
-CIPHERTEXT_IN_MAX_SIZE = CIPHERTEXT_MAX_SIZE
-INPUT_CIPHERTEXTS = EXPECTED_CIPHERTEXTS + [EXPECTED_CIPHERTEXTS[0]]
-INPUT_TAGS = EXPECTED_TAGS + [TAMPERED_TAG]
-INPUT_CIPHERTEXT_LENS = CIPHERTEXT_LENS + [CIPHERTEXT_LENS[0]]
+
+# Input frame = ciphertext bytes, padded up to the lane width so the auth tag
+# always starts on a fresh beat (never merged into ciphertext's partial final
+# beat), + the 16-byte tag. The keep mask marks the real ciphertext bytes and
+# the tag as kept, the padding as not-kept -- see make_axis_byte_source's
+# use_keep_mask docstring.
+LANE_WIDTH = 16
+IN_FRAME_MAX_SIZE = CIPHERTEXT_MAX_SIZE + POLY1305_AUTH_TAG_SIZE
+_INPUT_CIPHERTEXTS = EXPECTED_CIPHERTEXTS + [EXPECTED_CIPHERTEXTS[0]]
+_INPUT_TAGS = EXPECTED_TAGS + [TAMPERED_TAG]
+_INPUT_CIPHERTEXT_LENS = CIPHERTEXT_LENS + [CIPHERTEXT_LENS[0]]
+
+
+def _round_up(n, to):
+    return ((n + to - 1) // to) * to
+
+
+INPUT_FRAMES = []
+INPUT_KEEP_MASKS = []
+INPUT_FRAME_LENS = []
+for _ct, _tag, _ct_len in zip(_INPUT_CIPHERTEXTS, _INPUT_TAGS, _INPUT_CIPHERTEXT_LENS):
+    _padded_ct_len = _round_up(_ct_len, LANE_WIDTH)
+    _total_len = _padded_ct_len + POLY1305_AUTH_TAG_SIZE
+    _frame = (
+        _ct[:_ct_len]
+        + [0] * (_padded_ct_len - _ct_len)
+        + _tag
+        + [0] * (IN_FRAME_MAX_SIZE - _total_len)
+    )
+    _mask = (
+        [1] * _ct_len
+        + [0] * (_padded_ct_len - _ct_len)
+        + [1] * POLY1305_AUTH_TAG_SIZE
+        + [0] * (IN_FRAME_MAX_SIZE - _total_len)
+    )
+    INPUT_FRAMES.append(_frame)
+    INPUT_KEEP_MASKS.append(_mask)
+    INPUT_FRAME_LENS.append(_total_len)
+
 EXPECTED_PLAINTEXTS = PLAINTEXTS + [PLAINTEXTS[0]]
 EXPECTED_PLAINTEXT_LENS = PLAINTEXT_LENS + [PLAINTEXT_LENS[0]]
 EXPECTED_VERIFIED = [1] * NUM_PLAINTEXT_TEST_STRS + [0]
+
+byte_source, byte_source_t = make_axis_byte_source(
+    axis128_intrf, LANE_WIDTH, IN_FRAME_MAX_SIZE, use_keep_mask=True
+)
+byte_sink, byte_sink_t = make_axis_byte_sink(axis128_intrf, 16, PLAINTEXT_MAX_SIZE)
 
 
 # Sticky and one clock cycle delayed relative to the completing "Test N DONE!" print
@@ -83,8 +134,6 @@ EXPECTED_VERIFIED = [1] * NUM_PLAINTEXT_TEST_STRS + [0]
 decrypt_all_done: Wire[uint1_t]
 
 
-# CSR values available all at once do not need to be static=registers
-# Streaming inputs data is done as shift register
 @MAIN
 @wires
 def decrypt_syn_tb() -> axis128_intrf.fwd_t:
@@ -92,15 +141,13 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = NONCE
     aad: uint8_t[AAD_MAX_LEN] = AAD
+    input_frames: uint8_t[NUM_PACKETS][IN_FRAME_MAX_SIZE] = INPUT_FRAMES
+    input_frame_lens: uint32_t[NUM_PACKETS] = INPUT_FRAME_LENS
+    input_keep_masks: uint1_t[NUM_PACKETS][IN_FRAME_MAX_SIZE] = INPUT_KEEP_MASKS
     expected_plaintexts: uint8_t[NUM_PACKETS][PLAINTEXT_MAX_SIZE] = (
         EXPECTED_PLAINTEXTS
     )
-    plaintext_lens: uint32_t[NUM_PACKETS] = EXPECTED_PLAINTEXT_LENS
-    input_ciphertexts: uint8_t[NUM_PACKETS][CIPHERTEXT_IN_MAX_SIZE] = (
-        INPUT_CIPHERTEXTS
-    )
-    ciphertext_lens: uint32_t[NUM_PACKETS] = INPUT_CIPHERTEXT_LENS
-    input_tags: uint8_t[NUM_PACKETS][POLY1305_AUTH_TAG_SIZE] = INPUT_TAGS
+    expected_plaintext_lens: uint32_t[NUM_PACKETS] = EXPECTED_PLAINTEXT_LENS
     expected_verified_flags: uint1_t[NUM_PACKETS] = EXPECTED_VERIFIED
 
     # Connect CSR inputs to dut
@@ -109,11 +156,6 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
     chacha20poly1305_decrypt_ports.aad = aad
     chacha20poly1305_decrypt_ports.aad_len = AAD_LEN
 
-    # --- Input State Machine (Streams CIPHERTEXT then AUTH TAG) ---
-    input_packet_count: Reg[uint32_t]
-    ciphertext_in_stream: Reg[uint8_t[CIPHERTEXT_IN_MAX_SIZE]]
-    ciphertext_remaining_in: Reg[uint32_t]
-    input_tag: Reg[uint8_t[POLY1305_AUTH_TAG_SIZE]]
     cycle_counter: Reg[uint32_t]
     decrypt_all_done_reg: Reg[uint1_t]
 
@@ -121,10 +163,8 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
     # encrypt_syn_tb.py's matching comment for why this one-cycle delay matters.
     decrypt_all_done = decrypt_all_done_reg
 
-    # Initialize/Reset Logic
     if cycle_counter == 0:
         sim_print("=== ChaCha20-Poly1305 Decryption Test ===")
-        # Print test inputs
         key_u: uint256_t = array_to_uint_be(key)
         sim_print(
             f"Decrypt Key: {hex(key_u[255:224])}{hex(key_u[223:192])}{hex(key_u[191:160])}{hex(key_u[159:128])}{hex(key_u[127:96])}{hex(key_u[95:64])}{hex(key_u[63:32])}{hex(key_u[31:0])}"
@@ -134,147 +174,59 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
             f"Decrypt Nonce: {hex(nonce_u[95:64])}{hex(nonce_u[63:32])}{hex(nonce_u[31:0])}"
         )
         sim_print("AAD (29 bytes): Additional authenticated data")
-        # Init input regs with first test ciphertext
-        ciphertext_in_stream = input_ciphertexts[input_packet_count]
-        ciphertext_remaining_in = ciphertext_lens[input_packet_count]
-        input_tag = input_tags[input_packet_count]
+
+    # --- Input side: stream each packet's ciphertext+tag through byte_source ---
+    input_packet_count: Reg[uint32_t]
+    input_loaded: Reg[uint1_t]
+
+    dut_in_ready: Feedback[axis128_intrf.fb_t]
+    src = byte_source(
+        load=~input_loaded,
+        load_data=input_frames[input_packet_count],
+        load_len=input_frame_lens[input_packet_count],
+        load_keep_mask=input_keep_masks[input_packet_count],
+        stream_out_if=dut_in_ready,
+    )
+    if ~input_loaded:
         sim_print(f"Decrypting test string {input_packet_count}...")
+        input_loaded = 1
+    if src.idle & input_loaded & (input_packet_count < NUM_PACKETS - 1):
+        input_packet_count = input_packet_count + 1
+        input_loaded = 0
+    chacha20poly1305_decrypt_ports.axis_in = src.stream_out_if
+    dut_in_ready = axis128_intrf.fb_t(ready=chacha20poly1305_decrypt_ports.axis_in_ready)
 
-    # Stream ciphertext + auth tag into dut
-    axis_in_s: axis128_intrf.fwd_t = axis128_null()
-    if ciphertext_remaining_in > 0:
-        # Ciphertext words: keep marks exactly the remaining bytes (partial
-        # on the final word), eod never set (the auth tag word follows)
-        for i in range(16):
-            axis_in_s.stream.data.frag.keep[i] = ciphertext_remaining_in > i
-            axis_in_s.stream.data.frag.data[i] = 0
-            if ciphertext_remaining_in > i:
-                axis_in_s.stream.data.frag.data[i] = ciphertext_in_stream[i]
-        axis_in_s.stream.data.eod[0] = 0
-        axis_in_s.stream.valid = 1
-        if axis_in_s.stream.valid & chacha20poly1305_decrypt_ports.axis_in_ready:
-            in_chunk: uint128_t = array_to_uint_be(axis_in_s.stream.data.frag.data)
-            sim_print(
-                f"Decrypt: Input Ciphertext next 16 bytes: {hex(in_chunk[127:96])}{hex(in_chunk[95:64])}{hex(in_chunk[63:32])}{hex(in_chunk[31:0])}",
-                debug=True,
-            )
-            if ciphertext_remaining_in > 16:
-                ciphertext_remaining_in = ciphertext_remaining_in - 16
-                # ARRAY_SHIFT_DOWN(ciphertext_in_stream, CIPHERTEXT_IN_MAX_SIZE, 16)
-                for i in range(CIPHERTEXT_IN_MAX_SIZE - 16):
-                    ciphertext_in_stream[i] = ciphertext_in_stream[i + 16]
-            else:
-                # Final (possibly partial) ciphertext word sent: tag is next
-                ciphertext_remaining_in = 0
-    elif input_packet_count < NUM_PACKETS:
-        # Auth tag word: all 16 lanes kept, ends the input packet
-        for i in range(POLY1305_AUTH_TAG_SIZE):
-            axis_in_s.stream.data.frag.keep[i] = 1
-            axis_in_s.stream.data.frag.data[i] = input_tag[i]
-        axis_in_s.stream.data.eod[0] = 1
-        axis_in_s.stream.valid = 1
-        if axis_in_s.stream.valid & chacha20poly1305_decrypt_ports.axis_in_ready:
-            tag_chunk: uint128_t = array_to_uint_be(axis_in_s.stream.data.frag.data)
-            sim_print(
-                f"Decrypt: Input Auth Tag: {hex(tag_chunk[127:96])}{hex(tag_chunk[95:64])}{hex(tag_chunk[63:32])}{hex(tag_chunk[31:0])}"
-            )
-            sim_print(
-                f"Decrypt: End of input Ciphertext/Tag for test {input_packet_count}"
-            )
-            input_packet_count = input_packet_count + 1
-            if input_packet_count < NUM_PACKETS:
-                # Reset for next test string
-                ciphertext_in_stream = input_ciphertexts[input_packet_count]
-                ciphertext_remaining_in = ciphertext_lens[input_packet_count]
-                input_tag = input_tags[input_packet_count]
-                sim_print(f"Decrypting next test string {input_packet_count}...")
-    chacha20poly1305_decrypt_ports.axis_in = axis_in_s
-
-    # --- Output State Machine (Checks PLAINTEXT + is_verified) ---
+    # --- Output side: collect plaintext via byte_sink, compare whole frames + is_verified ---
     output_packet_count: Reg[uint32_t]
-    plaintext_out_size: Reg[uint32_t]
-    plaintext_remaining_out: Reg[uint32_t]
-    plaintext_out_expected: Reg[uint8_t[PLAINTEXT_MAX_SIZE]]
-    expected_verified: Reg[uint1_t]
 
-    if cycle_counter == 0:
-        # Init output regs with first expected plaintext
-        plaintext_out_expected = expected_plaintexts[output_packet_count]
-        plaintext_out_size = plaintext_lens[output_packet_count]
-        plaintext_remaining_out = plaintext_out_size
-        expected_verified = expected_verified_flags[output_packet_count]
-        sim_print(f"Decrypt: Checking Plaintext for test string {output_packet_count}...")
-
-    # Testbench is ready to receive plaintext
     chacha20poly1305_decrypt_ports.axis_out_ready = 1
-    out_axis: axis128_intrf.fwd_t = chacha20poly1305_decrypt_ports.axis_out
-    if out_axis.stream.valid:
-        # Print plaintext as it flows out of dut
-        out_chunk: uint128_t = array_to_uint_be(out_axis.stream.data.frag.data)
-        sim_print(
-            f"Decrypt: Output Plaintext next 16 bytes: {hex(out_chunk[127:96])}{hex(out_chunk[95:64])}{hex(out_chunk[63:32])}{hex(out_chunk[31:0])}",
-            debug=True,
-        )
+    snk = byte_sink(stream_in_if=chacha20poly1305_decrypt_ports.axis_out)
 
-        # The verification result rides alongside the whole output packet
+    if snk.frame_valid:
+        expected_verified: uint1_t = expected_verified_flags[output_packet_count]
         sim_assert(
             chacha20poly1305_decrypt_ports.is_verified_out == expected_verified,
-            f"Decrypt: is_verified mismatch. expected {expected_verified} got {chacha20poly1305_decrypt_ports.is_verified_out}",
+            f"Decrypt: Test {output_packet_count} is_verified mismatch. expected {expected_verified} got {chacha20poly1305_decrypt_ports.is_verified_out}",
         )
-
-        # Compare keep pattern (partial on the final word) and, for kept
-        # lanes, the data bytes to the expected plaintext
-        for i in range(16):
-            expected_keep: uint1_t = plaintext_remaining_out > i
-            # lane index as a fixed-width value: a bare {i} literal's width
-            # would vary across the unrolled iterations, giving each
-            # sim_assert instance a different port width
-            lane: uint8_t = i
-            sim_assert(
-                out_axis.stream.data.frag.keep[i] == expected_keep,
-                f"Decrypt: Plaintext keep mismatch at lane {lane}. expected {expected_keep} got {out_axis.stream.data.frag.keep[i]}",
-            )
-            if expected_keep:
-                plaintext_pos: uint32_t = (
-                    plaintext_out_size - plaintext_remaining_out
-                ) + i
+        expected_len: uint32_t = expected_plaintext_lens[output_packet_count]
+        sim_assert(
+            snk.frame_len == expected_len,
+            f"Decrypt: Test {output_packet_count} output length mismatch. expected {expected_len} got {snk.frame_len}",
+        )
+        for i in range(PLAINTEXT_MAX_SIZE):
+            byte_idx: uint32_t = i
+            if byte_idx < expected_len:
                 sim_assert(
-                    out_axis.stream.data.frag.data[i] == plaintext_out_expected[i],
-                    f"Decrypt: Plaintext mismatch at byte[{plaintext_pos}]. expected {hex(plaintext_out_expected[i])} got {hex(out_axis.stream.data.frag.data[i])}",
+                    snk.frame_data[i] == expected_plaintexts[output_packet_count][i],
+                    f"Decrypt: Test {output_packet_count} mismatch at byte[{byte_idx}]. expected {hex(expected_plaintexts[output_packet_count][i])} got {hex(snk.frame_data[i])}",
                 )
-
-        # Handle stream end
-        if out_axis.stream.data.eod[0]:
-            sim_assert(
-                plaintext_remaining_out <= 16,
-                "Decrypt: Early end to Plaintext output!",
-            )
-            sim_print(f"Decrypt: Test {output_packet_count} DONE!")
-            output_packet_count = output_packet_count + 1
-            if output_packet_count < NUM_PACKETS:
-                # Reset for next test string
-                plaintext_out_expected = expected_plaintexts[output_packet_count]
-                plaintext_out_size = plaintext_lens[output_packet_count]
-                plaintext_remaining_out = plaintext_out_size
-                expected_verified = expected_verified_flags[output_packet_count]
-                sim_print(
-                    f"Decrypt: Checking plaintext for next test string {output_packet_count}..."
-                )
-            else:
-                # All packets checked -- signal completion (sticky; see
-                # decrypt_all_done's declaration above). The top-level file
-                # decides when it's safe to actually call sim_finish().
-                decrypt_all_done_reg = 1
-        else:
-            sim_assert(
-                plaintext_remaining_out > 16,
-                "Decrypt: Plaintext word missing end of packet!",
-            )
-            if plaintext_remaining_out > 16:
-                plaintext_remaining_out = plaintext_remaining_out - 16
-                # ARRAY_SHIFT_DOWN(plaintext_out_expected, PLAINTEXT_MAX_SIZE, 16)
-                for i in range(PLAINTEXT_MAX_SIZE - 16):
-                    plaintext_out_expected[i] = plaintext_out_expected[i + 16]
+        sim_print(f"Decrypt: Test {output_packet_count} DONE!")
+        output_packet_count = output_packet_count + 1
+        if output_packet_count >= NUM_PACKETS:
+            # All packets checked -- signal completion (sticky; see
+            # decrypt_all_done's declaration above). The top-level file
+            # decides when it's safe to actually call sim_finish().
+            decrypt_all_done_reg = 1
 
     cycle_counter = cycle_counter + 1
 

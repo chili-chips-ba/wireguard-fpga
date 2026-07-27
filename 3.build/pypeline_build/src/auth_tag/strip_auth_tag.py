@@ -95,10 +95,10 @@ def strip_auth_tag(
     # Ready for axis into early module
     o.axis_in_if = early_tlast.stream_in_if
     # stream coming out of early module
-    stream_in: axis128_intrf.fwd_t = early_tlast.axis_out_if
+    stream_in: axis128_intrf.stream_t = early_tlast.axis_out_if.stream
 
     # Default passing input axis data to ciphertext output
-    o.axis_out_if = stream_in
+    o.axis_out_if = axis128_intrf.fwd_t(stream=stream_in)
     early_out_ready = axis_out_if  # same fb_t type, no need to rebuild from .ready
 
     # With override to use the early tlast for ciphertext tlast
@@ -107,12 +107,12 @@ def strip_auth_tag(
     o.auth_tag_out_if = poly1305_auth_tag_stream_null()
 
     # If this is last input cycle then it's auth tag
-    if stream_in.stream.valid & stream_in.stream.data.eod[0]:
+    if stream_in.valid & stream_in.data.eod[0]:
         # not passing ciphertext output
         o.axis_out_if.stream.valid = 0
         # Connect to auth tag output
-        o.auth_tag_out_if.stream.data = array_to_uint_le(stream_in.stream.data.frag.data)
-        o.auth_tag_out_if.stream.valid = stream_in.stream.valid
+        o.auth_tag_out_if.stream.data = array_to_uint_le(stream_in.data.frag.data)
+        o.auth_tag_out_if.stream.valid = stream_in.valid
         early_out_ready = axis128_intrf.fb_t(ready=auth_tag_out_if.ready)
 
     return o
