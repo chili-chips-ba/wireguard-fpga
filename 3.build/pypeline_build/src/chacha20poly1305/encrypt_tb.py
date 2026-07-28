@@ -86,7 +86,7 @@ def drive_in_word() -> axis128_intrf.stream_t:
     # same-cycle combinational function of this cycle's axis_in.valid), so
     # it already holds a stable value at the start of the cycle -- safe to
     # read directly here to decide whether this word was accepted.
-    return _src.step(chacha20poly1305_encrypt_ports.axis_in_ready).stream
+    return _src.step(chacha20poly1305_encrypt_ports.axis_in_if.ready).stream
 
 
 @sim_output
@@ -112,7 +112,7 @@ def report_new_packets():
 
 @sim_output
 def check_out():
-    _snk.step(axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out))
+    _snk.step(axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream))
     result = _snk.check_nowait()
     if result is None:
         return
@@ -144,12 +144,12 @@ def encrypt_tb() -> axis128_intrf.fwd_t:
     chacha20poly1305_encrypt_ports.aad = aad
     chacha20poly1305_encrypt_ports.aad_len = common.AAD_LEN
 
-    chacha20poly1305_encrypt_ports.axis_in = drive_in_word()
-    chacha20poly1305_encrypt_ports.axis_out_ready = 1
+    chacha20poly1305_encrypt_ports.axis_in_if.stream = drive_in_word()
+    chacha20poly1305_encrypt_ports.axis_out_if.ready = 1
 
     announce()
     report_new_packets()
     check_out()
 
     # dummy return so nothing optimizes away
-    return axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out)
+    return axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream)

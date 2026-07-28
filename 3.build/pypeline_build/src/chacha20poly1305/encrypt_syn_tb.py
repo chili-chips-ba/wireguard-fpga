@@ -161,15 +161,15 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
     if src.idle & input_loaded & (input_packet_count < NUM_PLAINTEXT_TEST_STRS - 1):
         input_packet_count = input_packet_count + 1
         input_loaded = 0
-    chacha20poly1305_encrypt_ports.axis_in = src.stream_out_if.stream
-    dut_in_ready = chacha20poly1305_encrypt_ports.axis_in_ready
+    chacha20poly1305_encrypt_ports.axis_in_if.stream = src.stream_out_if.stream
+    dut_in_ready = chacha20poly1305_encrypt_ports.axis_in_if.ready
 
     # --- Output side: collect ciphertext+tag via byte_sink, compare whole frames ---
     output_packet_count: Reg[uint32_t]
 
-    chacha20poly1305_encrypt_ports.axis_out_ready = 1
+    chacha20poly1305_encrypt_ports.axis_out_if.ready = 1
     snk = byte_sink(
-        stream_in_if=axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out)
+        stream_in_if=axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream)
     )
 
     if snk.frame_valid:
@@ -197,4 +197,4 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     # dummy return for synthesis
     # so everything doesnt optimize away
-    return axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out)
+    return axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream)

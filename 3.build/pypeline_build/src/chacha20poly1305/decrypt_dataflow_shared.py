@@ -29,14 +29,14 @@ def decrypt_dataflow_shared():
     # flat DUT-facing port wires.
     r = decrypt_dataflow_core(
         # forward half of the input port, constructed inline
-        axis_in_if=axis128_intrf.fwd_t(stream=chacha20poly1305_decrypt_ports.axis_in),
+        axis_in_if=axis128_intrf.fwd_t(stream=chacha20poly1305_decrypt_ports.axis_in_if.stream),
         key=chacha20poly1305_decrypt_ports.key,
         nonce=chacha20poly1305_decrypt_ports.nonce,
         aad=chacha20poly1305_decrypt_ports.aad,
         aad_len=chacha20poly1305_decrypt_ports.aad_len,
         # reverse half of the output port, constructed inline
-        axis_out_if=axis128_intrf.fb_t(ready=chacha20poly1305_decrypt_ports.axis_out_ready),
+        axis_out_if=axis128_intrf.fb_t(ready=chacha20poly1305_decrypt_ports.axis_out_if.ready),
     )
-    chacha20poly1305_decrypt_ports.axis_in_ready = r.axis_in_if.ready
-    chacha20poly1305_decrypt_ports.axis_out = r.axis_out_if.stream
+    chacha20poly1305_decrypt_ports.axis_in_if.ready = r.axis_in_if.ready
+    chacha20poly1305_decrypt_ports.axis_out_if.stream = r.axis_out_if.stream
     chacha20poly1305_decrypt_ports.is_verified_out = r.is_verified_out
