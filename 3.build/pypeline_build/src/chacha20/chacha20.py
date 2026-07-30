@@ -6,7 +6,7 @@ directly, once per direction.
 
 Pypeline port of ../pipelinec_build/src/chacha20/chacha20.h and chacha20.c.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from enum import auto
 

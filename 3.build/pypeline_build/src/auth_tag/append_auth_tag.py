@@ -4,7 +4,7 @@
 Pypeline port of ../pipelinec_build/src/auth_tag/append_auth_tag.c.
 Wire names elaborate as append_auth_tag_<wire> to match the C globals.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from enum import auto
 

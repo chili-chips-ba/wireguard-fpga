@@ -10,7 +10,7 @@ testbench drives the ports wires directly instead
 Pypeline port of the DECL_INPUT/DECL_OUTPUT + io_wires MAIN in
 ../pipelinec_build/src/chacha20poly1305/chacha20poly1305_encrypt.h.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import (
     MAIN,

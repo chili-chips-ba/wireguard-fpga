@@ -14,7 +14,7 @@ chacha20.chacha20_instance is for the standalone (non-shared) builds.
 Pypeline port of ../pipelinec_build/src/chacha20/chacha20_pipeline_shared.c
 (wire names elaborate as chacha20_pipeline_shared_<wire>).
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import (
     MAIN,

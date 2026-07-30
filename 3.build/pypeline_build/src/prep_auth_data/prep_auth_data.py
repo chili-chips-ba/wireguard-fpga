@@ -7,7 +7,7 @@ Pypeline port of ../pipelinec_build/src/prep_auth_data/prep_auth_data.h and
 prep_auth_data.c. prep_auth_data_fsm is instantiated directly, once per
 direction, by each dataflow core.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from enum import auto
 

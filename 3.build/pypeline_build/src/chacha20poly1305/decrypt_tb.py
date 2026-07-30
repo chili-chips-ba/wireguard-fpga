@@ -28,7 +28,7 @@ reporting) remain here.
 """
 import random
 
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import MAIN, wires, uint8_t, sim_input, sim_output, sim_print, hex
 

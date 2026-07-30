@@ -17,7 +17,7 @@ testbench library (see PipelineC's include/pypeline/axi/axis.py) -- only the
 genuinely wireguard-specific bits (which test string is loaded, matching the
 expected ciphertext+tag, is_verified reporting) remain here.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import (
     MAIN,

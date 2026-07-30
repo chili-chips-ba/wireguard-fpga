@@ -6,7 +6,7 @@ objects (struct C-names are canonical-by-shape anyway, but centralizing keeps
 the design readable). Matches the C #defines in
 ../pipelinec_build/src/{chacha20/chacha20.h,poly1305/poly1305.h,prep_auth_data/prep_auth_data.h}.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import uint1_t, uint8_t, make_uint_t
 from kept_data_bus import make_kept_data_bus_t

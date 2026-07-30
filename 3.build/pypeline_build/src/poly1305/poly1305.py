@@ -15,7 +15,7 @@ big-integer Poly1305 reference and the official RFC 8439 test vectors (see
 vectors against the `cryptography` package and the RFC 8439 2.8.2
 known-answer test).
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from enum import auto
 

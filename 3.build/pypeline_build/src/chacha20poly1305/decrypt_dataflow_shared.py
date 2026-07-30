@@ -6,7 +6,7 @@ except the chacha20 instance is chacha20_pipeline_shared.chacha20_decrypt_shared
 Pypeline port of ../pipelinec_build/src/chacha20poly1305/decrypt_dataflow.c
 as included by decrypt_shared.c.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import MAIN
 

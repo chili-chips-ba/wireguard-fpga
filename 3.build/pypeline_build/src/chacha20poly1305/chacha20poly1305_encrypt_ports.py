@@ -8,7 +8,7 @@ Pypeline port of the wire declarations in
 ../pipelinec_build/src/chacha20poly1305/chacha20poly1305_encrypt.h
 (wire names elaborate as chacha20poly1305_encrypt_ports_<wire>).
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import Wire, uint1_t, uint8_t
 
