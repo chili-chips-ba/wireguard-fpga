@@ -3,7 +3,7 @@
 
 Pypeline port of ../pipelinec_build/src/chacha20poly1305/encrypt_dataflow.c.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import MAIN
 

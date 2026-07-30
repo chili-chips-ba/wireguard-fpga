@@ -9,7 +9,7 @@ Build (from pypeline_build/): ./build_verilog_decrypt.sh
 import sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import PART
 

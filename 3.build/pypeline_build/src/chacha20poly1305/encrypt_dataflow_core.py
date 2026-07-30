@@ -15,7 +15,7 @@ instance feeds this graph, so encrypt_dataflow_core is a factory parameterized
 by that one callable (same elaboration-time-closure idiom as
 chacha20.make_quarter_round/stream.make_stream_pipeline).
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import NamedTuple, uint8_t
 

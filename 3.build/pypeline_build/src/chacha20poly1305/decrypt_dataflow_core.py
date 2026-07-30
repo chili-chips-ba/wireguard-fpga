@@ -16,7 +16,7 @@ and the shared-pipeline build (decrypt_dataflow_shared.py) is which chacha20
 instance feeds this graph, so decrypt_dataflow_core is a factory parameterized
 by that one callable (mirrors encrypt_dataflow_core's make_encrypt_dataflow_core).
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import NamedTuple, uint1_t, uint8_t
 

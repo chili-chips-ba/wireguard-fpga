@@ -5,7 +5,7 @@ Pypeline port of ../pipelinec_build/src/poly1305/poly1305_verify_decrypt.c.
 Wire names elaborate as poly1305_verify_decrypt_<wire>; the C globals were
 poly1305_verify_<wire> (prefix differs slightly, connections unchanged).
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from enum import auto
 

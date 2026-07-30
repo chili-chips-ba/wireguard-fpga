@@ -7,7 +7,7 @@ Wire names elaborate as wait_to_verify_<wire> to match the C globals;
 the C GLOBAL_STREAM_FIFO(axis128_intrf.fwd_t, verify_fifo, 128) becomes a
 make_stream_fifo instance in its own MAIN with verify_fifo_* wires.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from enum import auto
 

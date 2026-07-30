@@ -5,7 +5,7 @@ into a ciphertext stream + an auth tag stream).
 Pypeline port of ../pipelinec_build/src/auth_tag/strip_auth_tag.c.
 Wire names elaborate as strip_auth_tag_<wire> to match the C globals.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import (
     NamedTuple,

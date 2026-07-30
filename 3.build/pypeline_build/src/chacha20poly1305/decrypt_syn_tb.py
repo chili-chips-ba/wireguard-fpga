@@ -27,7 +27,7 @@ beat), so a non-block-aligned ciphertext is padded up to the lane width
 first, with `byte_source`'s `use_keep_mask=True` marking the real ciphertext
 bytes (and the tag) as kept and the padding bytes as not-kept.
 """
-import pypeline_env  # noqa: F401
+import wireguard_env  # noqa: F401
 
 from pypeline import (
     MAIN,
