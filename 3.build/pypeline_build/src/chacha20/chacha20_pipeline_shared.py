@@ -153,8 +153,8 @@ def chacha20_pipeline_shared():
     decrypt_pipeline_in_if.ready = decrypt_pipeline_in_ready_s
 
     result = pipeline_func(
-        stream_in_if=chacha_shared_pipeline_in_stream_intrf.fwd_t(stream=pipeline_in_s),
-        stream_out_if=chacha_shared_pipeline_out_stream_intrf.fb_t(ready=pipeline_out_ready_s),
+        stream_in_if=chacha_shared_pipeline_in_stream_intrf.fwd_t(pipeline_in_s),
+        stream_out_if=chacha_shared_pipeline_out_stream_intrf.fb_t(pipeline_out_ready_s),
     )
     pipeline_out = result.stream_out_if.stream
     pipeline_in_ready = result.stream_in_if.ready
@@ -182,9 +182,9 @@ def chacha20_encrypt_shared(
         key_if=key_if,
         axis_out_if=axis_out_if,
         to_pipeline_if=chacha20.chacha20_loop_body_stream_intrf.fb_t(
-            ready=encrypt_pipeline_in_if.ready
+            encrypt_pipeline_in_if.ready
         ),
-        from_pipeline_if=axis512_intrf.fwd_t(stream=from_pipe_fwd),
+        from_pipeline_if=axis512_intrf.fwd_t(from_pipe_fwd),
     )
     o.axis_in_if = fsm_out.axis_in_if
     o.key_if = fsm_out.key_if
@@ -211,9 +211,9 @@ def chacha20_decrypt_shared(
         key_if=key_if,
         axis_out_if=axis_out_if,
         to_pipeline_if=chacha20.chacha20_loop_body_stream_intrf.fb_t(
-            ready=decrypt_pipeline_in_if.ready
+            decrypt_pipeline_in_if.ready
         ),
-        from_pipeline_if=axis512_intrf.fwd_t(stream=from_pipe_fwd),
+        from_pipeline_if=axis512_intrf.fwd_t(from_pipe_fwd),
     )
     o.axis_in_if = fsm_out.axis_in_if
     o.key_if = fsm_out.key_if

@@ -284,8 +284,8 @@ def chacha20_fsm(
         dwidth_conv_data_in = axis_in_if.stream
     block_in_ready: Feedback[uint1_t]
     in_to_block = axis128_to_axis512(
-        narrow_in_if=axis128_intrf.fwd_t(stream=dwidth_conv_data_in),
-        wide_out_if=axis512_intrf.fb_t(ready=block_in_ready),
+        narrow_in_if=axis128_intrf.fwd_t(dwidth_conv_data_in),
+        wide_out_if=axis512_intrf.fb_t(block_in_ready),
     )
     block_in_stream: axis512_intrf.stream_t = in_to_block.wide_out_if.stream
     # Default not ready for incoming blocks
@@ -353,7 +353,7 @@ def chacha20_fsm(
 
     # Convert pipeline output 512b block stream to 128b
     block_to_out = axis512_to_axis128(
-        wide_in_if=axis512_intrf.fwd_t(stream=block_to_out_axis_in),
+        wide_in_if=axis512_intrf.fwd_t(block_to_out_axis_in),
         narrow_out_if=axis_out_if,
     )
     o.axis_out_if = block_to_out.narrow_out_if

@@ -112,7 +112,7 @@ def report_new_packets():
 
 @sim_output
 def check_out():
-    _snk.step(axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream))
+    _snk.step(axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream))
     result = _snk.check_nowait()
     if result is None:
         return
@@ -152,4 +152,4 @@ def encrypt_tb() -> axis128_intrf.fwd_t:
     check_out()
 
     # dummy return so nothing optimizes away
-    return axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream)
+    return axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)

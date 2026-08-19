@@ -491,10 +491,9 @@ does — the DUT-facing `Wire`s in `chacha20poly1305_*_ports.py` are still flat
 scalars driven by the testbench and the hardware top:
 
 ```python
-axis_out_rev: axis128_fb_t = axis128_fb_t(ready=ports.axis_out_ready)
 r = decrypt_dataflow_core(
     ports.axis_in, ports.key, ports.nonce, ports.aad, ports.aad_len,
-    axis_out_rev,                             # reverse half of the output port
+    axis128_fb_t(ports.axis_out_ready),  # reverse half of the output port
 )
 ports.axis_in_ready = r.axis_in_if.ready      # implied feedback -> explicit
 ports.axis_out = r.axis_out_if
