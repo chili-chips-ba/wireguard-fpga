@@ -29,13 +29,13 @@ def encrypt_dataflow_shared():
     # flat DUT-facing port wires.
     r = encrypt_dataflow_core(
         # forward half of the input port, constructed inline
-        axis_in_if=axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_in_if.stream),
+        axis_in_if=axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_in_if.stream),
         key=chacha20poly1305_encrypt_ports.key,
         nonce=chacha20poly1305_encrypt_ports.nonce,
         aad=chacha20poly1305_encrypt_ports.aad,
         aad_len=chacha20poly1305_encrypt_ports.aad_len,
         # reverse half of the output port, constructed inline
-        axis_out_if=axis128_intrf.fb_t(ready=chacha20poly1305_encrypt_ports.axis_out_if.ready),
+        axis_out_if=axis128_intrf.fb_t(chacha20poly1305_encrypt_ports.axis_out_if.ready),
     )
     chacha20poly1305_encrypt_ports.axis_in_if.ready = r.axis_in_if.ready
     chacha20poly1305_encrypt_ports.axis_out_if.stream = r.axis_out_if.stream

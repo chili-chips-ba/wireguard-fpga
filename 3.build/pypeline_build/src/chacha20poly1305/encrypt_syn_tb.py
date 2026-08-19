@@ -153,7 +153,7 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
         load=~input_loaded,
         load_data=plaintexts[input_packet_count],
         load_len=plaintext_lens[input_packet_count],
-        stream_out_if=axis128_intrf.fb_t(ready=dut_in_ready),
+        stream_out_if=axis128_intrf.fb_t(dut_in_ready),
     )
     if ~input_loaded:
         sim_print(f"Encrypting test string {input_packet_count}...")
@@ -169,7 +169,7 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     chacha20poly1305_encrypt_ports.axis_out_if.ready = 1
     snk = byte_sink(
-        stream_in_if=axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream)
+        stream_in_if=axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)
     )
 
     if snk.frame_valid:
@@ -197,4 +197,4 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     # dummy return for synthesis
     # so everything doesnt optimize away
-    return axis128_intrf.fwd_t(stream=chacha20poly1305_encrypt_ports.axis_out_if.stream)
+    return axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)

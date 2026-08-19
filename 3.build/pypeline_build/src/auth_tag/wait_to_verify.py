@@ -121,8 +121,8 @@ def wait_to_verify(
         o.verify_bit_if.ready = 0
 
     fifo_result = verify_fifo_func(
-        in_stream_if=axis128_intrf.fwd_t(stream=verify_fifo_in_s),
-        out_stream_if=axis128_intrf.fb_t(ready=verify_fifo_out_ready_s),
+        in_stream_if=axis128_intrf.fwd_t(verify_fifo_in_s),
+        out_stream_if=axis128_intrf.fb_t(verify_fifo_out_ready_s),
     )
     verify_fifo_out = fifo_result.out_stream_if.stream
     verify_fifo_in_ready = fifo_result.in_stream_if.ready

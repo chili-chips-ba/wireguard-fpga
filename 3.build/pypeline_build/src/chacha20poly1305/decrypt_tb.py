@@ -154,7 +154,7 @@ def check_out():
     # its duration), so sampling it once when the frame completes below is
     # equivalent to checking every beat.
     got_verified = chacha20poly1305_decrypt_ports.is_verified_out
-    _snk.step(axis128_intrf.fwd_t(stream=out))
+    _snk.step(axis128_intrf.fwd_t(out))
     result = _snk.check_nowait()
     if result is None:
         return
@@ -201,4 +201,4 @@ def decrypt_tb() -> axis128_intrf.fwd_t:
     check_out()
 
     # dummy return so nothing optimizes away
-    return axis128_intrf.fwd_t(stream=chacha20poly1305_decrypt_ports.axis_out_if.stream)
+    return axis128_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)

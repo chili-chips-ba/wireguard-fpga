@@ -185,7 +185,7 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
         load_data=input_frames[input_packet_count],
         load_len=input_frame_lens[input_packet_count],
         load_keep_mask=input_keep_masks[input_packet_count],
-        stream_out_if=axis128_intrf.fb_t(ready=dut_in_ready),
+        stream_out_if=axis128_intrf.fb_t(dut_in_ready),
     )
     if ~input_loaded:
         sim_print(f"Decrypting test string {input_packet_count}...")
@@ -201,7 +201,7 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     chacha20poly1305_decrypt_ports.axis_out_if.ready = 1
     snk = byte_sink(
-        stream_in_if=axis128_intrf.fwd_t(stream=chacha20poly1305_decrypt_ports.axis_out_if.stream)
+        stream_in_if=axis128_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)
     )
 
     if snk.frame_valid:
@@ -234,4 +234,4 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     # dummy return for synthesis
     # so everything doesnt optimize away
-    return axis128_intrf.fwd_t(stream=chacha20poly1305_decrypt_ports.axis_out_if.stream)
+    return axis128_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)
