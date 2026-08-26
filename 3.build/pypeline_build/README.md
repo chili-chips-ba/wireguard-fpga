@@ -115,8 +115,10 @@ src/
     prep_auth_data.py           AAD||ciphertext||lengths framing FSM (prep_auth_data_fsm,
                                  called directly by both directions; prep_auth_data.h)
   auth_tag/
-    append_auth_tag.py          append tag after ciphertext (encrypt output)
-    strip_auth_tag.py           split tag off ciphertext (decrypt input, early-tlast buffer)
+    append_auth_tag.py          merge tag into ciphertext's final beat + a tag-tail beat
+                                 (encrypt output; Xilinx-style packed framing, issue #44)
+    strip_auth_tag.py           reassemble the tag from the last two input beats
+                                 (decrypt input, early-tlast buffer; issue #44)
     wait_to_verify.py           128-deep FIFO + wait-for-verdict FSM, merged into one
                                  function, holding plaintext until tag verdict
   chacha20poly1305/
@@ -132,7 +134,7 @@ src/
     encrypt_dataflow_shared.py / decrypt_dataflow_shared.py  shared design: instantiate the
                                  same factory with chacha20_pipeline_shared's
                                  chacha20_encrypt_shared / chacha20_decrypt_shared
-    tb_common.py                 synthesizable-style testbench's fixed 8-string vectors,
+    tb_common.py                 synthesizable-style testbench's fixed 10-string vectors,
                                   computed once at elaboration time
     tb_common_sim.py             non-synthesizable testbench's shared support: fixed
                                   KEY/NONCE/AAD + on-the-fly random-packet-length helper
@@ -245,14 +247,20 @@ import-time known-answer self-test against the official RFC 8439 §2.8.2 AEAD
 test vector (so a broken `cryptography` install fails loudly at elaboration
 rather than as unexplained testbench `ERROR`s).
 
-The test strings' byte lengths (56, 71, 58, 3, 16, 17, 64, 128) deliberately
-cover the partial-final-word and block corner cases: shorter than one
-16-byte AXIS word, exactly one word, one word plus one byte, several
-mid-word endings, exactly one 64-byte ChaCha20 block, and the 128-byte
-maximum (a multiple of both 16 and 64). Both testbenches check the exact
-per-lane `keep` pattern and packet framing (`eod` only on the auth tag word
-for encrypt output / on the final plaintext word for decrypt output), not
-just the data bytes.
+The test strings' byte lengths (56, 71, 58, 3, 16, 17, 64, 128, 15, 79)
+deliberately cover the partial-final-word and block corner cases: shorter
+than one 16-byte AXIS word, exactly one word, one word plus one byte,
+several mid-word endings, exactly one 64-byte ChaCha20 block, the 128-byte
+maximum (a multiple of both 16 and 64), and — added for the Xilinx-style
+tkeep fix (issue #44) — 15 and 79, both `r = ct_len % 16 = 15`: the maximal
+tag-rotation case (only 1 tag byte merged into the ciphertext's final beat,
+15 in the true final tag-only beat), the first within a single beat, the
+second spanning past a 64-byte ChaCha20 block boundary. Both testbenches
+compare the collected kept-byte sequence/length against the packed `ct||tag`
+frame (encrypt output) or plaintext (decrypt output), and separately assert
+on every beat that `tkeep` itself is Xilinx-style compliant — full keep
+except a trailing-only partial `eod` beat, never a mid-packet or mid-beat
+hole (see `make_axis_byte_sink`'s docstring) — not just the data bytes.
 
 The decrypt testbench additionally replays test string 0's ciphertext with a
 deliberately corrupted auth tag (`tb_common.TAMPERED_TAG`) as an extra final
@@ -264,10 +272,11 @@ which the all-valid vectors never hit.
 
 `tb_common_sim.py` reuses the same fixed `KEY`/`NONCE`/`AAD` as
 `tb_common.py`, but does not precompute any ciphertext/tag vectors — instead
-it holds `NUM_RANDOM_PACKETS = 10`, the `PACKET_LEN_MIN`/`PACKET_LEN_MAX`
-range (1-1024 bytes), the stratified `CORNER_CASE_LENS` list (`[16, 17, 64,
-128]`, matching the synthesizable variant's coverage of the partial-final-
-word and block-boundary cases) and `DEFAULT_SEED`. `encrypt_tb.py`/
+it holds `NUM_RANDOM_PACKETS = 12`, the `PACKET_LEN_MIN`/`PACKET_LEN_MAX`
+range (1-1024 bytes), the stratified `CORNER_CASE_LENS` list (`[15, 16, 17,
+31, 64, 128]`, matching the synthesizable variant's coverage of the
+partial-final-word and block-boundary cases, including the Xilinx-style
+tkeep fix's `r = 15` maximal-rotation cases) and `DEFAULT_SEED`. `encrypt_tb.py`/
 `decrypt_tb.py` call `next_packet_length(rng, packet_idx)` and
 `aead_ref_model.generate_encrypt_vector(...)` live, during simulation, right
 when each packet's random plaintext is generated: the first
@@ -302,9 +311,86 @@ passed it through correctly), `chacha20_loop_body` XORs only kept lanes
 (forcing non-kept lanes to zero so raw keystream bytes never leak
 downstream), and `prep_auth_data.py`'s keep-bit length accumulator therefore
 authenticates the *true* ciphertext length in the Poly1305 length field, per
-RFC 8439. The auth tag is a separate full 16-byte word appended after the
-final (possibly partial) ciphertext word, which is exactly how the decrypt
-testbench frames its input in return.
+RFC 8439. (The auth tag's own framing at this point was a separate full
+16-byte word appended after the final ciphertext word — since fixed again,
+see "Fixed: Xilinx-style tkeep" below.)
+
+### Fixed: Xilinx-style tkeep — no mid-packet null bytes ([issue #44](https://github.com/chili-chips-ba/wireguard-fpga/issues/44))
+
+The fix above made the final ciphertext AXIS word carry a genuinely partial
+`keep` (`r` kept lanes, `r = ct_len % 16`, or `16` when aligned) — but
+`append_auth_tag.py` still inserted the auth tag as its own always-full-keep
+word right after it:
+
+```
+word k    : ciphertext, keep = r ones,   eod = 0   <- partial keep MID-packet
+word k+1  : auth tag,   keep = all ones, eod = 1
+```
+
+The `16-r` unkept lanes in word `k` are embedded null bytes: legal under
+strict ARM AXI4-Stream (IHI 0051), but not under the AMD/Xilinx AXIS-interop
+subset that every practical AXIS component (width converters, packet FIFOs,
+DMA, the Ethernet subsystem) actually implements — those only tolerate full
+keep on every beat except optional trailing nulls on the `eod`/`tlast` beat.
+Since this design is meant to sit in a WireGuard datapath surrounded by
+ordinary AXIS plumbing, the Xilinx subset is the standard that matters, and
+the fix packs the tag into the stream instead of appending it as a separate
+word:
+
+```
+word k    : r ct bytes ‖ tag[0 : 16-r],  keep = all ones, eod = 0
+word k+1  : tag[16-r : 16],              keep = r ones,   eod = 1
+```
+
+`r = 16` (aligned lengths) degenerates to the pre-fix layout exactly — word
+`k` is pure ciphertext, word `k+1` the whole tag — so the aligned-length test
+vectors (16/64/128-byte strings) are bit-identical before and after this
+fix; only `r != 0` packets change. Beat count per packet is unchanged
+(`ceil(ct_len/16) + 1`).
+
+`append_auth_tag.py` is now a 3-state FSM (`CIPHERTEXT -> MERGED_WORD ->
+TAG_TAIL`): it holds the packet's true final ciphertext beat back one cycle
+(accepting it unconditionally, *not* gated on the tag being ready yet —
+that beat and the copy `poly1305_mac` consumes to produce the tag are two
+ends of the same `axis128_2broadcast` interlock, so refusing it while
+waiting for the tag would deadlock the broadcast), merges `tag[0 : 16-r]`
+into its unused lanes in `MERGED_WORD`, then emits `tag[16-r : 16]` with
+`keep = r` as the true final beat in `TAG_TAIL`. A zero-kept final ciphertext
+beat (an empty payload, e.g. a WireGuard keepalive) skips straight to
+`TAG_TAIL`, emitting the whole tag as a single full-keep last word instead of
+merging into nothing — untested (see "Test Vectors" above), flagged as a
+follow-up.
+
+`strip_auth_tag.py` reassembles the tag from the *last two* input beats
+instead of reading it whole off one dedicated beat: the existing
+`axis128_early_tlast` one-word lookahead buffer already exposes exactly the
+two-beat visibility needed (the buffered candidate-output beat plus the raw
+incoming beat, same cycle). On the beat immediately preceding the true final
+beat (`next_axis_out_is_tlast`), its `keep` is truncated to `r` (dropping the
+packed-in tag bytes) and its data is latched into `prev_data_reg`; on the
+true final beat, the 16-byte tag is read out of a 32-byte `{prev_data_reg,
+this beat}` window starting at lane `r`. As a side effect, the *internal*
+decrypt ciphertext stream (into `chacha20`/`prep_auth_data`) is now
+Xilinx-style compliant too, which it was not before.
+
+No changes were needed anywhere else in the crypto path — `prep_auth_data.py`
+already zeroed unkept lanes and counted keep bits (now always a
+trailing-only partial), `chacha20.py` already XORed only kept lanes with its
+dwidth converters inferring chunk validity from thermometer keep, and
+`poly1305.py`/`wait_to_verify.py` never touch keep at all.
+
+This is a Pypeline-only fix — the C reference sources
+(`../pipelinec_build/src/auth_tag/{append_auth_tag.c,strip_auth_tag.c}`)
+still use the old separate-tag-word framing, joining the Poly1305 math bugs
+and exact-length framing below as another place this port deliberately
+diverges from the C. The shared PipelineC testbench library
+(`include/pypeline/axi/axis.py`'s `make_axis_byte_source`/
+`make_axis_byte_sink`, `include/pypeline/axi/axis_sim.py`'s
+`AxisSimSource`/`AxisSimSink`) was converted to Xilinx-style-only as part of
+this fix: the `use_keep_mask`/`keep_mask` escape hatch that let a caller mark
+arbitrary padding gaps as not-kept (previously used by this repo's decrypt
+testbenches to frame ciphertext-then-tag input) has been removed, and both
+sinks now assert Xilinx-style compliance on every beat they accept.
 
 ### Fixed: Poly1305 320-bit math is now RFC 8439-correct
 

@@ -1,9 +1,14 @@
 # pyright: reportInvalidTypeForm=none
 """Strip the auth tag from the end of the ciphertext stream (splits the input
-into a ciphertext stream + an auth tag stream).
+into a ciphertext stream + an auth tag stream). Xilinx-style packed ct||tag
+framing (wireguard-fpga issue #44): the tag's first `16-r` bytes are merged
+into the ciphertext's true final (full-keep) beat, and the last `r` bytes are
+their own beat with `keep=r`, `eod=1` -- so the tag is reassembled from the
+last two input beats rather than read whole off one dedicated tag beat.
 
-Pypeline port of ../pipelinec_build/src/auth_tag/strip_auth_tag.c.
-Wire names elaborate as strip_auth_tag_<wire> to match the C globals.
+No longer a 1:1 port of ../pipelinec_build/src/auth_tag/strip_auth_tag.c --
+see README.md's "Xilinx-style tkeep" section for why this Pypeline port
+deliberately diverges.
 """
 import wireguard_env  # noqa: F401
 
@@ -14,12 +19,18 @@ from pypeline import (
     Reg,
     Feedback,
     uint1_t,
+    uint8_t,
     array_to_uint_le,
+    sim_assert,
 )
 
 from aead_types import (
+    POLY1305_AUTH_TAG_SIZE,
     axis128_intrf,
     axis128_stream_null,
+    axis128_keep_count,
+    axis128_keep_count_t,
+    axis128_count_to_keep,
     poly1305_auth_tag_stream_intrf,
     poly1305_auth_tag_stream_null,
 )
@@ -89,6 +100,11 @@ def strip_auth_tag(
 ) -> strip_auth_tag_out_t:
     o: strip_auth_tag_out_t
     early_out_ready: Feedback[uint1_t]
+    # The second-to-last input beat (the ciphertext's true final beat,
+    # carrying tag[0 : 16-r] merged into its unused lanes) -- held so its
+    # tag head can be recombined with the tag tail once the true last beat
+    # (tag[16-r : 16], r kept lanes) arrives next.
+    prev_data_reg: Reg[uint8_t[POLY1305_AUTH_TAG_SIZE]]
 
     early_tlast = axis128_early_tlast(
         stream_in_if=axis_in_if, axis_out_if=axis128_intrf.fb_t(early_out_ready)
@@ -105,15 +121,55 @@ def strip_auth_tag(
 
     # With override to use the early tlast for ciphertext tlast
     o.axis_out_if.stream.data.eod[0] = early_tlast.next_axis_out_is_tlast
+    if early_tlast.next_axis_out_is_tlast:
+        # This (buffered) beat is the ciphertext's true final beat -- r of
+        # its 16 lanes are real ciphertext, the rest are tag head bytes
+        # packed in by append_auth_tag. r is the raw incoming beat's own
+        # keep count, and that raw beat (the tag-tail beat) already carries
+        # exactly r kept lanes as a Xilinx-style thermometer prefix by
+        # construction, seen a cycle early since it's sitting on axis_in_if
+        # right now while this beat is still in the buffer. So its `keep`
+        # can be reused as-is instead of re-derived via keep_count +
+        # count_to_keep -- for a genuine prefix pattern the two are
+        # identical, and skipping the round trip keeps this beat's fan-out
+        # into axis128_2broadcast's consumers (prep_auth_data_fsm/chacha20,
+        # each of which recomputes its own keep_count downstream regardless)
+        # off a combinational path that was otherwise stacking two 16-lane
+        # popcounts and a decode in series with no register between them.
+        recomputed_keep = axis128_count_to_keep(
+            axis128_keep_count(axis_in_if.stream.data.frag)
+        )
+        keep_is_prefix: uint1_t = 1
+        for i in range(16):
+            if recomputed_keep[i] != axis_in_if.stream.data.frag.keep[i]:
+                keep_is_prefix = 0
+        sim_assert(
+            keep_is_prefix,
+            "strip_auth_tag: tag-tail beat's keep is not a Xilinx-style prefix",
+        )
+        o.axis_out_if.stream.data.frag.keep = axis_in_if.stream.data.frag.keep
+        if o.axis_out_if.stream.valid & axis_out_if.ready:
+            prev_data_reg = stream_in.data.frag.data
     # and not passing data to auth tag out
     o.auth_tag_out_if.stream = poly1305_auth_tag_stream_null()
 
-    # If this is last input cycle then it's auth tag
+    # If this is last input cycle then it's the tag's final (r-byte) beat --
+    # reassemble the full 16-byte tag from it plus the previous (merged)
+    # beat held in prev_data_reg.
     if stream_in.valid & stream_in.data.eod[0]:
+        last_keep_count: axis128_keep_count_t = axis128_keep_count(stream_in.data.frag)
+        window: uint8_t[2 * POLY1305_AUTH_TAG_SIZE]
+        for i in range(POLY1305_AUTH_TAG_SIZE):
+            window[i] = prev_data_reg[i]
+            window[POLY1305_AUTH_TAG_SIZE + i] = stream_in.data.frag.data[i]
+        tag_bytes: uint8_t[POLY1305_AUTH_TAG_SIZE]
+        for i in range(POLY1305_AUTH_TAG_SIZE):
+            tag_bytes[i] = window[last_keep_count + i]
+
         # not passing ciphertext output
         o.axis_out_if.stream.valid = 0
         # Connect to auth tag output
-        o.auth_tag_out_if.stream.data = array_to_uint_le(stream_in.data.frag.data)
+        o.auth_tag_out_if.stream.data = array_to_uint_le(tag_bytes)
         o.auth_tag_out_if.stream.valid = stream_in.valid
         early_out_ready = auth_tag_out_if.ready
 

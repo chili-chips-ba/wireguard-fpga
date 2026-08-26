@@ -1,10 +1,10 @@
 # pyright: reportInvalidTypeForm=none
 """Non-synthesizable testbench for the standalone encrypt design: generates
-10 random-length (1-1024 byte) plaintext packets on the fly, during live
+12 random-length (1-1024 byte) plaintext packets on the fly, during live
 simulation, using Python's `random` (default-seeded, seed printed for
 replayability) and streams/checks them via @sim_input/@sim_output -- no
 fixed-size hardware register arrays, no elaboration-time pre-baking. For the
-synthesizable-style variant (fixed 8-string vectors), see encrypt_syn_tb.py.
+synthesizable-style variant (fixed 10-string vectors), see encrypt_syn_tb.py.
 
 Only runs under Pypeline's native --sim mode: @sim_input/@sim_output calls
 are elaborated away entirely for any real-VHDL path (cocotb+GHDL, real
