@@ -22,20 +22,22 @@ AAD_LEN = len(AAD_TEST_STR)  # 29
 AAD = list(AAD_TEST_STR.encode()) + [0] * (AAD_MAX_LEN - AAD_LEN)
 
 # Random packet generation
-NUM_RANDOM_PACKETS = 10
+NUM_RANDOM_PACKETS = 12
 PACKET_LEN_MIN = 1
 PACKET_LEN_MAX = 1024
 
 # The first len(CORNER_CASE_LENS) packets each run are pinned to these
 # lengths -- the same partial-final-word/block-boundary corner cases
-# tb_common.py's fixed 8-string set was chosen to cover (see its comment):
-# shorter than one 16-byte AXIS word would also be nice but 16 doubles as
-# "exactly one word"; 17 is one word plus one byte; 64 is exactly one
+# tb_common.py's fixed test-string set was chosen to cover (see its
+# comment): 15 is one byte short of a full word (r=15, the packed ct||tag
+# framing's maximal-rotation case -- see issue #44 -- within a single beat);
+# 16 doubles as "exactly one word"; 17 is one word plus one byte; 31 is one
+# word plus 15 bytes (r=15 again, but spanning two beats); 64 is exactly one
 # ChaCha20 block; 128 is the old fixed-vector max and a multiple of both 16
 # and 64. The remaining packets are uniform-random over
 # [PACKET_LEN_MIN, PACKET_LEN_MAX], so every run is guaranteed to exercise
 # these boundaries at least once while still covering fresh random lengths.
-CORNER_CASE_LENS = [16, 17, 64, 128]
+CORNER_CASE_LENS = [15, 16, 17, 31, 64, 128]
 
 # Fixed default seed (nod to RFC 8439) so a failing run's exact vectors are
 # reproducible by re-seeding with the same value; the seed actually used is
