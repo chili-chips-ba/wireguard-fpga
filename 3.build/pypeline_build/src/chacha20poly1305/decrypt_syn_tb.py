@@ -4,27 +4,15 @@
 time. For the non-synthesizable @sim_input/@sim_output variant (12 + 1
 on-the-fly random packets), see decrypt_tb.py.
 
-Pypeline port of ../pipelinec_build/src/chacha20poly1305/decrypt_tb.c.
-Streams the test ciphertext+tag packets into the DUT wires exactly as the
-encrypt side frames them — Xilinx-style packed AXIS (issue #44): ciphertext
-bytes immediately followed by the auth tag bytes, tkeep full everywhere
-except a trailing-only partial final beat — and checks the plaintext stream
-coming out: `byte_sink` compares the collected kept-byte sequence/length,
-separately asserts on every beat that `tkeep` itself is Xilinx-style
-compliant (see `make_axis_byte_sink`'s docstring), and this file additionally
-checks the is_verified_out flag -- printing "ERROR: ..." on a data mismatch,
-raising `sim_assert` on a `tkeep`/is_verified violation, and "Decrypt: Test N
-DONE!" per passing packet.
+Pypeline port of ../pipelinec_build/src/chacha20poly1305/decrypt_tb.c. Input
+frames ciphertext+tag Xilinx-style packed (issue #44 -- see README), and
+uses the shared `make_axis_byte_source`/`make_axis_byte_sink` testbench
+library (PipelineC's include/pypeline/axi/axis.py) plus its own
+is_verified_out check -- only the wireguard-specific bits live here.
 
 The final packet is a negative test: test string 0's ciphertext replayed
 with a corrupted tag (tb_common.TAMPERED_TAG). The DUT must still emit that
 packet's plaintext but with is_verified_out low.
-
-The per-lane keep/eod/shift-register bookkeeping this testbench used to
-hand-roll is now the shared `make_axis_byte_source`/`make_axis_byte_sink`
-testbench library (see PipelineC's include/pypeline/axi/axis.py) -- only the
-genuinely wireguard-specific bits (which test string is loaded, matching the
-expected plaintext, is_verified reporting) remain here.
 """
 import wireguard_env  # noqa: F401
 

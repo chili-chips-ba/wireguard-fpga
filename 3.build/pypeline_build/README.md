@@ -344,34 +344,67 @@ word k+1  : tag[16-r : 16],              keep = r ones,   eod = 1
 
 `r = 16` (aligned lengths) degenerates to the pre-fix layout exactly — word
 `k` is pure ciphertext, word `k+1` the whole tag — so the aligned-length test
-vectors (16/64/128-byte strings) are bit-identical before and after this
-fix; only `r != 0` packets change. Beat count per packet is unchanged
-(`ceil(ct_len/16) + 1`).
+vectors (16/64/128-byte strings) are bit- *and* cycle-identical before and
+after this fix; only `r != 0` packets change. Beat count per packet is
+unchanged (`ceil(ct_len/16) + 1`).
 
-`append_auth_tag.py` is now a 3-state FSM (`CIPHERTEXT -> MERGED_WORD ->
-TAG_TAIL`): it holds the packet's true final ciphertext beat back one cycle
-(accepting it unconditionally, *not* gated on the tag being ready yet —
+**`append_auth_tag.py`** is a 3-state FSM. `r == 16` needs no lanes merged,
+so `CIPHERTEXT` forwards it immediately and jumps straight to `TAG_TAIL`;
+`r < 16` must hold the beat (`MERGED_WORD`) so the tag can fill its unused
+lanes:
+
+```
+r = 5  (mid-word):    CIPHERTEXT -> MERGED_WORD -> TAG_TAIL
+  MERGED_WORD : ct[0:5] ‖ tag[0:11],  keep = all ones, eod = 0
+  TAG_TAIL    : tag[11:16],           keep = 5 ones,   eod = 1
+
+r = 16 (word-aligned): CIPHERTEXT -----------> TAG_TAIL
+  CIPHERTEXT  : ct[0:16] (forwarded immediately, unmerged), keep = all ones, eod = 0
+  TAG_TAIL    : tag[0:16],                                  keep = all ones, eod = 1
+```
+
+The `MERGED_WORD` hold is *not* gated on the tag being ready — it can't be:
 that beat and the copy `poly1305_mac` consumes to produce the tag are two
-ends of the same `axis128_2broadcast` interlock, so refusing it while
-waiting for the tag would deadlock the broadcast), merges `tag[0 : 16-r]`
-into its unused lanes in `MERGED_WORD`, then emits `tag[16-r : 16]` with
-`keep = r` as the true final beat in `TAG_TAIL`. A zero-kept final ciphertext
-beat (an empty payload, e.g. a WireGuard keepalive) skips straight to
-`TAG_TAIL`, emitting the whole tag as a single full-keep last word instead of
-merging into nothing — untested (see "Test Vectors" above), flagged as a
-follow-up.
+ends of the same `axis128_2broadcast` interlock, so the MAC cannot even see
+this word until this copy is accepted, and waiting for the tag first would
+deadlock the broadcast. So the hold is unconditional, and the wait that
+follows (`MERGED_WORD`/`TAG_TAIL` until `poly1305_mac`'s tag stream goes
+valid) is bounded below only by the MAC's own latency from "last block
+accepted" to "tag valid" — currently two `make_valid_ready_mcp` passes (the
+last ciphertext block, then the length block) plus final accumulation, and
+being reduced separately as part of the ongoing Poly1305 MAC optimisation.
+`append_auth_tag` already reacts the same cycle the tag goes valid, so this
+gap shrinks automatically as the MAC gets faster — it cannot be reduced
+further from inside this module, since the merged word cannot be emitted
+before the tag exists. In the limit of a single-cycle MAC, one cycle of gap
+remains: the cycle needed to recognize "this beat is the last one" and
+start the merge. A zero-kept final beat (empty payload) cannot occur in
+practice — the dwidth converters never emit a beat whose lane 0 is unkept —
+and is `sim_assert`-checked rather than special-cased.
 
-`strip_auth_tag.py` reassembles the tag from the *last two* input beats
-instead of reading it whole off one dedicated beat: the existing
-`axis128_early_tlast` one-word lookahead buffer already exposes exactly the
-two-beat visibility needed (the buffered candidate-output beat plus the raw
-incoming beat, same cycle). On the beat immediately preceding the true final
-beat (`next_axis_out_is_tlast`), its `keep` is truncated to `r` (dropping the
-packed-in tag bytes) and its data is latched into `prev_data_reg`; on the
-true final beat, the 16-byte tag is read out of a 32-byte `{prev_data_reg,
-this beat}` window starting at lane `r`. As a side effect, the *internal*
-decrypt ciphertext stream (into `chacha20`/`prep_auth_data`) is now
-Xilinx-style compliant too, which it was not before.
+**`strip_auth_tag.py`** reassembles the tag from the *last two* input beats
+instead of reading it whole off one dedicated beat, using the existing
+`axis128_early_tlast` one-word lookahead buffer (which already exposes the
+buffered candidate-output beat plus the raw incoming beat, same cycle):
+
+```
+                     |<----- prev_data_reg ------>|<--- this beat (wire) --->|
+final ct beat (r=5)  |  ct[0:5]  |   tag[0:11]     |
+tag-tail beat                                      | tag[11:16] |  (unkept)  |
+tag = window[r + i], i in [0,16), window = {prev_data_reg, this beat}, r = 5
+```
+
+The beat before the true final one has its `keep` truncated to `r` (its
+data latched into `prev_data_reg`), and reuses the *tag-tail* beat's own
+`keep` as-is rather than re-deriving it via `keep_count` + `count_to_keep`:
+that beat is sitting on `axis_in_if` this same cycle and, by construction,
+already carries exactly `r` kept lanes as a Xilinx-style prefix, so the
+round trip is an identity for it — skipping it keeps this fan-out (into
+`axis128_2broadcast`'s consumers, each of which recomputes its own
+keep_count downstream anyway) off a path that would otherwise stack two
+16-lane popcounts and a decode with no register between them. As a side
+effect, the *internal* decrypt ciphertext stream is now Xilinx-style
+compliant too, which it was not before.
 
 No changes were needed anywhere else in the crypto path — `prep_auth_data.py`
 already zeroed unkept lanes and counted keep bits (now always a

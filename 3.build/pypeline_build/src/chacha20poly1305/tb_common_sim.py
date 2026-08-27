@@ -27,16 +27,11 @@ PACKET_LEN_MIN = 1
 PACKET_LEN_MAX = 1024
 
 # The first len(CORNER_CASE_LENS) packets each run are pinned to these
-# lengths -- the same partial-final-word/block-boundary corner cases
-# tb_common.py's fixed test-string set was chosen to cover (see its
-# comment): 15 is one byte short of a full word (r=15, the packed ct||tag
-# framing's maximal-rotation case -- see issue #44 -- within a single beat);
-# 16 doubles as "exactly one word"; 17 is one word plus one byte; 31 is one
-# word plus 15 bytes (r=15 again, but spanning two beats); 64 is exactly one
-# ChaCha20 block; 128 is the old fixed-vector max and a multiple of both 16
-# and 64. The remaining packets are uniform-random over
-# [PACKET_LEN_MIN, PACKET_LEN_MAX], so every run is guaranteed to exercise
-# these boundaries at least once while still covering fresh random lengths.
+# lengths -- the same corner cases tb_common.py's PLAINTEXT_TEST_STRS
+# comment covers (15/31 pin r=15, see there and README's "Xilinx-style
+# tkeep" section): 16 is exactly one word, 17 is one word plus one byte, 64
+# is exactly one ChaCha20 block, 128 is the old fixed-vector max. Remaining
+# packets are uniform-random over [PACKET_LEN_MIN, PACKET_LEN_MAX].
 CORNER_CASE_LENS = [15, 16, 17, 31, 64, 128]
 
 # Fixed default seed (nod to RFC 8439) so a failing run's exact vectors are
