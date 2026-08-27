@@ -4,22 +4,11 @@
 time. For the non-synthesizable @sim_input/@sim_output variant (12
 on-the-fly random packets), see encrypt_tb.py.
 
-Pypeline port of ../pipelinec_build/src/chacha20poly1305/encrypt_tb.c.
-Streams the test plaintexts into the DUT wires (with exact tkeep, partial on
-the final word of each packet) and checks the ciphertext + auth tag stream
-coming out against the packed ct||tag frame (Xilinx-style AXIS, issue #44) --
-`byte_sink` compares the collected kept-byte sequence/length and separately
-asserts on every beat that `tkeep` is itself Xilinx-style compliant (full
-keep except a trailing-only partial `eod` beat; see
-`make_axis_byte_sink`'s docstring) -- printing "ERROR: ..." on any data
-mismatch, raising `sim_assert` on a `tkeep` violation, and "Encrypt: Test N
-DONE!" per passing packet.
-
-The per-lane keep/eod/shift-register bookkeeping this testbench used to
-hand-roll is now the shared `make_axis_byte_source`/`make_axis_byte_sink`
-testbench library (see PipelineC's include/pypeline/axi/axis.py) -- only the
-genuinely wireguard-specific bits (which test string is loaded, matching the
-expected ciphertext+tag, is_verified reporting) remain here.
+Pypeline port of ../pipelinec_build/src/chacha20poly1305/encrypt_tb.c. Uses
+the shared `make_axis_byte_source`/`make_axis_byte_sink` testbench library
+(PipelineC's include/pypeline/axi/axis.py -- see its docstrings for what
+`byte_sink` checks) -- only the wireguard-specific bits (test vectors,
+expected ciphertext+tag, is_verified reporting) live here.
 """
 import wireguard_env  # noqa: F401
 
@@ -66,14 +55,10 @@ from tb_common import (
     CIPHERTEXT_LENS,
 )
 
-# Ciphertext + the auth tag, packed contiguously as one continuous frame --
-# matches exactly what the DUT emits (Xilinx-style AXIS, issue #44: the tag's
-# head bytes are merged into the ciphertext's true final beat, the rest form
-# a trailing-only partial last beat -- byte_sink's kept-byte comparison here
-# doesn't see the beat split, only the packed bytes). EXPECTED_CIPHERTEXTS
-# entries are themselves already zero-padded out to CIPHERTEXT_MAX_SIZE (see
-# tb_common.py), so the real length must come from CIPHERTEXT_LENS, not
-# len(ct) (always CIPHERTEXT_MAX_SIZE).
+# Ciphertext + tag, packed contiguously as one frame (Xilinx-style AXIS,
+# issue #44 -- see README). EXPECTED_CIPHERTEXTS entries are already
+# zero-padded to CIPHERTEXT_MAX_SIZE, so the real length must come from
+# CIPHERTEXT_LENS, not len(ct).
 OUT_FRAME_MAX_SIZE = CIPHERTEXT_MAX_SIZE + POLY1305_AUTH_TAG_SIZE
 EXPECTED_OUT_FRAMES = [
     (ct[:ct_len] + tag) + [0] * (OUT_FRAME_MAX_SIZE - ct_len - len(tag))
