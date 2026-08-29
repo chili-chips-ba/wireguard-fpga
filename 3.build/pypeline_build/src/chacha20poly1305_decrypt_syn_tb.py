@@ -1,6 +1,6 @@
 # pyright: reportInvalidTypeForm=none
 """Simulation top for the standalone decrypt design + its synthesizable-style
-testbench (fixed 8-string vectors baked into hardware register arrays at
+testbench (fixed 10-string vectors baked into hardware register arrays at
 elaboration time). For the non-synthesizable @sim_input/@sim_output variant
 (on-the-fly random vectors), see chacha20poly1305_decrypt_tb.py.
 
