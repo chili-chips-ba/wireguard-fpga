@@ -12,7 +12,7 @@ from pypeline import uint1_t, uint8_t, make_uint_t
 from kept_data_bus import make_kept_data_bus_t
 from ndarray import make_ndarray_fragment_t
 from stream.stream import make_stream_interface
-from axi.axis import make_keep_count, make_axis_broadcast_interlock
+from axi.axis import make_keep_count, make_count_to_keep, make_axis_broadcast_interlock
 
 # ChaCha20 sizes
 CHACHA20_STATE_NWORDS = 16
@@ -55,6 +55,13 @@ uint1_stream_intrf = make_stream_interface(uint1_t)
 
 # C axis128_keep_count
 axis128_keep_count = make_keep_count(axis128_bus_t, 16)
+axis128_keep_count_t = make_uint_t((16).bit_length())  # matches make_keep_count's count_t
+
+# Inverse of axis128_keep_count: lane count -> thermometer-coded keep[16]
+# (lanes [0, count) asserted). Used by append_auth_tag/strip_auth_tag to
+# derive tkeep for the auth-tag beats of a Xilinx-style packed ct||tag frame
+# (issue #44 -- no mid-packet null bytes).
+axis128_count_to_keep = make_count_to_keep(16)
 
 # Combinational 2-way broadcast/fork of an axis128 stream (shared by the
 # encrypt/decrypt dataflows' ciphertext-stream forks). `axis_out` is an array
