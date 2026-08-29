@@ -1,10 +1,10 @@
 # pyright: reportInvalidTypeForm=none
 """Non-synthesizable testbench for the standalone decrypt design: generates
-10 random-length (1-1024 byte) packets on the fly (ciphertext+tag streamed
-in, plaintext + is_verified_out checked at the output), plus an 11th
+12 random-length (1-1024 byte) packets on the fly (ciphertext+tag streamed
+in, plaintext + is_verified_out checked at the output), plus a 13th
 tampered-tag negative packet (a valid packet with one tag bit flipped after
 generation -- DUT must still emit the plaintext but with is_verified_out
-low). For the synthesizable-style variant (fixed 8-string vectors + 1 fixed
+low). For the synthesizable-style variant (fixed 10-string vectors + 1 fixed
 tampered-tag packet), see decrypt_syn_tb.py.
 
 Only runs under Pypeline's native --sim mode: @sim_input/@sim_output calls
@@ -107,15 +107,10 @@ def drive_in_word() -> axis128_intrf.stream_t:
         _scoreboard.expect(
             pkt["plaintext"], idx=idx, expected_verified=pkt["expected_verified"]
         )
-        # The auth tag must always start on a fresh beat, never merged into a
-        # partial final ciphertext beat -- pad the ciphertext up to the lane
-        # width first, marking the padding not-kept via keep_mask (see
-        # make_axis_byte_source's use_keep_mask docstring for why).
-        ciphertext = pkt["ciphertext"]
-        pad_len = (-len(ciphertext)) % 16
-        frame = ciphertext + bytes(pad_len) + pkt["tag"]
-        keep_mask = [1] * len(ciphertext) + [0] * pad_len + [1] * len(pkt["tag"])
-        _src.send(frame, keep_mask=keep_mask)
+        # Xilinx-style packed AXIS framing (issue #44): the tag immediately
+        # follows the ciphertext bytes, no padding gap -- AxisSimSource
+        # derives keep as a plain trailing-only partial final beat.
+        _src.send(pkt["ciphertext"] + pkt["tag"])
         _dec_state["in_packet_idx"] += 1
 
     # axis_in_ready is Reg-driven downstream (buffer-occupancy-based, not a
