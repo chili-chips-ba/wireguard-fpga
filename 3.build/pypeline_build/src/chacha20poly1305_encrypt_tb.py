@@ -1,7 +1,7 @@
 # pyright: reportInvalidTypeForm=none
 """Simulation top for the standalone encrypt design + its non-synthesizable
 testbench (@sim_input/@sim_output, 10 on-the-fly random packets). For the
-synthesizable-style variant (fixed 8-string vectors), see
+synthesizable-style variant (fixed 10-string vectors), see
 chacha20poly1305_encrypt_syn_tb.py.
 
 Only runs under native --sim (no cocotb/GHDL, no real autopipelining):
