@@ -12,6 +12,10 @@ synthesizable-style testbench (fixed vectors, compiles through cocotb/GHDL or
 real hardware) and a non-synthesizable testbench (`@sim_input`/`@sim_output`,
 on-the-fly random vectors, native sim only) — see "Testbench Styles" below.
 
+<p align="center">
+  <img width="90%" src="0.doc/Sims-Illustrated---Starring-Pypeline.png" alt="Pypeline native sim: Python HDL, cycle-exact sim engine, silicon-verified">
+</p>
+
 ## Build Commands
 
 The `$PYPELINEC` environment variable must point to the PipelineC executable

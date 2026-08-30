@@ -1,0 +1,158 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="24.0.0">
+  <diagram name="Pypeline Sim Illustrated" id="pypeline-sim-illustrated">
+    <mxGraphModel dx="1460" dy="800" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1460" pageHeight="800" math="0" shadow="0" background="#0b0f14">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- background -->
+        <mxCell id="bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#0b0f14;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="1460" height="800" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== PANEL A: Python / Pypeline ===================== -->
+        <mxCell id="panelA" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#29b6f6;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="420" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="pillA" value="Python / Pypeline" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#29b6f6;strokeColor=none;fontColor=#0b0f14;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="130" y="37" width="240" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="codeWin" value="" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#11161c;strokeColor=#30363d;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="60" y="140" width="380" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="codeDots" value="&lt;font color=&quot;#ff5f56&quot;&gt;&amp;#9679;&lt;/font&gt; &lt;font color=&quot;#ffbd2e&quot;&gt;&amp;#9679;&lt;/font&gt; &lt;font color=&quot;#27c93f&quot;&gt;&amp;#9679;&lt;/font&gt;&amp;nbsp;&amp;nbsp;&lt;font color=&quot;#8b949e&quot;&gt;chacha20.py&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Consolas;fontSize=13;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="140" width="380" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="codeBody" value="&lt;font color=&quot;#d2a8ff&quot;&gt;@hw_func&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#ff7b72&quot;&gt;def&lt;/font&gt; &lt;font color=&quot;#d2a8ff&quot;&gt;quarter_round&lt;/font&gt;(s):&lt;br&gt;&amp;nbsp;&amp;nbsp;a = s[0] + s[4]&lt;br&gt;&amp;nbsp;&amp;nbsp;d = rotl(s[12] ^ a, 16)&lt;br&gt;&amp;nbsp;&amp;nbsp;c = s[8] + d&lt;br&gt;&amp;nbsp;&amp;nbsp;b = rotl(s[4] ^ c, 12)&lt;br&gt;&amp;nbsp;&amp;nbsp;&lt;font color=&quot;#ff7b72&quot;&gt;return&lt;/font&gt; [a, b, c, d]" style="text;html=1;align=left;verticalAlign=top;fontFamily=Consolas;fontSize=13;fontColor=#c9d1d9;spacingLeft=14;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="170" width="380" height="190" as="geometry" />
+        </mxCell>
+
+        <mxCell id="snakeIcon" value="&amp;#128013;" style="text;html=1;align=center;verticalAlign=middle;fontSize=40;" vertex="1" parent="1">
+          <mxGeometry x="60" y="390" width="380" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="algoHdl" value="ALGORITHMIC HDL" style="text;html=1;align=center;verticalAlign=middle;fontColor=#29b6f6;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="450" width="380" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- arrow A -> B -->
+        <mxCell id="arrowAB" value="" style="endArrow=block;endFill=1;html=1;strokeColor=#29b6f6;strokeWidth=6;rounded=0;fontColor=#29b6f6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="320" as="sourcePoint" />
+            <mxPoint x="518" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===================== PANEL B: Pypeline Sim Engine ===================== -->
+        <mxCell id="panelB" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#b57bee;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="520" y="60" width="420" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="pillB" value="Pypeline Sim Engine" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#b57bee;strokeColor=none;fontColor=#0b0f14;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="600" y="37" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="latencyPanel" value="" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7c4dff;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="540" y="110" width="380" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="latencyTitle" value="CYCLE-ACCURATE LATENCY" style="text;html=1;align=center;verticalAlign=middle;fontColor=#c792ea;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="540" y="120" width="380" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stage0" value="Stage 0&lt;br&gt;&lt;font color=&quot;#8b949e&quot; style=&quot;font-weight:normal&quot;&gt;Reg D&amp;#8594;Q&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#241b36;strokeColor=#7c4dff;fontColor=#e6d9ff;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="560" y="170" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="stageArrow1" value="" style="endArrow=block;endFill=1;html=1;strokeColor=#b57bee;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="660" y="200" as="sourcePoint" />
+            <mxPoint x="686" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="stage1" value="Stage 1&lt;br&gt;&lt;font color=&quot;#8b949e&quot; style=&quot;font-weight:normal&quot;&gt;Pipelined&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#241b36;strokeColor=#7c4dff;fontColor=#e6d9ff;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="686" y="170" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="stageArrow2" value="" style="endArrow=block;endFill=1;html=1;strokeColor=#b57bee;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="786" y="200" as="sourcePoint" />
+            <mxPoint x="812" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="stageN" value="Stage N&lt;br&gt;&lt;font color=&quot;#8b949e&quot; style=&quot;font-weight:normal&quot;&gt;Output&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#241b36;strokeColor=#7c4dff;fontColor=#e6d9ff;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="812" y="170" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="clkLabel" value="CLK  &amp;#9196;&amp;#175;|_|&amp;#175;|_|&amp;#175;|_" style="text;html=1;align=center;verticalAlign=middle;fontColor=#c792ea;fontFamily=Consolas;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="540" y="255" width="380" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="clkCaption" value="Step-by-step register clocking" style="text;html=1;align=center;verticalAlign=middle;fontColor=#8b949e;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="285" width="380" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="zeroLagBox" value="&lt;font color=&quot;#e6d9ff&quot; style=&quot;font-weight:bold&quot;&gt;&amp;#9889; Zero Compilation Lag&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#8b949e&quot;&gt;Direct in-memory Python execution&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#1c1330;strokeColor=#7c4dff;align=center;verticalAlign=middle;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="540" y="360" width="380" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- arrow B -> C -->
+        <mxCell id="arrowBC" value="" style="endArrow=block;endFill=1;html=1;strokeColor=#b57bee;strokeWidth=6;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="940" y="320" as="sourcePoint" />
+            <mxPoint x="998" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===================== PANEL C: Interactive Verification ===================== -->
+        <mxCell id="panelC" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#2ecc71;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="60" width="420" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="pillC" value="Interactive Verification" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#2ecc71;strokeColor=none;fontColor=#0b0f14;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="37" width="280" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="checkPanel" value="" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#0f2818;strokeColor=#2ecc71;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="110" width="380" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="checkGlyph" value="&amp;#10003;" style="text;html=1;align=center;verticalAlign=middle;fontColor=#3ddc84;fontSize=48;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="140" width="380" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="checkTitle" value="BIT- &amp;amp; CYCLE-EXACT" style="text;html=1;align=center;verticalAlign=middle;fontColor=#ffffff;fontStyle=1;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="215" width="380" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="checkSub" value="Live Golden Assertion" style="text;html=1;align=center;verticalAlign=middle;fontColor=#8b949e;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="248" width="380" height="26" as="geometry" />
+        </mxCell>
+
+        <mxCell id="debugBox" value="&lt;font color=&quot;#dcedd6&quot; style=&quot;font-weight:bold&quot;&gt;&amp;#128269; Native Python Debugging&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#8b949e&quot;&gt;pdb breakpoints &amp;amp; print() inspection&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#0f2818;strokeColor=#2ecc71;align=center;verticalAlign=middle;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="360" width="380" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BOTTOM: Python Ecosystem band ===================== -->
+        <mxCell id="ecoBand" value="THE PYTHON ECOSYSTEM" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#3a4048;dashed=1;verticalAlign=top;align=center;fontColor=#8b949e;fontStyle=1;fontSize=13;spacingTop=14;" vertex="1" parent="1">
+          <mxGeometry x="20" y="610" width="1420" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ecoBox1" value="NumPy / SciPy&lt;br&gt;&lt;font color=&quot;#8b949e&quot; style=&quot;font-weight:normal&quot;&gt;Test Vectors&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#11161c;strokeColor=#30363d;fontColor=#ffffff;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="660" width="380" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ecoBox2" value="Cryptography&lt;br&gt;&lt;font color=&quot;#8b949e&quot; style=&quot;font-weight:normal&quot;&gt;Golden Specs&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#11161c;strokeColor=#30363d;fontColor=#ffffff;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="540" y="660" width="380" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ecoBox3" value="Matplotlib&lt;br&gt;&lt;font color=&quot;#8b949e&quot; style=&quot;font-weight:normal&quot;&gt;Wave Visualizer&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#11161c;strokeColor=#30363d;fontColor=#ffffff;fontStyle=1;fontSize=14;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="660" width="380" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stimulusArrow" value="Stimulus" style="endArrow=block;startArrow=block;endFill=1;startFill=1;html=1;strokeColor=#29b6f6;fontColor=#29b6f6;dashed=1;fontSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="660" as="sourcePoint" />
+            <mxPoint x="250" y="582" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="analysisArrow" value="Analysis" style="endArrow=block;startArrow=block;endFill=1;startFill=1;html=1;strokeColor=#2ecc71;fontColor=#2ecc71;dashed=1;fontSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1190" y="660" as="sourcePoint" />
+            <mxPoint x="1190" y="582" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
