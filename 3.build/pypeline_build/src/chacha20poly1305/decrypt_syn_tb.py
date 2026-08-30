@@ -1,31 +1,18 @@
 # pyright: reportInvalidTypeForm=none
 """Synthesizable-style testbench for the standalone decrypt design: fixed
-8-string test vectors baked into hardware register arrays at elaboration
-time. For the non-synthesizable @sim_input/@sim_output variant (10 + 1
+10-string test vectors baked into hardware register arrays at elaboration
+time. For the non-synthesizable @sim_input/@sim_output variant (12 + 1
 on-the-fly random packets), see decrypt_tb.py.
 
-Pypeline port of ../pipelinec_build/src/chacha20poly1305/decrypt_tb.c.
-Streams the test ciphertext+tag packets into the DUT wires exactly as the
-encrypt side frames them — ciphertext words with exact tkeep (partial on the
-final word of an odd-length ciphertext, never eod) followed by the auth tag
-as its own full 16-byte word carrying eod — and checks the plaintext stream
-coming out (data bytes, the exact per-lane keep pattern, packet framing, and
-the is_verified_out flag), printing "ERROR: ..." on any mismatch and
-"Decrypt: Test N DONE!" per passing packet.
+Pypeline port of ../pipelinec_build/src/chacha20poly1305/decrypt_tb.c. Input
+frames ciphertext+tag Xilinx-style packed (issue #44 -- see README), and
+uses the shared `make_axis_byte_source`/`make_axis_byte_sink` testbench
+library (PipelineC's include/pypeline/axi/axis.py) plus its own
+is_verified_out check -- only the wireguard-specific bits live here.
 
 The final packet is a negative test: test string 0's ciphertext replayed
 with a corrupted tag (tb_common.TAMPERED_TAG). The DUT must still emit that
 packet's plaintext but with is_verified_out low.
-
-The per-lane keep/eod/shift-register bookkeeping this testbench used to
-hand-roll is now the shared `make_axis_byte_source`/`make_axis_byte_sink`
-testbench library (see PipelineC's include/pypeline/axi/axis.py) -- only the
-genuinely wireguard-specific bits (which test string is loaded, matching the
-expected plaintext, is_verified reporting) remain here. The auth tag must
-always start on a fresh beat (never merged into a partial final ciphertext
-beat), so a non-block-aligned ciphertext is padded up to the lane width
-first, with `byte_source`'s `use_keep_mask=True` marking the real ciphertext
-bytes (and the tag) as kept and the padding bytes as not-kept.
 """
 import wireguard_env  # noqa: F401
 
@@ -80,51 +67,28 @@ from tb_common import (
 NUM_PACKETS = NUM_PLAINTEXT_TEST_STRS + 1
 PLAINTEXT_MAX_SIZE = PLAINTEXT_TEST_STR_MAX_SIZE
 
-# Input frame = ciphertext bytes, padded up to the lane width so the auth tag
-# always starts on a fresh beat (never merged into ciphertext's partial final
-# beat), + the 16-byte tag. The keep mask marks the real ciphertext bytes and
-# the tag as kept, the padding as not-kept -- see make_axis_byte_source's
-# use_keep_mask docstring.
+# Input frame = ciphertext bytes immediately followed by the 16-byte tag --
+# Xilinx-style packed AXIS (issue #44), no padding gap; byte_source derives
+# keep as a plain trailing-only partial final beat.
 LANE_WIDTH = 16
 IN_FRAME_MAX_SIZE = CIPHERTEXT_MAX_SIZE + POLY1305_AUTH_TAG_SIZE
 _INPUT_CIPHERTEXTS = EXPECTED_CIPHERTEXTS + [EXPECTED_CIPHERTEXTS[0]]
 _INPUT_TAGS = EXPECTED_TAGS + [TAMPERED_TAG]
 _INPUT_CIPHERTEXT_LENS = CIPHERTEXT_LENS + [CIPHERTEXT_LENS[0]]
 
-
-def _round_up(n, to):
-    return ((n + to - 1) // to) * to
-
-
 INPUT_FRAMES = []
-INPUT_KEEP_MASKS = []
 INPUT_FRAME_LENS = []
 for _ct, _tag, _ct_len in zip(_INPUT_CIPHERTEXTS, _INPUT_TAGS, _INPUT_CIPHERTEXT_LENS):
-    _padded_ct_len = _round_up(_ct_len, LANE_WIDTH)
-    _total_len = _padded_ct_len + POLY1305_AUTH_TAG_SIZE
-    _frame = (
-        _ct[:_ct_len]
-        + [0] * (_padded_ct_len - _ct_len)
-        + _tag
-        + [0] * (IN_FRAME_MAX_SIZE - _total_len)
-    )
-    _mask = (
-        [1] * _ct_len
-        + [0] * (_padded_ct_len - _ct_len)
-        + [1] * POLY1305_AUTH_TAG_SIZE
-        + [0] * (IN_FRAME_MAX_SIZE - _total_len)
-    )
+    _total_len = _ct_len + POLY1305_AUTH_TAG_SIZE
+    _frame = _ct[:_ct_len] + _tag + [0] * (IN_FRAME_MAX_SIZE - _total_len)
     INPUT_FRAMES.append(_frame)
-    INPUT_KEEP_MASKS.append(_mask)
     INPUT_FRAME_LENS.append(_total_len)
 
 EXPECTED_PLAINTEXTS = PLAINTEXTS + [PLAINTEXTS[0]]
 EXPECTED_PLAINTEXT_LENS = PLAINTEXT_LENS + [PLAINTEXT_LENS[0]]
 EXPECTED_VERIFIED = [1] * NUM_PLAINTEXT_TEST_STRS + [0]
 
-byte_source, byte_source_t = make_axis_byte_source(
-    axis128_intrf, LANE_WIDTH, IN_FRAME_MAX_SIZE, use_keep_mask=True
-)
+byte_source, byte_source_t = make_axis_byte_source(axis128_intrf, LANE_WIDTH, IN_FRAME_MAX_SIZE)
 byte_sink, byte_sink_t = make_axis_byte_sink(axis128_intrf, 16, PLAINTEXT_MAX_SIZE)
 
 
@@ -143,7 +107,6 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
     aad: uint8_t[AAD_MAX_LEN] = AAD
     input_frames: uint8_t[NUM_PACKETS][IN_FRAME_MAX_SIZE] = INPUT_FRAMES
     input_frame_lens: uint32_t[NUM_PACKETS] = INPUT_FRAME_LENS
-    input_keep_masks: uint1_t[NUM_PACKETS][IN_FRAME_MAX_SIZE] = INPUT_KEEP_MASKS
     expected_plaintexts: uint8_t[NUM_PACKETS][PLAINTEXT_MAX_SIZE] = (
         EXPECTED_PLAINTEXTS
     )
@@ -184,7 +147,6 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
         load=~input_loaded,
         load_data=input_frames[input_packet_count],
         load_len=input_frame_lens[input_packet_count],
-        load_keep_mask=input_keep_masks[input_packet_count],
         stream_out_if=axis128_intrf.fb_t(dut_in_ready),
     )
     if ~input_loaded:

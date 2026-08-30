@@ -24,6 +24,11 @@ PLAINTEXT_TEST_STR_MAX_SIZE = 128
 # shorter than one 16-byte AXIS word (3), exactly one word (16), one word
 # plus one byte (17), mid-word endings (56, 71, 58), exactly one 64-byte
 # ChaCha20 block (64), and the 128-byte max (a multiple of both 16 and 64).
+# 15 and 79 additionally pin r=15 (the packed ct||tag framing's maximal-
+# rotation case: only 1 tag byte merged into the ciphertext's final beat, 15
+# in the true final tag-only beat -- see issue #44 / README's "Xilinx-style
+# tkeep" section), the first within a single beat, the second spanning past a
+# 64-byte ChaCha20 block boundary.
 PLAINTEXT_TEST_STRS = [
     "Hello CHILIChips - Wireguard team, let's test this aead!",
     "PipelineC is the best HDL around :) Let's go CHILIChips Wireguard team!",
@@ -34,10 +39,12 @@ PLAINTEXT_TEST_STRS = [
     "One full sixty four byte ChaCha20 block exactly, nothing more!!!",
     "This one hundred twenty eight byte maximum size test string covers"
     " exactly two full sixty four byte ChaCha20 blocks of data!!!!!",
+    "Fifteen bytes!!",
+    "Seventy nine byte string spanning past one ChaCha20 block boundary exactly!!!!!",
 ]
 NUM_PLAINTEXT_TEST_STRS = len(PLAINTEXT_TEST_STRS)
 PLAINTEXT_LENS = [len(s) for s in PLAINTEXT_TEST_STRS]
-assert PLAINTEXT_LENS == [56, 71, 58, 3, 16, 17, 64, 128]
+assert PLAINTEXT_LENS == [56, 71, 58, 3, 16, 17, 64, 128, 15, 79]
 assert all(0 < n <= PLAINTEXT_TEST_STR_MAX_SIZE for n in PLAINTEXT_LENS)
 PLAINTEXTS = [
     list(s.encode()) + [0] * (PLAINTEXT_TEST_STR_MAX_SIZE - len(s))
@@ -45,10 +52,12 @@ PLAINTEXTS = [
 ]
 
 # Expected DUT output, generated on the fly per RFC 8439 (see
-# aead_ref_model.py): the ciphertext is exactly as long as the plaintext (the
-# final AXIS word carries a partial keep when the length is not a multiple of
-# 16), and the auth tag is a separate full 16-byte word the DUT appends after
-# the final ciphertext word.
+# aead_ref_model.py): the ciphertext is exactly as long as the plaintext, and
+# the auth tag is packed contiguously right after it (Xilinx-style AXIS
+# framing, issue #44) -- the DUT's actual keep/eod split of that packed
+# ct||tag frame across beats is exercised by encrypt_syn_tb.py/
+# decrypt_syn_tb.py, not represented here (see their own
+# EXPECTED_OUT_FRAMES/INPUT_FRAMES construction).
 POLY1305_AUTH_TAG_SIZE = 16
 CIPHERTEXT_MAX_SIZE = PLAINTEXT_TEST_STR_MAX_SIZE
 

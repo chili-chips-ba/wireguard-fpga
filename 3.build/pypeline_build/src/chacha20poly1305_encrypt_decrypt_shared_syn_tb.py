@@ -1,6 +1,6 @@
 # pyright: reportInvalidTypeForm=none
 """Simulation top for the shared encrypt+decrypt design — both the encrypt
-and decrypt side synthesizable-style testbenches (fixed 8-string vectors
+and decrypt side synthesizable-style testbenches (fixed 10-string vectors
 baked into hardware register arrays at elaboration time) running at the same
 time against the design sharing one ChaCha20 compute pipeline. For the
 non-synthesizable @sim_input/@sim_output variant (on-the-fly random
@@ -30,7 +30,7 @@ import decrypt_syn_tb  # noqa: F401
 
 # Both encrypt_syn_tb() and decrypt_syn_tb() run concurrently in this build, each
 # only signaling completion via its own Wire (not calling sim_finish() itself --
-# see encrypt_syn_tb.py/decrypt_syn_tb.py). Encrypt has 8 packets, decrypt has 9,
+# see encrypt_syn_tb.py/decrypt_syn_tb.py). Encrypt has 10 packets, decrypt has 11,
 # so they don't finish at the same time -- only stop the whole simulation once
 # BOTH are done, or decrypt's remaining checks would be silently skipped.
 #
