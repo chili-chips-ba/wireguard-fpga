@@ -13,7 +13,8 @@ real hardware) and a non-synthesizable testbench (`@sim_input`/`@sim_output`,
 on-the-fly random vectors, native sim only) — see "Testbench Styles" below.
 
 <p align="center">
-  <img width="90%" src="0.doc/Sims-Illustrated---Starring-Pypeline.png" alt="Pypeline native sim: Python HDL, cycle-exact sim engine, silicon-verified">
+  <img width="90%" src="0.doc/wireguard-pypeline-sim-light.png"
+   alt="Pypeline native sim: Python HDL, cycle-exact sim engine, silicon-verified">
 </p>
 
 ## Build Commands
