@@ -165,40 +165,64 @@ The single-stream bottleneck is eliminated by replacing the multi-cycle path (MC
 
 ---
 
-**Two-Part MAC FSM Architecture**
+## **1. Prologue (Setup before message beats)**
+
+* **Key Derivation:** ChaCha20 counter 0 produces a 32-byte keystream block, parsed and clamped into:
+  * $r$ (clamped 128-bit key)
+  * $s$ (128-bit additive tag key)
+
+
+* **Power Computation (mod $p = 2^{130}-5$):** Compute and latch the set of powers up to $r^L$:
+  * $r^2 = (r \cdot r) \pmod p$
+  * $r^3 = (r^2 \cdot r) \pmod p$
+  * $r^4 = (r^2 \cdot r^2) \pmod p \quad (\text{or } r^L \text{ for general } L)$
+  * *Purpose:* $r^L$ serves as the constant stride multiplier during streaming; $r^1 \dots r^L$ are retained for the epilogue.
+
+
+* **Accumulator Reset:** Initialize all $L$ lane accumulators to zero:
+
+
+
+## **2. Streaming Message Loop (1 block/cycle, $\text{II} = 1$) Two-Part MAC FSM Architecture**
 The FSM decouples into two concurrent, pipelined processes:
 
 * **Input Dispatch (Round-Robin):**
-* Incoming 16-byte message blocks ($c_i$) are dispatched round-robin across $L$ independent accumulator registers ($A_0, \dots, A_{L-1}$).
-* Every cycle, the active lane launches its tuple $(A_j, r^L, c_i)$ into `compute_pipeline`. All lanes step by the stride factor $r^L$ rather than $r$.
-* Multiple independent block computations remain in flight simultaneously, saturating the pipeline.
+  * Incoming 16-byte message blocks ($c_i$) are dispatched round-robin across $L$ independent accumulator registers ($A_0, \dots, A_{L-1}$).
+  * Every cycle, the active lane launches its tuple $(A_j, r^L, c_i)$ into `compute_pipeline`. All lanes step by the stride factor $r^L$ rather than $r$.
+  * Multiple independent block computations remain in flight simultaneously, saturating the pipeline.
 
 
 * **Output Writeback (Round-Robin):**
-* As updated accumulators emerge $D$ cycles later, an output round-robin tracker retires each $A_{j,\text{next}}$ into its designated accumulator register.
+  * As updated accumulators emerge $D$ cycles later, an output round-robin tracker retires each $A_{j,\text{next}}$ into its designated accumulator register.
+
 * **Timing Constraint:** Sizing $L \ge D$ guarantees that by the time Lane 0 is scheduled to ingest block $c_L$, its previous update from block $c_0$ has already retired—achieving bubble-free, stall-free operation.
 
 
 
 ---
 
-**End-of-Packet Finalization**
+## **3. Epilogue (Finalization after last beat)**
 Because the strided lanes compute independent partial polynomials, combining them at packet boundaries requires a **weighted sum**:
 
+### **Weighted Combine:** Fold all $L$ partial polynomial accumulators using the precomputed powers:
 
-$$a = \sum_{j=0}^{L-1} \left(A_j \cdot r^{L-j}\right) \pmod{2^{130}-5}$$
+$$a = \left(\sum_{j=0}^{L-1} A_j \cdot r^{L-j}\right) \pmod{2^{130}-5}$$
 
 Two approaches can handle this end-of-packet combine:
 
 1. **Pipeline Reuse (Area-Optimized):** Re-route the $L$ accumulator registers through `compute_pipeline` over $L$ consecutive cycles using $c=0$ and the precomputed weights $r^{L-j}$.
 2. **Dedicated Combine Tree (Throughput-Optimized):** Implement a dedicated pipelined multiplier/adder tree running in parallel to drain the packet without reconfiguring the main pipeline inputs.
 
-**Final Tag Addition ($+ s$):**
+
+### **Final Tag Addition:** Truncate to 128 bits and add key $s$:
+
+$$\text{tag} = (a \bmod 2^{128} + s) \bmod 2^{128}$$
+
 Just like the original design's `A_PLUS_S` state, the final 128-bit key addition $(a + s) \bmod 2^{128}$ must be applied. This can be kept as a standalone terminal state or folded directly into the final reduction stage of the weighted combine before presenting the result on `auth_tag_if`.
 
 ---
 
-### References:
+# References:
 
 [1] Improve chacha poly per-packet overhead [Issue39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39)
 
