@@ -97,4 +97,6 @@ Just like the original design's `A_PLUS_S` state, the final 128-bit key addition
 
 ### References:
 
-[1] -- Improve chacha poly per-packet overhead [Issue39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39)
+[1] Improve chacha poly per-packet overhead [Issue39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39)
+
+[2] [Illustration](https://share.gemini.google/dCzLp7lhYqaR) of the algorithm
