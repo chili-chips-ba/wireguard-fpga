@@ -92,3 +92,9 @@ Two approaches can handle this end-of-packet combine:
 
 **Final Tag Addition ($+ s$):**
 Just like the original design's `A_PLUS_S` state, the final 128-bit key addition $(a + s) \bmod 2^{128}$ must be applied. This can be kept as a standalone terminal state or folded directly into the final reduction stage of the weighted combine before presenting the result on `auth_tag_if`.
+
+---
+
+### References:
+
+[1] -- Improve chacha poly per-packet overhead [Issue39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39)
