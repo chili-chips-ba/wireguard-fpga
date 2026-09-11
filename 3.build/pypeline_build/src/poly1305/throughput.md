@@ -208,17 +208,90 @@ Because the strided lanes compute independent partial polynomials, combining the
 
 $$a = \left(\sum_{j=0}^{L-1} A_j \cdot r^{L-j}\right) \pmod{2^{130}-5}$$
 
-Two approaches can handle this end-of-packet combine:
-
-1. **Pipeline Reuse (Area-Optimized):** Re-route the $L$ accumulator registers through `compute_pipeline` over $L$ consecutive cycles using $c=0$ and the precomputed weights $r^{L-j}$.
-2. **Dedicated Combine Tree (Throughput-Optimized):** Implement a dedicated pipelined multiplier/adder tree running in parallel to drain the packet without reconfiguring the main pipeline inputs.
-
-
 ### **Final Tag Addition:** Truncate to 128 bits and add key $s$:
 
 $$\text{tag} = (a \bmod 2^{128} + s) \bmod 2^{128}$$
 
-Just like the original design's `A_PLUS_S` state, the final 128-bit key addition $(a + s) \bmod 2^{128}$ must be applied. This can be kept as a standalone terminal state or folded directly into the final reduction stage of the weighted combine before presenting the result on `auth_tag_if`.
+Just like the original design's `A_PLUS_S` state, the final 128-bit key addition $(a + s) \bmod 2^{128}$ must be applied. 
+
+### Comparison of Combine Options ($L = 4, D \approx 4\text{--}5$)
+
+The choice of end-of-packet (EOP) combine architecture dictates the area ceiling of the entire crypto core and whether back-to-back packets incur inter-frame bubbles.
+
+| Architecture | Additional DSP48s | EOP Drain Latency | Inter-Packet Bubble | Fit / Feasibility |
+| --- | --- | --- | --- | --- |
+| **Option 1: Pipeline Reuse (Time-Multiplexed)** | **0** (Reuses `compute_pipeline`) | $2D + L \approx 12\text{--}14\text{ cycles}$ | $2D + L$ cycles (unless hidden) | **Best for Artix-7 (A35T/A100T)**; minimal area |
+| **Option 2: Dedicated Parallel Tree** | **+30 to +48** (3–4 full modular multipliers) | $D + \log_2 L \approx 6\text{--}7\text{ cycles}$ | **0 cycles** (pure streaming) | **Prohibitive on A35T**; burns 50–70% of total DSPs |
+| **Option 3: Dedicated Serial Multiplier** | **+10 to +16** (1 dedicated modular multiplier) | $D + L \cdot D \approx 20\text{--}24\text{ cycles}$ | **0 cycles** on main pipeline | Compromise if main pipe cannot be interrupted |
+
+---
+
+### Option 1: Pipeline Reuse (Area-Optimized)
+
+The $L$ accumulator registers are looped back into the main `compute_pipeline` over $L$ consecutive cycles with input block $c = 0$ and precomputed weights $r^{L-j}$.
+
+* **Latency:**
+1. **Pipeline Drain:** After the last block $c_{N-1}$ enters, wait $D$ cycles for all accumulators $A_0 \dots A_{L-1}$ to retire.
+2. **Injection:** Inject the $L$ combine tuples $(A_0, r^4, 0), (A_1, r^3, 0), \dots$ over $L$ consecutive cycles.
+3. **Output Accumulation:** As products emerge $D$ cycles later, sum them into a simple 130-bit modular accumulator.
+
+
+* **Total EOP Latency:** $2D + L$ cycles ($\approx 12\text{--}14\text{ cycles}$ at $D=4, L=4$).
+
+
+* **Throughput Impact:**
+* If the next packet is waiting to stream, the pipeline is blocked for ~12–14 cycles.
+* For a standard MTU packet (1420 bytes $\approx$ 89 blocks), a 13-cycle bubble reduces peak line throughput by **~12%** ($89 / (89 + 13) \approx 87\%$ of line rate).
+* For small packets (e.g., 64 bytes = 4 blocks), throughput drops by **~75%**.
+
+
+* **Area:** **0 additional multipliers**. Requires only input multiplexers on `to_compute_if` and a 130-bit adder on the output.
+
+---
+
+### Option 2: Dedicated Parallel Tree (Throughput-Optimized)
+
+$L$ dedicated modular multipliers compute all terms $A_j \cdot r^{L-j}$ simultaneously, feeding a 2-level adder tree.
+
+* **Latency:**
+* Wait $D$ cycles for the message loop to drain.
+* Multiply all lanes in parallel ($D_{\text{mult}} \approx 4\text{ cycles}$) and reduce through the adder tree ($2\text{ cycles}$).
+* **Total EOP Latency:** $D + 6 \approx 10\text{ cycles}$.
+
+
+* **Throughput Impact:**
+* **Zero inter-packet stall on the main datapath.** The moment block $c_{N-1}$ enters `compute_pipeline`, Packet $k+1$ can begin streaming immediately into the main pipeline.
+
+
+* **Area Penalty:**
+* A single 130-bit modular multiplier uses **10 to 16 DSP48E1 slices** on Xilinx 7-series (depending on whether Karatsuba or radix-$2^{26}$ decomposition is used).
+* Replicating this for 4 parallel paths requires **40 to 64 DSP48s** just for the combine block. On an Artix-7 35T (90 DSPs total), this will cause routing congestion or fit failures.
+
+---
+
+### Option 3: Dedicated Serial Multiplier / Horner Fold
+
+Instead of $L$ parallel multipliers, a single separate modular multiplier evaluates the accumulators via Horner's rule:
+
+
+$$a = \left(\left(\left(A_0 \cdot r + A_1\right) \cdot r + A_2\right) \cdot r + A_3\right) \cdot r \pmod p$$
+
+* **Area:** Exactly 1 dedicated modular multiplier (~10–16 DSPs).
+* **Throughput:** Zero stall on the main pipeline (Packet $k+1$ can start immediately).
+* **Latency:** High sequential latency ($L \times D \approx 16\text{--}20\text{ cycles}$), but runs entirely in the background while the next packet starts.
+
+
+### Final Tag Addition ($+ s$) Implementation
+
+* **Folded into Final Combine Reduction (Recommended):**
+* The final modular sum produces $a \pmod{2^{130}-5}$. The tag definition truncates to 128 bits: $(a[127:0] + s[127:0]) \bmod 2^{128}$.
+* Because this is a standard 128-bit adder without carry-out or feedback, it can be placed directly in the output register slice of the modular adder tree. It adds **0 additional clock cycles**.
+
+
+* **Standalone FSM State (`A_PLUS_S`):**
+* Adding a dedicated cycle mirrors the existing design's state machine. It is simpler to verify in isolation, costing exactly **1 clock cycle** of tag latency before asserting `auth_tag_if.valid`.
+
+
 
 ---
 
@@ -227,3 +300,6 @@ Just like the original design's `A_PLUS_S` state, the final 128-bit key addition
 [1] Improve chacha poly per-packet overhead [Issue39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39)
 
 [2] [Illustration](https://share.gemini.google/dCzLp7lhYqaR) of the algorithm
+
+
+
