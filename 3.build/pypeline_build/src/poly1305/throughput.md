@@ -25,6 +25,8 @@
 
 One 16-byte block processed every ~5 cycles, stalling the stream while the unpipelined multi-cycle path settles.
 
+There is no start of packet prologue computation (`r` comes directly from `key`), and the epilogue is simply the `+ s` addition single cycle state inside FSM.
+
 # Intermediate Design: 
 
 Before collapsing the hardware into an interleaved pipeline, the parallelism can be understood as multple physical copies of the original multi-cycle engine running in parallel, with launches staggered by 1 cycle. (And uses a special final end of packet step to combine the multiple parallel accumulator results, discussed later).
@@ -70,42 +72,52 @@ Incoming 16B Blocks (1 beat/cycle):
 
 # New Design
 
-Schematic-style dataflow between blocks:
+Schematic-style dataflow between blocks: The FSM orchestrates use of the prologue MCP, body pipeline, and epilogue MCP.
 
 ```text
-                            key_if (r powers, s)
-                                     │
-                                     ▼
-             ┌─────────────────────────────────────────────────┐
-             │              new_poly1305_mac_fsm               │
-             │                                                 │
-             │  Registers:                                     │
-             │    • A_0 … A_{L-1} (L accumulators)             │
-             │    • r^L (loop step), r^1…r^L (combine), s      │
-             │                                                 │
-  data_in_if │  Input Dispatch:               Output Writeback:│ auth_tag_if
-  ──────────►│    Round-robin select            Round-robin    ├────────────►
-             │    (c_i -> lane j)               retire to A_j  │
-             │                                                 │
-             │  End-of-Packet Combine:                         │
-             │    1. Weighted combine: ∑ (A_j · r^{L-j}) mod p │
-             │    2. Final tag add: (a + s) mod 2^128          │
-             └───────┬─────────────────────────────────▲───────┘
-                     │                                 │
-          to_compute │                                 │ from_compute
-      (A_j, r^L, c_i)│                                 │ (A_j_next)
-                     ▼                                 │
-             ┌─────────────────────────────────────────┴───────┐
-             │                compute_pipeline                 │
-             │        (autopipelined, II = 1, D stages)        │
-             │   [ multiple (A_j, r^L, c_i) beats in flight ]  │
-             └─────────────────────────────────────────────────┘
+key_if (r, s)
+                                                       │
+                                                       ▼
+           ┌───────────────────────────────────────────┬───────────────────────────────────────────┐
+           │                                 new_poly1305_mac_fsm                                  │
+           │                                                                                       │
+           │  Registers:                                                                           │
+           │    • A_0 … A_{L-1} (L accumulators)                                                   │
+           │    • r^1 … r^L (powers of r array), s                                                 │
+           │                                                                                       │
+data_in_if │  Input Dispatch:                                                 Output Writeback:    │ auth_tag_if
+──────────►│    Round-robin select                                              Round-robin        ├────────────►
+           │    (c_i -> lane j)                                                 retire to A_j      │
+           │                                                                                       │
+           └────┬─────────────────┬─────────────────┬──────────────┬────────────┬──────────────┬───┘
+                │                 ▲                 │              ▲            │              ▲
+    to_prologue │   from_prologue │      to_compute │ from_compute │to_epilogue │from_epilogue │
+            (r) │ (r^1…r^L array) │ (A_j, r^L, c_i) │   (A_j_next) │  (A_regs,  │   (auth_tag) │
+                │                 │                 │              │   r_pows,  │              │
+                ▼                 │                 ▼              │      s)    │              │
+                │                 │                 │              │            ▼              │
+           ┌────┴─────────────────┴────┐       ┌────┴──────────────┴────┐  ┌────┴──────────────┴────┐
+           │        prologue_mcp       │       │    compute_pipeline    │  │      epilogue_mcp      │
+           │       (multi-cycle)       │       │ (autopipelined, II=1)  │  │     (multi-cycle)      │
+           │                           │       │                        │  │                        │
+           │     Computes powers:      │       │    Streaming loop:     │  │   Weighted Combine:    │
+           │      r^2, r^3 … r^L       │       │   (A_j + c_i) · r^L    │  │   ∑ (A_j · r^{L-j})    │
+           │                           │       │                        │  │   Final tag add: + s   │
+           └───────────────────────────┘       └────────────────────────┘  └────────────────────────┘
 ```
 
 Logical algorithm execution diagram:
 
 ```text
-Incoming 16B Blocks (1 beat/cycle):
+════════════════════════════════════════════════════════════════════════════
+   Prologue: Start of Packet (Runs Once per Packet at most, likely less)
+────────────────────────────────────────────────────────────────────────────
+   Compute and the powers of r up to r^L up. Only when key changes.
+   r^L is body stride multiplier; r^1 -> r^L values for epilogue.
+
+════════════════════════════════════════════════════════════════════════════
+        Body: Incoming 16B Blocks (1 beat/cycle):
+────────────────────────────────────────────────────────────────────────────
      ──► [ c_3 ] ──► [ c_2 ] ──► [ c_1 ] ──► [ c_0 ]
             │           │           │           │
             ▼           ▼           ▼           ▼
@@ -123,12 +135,11 @@ Incoming 16B Blocks (1 beat/cycle):
    Cycle 3: (A_3, r^L, c_3) ───┘
                         │
                         ▼
- ═══════════════════════════════════════════════════════════════════════════
-                      compute_pipeline (Depth D, II = 1)
+                compute_pipeline (Depth D, II = 1)
  ───────────────────────────────────────────────────────────────────────────
    [ Stage 1 ]     ──►     [ Stage 2 ]     ──►  ...  ──►     [ Stage D ]
   (A_3, r^L, c_3)         (A_2, r^L, c_2)                   (A_0, r^L, c_0)
- ═══════════════════════════════════════════════════════════════════════════
+ ───────────────────────────────────────────────────────────────────────────
                         │
                         ▼
               Round-Robin Writeback
@@ -143,7 +154,7 @@ Incoming 16B Blocks (1 beat/cycle):
                         ▼ (Loop repeats until Last Block)
 
 ════════════════════════════════════════════════════════════════════════════
-                 End of Packet Combine (Runs Once per Packet)
+        Epilogue: End of Packet Combine (Runs Once per Packet)
 ────────────────────────────────────────────────────────────────────────────
           A_0           A_1           A_2           A_3   (From registers above)
            │             │             │             │
