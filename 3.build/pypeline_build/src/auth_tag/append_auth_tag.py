@@ -21,6 +21,8 @@ from pypeline import (
     sim_assert,
 )
 
+import perf_taps
+
 from aead_types import (
     POLY1305_AUTH_TAG_SIZE,
     axis128_intrf,
@@ -39,6 +41,10 @@ class append_auth_tag_state_t:
     TAG_TAIL = auto()
 
 
+# Declaration order = value order, for the perf_taps state histogram.
+APPEND_AUTH_TAG_STATE_NAMES = tuple(append_auth_tag_state_t.__members__)
+
+
 @struct
 class append_auth_tag_out_t(NamedTuple):
     axis_in_if: axis128_intrf.fb_t
@@ -54,6 +60,10 @@ def append_auth_tag(
 ) -> append_auth_tag_out_t:
     o: append_auth_tag_out_t
     state: Reg[append_auth_tag_state_t]
+    # Sampled before the FSM reassigns it -- see src/perf_taps.py. MERGED_WORD
+    # and TAG_TAIL cycles are the per-packet wait on the MAC's tag, so this
+    # histogram is how much of the tail cost is Poly1305 latency.
+    perf_taps.state("append.fsm", state, APPEND_AUTH_TAG_STATE_NAMES)
     # The packet's final ciphertext word, and how many of its 16 lanes are
     # really ciphertext (r, in [1, 16])
     held_data_reg: Reg[uint8_t[POLY1305_AUTH_TAG_SIZE]]
@@ -126,4 +136,21 @@ def append_auth_tag(
         if o.axis_out_if.stream.valid & axis_out_if.ready:
             state = append_auth_tag_state_t.CIPHERTEXT
 
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), last
+    # so every o.* field above is final.
+    perf_taps.hs(
+        "append.axis_in",
+        axis_in_if.stream.valid,
+        o.axis_in_if.ready,
+        axis_in_if.stream.data.frag.keep,
+    )
+    perf_taps.hs(
+        "append.axis_out",
+        o.axis_out_if.stream.valid,
+        axis_out_if.ready,
+        o.axis_out_if.stream.data.frag.keep,
+    )
+    perf_taps.hs(
+        "append.tag_in", auth_tag_in_if.stream.valid, o.auth_tag_in_if.ready
+    )
     return o

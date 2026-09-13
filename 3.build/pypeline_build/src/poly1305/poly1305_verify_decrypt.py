@@ -18,6 +18,8 @@ from pypeline import (
     uint1_t,
 )
 
+import perf_taps
+
 from aead_types import (
     poly1305_auth_tag_uint_t,
     poly1305_auth_tag_stream_intrf,
@@ -32,6 +34,10 @@ class poly1305_verify_state_t:
     TAKE_CALC_TAG = auto()  # take calculated tag and place it into a reg
     COMPARE_TAGS = auto()  # compare the two tags ("==") and place res in reg
     OUTPUT_COMPARE_RESULT = auto()  # output the compare value
+
+
+# Declaration order = value order, for the perf_taps state histogram.
+POLY1305_VERIFY_STATE_NAMES = tuple(poly1305_verify_state_t.__members__)
 
 
 @struct
@@ -50,6 +56,9 @@ def poly1305_verify_decrypt(
     o: poly1305_verify_decrypt_out_t
     # Define static variables
     state: Reg[poly1305_verify_state_t]
+    # Sampled before the FSM reassigns it -- see src/perf_taps.py. This FSM is
+    # strictly sequential (>= 4 cycles per packet), a fixed decrypt-side tail.
+    perf_taps.state("verify.fsm", state, POLY1305_VERIFY_STATE_NAMES)
 
     # Regs to hold the tag value
     auth_tag_reg: Reg[poly1305_auth_tag_uint_t]
@@ -93,4 +102,11 @@ def poly1305_verify_decrypt(
             # Reset the FSM for the next verification
             state = poly1305_verify_state_t.TAKE_AUTH_TAG
 
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), last
+    # so every o.* field above is final.
+    perf_taps.hs("verify.auth_tag", auth_tag_if.stream.valid, o.auth_tag_if.ready)
+    perf_taps.hs("verify.calc_tag", calc_tag_if.stream.valid, o.calc_tag_if.ready)
+    perf_taps.hs(
+        "verify.tags_match", o.tags_match_if.stream.valid, tags_match_if.ready
+    )
     return o

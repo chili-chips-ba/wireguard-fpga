@@ -1,0 +1,7148 @@
+{
+ "schema_version": 1,
+ "source": "perf_tb",
+ "config": {
+  "design": "shared",
+  "bus_bytes": 16,
+  "dirs": [
+   "encrypt",
+   "decrypt"
+  ],
+  "seed": 8439,
+  "sizes": [
+   16,
+   64,
+   256,
+   1024,
+   1420
+  ],
+  "packets_per_size": 4,
+  "peak_bytes": 1920,
+  "peak_packets": 4,
+  "max_cycles_per_phase": 20000,
+  "stall_timeout_cycles": 1000,
+  "settle_cycles": 8,
+  "taps": [
+   "all"
+  ],
+  "phase_plan": [
+   {
+    "name": "b2b-16",
+    "packet_bytes": 16,
+    "num_packets": 4
+   },
+   {
+    "name": "b2b-64",
+    "packet_bytes": 64,
+    "num_packets": 4
+   },
+   {
+    "name": "b2b-256",
+    "packet_bytes": 256,
+    "num_packets": 4
+   },
+   {
+    "name": "b2b-1024",
+    "packet_bytes": 1024,
+    "num_packets": 4
+   },
+   {
+    "name": "b2b-1420",
+    "packet_bytes": 1420,
+    "num_packets": 4
+   },
+   {
+    "name": "peak-1920",
+    "packet_bytes": 1920,
+    "num_packets": 4
+   }
+  ],
+  "max_packet_bytes": 2032,
+  "key": "808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f",
+  "nonce": "070000004041424344454647",
+  "aad_len": 29,
+  "taps_active": [
+   "decrypt/chacha20.axis_in",
+   "decrypt/chacha20.axis_out",
+   "decrypt/chacha20.from_pipeline",
+   "decrypt/chacha20.in_state",
+   "decrypt/chacha20.key_out",
+   "decrypt/chacha20.out_state",
+   "decrypt/chacha20.to_pipeline",
+   "decrypt/poly1305.data_in",
+   "decrypt/poly1305.from_compute",
+   "decrypt/poly1305.fsm",
+   "decrypt/poly1305.key_in",
+   "decrypt/poly1305.tag_out",
+   "decrypt/poly1305.to_compute",
+   "decrypt/prep.axis_in",
+   "decrypt/prep.axis_out",
+   "decrypt/prep.fsm",
+   "decrypt/strip.axis_in",
+   "decrypt/strip.axis_out",
+   "decrypt/strip.tag_out",
+   "decrypt/verify.auth_tag",
+   "decrypt/verify.calc_tag",
+   "decrypt/verify.fsm",
+   "decrypt/verify.tags_match",
+   "decrypt/wtv.axis_in",
+   "decrypt/wtv.axis_out",
+   "decrypt/wtv.fsm",
+   "decrypt/wtv.verify_bit",
+   "encrypt/append.axis_in",
+   "encrypt/append.axis_out",
+   "encrypt/append.fsm",
+   "encrypt/append.tag_in",
+   "encrypt/chacha20.axis_in",
+   "encrypt/chacha20.axis_out",
+   "encrypt/chacha20.from_pipeline",
+   "encrypt/chacha20.in_state",
+   "encrypt/chacha20.key_out",
+   "encrypt/chacha20.out_state",
+   "encrypt/chacha20.to_pipeline",
+   "encrypt/poly1305.data_in",
+   "encrypt/poly1305.from_compute",
+   "encrypt/poly1305.fsm",
+   "encrypt/poly1305.key_in",
+   "encrypt/poly1305.tag_out",
+   "encrypt/poly1305.to_compute",
+   "encrypt/prep.axis_in",
+   "encrypt/prep.axis_out",
+   "encrypt/prep.fsm",
+   "shared/pipe.arb",
+   "shared/pipe.dec_in",
+   "shared/pipe.dec_out",
+   "shared/pipe.enc_in",
+   "shared/pipe.enc_out"
+  ]
+ },
+ "phases": [
+  {
+   "name": "b2b-16",
+   "packet_bytes": 16,
+   "num_packets": 4,
+   "encrypt": {
+    "window_cycles": 149,
+    "goodput_bytes": 64,
+    "in_beats": 4,
+    "out_beats": 8,
+    "in_line_bytes": 64,
+    "out_line_bytes": 128,
+    "in_payload_bytes": 64,
+    "out_payload_bytes": 128,
+    "beats_per_packet": 2.0,
+    "bytes_per_cycle": 0.42953020134228187,
+    "packet_period_cycles": 31.0,
+    "sustained_bytes_per_cycle": 0.5161290322580645,
+    "steady_in_bytes_per_cycle": null,
+    "steady_out_bytes_per_cycle": null,
+    "in_duty": 0.026845637583892617,
+    "out_duty": 0.053691275167785234,
+    "in_stall_cycles": 6,
+    "in_stall_frac": 0.040268456375838924,
+    "latency_cycles": {
+     "cold_head": 41,
+     "head_min": 41,
+     "head_med": 85.5,
+     "head_max": 127,
+     "total_min": 55,
+     "total_med": 99.5,
+     "total_max": 141
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 16,
+      "out_bytes": 32,
+      "first_in": 2,
+      "first_out": 43,
+      "last_out": 57,
+      "head_latency": 41,
+      "total_latency": 55
+     },
+     {
+      "idx": 1,
+      "in_bytes": 16,
+      "out_bytes": 32,
+      "first_in": 3,
+      "first_out": 74,
+      "last_out": 88,
+      "head_latency": 71,
+      "total_latency": 85
+     },
+     {
+      "idx": 2,
+      "in_bytes": 16,
+      "out_bytes": 32,
+      "first_in": 5,
+      "first_out": 105,
+      "last_out": 119,
+      "head_latency": 100,
+      "total_latency": 114
+     },
+     {
+      "idx": 3,
+      "in_bytes": 16,
+      "out_bytes": 32,
+      "first_in": 9,
+      "first_out": 136,
+      "last_out": 150,
+      "head_latency": 127,
+      "total_latency": 141
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 2,
+    "last_out_cycle": 150
+   },
+   "decrypt": {
+    "window_cycles": 246,
+    "goodput_bytes": 64,
+    "in_beats": 8,
+    "out_beats": 4,
+    "in_line_bytes": 128,
+    "out_line_bytes": 64,
+    "in_payload_bytes": 128,
+    "out_payload_bytes": 64,
+    "beats_per_packet": 1.0,
+    "bytes_per_cycle": 0.2601626016260163,
+    "packet_period_cycles": 39.666666666666664,
+    "sustained_bytes_per_cycle": 0.40336134453781514,
+    "steady_in_bytes_per_cycle": null,
+    "steady_out_bytes_per_cycle": null,
+    "in_duty": 0.032520325203252036,
+    "out_duty": 0.016260162601626018,
+    "in_stall_cycles": 208,
+    "in_stall_frac": 0.8455284552845529,
+    "latency_cycles": {
+     "cold_head": 126,
+     "head_min": 69,
+     "head_med": 97.5,
+     "head_max": 127,
+     "total_min": 69,
+     "total_med": 97.5,
+     "total_max": 127
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 32,
+      "out_bytes": 16,
+      "first_in": 0,
+      "first_out": 126,
+      "last_out": 126,
+      "head_latency": 126,
+      "total_latency": 126
+     },
+     {
+      "idx": 1,
+      "in_bytes": 32,
+      "out_bytes": 16,
+      "first_in": 38,
+      "first_out": 165,
+      "last_out": 165,
+      "head_latency": 127,
+      "total_latency": 127
+     },
+     {
+      "idx": 2,
+      "in_bytes": 32,
+      "out_bytes": 16,
+      "first_in": 136,
+      "first_out": 205,
+      "last_out": 205,
+      "head_latency": 69,
+      "total_latency": 69
+     },
+     {
+      "idx": 3,
+      "in_bytes": 32,
+      "out_bytes": 16,
+      "first_in": 176,
+      "first_out": 245,
+      "last_out": 245,
+      "head_latency": 69,
+      "total_latency": 69
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 0,
+    "last_out_cycle": 245
+   },
+   "taps": {
+    "decrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 12,
+     "ready_cycles": 210,
+     "xfer_cycles": 4,
+     "stall_cycles": 8,
+     "starved_cycles": 206,
+     "idle_cycles": 36,
+     "offered_cycles": 12,
+     "accept_rate": 0.3333333333333333,
+     "service_period_cycles": 3.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.031496062992125984,
+     "starve_frac": 0.8110236220472441,
+     "idle_frac": 0.14173228346456693,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 254,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 250,
+     "idle_cycles": 0,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.984251968503937,
+     "idle_frac": 0.0,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 8,
+     "ready_cycles": 254,
+     "xfer_cycles": 8,
+     "stall_cycles": 0,
+     "starved_cycles": 246,
+     "idle_cycles": 0,
+     "offered_cycles": 8,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.0,
+     "starve_frac": 0.968503937007874,
+     "idle_frac": 0.0
+    },
+    "decrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 44,
+       "frac": 0.1732283464566929
+      },
+      "PLAINTEXT": {
+       "cycles": 210,
+       "frac": 0.8267716535433071
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 150,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 146,
+     "idle_cycles": 104,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5748031496062992,
+     "idle_frac": 0.4094488188976378
+    },
+    "decrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 43,
+       "frac": 0.16929133858267717
+      },
+      "PLAINTEXT": {
+       "cycles": 211,
+       "frac": 0.8307086614173228
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 126,
+     "xfer_cycles": 8,
+     "stall_cycles": 8,
+     "starved_cycles": 118,
+     "idle_cycles": 120,
+     "offered_cycles": 16,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.031496062992125984,
+     "starve_frac": 0.4645669291338583,
+     "idle_frac": 0.47244094488188976
+    },
+    "decrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 217,
+     "ready_cycles": 16,
+     "xfer_cycles": 16,
+     "stall_cycles": 201,
+     "starved_cycles": 0,
+     "idle_cycles": 37,
+     "offered_cycles": 217,
+     "accept_rate": 0.07373271889400922,
+     "service_period_cycles": 13.5625,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.7913385826771654,
+     "starve_frac": 0.0,
+     "idle_frac": 0.14566929133858267,
+     "bytes": 256,
+     "bytes_per_cycle": 1.0078740157480315,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 254,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 238,
+     "idle_cycles": 0,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.0,
+     "starve_frac": 0.937007874015748,
+     "idle_frac": 0.0
+    },
+    "decrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "IDLE": {
+       "cycles": 150,
+       "frac": 0.5905511811023622
+      },
+      "FINISH_ITER": {
+       "cycles": 96,
+       "frac": 0.3779527559055118
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.015748031496062992
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.015748031496062992
+      }
+     },
+     "dominant": "IDLE"
+    },
+    "decrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 150,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 146,
+     "idle_cycles": 104,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5748031496062992,
+     "idle_frac": 0.4094488188976378
+    },
+    "decrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 202,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.1889763779527559,
+     "idle_frac": 0.7952755905511811
+    },
+    "decrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 174,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 158,
+     "idle_cycles": 80,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.0,
+     "starve_frac": 0.6220472440944882,
+     "idle_frac": 0.31496062992125984
+    },
+    "decrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 212,
+     "ready_cycles": 4,
+     "xfer_cycles": 4,
+     "stall_cycles": 208,
+     "starved_cycles": 0,
+     "idle_cycles": 42,
+     "offered_cycles": 212,
+     "accept_rate": 0.018867924528301886,
+     "service_period_cycles": 53.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.8188976377952756,
+     "starve_frac": 0.0,
+     "idle_frac": 0.16535433070866143,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 217,
+     "ready_cycles": 16,
+     "xfer_cycles": 16,
+     "stall_cycles": 201,
+     "starved_cycles": 0,
+     "idle_cycles": 37,
+     "offered_cycles": 217,
+     "accept_rate": 0.07373271889400922,
+     "service_period_cycles": 13.5625,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.7913385826771654,
+     "starve_frac": 0.0,
+     "idle_frac": 0.14566929133858267,
+     "bytes": 256,
+     "bytes_per_cycle": 1.0078740157480315,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "IDLE": {
+       "cycles": 37,
+       "frac": 0.14566929133858267
+      },
+      "AAD_STATE": {
+       "cycles": 169,
+       "frac": 0.6653543307086615
+      },
+      "CIPHERTEXT": {
+       "cycles": 24,
+       "frac": 0.09448818897637795
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.09448818897637795
+      }
+     },
+     "dominant": "AAD_STATE"
+    },
+    "decrypt/strip.axis_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 216,
+     "ready_cycles": 46,
+     "xfer_cycles": 8,
+     "stall_cycles": 208,
+     "starved_cycles": 38,
+     "idle_cycles": 0,
+     "offered_cycles": 216,
+     "accept_rate": 0.037037037037037035,
+     "service_period_cycles": 27.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.8188976377952756,
+     "starve_frac": 0.14960629921259844,
+     "idle_frac": 0.0,
+     "bytes": 128,
+     "bytes_per_cycle": 0.5039370078740157,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.axis_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 212,
+     "ready_cycles": 4,
+     "xfer_cycles": 4,
+     "stall_cycles": 208,
+     "starved_cycles": 0,
+     "idle_cycles": 42,
+     "offered_cycles": 212,
+     "accept_rate": 0.018867924528301886,
+     "service_period_cycles": 53.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.8188976377952756,
+     "starve_frac": 0.0,
+     "idle_frac": 0.16535433070866143,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.tag_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 194,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 190,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.7480314960629921,
+     "idle_frac": 0.23622047244094488
+    },
+    "decrypt/verify.auth_tag": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 194,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 190,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.7480314960629921,
+     "idle_frac": 0.23622047244094488
+    },
+    "decrypt/verify.calc_tag": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 202,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.1889763779527559,
+     "idle_frac": 0.7952755905511811
+    },
+    "decrypt/verify.fsm": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "TAKE_AUTH_TAG": {
+       "cycles": 194,
+       "frac": 0.7637795275590551
+      },
+      "TAKE_CALC_TAG": {
+       "cycles": 52,
+       "frac": 0.2047244094488189
+      },
+      "COMPARE_TAGS": {
+       "cycles": 4,
+       "frac": 0.015748031496062992
+      },
+      "OUTPUT_COMPARE_RESULT": {
+       "cycles": 4,
+       "frac": 0.015748031496062992
+      }
+     },
+     "dominant": "TAKE_AUTH_TAG"
+    },
+    "decrypt/verify.tags_match": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 139,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 135,
+     "idle_cycles": 115,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.531496062992126,
+     "idle_frac": 0.452755905511811
+    },
+    "decrypt/wtv.axis_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 254,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 250,
+     "idle_cycles": 0,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.984251968503937,
+     "idle_frac": 0.0,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.axis_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 254,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 250,
+     "idle_cycles": 0,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.984251968503937,
+     "idle_frac": 0.0,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.fsm": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "WAIT_TO_VERIFY_BIT": {
+       "cycles": 139,
+       "frac": 0.547244094488189
+      },
+      "OUTPUT_PLAINTEXT": {
+       "cycles": 115,
+       "frac": 0.452755905511811
+      }
+     },
+     "dominant": "WAIT_TO_VERIFY_BIT"
+    },
+    "decrypt/wtv.verify_bit": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 139,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 135,
+     "idle_cycles": 115,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.531496062992126,
+     "idle_frac": 0.452755905511811
+    },
+    "encrypt/append.axis_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 198,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 194,
+     "idle_cycles": 56,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.7637795275590551,
+     "idle_frac": 0.2204724409448819,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.axis_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 8,
+     "ready_cycles": 254,
+     "xfer_cycles": 8,
+     "stall_cycles": 0,
+     "starved_cycles": 246,
+     "idle_cycles": 0,
+     "offered_cycles": 8,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.0,
+     "starve_frac": 0.968503937007874,
+     "idle_frac": 0.0,
+     "bytes": 128,
+     "bytes_per_cycle": 0.5039370078740157,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.fsm": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "CIPHERTEXT": {
+       "cycles": 198,
+       "frac": 0.7795275590551181
+      },
+      "TAG_TAIL": {
+       "cycles": 56,
+       "frac": 0.2204724409448819
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "encrypt/append.tag_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 198,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.2047244094488189,
+     "idle_frac": 0.7795275590551181
+    },
+    "encrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 10,
+     "ready_cycles": 7,
+     "xfer_cycles": 4,
+     "stall_cycles": 6,
+     "starved_cycles": 3,
+     "idle_cycles": 241,
+     "offered_cycles": 10,
+     "accept_rate": 0.4,
+     "service_period_cycles": 2.5,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.023622047244094488,
+     "starve_frac": 0.011811023622047244,
+     "idle_frac": 0.9488188976377953,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 56,
+     "ready_cycles": 4,
+     "xfer_cycles": 4,
+     "stall_cycles": 52,
+     "starved_cycles": 0,
+     "idle_cycles": 198,
+     "offered_cycles": 56,
+     "accept_rate": 0.07142857142857142,
+     "service_period_cycles": 14.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.2047244094488189,
+     "starve_frac": 0.0,
+     "idle_frac": 0.7795275590551181,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 94,
+     "ready_cycles": 138,
+     "xfer_cycles": 8,
+     "stall_cycles": 86,
+     "starved_cycles": 130,
+     "idle_cycles": 30,
+     "offered_cycles": 94,
+     "accept_rate": 0.0851063829787234,
+     "service_period_cycles": 11.75,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.33858267716535434,
+     "starve_frac": 0.5118110236220472,
+     "idle_frac": 0.11811023622047244
+    },
+    "encrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 244,
+       "frac": 0.9606299212598425
+      },
+      "PLAINTEXT": {
+       "cycles": 10,
+       "frac": 0.03937007874015748
+      }
+     },
+     "dominant": "POLY_KEY"
+    },
+    "encrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 90,
+     "ready_cycles": 131,
+     "xfer_cycles": 4,
+     "stall_cycles": 86,
+     "starved_cycles": 127,
+     "idle_cycles": 37,
+     "offered_cycles": 90,
+     "accept_rate": 0.044444444444444446,
+     "service_period_cycles": 22.5,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.33858267716535434,
+     "starve_frac": 0.5,
+     "idle_frac": 0.14566929133858267
+    },
+    "encrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 247,
+       "frac": 0.9724409448818898
+      },
+      "PLAINTEXT": {
+       "cycles": 7,
+       "frac": 0.027559055118110236
+      }
+     },
+     "dominant": "POLY_KEY"
+    },
+    "encrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 127,
+     "xfer_cycles": 8,
+     "stall_cycles": 8,
+     "starved_cycles": 119,
+     "idle_cycles": 119,
+     "offered_cycles": 16,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.031496062992125984,
+     "starve_frac": 0.468503937007874,
+     "idle_frac": 0.468503937007874
+    },
+    "encrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 76,
+     "ready_cycles": 35,
+     "xfer_cycles": 16,
+     "stall_cycles": 60,
+     "starved_cycles": 19,
+     "idle_cycles": 159,
+     "offered_cycles": 76,
+     "accept_rate": 0.21052631578947367,
+     "service_period_cycles": 4.75,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.23622047244094488,
+     "starve_frac": 0.07480314960629922,
+     "idle_frac": 0.6259842519685039,
+     "bytes": 256,
+     "bytes_per_cycle": 1.0078740157480315,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 254,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 238,
+     "idle_cycles": 0,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.0,
+     "starve_frac": 0.937007874015748,
+     "idle_frac": 0.0
+    },
+    "encrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "IDLE": {
+       "cycles": 131,
+       "frac": 0.515748031496063
+      },
+      "START_ITER": {
+       "cycles": 19,
+       "frac": 0.07480314960629922
+      },
+      "FINISH_ITER": {
+       "cycles": 96,
+       "frac": 0.3779527559055118
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.015748031496062992
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.015748031496062992
+      }
+     },
+     "dominant": "IDLE"
+    },
+    "encrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 90,
+     "ready_cycles": 131,
+     "xfer_cycles": 4,
+     "stall_cycles": 86,
+     "starved_cycles": 127,
+     "idle_cycles": 37,
+     "offered_cycles": 90,
+     "accept_rate": 0.044444444444444446,
+     "service_period_cycles": 22.5,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.33858267716535434,
+     "starve_frac": 0.5,
+     "idle_frac": 0.14566929133858267
+    },
+    "encrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 198,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.0,
+     "starve_frac": 0.2047244094488189,
+     "idle_frac": 0.7795275590551181
+    },
+    "encrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 174,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 158,
+     "idle_cycles": 80,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.0,
+     "starve_frac": 0.6220472440944882,
+     "idle_frac": 0.31496062992125984
+    },
+    "encrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 56,
+     "ready_cycles": 4,
+     "xfer_cycles": 4,
+     "stall_cycles": 52,
+     "starved_cycles": 0,
+     "idle_cycles": 198,
+     "offered_cycles": 56,
+     "accept_rate": 0.07142857142857142,
+     "service_period_cycles": 14.0,
+     "beats_per_cycle": 0.015748031496062992,
+     "duty": 0.015748031496062992,
+     "stall_frac": 0.2047244094488189,
+     "starve_frac": 0.0,
+     "idle_frac": 0.7795275590551181,
+     "bytes": 64,
+     "bytes_per_cycle": 0.25196850393700787,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 76,
+     "ready_cycles": 35,
+     "xfer_cycles": 16,
+     "stall_cycles": 60,
+     "starved_cycles": 19,
+     "idle_cycles": 159,
+     "offered_cycles": 76,
+     "accept_rate": 0.21052631578947367,
+     "service_period_cycles": 4.75,
+     "beats_per_cycle": 0.06299212598425197,
+     "duty": 0.06299212598425197,
+     "stall_frac": 0.23622047244094488,
+     "starve_frac": 0.07480314960629922,
+     "idle_frac": 0.6259842519685039,
+     "bytes": 256,
+     "bytes_per_cycle": 1.0078740157480315,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 254,
+     "states": {
+      "IDLE": {
+       "cycles": 178,
+       "frac": 0.7007874015748031
+      },
+      "AAD_STATE": {
+       "cycles": 28,
+       "frac": 0.11023622047244094
+      },
+      "CIPHERTEXT": {
+       "cycles": 24,
+       "frac": 0.09448818897637795
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.09448818897637795
+      }
+     },
+     "dominant": "IDLE"
+    },
+    "shared/pipe.arb": {
+     "kind": "arb",
+     "cycles": 254,
+     "labels": [
+      "encrypt",
+      "decrypt"
+     ],
+     "granted_ready_frac": 0.9960629921259843,
+     "per_requester": {
+      "encrypt": {
+       "req_cycles": 16,
+       "sel_cycles": 127,
+       "xfer_cycles": 8,
+       "contention_cycles": 0,
+       "wasted_slot_cycles": 8,
+       "arb_loss_frac": 0.5,
+       "contention_frac": 0.0,
+       "wasted_slot_frac": 0.5
+      },
+      "decrypt": {
+       "req_cycles": 16,
+       "sel_cycles": 127,
+       "xfer_cycles": 8,
+       "contention_cycles": 1,
+       "wasted_slot_cycles": 7,
+       "arb_loss_frac": 0.5,
+       "contention_frac": 0.0625,
+       "wasted_slot_frac": 0.4375
+      }
+     }
+    },
+    "shared/pipe.dec_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 126,
+     "xfer_cycles": 8,
+     "stall_cycles": 8,
+     "starved_cycles": 118,
+     "idle_cycles": 120,
+     "offered_cycles": 16,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.031496062992125984,
+     "starve_frac": 0.4645669291338583,
+     "idle_frac": 0.47244094488188976
+    },
+    "shared/pipe.dec_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 8,
+     "ready_cycles": 254,
+     "xfer_cycles": 8,
+     "stall_cycles": 0,
+     "starved_cycles": 246,
+     "idle_cycles": 0,
+     "offered_cycles": 8,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.0,
+     "starve_frac": 0.968503937007874,
+     "idle_frac": 0.0
+    },
+    "shared/pipe.enc_in": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 16,
+     "ready_cycles": 127,
+     "xfer_cycles": 8,
+     "stall_cycles": 8,
+     "starved_cycles": 119,
+     "idle_cycles": 119,
+     "offered_cycles": 16,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.031496062992125984,
+     "starve_frac": 0.468503937007874,
+     "idle_frac": 0.468503937007874
+    },
+    "shared/pipe.enc_out": {
+     "kind": "handshake",
+     "cycles": 254,
+     "valid_cycles": 94,
+     "ready_cycles": 138,
+     "xfer_cycles": 8,
+     "stall_cycles": 86,
+     "starved_cycles": 130,
+     "idle_cycles": 30,
+     "offered_cycles": 94,
+     "accept_rate": 0.0851063829787234,
+     "service_period_cycles": 11.75,
+     "beats_per_cycle": 0.031496062992125984,
+     "duty": 0.031496062992125984,
+     "stall_frac": 0.33858267716535434,
+     "starve_frac": 0.5118110236220472,
+     "idle_frac": 0.11811023622047244
+    }
+   }
+  },
+  {
+   "name": "b2b-64",
+   "packet_bytes": 64,
+   "num_packets": 4,
+   "encrypt": {
+    "window_cycles": 223,
+    "goodput_bytes": 256,
+    "in_beats": 16,
+    "out_beats": 20,
+    "in_line_bytes": 256,
+    "out_line_bytes": 320,
+    "in_payload_bytes": 256,
+    "out_payload_bytes": 320,
+    "beats_per_packet": 5.0,
+    "bytes_per_cycle": 1.147982062780269,
+    "packet_period_cycles": 49.0,
+    "sustained_bytes_per_cycle": 1.3061224489795917,
+    "steady_in_bytes_per_cycle": null,
+    "steady_out_bytes_per_cycle": 1.6326530612244898,
+    "in_duty": 0.07174887892376682,
+    "out_duty": 0.08968609865470852,
+    "in_stall_cycles": 7,
+    "in_stall_frac": 0.03139013452914798,
+    "latency_cycles": {
+     "cold_head": 43,
+     "head_min": 43,
+     "head_med": 109.5,
+     "head_max": 174,
+     "total_min": 75,
+     "total_med": 141.5,
+     "total_max": 206
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 64,
+      "out_bytes": 80,
+      "first_in": 256,
+      "first_out": 299,
+      "last_out": 331,
+      "head_latency": 43,
+      "total_latency": 75
+     },
+     {
+      "idx": 1,
+      "in_bytes": 64,
+      "out_bytes": 80,
+      "first_in": 260,
+      "first_out": 348,
+      "last_out": 380,
+      "head_latency": 88,
+      "total_latency": 120
+     },
+     {
+      "idx": 2,
+      "in_bytes": 64,
+      "out_bytes": 80,
+      "first_in": 266,
+      "first_out": 397,
+      "last_out": 429,
+      "head_latency": 131,
+      "total_latency": 163
+     },
+     {
+      "idx": 3,
+      "in_bytes": 64,
+      "out_bytes": 80,
+      "first_in": 272,
+      "first_out": 446,
+      "last_out": 478,
+      "head_latency": 174,
+      "total_latency": 206
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 256,
+    "last_out_cycle": 478
+   },
+   "decrypt": {
+    "window_cycles": 359,
+    "goodput_bytes": 256,
+    "in_beats": 20,
+    "out_beats": 16,
+    "in_line_bytes": 320,
+    "out_line_bytes": 256,
+    "in_payload_bytes": 320,
+    "out_payload_bytes": 256,
+    "beats_per_packet": 4.0,
+    "bytes_per_cycle": 0.713091922005571,
+    "packet_period_cycles": 57.666666666666664,
+    "sustained_bytes_per_cycle": 1.1098265895953758,
+    "steady_in_bytes_per_cycle": 0.8888888888888888,
+    "steady_out_bytes_per_cycle": null,
+    "in_duty": 0.055710306406685235,
+    "out_duty": 0.04456824512534819,
+    "in_stall_cycles": 306,
+    "in_stall_frac": 0.8523676880222841,
+    "latency_cycles": {
+     "cold_head": 182,
+     "head_min": 87,
+     "head_med": 134.5,
+     "head_max": 183,
+     "total_min": 90,
+     "total_med": 137.5,
+     "total_max": 186
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 80,
+      "out_bytes": 64,
+      "first_in": 254,
+      "first_out": 436,
+      "last_out": 439,
+      "head_latency": 182,
+      "total_latency": 185
+     },
+     {
+      "idx": 1,
+      "in_bytes": 80,
+      "out_bytes": 64,
+      "first_in": 310,
+      "first_out": 493,
+      "last_out": 496,
+      "head_latency": 183,
+      "total_latency": 186
+     },
+     {
+      "idx": 2,
+      "in_bytes": 80,
+      "out_bytes": 64,
+      "first_in": 464,
+      "first_out": 551,
+      "last_out": 554,
+      "head_latency": 87,
+      "total_latency": 90
+     },
+     {
+      "idx": 3,
+      "in_bytes": 80,
+      "out_bytes": 64,
+      "first_in": 522,
+      "first_out": 609,
+      "last_out": 612,
+      "head_latency": 87,
+      "total_latency": 90
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 254,
+    "last_out_cycle": 612
+   },
+   "taps": {
+    "decrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 24,
+     "ready_cycles": 320,
+     "xfer_cycles": 16,
+     "stall_cycles": 8,
+     "starved_cycles": 304,
+     "idle_cycles": 39,
+     "offered_cycles": 24,
+     "accept_rate": 0.6666666666666666,
+     "service_period_cycles": 1.5,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.021798365122615803,
+     "starve_frac": 0.8283378746594006,
+     "idle_frac": 0.10626702997275204,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 16,
+     "ready_cycles": 367,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 351,
+     "idle_cycles": 0,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9564032697547684,
+     "idle_frac": 0.0,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 8,
+     "ready_cycles": 363,
+     "xfer_cycles": 8,
+     "stall_cycles": 0,
+     "starved_cycles": 355,
+     "idle_cycles": 4,
+     "offered_cycles": 8,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9673024523160763,
+     "idle_frac": 0.010899182561307902
+    },
+    "decrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 47,
+       "frac": 0.12806539509536785
+      },
+      "PLAINTEXT": {
+       "cycles": 320,
+       "frac": 0.8719346049046321
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 191,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 187,
+     "idle_cycles": 176,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5095367847411444,
+     "idle_frac": 0.47956403269754766
+    },
+    "decrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 46,
+       "frac": 0.12534059945504086
+      },
+      "PLAINTEXT": {
+       "cycles": 321,
+       "frac": 0.8746594005449592
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 16,
+     "ready_cycles": 184,
+     "xfer_cycles": 8,
+     "stall_cycles": 8,
+     "starved_cycles": 176,
+     "idle_cycles": 175,
+     "offered_cycles": 16,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.021798365122615803,
+     "starve_frac": 0.47956403269754766,
+     "idle_frac": 0.4768392370572207
+    },
+    "decrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 327,
+     "ready_cycles": 28,
+     "xfer_cycles": 28,
+     "stall_cycles": 299,
+     "starved_cycles": 0,
+     "idle_cycles": 40,
+     "offered_cycles": 327,
+     "accept_rate": 0.0856269113149847,
+     "service_period_cycles": 11.678571428571429,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.8147138964577657,
+     "starve_frac": 0.0,
+     "idle_frac": 0.10899182561307902,
+     "bytes": 448,
+     "bytes_per_cycle": 1.220708446866485,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 28,
+     "ready_cycles": 367,
+     "xfer_cycles": 28,
+     "stall_cycles": 0,
+     "starved_cycles": 339,
+     "idle_cycles": 0,
+     "offered_cycles": 28,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9237057220708447,
+     "idle_frac": 0.0
+    },
+    "decrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "IDLE": {
+       "cycles": 191,
+       "frac": 0.5204359673024523
+      },
+      "FINISH_ITER": {
+       "cycles": 168,
+       "frac": 0.45776566757493187
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.010899182561307902
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.010899182561307902
+      }
+     },
+     "dominant": "IDLE"
+    },
+    "decrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 191,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 187,
+     "idle_cycles": 176,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5095367847411444,
+     "idle_frac": 0.47956403269754766
+    },
+    "decrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 315,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.1307901907356948,
+     "idle_frac": 0.8583106267029973
+    },
+    "decrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 28,
+     "ready_cycles": 227,
+     "xfer_cycles": 28,
+     "stall_cycles": 0,
+     "starved_cycles": 199,
+     "idle_cycles": 140,
+     "offered_cycles": 28,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5422343324250681,
+     "idle_frac": 0.3814713896457766
+    },
+    "decrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 322,
+     "ready_cycles": 16,
+     "xfer_cycles": 16,
+     "stall_cycles": 306,
+     "starved_cycles": 0,
+     "idle_cycles": 45,
+     "offered_cycles": 322,
+     "accept_rate": 0.049689440993788817,
+     "service_period_cycles": 20.125,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.8337874659400545,
+     "starve_frac": 0.0,
+     "idle_frac": 0.1226158038147139,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 327,
+     "ready_cycles": 28,
+     "xfer_cycles": 28,
+     "stall_cycles": 299,
+     "starved_cycles": 0,
+     "idle_cycles": 40,
+     "offered_cycles": 327,
+     "accept_rate": 0.0856269113149847,
+     "service_period_cycles": 11.678571428571429,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.8147138964577657,
+     "starve_frac": 0.0,
+     "idle_frac": 0.10899182561307902,
+     "bytes": 448,
+     "bytes_per_cycle": 1.220708446866485,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "IDLE": {
+       "cycles": 40,
+       "frac": 0.10899182561307902
+      },
+      "AAD_STATE": {
+       "cycles": 207,
+       "frac": 0.5640326975476839
+      },
+      "CIPHERTEXT": {
+       "cycles": 96,
+       "frac": 0.2615803814713896
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.0653950953678474
+      }
+     },
+     "dominant": "AAD_STATE"
+    },
+    "decrypt/strip.axis_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 326,
+     "ready_cycles": 61,
+     "xfer_cycles": 20,
+     "stall_cycles": 306,
+     "starved_cycles": 41,
+     "idle_cycles": 0,
+     "offered_cycles": 326,
+     "accept_rate": 0.06134969325153374,
+     "service_period_cycles": 16.3,
+     "beats_per_cycle": 0.05449591280653951,
+     "duty": 0.05449591280653951,
+     "stall_frac": 0.8337874659400545,
+     "starve_frac": 0.11171662125340599,
+     "idle_frac": 0.0,
+     "bytes": 320,
+     "bytes_per_cycle": 0.8719346049046321,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.axis_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 322,
+     "ready_cycles": 16,
+     "xfer_cycles": 16,
+     "stall_cycles": 306,
+     "starved_cycles": 0,
+     "idle_cycles": 45,
+     "offered_cycles": 322,
+     "accept_rate": 0.049689440993788817,
+     "service_period_cycles": 20.125,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.8337874659400545,
+     "starve_frac": 0.0,
+     "idle_frac": 0.1226158038147139,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.tag_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 307,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 303,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8256130790190735,
+     "idle_frac": 0.16348773841961853
+    },
+    "decrypt/verify.auth_tag": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 307,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 303,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8256130790190735,
+     "idle_frac": 0.16348773841961853
+    },
+    "decrypt/verify.calc_tag": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 315,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.1307901907356948,
+     "idle_frac": 0.8583106267029973
+    },
+    "decrypt/verify.fsm": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "TAKE_AUTH_TAG": {
+       "cycles": 307,
+       "frac": 0.8365122615803815
+      },
+      "TAKE_CALC_TAG": {
+       "cycles": 52,
+       "frac": 0.14168937329700274
+      },
+      "COMPARE_TAGS": {
+       "cycles": 4,
+       "frac": 0.010899182561307902
+      },
+      "OUTPUT_COMPARE_RESULT": {
+       "cycles": 4,
+       "frac": 0.010899182561307902
+      }
+     },
+     "dominant": "TAKE_AUTH_TAG"
+    },
+    "decrypt/verify.tags_match": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 202,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 198,
+     "idle_cycles": 165,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5395095367847411,
+     "idle_frac": 0.44959128065395093
+    },
+    "decrypt/wtv.axis_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 16,
+     "ready_cycles": 367,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 351,
+     "idle_cycles": 0,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9564032697547684,
+     "idle_frac": 0.0,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.axis_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 16,
+     "ready_cycles": 367,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 351,
+     "idle_cycles": 0,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9564032697547684,
+     "idle_frac": 0.0,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.fsm": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "WAIT_TO_VERIFY_BIT": {
+       "cycles": 202,
+       "frac": 0.5504087193460491
+      },
+      "OUTPUT_PLAINTEXT": {
+       "cycles": 165,
+       "frac": 0.44959128065395093
+      }
+     },
+     "dominant": "WAIT_TO_VERIFY_BIT"
+    },
+    "decrypt/wtv.verify_bit": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 202,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 198,
+     "idle_cycles": 165,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5395095367847411,
+     "idle_frac": 0.44959128065395093
+    },
+    "encrypt/append.axis_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 16,
+     "ready_cycles": 311,
+     "xfer_cycles": 16,
+     "stall_cycles": 0,
+     "starved_cycles": 295,
+     "idle_cycles": 56,
+     "offered_cycles": 16,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8038147138964578,
+     "idle_frac": 0.15258855585831063,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.axis_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 20,
+     "ready_cycles": 367,
+     "xfer_cycles": 20,
+     "stall_cycles": 0,
+     "starved_cycles": 347,
+     "idle_cycles": 0,
+     "offered_cycles": 20,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.05449591280653951,
+     "duty": 0.05449591280653951,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9455040871934605,
+     "idle_frac": 0.0,
+     "bytes": 320,
+     "bytes_per_cycle": 0.8719346049046321,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.fsm": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "CIPHERTEXT": {
+       "cycles": 311,
+       "frac": 0.8474114441416893
+      },
+      "TAG_TAIL": {
+       "cycles": 56,
+       "frac": 0.15258855585831063
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "encrypt/append.tag_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 311,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.14168937329700274,
+     "idle_frac": 0.8474114441416893
+    },
+    "encrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 23,
+     "ready_cycles": 18,
+     "xfer_cycles": 16,
+     "stall_cycles": 7,
+     "starved_cycles": 2,
+     "idle_cycles": 342,
+     "offered_cycles": 23,
+     "accept_rate": 0.6956521739130435,
+     "service_period_cycles": 1.4375,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.01907356948228883,
+     "starve_frac": 0.005449591280653951,
+     "idle_frac": 0.9318801089918256,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 128,
+     "ready_cycles": 16,
+     "xfer_cycles": 16,
+     "stall_cycles": 112,
+     "starved_cycles": 0,
+     "idle_cycles": 239,
+     "offered_cycles": 128,
+     "accept_rate": 0.125,
+     "service_period_cycles": 8.0,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.30517711171662126,
+     "starve_frac": 0.0,
+     "idle_frac": 0.6512261580381471,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 148,
+     "ready_cycles": 179,
+     "xfer_cycles": 8,
+     "stall_cycles": 140,
+     "starved_cycles": 171,
+     "idle_cycles": 48,
+     "offered_cycles": 148,
+     "accept_rate": 0.05405405405405406,
+     "service_period_cycles": 18.5,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.3814713896457766,
+     "starve_frac": 0.4659400544959128,
+     "idle_frac": 0.1307901907356948
+    },
+    "encrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 349,
+       "frac": 0.9509536784741145
+      },
+      "PLAINTEXT": {
+       "cycles": 18,
+       "frac": 0.04904632152588556
+      }
+     },
+     "dominant": "POLY_KEY"
+    },
+    "encrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 144,
+     "ready_cycles": 170,
+     "xfer_cycles": 4,
+     "stall_cycles": 140,
+     "starved_cycles": 166,
+     "idle_cycles": 57,
+     "offered_cycles": 144,
+     "accept_rate": 0.027777777777777776,
+     "service_period_cycles": 36.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.3814713896457766,
+     "starve_frac": 0.45231607629427795,
+     "idle_frac": 0.1553133514986376
+    },
+    "encrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 358,
+       "frac": 0.9754768392370572
+      },
+      "PLAINTEXT": {
+       "cycles": 9,
+       "frac": 0.02452316076294278
+      }
+     },
+     "dominant": "POLY_KEY"
+    },
+    "encrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 11,
+     "ready_cycles": 183,
+     "xfer_cycles": 8,
+     "stall_cycles": 3,
+     "starved_cycles": 175,
+     "idle_cycles": 181,
+     "offered_cycles": 11,
+     "accept_rate": 0.7272727272727273,
+     "service_period_cycles": 1.375,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.008174386920980926,
+     "starve_frac": 0.4768392370572207,
+     "idle_frac": 0.49318801089918257
+    },
+    "encrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 148,
+     "ready_cycles": 49,
+     "xfer_cycles": 28,
+     "stall_cycles": 120,
+     "starved_cycles": 21,
+     "idle_cycles": 198,
+     "offered_cycles": 148,
+     "accept_rate": 0.1891891891891892,
+     "service_period_cycles": 5.285714285714286,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.32697547683923706,
+     "starve_frac": 0.05722070844686648,
+     "idle_frac": 0.5395095367847411,
+     "bytes": 448,
+     "bytes_per_cycle": 1.220708446866485,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 28,
+     "ready_cycles": 367,
+     "xfer_cycles": 28,
+     "stall_cycles": 0,
+     "starved_cycles": 339,
+     "idle_cycles": 0,
+     "offered_cycles": 28,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9237057220708447,
+     "idle_frac": 0.0
+    },
+    "encrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "IDLE": {
+       "cycles": 170,
+       "frac": 0.46321525885558584
+      },
+      "START_ITER": {
+       "cycles": 21,
+       "frac": 0.05722070844686648
+      },
+      "FINISH_ITER": {
+       "cycles": 168,
+       "frac": 0.45776566757493187
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.010899182561307902
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.010899182561307902
+      }
+     },
+     "dominant": "IDLE"
+    },
+    "encrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 144,
+     "ready_cycles": 170,
+     "xfer_cycles": 4,
+     "stall_cycles": 140,
+     "starved_cycles": 166,
+     "idle_cycles": 57,
+     "offered_cycles": 144,
+     "accept_rate": 0.027777777777777776,
+     "service_period_cycles": 36.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.3814713896457766,
+     "starve_frac": 0.45231607629427795,
+     "idle_frac": 0.1553133514986376
+    },
+    "encrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 311,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.010899182561307902,
+     "duty": 0.010899182561307902,
+     "stall_frac": 0.0,
+     "starve_frac": 0.14168937329700274,
+     "idle_frac": 0.8474114441416893
+    },
+    "encrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 28,
+     "ready_cycles": 227,
+     "xfer_cycles": 28,
+     "stall_cycles": 0,
+     "starved_cycles": 199,
+     "idle_cycles": 140,
+     "offered_cycles": 28,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5422343324250681,
+     "idle_frac": 0.3814713896457766
+    },
+    "encrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 128,
+     "ready_cycles": 16,
+     "xfer_cycles": 16,
+     "stall_cycles": 112,
+     "starved_cycles": 0,
+     "idle_cycles": 239,
+     "offered_cycles": 128,
+     "accept_rate": 0.125,
+     "service_period_cycles": 8.0,
+     "beats_per_cycle": 0.043596730245231606,
+     "duty": 0.043596730245231606,
+     "stall_frac": 0.30517711171662126,
+     "starve_frac": 0.0,
+     "idle_frac": 0.6512261580381471,
+     "bytes": 256,
+     "bytes_per_cycle": 0.6975476839237057,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 148,
+     "ready_cycles": 49,
+     "xfer_cycles": 28,
+     "stall_cycles": 120,
+     "starved_cycles": 21,
+     "idle_cycles": 198,
+     "offered_cycles": 148,
+     "accept_rate": 0.1891891891891892,
+     "service_period_cycles": 5.285714285714286,
+     "beats_per_cycle": 0.07629427792915532,
+     "duty": 0.07629427792915532,
+     "stall_frac": 0.32697547683923706,
+     "starve_frac": 0.05722070844686648,
+     "idle_frac": 0.5395095367847411,
+     "bytes": 448,
+     "bytes_per_cycle": 1.220708446866485,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 367,
+     "states": {
+      "IDLE": {
+       "cycles": 219,
+       "frac": 0.5967302452316077
+      },
+      "AAD_STATE": {
+       "cycles": 28,
+       "frac": 0.07629427792915532
+      },
+      "CIPHERTEXT": {
+       "cycles": 96,
+       "frac": 0.2615803814713896
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.0653950953678474
+      }
+     },
+     "dominant": "IDLE"
+    },
+    "shared/pipe.arb": {
+     "kind": "arb",
+     "cycles": 367,
+     "labels": [
+      "encrypt",
+      "decrypt"
+     ],
+     "granted_ready_frac": 1.0,
+     "per_requester": {
+      "encrypt": {
+       "req_cycles": 11,
+       "sel_cycles": 183,
+       "xfer_cycles": 8,
+       "contention_cycles": 0,
+       "wasted_slot_cycles": 3,
+       "arb_loss_frac": 0.2727272727272727,
+       "contention_frac": 0.0,
+       "wasted_slot_frac": 0.2727272727272727
+      },
+      "decrypt": {
+       "req_cycles": 16,
+       "sel_cycles": 184,
+       "xfer_cycles": 8,
+       "contention_cycles": 1,
+       "wasted_slot_cycles": 7,
+       "arb_loss_frac": 0.5,
+       "contention_frac": 0.0625,
+       "wasted_slot_frac": 0.4375
+      }
+     }
+    },
+    "shared/pipe.dec_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 16,
+     "ready_cycles": 184,
+     "xfer_cycles": 8,
+     "stall_cycles": 8,
+     "starved_cycles": 176,
+     "idle_cycles": 175,
+     "offered_cycles": 16,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.021798365122615803,
+     "starve_frac": 0.47956403269754766,
+     "idle_frac": 0.4768392370572207
+    },
+    "shared/pipe.dec_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 8,
+     "ready_cycles": 363,
+     "xfer_cycles": 8,
+     "stall_cycles": 0,
+     "starved_cycles": 355,
+     "idle_cycles": 4,
+     "offered_cycles": 8,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9673024523160763,
+     "idle_frac": 0.010899182561307902
+    },
+    "shared/pipe.enc_in": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 11,
+     "ready_cycles": 183,
+     "xfer_cycles": 8,
+     "stall_cycles": 3,
+     "starved_cycles": 175,
+     "idle_cycles": 181,
+     "offered_cycles": 11,
+     "accept_rate": 0.7272727272727273,
+     "service_period_cycles": 1.375,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.008174386920980926,
+     "starve_frac": 0.4768392370572207,
+     "idle_frac": 0.49318801089918257
+    },
+    "shared/pipe.enc_out": {
+     "kind": "handshake",
+     "cycles": 367,
+     "valid_cycles": 148,
+     "ready_cycles": 179,
+     "xfer_cycles": 8,
+     "stall_cycles": 140,
+     "starved_cycles": 171,
+     "idle_cycles": 48,
+     "offered_cycles": 148,
+     "accept_rate": 0.05405405405405406,
+     "service_period_cycles": 18.5,
+     "beats_per_cycle": 0.021798365122615803,
+     "duty": 0.021798365122615803,
+     "stall_frac": 0.3814713896457766,
+     "starve_frac": 0.4659400544959128,
+     "idle_frac": 0.1307901907356948
+    }
+   }
+  },
+  {
+   "name": "b2b-256",
+   "packet_bytes": 256,
+   "num_packets": 4,
+   "encrypt": {
+    "window_cycles": 511,
+    "goodput_bytes": 1024,
+    "in_beats": 64,
+    "out_beats": 68,
+    "in_line_bytes": 1024,
+    "out_line_bytes": 1088,
+    "in_payload_bytes": 1024,
+    "out_payload_bytes": 1088,
+    "beats_per_packet": 17.0,
+    "bytes_per_cycle": 2.003913894324853,
+    "packet_period_cycles": 121.0,
+    "sustained_bytes_per_cycle": 2.115702479338843,
+    "steady_in_bytes_per_cycle": 14.285714285714286,
+    "steady_out_bytes_per_cycle": 2.267716535433071,
+    "in_duty": 0.12524461839530332,
+    "out_duty": 0.13307240704500978,
+    "in_stall_cycles": 8,
+    "in_stall_frac": 0.015655577299412915,
+    "latency_cycles": {
+     "cold_head": 43,
+     "head_min": 43,
+     "head_med": 199.5,
+     "head_max": 354,
+     "total_min": 147,
+     "total_med": 303.5,
+     "total_max": 458
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 256,
+      "out_bytes": 272,
+      "first_in": 624,
+      "first_out": 667,
+      "last_out": 771,
+      "head_latency": 43,
+      "total_latency": 147
+     },
+     {
+      "idx": 1,
+      "in_bytes": 256,
+      "out_bytes": 272,
+      "first_in": 640,
+      "first_out": 788,
+      "last_out": 892,
+      "head_latency": 148,
+      "total_latency": 252
+     },
+     {
+      "idx": 2,
+      "in_bytes": 256,
+      "out_bytes": 272,
+      "first_in": 658,
+      "first_out": 909,
+      "last_out": 1013,
+      "head_latency": 251,
+      "total_latency": 355
+     },
+     {
+      "idx": 3,
+      "in_bytes": 256,
+      "out_bytes": 272,
+      "first_in": 676,
+      "first_out": 1030,
+      "last_out": 1134,
+      "head_latency": 354,
+      "total_latency": 458
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 624,
+    "last_out_cycle": 1134
+   },
+   "decrypt": {
+    "window_cycles": 874,
+    "goodput_bytes": 1024,
+    "in_beats": 68,
+    "out_beats": 64,
+    "in_line_bytes": 1088,
+    "out_line_bytes": 1024,
+    "in_payload_bytes": 1088,
+    "out_payload_bytes": 1024,
+    "beats_per_packet": 16.0,
+    "bytes_per_cycle": 1.17162471395881,
+    "packet_period_cycles": 129.33333333333334,
+    "sustained_bytes_per_cycle": 1.979381443298969,
+    "steady_in_bytes_per_cycle": 1.180327868852459,
+    "steady_out_bytes_per_cycle": 2.056555269922879,
+    "in_duty": 0.07780320366132723,
+    "out_duty": 0.07322654462242563,
+    "in_stall_cycles": 773,
+    "in_stall_frac": 0.8844393592677345,
+    "latency_cycles": {
+     "cold_head": 353,
+     "head_min": 145,
+     "head_med": 249.5,
+     "head_max": 471,
+     "total_min": 161,
+     "total_med": 323.5,
+     "total_max": 486
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 272,
+      "out_bytes": 256,
+      "first_in": 621,
+      "first_out": 974,
+      "last_out": 1106,
+      "head_latency": 353,
+      "total_latency": 485
+     },
+     {
+      "idx": 1,
+      "in_bytes": 272,
+      "out_bytes": 256,
+      "first_in": 748,
+      "first_out": 1219,
+      "last_out": 1234,
+      "head_latency": 471,
+      "total_latency": 486
+     },
+     {
+      "idx": 2,
+      "in_bytes": 272,
+      "out_bytes": 256,
+      "first_in": 1203,
+      "first_out": 1348,
+      "last_out": 1364,
+      "head_latency": 145,
+      "total_latency": 161
+     },
+     {
+      "idx": 3,
+      "in_bytes": 272,
+      "out_bytes": 256,
+      "first_in": 1332,
+      "first_out": 1478,
+      "last_out": 1494,
+      "head_latency": 146,
+      "total_latency": 162
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 621,
+    "last_out_cycle": 1494
+   },
+   "taps": {
+    "decrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 71,
+     "ready_cycles": 836,
+     "xfer_cycles": 64,
+     "stall_cycles": 7,
+     "starved_cycles": 772,
+     "idle_cycles": 39,
+     "offered_cycles": 71,
+     "accept_rate": 0.9014084507042254,
+     "service_period_cycles": 1.109375,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.007936507936507936,
+     "starve_frac": 0.8752834467120182,
+     "idle_frac": 0.04421768707482993,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 64,
+     "ready_cycles": 882,
+     "xfer_cycles": 64,
+     "stall_cycles": 0,
+     "starved_cycles": 818,
+     "idle_cycles": 0,
+     "offered_cycles": 64,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.0,
+     "starve_frac": 0.927437641723356,
+     "idle_frac": 0.0,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 26,
+     "ready_cycles": 842,
+     "xfer_cycles": 20,
+     "stall_cycles": 6,
+     "starved_cycles": 822,
+     "idle_cycles": 34,
+     "offered_cycles": 26,
+     "accept_rate": 0.7692307692307693,
+     "service_period_cycles": 1.3,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.006802721088435374,
+     "starve_frac": 0.9319727891156463,
+     "idle_frac": 0.03854875283446712
+    },
+    "decrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 46,
+       "frac": 0.05215419501133787
+      },
+      "PLAINTEXT": {
+       "cycles": 836,
+       "frac": 0.9478458049886621
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 418,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 414,
+     "idle_cycles": 464,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.46938775510204084,
+     "idle_frac": 0.5260770975056689
+    },
+    "decrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 45,
+       "frac": 0.05102040816326531
+      },
+      "PLAINTEXT": {
+       "cycles": 837,
+       "frac": 0.9489795918367347
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 35,
+     "ready_cycles": 441,
+     "xfer_cycles": 20,
+     "stall_cycles": 15,
+     "starved_cycles": 421,
+     "idle_cycles": 426,
+     "offered_cycles": 35,
+     "accept_rate": 0.5714285714285714,
+     "service_period_cycles": 1.75,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.017006802721088437,
+     "starve_frac": 0.47732426303854875,
+     "idle_frac": 0.48299319727891155
+    },
+    "decrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 842,
+     "ready_cycles": 76,
+     "xfer_cycles": 76,
+     "stall_cycles": 766,
+     "starved_cycles": 0,
+     "idle_cycles": 40,
+     "offered_cycles": 842,
+     "accept_rate": 0.09026128266033254,
+     "service_period_cycles": 11.078947368421053,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.8684807256235828,
+     "starve_frac": 0.0,
+     "idle_frac": 0.045351473922902494,
+     "bytes": 1216,
+     "bytes_per_cycle": 1.3786848072562359,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 76,
+     "ready_cycles": 882,
+     "xfer_cycles": 76,
+     "stall_cycles": 0,
+     "starved_cycles": 806,
+     "idle_cycles": 0,
+     "offered_cycles": 76,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9138321995464853,
+     "idle_frac": 0.0
+    },
+    "decrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "IDLE": {
+       "cycles": 418,
+       "frac": 0.47392290249433106
+      },
+      "FINISH_ITER": {
+       "cycles": 456,
+       "frac": 0.5170068027210885
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.0045351473922902496
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.0045351473922902496
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "decrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 418,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 414,
+     "idle_cycles": 464,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.46938775510204084,
+     "idle_frac": 0.5260770975056689
+    },
+    "decrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 830,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.05442176870748299,
+     "idle_frac": 0.9410430839002267
+    },
+    "decrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 76,
+     "ready_cycles": 502,
+     "xfer_cycles": 76,
+     "stall_cycles": 0,
+     "starved_cycles": 426,
+     "idle_cycles": 380,
+     "offered_cycles": 76,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.0,
+     "starve_frac": 0.48299319727891155,
+     "idle_frac": 0.4308390022675737
+    },
+    "decrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 837,
+     "ready_cycles": 64,
+     "xfer_cycles": 64,
+     "stall_cycles": 773,
+     "starved_cycles": 0,
+     "idle_cycles": 45,
+     "offered_cycles": 837,
+     "accept_rate": 0.07646356033452807,
+     "service_period_cycles": 13.078125,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.8764172335600907,
+     "starve_frac": 0.0,
+     "idle_frac": 0.05102040816326531,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 842,
+     "ready_cycles": 76,
+     "xfer_cycles": 76,
+     "stall_cycles": 766,
+     "starved_cycles": 0,
+     "idle_cycles": 40,
+     "offered_cycles": 842,
+     "accept_rate": 0.09026128266033254,
+     "service_period_cycles": 11.078947368421053,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.8684807256235828,
+     "starve_frac": 0.0,
+     "idle_frac": 0.045351473922902494,
+     "bytes": 1216,
+     "bytes_per_cycle": 1.3786848072562359,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "IDLE": {
+       "cycles": 40,
+       "frac": 0.045351473922902494
+      },
+      "AAD_STATE": {
+       "cycles": 434,
+       "frac": 0.49206349206349204
+      },
+      "CIPHERTEXT": {
+       "cycles": 384,
+       "frac": 0.43537414965986393
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.027210884353741496
+      }
+     },
+     "dominant": "AAD_STATE"
+    },
+    "decrypt/strip.axis_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 841,
+     "ready_cycles": 109,
+     "xfer_cycles": 68,
+     "stall_cycles": 773,
+     "starved_cycles": 41,
+     "idle_cycles": 0,
+     "offered_cycles": 841,
+     "accept_rate": 0.08085612366230678,
+     "service_period_cycles": 12.367647058823529,
+     "beats_per_cycle": 0.07709750566893424,
+     "duty": 0.07709750566893424,
+     "stall_frac": 0.8764172335600907,
+     "starve_frac": 0.046485260770975055,
+     "idle_frac": 0.0,
+     "bytes": 1088,
+     "bytes_per_cycle": 1.2335600907029478,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.axis_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 837,
+     "ready_cycles": 64,
+     "xfer_cycles": 64,
+     "stall_cycles": 773,
+     "starved_cycles": 0,
+     "idle_cycles": 45,
+     "offered_cycles": 837,
+     "accept_rate": 0.07646356033452807,
+     "service_period_cycles": 13.078125,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.8764172335600907,
+     "starve_frac": 0.0,
+     "idle_frac": 0.05102040816326531,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.tag_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 822,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 818,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.927437641723356,
+     "idle_frac": 0.06802721088435375
+    },
+    "decrypt/verify.auth_tag": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 822,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 818,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.927437641723356,
+     "idle_frac": 0.06802721088435375
+    },
+    "decrypt/verify.calc_tag": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 830,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.05442176870748299,
+     "idle_frac": 0.9410430839002267
+    },
+    "decrypt/verify.fsm": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "TAKE_AUTH_TAG": {
+       "cycles": 822,
+       "frac": 0.9319727891156463
+      },
+      "TAKE_CALC_TAG": {
+       "cycles": 52,
+       "frac": 0.05895691609977324
+      },
+      "COMPARE_TAGS": {
+       "cycles": 4,
+       "frac": 0.0045351473922902496
+      },
+      "OUTPUT_COMPARE_RESULT": {
+       "cycles": 4,
+       "frac": 0.0045351473922902496
+      }
+     },
+     "dominant": "TAKE_AUTH_TAG"
+    },
+    "decrypt/verify.tags_match": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 489,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 485,
+     "idle_cycles": 393,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5498866213151927,
+     "idle_frac": 0.445578231292517
+    },
+    "decrypt/wtv.axis_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 64,
+     "ready_cycles": 882,
+     "xfer_cycles": 64,
+     "stall_cycles": 0,
+     "starved_cycles": 818,
+     "idle_cycles": 0,
+     "offered_cycles": 64,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.0,
+     "starve_frac": 0.927437641723356,
+     "idle_frac": 0.0,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.axis_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 64,
+     "ready_cycles": 882,
+     "xfer_cycles": 64,
+     "stall_cycles": 0,
+     "starved_cycles": 818,
+     "idle_cycles": 0,
+     "offered_cycles": 64,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.0,
+     "starve_frac": 0.927437641723356,
+     "idle_frac": 0.0,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.fsm": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "WAIT_TO_VERIFY_BIT": {
+       "cycles": 489,
+       "frac": 0.5544217687074829
+      },
+      "OUTPUT_PLAINTEXT": {
+       "cycles": 393,
+       "frac": 0.445578231292517
+      }
+     },
+     "dominant": "WAIT_TO_VERIFY_BIT"
+    },
+    "decrypt/wtv.verify_bit": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 489,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 485,
+     "idle_cycles": 393,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.5498866213151927,
+     "idle_frac": 0.445578231292517
+    },
+    "encrypt/append.axis_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 64,
+     "ready_cycles": 826,
+     "xfer_cycles": 64,
+     "stall_cycles": 0,
+     "starved_cycles": 762,
+     "idle_cycles": 56,
+     "offered_cycles": 64,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8639455782312925,
+     "idle_frac": 0.06349206349206349,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.axis_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 68,
+     "ready_cycles": 882,
+     "xfer_cycles": 68,
+     "stall_cycles": 0,
+     "starved_cycles": 814,
+     "idle_cycles": 0,
+     "offered_cycles": 68,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.07709750566893424,
+     "duty": 0.07709750566893424,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9229024943310657,
+     "idle_frac": 0.0,
+     "bytes": 1088,
+     "bytes_per_cycle": 1.2335600907029478,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.fsm": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "CIPHERTEXT": {
+       "cycles": 826,
+       "frac": 0.9365079365079365
+      },
+      "TAG_TAIL": {
+       "cycles": 56,
+       "frac": 0.06349206349206349
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "encrypt/append.tag_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 826,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.05895691609977324,
+     "idle_frac": 0.9365079365079365
+    },
+    "encrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 72,
+     "ready_cycles": 66,
+     "xfer_cycles": 64,
+     "stall_cycles": 8,
+     "starved_cycles": 2,
+     "idle_cycles": 808,
+     "offered_cycles": 72,
+     "accept_rate": 0.8888888888888888,
+     "service_period_cycles": 1.125,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.009070294784580499,
+     "starve_frac": 0.0022675736961451248,
+     "idle_frac": 0.9160997732426304,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 416,
+     "ready_cycles": 64,
+     "xfer_cycles": 64,
+     "stall_cycles": 352,
+     "starved_cycles": 0,
+     "idle_cycles": 466,
+     "offered_cycles": 416,
+     "accept_rate": 0.15384615384615385,
+     "service_period_cycles": 6.5,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.39909297052154197,
+     "starve_frac": 0.0,
+     "idle_frac": 0.528344671201814,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 436,
+     "ready_cycles": 418,
+     "xfer_cycles": 20,
+     "stall_cycles": 416,
+     "starved_cycles": 398,
+     "idle_cycles": 48,
+     "offered_cycles": 436,
+     "accept_rate": 0.045871559633027525,
+     "service_period_cycles": 21.8,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.47165532879818595,
+     "starve_frac": 0.4512471655328798,
+     "idle_frac": 0.05442176870748299
+    },
+    "encrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 816,
+       "frac": 0.9251700680272109
+      },
+      "PLAINTEXT": {
+       "cycles": 66,
+       "frac": 0.07482993197278912
+      }
+     },
+     "dominant": "POLY_KEY"
+    },
+    "encrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 135,
+     "ready_cycles": 397,
+     "xfer_cycles": 4,
+     "stall_cycles": 131,
+     "starved_cycles": 393,
+     "idle_cycles": 354,
+     "offered_cycles": 135,
+     "accept_rate": 0.02962962962962963,
+     "service_period_cycles": 33.75,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.14852607709750568,
+     "starve_frac": 0.445578231292517,
+     "idle_frac": 0.4013605442176871
+    },
+    "encrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 573,
+       "frac": 0.6496598639455783
+      },
+      "PLAINTEXT": {
+       "cycles": 309,
+       "frac": 0.35034013605442177
+      }
+     },
+     "dominant": "POLY_KEY"
+    },
+    "encrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 24,
+     "ready_cycles": 441,
+     "xfer_cycles": 20,
+     "stall_cycles": 4,
+     "starved_cycles": 421,
+     "idle_cycles": 437,
+     "offered_cycles": 24,
+     "accept_rate": 0.8333333333333334,
+     "service_period_cycles": 1.2,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.0045351473922902496,
+     "starve_frac": 0.47732426303854875,
+     "idle_frac": 0.4954648526077097
+    },
+    "encrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 436,
+     "ready_cycles": 97,
+     "xfer_cycles": 76,
+     "stall_cycles": 360,
+     "starved_cycles": 21,
+     "idle_cycles": 425,
+     "offered_cycles": 436,
+     "accept_rate": 0.1743119266055046,
+     "service_period_cycles": 5.7368421052631575,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.40816326530612246,
+     "starve_frac": 0.023809523809523808,
+     "idle_frac": 0.481859410430839,
+     "bytes": 1216,
+     "bytes_per_cycle": 1.3786848072562359,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 76,
+     "ready_cycles": 882,
+     "xfer_cycles": 76,
+     "stall_cycles": 0,
+     "starved_cycles": 806,
+     "idle_cycles": 0,
+     "offered_cycles": 76,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9138321995464853,
+     "idle_frac": 0.0
+    },
+    "encrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "IDLE": {
+       "cycles": 397,
+       "frac": 0.4501133786848073
+      },
+      "START_ITER": {
+       "cycles": 21,
+       "frac": 0.023809523809523808
+      },
+      "FINISH_ITER": {
+       "cycles": 456,
+       "frac": 0.5170068027210885
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.0045351473922902496
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.0045351473922902496
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "encrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 135,
+     "ready_cycles": 397,
+     "xfer_cycles": 4,
+     "stall_cycles": 131,
+     "starved_cycles": 393,
+     "idle_cycles": 354,
+     "offered_cycles": 135,
+     "accept_rate": 0.02962962962962963,
+     "service_period_cycles": 33.75,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.14852607709750568,
+     "starve_frac": 0.445578231292517,
+     "idle_frac": 0.4013605442176871
+    },
+    "encrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 826,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0045351473922902496,
+     "duty": 0.0045351473922902496,
+     "stall_frac": 0.0,
+     "starve_frac": 0.05895691609977324,
+     "idle_frac": 0.9365079365079365
+    },
+    "encrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 76,
+     "ready_cycles": 502,
+     "xfer_cycles": 76,
+     "stall_cycles": 0,
+     "starved_cycles": 426,
+     "idle_cycles": 380,
+     "offered_cycles": 76,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.0,
+     "starve_frac": 0.48299319727891155,
+     "idle_frac": 0.4308390022675737
+    },
+    "encrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 416,
+     "ready_cycles": 64,
+     "xfer_cycles": 64,
+     "stall_cycles": 352,
+     "starved_cycles": 0,
+     "idle_cycles": 466,
+     "offered_cycles": 416,
+     "accept_rate": 0.15384615384615385,
+     "service_period_cycles": 6.5,
+     "beats_per_cycle": 0.07256235827664399,
+     "duty": 0.07256235827664399,
+     "stall_frac": 0.39909297052154197,
+     "starve_frac": 0.0,
+     "idle_frac": 0.528344671201814,
+     "bytes": 1024,
+     "bytes_per_cycle": 1.1609977324263039,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 436,
+     "ready_cycles": 97,
+     "xfer_cycles": 76,
+     "stall_cycles": 360,
+     "starved_cycles": 21,
+     "idle_cycles": 425,
+     "offered_cycles": 436,
+     "accept_rate": 0.1743119266055046,
+     "service_period_cycles": 5.7368421052631575,
+     "beats_per_cycle": 0.08616780045351474,
+     "duty": 0.08616780045351474,
+     "stall_frac": 0.40816326530612246,
+     "starve_frac": 0.023809523809523808,
+     "idle_frac": 0.481859410430839,
+     "bytes": 1216,
+     "bytes_per_cycle": 1.3786848072562359,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 882,
+     "states": {
+      "IDLE": {
+       "cycles": 446,
+       "frac": 0.5056689342403629
+      },
+      "AAD_STATE": {
+       "cycles": 28,
+       "frac": 0.031746031746031744
+      },
+      "CIPHERTEXT": {
+       "cycles": 384,
+       "frac": 0.43537414965986393
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.027210884353741496
+      }
+     },
+     "dominant": "IDLE"
+    },
+    "shared/pipe.arb": {
+     "kind": "arb",
+     "cycles": 882,
+     "labels": [
+      "encrypt",
+      "decrypt"
+     ],
+     "granted_ready_frac": 1.0,
+     "per_requester": {
+      "encrypt": {
+       "req_cycles": 24,
+       "sel_cycles": 441,
+       "xfer_cycles": 20,
+       "contention_cycles": 2,
+       "wasted_slot_cycles": 2,
+       "arb_loss_frac": 0.16666666666666666,
+       "contention_frac": 0.08333333333333333,
+       "wasted_slot_frac": 0.08333333333333333
+      },
+      "decrypt": {
+       "req_cycles": 35,
+       "sel_cycles": 441,
+       "xfer_cycles": 20,
+       "contention_cycles": 1,
+       "wasted_slot_cycles": 14,
+       "arb_loss_frac": 0.42857142857142855,
+       "contention_frac": 0.02857142857142857,
+       "wasted_slot_frac": 0.4
+      }
+     }
+    },
+    "shared/pipe.dec_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 35,
+     "ready_cycles": 441,
+     "xfer_cycles": 20,
+     "stall_cycles": 15,
+     "starved_cycles": 421,
+     "idle_cycles": 426,
+     "offered_cycles": 35,
+     "accept_rate": 0.5714285714285714,
+     "service_period_cycles": 1.75,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.017006802721088437,
+     "starve_frac": 0.47732426303854875,
+     "idle_frac": 0.48299319727891155
+    },
+    "shared/pipe.dec_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 26,
+     "ready_cycles": 842,
+     "xfer_cycles": 20,
+     "stall_cycles": 6,
+     "starved_cycles": 822,
+     "idle_cycles": 34,
+     "offered_cycles": 26,
+     "accept_rate": 0.7692307692307693,
+     "service_period_cycles": 1.3,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.006802721088435374,
+     "starve_frac": 0.9319727891156463,
+     "idle_frac": 0.03854875283446712
+    },
+    "shared/pipe.enc_in": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 24,
+     "ready_cycles": 441,
+     "xfer_cycles": 20,
+     "stall_cycles": 4,
+     "starved_cycles": 421,
+     "idle_cycles": 437,
+     "offered_cycles": 24,
+     "accept_rate": 0.8333333333333334,
+     "service_period_cycles": 1.2,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.0045351473922902496,
+     "starve_frac": 0.47732426303854875,
+     "idle_frac": 0.4954648526077097
+    },
+    "shared/pipe.enc_out": {
+     "kind": "handshake",
+     "cycles": 882,
+     "valid_cycles": 436,
+     "ready_cycles": 418,
+     "xfer_cycles": 20,
+     "stall_cycles": 416,
+     "starved_cycles": 398,
+     "idle_cycles": 48,
+     "offered_cycles": 436,
+     "accept_rate": 0.045871559633027525,
+     "service_period_cycles": 21.8,
+     "beats_per_cycle": 0.022675736961451247,
+     "duty": 0.022675736961451247,
+     "stall_frac": 0.47165532879818595,
+     "starve_frac": 0.4512471655328798,
+     "idle_frac": 0.05442176870748299
+    }
+   }
+  },
+  {
+   "name": "b2b-1024",
+   "packet_bytes": 1024,
+   "num_packets": 4,
+   "encrypt": {
+    "window_cycles": 1691,
+    "goodput_bytes": 4096,
+    "in_beats": 256,
+    "out_beats": 260,
+    "in_line_bytes": 4096,
+    "out_line_bytes": 4160,
+    "in_payload_bytes": 4096,
+    "out_payload_bytes": 4160,
+    "beats_per_packet": 65.0,
+    "bytes_per_cycle": 2.4222353636901244,
+    "packet_period_cycles": 418.3333333333333,
+    "sustained_bytes_per_cycle": 2.4478087649402394,
+    "steady_in_bytes_per_cycle": 2.4916030534351146,
+    "steady_out_bytes_per_cycle": 2.4958553127354937,
+    "in_duty": 0.15138971023063277,
+    "out_duty": 0.1537551744529864,
+    "in_stall_cycles": 1108,
+    "in_stall_frac": 0.6552335895919574,
+    "latency_cycles": {
+     "cold_head": 43,
+     "head_min": 43,
+     "head_med": 348.5,
+     "head_max": 586,
+     "total_min": 435,
+     "total_med": 742.5,
+     "total_max": 1002
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 1024,
+      "out_bytes": 1040,
+      "first_in": 1506,
+      "first_out": 1549,
+      "last_out": 1941,
+      "head_latency": 43,
+      "total_latency": 435
+     },
+     {
+      "idx": 1,
+      "in_bytes": 1024,
+      "out_bytes": 1040,
+      "first_in": 1570,
+      "first_out": 1958,
+      "last_out": 2354,
+      "head_latency": 388,
+      "total_latency": 784
+     },
+     {
+      "idx": 2,
+      "in_bytes": 1024,
+      "out_bytes": 1040,
+      "first_in": 2062,
+      "first_out": 2371,
+      "last_out": 2763,
+      "head_latency": 309,
+      "total_latency": 701
+     },
+     {
+      "idx": 3,
+      "in_bytes": 1024,
+      "out_bytes": 1040,
+      "first_in": 2194,
+      "first_out": 2780,
+      "last_out": 3196,
+      "head_latency": 586,
+      "total_latency": 1002
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 1506,
+    "last_out_cycle": 3196
+   },
+   "decrypt": {
+    "window_cycles": 2285,
+    "goodput_bytes": 4096,
+    "in_beats": 260,
+    "out_beats": 256,
+    "in_line_bytes": 4160,
+    "out_line_bytes": 4096,
+    "in_payload_bytes": 4160,
+    "out_payload_bytes": 4096,
+    "beats_per_packet": 64.0,
+    "bytes_per_cycle": 1.7925601750547047,
+    "packet_period_cycles": 561.6666666666666,
+    "sustained_bytes_per_cycle": 1.823145400593472,
+    "steady_in_bytes_per_cycle": 1.7787325456498388,
+    "steady_out_bytes_per_cycle": 1.923394225103123,
+    "in_duty": 0.1137855579868709,
+    "out_duty": 0.11203501094091904,
+    "in_stall_cycles": 1945,
+    "in_stall_frac": 0.8512035010940919,
+    "latency_cycles": {
+     "cold_head": 431,
+     "head_min": 431,
+     "head_med": 515.5,
+     "head_max": 903,
+     "total_min": 497,
+     "total_med": 629.5,
+     "total_max": 986
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 1040,
+      "out_bytes": 1024,
+      "first_in": 1503,
+      "first_out": 1934,
+      "last_out": 2102,
+      "head_latency": 431,
+      "total_latency": 599
+     },
+     {
+      "idx": 1,
+      "in_bytes": 1040,
+      "out_bytes": 1024,
+      "first_in": 1918,
+      "first_out": 2821,
+      "last_out": 2904,
+      "head_latency": 903,
+      "total_latency": 986
+     },
+     {
+      "idx": 2,
+      "in_bytes": 1040,
+      "out_bytes": 1024,
+      "first_in": 2709,
+      "first_out": 3306,
+      "last_out": 3369,
+      "head_latency": 597,
+      "total_latency": 660
+     },
+     {
+      "idx": 3,
+      "in_bytes": 1040,
+      "out_bytes": 1024,
+      "first_in": 3290,
+      "first_out": 3724,
+      "last_out": 3787,
+      "head_latency": 434,
+      "total_latency": 497
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 1503,
+    "last_out_cycle": 3787
+   },
+   "taps": {
+    "decrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 607,
+     "ready_cycles": 1856,
+     "xfer_cycles": 256,
+     "stall_cycles": 351,
+     "starved_cycles": 1600,
+     "idle_cycles": 86,
+     "offered_cycles": 607,
+     "accept_rate": 0.42174629324546953,
+     "service_period_cycles": 2.37109375,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.1530745747928478,
+     "starve_frac": 0.6977758395115569,
+     "idle_frac": 0.03750545137374618,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 256,
+     "ready_cycles": 2293,
+     "xfer_cycles": 256,
+     "stall_cycles": 0,
+     "starved_cycles": 2037,
+     "idle_cycles": 0,
+     "offered_cycles": 256,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.0,
+     "starve_frac": 0.888355865678151,
+     "idle_frac": 0.0,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 172,
+     "ready_cycles": 2111,
+     "xfer_cycles": 68,
+     "stall_cycles": 104,
+     "starved_cycles": 2043,
+     "idle_cycles": 78,
+     "offered_cycles": 172,
+     "accept_rate": 0.3953488372093023,
+     "service_period_cycles": 2.5294117647058822,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.0453554295682512,
+     "starve_frac": 0.8909725250763192,
+     "idle_frac": 0.0340165721761884
+    },
+    "decrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 163,
+       "frac": 0.07108591365023986
+      },
+      "PLAINTEXT": {
+       "cycles": 2130,
+       "frac": 0.9289140863497601
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 478,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 474,
+     "idle_cycles": 1815,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.20671609245529873,
+     "idle_frac": 0.7915394679459223
+    },
+    "decrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 115,
+       "frac": 0.05015263846489315
+      },
+      "PLAINTEXT": {
+       "cycles": 2178,
+       "frac": 0.9498473615351068
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 598,
+     "ready_cycles": 585,
+     "xfer_cycles": 68,
+     "stall_cycles": 530,
+     "starved_cycles": 517,
+     "idle_cycles": 1178,
+     "offered_cycles": 598,
+     "accept_rate": 0.11371237458193979,
+     "service_period_cycles": 8.794117647058824,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.23113824683820322,
+     "starve_frac": 0.22546881814217182,
+     "idle_frac": 0.5137374618403838
+    },
+    "decrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 2007,
+     "ready_cycles": 467,
+     "xfer_cycles": 268,
+     "stall_cycles": 1739,
+     "starved_cycles": 199,
+     "idle_cycles": 87,
+     "offered_cycles": 2007,
+     "accept_rate": 0.13353263577478824,
+     "service_period_cycles": 7.4888059701492535,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.7583951155691234,
+     "starve_frac": 0.0867858700392499,
+     "idle_frac": 0.03794156127344091,
+     "bytes": 4288,
+     "bytes_per_cycle": 1.8700392498909726,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 268,
+     "ready_cycles": 2293,
+     "xfer_cycles": 268,
+     "stall_cycles": 0,
+     "starved_cycles": 2025,
+     "idle_cycles": 0,
+     "offered_cycles": 268,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8831225468818142,
+     "idle_frac": 0.0
+    },
+    "decrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "IDLE": {
+       "cycles": 478,
+       "frac": 0.20846053205407764
+      },
+      "START_ITER": {
+       "cycles": 199,
+       "frac": 0.0867858700392499
+      },
+      "FINISH_ITER": {
+       "cycles": 1608,
+       "frac": 0.7012647187091147
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.0017444395987788923
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.0017444395987788923
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "decrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 478,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 474,
+     "idle_cycles": 1815,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.20671609245529873,
+     "idle_frac": 0.7915394679459223
+    },
+    "decrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 2241,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.020933275185346708,
+     "idle_frac": 0.9773222852158744
+    },
+    "decrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 268,
+     "ready_cycles": 953,
+     "xfer_cycles": 268,
+     "stall_cycles": 0,
+     "starved_cycles": 685,
+     "idle_cycles": 1340,
+     "offered_cycles": 268,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.0,
+     "starve_frac": 0.2987352812908853,
+     "idle_frac": 0.5843872655909289
+    },
+    "decrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 2002,
+     "ready_cycles": 455,
+     "xfer_cycles": 256,
+     "stall_cycles": 1746,
+     "starved_cycles": 199,
+     "idle_cycles": 92,
+     "offered_cycles": 2002,
+     "accept_rate": 0.12787212787212787,
+     "service_period_cycles": 7.8203125,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.7614478848669864,
+     "starve_frac": 0.0867858700392499,
+     "idle_frac": 0.04012211077191452,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 2007,
+     "ready_cycles": 467,
+     "xfer_cycles": 268,
+     "stall_cycles": 1739,
+     "starved_cycles": 199,
+     "idle_cycles": 87,
+     "offered_cycles": 2007,
+     "accept_rate": 0.13353263577478824,
+     "service_period_cycles": 7.4888059701492535,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.7583951155691234,
+     "starve_frac": 0.0867858700392499,
+     "idle_frac": 0.03794156127344091,
+     "bytes": 4288,
+     "bytes_per_cycle": 1.8700392498909726,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "IDLE": {
+       "cycles": 87,
+       "frac": 0.03794156127344091
+      },
+      "AAD_STATE": {
+       "cycles": 447,
+       "frac": 0.1949411251635412
+      },
+      "CIPHERTEXT": {
+       "cycles": 1735,
+       "frac": 0.7566506759703445
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.010466637592673354
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "decrypt/strip.axis_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 2205,
+     "ready_cycles": 348,
+     "xfer_cycles": 260,
+     "stall_cycles": 1945,
+     "starved_cycles": 88,
+     "idle_cycles": 0,
+     "offered_cycles": 2205,
+     "accept_rate": 0.11791383219954649,
+     "service_period_cycles": 8.48076923076923,
+     "beats_per_cycle": 0.113388573920628,
+     "duty": 0.113388573920628,
+     "stall_frac": 0.8482337549062364,
+     "starve_frac": 0.03837767117313563,
+     "idle_frac": 0.0,
+     "bytes": 4160,
+     "bytes_per_cycle": 1.814217182730048,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.axis_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 2201,
+     "ready_cycles": 256,
+     "xfer_cycles": 256,
+     "stall_cycles": 1945,
+     "starved_cycles": 0,
+     "idle_cycles": 92,
+     "offered_cycles": 2201,
+     "accept_rate": 0.11631076783280327,
+     "service_period_cycles": 8.59765625,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.8482337549062364,
+     "starve_frac": 0.0,
+     "idle_frac": 0.04012211077191452,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.tag_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 2233,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 2229,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9720889664195377,
+     "idle_frac": 0.026166593981683386
+    },
+    "decrypt/verify.auth_tag": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 2233,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 2229,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9720889664195377,
+     "idle_frac": 0.026166593981683386
+    },
+    "decrypt/verify.calc_tag": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 2241,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.020933275185346708,
+     "idle_frac": 0.9773222852158744
+    },
+    "decrypt/verify.fsm": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "TAKE_AUTH_TAG": {
+       "cycles": 2233,
+       "frac": 0.9738334060183166
+      },
+      "TAKE_CALC_TAG": {
+       "cycles": 52,
+       "frac": 0.0226777147841256
+      },
+      "COMPARE_TAGS": {
+       "cycles": 4,
+       "frac": 0.0017444395987788923
+      },
+      "OUTPUT_COMPARE_RESULT": {
+       "cycles": 4,
+       "frac": 0.0017444395987788923
+      }
+     },
+     "dominant": "TAKE_AUTH_TAG"
+    },
+    "decrypt/verify.tags_match": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 1816,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 1812,
+     "idle_cycles": 477,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.7902311382468382,
+     "idle_frac": 0.2080244221543829
+    },
+    "decrypt/wtv.axis_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 256,
+     "ready_cycles": 2293,
+     "xfer_cycles": 256,
+     "stall_cycles": 0,
+     "starved_cycles": 2037,
+     "idle_cycles": 0,
+     "offered_cycles": 256,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.0,
+     "starve_frac": 0.888355865678151,
+     "idle_frac": 0.0,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.axis_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 256,
+     "ready_cycles": 2293,
+     "xfer_cycles": 256,
+     "stall_cycles": 0,
+     "starved_cycles": 2037,
+     "idle_cycles": 0,
+     "offered_cycles": 256,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.0,
+     "starve_frac": 0.888355865678151,
+     "idle_frac": 0.0,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.fsm": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "WAIT_TO_VERIFY_BIT": {
+       "cycles": 1816,
+       "frac": 0.7919755778456171
+      },
+      "OUTPUT_PLAINTEXT": {
+       "cycles": 477,
+       "frac": 0.2080244221543829
+      }
+     },
+     "dominant": "WAIT_TO_VERIFY_BIT"
+    },
+    "decrypt/wtv.verify_bit": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 1816,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 1812,
+     "idle_cycles": 477,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.7902311382468382,
+     "idle_frac": 0.2080244221543829
+    },
+    "encrypt/append.axis_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 256,
+     "ready_cycles": 2237,
+     "xfer_cycles": 256,
+     "stall_cycles": 0,
+     "starved_cycles": 1981,
+     "idle_cycles": 56,
+     "offered_cycles": 256,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8639337112952464,
+     "idle_frac": 0.02442215438290449,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.axis_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 260,
+     "ready_cycles": 2293,
+     "xfer_cycles": 260,
+     "stall_cycles": 0,
+     "starved_cycles": 2033,
+     "idle_cycles": 0,
+     "offered_cycles": 260,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.113388573920628,
+     "duty": 0.113388573920628,
+     "stall_frac": 0.0,
+     "starve_frac": 0.886611426079372,
+     "idle_frac": 0.0,
+     "bytes": 4160,
+     "bytes_per_cycle": 1.814217182730048,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.fsm": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "CIPHERTEXT": {
+       "cycles": 2237,
+       "frac": 0.9755778456170955
+      },
+      "TAG_TAIL": {
+       "cycles": 56,
+       "frac": 0.02442215438290449
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "encrypt/append.tag_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 2237,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.0226777147841256,
+     "idle_frac": 0.9755778456170955
+    },
+    "encrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1364,
+     "ready_cycles": 258,
+     "xfer_cycles": 256,
+     "stall_cycles": 1108,
+     "starved_cycles": 2,
+     "idle_cycles": 927,
+     "offered_cycles": 1364,
+     "accept_rate": 0.187683284457478,
+     "service_period_cycles": 5.328125,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.48320976886175315,
+     "starve_frac": 0.0008722197993894462,
+     "idle_frac": 0.4042738770170083,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1558,
+     "ready_cycles": 284,
+     "xfer_cycles": 256,
+     "stall_cycles": 1302,
+     "starved_cycles": 28,
+     "idle_cycles": 707,
+     "offered_cycles": 1558,
+     "accept_rate": 0.1643132220795892,
+     "service_period_cycles": 6.0859375,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.5678150894025294,
+     "starve_frac": 0.012211077191452245,
+     "idle_frac": 0.3083296990841692,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1506,
+     "ready_cycles": 745,
+     "xfer_cycles": 68,
+     "stall_cycles": 1438,
+     "starved_cycles": 677,
+     "idle_cycles": 110,
+     "offered_cycles": 1506,
+     "accept_rate": 0.0451527224435591,
+     "service_period_cycles": 22.147058823529413,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.6271260357610118,
+     "starve_frac": 0.29524640209332753,
+     "idle_frac": 0.04797208896641954
+    },
+    "encrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 957,
+       "frac": 0.41735717400785
+      },
+      "PLAINTEXT": {
+       "cycles": 1336,
+       "frac": 0.58264282599215
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "encrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 136,
+     "ready_cycles": 628,
+     "xfer_cycles": 4,
+     "stall_cycles": 132,
+     "starved_cycles": 624,
+     "idle_cycles": 1533,
+     "offered_cycles": 136,
+     "accept_rate": 0.029411764705882353,
+     "service_period_cycles": 34.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.05756650675970344,
+     "starve_frac": 0.2721325774095072,
+     "idle_frac": 0.6685564762320104
+    },
+    "encrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 804,
+       "frac": 0.35063235935455733
+      },
+      "PLAINTEXT": {
+       "cycles": 1489,
+       "frac": 0.6493676406454426
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "encrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1172,
+     "ready_cycles": 574,
+     "xfer_cycles": 68,
+     "stall_cycles": 1104,
+     "starved_cycles": 506,
+     "idle_cycles": 615,
+     "offered_cycles": 1172,
+     "accept_rate": 0.05802047781569966,
+     "service_period_cycles": 17.235294117647058,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.48146532926297425,
+     "starve_frac": 0.22067160924552987,
+     "idle_frac": 0.26820758831225466
+    },
+    "encrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1578,
+     "ready_cycles": 317,
+     "xfer_cycles": 268,
+     "stall_cycles": 1310,
+     "starved_cycles": 49,
+     "idle_cycles": 666,
+     "offered_cycles": 1578,
+     "accept_rate": 0.16983523447401774,
+     "service_period_cycles": 5.888059701492537,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.5713039686000873,
+     "starve_frac": 0.02136938508504143,
+     "idle_frac": 0.29044919319668555,
+     "bytes": 4288,
+     "bytes_per_cycle": 1.8700392498909726,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 268,
+     "ready_cycles": 2293,
+     "xfer_cycles": 268,
+     "stall_cycles": 0,
+     "starved_cycles": 2025,
+     "idle_cycles": 0,
+     "offered_cycles": 268,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8831225468818142,
+     "idle_frac": 0.0
+    },
+    "encrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "IDLE": {
+       "cycles": 628,
+       "frac": 0.2738770170082861
+      },
+      "START_ITER": {
+       "cycles": 49,
+       "frac": 0.02136938508504143
+      },
+      "FINISH_ITER": {
+       "cycles": 1608,
+       "frac": 0.7012647187091147
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.0017444395987788923
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.0017444395987788923
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "encrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 136,
+     "ready_cycles": 628,
+     "xfer_cycles": 4,
+     "stall_cycles": 132,
+     "starved_cycles": 624,
+     "idle_cycles": 1533,
+     "offered_cycles": 136,
+     "accept_rate": 0.029411764705882353,
+     "service_period_cycles": 34.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.05756650675970344,
+     "starve_frac": 0.2721325774095072,
+     "idle_frac": 0.6685564762320104
+    },
+    "encrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 2237,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0017444395987788923,
+     "duty": 0.0017444395987788923,
+     "stall_frac": 0.0,
+     "starve_frac": 0.0226777147841256,
+     "idle_frac": 0.9755778456170955
+    },
+    "encrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 268,
+     "ready_cycles": 953,
+     "xfer_cycles": 268,
+     "stall_cycles": 0,
+     "starved_cycles": 685,
+     "idle_cycles": 1340,
+     "offered_cycles": 268,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.0,
+     "starve_frac": 0.2987352812908853,
+     "idle_frac": 0.5843872655909289
+    },
+    "encrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1558,
+     "ready_cycles": 284,
+     "xfer_cycles": 256,
+     "stall_cycles": 1302,
+     "starved_cycles": 28,
+     "idle_cycles": 707,
+     "offered_cycles": 1558,
+     "accept_rate": 0.1643132220795892,
+     "service_period_cycles": 6.0859375,
+     "beats_per_cycle": 0.11164413432184911,
+     "duty": 0.11164413432184911,
+     "stall_frac": 0.5678150894025294,
+     "starve_frac": 0.012211077191452245,
+     "idle_frac": 0.3083296990841692,
+     "bytes": 4096,
+     "bytes_per_cycle": 1.7863061491495857,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1578,
+     "ready_cycles": 317,
+     "xfer_cycles": 268,
+     "stall_cycles": 1310,
+     "starved_cycles": 49,
+     "idle_cycles": 666,
+     "offered_cycles": 1578,
+     "accept_rate": 0.16983523447401774,
+     "service_period_cycles": 5.888059701492537,
+     "beats_per_cycle": 0.11687745311818579,
+     "duty": 0.11687745311818579,
+     "stall_frac": 0.5713039686000873,
+     "starve_frac": 0.02136938508504143,
+     "idle_frac": 0.29044919319668555,
+     "bytes": 4288,
+     "bytes_per_cycle": 1.8700392498909726,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 2293,
+     "states": {
+      "IDLE": {
+       "cycles": 677,
+       "frac": 0.29524640209332753
+      },
+      "AAD_STATE": {
+       "cycles": 28,
+       "frac": 0.012211077191452245
+      },
+      "CIPHERTEXT": {
+       "cycles": 1564,
+       "frac": 0.6820758831225469
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.010466637592673354
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "shared/pipe.arb": {
+     "kind": "arb",
+     "cycles": 2293,
+     "labels": [
+      "encrypt",
+      "decrypt"
+     ],
+     "granted_ready_frac": 0.505451373746184,
+     "per_requester": {
+      "encrypt": {
+       "req_cycles": 1172,
+       "sel_cycles": 1147,
+       "xfer_cycles": 68,
+       "contention_cycles": 256,
+       "wasted_slot_cycles": 298,
+       "arb_loss_frac": 0.4726962457337884,
+       "contention_frac": 0.21843003412969283,
+       "wasted_slot_frac": 0.25426621160409557
+      },
+      "decrypt": {
+       "req_cycles": 598,
+       "sel_cycles": 1146,
+       "xfer_cycles": 68,
+       "contention_cycles": 250,
+       "wasted_slot_cycles": 41,
+       "arb_loss_frac": 0.4866220735785953,
+       "contention_frac": 0.4180602006688963,
+       "wasted_slot_frac": 0.06856187290969899
+      }
+     }
+    },
+    "shared/pipe.dec_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 598,
+     "ready_cycles": 585,
+     "xfer_cycles": 68,
+     "stall_cycles": 530,
+     "starved_cycles": 517,
+     "idle_cycles": 1178,
+     "offered_cycles": 598,
+     "accept_rate": 0.11371237458193979,
+     "service_period_cycles": 8.794117647058824,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.23113824683820322,
+     "starve_frac": 0.22546881814217182,
+     "idle_frac": 0.5137374618403838
+    },
+    "shared/pipe.dec_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 172,
+     "ready_cycles": 2111,
+     "xfer_cycles": 68,
+     "stall_cycles": 104,
+     "starved_cycles": 2043,
+     "idle_cycles": 78,
+     "offered_cycles": 172,
+     "accept_rate": 0.3953488372093023,
+     "service_period_cycles": 2.5294117647058822,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.0453554295682512,
+     "starve_frac": 0.8909725250763192,
+     "idle_frac": 0.0340165721761884
+    },
+    "shared/pipe.enc_in": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1172,
+     "ready_cycles": 574,
+     "xfer_cycles": 68,
+     "stall_cycles": 1104,
+     "starved_cycles": 506,
+     "idle_cycles": 615,
+     "offered_cycles": 1172,
+     "accept_rate": 0.05802047781569966,
+     "service_period_cycles": 17.235294117647058,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.48146532926297425,
+     "starve_frac": 0.22067160924552987,
+     "idle_frac": 0.26820758831225466
+    },
+    "shared/pipe.enc_out": {
+     "kind": "handshake",
+     "cycles": 2293,
+     "valid_cycles": 1506,
+     "ready_cycles": 745,
+     "xfer_cycles": 68,
+     "stall_cycles": 1438,
+     "starved_cycles": 677,
+     "idle_cycles": 110,
+     "offered_cycles": 1506,
+     "accept_rate": 0.0451527224435591,
+     "service_period_cycles": 22.147058823529413,
+     "beats_per_cycle": 0.02965547317924117,
+     "duty": 0.02965547317924117,
+     "stall_frac": 0.6271260357610118,
+     "starve_frac": 0.29524640209332753,
+     "idle_frac": 0.04797208896641954
+    }
+   }
+  },
+  {
+   "name": "b2b-1420",
+   "packet_bytes": 1420,
+   "num_packets": 4,
+   "encrypt": {
+    "window_cycles": 2288,
+    "goodput_bytes": 5680,
+    "in_beats": 356,
+    "out_beats": 360,
+    "in_line_bytes": 5696,
+    "out_line_bytes": 5760,
+    "in_payload_bytes": 5680,
+    "out_payload_bytes": 5744,
+    "beats_per_packet": 90.0,
+    "bytes_per_cycle": 2.4825174825174825,
+    "packet_period_cycles": 565.6666666666666,
+    "sustained_bytes_per_cycle": 2.5103123158515026,
+    "steady_in_bytes_per_cycle": 3.0193204530313125,
+    "steady_out_bytes_per_cycle": 2.5402107598447032,
+    "in_duty": 0.1555944055944056,
+    "out_duty": 0.15734265734265734,
+    "in_stall_cycles": 1406,
+    "in_stall_frac": 0.6145104895104895,
+    "latency_cycles": {
+     "cold_head": 43,
+     "head_min": 43,
+     "head_med": 517.0,
+     "head_max": 547,
+     "total_min": 590,
+     "total_med": 1060.0,
+     "total_max": 1090
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 1420,
+      "out_bytes": 1436,
+      "first_in": 3798,
+      "first_out": 3841,
+      "last_out": 4388,
+      "head_latency": 43,
+      "total_latency": 590
+     },
+     {
+      "idx": 1,
+      "in_bytes": 1420,
+      "out_bytes": 1436,
+      "first_in": 3887,
+      "first_out": 4422,
+      "last_out": 4965,
+      "head_latency": 535,
+      "total_latency": 1078
+     },
+     {
+      "idx": 2,
+      "in_bytes": 1420,
+      "out_bytes": 1436,
+      "first_in": 4483,
+      "first_out": 4982,
+      "last_out": 5525,
+      "head_latency": 499,
+      "total_latency": 1042
+     },
+     {
+      "idx": 3,
+      "in_bytes": 1420,
+      "out_bytes": 1436,
+      "first_in": 4995,
+      "first_out": 5542,
+      "last_out": 6085,
+      "head_latency": 547,
+      "total_latency": 1090
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 3798,
+    "last_out_cycle": 6085
+   },
+   "decrypt": {
+    "window_cycles": 3553,
+    "goodput_bytes": 5680,
+    "in_beats": 360,
+    "out_beats": 356,
+    "in_line_bytes": 5760,
+    "out_line_bytes": 5696,
+    "in_payload_bytes": 5744,
+    "out_payload_bytes": 5680,
+    "beats_per_packet": 89.0,
+    "bytes_per_cycle": 1.5986490289895863,
+    "packet_period_cycles": 857.6666666666666,
+    "sustained_bytes_per_cycle": 1.6556548775748154,
+    "steady_in_bytes_per_cycle": 1.53485254691689,
+    "steady_out_bytes_per_cycle": 1.563297688858227,
+    "in_duty": 0.10132282578103012,
+    "out_duty": 0.10019701660568534,
+    "in_stall_cycles": 3088,
+    "in_stall_frac": 0.8691246833661694,
+    "latency_cycles": {
+     "cold_head": 582,
+     "head_min": 582,
+     "head_med": 610.5,
+     "head_max": 1709,
+     "total_min": 671,
+     "total_med": 852.5,
+     "total_max": 1797
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 1436,
+      "out_bytes": 1420,
+      "first_in": 3796,
+      "first_out": 4378,
+      "last_out": 4775,
+      "head_latency": 582,
+      "total_latency": 979
+     },
+     {
+      "idx": 1,
+      "in_bytes": 1436,
+      "out_bytes": 1420,
+      "first_in": 4362,
+      "first_out": 6071,
+      "last_out": 6159,
+      "head_latency": 1709,
+      "total_latency": 1797
+     },
+     {
+      "idx": 2,
+      "in_bytes": 1436,
+      "out_bytes": 1420,
+      "first_in": 6055,
+      "first_out": 6693,
+      "last_out": 6781,
+      "head_latency": 638,
+      "total_latency": 726
+     },
+     {
+      "idx": 3,
+      "in_bytes": 1436,
+      "out_bytes": 1420,
+      "first_in": 6677,
+      "first_out": 7260,
+      "last_out": 7348,
+      "head_latency": 583,
+      "total_latency": 671
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 3796,
+    "last_out_cycle": 7348
+   },
+   "taps": {
+    "decrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 1136,
+     "ready_cycles": 2669,
+     "xfer_cycles": 356,
+     "stall_cycles": 780,
+     "starved_cycles": 2313,
+     "idle_cycles": 112,
+     "offered_cycles": 1136,
+     "accept_rate": 0.31338028169014087,
+     "service_period_cycles": 3.191011235955056,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.21903959561920808,
+     "starve_frac": 0.649536647009267,
+     "idle_frac": 0.031451839370963214,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "decrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 356,
+     "ready_cycles": 3561,
+     "xfer_cycles": 356,
+     "stall_cycles": 0,
+     "starved_cycles": 3205,
+     "idle_cycles": 0,
+     "offered_cycles": 356,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9000280819994384,
+     "idle_frac": 0.0,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "decrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 205,
+     "ready_cycles": 3297,
+     "xfer_cycles": 96,
+     "stall_cycles": 109,
+     "starved_cycles": 3201,
+     "idle_cycles": 155,
+     "offered_cycles": 205,
+     "accept_rate": 0.4682926829268293,
+     "service_period_cycles": 2.1354166666666665,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.030609379387812413,
+     "starve_frac": 0.8989048020219039,
+     "idle_frac": 0.04352709912945802
+    },
+    "decrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 131,
+       "frac": 0.036787419264251615
+      },
+      "PLAINTEXT": {
+       "cycles": 3430,
+       "frac": 0.9632125807357483
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 674,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 670,
+     "idle_cycles": 2887,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.18814939623701207,
+     "idle_frac": 0.8107273237854535
+    },
+    "decrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 188,
+       "frac": 0.05279415894411682
+      },
+      "PLAINTEXT": {
+       "cycles": 3373,
+       "frac": 0.9472058410558831
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 1025,
+     "ready_cycles": 797,
+     "xfer_cycles": 96,
+     "stall_cycles": 929,
+     "starved_cycles": 701,
+     "idle_cycles": 1835,
+     "offered_cycles": 1025,
+     "accept_rate": 0.09365853658536585,
+     "service_period_cycles": 10.677083333333334,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.2608817747823645,
+     "starve_frac": 0.19685481606290367,
+     "idle_frac": 0.5153046896939062
+    },
+    "decrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2778,
+     "ready_cycles": 1039,
+     "xfer_cycles": 368,
+     "stall_cycles": 2410,
+     "starved_cycles": 671,
+     "idle_cycles": 112,
+     "offered_cycles": 2778,
+     "accept_rate": 0.13246940244780417,
+     "service_period_cycles": 7.548913043478261,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.6767761864644762,
+     "starve_frac": 0.18843021623139566,
+     "idle_frac": 0.031451839370963214,
+     "bytes": 5888,
+     "bytes_per_cycle": 1.6534681269306375,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 368,
+     "ready_cycles": 3561,
+     "xfer_cycles": 368,
+     "stall_cycles": 0,
+     "starved_cycles": 3193,
+     "idle_cycles": 0,
+     "offered_cycles": 368,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8966582420668352,
+     "idle_frac": 0.0
+    },
+    "decrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "IDLE": {
+       "cycles": 674,
+       "frac": 0.18927267621454646
+      },
+      "START_ITER": {
+       "cycles": 671,
+       "frac": 0.18843021623139566
+      },
+      "FINISH_ITER": {
+       "cycles": 2208,
+       "frac": 0.620050547598989
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.0011232799775344005
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.0011232799775344005
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "decrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 674,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 670,
+     "idle_cycles": 2887,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.18814939623701207,
+     "idle_frac": 0.8107273237854535
+    },
+    "decrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 3509,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.013479359730412805,
+     "idle_frac": 0.9853973602920528
+    },
+    "decrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 368,
+     "ready_cycles": 1721,
+     "xfer_cycles": 368,
+     "stall_cycles": 0,
+     "starved_cycles": 1353,
+     "idle_cycles": 1840,
+     "offered_cycles": 368,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.37994945240101097,
+     "idle_frac": 0.5167087896658242
+    },
+    "decrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2773,
+     "ready_cycles": 1027,
+     "xfer_cycles": 356,
+     "stall_cycles": 2417,
+     "starved_cycles": 671,
+     "idle_cycles": 117,
+     "offered_cycles": 2773,
+     "accept_rate": 0.1283808150018031,
+     "service_period_cycles": 7.78932584269663,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.6787419264251615,
+     "starve_frac": 0.18843021623139566,
+     "idle_frac": 0.03285593934288121,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "decrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2778,
+     "ready_cycles": 1039,
+     "xfer_cycles": 368,
+     "stall_cycles": 2410,
+     "starved_cycles": 671,
+     "idle_cycles": 112,
+     "offered_cycles": 2778,
+     "accept_rate": 0.13246940244780417,
+     "service_period_cycles": 7.548913043478261,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.6767761864644762,
+     "starve_frac": 0.18843021623139566,
+     "idle_frac": 0.031451839370963214,
+     "bytes": 5888,
+     "bytes_per_cycle": 1.6534681269306375,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "IDLE": {
+       "cycles": 112,
+       "frac": 0.031451839370963214
+      },
+      "AAD_STATE": {
+       "cycles": 618,
+       "frac": 0.17354675652906487
+      },
+      "CIPHERTEXT": {
+       "cycles": 2807,
+       "frac": 0.7882617242347655
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.006739679865206402
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "decrypt/strip.axis_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 3448,
+     "ready_cycles": 473,
+     "xfer_cycles": 360,
+     "stall_cycles": 3088,
+     "starved_cycles": 113,
+     "idle_cycles": 0,
+     "offered_cycles": 3448,
+     "accept_rate": 0.10440835266821345,
+     "service_period_cycles": 9.577777777777778,
+     "beats_per_cycle": 0.10109519797809605,
+     "duty": 0.10109519797809605,
+     "stall_frac": 0.8671721426565572,
+     "starve_frac": 0.03173265936534681,
+     "idle_frac": 0.0,
+     "bytes": 5744,
+     "bytes_per_cycle": 1.613030047739399,
+     "bytes_per_beat": 15.955555555555556
+    },
+    "decrypt/strip.axis_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 3444,
+     "ready_cycles": 356,
+     "xfer_cycles": 356,
+     "stall_cycles": 3088,
+     "starved_cycles": 0,
+     "idle_cycles": 117,
+     "offered_cycles": 3444,
+     "accept_rate": 0.10336817653890824,
+     "service_period_cycles": 9.674157303370787,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.8671721426565572,
+     "starve_frac": 0.0,
+     "idle_frac": 0.03285593934288121,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "decrypt/strip.tag_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 3501,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 3497,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9820275203594496,
+     "idle_frac": 0.016849199663016005
+    },
+    "decrypt/verify.auth_tag": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 3501,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 3497,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9820275203594496,
+     "idle_frac": 0.016849199663016005
+    },
+    "decrypt/verify.calc_tag": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 3509,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.013479359730412805,
+     "idle_frac": 0.9853973602920528
+    },
+    "decrypt/verify.fsm": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "TAKE_AUTH_TAG": {
+       "cycles": 3501,
+       "frac": 0.983150800336984
+      },
+      "TAKE_CALC_TAG": {
+       "cycles": 52,
+       "frac": 0.014602639707947207
+      },
+      "COMPARE_TAGS": {
+       "cycles": 4,
+       "frac": 0.0011232799775344005
+      },
+      "OUTPUT_COMPARE_RESULT": {
+       "cycles": 4,
+       "frac": 0.0011232799775344005
+      }
+     },
+     "dominant": "TAKE_AUTH_TAG"
+    },
+    "decrypt/verify.tags_match": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 2896,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 2892,
+     "idle_cycles": 665,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8121314237573716,
+     "idle_frac": 0.18674529626509406
+    },
+    "decrypt/wtv.axis_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 356,
+     "ready_cycles": 3561,
+     "xfer_cycles": 356,
+     "stall_cycles": 0,
+     "starved_cycles": 3205,
+     "idle_cycles": 0,
+     "offered_cycles": 356,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9000280819994384,
+     "idle_frac": 0.0,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "decrypt/wtv.axis_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 356,
+     "ready_cycles": 3561,
+     "xfer_cycles": 356,
+     "stall_cycles": 0,
+     "starved_cycles": 3205,
+     "idle_cycles": 0,
+     "offered_cycles": 356,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9000280819994384,
+     "idle_frac": 0.0,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "decrypt/wtv.fsm": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "WAIT_TO_VERIFY_BIT": {
+       "cycles": 2896,
+       "frac": 0.8132547037349059
+      },
+      "OUTPUT_PLAINTEXT": {
+       "cycles": 665,
+       "frac": 0.18674529626509406
+      }
+     },
+     "dominant": "WAIT_TO_VERIFY_BIT"
+    },
+    "decrypt/wtv.verify_bit": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 4,
+     "ready_cycles": 2896,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 2892,
+     "idle_cycles": 665,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8121314237573716,
+     "idle_frac": 0.18674529626509406
+    },
+    "encrypt/append.axis_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 356,
+     "ready_cycles": 3501,
+     "xfer_cycles": 356,
+     "stall_cycles": 0,
+     "starved_cycles": 3145,
+     "idle_cycles": 60,
+     "offered_cycles": 356,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8831788823364224,
+     "idle_frac": 0.016849199663016005,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "encrypt/append.axis_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 360,
+     "ready_cycles": 3561,
+     "xfer_cycles": 360,
+     "stall_cycles": 0,
+     "starved_cycles": 3201,
+     "idle_cycles": 0,
+     "offered_cycles": 360,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.10109519797809605,
+     "duty": 0.10109519797809605,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8989048020219039,
+     "idle_frac": 0.0,
+     "bytes": 5744,
+     "bytes_per_cycle": 1.613030047739399,
+     "bytes_per_beat": 15.955555555555556
+    },
+    "encrypt/append.fsm": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "CIPHERTEXT": {
+       "cycles": 3501,
+       "frac": 0.983150800336984
+      },
+      "MERGED_WORD": {
+       "cycles": 56,
+       "frac": 0.015725919685481607
+      },
+      "TAG_TAIL": {
+       "cycles": 4,
+       "frac": 0.0011232799775344005
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "encrypt/append.tag_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 8,
+     "ready_cycles": 4,
+     "xfer_cycles": 4,
+     "stall_cycles": 4,
+     "starved_cycles": 0,
+     "idle_cycles": 3553,
+     "offered_cycles": 8,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0011232799775344005,
+     "starve_frac": 0.0,
+     "idle_frac": 0.9977534400449312
+    },
+    "encrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 1762,
+     "ready_cycles": 381,
+     "xfer_cycles": 356,
+     "stall_cycles": 1406,
+     "starved_cycles": 25,
+     "idle_cycles": 1774,
+     "offered_cycles": 1762,
+     "accept_rate": 0.20204313280363223,
+     "service_period_cycles": 4.949438202247191,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.39483291210334176,
+     "starve_frac": 0.007020499859590003,
+     "idle_frac": 0.4981746700365066,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "encrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2163,
+     "ready_cycles": 360,
+     "xfer_cycles": 356,
+     "stall_cycles": 1807,
+     "starved_cycles": 4,
+     "idle_cycles": 1394,
+     "offered_cycles": 2163,
+     "accept_rate": 0.16458622283865001,
+     "service_period_cycles": 6.075842696629214,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.5074417298511654,
+     "starve_frac": 0.0011232799775344005,
+     "idle_frac": 0.39146307217073856,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "encrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2152,
+     "ready_cycles": 1427,
+     "xfer_cycles": 96,
+     "stall_cycles": 2056,
+     "starved_cycles": 1331,
+     "idle_cycles": 78,
+     "offered_cycles": 2152,
+     "accept_rate": 0.04460966542750929,
+     "service_period_cycles": 22.416666666666668,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.5773659084526819,
+     "starve_frac": 0.37377141252457174,
+     "idle_frac": 0.02190395956192081
+    },
+    "encrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 1947,
+       "frac": 0.5467565290648694
+      },
+      "PLAINTEXT": {
+       "cycles": 1614,
+       "frac": 0.45324347093513057
+      }
+     },
+     "dominant": "POLY_KEY"
+    },
+    "encrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 58,
+     "ready_cycles": 1305,
+     "xfer_cycles": 4,
+     "stall_cycles": 54,
+     "starved_cycles": 1301,
+     "idle_cycles": 2202,
+     "offered_cycles": 58,
+     "accept_rate": 0.06896551724137931,
+     "service_period_cycles": 14.5,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.015164279696714406,
+     "starve_frac": 0.36534681269306374,
+     "idle_frac": 0.6183656276326874
+    },
+    "encrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 1403,
+       "frac": 0.39399045212019096
+      },
+      "PLAINTEXT": {
+       "cycles": 2158,
+       "frac": 0.6060095478798091
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "encrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 1541,
+     "ready_cycles": 842,
+     "xfer_cycles": 96,
+     "stall_cycles": 1445,
+     "starved_cycles": 746,
+     "idle_cycles": 1274,
+     "offered_cycles": 1541,
+     "accept_rate": 0.06229720960415315,
+     "service_period_cycles": 16.052083333333332,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.40578489188430217,
+     "starve_frac": 0.20949171581016568,
+     "idle_frac": 0.35776467284470653
+    },
+    "encrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2183,
+     "ready_cycles": 404,
+     "xfer_cycles": 368,
+     "stall_cycles": 1815,
+     "starved_cycles": 36,
+     "idle_cycles": 1342,
+     "offered_cycles": 2183,
+     "accept_rate": 0.168575355016033,
+     "service_period_cycles": 5.932065217391305,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.5096882898062342,
+     "starve_frac": 0.010109519797809604,
+     "idle_frac": 0.37686043246279133,
+     "bytes": 5888,
+     "bytes_per_cycle": 1.6534681269306375,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 368,
+     "ready_cycles": 3561,
+     "xfer_cycles": 368,
+     "stall_cycles": 0,
+     "starved_cycles": 3193,
+     "idle_cycles": 0,
+     "offered_cycles": 368,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8966582420668352,
+     "idle_frac": 0.0
+    },
+    "encrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "IDLE": {
+       "cycles": 1305,
+       "frac": 0.36647009267059816
+      },
+      "START_ITER": {
+       "cycles": 36,
+       "frac": 0.010109519797809604
+      },
+      "FINISH_ITER": {
+       "cycles": 2208,
+       "frac": 0.620050547598989
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.0011232799775344005
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 8,
+       "frac": 0.002246559955068801
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "encrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 58,
+     "ready_cycles": 1305,
+     "xfer_cycles": 4,
+     "stall_cycles": 54,
+     "starved_cycles": 1301,
+     "idle_cycles": 2202,
+     "offered_cycles": 58,
+     "accept_rate": 0.06896551724137931,
+     "service_period_cycles": 14.5,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.015164279696714406,
+     "starve_frac": 0.36534681269306374,
+     "idle_frac": 0.6183656276326874
+    },
+    "encrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 8,
+     "ready_cycles": 4,
+     "xfer_cycles": 4,
+     "stall_cycles": 4,
+     "starved_cycles": 0,
+     "idle_cycles": 3553,
+     "offered_cycles": 8,
+     "accept_rate": 0.5,
+     "service_period_cycles": 2.0,
+     "beats_per_cycle": 0.0011232799775344005,
+     "duty": 0.0011232799775344005,
+     "stall_frac": 0.0011232799775344005,
+     "starve_frac": 0.0,
+     "idle_frac": 0.9977534400449312
+    },
+    "encrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 368,
+     "ready_cycles": 1721,
+     "xfer_cycles": 368,
+     "stall_cycles": 0,
+     "starved_cycles": 1353,
+     "idle_cycles": 1840,
+     "offered_cycles": 368,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.37994945240101097,
+     "idle_frac": 0.5167087896658242
+    },
+    "encrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2163,
+     "ready_cycles": 360,
+     "xfer_cycles": 356,
+     "stall_cycles": 1807,
+     "starved_cycles": 4,
+     "idle_cycles": 1394,
+     "offered_cycles": 2163,
+     "accept_rate": 0.16458622283865001,
+     "service_period_cycles": 6.075842696629214,
+     "beats_per_cycle": 0.09997191800056164,
+     "duty": 0.09997191800056164,
+     "stall_frac": 0.5074417298511654,
+     "starve_frac": 0.0011232799775344005,
+     "idle_frac": 0.39146307217073856,
+     "bytes": 5680,
+     "bytes_per_cycle": 1.5950575680988486,
+     "bytes_per_beat": 15.955056179775282
+    },
+    "encrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2183,
+     "ready_cycles": 404,
+     "xfer_cycles": 368,
+     "stall_cycles": 1815,
+     "starved_cycles": 36,
+     "idle_cycles": 1342,
+     "offered_cycles": 2183,
+     "accept_rate": 0.168575355016033,
+     "service_period_cycles": 5.932065217391305,
+     "beats_per_cycle": 0.10334175793316484,
+     "duty": 0.10334175793316484,
+     "stall_frac": 0.5096882898062342,
+     "starve_frac": 0.010109519797809604,
+     "idle_frac": 0.37686043246279133,
+     "bytes": 5888,
+     "bytes_per_cycle": 1.6534681269306375,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 3561,
+     "states": {
+      "IDLE": {
+       "cycles": 1369,
+       "frac": 0.38444257231114853
+      },
+      "AAD_STATE": {
+       "cycles": 28,
+       "frac": 0.007862959842740803
+      },
+      "CIPHERTEXT": {
+       "cycles": 2140,
+       "frac": 0.6009547879809043
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.006739679865206402
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "shared/pipe.arb": {
+     "kind": "arb",
+     "cycles": 3561,
+     "labels": [
+      "encrypt",
+      "decrypt"
+     ],
+     "granted_ready_frac": 0.4602639707947206,
+     "per_requester": {
+      "encrypt": {
+       "req_cycles": 1541,
+       "sel_cycles": 1780,
+       "xfer_cycles": 96,
+       "contention_cycles": 316,
+       "wasted_slot_cycles": 410,
+       "arb_loss_frac": 0.47112264763140815,
+       "contention_frac": 0.20506164828033743,
+       "wasted_slot_frac": 0.26606099935107075
+      },
+      "decrypt": {
+       "req_cycles": 1025,
+       "sel_cycles": 1781,
+       "xfer_cycles": 96,
+       "contention_cycles": 354,
+       "wasted_slot_cycles": 136,
+       "arb_loss_frac": 0.47804878048780486,
+       "contention_frac": 0.34536585365853656,
+       "wasted_slot_frac": 0.1326829268292683
+      }
+     }
+    },
+    "shared/pipe.dec_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 1025,
+     "ready_cycles": 797,
+     "xfer_cycles": 96,
+     "stall_cycles": 929,
+     "starved_cycles": 701,
+     "idle_cycles": 1835,
+     "offered_cycles": 1025,
+     "accept_rate": 0.09365853658536585,
+     "service_period_cycles": 10.677083333333334,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.2608817747823645,
+     "starve_frac": 0.19685481606290367,
+     "idle_frac": 0.5153046896939062
+    },
+    "shared/pipe.dec_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 205,
+     "ready_cycles": 3297,
+     "xfer_cycles": 96,
+     "stall_cycles": 109,
+     "starved_cycles": 3201,
+     "idle_cycles": 155,
+     "offered_cycles": 205,
+     "accept_rate": 0.4682926829268293,
+     "service_period_cycles": 2.1354166666666665,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.030609379387812413,
+     "starve_frac": 0.8989048020219039,
+     "idle_frac": 0.04352709912945802
+    },
+    "shared/pipe.enc_in": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 1541,
+     "ready_cycles": 842,
+     "xfer_cycles": 96,
+     "stall_cycles": 1445,
+     "starved_cycles": 746,
+     "idle_cycles": 1274,
+     "offered_cycles": 1541,
+     "accept_rate": 0.06229720960415315,
+     "service_period_cycles": 16.052083333333332,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.40578489188430217,
+     "starve_frac": 0.20949171581016568,
+     "idle_frac": 0.35776467284470653
+    },
+    "shared/pipe.enc_out": {
+     "kind": "handshake",
+     "cycles": 3561,
+     "valid_cycles": 2152,
+     "ready_cycles": 1427,
+     "xfer_cycles": 96,
+     "stall_cycles": 2056,
+     "starved_cycles": 1331,
+     "idle_cycles": 78,
+     "offered_cycles": 2152,
+     "accept_rate": 0.04460966542750929,
+     "service_period_cycles": 22.416666666666668,
+     "beats_per_cycle": 0.02695871946082561,
+     "duty": 0.02695871946082561,
+     "stall_frac": 0.5773659084526819,
+     "starve_frac": 0.37377141252457174,
+     "idle_frac": 0.02190395956192081
+    }
+   }
+  },
+  {
+   "name": "peak-1920",
+   "packet_bytes": 1920,
+   "num_packets": 4,
+   "encrypt": {
+    "window_cycles": 3051,
+    "goodput_bytes": 7680,
+    "in_beats": 480,
+    "out_beats": 484,
+    "in_line_bytes": 7680,
+    "out_line_bytes": 7744,
+    "in_payload_bytes": 7680,
+    "out_payload_bytes": 7744,
+    "beats_per_packet": 121.0,
+    "bytes_per_cycle": 2.517207472959685,
+    "packet_period_cycles": 758.3333333333334,
+    "sustained_bytes_per_cycle": 2.5318681318681318,
+    "steady_in_bytes_per_cycle": 2.569392033542977,
+    "steady_out_bytes_per_cycle": 2.555233760860571,
+    "in_duty": 0.15732546705998032,
+    "out_duty": 0.1586365126188135,
+    "in_stall_cycles": 2100,
+    "in_stall_frac": 0.688298918387414,
+    "latency_cycles": {
+     "cold_head": 43,
+     "head_min": 43,
+     "head_med": 262.0,
+     "head_max": 473,
+     "total_min": 775,
+     "total_med": 990.0,
+     "total_max": 1241
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 1920,
+      "out_bytes": 1936,
+      "first_in": 7360,
+      "first_out": 7403,
+      "last_out": 8135,
+      "head_latency": 43,
+      "total_latency": 775
+     },
+     {
+      "idx": 1,
+      "in_bytes": 1920,
+      "out_bytes": 1936,
+      "first_in": 7916,
+      "first_out": 8152,
+      "last_out": 8880,
+      "head_latency": 236,
+      "total_latency": 964
+     },
+     {
+      "idx": 2,
+      "in_bytes": 1920,
+      "out_bytes": 1936,
+      "first_in": 8424,
+      "first_out": 8897,
+      "last_out": 9665,
+      "head_latency": 473,
+      "total_latency": 1241
+     },
+     {
+      "idx": 3,
+      "in_bytes": 1920,
+      "out_bytes": 1936,
+      "first_in": 9394,
+      "first_out": 9682,
+      "last_out": 10410,
+      "head_latency": 288,
+      "total_latency": 1016
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 7360,
+    "last_out_cycle": 10410
+   },
+   "decrypt": {
+    "window_cycles": 4201,
+    "goodput_bytes": 7680,
+    "in_beats": 484,
+    "out_beats": 480,
+    "in_line_bytes": 7744,
+    "out_line_bytes": 7680,
+    "in_payload_bytes": 7744,
+    "out_payload_bytes": 7680,
+    "beats_per_packet": 120.0,
+    "bytes_per_cycle": 1.8281361580576054,
+    "packet_period_cycles": 1040.3333333333333,
+    "sustained_bytes_per_cycle": 1.8455623197693047,
+    "steady_in_bytes_per_cycle": 1.7891077636152954,
+    "steady_out_bytes_per_cycle": 1.8402402402402402,
+    "in_duty": 0.11521066412758867,
+    "out_duty": 0.11425850987860034,
+    "in_stall_cycles": 3581,
+    "in_stall_frac": 0.8524160914068079,
+    "latency_cycles": {
+     "cold_head": 774,
+     "head_min": 770,
+     "head_med": 918.5,
+     "head_max": 1522,
+     "total_min": 889,
+     "total_med": 1130.5,
+     "total_max": 1831
+    },
+    "packets": [
+     {
+      "idx": 0,
+      "in_bytes": 1936,
+      "out_bytes": 1920,
+      "first_in": 7357,
+      "first_out": 8131,
+      "last_out": 8436,
+      "head_latency": 774,
+      "total_latency": 1079
+     },
+     {
+      "idx": 1,
+      "in_bytes": 1936,
+      "out_bytes": 1920,
+      "first_in": 8115,
+      "first_out": 9637,
+      "last_out": 9946,
+      "head_latency": 1522,
+      "total_latency": 1831
+     },
+     {
+      "idx": 2,
+      "in_bytes": 1936,
+      "out_bytes": 1920,
+      "first_in": 9621,
+      "first_out": 10684,
+      "last_out": 10803,
+      "head_latency": 1063,
+      "total_latency": 1182
+     },
+     {
+      "idx": 3,
+      "in_bytes": 1936,
+      "out_bytes": 1920,
+      "first_in": 10668,
+      "first_out": 11438,
+      "last_out": 11557,
+      "head_latency": 770,
+      "total_latency": 889
+     }
+    ],
+    "packets_in": 4,
+    "packets_out": 4,
+    "timed_out": false,
+    "first_in_cycle": 7357,
+    "last_out_cycle": 11557
+   },
+   "taps": {
+    "decrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 1125,
+     "ready_cycles": 3422,
+     "xfer_cycles": 480,
+     "stall_cycles": 645,
+     "starved_cycles": 2942,
+     "idle_cycles": 142,
+     "offered_cycles": 1125,
+     "accept_rate": 0.4266666666666667,
+     "service_period_cycles": 2.34375,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.15324305060584462,
+     "starve_frac": 0.6989783796626277,
+     "idle_frac": 0.033737229745782846,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 480,
+     "ready_cycles": 4209,
+     "xfer_cycles": 480,
+     "stall_cycles": 0,
+     "starved_cycles": 3729,
+     "idle_cycles": 0,
+     "offered_cycles": 480,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8859586600142552,
+     "idle_frac": 0.0,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 322,
+     "ready_cycles": 3859,
+     "xfer_cycles": 124,
+     "stall_cycles": 198,
+     "starved_cycles": 3735,
+     "idle_cycles": 152,
+     "offered_cycles": 322,
+     "accept_rate": 0.38509316770186336,
+     "service_period_cycles": 2.596774193548387,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.047042052744119746,
+     "starve_frac": 0.887384176764077,
+     "idle_frac": 0.03611309099548586
+    },
+    "decrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 243,
+       "frac": 0.05773342836778332
+      },
+      "PLAINTEXT": {
+       "cycles": 3966,
+       "frac": 0.9422665716322167
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 825,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 821,
+     "idle_cycles": 3384,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.19505820860061773,
+     "idle_frac": 0.8039914468995011
+    },
+    "decrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 195,
+       "frac": 0.04632929436920884
+      },
+      "PLAINTEXT": {
+       "cycles": 4014,
+       "frac": 0.9536707056307911
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "decrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 1026,
+     "ready_cycles": 953,
+     "xfer_cycles": 124,
+     "stall_cycles": 902,
+     "starved_cycles": 829,
+     "idle_cycles": 2354,
+     "offered_cycles": 1026,
+     "accept_rate": 0.12085769980506822,
+     "service_period_cycles": 8.274193548387096,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.21430268472321218,
+     "starve_frac": 0.19695889760038013,
+     "idle_frac": 0.5592777381800903
+    },
+    "decrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 3642,
+     "ready_cycles": 916,
+     "xfer_cycles": 492,
+     "stall_cycles": 3150,
+     "starved_cycles": 424,
+     "idle_cycles": 143,
+     "offered_cycles": 3642,
+     "accept_rate": 0.13509060955518945,
+     "service_period_cycles": 7.402439024390244,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.7483962936564504,
+     "starve_frac": 0.10073651698740793,
+     "idle_frac": 0.03397481587075315,
+     "bytes": 7872,
+     "bytes_per_cycle": 1.8702779757662154,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 492,
+     "ready_cycles": 4209,
+     "xfer_cycles": 492,
+     "stall_cycles": 0,
+     "starved_cycles": 3717,
+     "idle_cycles": 0,
+     "offered_cycles": 492,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8831076265146115,
+     "idle_frac": 0.0
+    },
+    "decrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "IDLE": {
+       "cycles": 825,
+       "frac": 0.19600855310049894
+      },
+      "START_ITER": {
+       "cycles": 424,
+       "frac": 0.10073651698740793
+      },
+      "FINISH_ITER": {
+       "cycles": 2952,
+       "frac": 0.7013542409123307
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.000950344499881207
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.000950344499881207
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "decrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 825,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 821,
+     "idle_cycles": 3384,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.19505820860061773,
+     "idle_frac": 0.8039914468995011
+    },
+    "decrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 4157,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.011404133998574484,
+     "idle_frac": 0.9876455215015443
+    },
+    "decrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 492,
+     "ready_cycles": 1749,
+     "xfer_cycles": 492,
+     "stall_cycles": 0,
+     "starved_cycles": 1257,
+     "idle_cycles": 2460,
+     "offered_cycles": 492,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.0,
+     "starve_frac": 0.29864575908766927,
+     "idle_frac": 0.5844618674269423
+    },
+    "decrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 3637,
+     "ready_cycles": 904,
+     "xfer_cycles": 480,
+     "stall_cycles": 3157,
+     "starved_cycles": 424,
+     "idle_cycles": 148,
+     "offered_cycles": 3637,
+     "accept_rate": 0.1319769040417927,
+     "service_period_cycles": 7.577083333333333,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.7500593965312425,
+     "starve_frac": 0.10073651698740793,
+     "idle_frac": 0.035162746495604656,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 3642,
+     "ready_cycles": 916,
+     "xfer_cycles": 492,
+     "stall_cycles": 3150,
+     "starved_cycles": 424,
+     "idle_cycles": 143,
+     "offered_cycles": 3642,
+     "accept_rate": 0.13509060955518945,
+     "service_period_cycles": 7.402439024390244,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.7483962936564504,
+     "starve_frac": 0.10073651698740793,
+     "idle_frac": 0.03397481587075315,
+     "bytes": 7872,
+     "bytes_per_cycle": 1.8702779757662154,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "IDLE": {
+       "cycles": 143,
+       "frac": 0.03397481587075315
+      },
+      "AAD_STATE": {
+       "cycles": 738,
+       "frac": 0.17533856022808267
+      },
+      "CIPHERTEXT": {
+       "cycles": 3304,
+       "frac": 0.784984556901877
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.005702066999287242
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "decrypt/strip.axis_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4065,
+     "ready_cycles": 628,
+     "xfer_cycles": 484,
+     "stall_cycles": 3581,
+     "starved_cycles": 144,
+     "idle_cycles": 0,
+     "offered_cycles": 4065,
+     "accept_rate": 0.11906519065190652,
+     "service_period_cycles": 8.398760330578513,
+     "beats_per_cycle": 0.11499168448562604,
+     "duty": 0.11499168448562604,
+     "stall_frac": 0.8507959135186505,
+     "starve_frac": 0.03421240199572345,
+     "idle_frac": 0.0,
+     "bytes": 7744,
+     "bytes_per_cycle": 1.8398669517700166,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.axis_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4061,
+     "ready_cycles": 480,
+     "xfer_cycles": 480,
+     "stall_cycles": 3581,
+     "starved_cycles": 0,
+     "idle_cycles": 148,
+     "offered_cycles": 4061,
+     "accept_rate": 0.11819748830337355,
+     "service_period_cycles": 8.460416666666667,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.8507959135186505,
+     "starve_frac": 0.0,
+     "idle_frac": 0.035162746495604656,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/strip.tag_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 4149,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 4145,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9847944880019007,
+     "idle_frac": 0.014255167498218105
+    },
+    "decrypt/verify.auth_tag": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 4149,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 4145,
+     "idle_cycles": 60,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.9847944880019007,
+     "idle_frac": 0.014255167498218105
+    },
+    "decrypt/verify.calc_tag": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 52,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 48,
+     "idle_cycles": 4157,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.011404133998574484,
+     "idle_frac": 0.9876455215015443
+    },
+    "decrypt/verify.fsm": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "TAKE_AUTH_TAG": {
+       "cycles": 4149,
+       "frac": 0.9857448325017819
+      },
+      "TAKE_CALC_TAG": {
+       "cycles": 52,
+       "frac": 0.01235447849845569
+      },
+      "COMPARE_TAGS": {
+       "cycles": 4,
+       "frac": 0.000950344499881207
+      },
+      "OUTPUT_COMPARE_RESULT": {
+       "cycles": 4,
+       "frac": 0.000950344499881207
+      }
+     },
+     "dominant": "TAKE_AUTH_TAG"
+    },
+    "decrypt/verify.tags_match": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 3353,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 3349,
+     "idle_cycles": 856,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.7956759325255405,
+     "idle_frac": 0.20337372297457829
+    },
+    "decrypt/wtv.axis_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 480,
+     "ready_cycles": 4209,
+     "xfer_cycles": 480,
+     "stall_cycles": 0,
+     "starved_cycles": 3729,
+     "idle_cycles": 0,
+     "offered_cycles": 480,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8859586600142552,
+     "idle_frac": 0.0,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.axis_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 480,
+     "ready_cycles": 4209,
+     "xfer_cycles": 480,
+     "stall_cycles": 0,
+     "starved_cycles": 3729,
+     "idle_cycles": 0,
+     "offered_cycles": 480,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8859586600142552,
+     "idle_frac": 0.0,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "decrypt/wtv.fsm": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "WAIT_TO_VERIFY_BIT": {
+       "cycles": 3353,
+       "frac": 0.7966262770254218
+      },
+      "OUTPUT_PLAINTEXT": {
+       "cycles": 856,
+       "frac": 0.20337372297457829
+      }
+     },
+     "dominant": "WAIT_TO_VERIFY_BIT"
+    },
+    "decrypt/wtv.verify_bit": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 3353,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 3349,
+     "idle_cycles": 856,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.7956759325255405,
+     "idle_frac": 0.20337372297457829
+    },
+    "encrypt/append.axis_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 480,
+     "ready_cycles": 4153,
+     "xfer_cycles": 480,
+     "stall_cycles": 0,
+     "starved_cycles": 3673,
+     "idle_cycles": 56,
+     "offered_cycles": 480,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8726538370159183,
+     "idle_frac": 0.013304822998336897,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.axis_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 484,
+     "ready_cycles": 4209,
+     "xfer_cycles": 484,
+     "stall_cycles": 0,
+     "starved_cycles": 3725,
+     "idle_cycles": 0,
+     "offered_cycles": 484,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11499168448562604,
+     "duty": 0.11499168448562604,
+     "stall_frac": 0.0,
+     "starve_frac": 0.885008315514374,
+     "idle_frac": 0.0,
+     "bytes": 7744,
+     "bytes_per_cycle": 1.8398669517700166,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/append.fsm": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "CIPHERTEXT": {
+       "cycles": 4153,
+       "frac": 0.9866951770016631
+      },
+      "TAG_TAIL": {
+       "cycles": 56,
+       "frac": 0.013304822998336897
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "encrypt/append.tag_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 4153,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.01235447849845569,
+     "idle_frac": 0.9866951770016631
+    },
+    "encrypt/chacha20.axis_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2580,
+     "ready_cycles": 482,
+     "xfer_cycles": 480,
+     "stall_cycles": 2100,
+     "starved_cycles": 2,
+     "idle_cycles": 1627,
+     "offered_cycles": 2580,
+     "accept_rate": 0.18604651162790697,
+     "service_period_cycles": 5.375,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.4989308624376336,
+     "starve_frac": 0.0004751722499406035,
+     "idle_frac": 0.38655262532668094,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.axis_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2896,
+     "ready_cycles": 524,
+     "xfer_cycles": 480,
+     "stall_cycles": 2416,
+     "starved_cycles": 44,
+     "idle_cycles": 1269,
+     "offered_cycles": 2896,
+     "accept_rate": 0.16574585635359115,
+     "service_period_cycles": 6.033333333333333,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.574008077928249,
+     "starve_frac": 0.010453789498693276,
+     "idle_frac": 0.3014967925873129,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/chacha20.from_pipeline": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2771,
+     "ready_cycles": 1389,
+     "xfer_cycles": 124,
+     "stall_cycles": 2647,
+     "starved_cycles": 1265,
+     "idle_cycles": 173,
+     "offered_cycles": 2771,
+     "accept_rate": 0.04474918801876579,
+     "service_period_cycles": 22.346774193548388,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.6288904727963887,
+     "starve_frac": 0.3005464480874317,
+     "idle_frac": 0.0411023996198622
+    },
+    "encrypt/chacha20.in_state": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 1639,
+       "frac": 0.38940365882632455
+      },
+      "PLAINTEXT": {
+       "cycles": 2570,
+       "frac": 0.6105963411736754
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "encrypt/chacha20.key_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 136,
+     "ready_cycles": 1184,
+     "xfer_cycles": 4,
+     "stall_cycles": 132,
+     "starved_cycles": 1180,
+     "idle_cycles": 2893,
+     "offered_cycles": 136,
+     "accept_rate": 0.029411764705882353,
+     "service_period_cycles": 34.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.03136136849607983,
+     "starve_frac": 0.28035162746495607,
+     "idle_frac": 0.687336659539083
+    },
+    "encrypt/chacha20.out_state": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "POLY_KEY": {
+       "cycles": 1360,
+       "frac": 0.32311712995961034
+      },
+      "PLAINTEXT": {
+       "cycles": 2849,
+       "frac": 0.6768828700403896
+      }
+     },
+     "dominant": "PLAINTEXT"
+    },
+    "encrypt/chacha20.to_pipeline": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2220,
+     "ready_cycles": 978,
+     "xfer_cycles": 124,
+     "stall_cycles": 2096,
+     "starved_cycles": 854,
+     "idle_cycles": 1135,
+     "offered_cycles": 2220,
+     "accept_rate": 0.055855855855855854,
+     "service_period_cycles": 17.903225806451612,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.49798051793775244,
+     "starve_frac": 0.2028985507246377,
+     "idle_frac": 0.26966025184129244
+    },
+    "encrypt/poly1305.data_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2916,
+     "ready_cycles": 557,
+     "xfer_cycles": 492,
+     "stall_cycles": 2424,
+     "starved_cycles": 65,
+     "idle_cycles": 1228,
+     "offered_cycles": 2916,
+     "accept_rate": 0.16872427983539096,
+     "service_period_cycles": 5.926829268292683,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.5759087669280114,
+     "starve_frac": 0.015443098123069612,
+     "idle_frac": 0.29175576146353055,
+     "bytes": 7872,
+     "bytes_per_cycle": 1.8702779757662154,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/poly1305.from_compute": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 492,
+     "ready_cycles": 4209,
+     "xfer_cycles": 492,
+     "stall_cycles": 0,
+     "starved_cycles": 3717,
+     "idle_cycles": 0,
+     "offered_cycles": 492,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.0,
+     "starve_frac": 0.8831076265146115,
+     "idle_frac": 0.0
+    },
+    "encrypt/poly1305.fsm": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "IDLE": {
+       "cycles": 1184,
+       "frac": 0.28130197196483725
+      },
+      "START_ITER": {
+       "cycles": 65,
+       "frac": 0.015443098123069612
+      },
+      "FINISH_ITER": {
+       "cycles": 2952,
+       "frac": 0.7013542409123307
+      },
+      "A_PLUS_S": {
+       "cycles": 4,
+       "frac": 0.000950344499881207
+      },
+      "OUTPUT_AUTH_TAG": {
+       "cycles": 4,
+       "frac": 0.000950344499881207
+      }
+     },
+     "dominant": "FINISH_ITER"
+    },
+    "encrypt/poly1305.key_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 136,
+     "ready_cycles": 1184,
+     "xfer_cycles": 4,
+     "stall_cycles": 132,
+     "starved_cycles": 1180,
+     "idle_cycles": 2893,
+     "offered_cycles": 136,
+     "accept_rate": 0.029411764705882353,
+     "service_period_cycles": 34.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.03136136849607983,
+     "starve_frac": 0.28035162746495607,
+     "idle_frac": 0.687336659539083
+    },
+    "encrypt/poly1305.tag_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 4,
+     "ready_cycles": 56,
+     "xfer_cycles": 4,
+     "stall_cycles": 0,
+     "starved_cycles": 52,
+     "idle_cycles": 4153,
+     "offered_cycles": 4,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.000950344499881207,
+     "duty": 0.000950344499881207,
+     "stall_frac": 0.0,
+     "starve_frac": 0.01235447849845569,
+     "idle_frac": 0.9866951770016631
+    },
+    "encrypt/poly1305.to_compute": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 492,
+     "ready_cycles": 1749,
+     "xfer_cycles": 492,
+     "stall_cycles": 0,
+     "starved_cycles": 1257,
+     "idle_cycles": 2460,
+     "offered_cycles": 492,
+     "accept_rate": 1.0,
+     "service_period_cycles": 1.0,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.0,
+     "starve_frac": 0.29864575908766927,
+     "idle_frac": 0.5844618674269423
+    },
+    "encrypt/prep.axis_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2896,
+     "ready_cycles": 524,
+     "xfer_cycles": 480,
+     "stall_cycles": 2416,
+     "starved_cycles": 44,
+     "idle_cycles": 1269,
+     "offered_cycles": 2896,
+     "accept_rate": 0.16574585635359115,
+     "service_period_cycles": 6.033333333333333,
+     "beats_per_cycle": 0.11404133998574484,
+     "duty": 0.11404133998574484,
+     "stall_frac": 0.574008077928249,
+     "starve_frac": 0.010453789498693276,
+     "idle_frac": 0.3014967925873129,
+     "bytes": 7680,
+     "bytes_per_cycle": 1.8246614397719174,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.axis_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2916,
+     "ready_cycles": 557,
+     "xfer_cycles": 492,
+     "stall_cycles": 2424,
+     "starved_cycles": 65,
+     "idle_cycles": 1228,
+     "offered_cycles": 2916,
+     "accept_rate": 0.16872427983539096,
+     "service_period_cycles": 5.926829268292683,
+     "beats_per_cycle": 0.11689237348538846,
+     "duty": 0.11689237348538846,
+     "stall_frac": 0.5759087669280114,
+     "starve_frac": 0.015443098123069612,
+     "idle_frac": 0.29175576146353055,
+     "bytes": 7872,
+     "bytes_per_cycle": 1.8702779757662154,
+     "bytes_per_beat": 16.0
+    },
+    "encrypt/prep.fsm": {
+     "kind": "state",
+     "cycles": 4209,
+     "states": {
+      "IDLE": {
+       "cycles": 1233,
+       "frac": 0.29294369208838206
+      },
+      "AAD_STATE": {
+       "cycles": 28,
+       "frac": 0.006652411499168448
+      },
+      "CIPHERTEXT": {
+       "cycles": 2924,
+       "frac": 0.6947018294131623
+      },
+      "LENGTHS": {
+       "cycles": 24,
+       "frac": 0.005702066999287242
+      }
+     },
+     "dominant": "CIPHERTEXT"
+    },
+    "shared/pipe.arb": {
+     "kind": "arb",
+     "cycles": 4209,
+     "labels": [
+      "encrypt",
+      "decrypt"
+     ],
+     "granted_ready_frac": 0.45877880731765264,
+     "per_requester": {
+      "encrypt": {
+       "req_cycles": 2220,
+       "sel_cycles": 2105,
+       "xfer_cycles": 124,
+       "contention_cycles": 392,
+       "wasted_slot_cycles": 658,
+       "arb_loss_frac": 0.47297297297297297,
+       "contention_frac": 0.17657657657657658,
+       "wasted_slot_frac": 0.2963963963963964
+      },
+      "decrypt": {
+       "req_cycles": 1026,
+       "sel_cycles": 2104,
+       "xfer_cycles": 124,
+       "contention_cycles": 398,
+       "wasted_slot_cycles": 96,
+       "arb_loss_frac": 0.48148148148148145,
+       "contention_frac": 0.38791423001949316,
+       "wasted_slot_frac": 0.0935672514619883
+      }
+     }
+    },
+    "shared/pipe.dec_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 1026,
+     "ready_cycles": 953,
+     "xfer_cycles": 124,
+     "stall_cycles": 902,
+     "starved_cycles": 829,
+     "idle_cycles": 2354,
+     "offered_cycles": 1026,
+     "accept_rate": 0.12085769980506822,
+     "service_period_cycles": 8.274193548387096,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.21430268472321218,
+     "starve_frac": 0.19695889760038013,
+     "idle_frac": 0.5592777381800903
+    },
+    "shared/pipe.dec_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 322,
+     "ready_cycles": 3859,
+     "xfer_cycles": 124,
+     "stall_cycles": 198,
+     "starved_cycles": 3735,
+     "idle_cycles": 152,
+     "offered_cycles": 322,
+     "accept_rate": 0.38509316770186336,
+     "service_period_cycles": 2.596774193548387,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.047042052744119746,
+     "starve_frac": 0.887384176764077,
+     "idle_frac": 0.03611309099548586
+    },
+    "shared/pipe.enc_in": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2220,
+     "ready_cycles": 978,
+     "xfer_cycles": 124,
+     "stall_cycles": 2096,
+     "starved_cycles": 854,
+     "idle_cycles": 1135,
+     "offered_cycles": 2220,
+     "accept_rate": 0.055855855855855854,
+     "service_period_cycles": 17.903225806451612,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.49798051793775244,
+     "starve_frac": 0.2028985507246377,
+     "idle_frac": 0.26966025184129244
+    },
+    "shared/pipe.enc_out": {
+     "kind": "handshake",
+     "cycles": 4209,
+     "valid_cycles": 2771,
+     "ready_cycles": 1389,
+     "xfer_cycles": 124,
+     "stall_cycles": 2647,
+     "starved_cycles": 1265,
+     "idle_cycles": 173,
+     "offered_cycles": 2771,
+     "accept_rate": 0.04474918801876579,
+     "service_period_cycles": 22.346774193548388,
+     "beats_per_cycle": 0.029460679496317414,
+     "duty": 0.029460679496317414,
+     "stall_frac": 0.6288904727963887,
+     "starve_frac": 0.3005464480874317,
+     "idle_frac": 0.0411023996198622
+    }
+   }
+  }
+ ],
+ "checks": {
+  "functional_pass": true,
+  "packets_checked": 48,
+  "errors": []
+ },
+ "sim": {
+  "total_cycles": 11567,
+  "finalized": true
+ }
+}

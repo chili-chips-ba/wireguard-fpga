@@ -22,6 +22,8 @@ from pypeline import (
     uint16_t,
 )
 
+import perf_taps
+
 import aead_types
 from aead_types import (
     AAD_MAX_LEN,
@@ -36,6 +38,11 @@ class prep_auth_data_state_t:
     AAD_STATE = auto()
     CIPHERTEXT = auto()
     LENGTHS = auto()
+
+
+# Member names in declaration order for the perf_taps state histogram -- plain
+# Python, never elaborated. See src/perf_taps.py.
+PREP_AUTH_DATA_STATE_NAMES = tuple(prep_auth_data_state_t.__members__)
 
 
 @struct
@@ -58,6 +65,11 @@ def prep_auth_data_fsm(
     state: Reg[prep_auth_data_state_t]
     aad_reg: Reg[uint8_t[AAD_MAX_LEN]]
     counter: Reg[uint16_t]
+    # Perf probe (sim-only, elaborated away). Before the FSM reassigns `state`,
+    # so the histogram counts the state occupied this cycle. AAD_STATE +
+    # LENGTHS cycles are the per-packet framing cost that inflates the Poly1305
+    # block count by 3 (2 AAD blocks at AAD_LEN=29, plus the lengths block).
+    perf_taps.state("prep.fsm", state, PREP_AUTH_DATA_STATE_NAMES)
 
     # Default not ready for incoming data
     o.axis_in_if.ready = 0
@@ -142,4 +154,21 @@ def prep_auth_data_fsm(
         # As xfer happens, go back to idle
         if o.axis_if.stream.valid & axis_if.ready:
             state = prep_auth_data_state_t.IDLE
+
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py). prep sits
+    # directly between the ciphertext fork and the MAC, so comparing these two
+    # taps separates "the MAC is slow" (axis_out stalls, axis_in starves in
+    # AAD/LENGTHS) from "prep itself is slow".
+    perf_taps.hs(
+        "prep.axis_in",
+        axis_in_if.stream.valid,
+        o.axis_in_if.ready,
+        axis_in_if.stream.data.frag.keep,
+    )
+    perf_taps.hs(
+        "prep.axis_out",
+        o.axis_if.stream.valid,
+        axis_if.ready,
+        o.axis_if.stream.data.frag.keep,
+    )
     return o

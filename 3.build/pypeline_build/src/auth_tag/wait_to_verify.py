@@ -22,6 +22,8 @@ from pypeline import (
 )
 from stream.stream_fifo import make_stream_fifo
 
+import perf_taps
+
 from aead_types import (
     axis128_intrf,
     axis128_frag_t,
@@ -40,6 +42,10 @@ class wait_to_verify_state_t:
     OUTPUT_PLAINTEXT = auto()
 
 
+# Declaration order = value order, for the perf_taps state histogram.
+WAIT_TO_VERIFY_STATE_NAMES = tuple(wait_to_verify_state_t.__members__)
+
+
 @struct
 class wait_to_verify_out_t(NamedTuple):
     axis_in_if: axis128_intrf.fb_t
@@ -56,6 +62,10 @@ def wait_to_verify(
 ) -> wait_to_verify_out_t:
     o: wait_to_verify_out_t
     state: Reg[wait_to_verify_state_t]
+    # Sampled before the FSM reassigns it -- see src/perf_taps.py. Time spent in
+    # WAIT_TO_VERIFY_BIT is exactly the decrypt-side latency penalty of holding
+    # the whole plaintext until Poly1305 returns its verdict.
+    perf_taps.state("wtv.fsm", state, WAIT_TO_VERIFY_STATE_NAMES)
     # Reg to hold the received verification result (tags_match)
     tags_match_reg: Reg[uint1_t]
 
@@ -127,4 +137,19 @@ def wait_to_verify(
     verify_fifo_out = fifo_result.out_stream_if.stream
     verify_fifo_in_ready = fifo_result.in_stream_if.ready
 
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), last
+    # so every o.* field above is final.
+    perf_taps.hs(
+        "wtv.axis_in",
+        axis_in_if.stream.valid,
+        o.axis_in_if.ready,
+        axis_in_if.stream.data.frag.keep,
+    )
+    perf_taps.hs(
+        "wtv.axis_out",
+        o.axis_out_if.stream.valid,
+        axis_out_if.ready,
+        o.axis_out_if.stream.data.frag.keep,
+    )
+    perf_taps.hs("wtv.verify_bit", verify_bit_if.stream.valid, o.verify_bit_if.ready)
     return o

@@ -2,9 +2,14 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""Plain-Python (no pypeline/hardware import) configuration and shared
-singletons for the performance testbenches (encrypt_perf_tb.py /
-decrypt_perf_tb.py / chacha20poly1305_encrypt_decrypt_shared_perf_tb.py).
+"""Configuration and shared singletons for the performance testbenches
+(encrypt_perf_tb.py / decrypt_perf_tb.py /
+chacha20poly1305_encrypt_decrypt_shared_perf_tb.py).
+
+The measurement math itself stays in perf_probe.py, which imports no pypeline
+at all (so `perf_probe.py --selftest` runs standalone). This file does import
+`perf_taps` -- the design-side @sim_output probe shims -- purely to share its
+one TapRegistry; nothing here is baked into hardware either way.
 
 Every knob here is read from the environment at import time and NOTHING is
 baked into hardware: the phase plan, packet sizes, counts and payload bytes
@@ -19,9 +24,10 @@ Key/nonce/AAD are reused from tb_common_sim.py rather than duplicated.
 
 import os
 
+import perf_taps
 import tb_common_sim as common
 from aead_ref_model import generate_encrypt_vector
-from perf_probe import DirectionRunner, PerfRecorder, PhaseBarrier, TapRegistry
+from perf_probe import DirectionRunner, PerfRecorder, PhaseBarrier
 
 # ---------------------------------------------------------------------------
 # Hard design limit: wait_to_verify buffers the decrypt-side ciphertext in a
@@ -139,7 +145,12 @@ CONFIG = {
 
 BARRIER = PhaseBarrier(ENABLED_DIRS)
 RECORDER = PerfRecorder(JSON_PATH, CONFIG)
-TAPS = TapRegistry(TAP_NAMES)
+# The ONE registry for the whole run, owned by perf_taps so the design's own
+# probe call sites (which import perf_taps, never this file) and the testbench
+# share it. Enable in place -- never rebind perf_taps.REGISTRY, see its module
+# docstring on @sim_output's detached globals.
+TAPS = perf_taps.REGISTRY
+TAPS.enable(TAP_NAMES)
 
 _RUNNERS = {}
 
@@ -189,6 +200,7 @@ def make_runner(direction, src, snk, scoreboard, frame_builder):
         max_cycles_per_phase=MAX_CYCLES_PER_PHASE,
         settle_cycles=SETTLE_CYCLES,
         stall_timeout_cycles=STALL_TIMEOUT,
+        taps=TAPS,
     )
     _RUNNERS[direction] = runner
     return runner
@@ -208,7 +220,11 @@ def total_cycles():
 def finalize():
     """Write the final JSON (phase results were already written incrementally
     after each phase, so this only adds the run-level totals)."""
-    RECORDER.config["taps_measured"] = TAPS.snapshot()
+    # Tap counters live per phase (PerfRecorder.record_taps zeroes them at each
+    # barrier release), so there is no meaningful run-level total to report --
+    # what IS worth recording is which taps actually fired, since a name that
+    # matched nothing is the usual explanation for an empty "taps" section.
+    RECORDER.config["taps_active"] = TAPS.active_names()
     RECORDER.finalize(total_cycles=total_cycles())
 
 

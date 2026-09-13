@@ -27,6 +27,13 @@ convergence loop of cycle N, `note_out(...)`/`tick()` from `@sim_output` in the
 final (converged) pass of the same cycle N, and `tick()` increments the counter
 last -- so both sides of a cycle agree on N. `note_in`/`note_out` are
 idempotent per cycle, so a convergence re-entry can never double-count.
+
+Alongside the boundary meters, `HandshakeTap`/`StateTap`/`ArbTap` (+ the
+`TapRegistry` that owns them) measure the design's INTERNAL block boundaries.
+Those are fed from probe calls placed inside the design's own hardware
+functions -- see src/perf_taps.py, which is the pypeline-side half of this and
+the only part that imports pypeline. They are snapshotted and zeroed per phase,
+landing under each phase's `"taps"` in the results.
 """
 
 import json
@@ -34,34 +41,95 @@ import os
 import statistics
 
 
-class HandshakeTap:
-    """Duty/stall counters for one internal valid/ready handshake -- the
-    extension point for narrowing in on a bottleneck.
+class _EpochTap:
+    """Common sampling discipline for every tap.
 
-    To tap an internal stream, register a name in `WG_PERF_TAPS` and add one
-    line to a `@sim_output` reading that interface's wires, e.g.
+    `note(...)` commits a sample immediately. `sample(epoch, ...)` buffers one
+    and commits the PREVIOUS one when the epoch changes, which is what the
+    in-design probes use, because a hardware function body that declares any
+    `Feedback[T]` is wrapped by PipelineC in a `while True:` convergence loop
+    (see pypeline.py's "__fb_iters" body rewriting) and therefore re-executes --
+    probes included -- until its feedback settles. Only the LAST firing of a
+    cycle carries converged values, so keeping the last one is both correct and
+    the only choice that does not undercount or double-count.
 
-        tap = perf_tb_common.TAPS.tap("chacha_shared_enc_in")
-        tap.note(chacha20_pipeline_shared.encrypt_pipeline_in_if.stream.valid,
-                 chacha20_pipeline_shared.encrypt_pipeline_in_if.ready)
-
-    Counters are snapshotted (and zeroed) per phase, landing in the phase's
-    `"taps"` dict. Disabled taps are `NullTap`s, so an unused tap costs one
-    no-op call per cycle.
+    The epoch comes from perf_taps.py, which derives it from a `@sim_input`
+    (pypeline clears that cache exactly once per simulated cycle), so it is
+    independent of MAIN ordering and of how many convergence passes ran.
     """
 
     def __init__(self, name):
         self.name = name
+        self._epoch = None
+        self._pending = None
         self.reset()
+
+    def sample(self, epoch, args):
+        if self._pending is not None and epoch != self._epoch:
+            self._commit(self._pending)
+        self._epoch = epoch
+        self._pending = args
+
+    def flush(self):
+        """Commit the buffered sample -- called before every snapshot, so the
+        last cycle of a phase is not silently dropped at the phase boundary."""
+        if self._pending is not None:
+            self._commit(self._pending)
+            self._pending = None
+            self._epoch = None
+
+    def _commit(self, args):
+        raise NotImplementedError
+
+
+class HandshakeTap(_EpochTap):
+    """Per-cycle valid/ready accounting for ONE handshake -- the unit of
+    internal bottleneck analysis.
+
+    Boundary metrics (DirectionMeter below) answer "how fast is the design";
+    these answer "which block is holding it up". The four mutually exclusive
+    cycle classes are what make that attribution automatic:
+
+        xfer     valid &  ready   a beat moved
+        stall    valid & ~ready   CONSUMER backpressured the producer
+        starved ~valid &  ready   consumer was ready, PRODUCER had nothing
+        idle    ~valid & ~ready   neither side had anything to do
+
+    A block that is the bottleneck shows high `stall` on its own input while
+    everything downstream of it shows high `starved`. The two derived numbers
+    that matter most:
+
+      `service_period_cycles` = offered/xfer -- cycles per accepted beat *while
+        work is being offered*. This is the block's throughput ceiling in
+        situ, independent of how often it is fed. Poly1305's data input reads
+        ~6.0 here (make_valid_ready_mcp(..., 5) re-arms every ncycles+1 cycles);
+        ChaCha20's edges read ~1.0.
+      `accept_rate` = xfer/offered -- the same thing as a fraction (1/period).
+
+    Deliberately NOT a trimmed steady-state window like
+    DirectionMeter._steady_bytes_per_cycle: accepts in this design are bursty
+    (see the README metric table on steady_in_bytes_per_cycle reading 14.3
+    B/cycle at 256 B), so an offered/accepted ratio is the honest per-block
+    rate and a windowed one is not.
+    """
+
+    kind = "handshake"
+
+    def _commit(self, args):
+        self.note(*args)
 
     def reset(self):
         self.cycles = 0
         self.valid_cycles = 0
         self.ready_cycles = 0
         self.xfer_cycles = 0
-        self.stall_cycles = 0  # valid & ~ready: producer held up by consumer
+        self.stall_cycles = 0  # valid & ~ready: consumer backpressures producer
+        self.starved_cycles = 0  # ~valid & ready: consumer idle, producer dry
+        self.idle_cycles = 0  # ~valid & ~ready
+        self.bytes = 0
+        self.has_bytes = False
 
-    def note(self, valid, ready):
+    def note(self, valid, ready, nbytes=None):
         valid = 1 if valid else 0
         ready = 1 if ready else 0
         self.cycles += 1
@@ -69,28 +137,209 @@ class HandshakeTap:
         self.ready_cycles += ready
         if valid and ready:
             self.xfer_cycles += 1
+            if nbytes is not None:
+                self.has_bytes = True
+                self.bytes += int(nbytes)
         elif valid:
             self.stall_cycles += 1
+        elif ready:
+            self.starved_cycles += 1
+        else:
+            self.idle_cycles += 1
 
     def snapshot(self):
         window = self.cycles or 1
-        return {
+        offered = self.xfer_cycles + self.stall_cycles
+        snap = {
+            "kind": self.kind,
             "cycles": self.cycles,
             "valid_cycles": self.valid_cycles,
             "ready_cycles": self.ready_cycles,
             "xfer_cycles": self.xfer_cycles,
             "stall_cycles": self.stall_cycles,
+            "starved_cycles": self.starved_cycles,
+            "idle_cycles": self.idle_cycles,
+            "offered_cycles": offered,
+            # The block's in-situ ceiling: how it serves work that IS offered.
+            "accept_rate": (self.xfer_cycles / offered) if offered else None,
+            "service_period_cycles": (
+                (offered / self.xfer_cycles) if self.xfer_cycles else None
+            ),
+            "beats_per_cycle": self.xfer_cycles / window,
             "duty": self.xfer_cycles / window,
             "stall_frac": self.stall_cycles / window,
+            "starve_frac": self.starved_cycles / window,
+            "idle_frac": self.idle_cycles / window,
+        }
+        if self.has_bytes:
+            snap["bytes"] = self.bytes
+            snap["bytes_per_cycle"] = self.bytes / window
+            snap["bytes_per_beat"] = (
+                (self.bytes / self.xfer_cycles) if self.xfer_cycles else None
+            )
+        return snap
+
+
+class StateTap(_EpochTap):
+    """Cycles-per-FSM-state histogram for one state register.
+
+    Turns "the block is slow" into "the block spent 83% of its cycles in
+    FINISH_ITER", which names the mechanism rather than the symptom. Pypeline
+    `@enum` members declared with auto() are 0-based in declaration order (see
+    PipelineC pypeline.py's enum decorator), so a names tuple in declaration
+    order indexes directly by value.
+    """
+
+    kind = "state"
+
+    def __init__(self, name):
+        self.state_names = ()
+        super().__init__(name)
+
+    def _commit(self, args):
+        self.note(*args)
+
+    def reset(self):
+        self.cycles = 0
+        self.counts = {}
+
+    def note(self, value, names=None):
+        if names and not self.state_names:
+            self.state_names = tuple(str(n) for n in names)
+        self.cycles += 1
+        key = int(value)
+        self.counts[key] = self.counts.get(key, 0) + 1
+
+    def name_of(self, value):
+        if 0 <= value < len(self.state_names):
+            return self.state_names[value]
+        return f"state_{value}"
+
+    def snapshot(self):
+        window = self.cycles or 1
+        states = {}
+        for value, count in sorted(self.counts.items()):
+            states[self.name_of(value)] = {"cycles": count, "frac": count / window}
+        dominant = None
+        if states:
+            dominant = max(states, key=lambda k: states[k]["cycles"])
+        return {
+            "kind": self.kind,
+            "cycles": self.cycles,
+            "states": states,
+            "dominant": dominant,
+        }
+
+
+class ArbTap(_EpochTap):
+    """Round-robin arbitration accounting for a shared resource.
+
+    Built for chacha20_pipeline_shared, whose `is_encrypt` toggles every cycle
+    unconditionally, so a direction can only launch on alternate cycles. Every
+    cycle a requester wants the resource is exactly one of:
+
+      xfer         its slot, resource ready -- launched
+      blocked      its slot, resource NOT ready -- the pipeline is full. In the
+                   shared design this includes head-of-line blocking: the other
+                   direction's finished blocks waiting at the shared output
+                   (behind that direction's backpressure) stop both directions
+      contention   the other side's slot, and the other side wanted it too --
+                   the real cost of sharing
+      wasted_slot  the other side's slot, and the other side had NOTHING -- pure
+                   round-robin waste that a request-aware arbiter would recover
+
+    `note(sel, reqs, granted)`: `sel` is the index the mux points at this cycle,
+    `reqs` the per-requester valid bits, `granted` the resource's ready.
+    """
+
+    kind = "arb"
+
+    def __init__(self, name, labels=("a", "b")):
+        self.labels = tuple(labels)
+        super().__init__(name)
+
+    def _commit(self, args):
+        self.note(*args)
+
+    def reset(self):
+        n = len(self.labels)
+        self.cycles = 0
+        self.granted_ready_cycles = 0
+        self.sel_cycles = [0] * n
+        self.req_cycles = [0] * n
+        self.xfer_cycles = [0] * n
+        self.blocked_cycles = [0] * n
+        self.contention_cycles = [0] * n
+        self.wasted_slot_cycles = [0] * n
+
+    def note(self, sel, reqs, granted):
+        sel = int(sel)
+        reqs = [1 if r else 0 for r in reqs]
+        granted = 1 if granted else 0
+        self.cycles += 1
+        self.granted_ready_cycles += granted
+        if 0 <= sel < len(self.sel_cycles):
+            self.sel_cycles[sel] += 1
+        sel_wants = reqs[sel] if 0 <= sel < len(reqs) else 0
+        for i, req in enumerate(reqs):
+            self.req_cycles[i] += req
+            if not req:
+                continue
+            if i == sel:
+                if granted:
+                    self.xfer_cycles[i] += 1
+                else:
+                    self.blocked_cycles[i] += 1
+            elif sel_wants:
+                self.contention_cycles[i] += 1
+            else:
+                self.wasted_slot_cycles[i] += 1
+
+    def snapshot(self):
+        window = self.cycles or 1
+        per = {}
+        for i, label in enumerate(self.labels):
+            req = self.req_cycles[i] or 1
+            per[label] = {
+                "req_cycles": self.req_cycles[i],
+                "sel_cycles": self.sel_cycles[i],
+                "xfer_cycles": self.xfer_cycles[i],
+                "blocked_cycles": self.blocked_cycles[i],
+                "blocked_frac": self.blocked_cycles[i] / req,
+                "contention_cycles": self.contention_cycles[i],
+                "wasted_slot_cycles": self.wasted_slot_cycles[i],
+                # Of the cycles this side wanted the resource, how often it lost
+                # the slot -- split by whether losing it was necessary.
+                "arb_loss_frac": (
+                    self.contention_cycles[i] + self.wasted_slot_cycles[i]
+                )
+                / req,
+                "contention_frac": self.contention_cycles[i] / req,
+                "wasted_slot_frac": self.wasted_slot_cycles[i] / req,
+            }
+        return {
+            "kind": self.kind,
+            "cycles": self.cycles,
+            "labels": list(self.labels),
+            "granted_ready_frac": self.granted_ready_cycles / window,
+            "per_requester": per,
         }
 
 
 class NullTap:
-    """A tap that was not enabled via WG_PERF_TAPS: every call is a no-op."""
+    """A tap that was not enabled this run: every call is a no-op. Accepts any
+    tap's note() signature so probe call sites never branch on availability."""
 
     name = None
+    kind = "null"
 
-    def note(self, valid, ready):
+    def note(self, *args, **kwargs):
+        pass
+
+    def sample(self, *args, **kwargs):
+        pass
+
+    def flush(self):
         pass
 
     def reset(self):
@@ -101,22 +350,73 @@ class NullTap:
 
 
 class TapRegistry:
-    """Name -> HandshakeTap for the taps enabled this run; unknown/disabled
-    names get a NullTap so testbench code never branches on availability."""
+    """Name -> tap for the taps enabled this run; unknown/disabled names get a
+    NullTap.
+
+    Names are `<label>/<block>.<port>` (e.g. `encrypt/poly1305.data_in`), the
+    label coming from the MAIN the probe fired under -- see src/perf_taps.py.
+    `enable()` accepts exact names, a `<label>/` or `<block>` prefix, or the
+    literal "all", so `--taps poly1305` picks up both directions' MAC taps.
+    """
+
+    ALL = "all"
 
     def __init__(self, enabled=()):
-        self.enabled = set(n for n in enabled if n)
+        self.enabled = []
         self._taps = {}
         self._null = NullTap()
+        self._lookup = {}
+        self.enable(enabled)
 
-    def tap(self, name):
-        if name not in self.enabled:
-            return self._null
-        if name not in self._taps:
-            self._taps[name] = HandshakeTap(name)
-        return self._taps[name]
+    # ---- enablement -------------------------------------------------------
+    def enable(self, names):
+        for name in names or ():
+            name = str(name).strip()
+            if name and name not in self.enabled:
+                self.enabled.append(name)
+        self._lookup.clear()
+
+    def any_enabled(self):
+        return bool(self.enabled)
+
+    def _matches(self, full_name):
+        if not self.enabled:
+            return False
+        bare = full_name.split("/", 1)[-1]
+        for token in self.enabled:
+            if token == self.ALL:
+                return True
+            if token == full_name or token == bare:
+                return True
+            if full_name.startswith(token) or bare.startswith(token):
+                return True
+        return False
+
+    # ---- tap access -------------------------------------------------------
+    def tap(self, full_name, factory=HandshakeTap, *args, **kwargs):
+        """Return the tap for `full_name`, creating it on first use. Result is
+        cached per name, so a probe call site costs one dict hit per cycle."""
+        cached = self._lookup.get(full_name)
+        if cached is not None:
+            return cached
+        tap = (
+            factory(full_name, *args, **kwargs)
+            if self._matches(full_name)
+            else self._null
+        )
+        self._lookup[full_name] = tap
+        if tap is not self._null:
+            self._taps[full_name] = tap
+        return tap
+
+    def active_names(self):
+        """Names that actually matched a probe call site and fired this run. An
+        enabled name that never appears here did not match anything."""
+        return sorted(self._taps)
 
     def snapshot(self):
+        for tap in self._taps.values():
+            tap.flush()
         return {name: tap.snapshot() for name, tap in sorted(self._taps.items())}
 
     def reset(self):
@@ -154,6 +454,7 @@ class PerfRecorder:
         self.packets_checked = 0
         self.finalized = False
         self.total_cycles = None
+        self._taps_done = set()  # phase indices whose taps were already taken
 
     def record_phase(self, phase_idx, phase, direction, result, taps=None):
         entry = self.phases.setdefault(
@@ -169,6 +470,34 @@ class PerfRecorder:
             entry["taps"] = taps
         if result.get("timed_out"):
             entry["timed_out"] = True
+        self.write()
+
+    def record_taps(self, phase_idx, phase, registry):
+        """Snapshot and zero the internal taps for one phase, exactly once.
+
+        Both directions call this on the same cycle (the barrier release that
+        ends the phase); the first caller wins, so the counters are never split
+        across two half-windows. The tap window is barrier-to-barrier -- a bit
+        wider than a direction's own `window_cycles`, since it also covers the
+        drain and settle cycles at the end of the phase -- which is what makes
+        the per-tap fractions comparable across phases.
+        """
+        if registry is None or phase_idx in self._taps_done:
+            return
+        self._taps_done.add(phase_idx)
+        snapshot = registry.snapshot()
+        registry.reset()
+        if not snapshot:
+            return
+        entry = self.phases.setdefault(
+            phase_idx,
+            {
+                "name": phase["name"],
+                "packet_bytes": phase["packet_bytes"],
+                "num_packets": phase["num_packets"],
+            },
+        )
+        entry["taps"] = snapshot
         self.write()
 
     def note_error(self, message):
@@ -471,6 +800,7 @@ class DirectionRunner:
         max_cycles_per_phase=None,
         settle_cycles=None,
         stall_timeout_cycles=None,
+        taps=None,
     ):
         self.name = name
         self.phases = phases
@@ -482,6 +812,9 @@ class DirectionRunner:
         self.frame_builder = frame_builder
         self.bus_bytes = bus_bytes
         self.seed = seed
+        # Shared across directions (one registry per run); snapshotted per phase
+        # by whichever direction reaches the barrier release first.
+        self.taps = taps
         self.max_cycles_per_phase = max_cycles_per_phase
         # Fail fast on a real deadlock (a full/never-drained FIFO, a lost
         # handshake) instead of burning hours up to max_cycles_per_phase:
@@ -589,6 +922,7 @@ class DirectionRunner:
                 self.barrier.arrive(self.name, self.phase_idx)
         # Both directions reported this phase: start the next one together.
         if self.reported and self.barrier.released(self.phase_idx):
+            self.recorder.record_taps(self.phase_idx, phase, self.taps)
             self._next_phase()
         self.meter.tick()
 
@@ -708,6 +1042,113 @@ def _selftest():
         failures.append(
             f"steady_out_bytes_per_cycle: expected {bus} got {res3['steady_out_bytes_per_cycle']!r}"
         )
+
+    # ---- internal taps -----------------------------------------------------
+    # The per-block definitions every future variant gets compared on, checked
+    # here so they have regression cover without a build or a simulator.
+    reg = TapRegistry(["all"])
+    hs = reg.tap("encrypt/poly1305.data_in")
+    # The Poly1305 shape: work offered every cycle, accepted 1 cycle in 6
+    # (make_valid_ready_mcp(..., 5) re-arms every ncycles+1 cycles).
+    for cycle in range(60):
+        hs.note(1, 1 if cycle % 6 == 0 else 0, bus if cycle % 6 == 0 else None)
+    snap = hs.snapshot()
+    tap_checks = [
+        ("tap cycles", snap["cycles"], 60),
+        ("tap xfer", snap["xfer_cycles"], 10),
+        ("tap stall", snap["stall_cycles"], 50),
+        ("tap starved", snap["starved_cycles"], 0),
+        ("tap idle", snap["idle_cycles"], 0),
+        ("tap offered", snap["offered_cycles"], 60),
+        # THE per-block throughput number: 6 cycles per accepted 16 B beat.
+        ("tap service_period", snap["service_period_cycles"], 6.0),
+        ("tap accept_rate", snap["accept_rate"], 1 / 6),
+        ("tap bytes_per_beat", snap["bytes_per_beat"], 16.0),
+        ("tap bytes_per_cycle", snap["bytes_per_cycle"], 160 / 60),
+        ("tap stall_frac", snap["stall_frac"], 50 / 60),
+    ]
+    # A consumer that is never offered work must read as starved, not as slow.
+    starved = reg.tap("encrypt/append.axis_in")
+    for _ in range(40):
+        starved.note(0, 1)
+    ssnap = starved.snapshot()
+    tap_checks += [
+        ("starved tap starve_frac", ssnap["starve_frac"], 1.0),
+        ("starved tap stall_frac", ssnap["stall_frac"], 0.0),
+        ("starved tap service_period", ssnap["service_period_cycles"], None),
+    ]
+    for name, got, want in tap_checks:
+        ok = (
+            got == want
+            if want is None or not isinstance(want, float)
+            else abs(got - want) < 1e-9
+        )
+        if not ok:
+            failures.append(f"{name}: expected {want!r} got {got!r}")
+
+    # Epoch buffering: a body carrying Feedback[T] re-executes until it
+    # converges, so a probe there fires several times per cycle and only the
+    # LAST firing is converged. Three firings per cycle must count as one cycle,
+    # and must record the last sample -- not the first, and not all three.
+    fb = reg.tap("encrypt/chacha20.axis_in")
+    for cycle in range(10):
+        fb.sample(cycle, (1, 0, None))  # mid-convergence: not yet ready
+        fb.sample(cycle, (1, 0, None))
+        fb.sample(cycle, (1, 1, bus))  # converged: accepted
+    fb.flush()
+    fsnap = fb.snapshot()
+    if fsnap["cycles"] != 10:
+        failures.append(f"epoch dedupe: expected 10 cycles got {fsnap['cycles']}")
+    if fsnap["xfer_cycles"] != 10 or fsnap["stall_cycles"] != 0:
+        failures.append(
+            "epoch dedupe kept the wrong sample: "
+            f"xfer={fsnap['xfer_cycles']} stall={fsnap['stall_cycles']} "
+            "(the converged, last firing of each cycle must win)"
+        )
+
+    # State histogram: 0-based enum values index the declaration-order names.
+    st = reg.tap("encrypt/poly1305.fsm", StateTap)
+    names = ("IDLE", "START_ITER", "FINISH_ITER", "A_PLUS_S", "OUTPUT_AUTH_TAG")
+    for cycle in range(60):
+        st.note(1 if cycle % 6 == 0 else 2, names)
+    stsnap = st.snapshot()
+    if stsnap["dominant"] != "FINISH_ITER":
+        failures.append(f"state dominant: expected FINISH_ITER got {stsnap['dominant']}")
+    if abs(stsnap["states"]["FINISH_ITER"]["frac"] - 50 / 60) > 1e-9:
+        failures.append("state frac wrong for FINISH_ITER")
+
+    # Arbitration: a round robin that flips unconditionally throws away every
+    # other slot when only one side has work.
+    arb = reg.tap("shared/pipe.arb", ArbTap, ("encrypt", "decrypt"))
+    for cycle in range(40):
+        arb.note(0 if cycle % 2 == 0 else 1, (1, 0), 1)
+    asnap = arb.snapshot()["per_requester"]["encrypt"]
+    if asnap["xfer_cycles"] != 20 or asnap["wasted_slot_cycles"] != 20:
+        failures.append(f"arb split wrong: {asnap}")
+    if abs(asnap["wasted_slot_frac"] - 0.5) > 1e-9 or asnap["contention_frac"] != 0.0:
+        failures.append(f"arb fracs wrong: {asnap}")
+    full = reg.tap("shared/pipe.arb_full", ArbTap, ("encrypt", "decrypt"))
+    for cycle in range(40):
+        # both always want it; the resource is ready only on even cycles
+        full.note(0 if cycle % 2 == 0 else 1, (1, 1), 1 if cycle % 4 < 2 else 0)
+    fsnap_arb = full.snapshot()["per_requester"]["encrypt"]
+    parts = (fsnap_arb["xfer_cycles"], fsnap_arb["blocked_cycles"],
+             fsnap_arb["contention_cycles"], fsnap_arb["wasted_slot_cycles"])
+    if parts != (10, 10, 20, 0) or sum(parts) != fsnap_arb["req_cycles"]:
+        failures.append(f"arb categories must partition wanted cycles: {fsnap_arb}")
+
+    # Enablement: "all", exact names and prefixes; everything else is a NullTap.
+    narrow = TapRegistry(["poly1305"])
+    if narrow.tap("encrypt/poly1305.data_in").snapshot() is None:
+        failures.append("prefix match on the bare name should enable a tap")
+    if narrow.tap("encrypt/chacha20.axis_in").snapshot() is not None:
+        failures.append("an unmatched tap must be a NullTap")
+    bydir = TapRegistry(["decrypt/"])
+    if bydir.tap("decrypt/poly1305.data_in").snapshot() is None:
+        failures.append("direction prefix should enable a tap")
+    off = TapRegistry([])
+    if off.any_enabled() or off.tap("encrypt/poly1305.data_in").snapshot() is not None:
+        failures.append("an empty registry must enable nothing")
 
     for f in failures:
         print("FAIL: " + f)
