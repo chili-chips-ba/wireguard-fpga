@@ -455,8 +455,9 @@ Area (perf_tb_top): **31192 LUT** (30446 logic + 746 mem), **16049 FF**, **420 D
   limiting MAIN meets timing without a failing path, 80 MHz is a *lower bound* on
   the real fmax, not a measurement of it.
 - **Poly1305 limits throughput, and ChaCha20 is nowhere near it.** Structurally,
-  Poly1305's compute is `make_valid_ready_mcp(poly1305_mac_loop_body, 5)`, whose
-  output is valid at `cycles_since_launch == ncycles+1` with `ready` re-armed that
+  Poly1305's compute is `make_stream_interface_automcp(poly1305_mac_loop_body,
+  start_latency=5)` (the build keeps the known-good 5 cycles), whose
+  output is valid at `cycles_since_launch == latency+1` with `ready` re-armed that
   same cycle — 6 cycles per 16 B block, a **2.667 B/cycle** ceiling, with
   `data_in_if.ready` high only in `START_ITER`. ChaCha20 is a
   `make_stream_pipeline` (II = 1) fed 4 beats per 64 B block by its dwidth
@@ -781,7 +782,7 @@ this word until this copy is accepted, and waiting for the tag first would
 deadlock the broadcast. So the hold is unconditional, and the wait that
 follows (`MERGED_WORD`/`TAG_TAIL` until `poly1305_mac`'s tag stream goes
 valid) is bounded below only by the MAC's own latency from "last block
-accepted" to "tag valid" — currently two `make_valid_ready_mcp` passes (the
+accepted" to "tag valid" — currently two `make_stream_interface_automcp` passes (the
 last ciphertext block, then the length block) plus final accumulation, and
 being reduced separately as part of the ongoing Poly1305 MAC optimisation.
 `append_auth_tag` already reacts the same cycle the tag goes valid, so this
@@ -907,7 +908,7 @@ source uses this directly:
   merge what used to be an FSM `@MAIN` and a datapath `@MAIN` into one
   function, using the same `Feedback[T]` pattern for the pair's mutual
   same-cycle dependency. This is safe because `make_stream_pipeline`/
-  `make_valid_ready_mcp`/`make_stream_fifo` (the library wrappers backing
+  `make_stream_interface_mcp`/`make_stream_fifo` (the library wrappers backing
   the datapath side) already do their own internal `autopipeline(...)`
   wrapping and expose purely `Reg`-driven `ready` outputs — so this is an
   ordering fix, not a new combinational loop.
@@ -919,7 +920,7 @@ source uses this directly:
   `decrypt_dataflow_core.py` are `make_encrypt_dataflow_core(chacha_func)`/
   `make_decrypt_dataflow_core(chacha_func)` factories — elaboration-time
   Python closures, the same idiom `chacha20.py`'s `make_quarter_round` and
-  Pypeline's own `make_stream_pipeline`/`make_valid_ready_mcp` already use.
+  Pypeline's own `make_stream_pipeline`/`make_stream_interface_mcp` already use.
   `encrypt_dataflow.py` instantiates the factory once with
   `chacha20.chacha20_instance`; `encrypt_dataflow_shared.py` instantiates the
   same factory with `chacha20_pipeline_shared.chacha20_encrypt_shared`.
@@ -1059,7 +1060,7 @@ elaboration do not catch this — only real synthesis does.
 - C's `#ifndef SIMULATION` hardware ports become separate `*_hw_io.py` modules
   imported only by the hardware tops (the sim TB tops omit them).
 - `GLOBAL_VALID_READY_PIPELINE_INST` / `GLOBAL_VALID_READY_MCP_INST` /
-  `GLOBAL_STREAM_FIFO` become `make_stream_pipeline` / `make_valid_ready_mcp` /
+  `GLOBAL_STREAM_FIFO` become `make_stream_pipeline` / `make_stream_interface_mcp` /
   `make_stream_fifo` instances, called directly from the function they back
   (`chacha20.chacha20_instance`, `poly1305.poly1305_mac_instance`,
   `wait_to_verify.wait_to_verify`) rather than wired up in a separate `@MAIN`
