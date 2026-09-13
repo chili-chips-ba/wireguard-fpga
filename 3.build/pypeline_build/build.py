@@ -22,12 +22,33 @@ def main():
     parser.add_argument("--comb", action="store_true", help="Combinational (zero pipeline stages) build. If omitted, defaults to pipelined.")
     parser.add_argument("--sim", action="store_true", help="Enable running simulation. If omitted, builds final Verilog.")
     parser.add_argument("--syn_tb", action="store_true", help="Select synthesizable test bench (_syn_tb_). Otherwise non-syn (_sim_) style.")
+    parser.add_argument("--perf", action="store_true", help="Select the QoR/performance measurement test bench (_perf_tb_). Implies --sim --native; see measure.py and README's 'Measuring QoR' section.")
     parser.add_argument("--native", action="store_true", help="Select native python build/sim. Otherwise normal cocotb ghdl style vhdl sim.")
     
     # Continue Option (dest used to bypass Python's reserved keyword limit)
     parser.add_argument("--continue", dest="continue_build", action="store_true", help="Skip clearing out the output directory and continue with existing files.")
 
     args = parser.parse_args()
+
+    # --perf is a measurement run, not a correctness run: it is only ever a
+    # native-sim build (the perf testbench is @sim_input/@sim_output based, so
+    # it has no cocotb/GHDL equivalent, same as the other non-syn testbenches).
+    if args.perf:
+        if args.syn_tb:
+            parser.error("--perf and --syn_tb are different testbenches; pick one")
+        if args.enc or args.dec:
+            # Only the shared design has a perf top today: it is the variant whose
+            # (fmax, area, throughput, latency) this repo tracks. Add
+            # src/chacha20poly1305_{encrypt,decrypt}_perf_tb.py to measure one
+            # direction's standalone design; to measure one direction of the
+            # SHARED design, use measure.py --dirs enc|dec instead.
+            parser.error("--perf currently supports only the shared design (--shared)")
+        if not args.sim:
+            print("--> --perf implies --sim")
+            args.sim = True
+        if not args.native:
+            print("--> --perf implies --native")
+            args.native = True
 
     # 1. Determine Design Details
     if args.enc:
@@ -62,12 +83,20 @@ def main():
         
     else:
         # --- SIMULATION BUILD PATH ---
-        tb_type = "syn_tb" if args.syn_tb else "tb"
+        if args.perf:
+            tb_type = "perf_tb"
+        elif args.syn_tb:
+            tb_type = "syn_tb"
+        else:
+            tb_type = "tb"
         src_file = f"./src/chacha20poly1305_{design_name}_{tb_type}.py"
         
         # Construct directory name based on flags
         dir_parts = ["generated-files"]
-        dir_parts.append("syn-tb" if args.syn_tb else "sim")
+        if args.perf:
+            dir_parts.append("perf")
+        else:
+            dir_parts.append("syn-tb" if args.syn_tb else "sim")
         dir_parts.append("comb" if args.comb else "pipe")
         dir_parts.append(design_short)
         if args.native:

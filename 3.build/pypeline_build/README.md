@@ -99,6 +99,14 @@ what takes hours.
 ./build.py --shared   # Shared encrypt+decrypt
 ```
 
+**Measure QoR — fmax, area, throughput, latency (see "Measuring QoR" below):**
+```bash
+./measure.py --label shared-80mhz   # autopipeline for 80 MHz, then measure (hours)
+./measure.py --label X --reuse-syn  # re-measure, reusing the cached synthesis
+./build.py --shared --perf          # the underlying build/sim on its own
+./build.py --shared --perf --comb    # fast rig check (no synthesis, no area/fmax)
+```
+
 ## Source Layout (mirrors ../pipelinec_build/src/)
 
 ```
@@ -153,9 +161,28 @@ src/
     encrypt_tb.py / decrypt_tb.py           non-synthesizable testbench MAINs
                                   (@sim_input/@sim_output, on-the-fly random vectors,
                                   native sim only) — see "Testbench Styles" below
+    perf_probe.py                plain-Python QoR measurement layer: per-cycle handshake/byte
+                                  accounting, per-packet latency, phase sequencer + barrier,
+                                  incremental JSON writer, HandshakeTap extension point
+                                  (no pypeline import) — see "Measuring QoR" above
+    perf_tb_common.py            the phase plan + WG_PERF_* env knobs + frame builders and the
+                                  shared barrier/recorder/tap singletons (no pypeline import)
+    encrypt_perf_tb.py / decrypt_perf_tb.py  performance testbench MAINs: stream the phase plan
+                                  with zero source gaps and measure, while still checking every
+                                  packet against the reference model (native sim only)
   chacha20poly1305_encrypt.py / _tb.py / _syn_tb.py                    tops (hw / sim non-synth / sim synth)
   chacha20poly1305_decrypt.py / _tb.py / _syn_tb.py
-  chacha20poly1305_encrypt_decrypt_shared.py / _tb.py / _syn_tb.py
+  chacha20poly1305_encrypt_decrypt_shared.py / _tb.py / _syn_tb.py / _perf_tb.py
+```
+
+Measurement tooling lives next to `build.py` rather than under `src/` (it is not
+part of any design):
+
+```
+build.py         --perf selects the performance testbench (implies --sim --native)
+measure.py       the QoR orchestrator: build+sim, parse fmax/area, merge, emit JSON/CSV/md
+vivado_area.py   this repo's Vivado report_utilization parser (--selftest included)
+measurements/    one directory per measured point (results.json, summary.csv, …)
 ```
 
 ## Testbench Styles: Synthesizable vs Non-Synthesizable
@@ -232,6 +259,218 @@ just that both eventually produce the same final output — a check the
 ordinary `sim_assert`-based pass/fail criteria above can't provide on their
 own, since assertions on final output data don't catch a data word arriving
 correct but on the wrong cycle.
+
+## Measuring QoR (fmax, area, throughput, latency)
+
+The point of this design is to get *faster, smaller, lower latency*, so those
+three have to be measurable in one automated, repeatable step rather than
+eyeballed per change. `./measure.py` is that step: it produces one
+machine-readable record per design variant, and the next variant's record diffs
+against it directly.
+
+```bash
+./measure.py --label shared-80mhz          # THE measurement: fresh autopipelining + sim
+./measure.py --label X --reuse-syn         # sim only, reusing the cached synthesis
+./measure.py --label smoke --comb          # rig check in minutes (no Vivado, no area/fmax)
+./measure.py --label X --parse-only        # re-merge an existing run's outputs
+./measure.py --label X --sizes 64,1420 --packets 8 --peak-bytes 1920
+./vivado_area.py --selftest                # area parser check against logs on disk
+python3 src/chacha20poly1305/perf_probe.py --selftest   # metric math check (synthetic trace)
+```
+
+One `./measure.py` run is one `pypelinec` command line (`./build.py --shared
+--perf`): it autopipelines the design for its `@MAIN(80.0)` goal through Vivado,
+then runs the **native** simulation of exactly what it built, with the
+discovered per-stage latencies modeled — no cocotb/GHDL needed. So fmax, area,
+latency and throughput all describe the same build, and cannot drift apart.
+
+### What is measured, and how
+
+- **fmax + pipeline depth** come from pypelinec's own numbers, not a
+  reimplementation — but from the **final per-MAIN outcome lines** the build
+  prints (`met timing, N slice(s) built (M pipeline stages) … iterations=K`,
+  `synthesized as written (standalone check): X MHz vs Y MHz goal - PASS`,
+  `PASS <main>: X MHz … (confirmation run)`), **not** from
+  `<out_dir>/top/sweep_history.json`. That file is the sweep's *iteration log*
+  and stops before the iteration that finally meets timing: for this design it
+  ends at `iter=2 got=62.97MHz action=minisweep(...)` while the build went on to
+  meet its 80 MHz goal at iteration 3 with 19 slices / 20 stages. Reading its
+  last entry as the result understates fmax and reports timing as missed — see
+  `pypeline-bugs/sweep-history-json-omits-final-timing-met-iteration.md`. The
+  history is still recorded, clearly labelled, under
+  `fmax.per_main[*].last_sweep_iter.mid_sweep_mhz`.
+  When a MAIN meets its goal, pypelinec prints no achieved MHz for it ("no
+  failing timing path reported … assuming met"), so its exact fmax is unknown and
+  the goal is a *lower bound*: `design_mhz` is then the goal, with
+  `design_mhz_is_lower_bound: true`, a `design_mhz_basis` string saying why, and
+  `min_reported_mhz` carrying the lowest MHz anyone actually printed.
+  `limiting_main` names the MAIN that set the number.
+- **area** comes from `report_utilization` in that build's Vivado log, parsed by
+  this repo's own `vivado_area.py` — LUTs (logic vs memory vs SRL/DRAM), FFs,
+  DSP48s, BRAM (tiles / RAMB36 / RAMB18) and CARRY4 all kept separate.
+  PipelineC's `VIVADO.ParsedUtilizationReport` is deliberately unused: it is
+  documented upstream as diagnostic-only and reports three fields.
+  `--selftest` parses two logs already in the tree and checks values read off
+  them by hand, so the parser has regression cover without a Vivado run.
+  `perf_probe.py --selftest` does the same for the metric math itself, against a
+  hand-worked synthetic beat trace — the definitions below are what every future
+  variant gets compared on, so they are checked without needing a build.
+- **throughput, duty cycle and latency** come from the perf testbench
+  (`src/chacha20poly1305/{encrypt,decrypt}_perf_tb.py`, measurement layer in
+  `perf_probe.py`), which streams a **phase plan**: N back-to-back packets of
+  one size per phase, sweeping sizes, then a single long packet whose
+  steady-state rate is the peak. Encrypt and decrypt stream **concurrently**,
+  held in the same phase by a barrier, so every size sees the same contention on
+  the shared ChaCha20 pipeline.
+
+Metric definitions (all per direction, per phase):
+
+| metric | definition |
+|---|---|
+| `window_cycles` | first *accepted* input beat of the phase → `eod` output beat of its last packet |
+| `goodput_bytes` | plaintext bytes (encrypt: in, decrypt: out); `*_line_bytes` = beats × 16 is reported separately |
+| `sustained_bytes_per_cycle` | **the throughput figure.** `packet_bytes / packet_period_cycles`, where the period is the mean cycles between consecutive packet completions across the phase's same-size packets. Averaging over packets this way drops the first packet's one-off pipeline fill, so it is what a long stream of that size would sustain. `line_rate_frac` is this over the 16 B/cycle bus. Needs ≥ 2 packets; a single-packet phase falls back to `bytes_per_cycle` and says so in `throughput_basis` |
+| `bytes_per_cycle` | goodput over the whole phase window (`goodput_bytes / window_cycles`) — the conservative end-to-end number, still carrying the first packet's fill cost |
+| `steady_in_bytes_per_cycle` / `steady_out_bytes_per_cycle` | **diagnostics, not throughput.** Byte rate over the middle 80% of accepted input / emitted output beats. Because this design processes packets serially with gaps between them, both measure "how fast bytes move while they are moving": the input side reads ~14 B/cycle (near bus width) because a packet's beats are accepted in one burst, and on the **decrypt** side the output reads the full 16 B/cycle because `wait_to_verify` releases the buffered plaintext at line rate once Poly1305 returns its verdict. Useful for spotting burst behaviour; never quote them as throughput |
+| `in_duty` / `out_duty` | accepted input beats / output beats per window cycle |
+| `in_stall_cycles` | cycles with input `valid & ~ready` — the DUT backpressuring the source |
+| `latency_cycles.cold_head` | packet 0: first input beat → first output beat, with an empty pipeline |
+| `latency_cycles.head_*` / `total_*` | min/median/max per-packet first-in→first-out and first-in→`eod`-out |
+
+The testbench records **cycles, beats and bytes only**; `measure.py` multiplies
+by fmax afterwards. So the same measured run can be re-expressed at a different
+frequency without re-simulating, and `Gb/s @fmax` and `Gb/s @target` (80 MHz)
+are both reported.
+
+A perf run is also a functional run: every packet's ciphertext/tag (or
+plaintext + `is_verified_out`) is still checked against `aead_ref_model.py`, and
+`checks.functional_pass` in the results is false if any check failed — a perf
+number from a run that computed garbage would be worthless. Only valid packets
+are measured; the tampered-tag negative case stays in the functional
+testbenches, where it cannot perturb a timing window.
+
+### Output
+
+`measurements/<label>/` holds everything for one measured point:
+
+| file | what |
+|---|---|
+| `results.json` | the full record — config, provenance (both repos' git SHAs, Vivado version, wall times), `fmax`, `area` (incl. per-module out-of-context areas), `phases[]`, `summary`, `checks` |
+| `summary.csv` | one flat row per phase × direction — the throughput-vs-packet-size curve, ready to plot or diff |
+| `summary.md` | the same as a markdown table, for pasting into this README |
+| `perf_raw.json` | the testbench's own cycle-domain output, rewritten after **every** phase (so a killed run still leaves data) |
+| `pypelinec.log` | the build/sim log, with the per-cycle `Clock: N` spam filtered out (counted, not kept) |
+
+### Measured results: shared design, 80 MHz
+
+The current dataset for the shared encrypt+decrypt design. The table below is
+**generated**, not hand-written — `./measure.py … --update-readme` splices it in
+between the markers, so it cannot drift from `measurements/<label>/results.json`.
+
+<!-- MEASURED-RESULTS:BEGIN -->
+
+_Measured by `./measure.py --label shared-80mhz` on 2026-09-13T00:20:57+00:00 — wireguard-fpga `98444d730827`, PipelineC `a3c2d9ebf95c`, Vivado 2019.2, 11567 cycles. Regenerate with `./measure.py --label shared-80mhz --parse-only --update-readme`._
+
+Design `shared` | target 80.0 MHz | measured fmax **80.00 MHz** | limiting MAIN `chacha20_pipeline_shared`
+Area (perf_tb_top): **31192 LUT** (30446 logic + 746 mem), **16049 FF**, **420 DSP48**, **11 BRAM tiles**, 5086 CARRY4
+
+| phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | % line rate | Gb/s @80 MHz | in stall | cold head (clk) | total lat med (clk) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b2b-16 | 16 | 4 | encrypt | 0.516 | 31.0 | 3.2% | 0.330 | 0.040 | 41 | 99.5 |
+| b2b-16 | 16 | 4 | decrypt | 0.403 | 39.7 | 2.5% | 0.258 | 0.846 | 126 | 97.5 |
+| b2b-64 | 64 | 4 | encrypt | 1.306 | 49.0 | 8.2% | 0.836 | 0.031 | 43 | 141.5 |
+| b2b-64 | 64 | 4 | decrypt | 1.110 | 57.7 | 6.9% | 0.710 | 0.852 | 182 | 137.5 |
+| b2b-256 | 256 | 4 | encrypt | 2.116 | 121.0 | 13.2% | 1.354 | 0.016 | 43 | 303.5 |
+| b2b-256 | 256 | 4 | decrypt | 1.979 | 129.3 | 12.4% | 1.267 | 0.884 | 353 | 323.5 |
+| b2b-1024 | 1024 | 4 | encrypt | 2.448 | 418.3 | 15.3% | 1.567 | 0.655 | 43 | 742.5 |
+| b2b-1024 | 1024 | 4 | decrypt | 1.823 | 561.7 | 11.4% | 1.167 | 0.851 | 431 | 629.5 |
+| b2b-1420 | 1420 | 4 | encrypt | 2.510 | 565.7 | 15.7% | 1.607 | 0.615 | 43 | 1060.0 |
+| b2b-1420 | 1420 | 4 | decrypt | 1.656 | 857.7 | 10.3% | 1.060 | 0.869 | 582 | 852.5 |
+| peak-1920 | 1920 | 4 | encrypt | 2.532 | 758.3 | 15.8% | 1.620 | 0.688 | 43 | 990.0 |
+| peak-1920 | 1920 | 4 | decrypt | 1.846 | 1040.3 | 11.5% | 1.181 | 0.852 | 774 | 1130.5 |
+
+<!-- MEASURED-RESULTS:END -->
+
+What this says, and what it points at next:
+
+- **Timing is met.** All three MAINs meet the 80 MHz goal: `chacha20_pipeline_shared`
+  needed 19 slices / 20 pipeline stages (3 sweep iterations, bottleneck
+  `chacha20_block_step`), while `encrypt_dataflow_shared` / `decrypt_dataflow_shared`
+  have nothing sliceable and pass as written (85.77 MHz standalone, 93.69 MHz on
+  the confirmation run). Since the limiting MAIN met timing without a failing
+  path, 80 MHz is a *lower bound* on the real fmax, not a measurement of it.
+- **Throughput saturates around 2.5 B/cycle — roughly 15% of the 16 B/cycle
+  bus.** The datapath, not the bus, is the limit: at MTU the input is
+  backpressured ~60% of cycles on the encrypt side and ~87% on the decrypt side.
+  That gap between ~2.5 B/cycle and the bus's 16 B/cycle is the headroom the next
+  round of work is chasing.
+- **Small packets fall off a cliff.** 16 B packets run at ~0.43 B/cycle encrypt
+  (2.7% of line rate) versus ~2.48 at 1420 B: per-packet fixed cost dominates
+  below a few hundred bytes. `src/poly1305/throughput.md` predicts exactly this
+  shape (its estimate was ~75% loss at 64 B); these are the first numbers that
+  can confirm or refute it.
+- **Encrypt latency is constant, decrypt latency scales with packet size.**
+  Encrypt's cold-start head latency sits at ~43 cycles regardless of size, while
+  decrypt's grows from ~126 cycles (16 B) to ~767 (1920 B). That is structural,
+  not a bug: `wait_to_verify` holds the entire plaintext until Poly1305 returns a
+  verdict, so decrypt cannot emit its first byte until the whole packet has been
+  MAC'd. Anything wanting lower decrypt latency has to change that contract, not
+  tune the pipeline.
+- **Area** is dominated by the ChaCha20 datapath's DSPs and the 20-stage
+  pipelining. `results.json`'s `area.per_module` breaks it down per module
+  (out-of-context, so folding-free but not additive) — the starting point for
+  "where is the area going".
+
+### Re-measuring without re-synthesizing
+
+Every stimulus knob — packet sizes, counts, payload bytes, seed — lives in
+Python (`@sim_input`/`@sim_output`, configured through `WG_PERF_*` env vars set
+by `measure.py`), and **nothing** about the plan is baked into hardware. The
+elaborated design therefore stays bit-identical between runs, so pypelinec
+re-reads its hash-named cached `vivado_*.log` files instead of re-running the
+1–3 hour autopipelining sweep: `./measure.py --reuse-syn --sizes …` re-measures
+in sim time alone. Sweeping more curve points is cheap; changing the *design* is
+what costs a fresh sweep.
+
+### Adding measurement points (narrowing in on a bottleneck)
+
+Boundary probes answer "how fast is it"; internal taps answer "what is holding
+it up". `perf_probe.HandshakeTap` is the hook — enable a name via
+`--taps <name>` and add one line to a `@sim_output` reading that interface:
+
+```python
+tap = perf_tb_common.TAPS.tap("chacha_shared_enc_in")
+tap.note(chacha20_pipeline_shared.encrypt_pipeline_in_if.stream.valid,
+         chacha20_pipeline_shared.encrypt_pipeline_in_if.ready)
+```
+
+Its duty/stall counters then appear per phase under `"taps"` in the results.
+Taps not named in `--taps` are `NullTap`s, so unused ones cost a no-op call.
+
+### Caveats (all recorded in `results.json` too)
+
+- **Area scope.** The measured build is the perf testbench top, which drives
+  `key`/`nonce`/`aad` as constants, so Vivado folds some ChaCha20 logic away
+  (`area.scope = "perf_tb_top"`, `constant_key_folding: true`). It is a
+  *consistent-across-variants* number, not an absolute DUT area. For a
+  folding-free cross-check: `./build.py --shared` then
+  `./measure.py --area-from-dir generated-files-verilog-shared`. The per-module
+  areas are out-of-context syntheses — folding-free, but they do **not** sum to
+  the top-level total.
+- **No output backpressure.** `AxisSimSink` always presents `ready=1`, so every
+  throughput number is an upper bound with an infinitely fast consumer.
+- **Packet size ceiling 2048 B.** `wait_to_verify` holds decrypt ciphertext in a
+  128-deep × 16 B FIFO until Poly1305 returns a verdict, so a bigger packet
+  deadlocks instead of measuring; `perf_tb_common.MAX_PACKET_BYTES` (2032 B =
+  2048 − tag) asserts this at import rather than hanging.
+- **Native sim costs ≈ 0.5 s per cycle** for this design (≈ 2 cycles/s), which
+  is why the default plan is a few thousand cycles rather than a full MTU sweep
+  at high packet counts. A phase that sees no beat for 1000 cycles is declared
+  deadlocked and reported, rather than running to the cycle cap.
+- **Shared-pipeline arbitration.** `chacha20_pipeline_shared` toggles
+  `is_encrypt` every cycle unconditionally, so each direction can only launch on
+  alternate cycles. The concurrent phases are exactly the case that exposes it;
+  `--dirs enc` / `--dirs dec` measure a direction on its own for comparison.
 
 ## Test Vectors
 
