@@ -20,6 +20,8 @@ from pypeline import (
     sim_assert,
 )
 
+import perf_taps
+
 from aead_types import (
     POLY1305_AUTH_TAG_SIZE,
     axis128_intrf,
@@ -156,4 +158,21 @@ def strip_auth_tag(
         o.auth_tag_out_if.stream.valid = stream_in.valid
         early_out_ready = auth_tag_out_if.ready
 
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), last
+    # so every o.* field above is final.
+    perf_taps.hs(
+        "strip.axis_in",
+        axis_in_if.stream.valid,
+        o.axis_in_if.ready,
+        axis_in_if.stream.data.frag.keep,
+    )
+    perf_taps.hs(
+        "strip.axis_out",
+        o.axis_out_if.stream.valid,
+        axis_out_if.ready,
+        o.axis_out_if.stream.data.frag.keep,
+    )
+    perf_taps.hs(
+        "strip.tag_out", o.auth_tag_out_if.stream.valid, auth_tag_out_if.ready
+    )
     return o

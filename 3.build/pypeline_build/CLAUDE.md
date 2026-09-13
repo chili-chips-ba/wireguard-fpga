@@ -86,6 +86,52 @@ section for the full per-file breakdown.
 imports) using the `cryptography` package, with an RFC 8439 §2.8.2
 known-answer self-test at import time — the DUT never validates itself.
 
+## QoR measurement and in-design probes
+
+`./measure.py` is the one automated (fmax, area, throughput, latency) step; it
+runs `./build.py --shared --perf` (autopipeline + native sim of exactly what it
+built) and merges everything into `measurements/<label>/`. Cycle-domain
+measurement lives in `src/chacha20poly1305/perf_probe.py` (no pypeline import,
+`--selftest`-able), the phase plan and `WG_PERF_*` knobs in `perf_tb_common.py`,
+and block-level attribution in `bottleneck.py` (`--selftest`-able).
+
+**Internal taps go inside the design's own hardware functions**, via
+`src/perf_taps.py`: `perf_taps.hs(name, valid, ready, keep=None)`,
+`perf_taps.state(name, reg, NAMES_TUPLE)`, `perf_taps.arb(...)`. These are
+`@sim_output` shims and the elaborator deletes calls to them, so they cost **no
+hardware** (same 220 VHDL modules, same content-hash filenames, verified by
+diffing a Verilog build with and against without them). Caveat: generated VHDL
+embeds source line numbers in comments and signal names, so adding or MOVING a
+probe shifts those and costs one re-synthesis of the enclosing hierarchy; once
+the probes are in place, `measure.py --reuse-syn` re-measures in sim time alone
+as before. Rules when adding one:
+
+- plain `@hw_func`/`@MAIN` bodies only — an interface function's body (the
+  dataflow cores) rejects statements that touch interface values;
+- never inside an AUTOPIPELINE core (`chacha20_loop_body`,
+  `poly1305_mac_loop_body`) — probes there see stage-0 samples;
+- **state** probes at the TOP of an FSM body (a `Reg` reads back the next state
+  once assigned), **handshake** probes at the bottom (every `o.*` field final);
+- names are auto-qualified per direction from the executing MAIN
+  (`encrypt/poly1305.data_in`), so the twice-instantiated FSMs stay separate;
+- a new block needs an entry in `bottleneck.py`'s `BLOCKS` to appear in the
+  rollup.
+
+**README.md holds only the CURRENT QoR record and analysis** — it is not a
+history or change log, and it carries exactly ONE results table: the boundary
+QoR table between the `MEASURED-RESULTS` markers. The block analysis goes between
+the `BLOCK-RESULTS` markers as a short generated TEXT summary
+(`bottleneck.markdown_summary`, no tables) — the full per-block, FSM-state,
+bottleneck-evidence, arbitration and model tables stay in the run's
+`measurements/<label>/blocks.md`. Both regions are written by
+`./measure.py … --update-readme` (one provenance stamp, from the latest run); the
+hand-written `#### Analysis`
+beneath them describes that run in the present tense and is rewritten, not
+appended to, when a new run replaces it. Past measured points live only in
+their own `measurements/<label>/` directories.
+
+See README.md's "Measuring QoR" and "Probing inside the design" sections.
+
 ## Wiring Style: interface functions, not hand-threaded `Wire`s
 
 Unlike `../pipelinec_build/`'s C style (module-level `Wire[T]` globals wired

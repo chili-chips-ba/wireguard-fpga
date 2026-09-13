@@ -30,6 +30,8 @@ from pypeline import (
 from stream.stream import make_stream_interface
 from stream.stream_pipeline import make_stream_pipeline
 
+import perf_taps
+
 import chacha20
 from chacha20 import (
     chacha20_loop_body_in_t,
@@ -133,6 +135,37 @@ def chacha20_pipeline_shared():
         pipeline_in_s.data.data = decrypt_pipeline_in_if.stream.data
         pipeline_in_s.valid = decrypt_pipeline_in_if.stream.valid
         decrypt_pipeline_in_ready_s = pipeline_in_ready
+
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py). Placed
+    # BEFORE the toggle below, so `is_encrypt` still reads as this cycle's
+    # selection rather than next cycle's.
+    #
+    # The arbitration tap is what quantifies the README's shared-pipeline
+    # caveat: `is_encrypt` flips every cycle unconditionally, so a direction can
+    # only launch on alternate cycles. It splits each direction's lost cycles
+    # into contention (both wanted the slot) and wasted_slot (the selected side
+    # had nothing while the other had work queued) -- the second kind is what a
+    # request-aware arbiter would recover.
+    perf_taps.arb(
+        "pipe.arb",
+        is_encrypt,
+        encrypt_pipeline_in_if.stream.valid,
+        decrypt_pipeline_in_if.stream.valid,
+        pipeline_in_ready,
+        "encrypt",
+        "decrypt",
+    )
+    perf_taps.hs(
+        "pipe.enc_in",
+        encrypt_pipeline_in_if.stream.valid,
+        encrypt_pipeline_in_ready_s,
+    )
+    perf_taps.hs(
+        "pipe.dec_in",
+        decrypt_pipeline_in_if.stream.valid,
+        decrypt_pipeline_in_ready_s,
+    )
+
     is_encrypt = ~is_encrypt
 
     # Output side muxing based on id flag out of pipeline
@@ -151,6 +184,14 @@ def chacha20_pipeline_shared():
     encrypt_pipeline_in_if.ready = encrypt_pipeline_in_ready_s
     decrypt_pipeline_out_if.stream = decrypt_pipeline_out_s
     decrypt_pipeline_in_if.ready = decrypt_pipeline_in_ready_s
+
+    # Output side, after the demux has driven both directions' streams.
+    perf_taps.hs(
+        "pipe.enc_out", encrypt_pipeline_out_s.valid, encrypt_pipeline_out_if.ready
+    )
+    perf_taps.hs(
+        "pipe.dec_out", decrypt_pipeline_out_s.valid, decrypt_pipeline_out_if.ready
+    )
 
     result = pipeline_func(
         stream_in_if=chacha_shared_pipeline_in_stream_intrf.fwd_t(pipeline_in_s),

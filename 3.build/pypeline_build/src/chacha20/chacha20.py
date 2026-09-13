@@ -31,6 +31,8 @@ from stream.stream import make_stream_interface
 from stream.stream_pipeline import make_stream_pipeline
 from axi.axis import make_dwidth_widen, make_dwidth_narrow
 
+import perf_taps
+
 from aead_types import (
     CHACHA20_STATE_NWORDS,
     CHACHA20_KEY_SIZE,
@@ -229,6 +231,12 @@ class chacha20_state_t:
     PLAINTEXT = auto()
 
 
+# Member names in declaration order for the perf_taps state histograms (pypeline
+# @enum + auto() numbers members 0..n-1 in this order). Plain Python, never
+# elaborated -- see src/perf_taps.py.
+CHACHA20_STATE_NAMES = tuple(chacha20_state_t.__members__)
+
+
 # Data width converters to-from 512b wide blocks and the 128b bus
 axis128_to_axis512, _, _ = make_dwidth_widen(uint8_t, 16, 4)
 axis512_to_axis128, _, _ = make_dwidth_narrow(uint8_t, 16, 4)
@@ -266,6 +274,10 @@ def chacha20_fsm(
     # Pipeline input muxing FSM
     input_side_state: Reg[chacha20_state_t]
     block_count: Reg[uint32_t]
+    # Perf probe (sim-only, elaborated away -- see src/perf_taps.py). Sampled
+    # before the FSM below can reassign the register, so the histogram counts
+    # the state actually occupied this cycle rather than the next one.
+    perf_taps.state("chacha20.in_state", input_side_state, CHACHA20_STATE_NAMES)
     # Default no input into width conversion
     dwidth_conv_data_in: axis128_intrf.stream_t = axis128_stream_null()
     o.axis_in_if.ready = 0
@@ -324,6 +336,7 @@ def chacha20_fsm(
 
     # Pipeline output demuxing FSM
     output_side_state: Reg[chacha20_state_t]
+    perf_taps.state("chacha20.out_state", output_side_state, CHACHA20_STATE_NAMES)
     # Default not ready for pipeline output
     o.from_pipeline_if.ready = 0
     # Default no block going out
@@ -359,6 +372,37 @@ def chacha20_fsm(
     o.axis_out_if = block_to_out.narrow_out_if
     block_to_out_axis_in_ready = block_to_out.wide_in_if.ready  # FEEDBACK
 
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), placed
+    # last so every o.* field above is final. The structural point of comparison
+    # against Poly1305: this compute is a make_stream_pipeline (II=1), fed 4 x
+    # 16 B beats per 64 B block through the dwidth converter, so axis_in's
+    # service period should sit near 1 cycle/beat -- 16 B/cycle -- against the
+    # MAC's ~6.
+    perf_taps.hs(
+        "chacha20.axis_in",
+        axis_in_if.stream.valid,
+        o.axis_in_if.ready,
+        axis_in_if.stream.data.frag.keep,
+    )
+    perf_taps.hs(
+        "chacha20.axis_out",
+        o.axis_out_if.stream.valid,
+        axis_out_if.ready,
+        o.axis_out_if.stream.data.frag.keep,
+    )
+    # The poly key handoff: chacha20 holds its whole ciphertext path here until
+    # poly1305's IDLE state takes the key, so this tap's stall is a per-packet
+    # serialization cost, not a rate limit.
+    perf_taps.hs("chacha20.key_out", o.key_if.stream.valid, key_if.ready)
+    # Launch/retire against the (possibly shared) compute pipeline.
+    perf_taps.hs(
+        "chacha20.to_pipeline", o.to_pipeline_if.stream.valid, to_pipeline_if.ready
+    )
+    perf_taps.hs(
+        "chacha20.from_pipeline",
+        from_pipeline_if.stream.valid,
+        o.from_pipeline_if.ready,
+    )
     return o
 
 

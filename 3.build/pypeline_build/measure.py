@@ -19,7 +19,10 @@ What it does:
      (this repo's own parser, not pypelinec's diagnostic-only one);
   4. merges everything into measurements/<label>/results.json (machine
      readable), summary.csv (one row per phase x direction), and a markdown
-     table ready to paste into README.md.
+     table ready to paste into README.md;
+  5. rolls the run's INTERNAL taps (src/perf_taps.py probes inside the design's
+     own hardware functions) up into per-block throughput/stall numbers and an
+     automated bottleneck verdict per phase -- see bottleneck.py.
 
 Cycle-domain measurements and MHz live in separate steps on purpose: the
 testbench records cycles/beats/bytes only, so throughput can be re-expressed at
@@ -44,6 +47,7 @@ import subprocess
 import sys
 import time
 
+import bottleneck
 import vivado_area
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -559,6 +563,29 @@ def write_csv(path, label, phases):
                 ])
 
 
+def write_tap_csvs(meas_dir, label, phases):
+    """Per-tap and per-block rows, one file each -- the internal-stall curve, in
+    the same flat shape as summary.csv so the two diff/plot the same way."""
+    written = []
+    tap_rows = list(bottleneck.tap_rows(label, phases))
+    if tap_rows:
+        path = os.path.join(meas_dir, "taps.csv")
+        with open(path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(bottleneck.TAP_CSV_COLUMNS)
+            writer.writerows(tap_rows)
+        written.append(path)
+    block_rows = list(bottleneck.block_rows(label, phases))
+    if block_rows:
+        path = os.path.join(meas_dir, "blocks.csv")
+        with open(path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(bottleneck.BLOCK_CSV_COLUMNS)
+            writer.writerows(block_rows)
+        written.append(path)
+    return written
+
+
 def _fmt(value, spec=".3f"):
     return format(value, spec) if isinstance(value, (int, float)) else "-"
 
@@ -618,24 +645,13 @@ def markdown_table(results):
 
 README_BEGIN = "<!-- MEASURED-RESULTS:BEGIN -->"
 README_END = "<!-- MEASURED-RESULTS:END -->"
+BLOCKS_BEGIN = "<!-- BLOCK-RESULTS:BEGIN -->"
+BLOCKS_END = "<!-- BLOCK-RESULTS:END -->"
 
 
-def update_readme(table, results):
-    """Splice the generated table into README.md so its numbers are never
-    hand-copied (and so re-measuring a variant updates the docs in one step)."""
-    path = os.path.join(HERE, "README.md")
-    with open(path) as f:
-        text = f.read()
-    if README_BEGIN not in text or README_END not in text:
-        print(
-            f"!! {path} has no {README_BEGIN} / {README_END} markers; not updating",
-            file=sys.stderr,
-        )
-        return
-    head, rest = text.split(README_BEGIN, 1)
-    _, tail = rest.split(README_END, 1)
+def _stamp(results):
     provenance = results["provenance"]
-    stamp = (
+    return (
         f"_Measured by `./measure.py --label {results['label']}`"
         f" on {results['generated_utc']}"
         f" — wireguard-fpga `{(provenance.get('wireguard_fpga_git') or '?')[:12]}`,"
@@ -644,10 +660,52 @@ def update_readme(table, results):
         f" {provenance.get('cycles_run')} cycles."
         f" Regenerate with `./measure.py --label {results['label']} --parse-only --update-readme`._"
     )
-    body = f"{README_BEGIN}\n\n{stamp}\n\n{table}\n\n{README_END}"
+
+
+def _splice(text, begin, end, body):
+    """Replace whatever sits between two markers. None if they are not there."""
+    if begin not in text or end not in text:
+        return None
+    head, rest = text.split(begin, 1)
+    _, tail = rest.split(end, 1)
+    return head + f"{begin}\n\n{body}\n\n{end}" + tail
+
+
+def update_readme(table, results, block_summary=None):
+    """Splice the generated results into README.md so their numbers are never
+    hand-copied (and so re-measuring a variant updates the docs in one step).
+
+    The README carries exactly one table -- the boundary QoR table -- plus a text
+    summary of the block analysis; the full block tables live in the run's
+    measurements/<label>/blocks.md."""
+    path = os.path.join(HERE, "README.md")
+    with open(path) as f:
+        text = f.read()
+    stamp = _stamp(results)
+    spliced = _splice(text, README_BEGIN, README_END, f"{stamp}\n\n{table}")
+    if spliced is None:
+        print(
+            f"!! {path} has no {README_BEGIN} / {README_END} markers; not updating",
+            file=sys.stderr,
+        )
+    else:
+        text = spliced
+        print("--> README.md results table updated")
+    if block_summary:
+        # No second stamp: both regions come from the same run, and the README
+        # holds only the current record -- one provenance line is enough.
+        spliced = _splice(text, BLOCKS_BEGIN, BLOCKS_END, block_summary)
+        if spliced is None:
+            print(
+                f"!! {path} has no {BLOCKS_BEGIN} / {BLOCKS_END} markers; "
+                f"block summary not updated",
+                file=sys.stderr,
+            )
+        else:
+            text = spliced
+            print("--> README.md block summary updated")
     with open(path, "w") as f:
-        f.write(head + body + tail)
-    print(f"--> README.md results table updated")
+        f.write(text)
 
 
 def main():
@@ -662,7 +720,7 @@ def main():
     ap.add_argument("--packets", type=int, default=None, help="back-to-back packets per size")
     ap.add_argument("--peak-bytes", type=int, default=None, help="single long packet size for the peak phase (0 disables)")
     ap.add_argument("--dirs", default=None, choices=("both", "enc", "dec"), help="which directions to stream")
-    ap.add_argument("--taps", default=None, help="comma-separated internal tap names to enable (see perf_probe.HandshakeTap)")
+    ap.add_argument("--taps", default="all", help="internal taps to enable: 'all' (default), a block or direction prefix ('poly1305', 'encrypt'), or exact names; pass --taps '' to measure boundaries only (see src/perf_taps.py)")
     ap.add_argument("--seed", type=int, default=None, help="packet payload RNG seed")
     ap.add_argument("--update-readme", action="store_true", help="splice the results table into README.md between its MEASURED-RESULTS markers")
     args = ap.parse_args()
@@ -695,6 +753,10 @@ def main():
     area = parse_area(out_dir, per_module=not args.no_per_module_area)
     target_mhz = fmax.get("target_mhz") or DEFAULT_TARGET_MHZ
     phases = derive_throughput(perf_raw, fmax.get("design_mhz"), target_mhz)
+    # Internal taps -> per-block throughput/ceiling, a bottleneck verdict and the
+    # model cross-check. A run with no taps leaves the phases untouched.
+    aad_len = perf_raw.get("config", {}).get("aad_len") or 0
+    bottleneck.analyze(phases, aad_len=aad_len)
 
     results = {
         "schema_version": 1,
@@ -750,15 +812,51 @@ def main():
     table = markdown_table(results)
     with open(os.path.join(meas_dir, "summary.md"), "w") as f:
         f.write(table + "\n")
+    extra_csvs = write_tap_csvs(meas_dir, label, phases)
+    block_table = None
+    blocks_path = os.path.join(meas_dir, "blocks.md")
+    if any(phase.get("blocks") for phase in phases):
+        block_table = bottleneck.markdown_blocks(phases)
+        with open(blocks_path, "w") as f:
+            f.write(block_table + "\n")
+    # The README gets a text summary only; the full tables stay in blocks.md.
+    # Always produced -- a run without taps yields a "no internal taps" note, so
+    # the README never pairs this run's table with a previous run's summary.
+    block_summary = bottleneck.markdown_summary(
+        phases, os.path.relpath(blocks_path, HERE)
+    )
 
     if args.update_readme:
-        update_readme(table, results)
+        update_readme(table, results, block_summary)
 
     print()
     print(table)
+    if block_table:
+        print()
+        print(block_table)
     print()
     print(f"--> {results_path}")
     print(f"--> {os.path.join(meas_dir, 'summary.csv')}")
+    for path in extra_csvs:
+        print(f"--> {path}")
+    if block_table:
+        print(f"--> {os.path.join(meas_dir, 'blocks.md')}")
+    elif perf_raw.get("config", {}).get("taps"):
+        print(
+            "!! taps were requested but none fired -- check the names against "
+            "src/perf_taps.py's probe call sites",
+            file=sys.stderr,
+        )
+    for phase in phases:
+        check = phase.get("taps_check")
+        if check and not check["consistent"]:
+            print(
+                f"!! phase {phase['name']}: taps disagree on cycle count "
+                f"{check['cycles_seen']} -- a probe fired more than once per "
+                f"cycle ({', '.join(check['disagreeing_taps'][:4])}), so its "
+                f"per-cycle rates are inflated",
+                file=sys.stderr,
+            )
     checks = results["checks"]
     if not checks.get("functional_pass", True):
         print(f"!! FUNCTIONAL FAILURES: {checks.get('errors')}", file=sys.stderr)

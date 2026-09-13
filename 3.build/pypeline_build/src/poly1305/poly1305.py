@@ -41,6 +41,8 @@ from interface.interface_func import make_hw_func_from_interface_func
 from stream.stream import make_stream_interface
 from multi_cycle_path import make_valid_ready_mcp
 
+import perf_taps
+
 from aead_types import (
     POLY1305_BLOCK_SIZE,
     POLY1305_KEY_SIZE,
@@ -248,6 +250,12 @@ class poly1305_state_t:
     OUTPUT_AUTH_TAG = auto()  # Output the auth tag
 
 
+# Member names in declaration order, for the perf_taps state histogram: pypeline
+# @enum with auto() numbers members 0..n-1 in exactly this order, so a state
+# value indexes this tuple directly. Plain Python -- never elaborated.
+POLY1305_STATE_NAMES = tuple(poly1305_state_t.__members__)
+
+
 @struct
 class poly1305_mac_fsm_t(NamedTuple):
     key_if: poly1305_key_stream_intrf.fb_t
@@ -287,6 +295,14 @@ def poly1305_mac_fsm(
     a: Reg[u320_t]
     r: Reg[u320_t]
     s: Reg[u320_t]
+
+    # Perf probe (sim-only, elaborated away -- see src/perf_taps.py). Sampled
+    # HERE, before the FSM body runs, because `state` reads back the NEXT state
+    # once assigned: the trailing `if state == START_ITER` below deliberately
+    # relies on that same-cycle readback, so a probe at the end of the body
+    # would histogram next-states, not the state actually occupied this cycle.
+    perf_taps.state("poly1305.fsm", state, POLY1305_STATE_NAMES)
+
     if state == poly1305_state_t.IDLE:
         # Reset state
         is_last_block = 0  # Not the last block yet
@@ -348,6 +364,30 @@ def poly1305_mac_fsm(
         # And then wait for the output once input into compute happens
         if o.to_compute_if.stream.valid & o.data_in_if.ready:
             state = poly1305_state_t.FINISH_ITER
+
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py). At the
+    # end of the body so every o.* reverse/forward field below is final.
+    #
+    # `poly1305.data_in` is THE bottleneck measurement for this design:
+    # o.data_in_if.ready is asserted only in START_ITER, and the compute MCP
+    # (make_valid_ready_mcp(..., 5)) re-arms every ncycles+1 = 6 cycles, so this
+    # tap's service_period_cycles reads ~6.0 -- 16 B per 6 cycles = 2.667
+    # B/cycle, against ChaCha20's II=1 stream pipeline at up to 16 B/cycle.
+    perf_taps.hs(
+        "poly1305.data_in",
+        data_in_if.stream.valid,
+        o.data_in_if.ready,
+        data_in_if.stream.data.frag.keep,
+    )
+    perf_taps.hs("poly1305.key_in", key_if.stream.valid, o.key_if.ready)
+    perf_taps.hs("poly1305.tag_out", o.auth_tag_if.stream.valid, auth_tag_if.ready)
+    # Launch/retire edges of the multi-cycle compute itself: to_compute stalls
+    # exactly while the MCP is still settling; from_compute never stalls
+    # (o.from_compute_if.ready is hardwired 1 above), so it is a pure retire count.
+    perf_taps.hs(
+        "poly1305.to_compute", o.to_compute_if.stream.valid, to_compute_if.ready
+    )
+    perf_taps.hs("poly1305.from_compute", from_compute_if.stream.valid, 1)
     return o
 
 
