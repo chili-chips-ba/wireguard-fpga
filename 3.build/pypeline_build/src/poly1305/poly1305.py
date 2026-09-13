@@ -39,7 +39,7 @@ from pypeline import (
 from interface.interface import interface
 from interface.interface_func import make_hw_func_from_interface_func
 from stream.stream import make_stream_interface
-from multi_cycle_path import make_valid_ready_mcp
+from multi_cycle_path import make_stream_interface_automcp
 
 import perf_taps
 
@@ -370,7 +370,8 @@ def poly1305_mac_fsm(
     #
     # `poly1305.data_in` is THE bottleneck measurement for this design:
     # o.data_in_if.ready is asserted only in START_ITER, and the compute MCP
-    # (make_valid_ready_mcp(..., 5)) re-arms every ncycles+1 = 6 cycles, so this
+    # (make_stream_interface_automcp(..., start_latency=5), settled at 5) re-arms
+    # every latency+1 = 6 cycles, so this
     # tap's service_period_cycles reads ~6.0 -- 16 B per 6 cycles = 2.667
     # B/cycle, against ChaCha20's II=1 stream pipeline at up to 16 B/cycle.
     perf_taps.hs(
@@ -397,7 +398,14 @@ def poly1305_mac_fsm(
 # instance -- joined by global wires). Meant to be called once per direction
 # (encrypt, decrypt) from that direction's dataflow core; each call site gets
 # its own independent compute + FSM hardware state.
-compute_mcp, _compute_mcp_t = make_valid_ready_mcp(poly1305_mac_loop_body, 5)
+#
+# The multi-cycle count is an AUTOMCP: the Vivado throughput sweep raises it if
+# the loop body's launch->capture path fails timing. start_latency=5 is the
+# known-good count at 80 MHz (4 failed), so a normal build starts and settles
+# there with no extra synthesis; compute_mcp.mcp.latency reads the built count.
+compute_mcp, _compute_mcp_t = make_stream_interface_automcp(
+    poly1305_mac_loop_body, start_latency=5
+)
 
 
 @interface
