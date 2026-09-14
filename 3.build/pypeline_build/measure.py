@@ -12,9 +12,10 @@ What it does:
      native simulation of exactly what it built (autopipelined latencies
      modeled), with the perf testbench's phase plan passed in via WG_PERF_* env
      so the elaborated hardware never changes between runs;
-  2. reads fmax + pipeline depth from pypelinec's OWN numbers
-     (<out_dir>/top/sweep_history.json, with its stdout as cross-check) --
-     timing parsing is not reimplemented here;
+  2. reads fmax + pipeline depth from pypelinec's OWN numbers -- the per-MAIN
+     "final" records in <out_dir>/top/sweep_history.json (schema 2), with the
+     build's stdout outcome lines as cross-check -- timing parsing is not
+     reimplemented here;
   3. reads area from that same build's Vivado log via vivado_area.py
      (this repo's own parser, not pypelinec's diagnostic-only one);
   4. merges everything into measurements/<label>/results.json (machine
@@ -61,10 +62,10 @@ RE_SWEEP_ITER = re.compile(
     r"\[sweep\] iter=(\d+) main=(\S+) goal=([\d.]+)MHz got=([\d.]+)MHz"
 )
 RE_TIMING_NOT_MET = re.compile(r"ERROR: TIMING NOT MET: .*")
-# The FINAL per-MAIN outcome lines. These -- not sweep_history.json -- are
-# authoritative: sweep_history.json logs only the sweep's *intermediate*
-# iterations (it stops before the iteration that finally meets timing), so its
-# last entry is a mid-sweep number, not the built design's fmax.
+# The FINAL per-MAIN outcome lines. A schema-2 sweep_history.json's "final"
+# records are authoritative and these are the cross-check; for a schema-1 file
+# (an iteration log that could stop before the iteration that met timing, its
+# last entry a mid-sweep number) these lines are the only final numbers.
 RE_MET = re.compile(
     r"\[sweep\]\s+(\S+): met timing, (\d+) slice\(s\) built \((\d+) pipeline stages\), "
     r"cuts=(\d+), locked=(\d+) inst\(s\), iterations=(\d+)"
@@ -182,7 +183,7 @@ def parse_stdout(log_path):
         "sweep_iters": [],
         "timing_not_met": [],
         "pipeline_depth_summary": [],
-        "final": {},  # main -> final outcome (authoritative, see RE_MET above)
+        "final": {},  # main -> final outcome (see RE_MET above)
         "sim_cycles": None,
         "sim_wall_s": None,
     }
@@ -270,21 +271,70 @@ def parse_stdout(log_path):
     return info
 
 
+# Schema-2 sweep_history.json "final" field -> per_main field (the names the
+# stdout parser above already uses, so both sources merge the same way)
+HISTORY_FINAL_FIELDS = (
+    ("met", "met"),
+    ("achieved_mhz", "achieved_mhz"),
+    ("mhz_is_lower_bound", "mhz_is_lower_bound"),
+    ("met_basis", "met_basis"),
+    ("source", "outcome"),
+    ("standalone_mhz", "standalone_mhz"),
+    ("autopipelined", "autopipelined"),
+    ("slices_built", "slices"),
+    ("pipeline_stages", "pipeline_stages"),
+    ("cuts", "final_cuts"),
+    ("locked_instances", "locked_instances"),
+    ("failure_reason", "failure_reason"),
+)
+# Verdict numbers compared against stdout. Depth is not: the sweep's "met
+# timing, N slice(s)" line predates any pin-and-confirm re-realization, which
+# the final record (read off the final table) already includes.
+CROSS_CHECK_FIELDS = ("met", "achieved_mhz", "standalone_mhz")
+
+
+def final_from_history(final):
+    """Map one schema-2 "final" record onto per_main fields. The mapping keeps
+    a met-but-unmeasured MAIN's achieved_mhz None -- its goal is a lower bound."""
+    mapped = {}
+    for src, dst in HISTORY_FINAL_FIELDS:
+        if src in final and (final[src] is not None or src == "achieved_mhz"):
+            mapped[dst] = final[src]
+    return mapped
+
+
+def cross_check_final(from_history, from_stdout):
+    """{field: {"sweep_history": a, "stdout": b}} where both sources state a
+    value and disagree (MHz compared to the 2 decimals stdout prints)."""
+    mismatches = {}
+    for key in CROSS_CHECK_FIELDS:
+        a, b = from_history.get(key), from_stdout.get(key)
+        if a is None or b is None:
+            continue
+        if isinstance(a, bool) or isinstance(b, bool):
+            same = a == b
+        else:
+            same = abs(float(a) - float(b)) <= 0.01
+        if not same:
+            mismatches[key] = {"sweep_history": a, "stdout": b}
+    return mismatches
+
+
 def parse_fmax(out_dir, stdout_info):
     """fmax + per-MAIN pipelining from pypelinec's own numbers.
 
-    IMPORTANT: `sweep_history.json` is the sweep's *iteration log*, not the
-    result. It stops before the iteration that finally meets timing (a shared
-    design whose history ends at "iter=2 got=62.97MHz action=minisweep(...)"
-    went on to meet its 80 MHz goal at iteration 3, built with 19 slices rather
-    than the 22 cuts iteration 2 recorded). So the final per-MAIN outcome lines
-    printed at the end of the build are authoritative here, and the history is
-    kept only as diagnostics under `sweep_iters`.
+    A schema-2 `sweep_history.json` from a complete build carries one "final"
+    record per MAIN describing the design as built (after any confirmation run,
+    restored snapshot or as-written check); those records are authoritative and
+    the build's stdout outcome lines are only a cross-check
+    (`source.cross_check_mismatches`). A schema-1 file is only the sweep's
+    iteration log -- it could stop before the iteration that met timing -- so
+    for those the stdout outcome lines stay authoritative and the history is
+    kept as diagnostics (`last_sweep_iter.mid_sweep_mhz`).
 
-    When a MAIN meets its goal, pypelinec reports "met timing" without an
-    achieved MHz ("no failing timing path reported ... assuming met"), so the
-    exact fmax of that MAIN is unknown and its goal is a lower bound --
-    `design_mhz_is_lower_bound` says when that is the case.
+    A MAIN that met its goal with no MHz ever measured for it ("no failing
+    timing path reported ... assuming met") has an unknown exact fmax; its goal
+    is a lower bound -- `design_mhz_is_lower_bound` says when that is the case.
     """
     sweep_path = os.path.join(out_dir, "top", "sweep_history.json")
     result = {
@@ -298,37 +348,50 @@ def parse_fmax(out_dir, stdout_info):
         "per_main": {},
         "source": {
             "sweep_history": None,
-            "sweep_history_note": (
-                "iteration log only -- does NOT contain the final, timing-met "
-                "iteration; final numbers come from the build's stdout"
-            ),
+            "sweep_history_schema": None,
+            # "sweep_history.json final records" or "stdout outcome lines"
+            "final_basis": None,
+            "cross_check_mismatches": {},
             "stdout_fmax_lines": stdout_info["fmax_lines"],
             "final_outcomes": stdout_info["final"],
         },
         "pipeline_depth_summary": stdout_info["pipeline_depth_summary"],
         "timing_not_met": stdout_info["timing_not_met"],
     }
+    history_finals = {}  # main -> schema-2 "final" record (complete builds only)
     if os.path.exists(sweep_path):
         result["source"]["sweep_history"] = sweep_path
         with open(sweep_path) as f:
             history = json.load(f)
-        for main, iters in history.items():
-            entry = result["per_main"].setdefault(main, {})
-            entry["sweep_iters"] = len(iters)
-            if not iters:
-                continue
-            last = iters[-1]
-            # Explicitly NOT the final fmax -- see this function's docstring.
-            entry["last_sweep_iter"] = {
-                "iter": last.get("iter"),
-                "mid_sweep_mhz": last.get("achieved_mhz"),
-                "cuts": last.get("cuts"),
-                "pipeline_stages": last.get("pipeline_stages"),
-                "bottleneck": last.get("bottleneck"),
-                "action": last.get("action"),
-            }
-            entry.setdefault("goal_mhz", last.get("goal_mhz"))
-            entry.setdefault("bottleneck", last.get("bottleneck"))
+        if "schema_version" in history:
+            result["source"]["sweep_history_schema"] = history["schema_version"]
+            for main, record in history.get("mains", {}).items():
+                entry = result["per_main"].setdefault(main, {})
+                entry["sweep_iters"] = len(record.get("iterations", []))
+                entry.setdefault("goal_mhz", record.get("goal_mhz"))
+                # A provisional file (build died after the sweep) has no
+                # verdict for the design as built
+                if history.get("build_complete") and record.get("final"):
+                    history_finals[main] = record["final"]
+        else:
+            result["source"]["sweep_history_schema"] = 1
+            for main, iters in history.items():
+                entry = result["per_main"].setdefault(main, {})
+                entry["sweep_iters"] = len(iters)
+                if not iters:
+                    continue
+                last = iters[-1]
+                # Explicitly NOT the final fmax -- see this function's docstring.
+                entry["last_sweep_iter"] = {
+                    "iter": last.get("iter"),
+                    "mid_sweep_mhz": last.get("achieved_mhz"),
+                    "cuts": last.get("cuts"),
+                    "pipeline_stages": last.get("pipeline_stages"),
+                    "bottleneck": last.get("bottleneck"),
+                    "action": last.get("action"),
+                }
+                entry.setdefault("goal_mhz", last.get("goal_mhz"))
+                entry.setdefault("bottleneck", last.get("bottleneck"))
     if stdout_info["fmax_lines"] and not stdout_info["final"]:
         # --comb builds run no sweep: the printed per-clock FMAX lines are all
         # there is.
@@ -340,8 +403,20 @@ def parse_fmax(out_dir, stdout_info):
             )
 
     # Merge the authoritative final outcomes over the diagnostics.
-    for main, final in stdout_info["final"].items():
-        result["per_main"].setdefault(main, {}).update(final)
+    if history_finals:
+        result["source"]["final_basis"] = "sweep_history.json final records"
+        for main, final in history_finals.items():
+            mapped = final_from_history(final)
+            mismatches = cross_check_final(
+                mapped, stdout_info["final"].get(main, {})
+            )
+            if mismatches:
+                result["source"]["cross_check_mismatches"][main] = mismatches
+            result["per_main"].setdefault(main, {}).update(mapped)
+    elif stdout_info["final"]:
+        result["source"]["final_basis"] = "stdout outcome lines"
+        for main, final in stdout_info["final"].items():
+            result["per_main"].setdefault(main, {}).update(final)
 
     with_goal = {
         name: info
