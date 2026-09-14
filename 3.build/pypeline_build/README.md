@@ -298,22 +298,25 @@ latency and throughput all describe the same build, and cannot drift apart.
 ### What is measured, and how
 
 - **fmax + pipeline depth** come from pypelinec's own numbers, not a
-  reimplementation — but from the **final per-MAIN outcome lines** the build
-  prints (`met timing, N slice(s) built (M pipeline stages) … iterations=K`,
+  reimplementation: the per-MAIN **`final` records** in
+  `<out_dir>/top/sweep_history.json` (schema 2). They describe the design as
+  built, after any pin-and-confirm confirmation run, restored best/met
+  snapshot or as-written check. The build's printed outcome lines
+  (`met timing, N slice(s) built …`,
   `synthesized as written (standalone check): X MHz vs Y MHz goal - PASS`,
-  `PASS <main>: X MHz … (confirmation run)`), **not** from
-  `<out_dir>/top/sweep_history.json`. That file is the sweep's *iteration log*
-  and stops before the iteration that finally meets timing, so its last entry is
-  a mid-sweep number: reading it as the result understates fmax and reports
-  timing as missed — see
-  `pypeline-bugs/sweep-history-json-omits-final-timing-met-iteration.md`. The
-  history is still recorded, clearly labelled, under
-  `fmax.per_main[*].last_sweep_iter.mid_sweep_mhz`.
-  When a MAIN meets its goal, pypelinec prints no achieved MHz for it ("no
-  failing timing path reported … assuming met"), so its exact fmax is unknown and
-  the goal is a *lower bound*: `design_mhz` is then the goal, with
+  `PASS <main>: X MHz … (confirmation run)`, `TIMING NOT MET …`) are parsed
+  only as a cross-check, and any disagreement is listed under
+  `fmax.source.cross_check_mismatches`. `fmax.source.final_basis` says which
+  source was used. An older schema-1 history is only an iteration log that
+  could stop before the iteration that met timing, so for those the printed
+  lines stay authoritative and the log's last entry is kept, clearly labelled,
+  under `fmax.per_main[*].last_sweep_iter.mid_sweep_mhz`.
+  When a MAIN meets its goal but no MHz was ever measured for it (no failing
+  timing path named it), its `final` record has `achieved_mhz: null` and
+  `mhz_is_lower_bound: true`. Its exact fmax is unknown and the goal is only a
+  *lower bound*: `design_mhz` is then the goal, with
   `design_mhz_is_lower_bound: true`, a `design_mhz_basis` string saying why, and
-  `min_reported_mhz` carrying the lowest MHz anyone actually printed.
+  `min_reported_mhz` carrying the lowest MHz actually measured.
   `limiting_main` names the MAIN that set the number.
 - **area** comes from `report_utilization` in that build's Vivado log, parsed by
   this repo's own `vivado_area.py` — LUTs (logic vs memory vs SRL/DRAM), FFs,
