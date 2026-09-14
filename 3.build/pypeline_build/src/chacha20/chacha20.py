@@ -28,7 +28,7 @@ from pypeline import (
 from interface.interface import interface
 from interface.interface_func import make_hw_func_from_interface_func
 from stream.stream import make_stream_interface
-from stream.stream_pipeline import make_stream_pipeline
+from stream.stream_auto_pipeline import make_stream_auto_pipeline
 from axi.axis import make_dwidth_widen, make_dwidth_narrow
 
 import perf_taps
@@ -374,7 +374,7 @@ def chacha20_fsm(
 
     # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), placed
     # last so every o.* field above is final. The structural point of comparison
-    # against Poly1305: this compute is a make_stream_pipeline (II=1), fed 4 x
+    # against Poly1305: this compute is a make_stream_auto_pipeline (II=1), fed 4 x
     # 16 B beats per 64 B block through the dwidth converter, so axis_in's
     # service period should sit near 1 cycle/beat -- 16 B/cycle -- against the
     # MAC's ~6.
@@ -412,7 +412,7 @@ def chacha20_fsm(
 # wires). Meant to be called once per direction (encrypt, decrypt) from that
 # direction's dataflow core; each call site gets its own independent pipeline
 # + FSM hardware state, same as any other function call in pypeline.
-pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha20_loop_body)
+pipeline_func, _pipeline_result_t = make_stream_auto_pipeline(chacha20_loop_body)
 
 
 @interface

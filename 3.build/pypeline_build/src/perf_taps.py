@@ -34,7 +34,7 @@ WHERE PROBES MAY GO
    produced by calls and consumed as call arguments"). Not a limitation in
    practice -- every signal worth probing is a local or port inside some plain
    hw_func.
-2. Stateful, zero-latency contexts only -- never inside an AUTOPIPELINE core
+2. Stateful, zero-latency contexts only -- never inside an AUTO_PIPELINE core
    (chacha20_loop_body, poly1305_mac_loop_body) or a pipelined pure MAIN, where
    native sim's delay-line model would report stage-0 samples and the cycle
    alignment vs real VHDL would be wrong. See PipelineC/docs/README.md's

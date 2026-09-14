@@ -13,7 +13,7 @@ The only thing that differs between the standalone build (encrypt_dataflow.py)
 and the shared-pipeline build (encrypt_dataflow_shared.py) is which chacha20
 instance feeds this graph, so encrypt_dataflow_core is a factory parameterized
 by that one callable (same elaboration-time-closure idiom as
-chacha20.make_quarter_round/stream.make_stream_pipeline).
+chacha20.make_quarter_round/stream.make_stream_auto_pipeline).
 """
 import wireguard_env  # noqa: F401
 

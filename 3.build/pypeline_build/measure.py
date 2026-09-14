@@ -80,7 +80,7 @@ RE_CONFIRM = re.compile(
 RE_NOT_MET_MAIN = re.compile(
     r"ERROR: TIMING NOT MET: (\S+) achieved ([\d.]+) MHz vs ([\d.]+) MHz goal"
 )
-RE_NOT_AUTOPIPELINED = re.compile(r"\[sweep\]\s+(\S+): not autopipelined")
+RE_NOT_AUTOPIPELINED = re.compile(r"\[sweep\]\s+(\S+): not auto-?pipelined")
 RE_DEPTH = re.compile(r"\[sweep\]\s+(\S+): (\d+) slice\(s\) total \((\d+) pipeline stages")
 RE_CLOCK_LINE = re.compile(r"^Clock:\s+\d+\s*$")
 RE_SIM_SPEED = re.compile(r"(\d+) cycles in ([\d.]+)s")
@@ -281,6 +281,7 @@ HISTORY_FINAL_FIELDS = (
     ("source", "outcome"),
     ("standalone_mhz", "standalone_mhz"),
     ("autopipelined", "autopipelined"),
+    ("auto_pipelined", "autopipelined"),  # sweep_history key after the AUTO_PIPELINE rename
     ("slices_built", "slices"),
     ("pipeline_stages", "pipeline_stages"),
     ("cuts", "final_cuts"),

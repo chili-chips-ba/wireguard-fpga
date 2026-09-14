@@ -102,7 +102,7 @@ class HandshakeTap(_EpochTap):
       `service_period_cycles` = offered/xfer -- cycles per accepted beat *while
         work is being offered*. This is the block's throughput ceiling in
         situ, independent of how often it is fed. Poly1305's data input reads
-        ~6.0 here (make_stream_interface_automcp(..., start_latency=5) re-arms every latency+1 cycles);
+        ~6.0 here (make_stream_auto_multi_cycle(..., start_latency=5) re-arms every latency+1 cycles);
         ChaCha20's edges read ~1.0.
       `accept_rate` = xfer/offered -- the same thing as a fraction (1/period).
 
@@ -1049,7 +1049,7 @@ def _selftest():
     reg = TapRegistry(["all"])
     hs = reg.tap("encrypt/poly1305.data_in")
     # The Poly1305 shape: work offered every cycle, accepted 1 cycle in 6
-    # (make_stream_interface_automcp(..., start_latency=5) re-arms every latency+1 cycles).
+    # (make_stream_auto_multi_cycle(..., start_latency=5) re-arms every latency+1 cycles).
     for cycle in range(60):
         hs.note(1, 1 if cycle % 6 == 0 else 0, bus if cycle % 6 == 0 else None)
     snap = hs.snapshot()

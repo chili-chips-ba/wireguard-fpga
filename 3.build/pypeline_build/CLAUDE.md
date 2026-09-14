@@ -108,7 +108,7 @@ as before. Rules when adding one:
 
 - plain `@hw_func`/`@MAIN` bodies only — an interface function's body (the
   dataflow cores) rejects statements that touch interface values;
-- never inside an AUTOPIPELINE core (`chacha20_loop_body`,
+- never inside an AUTO_PIPELINE core (`chacha20_loop_body`,
   `poly1305_mac_loop_body`) — probes there see stage-0 samples;
 - **state** probes at the TOP of an FSM body (a `Reg` reads back the next state
   once assigned), **handshake** probes at the bottom (every `o.*` field final);

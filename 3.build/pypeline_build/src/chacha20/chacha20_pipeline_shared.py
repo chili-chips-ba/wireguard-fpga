@@ -28,7 +28,7 @@ from pypeline import (
     uint8_t,
 )
 from stream.stream import make_stream_interface
-from stream.stream_pipeline import make_stream_pipeline
+from stream.stream_auto_pipeline import make_stream_auto_pipeline
 
 import perf_taps
 
@@ -89,7 +89,7 @@ def chacha_shared_pipeline(
     return outputs
 
 
-pipeline_func, _pipeline_result_t = make_stream_pipeline(chacha_shared_pipeline)
+pipeline_func, _pipeline_result_t = make_stream_auto_pipeline(chacha_shared_pipeline)
 
 
 # Externally-exposed interface: looks like individual per-direction pipelines.
