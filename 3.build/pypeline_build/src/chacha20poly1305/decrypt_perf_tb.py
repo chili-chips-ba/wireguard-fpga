@@ -20,7 +20,7 @@ Only runs under Pypeline's native --sim mode (`./build.py --shared --perf`).
 """
 import wireguard_env  # noqa: F401
 
-from pypeline import MAIN, wires, uint8_t, sim_input, sim_output, sim_print
+from pypeline import MAIN, initial, sim_input, sim_output, sim_print, uint8_t, wires
 
 import chacha20poly1305_decrypt_ports
 
@@ -40,10 +40,6 @@ _snk = AxisSimSink(axis128_intrf, perf.BUS_BYTES, scoreboard=_scoreboard)
 _runner = perf.make_runner(
     "decrypt", _src, _snk, _scoreboard, perf.decrypt_frame_builder
 )
-
-# Mutated in place only -- see encrypt_tb.py for why.
-_state = {"announced": False}
-
 
 def _keep_count(stream):
     keep = stream.data.frag.keep
@@ -67,13 +63,11 @@ def drive_in_word() -> axis128_intrf.stream_t:
     return stream
 
 
-@sim_output
+@initial(sim=True)
 def announce():
-    if not _state["announced"]:
-        _state["announced"] = True
-        sim_print("=== ChaCha20-Poly1305 PERFORMANCE measurement (decrypt side) ===")
-        sim_print(f"Decrypt: phases = {[p['name'] for p in perf.PHASES]}")
-        sim_print(f"Decrypt: seed = {perf.SEED}, json = {perf.JSON_PATH or '(none)'}")
+    sim_print("=== ChaCha20-Poly1305 PERFORMANCE measurement (decrypt side) ===")
+    sim_print(f"Decrypt: phases = {[p['name'] for p in perf.PHASES]}")
+    sim_print(f"Decrypt: seed = {perf.SEED}, json = {perf.JSON_PATH or '(none)'}")
 
 
 @sim_output
@@ -134,7 +128,6 @@ def decrypt_perf_tb() -> axis128_intrf.fwd_t:
     # Never backpressure the output -- see encrypt_perf_tb.py.
     chacha20poly1305_decrypt_ports.axis_out_if.ready = 1
 
-    announce()
     measure_out()
 
     # dummy return so nothing optimizes away

@@ -1,6 +1,6 @@
 # pyright: reportInvalidTypeForm=none
 """Simulation top for the standalone decrypt design + its non-synthesizable
-testbench (@sim_input/@sim_output, 10 + 1 on-the-fly random packets). For
+testbench (@sim_input/@sim_output, 12 + 1 on-the-fly random packets). For
 the synthesizable-style variant (fixed 10-string vectors + 1 fixed
 tampered-tag packet), see chacha20poly1305_decrypt_syn_tb.py.
 
