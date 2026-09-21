@@ -20,7 +20,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import wireguard_env  # noqa: F401
 
-from pypeline import MAIN, PART, sim_finish, sim_output, sim_print, wires
+from pypeline import MAIN, PART, final, sim_finish, sim_output, sim_print, wires
 
 PART("xc7a200tffg1156-2")  # Artix 7 200T
 
@@ -35,20 +35,26 @@ import encrypt_perf_tb  # noqa: F401
 import decrypt_perf_tb  # noqa: F401
 import perf_tb_common as perf
 
-_state = {"finished": False}
-
 
 @sim_output
 def check_all_done():
-    # Every phase result was already written when that phase drained; this
-    # only adds the run-level totals before stopping the simulation.
-    if not _state["finished"] and perf.all_done():
-        _state["finished"] = True
-        perf.finalize()
-        for line in perf.summary_line():
-            sim_print("PERF: " + line)
-        sim_print(f"PERF: wrote {perf.JSON_PATH or '(no WG_PERF_JSON set)'}")
+    if perf.all_done():
         sim_finish()
+
+
+@final(sim=True)
+def write_results():
+    # Every phase result was already written when that phase drained; this
+    # only adds the run-level totals. A run that ended early (an error, or a
+    # --run N cutoff) keeps "finalized": false in its JSON.
+    if not perf.all_done():
+        sim_print("PERF: simulation ended before every phase finished -- "
+                  f"{perf.JSON_PATH or '(no WG_PERF_JSON set)'} left unfinalized")
+        return
+    perf.finalize()
+    for line in perf.summary_line():
+        sim_print("PERF: " + line)
+    sim_print(f"PERF: wrote {perf.JSON_PATH or '(no WG_PERF_JSON set)'}")
 
 
 # @wires: nothing here to synthesize/measure a path delay for -- see

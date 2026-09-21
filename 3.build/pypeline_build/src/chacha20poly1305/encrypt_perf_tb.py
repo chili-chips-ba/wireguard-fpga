@@ -20,7 +20,7 @@ elaborated hardware never changes between measurement runs.
 """
 import wireguard_env  # noqa: F401
 
-from pypeline import MAIN, wires, uint8_t, sim_input, sim_output, sim_print
+from pypeline import MAIN, initial, sim_input, sim_output, sim_print, uint8_t, wires
 
 import chacha20poly1305_encrypt_ports
 
@@ -40,11 +40,6 @@ _snk = AxisSimSink(axis128_intrf, perf.BUS_BYTES, scoreboard=_scoreboard)
 _runner = perf.make_runner(
     "encrypt", _src, _snk, _scoreboard, perf.encrypt_frame_builder
 )
-
-# Mutated in place only -- @sim_input/@sim_output bodies see a detached
-# snapshot of module globals (see encrypt_tb.py).
-_state = {"announced": False}
-
 
 def _keep_count(stream):
     keep = stream.data.frag.keep
@@ -70,13 +65,11 @@ def drive_in_word() -> axis128_intrf.stream_t:
     return stream
 
 
-@sim_output
+@initial(sim=True)
 def announce():
-    if not _state["announced"]:
-        _state["announced"] = True
-        sim_print("=== ChaCha20-Poly1305 PERFORMANCE measurement (encrypt side) ===")
-        sim_print(f"Encrypt: phases = {[p['name'] for p in perf.PHASES]}")
-        sim_print(f"Encrypt: seed = {perf.SEED}, json = {perf.JSON_PATH or '(none)'}")
+    sim_print("=== ChaCha20-Poly1305 PERFORMANCE measurement (encrypt side) ===")
+    sim_print(f"Encrypt: phases = {[p['name'] for p in perf.PHASES]}")
+    sim_print(f"Encrypt: seed = {perf.SEED}, json = {perf.JSON_PATH or '(none)'}")
 
 
 @sim_output
@@ -127,7 +120,6 @@ def encrypt_perf_tb() -> axis128_intrf.fwd_t:
     # with an infinitely fast consumer (documented in README).
     chacha20poly1305_encrypt_ports.axis_out_if.ready = 1
 
-    announce()
     measure_out()
 
     # dummy return so nothing optimizes away

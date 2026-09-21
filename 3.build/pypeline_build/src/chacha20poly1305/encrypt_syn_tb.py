@@ -21,9 +21,9 @@ from pypeline import (
     uint1_t,
     uint8_t,
     uint32_t,
+    initial,
     sim_assert,
     sim_print,
-    array_to_uint_be,
     hex,
 )
 
@@ -33,9 +33,7 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    uint96_t,
     uint128_t,
-    uint256_t,
     axis128_intrf,
 )
 from axi.axis import make_axis_byte_source, make_axis_byte_sink
@@ -89,6 +87,16 @@ byte_sink, byte_sink_t = make_axis_byte_sink(axis128_intrf, 16, OUT_FRAME_MAX_SI
 encrypt_all_done: Wire[uint1_t]
 
 
+# Host-side Python, printed once before the first clock by every simulator
+# (native or cocotb+GHDL) -- no hardware cycle counter needed to find cycle 0.
+@initial(sim=True)
+def announce():
+    sim_print("=== ChaCha20-Poly1305 Encryption Test ===")
+    sim_print(f"Encrypt Key: {bytes(KEY).hex()}")
+    sim_print(f"Encrypt Nonce: {bytes(NONCE).hex()}")
+    sim_print("AAD (29 bytes): Additional authenticated data")
+
+
 # CSR values available all at once do not need to be static=registers
 @MAIN
 @wires
@@ -114,7 +122,6 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
     chacha20poly1305_encrypt_ports.aad = aad
     chacha20poly1305_encrypt_ports.aad_len = AAD_LEN
 
-    cycle_counter: Reg[uint32_t]
     encrypt_all_done_reg: Reg[uint1_t]
 
     # Drive the Wire from the sticky reg's *previous*-cycle value (read here,
@@ -122,18 +129,6 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
     # execution) -- see encrypt_all_done's declaration above for why this
     # one-cycle delay matters.
     encrypt_all_done = encrypt_all_done_reg
-
-    if cycle_counter == 0:
-        sim_print("=== ChaCha20-Poly1305 Encryption Test ===")
-        key_u: uint256_t = array_to_uint_be(key)
-        sim_print(
-            f"Encrypt Key: {hex(key_u[255:224])}{hex(key_u[223:192])}{hex(key_u[191:160])}{hex(key_u[159:128])}{hex(key_u[127:96])}{hex(key_u[95:64])}{hex(key_u[63:32])}{hex(key_u[31:0])}"
-        )
-        nonce_u: uint96_t = array_to_uint_be(nonce)
-        sim_print(
-            f"Encrypt Nonce: {hex(nonce_u[95:64])}{hex(nonce_u[63:32])}{hex(nonce_u[31:0])}"
-        )
-        sim_print("AAD (29 bytes): Additional authenticated data")
 
     # --- Input side: stream each test string's plaintext through byte_source ---
     input_packet_count: Reg[uint32_t]
@@ -183,8 +178,6 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
             # encrypt_all_done's declaration above). The top-level file
             # decides when it's safe to actually call sim_finish().
             encrypt_all_done_reg = 1
-
-    cycle_counter = cycle_counter + 1
 
     # dummy return for synthesis
     # so everything doesnt optimize away

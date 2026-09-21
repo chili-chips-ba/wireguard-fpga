@@ -43,11 +43,15 @@ Run from `pypeline_build/` (not `src/`):
   against generated VHDL. `--comb` is quick; the pipelined form takes hours.
 - `--continue`: skip clearing the output dir (`./generated-files*-<variant>`).
 
-Pass criteria for every sim build: process exits zero. Every testbench calls
-`sim_assert(...)` per check and `sim_finish()` when done, so a failure raises
-immediately (native) or halts GHDL via a VHDL `assert ... severity failure`
-(cocotb) — never eyeball logs for `ERROR`. RNG-based runs print their seed
-(`tb_common_sim.DEFAULT_SEED` by default) so a failing run is reproducible.
+Pass criteria for every sim build: process exits zero — never eyeball logs for
+`ERROR`. `*_syn_tb` testbenches call `sim_assert(...)` per check, so a failure
+raises immediately (native) or halts GHDL via a VHDL `assert ... severity
+failure` (cocotb). The random `*_tb` testbenches print `ERROR:` per mismatch
+and an `@final(sim=True)` hook asserts zero errors and every packet checked
+once the sim ends. Start-of-run banners/seeds come from `@initial(sim=True)`
+hooks (host Python, run by every simulator before the first clock). RNG-based
+runs print their seed (`tb_common_sim.DEFAULT_SEED` by default) so a failing
+run is reproducible.
 
 **Native vs VHDL cycle-accuracy cross-check** (compares native latency-emulated
 sim against real cocotb+GHDL VHDL sim, cycle by cycle, using the `syn_tb`
@@ -76,7 +80,7 @@ section for the full per-file breakdown.
   baked into `Reg[uint8_t[N]]` arrays (`tb_common.py`). Synthesizable, so it
   runs through cocotb+GHDL — this is the acceptance test.
 - **Non-synthesizable** (`*_tb.py`): uses `@sim_input`/`@sim_output` to
-  generate/check 10 random-length (1-1024B) packets live during simulation
+  generate/check 12 random-length (1-1024B) packets live during simulation
   (`tb_common_sim.py`, calling `aead_ref_model.py` lazily per packet), plus a
   tampered-tag reject-path packet. `@sim_input`/`@sim_output` are stripped
   entirely from real hardware elaboration, so this style has **no cocotb/GHDL

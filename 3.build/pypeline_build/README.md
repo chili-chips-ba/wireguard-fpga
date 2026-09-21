@@ -43,15 +43,15 @@ it. Dropping `--comb` runs a real, cycle-accurate pipelined native
 simulation: real autopipelining runs through the synthesis tool first to
 discover each submodule's latency (like the pipelined cocotb/GHDL builds
 below), then the native simulator emulates those latencies — which is what
-makes it slow. Pass criteria: the build exits zero. Every testbench calls
-`sim_assert(...)` on every check (correct ciphertext/plaintext bytes, `keep`
-pattern, packet framing, and the tampered-tag packets' `is_verified_out`)
-and `sim_finish()` once all packets are checked, so a failure raises
-`AssertionError` immediately in native sim (or, downstream, a VHDL `assert
-... severity failure` under cocotb/GHDL) and the process exits non-zero —
-no more eyeballing console output for `ERROR`/`DONE` lines. The RNG seed in
-use is printed at the start of each run (`tb_common_sim.DEFAULT_SEED` by
-default) so a failing run's exact vectors can be reproduced.
+makes it slow. Pass criteria: the build exits zero. This testbench prints an
+`ERROR:` line for each mismatch (ciphertext/plaintext bytes, `keep` pattern,
+packet framing, the tampered-tag packet's `is_verified_out`) and calls
+`sim_finish()` once all packets are checked; an `@final(sim=True)` hook then
+runs once, however the simulation ended, and asserts there were zero errors
+and every packet was checked, so any failure exits non-zero — no eyeballing
+console output for `ERROR`/`DONE` lines. The RNG seed in use is printed by an
+`@initial(sim=True)` hook before the first cycle (`tb_common_sim.DEFAULT_SEED`
+by default) so a failing run's exact vectors can be reproduced.
 
 **Native Pypeline sim — synthesizable-style testbench (fixed vectors; no
 cocotb/GHDL, Pypeline's own Python simulator):**
@@ -70,7 +70,7 @@ runs the same real-autopipelining-first, cycle-accurate native simulation as
 the non-synthesizable testbench above, without needing cocotb/GHDL at all —
 useful for a cycle-accurate pipelined check that's still faster to iterate
 on than the full pipelined cocotb/GHDL build. Pass criteria: the build exits
-zero, per the same `sim_assert`/`sim_finish` behavior described above.
+zero — every check is a `sim_assert(...)`, so a failure raises immediately.
 
 **Simulate with cocotb + GHDL (the designs' acceptance tests — synthesizable-style
 testbench only, see "Testbench Styles" below):**
@@ -210,13 +210,13 @@ stimulus is generated and outputs checked:
 - **Non-synthesizable** (`encrypt_tb.py`/`decrypt_tb.py`, driven by the plain
   `_tb.py` tops): uses Pypeline's `@sim_input`/`@sim_output` decorators to
   generate stimulus and check outputs as arbitrary Python, live,
-  cycle-by-cycle during simulation. Each run generates 10 random-length
+  cycle-by-cycle during simulation. Each run generates 12 random-length
   (1-1024 byte) packets per direction on the fly — a few pinned to the same
   corner-case lengths as the fixed vectors, the rest uniform-random — calling
   `aead_ref_model.py` lazily, once per packet, right when that packet's
   random plaintext is generated (`tb_common_sim.py`), rather than batching
   everything up front. No fixed-size arrays, no elaboration-time
-  pre-baking — packets can be any length. The decrypt side adds an 11th
+  pre-baking — packets can be any length. The decrypt side adds a 13th
   packet with a deliberately bit-flipped tag (reject-path coverage,
   mirroring the synthesizable variant's fixed tampered-tag packet). The RNG
   is seeded by default (`tb_common_sim.DEFAULT_SEED`) and the seed is printed

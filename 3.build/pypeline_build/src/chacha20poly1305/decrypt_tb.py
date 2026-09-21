@@ -15,9 +15,11 @@ Each packet's ciphertext+tag is computed once, lazily, right when that
 packet's random plaintext is generated (aead_ref_model.py, RFC 8439 via the
 `cryptography` package) -- not batched at elaboration time. Printing follows
 the same "ERROR: ..." / "Decrypt: Test N DONE!" convention as the
-synthesizable variant, so the same "no ERROR lines, N DONE lines" pass
-criterion applies (N = tb_common_sim.NUM_RANDOM_PACKETS, plus one more for
-the tamper packet).
+synthesizable variant. An @initial(sim=True) hook seeds the RNG and prints the
+banner before the first cycle; an @final(sim=True) hook asserts, once the
+simulation has ended however it ended, that no ERROR was seen and all N =
+tb_common_sim.NUM_RANDOM_PACKETS + 1 (the tamper packet) packets were checked
+-- so a mismatch fails the run (non-zero exit), not just the log.
 
 The hand-rolled two-phase (ciphertext-then-tag) input shift register, per-lane
 output checker, and ad hoc dict-of-expected-packets this testbench used to
@@ -30,7 +32,17 @@ import random
 
 import wireguard_env  # noqa: F401
 
-from pypeline import MAIN, wires, uint8_t, sim_input, sim_output, sim_print, hex
+from pypeline import (
+    MAIN,
+    final,
+    hex,
+    initial,
+    sim_input,
+    sim_output,
+    sim_print,
+    uint8_t,
+    wires,
+)
 
 import chacha20poly1305_decrypt_ports
 
@@ -49,8 +61,8 @@ NUM_TOTAL_PACKETS = common.NUM_RANDOM_PACKETS + 1  # + 1 tampered-tag negative t
 # Mutable state shared between @sim_input/@sim_output callbacks, only ever
 # mutated in place (never rebound) -- see encrypt_tb.py for why.
 _dec_state = {
-    "rng": None,
-    "announced": False,
+    "rng": None,  # created by start()
+    "errors": 0,  # mismatches seen by check_out(); asserted zero by finish_checks()
     "in_packet_idx": 0,
     "gen_log": [],  # [(plaintext_len, expected_verified), ...] for reporting only
     "printed_gen_count": 0,
@@ -97,9 +109,6 @@ def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
 
 @sim_input
 def drive_in_word() -> axis128_intrf.stream_t:
-    if _dec_state["rng"] is None:
-        _dec_state["rng"] = random.Random(common.DEFAULT_SEED)
-
     if _dec_state["in_packet_idx"] < NUM_TOTAL_PACKETS and _src.idle():
         idx = _dec_state["in_packet_idx"]
         pkt = _generate_packet(_dec_state["rng"], idx)
@@ -120,16 +129,15 @@ def drive_in_word() -> axis128_intrf.stream_t:
     return _src.step(chacha20poly1305_decrypt_ports.axis_in_if.ready).stream
 
 
-@sim_output
-def announce():
-    if not _dec_state["announced"]:
-        _dec_state["announced"] = True
-        sim_print(
-            "=== ChaCha20-Poly1305 Decryption Test (non-synthesizable, on-the-fly random vectors) ==="
-        )
-        sim_print(f"Decrypt: RNG seed = {common.DEFAULT_SEED}")
-        sim_print(f"Decrypt Key: {bytes(common.KEY).hex()}")
-        sim_print(f"Decrypt Nonce: {bytes(common.NONCE).hex()}")
+@initial(sim=True)
+def start():
+    _dec_state["rng"] = random.Random(common.DEFAULT_SEED)
+    sim_print(
+        "=== ChaCha20-Poly1305 Decryption Test (non-synthesizable, on-the-fly random vectors) ==="
+    )
+    sim_print(f"Decrypt: RNG seed = {common.DEFAULT_SEED}")
+    sim_print(f"Decrypt Key: {bytes(common.KEY).hex()}")
+    sim_print(f"Decrypt Nonce: {bytes(common.NONCE).hex()}")
 
 
 @sim_output
@@ -156,6 +164,7 @@ def check_out():
 
     idx = result.get("idx", "?")
     if not result["passed"]:
+        _dec_state["errors"] += 1
         if "error" in result:
             sim_print(f"ERROR: Decrypt: {result['error']} (packet {idx})")
         else:
@@ -168,12 +177,25 @@ def check_out():
 
     expected_verified = result.get("expected_verified")
     if expected_verified is not None and got_verified != expected_verified:
+        _dec_state["errors"] += 1
         sim_print(
             f"ERROR: Decrypt: is_verified mismatch packet {idx}. expected {expected_verified} got {got_verified}"
         )
 
     sim_print(f"Decrypt: Test {idx} DONE!")
     _dec_state["out_packet_idx"] += 1
+
+
+@final(sim=True)
+def finish_checks():
+    assert _dec_state["errors"] == 0, (
+        f"Decrypt: {_dec_state['errors']} ERROR(s) -- see the ERROR lines above"
+    )
+    assert _dec_state["out_packet_idx"] == NUM_TOTAL_PACKETS and _scoreboard.pending() == 0, (
+        f"Decrypt: simulation ended with {_dec_state['out_packet_idx']} of {NUM_TOTAL_PACKETS} "
+        f"packets checked ({_scoreboard.pending()} still expected)"
+    )
+    sim_print(f"Decrypt: all {NUM_TOTAL_PACKETS} packets PASSED")
 
 
 @MAIN
@@ -191,7 +213,6 @@ def decrypt_tb() -> axis128_intrf.fwd_t:
     chacha20poly1305_decrypt_ports.axis_in_if.stream = drive_in_word()
     chacha20poly1305_decrypt_ports.axis_out_if.ready = 1
 
-    announce()
     report_new_packets()
     check_out()
 
