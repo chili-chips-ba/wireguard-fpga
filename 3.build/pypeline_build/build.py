@@ -15,7 +15,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 from poly1305_config import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
-    TARGETS_MHZ, default_target_mhz, target_out_dir,
+    TARGETS_MHZ, default_target_mhz, target_out_dir, starting_latencies,
 )
 
 
@@ -39,6 +39,7 @@ def main():
                         help="Maximum concurrent synthesis jobs (use 1 on low-RAM systems)")
     parser.add_argument("--continue", dest="continue_build", action="store_true",
                         help="Keep the selected output directory and reuse valid build caches")
+    parser.add_argument("--out-dir", help="Separate output cache (must be empty unless --continue)")
     args = parser.parse_args()
 
     if args.jobs is not None and args.jobs < 1:
@@ -87,6 +88,8 @@ def main():
         options = ["--top", f"chacha20poly1305_{design_name}", "--verilog"]
 
     out_dir = target_out_dir(implementation_out_dir(out_dir, args.poly1305), args.target_mhz)
+    if args.out_dir:
+        out_dir = args.out_dir
     cmd = [pipelinec_bin, src_file, "--out_dir", out_dir] + options
     if not (args.sim and args.comb):
         cmd.append("--stop_on_over_capacity")
@@ -94,8 +97,11 @@ def main():
         cmd.extend(["-j", str(args.jobs)])
 
     print(f"--> {design_short}: Poly1305 {args.poly1305}, clock target {args.target_mhz} MHz")
+    print(f"--> Automatic starting latencies: {starting_latencies(args.target_mhz)}")
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)
+    if args.out_dir and not args.continue_build and os.listdir(out_dir):
+        parser.error("Custom --out-dir is not empty; choose a fresh directory or use --continue")
     if args.continue_build:
         print("--> --continue active: Keeping output directory.")
     else:

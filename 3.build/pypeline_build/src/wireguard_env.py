@@ -15,9 +15,10 @@ of those onto sys.path itself before importing any design file.
 
 import os
 import sys
-from poly1305_config import selected_target
+from poly1305_config import selected_target, starting_latencies
 
 TARGET_MHZ = float(selected_target())
+START_LATENCIES = starting_latencies(TARGET_MHZ)
 
 _here = os.path.dirname(os.path.abspath(__file__))
 

@@ -260,12 +260,11 @@ def poly1305_mac_fsm(
 # (encrypt, decrypt) from that direction's dataflow core; each call site gets
 # its own independent compute + FSM hardware state.
 #
-# The multi-cycle count is an AUTO_MULTI_CYCLE: the Vivado throughput sweep raises it if
-# the loop body's launch->capture path fails timing. start_latency=5 is the
-# known-good count at 80 MHz (4 failed), so a normal build starts and settles
-# there with no extra synthesis; compute_mcp.mcp.latency reads the built count.
+# The multi-cycle count is automatic: the sweep raises it if the launch->capture
+# path fails timing. The clock profile retains the historical starting guess
+# of 5 at 80 MHz (4 failed); compute_mcp.mcp.latency reads the actual built count.
 compute_mcp, _compute_mcp_t = make_stream_auto_multi_cycle(
-    poly1305_mac_loop_body, start_latency=5
+    poly1305_mac_loop_body, start_latency=wireguard_env.START_LATENCIES["poly1305_legacy"]
 )
 
 

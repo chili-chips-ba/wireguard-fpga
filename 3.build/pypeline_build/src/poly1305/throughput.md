@@ -4,7 +4,8 @@ The shared design is characterized at **30 MHz**, now the default selected by
 `build.py` and `measure.py`. Use `--poly1305 legacy` for the historical
 80 MHz architecture, or `--target-mhz` to override the profile clock. Outputs
 are isolated by implementation and target. Automatic body/MCP discovery
-remains unseeded and uncapped.
+uses clock-profile starting guesses and remains uncapped; the sweep can
+adjust them. The packet QoR record below was produced by the unseeded source.
 
 The completed 2026-10-02 run's [summary](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md),
 [comparison](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/comparison.md),
@@ -99,8 +100,10 @@ packet, with one packet context active at a time.
 
 Let P be the discovered body `AUTO_PIPELINE.latency`. Including its explicit
 input and output registers, D = P + 2; use L = D accumulators with same-cycle
-writeback forwarding. No initial latency guesses, fixed depths, or maximum
-latencies are supplied to the new automatic pipeline/MCPs.
+writeback forwarding. The recorded characterization was unseeded. Current
+source supplies clock-profile `start_latency` hints (at 30 MHz, body P=0,
+prologue=1, epilogue=2 in each direction), with no fixed depths or maximum
+latencies. L still follows the actual discovered body latency, not the hint.
 
 ### Arithmetic representation and initial synthesis finding
 
@@ -334,6 +337,37 @@ legacy 1.620/1.181 Gb/s at 80 MHz (2.02×/2.47×). At 1420 bytes they are
 lower cycle counts. Arithmetic, compiler revision and shared ChaCha depth also
 differ; the comparison is not an isolated MAC-only A/B.
 
+### Starting-guess validation (2026-10-02)
+
+A fresh external-port shared build using the clock-profile hints converged to
+the same configuration in the table above: each body core P=0, D=L=2, and
+prologue/epilogue constrained counts 1/2. Shared ChaCha retained four core
+registers. The final 30.05/33.519/33.519 MHz synthesis results and DUT area
+matched the unseeded hardware exactly. All four MCP arithmetic audits passed;
+prologue setup/hold counts were 1/0 and epilogue counts 2/1 in both directions.
+The final 246 HDL input hashes and clock-constraint hash matched the retained
+passing synthesis manifest, including after restoration from the failed trim.
+
+There were two whole-design synthesis runs rather than three. The sweep
+passed at four ChaCha core registers, failed its attempted trim to three,
+and restored the passing implementation. Every consumed pipeline/MCP latency
+matched the built result, so no second pin-and-confirm pass was needed.
+Aggregate whole-design synthesis elapsed time was 2,069.3 seconds, compared
+with 5,586.7 seconds for the reference; machine-load differences also affect
+the observed runtime. The shared fixed-vector native combinational preflight
+passed in 348 cycles. Packet throughput measurements above remain the original
+unseeded QoR record; this run validated hardware/build convergence.
+
+The generated output directory is
+`generated-files-verilog-shared-poly1305-pipelined-30mhz-seeded-20261002-1939Z`.
+This validation used Vivado 2019.2 and PipelineC `1c32492-dirty`, including
+the stream-wrapper latency-option forwarding fix.
+Its retained report is `chacha20poly1305_encrypt_decrypt_shared/`
+`vivado_68754b09_bb94084203cc6c2b.log`, with input signature
+`bb94084203cc6c2bc8ffdcab8dd4b1b9b87ed9c076549900d2f4fac70816e795`.
+Build profile values remain hints, and uncharacterized 40/80 MHz targets
+reuse the 30 MHz profile until independent measurements are available.
+
 ## Area/latency alternatives, not implemented
 
 The dedicated parallel epilogue is intentionally the implemented choice:
@@ -353,8 +387,11 @@ does not implement.
 
 The final 128-bit addition of s is included in the whole epilogue MCP. It is
 not assumed to cost zero constrained cycles; the auto characterization measures
-the whole function. Seeding known-good starting latencies remains a possible
-follow-up, not part of the unseeded design that produced these results.
+the whole function. Current source seeds the known-good starting counts from
+`src/poly1305_config.py`; these are setup counts, not the MCP's count+1 stream
+response cycles. This is a build-time optimization, not part of the unseeded
+design that produced the recorded results. The fresh shared 30 MHz build
+above confirmed timing and convergence with these hints.
 
 
 ## Standalone testbenches
@@ -449,8 +486,8 @@ products with a carry chain, mask 0x3 in limb 2, and three folds
 This change extracts those helpers into `poly1305_math.py`, shared by both
 architectures, and fixes another reducer error: the final subtraction must
 also subtract the top limb 3 of p=2^130-5. Without it, reducing p produced
-3*2^128 rather than zero. The legacy FSM and its MCP starting configuration
-remain unchanged.
+3*2^128 rather than zero. The legacy FSM is unchanged; its historical MCP
+starting guess of five is now selected from the clock-profile table.
 
 The complete-block MAC and full AEAD testbenches use independent integer or
 cryptography references, including the RFC 8439 known-answer vector.

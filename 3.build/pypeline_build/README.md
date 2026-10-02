@@ -58,6 +58,49 @@ in the [Poly1305 design](src/poly1305/throughput.md#standalone-testbenches).
 `build.py` only selects the encrypt, decrypt, or shared top, with the existing
 hardware, correctness-testbench and shared-performance modes.
 
+### Automatic starting guesses
+
+All automatic compute blocks now take `start_latency` hints from the
+clock-indexed table in [src/poly1305_config.py](src/poly1305_config.py), selected
+alongside the clock in `wireguard_env.py`. The shared-design hints come from
+the confirmed 30 MHz hardware build; private cores reuse equivalent-core
+hints and legacy retains its historical seed. 40/80 MHz currently reuse the
+same table until their own profiles are characterized. These are neither
+fixed latencies nor maximum limits: the sweep still checks timing and can
+change them, and latency-dependent storage is sized from the actual pipeline
+depth. To add a characterized clock, add a complete entry to
+`START_LATENCIES_BY_MHZ`: pipeline values count core registers, excluding I/O
+registers, and MCP values count setup cycles, excluding the handshake cycle.
+The committed measurements below were made before these hints were added.
+Current source requires compiler support for
+`make_stream_auto_pipeline(..., start_latency=...)` and forwarding that option
+to its internal automatic pipeline.
+
+Use `--out-dir` to compare a fresh build without disturbing the previous cache:
+
+```sh
+./build.py --shared --target-mhz 30 -j 1 \
+  --out-dir generated-files-verilog-shared-poly1305-pipelined-30mhz-seeded
+```
+
+An explicitly selected output directory must be empty for a fresh build;
+`--continue --out-dir ...` resumes it without clearing files. Default output
+directory naming and cleanup behavior are unchanged. Keep separate caches
+when comparing clocks, architectures or starting-guess profiles.
+
+The fresh shared 30 MHz hardware build on 2026-10-02 confirmed the same
+latencies, 30.05 MHz limiting synthesis result and DUT area as the archived
+unseeded build. Whole-design synthesis runs fell from three to two: the
+four-stage ChaCha pipeline passed first, a three-stage trim failed, and the
+tool restored the passing result. Matching starting guesses eliminated the
+additional pin-and-confirm synthesis pass. Aggregate whole-design synthesis
+elapsed time was 34.5 minutes versus 93.1 minutes previously; machine load
+also affects this comparison. Individual module characterization still runs.
+Final HDL/input hashes, MCP setup/hold constraints and arithmetic HDL audits
+passed. This validates the shared 30 MHz hints; other clock profiles still
+need their own timing characterization. This validation used Vivado 2019.2
+and PipelineC `1c32492-dirty`, including the stream-wrapper forwarding fix.
+
 ### Acceptance and QoR
 
 The completed run tested both native testbench styles in combinational mode for

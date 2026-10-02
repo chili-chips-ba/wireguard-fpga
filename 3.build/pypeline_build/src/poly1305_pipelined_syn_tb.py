@@ -7,10 +7,9 @@ discovered automatic latency. WG_POLY1305_TB_BODY_DEPTH inserts real fixed
 stages ONLY in an isolated testbench configuration, never production/QoR.
 
 Set WG_POLY1305_TB_MODE=mac|body|arithmetic|components (default mac), and
-WG_POLY1305_TB_DIRECTION=encrypt|decrypt (default encrypt). See README.md
+WG_POLY1305_TB_DIRECTION=encrypt|decrypt (default encrypt). See src/poly1305/throughput.md
 for direct native/GHDL commands and isolated output-directory conventions.
 """
-import functools
 import os
 import random
 import sys
@@ -50,7 +49,11 @@ if MODE != "arithmetic":
     original_auto_pipeline = design.AUTO_PIPELINE
     try:
         if DEPTH:
-            design.AUTO_PIPELINE = functools.partial(AUTO_PIPELINE, latency=int(DEPTH))
+            # A fixed-depth stress case replaces, rather than combines with,
+            # the production starting guess (fixed latency and hints conflict).
+            def fixed_auto_pipeline(func, *, start_latency=None):
+                return AUTO_PIPELINE(func, latency=int(DEPTH))
+            design.AUTO_PIPELINE = fixed_auto_pipeline
         mac = design.make_poly1305_mac_pipelined(DIRECTION)
     finally:
         design.AUTO_PIPELINE = original_auto_pipeline

@@ -83,7 +83,9 @@ def make_poly1305_mac_pipelined(direction):
     if direction not in ("encrypt", "decrypt"):
         raise ValueError("Poly1305 direction must be encrypt or decrypt")
     body_func = poly1305_body_encrypt if direction == "encrypt" else poly1305_body_decrypt
-    body_ap = AUTO_PIPELINE(body_func)
+    body_ap = AUTO_PIPELINE(
+        body_func, start_latency=wireguard_env.START_LATENCIES[f"poly1305_body_{direction}"]
+    )
     lanes = body_ap.latency + 2
     lane_t = make_uint_t(max(1, (lanes - 1).bit_length()))
     count_t = make_uint_t(lanes.bit_length())
@@ -139,8 +141,12 @@ def make_poly1305_mac_pipelined(direction):
         tag: uint128_t = low + x.s
         return tag
 
-    prologue_mcp, prologue_result_t = make_stream_auto_multi_cycle(prologue)
-    epilogue_mcp, epilogue_result_t = make_stream_auto_multi_cycle(epilogue)
+    prologue_mcp, prologue_result_t = make_stream_auto_multi_cycle(
+        prologue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_prologue_{direction}"]
+    )
+    epilogue_mcp, epilogue_result_t = make_stream_auto_multi_cycle(
+        epilogue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_epilogue_{direction}"]
+    )
 
     @hw_func
     def poly1305_mac_pipelined(
