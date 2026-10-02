@@ -544,7 +544,7 @@ what makes attribution automatic:
 | `accept_rate` | `xfer/(xfer+stall)` — the same thing as a fraction (`1/service_period`) |
 | `ceiling_bytes_per_cycle` | `bytes_per_beat / service_period_cycles` — that ceiling in bytes/cycle, which is what makes "ChaCha20 is faster than Poly1305" a measured statement rather than an inference |
 | `states` / `dominant` (state taps) | cycles per FSM state, so a slow block also says *why* ("`FINISH_ITER` 83% of cycles" = waiting on the multi-cycle compute) |
-| `contention` / `wasted_slot` (arbitration tap) | cycles a direction wanted the shared ChaCha20 pipeline but did not have the slot, split into "the other side wanted it too" and "the selected side had nothing" — the second kind is pure round-robin waste |
+| `contention` / `wasted_slot` (arbitration tap) | cycles a direction wanted the shared ChaCha20 pipeline but did not have the slot, split into "the other side wanted it too" and "the selected side had nothing" — wasted slots should be zero with the current request-aware arbiter |
 
 Note these are **offered/accepted ratios, not windowed rates**, deliberately:
 accepts in this design are bursty (that is why `steady_in_bytes_per_cycle` reads
@@ -773,13 +773,14 @@ result at the real pipelined timing with fmax and area attached.
   is ~11.6k cycles, ≈ 2.5 h), which is why it is a few thousand cycles per size
   rather than a full MTU sweep at high packet counts. A phase that sees no beat for 1000 cycles is declared
   deadlocked and reported, rather than running to the cycle cap.
-- **Shared-pipeline arbitration.** `chacha20_pipeline_shared` toggles
-  `is_encrypt` every cycle unconditionally, so each direction can only launch on
-  alternate cycles. The concurrent phases are exactly the case that exposes it;
-  `--dirs enc` / `--dirs dec` measure a direction on its own for comparison, and
-  the `shared/pipe.arb` tap quantifies it directly — splitting each direction's
-  lost cycles into contention (both wanted the slot) and wasted slots (the
-  selected side had nothing while the other had work queued).
+- **Shared-pipeline arbitration.** `chacha20_pipeline_shared` serves a lone
+  requester immediately and uses round-robin priority when both request.
+  Priority advances only on an accepted launch; a stalled grant is held until
+  acceptance. Each direction's ready is independent of its own valid, and both
+  see pipeline readiness while idle. The `shared/pipe.arb` tap reports the actual
+  grant and separates contention from wasted slots, which should now be zero.
+  The archived measurements above used the previous unconditional alternation,
+  which could waste every other slot when only one direction had work.
 
 ## Test Vectors
 

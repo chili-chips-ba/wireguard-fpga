@@ -234,9 +234,9 @@ class StateTap(_EpochTap):
 class ArbTap(_EpochTap):
     """Round-robin arbitration accounting for a shared resource.
 
-    Built for chacha20_pipeline_shared, whose `is_encrypt` toggles every cycle
-    unconditionally, so a direction can only launch on alternate cycles. Every
-    cycle a requester wants the resource is exactly one of:
+    Samples chacha20_pipeline_shared's actual mux selection: request-aware
+    round robin advances priority on accepted launches and holds stalled
+    grants. Every cycle a requester wants the resource is exactly one of:
 
       xfer         its slot, resource ready -- launched
       blocked      its slot, resource NOT ready -- the pipeline is full. In the
@@ -245,8 +245,9 @@ class ArbTap(_EpochTap):
                    (behind that direction's backpressure) stop both directions
       contention   the other side's slot, and the other side wanted it too --
                    the real cost of sharing
-      wasted_slot  the other side's slot, and the other side had NOTHING -- pure
-                   round-robin waste that a request-aware arbiter would recover
+      wasted_slot  the selected side had no request. Normally zero with the
+                   request-aware arbiter; retained for historical measurements
+                   and synthetic traces of arbitration waste
 
     `note(sel, reqs, granted)`: `sel` is the index the mux points at this cycle,
     `reqs` the per-requester valid bits, `granted` the resource's ready.

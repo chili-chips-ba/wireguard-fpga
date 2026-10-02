@@ -126,28 +126,44 @@ def chacha20_pipeline_shared():
     decrypt_pipeline_out_s: axis512_intrf.stream_t = axis512_stream_null()  # to decrypt
     decrypt_pipeline_in_ready_s: uint1_t = 0  # from decrypt
 
-    # Input side state toggles round robin
-    is_encrypt: Reg[uint1_t]
+    # Decrypt has initial priority. Advance only on an accepted launch, and
+    # hold the selected direction while its valid input is stalled.
+    priority_encrypt: Reg[uint1_t]
+    grant_stalled: Reg[uint1_t]
+    stalled_is_encrypt: Reg[uint1_t]
+    encrypt_valid: uint1_t = encrypt_pipeline_in_if.stream.valid
+    decrypt_valid: uint1_t = decrypt_pipeline_in_if.stream.valid
+    is_encrypt: uint1_t = priority_encrypt
+    if grant_stalled:
+        is_encrypt = stalled_is_encrypt
+        if is_encrypt:
+            encrypt_pipeline_in_ready_s = pipeline_in_ready
+        else:
+            decrypt_pipeline_in_ready_s = pipeline_in_ready
+    else:
+        if encrypt_valid & ~decrypt_valid:
+            is_encrypt = 1
+        elif decrypt_valid & ~encrypt_valid:
+            is_encrypt = 0
+        # Each ready depends on priority and the OTHER requester's valid.
+        # With neither requesting, both see the pipeline's readiness.
+        encrypt_pipeline_in_ready_s = pipeline_in_ready & (
+            priority_encrypt | ~decrypt_valid
+        )
+        decrypt_pipeline_in_ready_s = pipeline_in_ready & (
+            ~priority_encrypt | ~encrypt_valid
+        )
+
     pipeline_in_s.data.is_encrypt = is_encrypt
     if is_encrypt:
         pipeline_in_s.data.data = encrypt_pipeline_in_if.stream.data
-        pipeline_in_s.valid = encrypt_pipeline_in_if.stream.valid
-        encrypt_pipeline_in_ready_s = pipeline_in_ready
+        pipeline_in_s.valid = encrypt_valid
     else:
         pipeline_in_s.data.data = decrypt_pipeline_in_if.stream.data
-        pipeline_in_s.valid = decrypt_pipeline_in_if.stream.valid
-        decrypt_pipeline_in_ready_s = pipeline_in_ready
+        pipeline_in_s.valid = decrypt_valid
 
-    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py). Placed
-    # BEFORE the toggle below, so `is_encrypt` still reads as this cycle's
-    # selection rather than next cycle's.
-    #
-    # The arbitration tap is what quantifies the README's shared-pipeline
-    # caveat: `is_encrypt` flips every cycle unconditionally, so a direction can
-    # only launch on alternate cycles. It splits each direction's lost cycles
-    # into contention (both wanted the slot) and wasted_slot (the selected side
-    # had nothing while the other had work queued) -- the second kind is what a
-    # request-aware arbiter would recover.
+    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py) sample
+    # this cycle's actual grant, including a lone requester or held grant.
     perf_taps.arb(
         "pipe.arb",
         is_encrypt,
@@ -168,7 +184,12 @@ def chacha20_pipeline_shared():
         decrypt_pipeline_in_ready_s,
     )
 
-    is_encrypt = ~is_encrypt
+    if pipeline_in_s.valid & pipeline_in_ready:
+        priority_encrypt = ~is_encrypt
+        grant_stalled = 0
+    elif pipeline_in_s.valid:
+        grant_stalled = 1
+        stalled_is_encrypt = is_encrypt
 
     # Output side muxing based on id flag out of pipeline
     if pipeline_out.valid:
