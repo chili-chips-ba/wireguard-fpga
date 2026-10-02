@@ -9,7 +9,7 @@ than a reading exercise.
 
 Consumed by measure.py; importable and `--selftest`-able on its own (no
 pypeline, no build, no Vivado -- same convention as perf_probe.py and
-vivado_area.py).
+measure.py).
 
 Three things are derived from the taps that perf_taps.py collects:
 
@@ -24,9 +24,9 @@ Three things are derived from the taps that perf_taps.py collects:
    somebody else's backpressure are walked through, so the verdict names the
    origin rather than the nearest symptom.
 
-3. **A model cross-check.** The dominant per-packet cost of this design is
-   predictable from first principles (Poly1305 block count x the MCP's
-   launch-to-launch period). Reporting predicted-vs-measured per phase makes a
+3. **A model cross-check.** The body service cost is predictable from the
+   Poly1305 block count x its implementation-specific initiation interval.
+   Packet setup and finalization are reported separately. Comparing each phase makes a
    design change legible immediately: a change that moves the measurement but
    not the model means the model's assumption is now wrong, and vice versa.
 """
@@ -36,11 +36,11 @@ import math
 import sys
 
 # --- design facts the model needs -------------------------------------------
-# make_valid_ready_mcp(poly1305_mac_loop_body, 5) in src/poly1305/poly1305.py.
+# Historical records used make_valid_ready_mcp(poly1305_mac_loop_body, 5).
 # PipelineC's MCP asserts output valid at cycles_since_launch == ncycles+1 and
 # re-arms `ready` the same cycle, so launch-to-launch is ncycles+1 cycles per
-# 16 B Poly1305 block. This is the DESIGN INTENT figure; the measured period
-# comes from the poly1305.data_in tap and is reported alongside it.
+# 16 B Poly1305 block. This fallback is ONLY for files without MAC metadata;
+# new measurements record the selected implementation's resolved latencies.
 POLY1305_MCP_NCYCLES = 5
 POLY1305_BLOCK_PERIOD_CYCLES = POLY1305_MCP_NCYCLES + 1
 POLY1305_BLOCK_BYTES = 16
@@ -83,7 +83,7 @@ BLOCKS = {
         "produces": "poly1305.tag_out",
         "downstream": (),
         "state": "poly1305.fsm",
-        "what": "Poly1305 MAC (multi-cycle compute loop)",
+        "what": "Poly1305 MAC (selected architecture)",
     },
     "append_auth_tag": {
         "consumes": "append.axis_in",
@@ -268,22 +268,29 @@ def _evidence_line(name, entry, runner_up):
     return "; ".join(parts)
 
 
-def model_for(packet_bytes, aad_len, measured_period, poly_tap=None):
+def model_for(packet_bytes, aad_len, measured_period, poly_tap=None, mac_config=None):
     """First-principles per-packet cycle cost, against the measured period.
 
     Poly1305 sees ceil(aad/16) AAD blocks + ceil(len/16) ciphertext blocks + 1
-    length block, each costing one MCP launch-to-launch period. That product
-    alone accounts for the large majority of this design's packet period; the
-    residual is everything else (key round trip, framing, tag tail, arbitration).
+    length block. Their count times the recorded body II is the body service
+    cost. Setup, drain, epilogue, framing, arbitration and tag stalls are
+    separate costs. Missing metadata denotes historical legacy measurements.
     """
     aad_blocks = math.ceil(aad_len / POLY1305_BLOCK_BYTES) if aad_len else 0
     ct_blocks = math.ceil(packet_bytes / POLY1305_BLOCK_BYTES)
     blocks = aad_blocks + ct_blocks + 1  # +1 for the aad_len||ct_len block
     measured_block_period = (poly_tap or {}).get("service_period_cycles")
+    mac_config = mac_config or {}
+    block_period = mac_config.get("body_ii", POLY1305_BLOCK_PERIOD_CYCLES)
     model = {
         "poly1305_blocks": blocks,
-        "poly1305_block_period_cycles": POLY1305_BLOCK_PERIOD_CYCLES,
-        "poly1305_model_cycles": blocks * POLY1305_BLOCK_PERIOD_CYCLES,
+        "poly1305_block_period_cycles": block_period,
+        "poly1305_model_cycles": blocks * block_period,
+        "poly1305_body_ii": block_period,
+        "poly1305_accumulator_count": mac_config.get("accumulator_count", 1),
+        "poly1305_body_latency": mac_config.get("body_latency"),
+        "poly1305_prologue_response_cycles": mac_config.get("prologue_response_cycles"),
+        "poly1305_epilogue_response_cycles": mac_config.get("epilogue_response_cycles"),
         "poly1305_measured_block_period_cycles": measured_block_period,
         "chacha20_model_cycles": (
             math.ceil(packet_bytes / CHACHA20_BLOCK_BYTES) * CHACHA20_BEATS_PER_BLOCK
@@ -299,12 +306,53 @@ def model_for(packet_bytes, aad_len, measured_period, poly_tap=None):
         model["residual_cycles"] = measured_period - model["poly1305_model_cycles"]
     # Structural ceilings, for the headline block comparison.
     model["poly1305_ceiling_bytes_per_cycle"] = (
-        POLY1305_BLOCK_BYTES / POLY1305_BLOCK_PERIOD_CYCLES
+        POLY1305_BLOCK_BYTES / block_period
     )
     model["chacha20_ceiling_bytes_per_cycle"] = (
         CHACHA20_BLOCK_BYTES / CHACHA20_BEATS_PER_BLOCK
     )
     return model
+
+
+def poly1305_lifecycle(taps, direction):
+    """Disjoint FSM phase counts plus body service and tag-stall counters.
+
+    Input backpressure outside STREAM_BODY belongs to packet setup/drain,
+    not to the body's II. Only new-architecture states support this split.
+    Per-packet values average over completed tags in this measurement window;
+    IDLE includes both upstream key wait and measurement settle cycles.
+    """
+    state = _get(taps, direction, "poly1305.fsm") or {}
+    states = state.get("states") or {}
+    if "STREAM_BODY" not in states:
+        return None
+    tag = _get(taps, direction, "poly1305.tag_out") or {}
+    body = _get(taps, direction, "poly1305.to_compute") or {}
+    retire = _get(taps, direction, "poly1305.from_compute") or {}
+    packets = tag.get("xfer_cycles", 0)
+    groups = {
+        "idle": ("IDLE",),
+        "setup": ("PROLOGUE_LAUNCH", "PROLOGUE_WAIT"),
+        "body": ("STREAM_BODY",),
+        "drain": ("DRAIN",),
+        "finalization": ("EPILOGUE_LAUNCH", "EPILOGUE_WAIT"),
+        "tag_output": ("OUTPUT_TAG",),
+    }
+    cycles = {name: sum(states.get(s, {}).get("cycles", 0) for s in names)
+              for name, names in groups.items()}
+    return {
+        "completed_packets": packets,
+        "phase_cycles": cycles,
+        "cycles_per_packet": {k: v / packets for k, v in cycles.items()} if packets else {},
+        "body_launches": body.get("xfer_cycles"),
+        "body_retirements": retire.get("xfer_cycles"),
+        "body_service_cycles": body.get("service_period_cycles"),
+        "body_input_gap_cycles": cycles["body"] - body.get("xfer_cycles", 0),
+        "tag_stall_cycles": tag.get("stall_cycles"),
+        "tag_stalls_per_packet": tag.get("stall_cycles", 0) / packets if packets else None,
+        "prologue_launches": (_get(taps, direction, "poly1305.prologue_in") or {}).get("xfer_cycles"),
+        "epilogue_launches": (_get(taps, direction, "poly1305.epilogue_in") or {}).get("xfer_cycles"),
+    }
 
 
 def check_taps(taps):
@@ -331,7 +379,7 @@ def check_taps(taps):
     return check
 
 
-def analyze_phase(phase, aad_len=0):
+def analyze_phase(phase, aad_len=0, mac_config=None):
     """Add `blocks`, `bottleneck` and `model` to one phase dict, in place."""
     taps = phase.get("taps")
     if not taps:
@@ -360,7 +408,11 @@ def analyze_phase(phase, aad_len=0):
             aad_len,
             direction.get("packet_period_cycles"),
             _get(taps, label, BLOCKS["poly1305"]["consumes"]),
+            ((mac_config or {}).get("directions") or {}).get(label),
         )
+        lifecycle = poly1305_lifecycle(taps, label)
+        if lifecycle:
+            phase.setdefault("poly1305_lifecycle", {})[label] = lifecycle
     # The shared ChaCha20 pipeline's arbitration is not per-direction.
     arb = {k: v for k, v in taps.items() if (v or {}).get("kind") == "arb"}
     if blocks:
@@ -374,9 +426,9 @@ def analyze_phase(phase, aad_len=0):
     return phase
 
 
-def analyze(phases, aad_len=0):
+def analyze(phases, aad_len=0, mac_config=None):
     for phase in phases:
-        analyze_phase(phase, aad_len=aad_len)
+        analyze_phase(phase, aad_len=aad_len, mac_config=mac_config)
     return phases
 
 
@@ -563,6 +615,10 @@ def markdown_blocks(phases):
     if model_lines:
         lines.append("")
         lines.extend(model_lines)
+    lifecycle_lines = markdown_poly1305_lifecycle(phases)
+    if lifecycle_lines:
+        lines.append("")
+        lines.extend(lifecycle_lines)
     return "\n".join(lines)
 
 
@@ -700,9 +756,12 @@ def markdown_summary(phases, detail_path=None):
             f"{_num(min(rs), '.0f')}–{_num(max(rs), '.0f')} cycles per packet)"
         )
     if fits:
+        periods = sorted({m["poly1305_block_period_cycles"]
+                          for p in analysed for m in (p.get("model") or {}).values()})
+        period_text = "/".join(str(p) for p in periods)
         lines.append(
             f"- **Model cross-check:** Poly1305 block count × its "
-            f"{POLY1305_BLOCK_PERIOD_CYCLES}-cycle block period accounts for "
+            f"{period_text}-cycle body block period accounts for "
             + "; ".join(fits) + " of the measured packet period."
         )
 
@@ -759,6 +818,34 @@ def markdown_arbitration(phases):
     return head + rows
 
 
+def markdown_poly1305_lifecycle(phases):
+    rows = []
+    for phase in phases:
+        for direction, lifecycle in (phase.get("poly1305_lifecycle") or {}).items():
+            per = lifecycle["cycles_per_packet"]
+            rows.append(
+                f"| {phase['name']} | {direction} "
+                f"| {_num(lifecycle.get('body_service_cycles'))} "
+                + "".join(f"| {_num(per.get(key))} " for key in
+                          ("setup", "body", "drain", "finalization", "tag_output"))
+                + f"| {_num(lifecycle.get('tag_stalls_per_packet'))} |"
+            )
+    if not rows:
+        return []
+    return [
+        "**Poly1305 lifecycle** — measured body service cycles per offered block "
+        "are separate from FSM cycles per completed packet. Body time includes "
+        "input gaps; setup includes the prologue handshake; finalization includes "
+        "the epilogue handshake. Tag stalls are a subset of tag-output cycles, "
+        "not an additional cost. IDLE/key wait and settle cycles remain in JSON. "
+        "These are MAC-local costs, not additive whole-datapath latency:",
+        "",
+        "| phase | dir | body service (clk/block) | setup (clk/pkt) | body (clk/pkt) "
+        "| drain (clk/pkt) | finalization (clk/pkt) | tag output (clk/pkt) | tag stalls (clk/pkt) |",
+        "|---|---|---|---|---|---|---|---|---|",
+    ] + rows
+
+
 def markdown_model(phases):
     rows = []
     for phase in phases:
@@ -777,10 +864,12 @@ def markdown_model(phases):
     if not rows:
         return []
     head = [
-        "**Model cross-check** — Poly1305 block count x the MCP's "
-        f"{POLY1305_BLOCK_PERIOD_CYCLES}-cycle launch-to-launch period, against the "
+        "**Model cross-check** — Poly1305 block count x its recorded body "
+        "initiation interval, against the "
         "measured packet period. The residual is everything that is not the MAC "
-        "loop (poly key round trip, framing, tag tail, arbitration):",
+        "loop (prologue, body drain, epilogue, poly key round trip, framing, "
+        "tag stalls, arbitration). This is a body-cost model, not a claim "
+        "of one-cycle whole-packet service:",
         "",
         "| phase | bytes | dir | poly blocks | model (clk) | measured blk period "
         "| measured period (clk) | model / measured | residual (clk) |",
@@ -1049,7 +1138,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         with open(sys.argv[1]) as f:
             results = json.load(f)
-        analyze(results.get("phases", []), aad_len=results.get("config", {}).get("aad_len", 0))
+        analyze(results.get("phases", []), aad_len=results.get("config", {}).get("aad_len", 0),
+                mac_config=results.get("config", {}).get("poly1305"))
         print(markdown_blocks(results.get("phases", [])))
         sys.exit(0)
     print(__doc__)

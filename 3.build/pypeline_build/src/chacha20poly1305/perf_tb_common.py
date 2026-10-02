@@ -23,8 +23,10 @@ Key/nonce/AAD are reused from tb_common_sim.py rather than duplicated.
 """
 
 import os
+import wireguard_env
 
 import perf_taps
+from poly1305_select import implementation_metadata
 import tb_common_sim as common
 from aead_ref_model import generate_encrypt_vector
 from perf_probe import DirectionRunner, PerfRecorder, PhaseBarrier
@@ -125,6 +127,8 @@ PHASES = _build_phases()
 
 CONFIG = {
     "design": "shared",
+    "target_mhz": wireguard_env.TARGET_MHZ,
+    "poly1305": implementation_metadata(),
     "bus_bytes": BUS_BYTES,
     "dirs": ENABLED_DIRS,
     "seed": SEED,

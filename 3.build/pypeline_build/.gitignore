@@ -1,0 +1,15 @@
+# Local synthesis/simulation caches and disposable investigation workspace.
+/generated-files*/
+/validation/
+/tests/
+__pycache__/
+*.pyc
+/lextab.py
+/yacctab.py
+
+# Only the latest shared 30 MHz characterization is part of this change.
+/measurements/poly1305-pipelined-comb-smoke/
+/measurements/poly1305-pipelined-residue130-comb-smoke/
+
+# These selected evidence logs are intentionally durable (root ignores *.log).
+!/measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/*.log

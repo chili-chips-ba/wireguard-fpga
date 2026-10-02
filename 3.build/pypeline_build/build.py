@@ -3,149 +3,118 @@
 # SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
 # SPDX-License-Identifier: BSD-3-Clause
 
+"""Build or simulate the encrypt, decrypt, or shared WireGuard top."""
+
 import argparse
 import os
-import sys
-import subprocess
+import shlex
 import shutil
+import subprocess
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
+from poly1305_config import (
+    IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
+    TARGETS_MHZ, default_target_mhz, target_out_dir,
+)
+
 
 def main():
-    parser = argparse.ArgumentParser(description="Unified build script for ChaCha20Poly1305 Pypeline design.")
-    
-    # Design Selection (Mutually Exclusive)
-    design_group = parser.add_mutually_exclusive_group()
-    design_group.add_argument("--enc", action="store_true", help="Select encrypt design")
-    design_group.add_argument("--dec", action="store_true", help="Select decrypt design")
-    design_group.add_argument("--shared", action="store_true", help="Select shared encrypt+decrypt design (Default)")
-
-    # Build Configuration
-    parser.add_argument("--comb", action="store_true", help="Combinational (zero pipeline stages) build. If omitted, defaults to pipelined.")
-    parser.add_argument("--sim", action="store_true", help="Enable running simulation. If omitted, builds final Verilog.")
-    parser.add_argument("--syn_tb", action="store_true", help="Select synthesizable test bench (_syn_tb_). Otherwise non-syn (_sim_) style.")
-    parser.add_argument("--perf", action="store_true", help="Select the QoR/performance measurement test bench (_perf_tb_). Implies --sim --native; see measure.py and README's 'Measuring QoR' section.")
-    parser.add_argument("--native", action="store_true", help="Select native python build/sim. Otherwise normal cocotb ghdl style vhdl sim.")
-    
-    # Continue Option (dest used to bypass Python's reserved keyword limit)
-    parser.add_argument("--continue", dest="continue_build", action="store_true", help="Skip clearing out the output directory and continue with existing files.")
-
+    parser = argparse.ArgumentParser(description=__doc__)
+    design = parser.add_mutually_exclusive_group()
+    design.add_argument("--enc", action="store_true", help="Encrypt top")
+    design.add_argument("--dec", action="store_true", help="Decrypt top")
+    design.add_argument("--shared", action="store_true", help="Shared encrypt/decrypt top (default)")
+    parser.add_argument("--poly1305", choices=IMPLEMENTATIONS,
+                        help="MAC architecture (WG_POLY1305_IMPL, otherwise pipelined)")
+    parser.add_argument("--target-mhz", type=int, choices=TARGETS_MHZ,
+                        help="Clock goal (default: pipelined 30 MHz, legacy 80 MHz)")
+    parser.add_argument("--sim", action="store_true", help="Run simulation instead of producing Verilog")
+    parser.add_argument("--comb", action="store_true", help="Simulate without automatic slicing")
+    parser.add_argument("--syn_tb", action="store_true", help="Use the fixed-vector synthesizable testbench")
+    parser.add_argument("--native", action="store_true", help="Use native simulation instead of cocotb/GHDL")
+    parser.add_argument("--perf", action="store_true",
+                        help="Shared QoR testbench; implies --sim --native (used by measure.py)")
+    parser.add_argument("-j", "--jobs", type=int,
+                        help="Maximum concurrent synthesis jobs (use 1 on low-RAM systems)")
+    parser.add_argument("--continue", dest="continue_build", action="store_true",
+                        help="Keep the selected output directory and reuse valid build caches")
     args = parser.parse_args()
 
-    # --perf is a measurement run, not a correctness run: it is only ever a
-    # native-sim build (the perf testbench is @sim_input/@sim_output based, so
-    # it has no cocotb/GHDL equivalent, same as the other non-syn testbenches).
+    if args.jobs is not None and args.jobs < 1:
+        parser.error("--jobs must be at least 1")
     if args.perf:
-        if args.syn_tb:
-            parser.error("--perf and --syn_tb are different testbenches; pick one")
         if args.enc or args.dec:
-            # Only the shared design has a perf top today: it is the variant whose
-            # (fmax, area, throughput, latency) this repo tracks. Add
-            # src/chacha20poly1305_{encrypt,decrypt}_perf_tb.py to measure one
-            # direction's standalone design; to measure one direction of the
-            # SHARED design, use measure.py --dirs enc|dec instead.
-            parser.error("--perf currently supports only the shared design (--shared)")
-        if not args.sim:
-            print("--> --perf implies --sim")
-            args.sim = True
-        if not args.native:
-            print("--> --perf implies --native")
-            args.native = True
+            parser.error("--perf supports only the shared top; measure.py --dirs selects measured directions")
+        if args.syn_tb:
+            parser.error("--perf and --syn_tb select different testbenches")
+        args.sim = args.native = True
+    try:
+        args.poly1305 = selected_implementation(args.poly1305)
+    except ValueError as exc:
+        parser.error(str(exc))
+    if args.target_mhz is None:
+        args.target_mhz = default_target_mhz(args.poly1305)
+    build_env = dict(os.environ, WG_POLY1305_IMPL=args.poly1305,
+                     WG_TARGET_MHZ=str(args.target_mhz))
 
-    # 1. Determine Design Details
     if args.enc:
-        design_name = "encrypt"
-        design_short = "enc"
+        design_name, design_short = "encrypt", "enc"
     elif args.dec:
-        design_name = "decrypt"
-        design_short = "dec"
+        design_name, design_short = "decrypt", "dec"
     else:
-        # Default behavior: Shared design
-        design_name = "encrypt_decrypt_shared"
-        design_short = "shared"
+        design_name, design_short = "encrypt_decrypt_shared", "shared"
 
-    pipelinec_bin = os.environ.get("PYPELINEC")
-    if not pipelinec_bin:
-        print("WARNING: $PYPELINEC environment variable not set. Falling back to 'pypelinec' in PATH.")
-        pipelinec_bin = "pypelinec"
-
-    # 2. Construct Build Parameters
-    if not args.sim:
-        # --- VERILOG BUILD PATH ---
-        dir_suffix = design_name if design_name != "encrypt_decrypt_shared" else "shared"
-        out_dir = f"./generated-files-verilog-{dir_suffix}"
-        src_file = f"./src/chacha20poly1305_{design_name}.py"
-        
-        cmd = [
-            pipelinec_bin, src_file, 
-            "--out_dir", out_dir, 
-            "--top", f"chacha20poly1305_{design_name}", 
-            "--verilog"
-        ]
-        
-    else:
-        # --- SIMULATION BUILD PATH ---
-        if args.perf:
-            tb_type = "perf_tb"
-        elif args.syn_tb:
-            tb_type = "syn_tb"
-        else:
-            tb_type = "tb"
+    pipelinec_bin = os.environ.get("PYPELINEC") or "pypelinec"
+    if args.sim:
+        tb_type = "perf_tb" if args.perf else "syn_tb" if args.syn_tb else "tb"
         src_file = f"./src/chacha20poly1305_{design_name}_{tb_type}.py"
-        
-        # Construct directory name based on flags
-        dir_parts = ["generated-files"]
-        if args.perf:
-            dir_parts.append("perf")
-        else:
-            dir_parts.append("syn-tb" if args.syn_tb else "sim")
-        dir_parts.append("comb" if args.comb else "pipe")
-        dir_parts.append(design_short)
+        kind = "perf" if args.perf else "syn-tb" if args.syn_tb else "sim"
+        dir_parts = ["generated-files", kind, "comb" if args.comb else "pipe", design_short]
         if args.native:
             dir_parts.append("native")
-            
         out_dir = "./" + "-".join(dir_parts)
-        
-        cmd = [pipelinec_bin, src_file, "--out_dir", out_dir, "--sim"]
-        
+        options = ["--sim"]
         if args.comb:
-            cmd.append("--comb")
-            
+            options.append("--comb")
         if not args.native:
-            cmd.extend(["--cocotb", "--ghdl"])
-            
-        # Every testbench (syn_tb and non-syn_tb alike) now calls sim_finish()
-        # once all packets are checked (see src/chacha20poly1305/
-        # encrypt_syn_tb.py / decrypt_syn_tb.py / encrypt_tb.py / decrypt_tb.py
-        # and their *_finish_checker MAINs), so simulation always self-
-        # terminates -- no more hand-tuned --run cycle counts to guess.
-        cmd.extend(["--run", "all"])
+            options.extend(["--cocotb", "--ghdl"])
+        options.extend(["--run", "all"])  # Testbenches finish themselves.
+    else:
+        src_file = f"./src/chacha20poly1305_{design_name}.py"
+        suffix = "shared" if design_short == "shared" else design_name
+        out_dir = f"./generated-files-verilog-{suffix}"
+        options = ["--top", f"chacha20poly1305_{design_name}", "--verilog"]
 
-    # 3. Execute directory management and pipelinec command
+    out_dir = target_out_dir(implementation_out_dir(out_dir, args.poly1305), args.target_mhz)
+    cmd = [pipelinec_bin, src_file, "--out_dir", out_dir] + options
+    if not (args.sim and args.comb):
+        cmd.append("--stop_on_over_capacity")
+    if args.jobs is not None:
+        cmd.extend(["-j", str(args.jobs)])
+
+    print(f"--> {design_short}: Poly1305 {args.poly1305}, clock target {args.target_mhz} MHz")
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)
-    
     if args.continue_build:
-        print("--> --continue active: Skipping output directory cleanup.")
+        print("--> --continue active: Keeping output directory.")
     else:
         print("--> Clearing output directory...")
-        # Replicating `rm -rf ./<dir>/*`
         for filename in os.listdir(out_dir):
             file_path = os.path.join(out_dir, filename)
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-            except Exception as e:
-                print(f'Failed to delete {file_path}. Reason: {e}')
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
 
-    cmd_str = " ".join(cmd)
-    print(f"\n--- Running Command ---\n{cmd_str}\n")
-    
+    print(f"\n--- Running Command ---\n{shlex.join(cmd)}\n")
     try:
-        subprocess.run(cmd_str, shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Build failed with exit code {e.returncode}")
-        sys.exit(e.returncode)
+        subprocess.run(cmd, env=build_env, check=True)
+    except subprocess.CalledProcessError as exc:
+        print(f"Build failed with exit code {exc.returncode}")
+        return exc.returncode
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -23,7 +23,7 @@ from interface.interface import interface
 from interface.interface_func import make_hw_func_from_interface_func
 
 import prep_auth_data
-import poly1305
+from poly1305_select import make_poly1305_mac
 import append_auth_tag
 
 from aead_types import (
@@ -47,6 +47,8 @@ def make_encrypt_dataflow_core(chacha_func):
     chacha20_pipeline_shared.chacha20_encrypt_shared (uses the arbitrated
     shared pipeline)."""
 
+    mac_func = make_poly1305_mac("encrypt")
+
     def encrypt_dataflow_core(
         axis_in_if: axis128_intrf,
         key: uint8_t[CHACHA20_KEY_SIZE],
@@ -63,7 +65,7 @@ def make_encrypt_dataflow_core(chacha_func):
             aad=aad, aad_len=aad_len, axis_in_if=bcast.axis_out_if[0]
         )
         # poly1305_mac computes the tag from the poly key + the framed data
-        mac = poly1305.poly1305_mac_instance(key_if=chacha.key_if, data_in_if=prep.axis_if)
+        mac = mac_func(key_if=chacha.key_if, data_in_if=prep.axis_if)
         # append_auth_tag appends the tag onto the other ciphertext fork
         append = append_auth_tag.append_auth_tag(
             axis_in_if=bcast.axis_out_if[1], auth_tag_in_if=mac.auth_tag_if

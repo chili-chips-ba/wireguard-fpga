@@ -1,9 +1,10 @@
 # pypeline_build — ChaCha20-Poly1305 AEAD in Pypeline
 
 Pypeline (Python front-end for PipelineC) port of the C designs in
-`../pipelinec_build/`. Same three design variants, same Artix-7
-xc7a200tffg1156-2 @ 80 MHz target — but with the C originals' Poly1305 math
-and ciphertext-length bugs fixed, so this port is RFC 8439-conformant and its
+`../pipelinec_build/`. Three design variants target Artix-7
+xc7a200tffg1156-2: **pipelined Poly1305 at 30 MHz by default**, or the
+selectable **legacy Poly1305 at 80 MHz**. The C originals' Poly1305 math
+and ciphertext-length bugs are fixed, so this port is RFC 8439-conformant and its
 tags/ciphertext lengths deliberately differ from the (still-unfixed) C
 designs (see "Test Vectors" below).
 
@@ -17,13 +18,120 @@ on-the-fly random vectors, native sim only) — see "Testbench Styles" below.
    alt="Pypeline native sim: Python HDL, cycle-exact sim engine, silicon-verified">
 </p>
 
-## Build Commands
+## Build Commands 
 
-The `$PYPELINEC` environment variable must point to the PipelineC executable
-(`<PipelineC repo>/src/pypelinec`) before running any build script — both the
-scripts and the design files' `sys.path` bootstrap (`src/pypeline_env.py`)
-use it to locate the repo (with a fallback to the sibling `../../../PipelineC`
-checkout).
+Run from `3.build/pypeline_build` in the primary WireGuard checkout. Set
+`PYPELINEC` to `<PipelineC checkout>/src/pypelinec`, or put it on PATH.
+`measure.py` also discovers the sibling PipelineC
+checkout. The compiler revision used for the completed run and its original
+dirty-tree provenance are preserved with the measurements.
+The completed run used Vivado 2019.2 and the compiler tree identified as
+`0cc6aed9caf7d6cfbdb7dd345e12d950e3303300-dirty` at QoR launch. A compatible
+PipelineC checkout needs the MCP, sweep-confirmation, package-rewrite and
+`--stop_on_over_capacity` support; see the archived source hashes for the
+exact tested code rather than assuming the revision alone implies a clean tree.
+
+### Validated profiles
+
+| Command | Poly1305 | Clock goal | Shared hardware output directory |
+| --- | --- | ---: | --- |
+| `./build.py --shared` | pipelined | 30 MHz | `generated-files-verilog-shared-poly1305-pipelined-30mhz` |
+| `./build.py --shared --poly1305 legacy` | legacy | 80 MHz | `generated-files-verilog-shared-poly1305-legacy` |
+
+An explicit `--target-mhz {30,40,80}` overrides the profile clock. Both
+`build.py` and `measure.py` support `--poly1305 {pipelined,legacy}`; explicit
+selection overrides `WG_POLY1305_IMPL`, otherwise it selects the implementation
+(default `pipelined`). Their clock defaults follow the selected implementation
+and override inherited `WG_TARGET_MHZ`. Direct compiler invocation instead
+honors `WG_TARGET_MHZ`, falling back to the same profile clocks. Only the chosen
+MAC module is imported: the selector adds no hardware mux or unused legacy FSM.
+
+Outputs include the implementation and, except for the historical 80 MHz
+naming, the clock suffix. This applies to hardware and every simulation mode;
+switching profiles cannot reuse the other profile's cache. The 30 MHz shared
+configuration is a completed synthesis/functional checkpoint, not an 80 MHz
+pipelined timing pass or routed implementation sign-off. Separate encrypt/decrypt
+variants passed the integration tests; the archived DUT-only area is for shared.
+
+Implementation details and standalone unit testbench commands are documented
+in the [Poly1305 design](src/poly1305/throughput.md#standalone-testbenches).
+`build.py` only selects the encrypt, decrypt, or shared top, with the existing
+hardware, correctness-testbench and shared-performance modes.
+
+### Acceptance and QoR
+
+The completed run tested both native testbench styles in combinational mode for
+all three variants, legacy fallback smoke checks for all three, two standalone
+MAC GHDL configurations, and randomized native plus fixed GHDL pipelined checks
+for all three. Arithmetic, II=1 acceptance, lane forwarding, drain, key changes,
+input gaps, stable tags under backpressure, framing/keep masks, and tampered-tag
+rejection are covered. Durable test/source records are in the latest shared run's
+[workflow evidence](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/workflow-evidence.json).
+
+Reproduce the 15-case integration/fallback matrix using ordinary builds
+(stop on the first failure):
+
+```sh
+set -e
+for design in enc dec shared; do
+  ./build.py --"$design" --sim --comb --native --continue
+  ./build.py --"$design" --sim --comb --syn_tb --native --continue
+  ./build.py --"$design" --poly1305 legacy --sim --comb --syn_tb --native --continue
+  ./build.py --"$design" --sim --native --continue -j 1
+  ./build.py --"$design" --sim --syn_tb --continue -j 1
+done
+```
+
+Reproduce external-port hardware and the exact fresh QoR plan:
+
+```sh
+./build.py --shared --continue -j 1
+./measure.py --poly1305 pipelined --target-mhz 30 -j 1 \
+  --label shared-30mhz-poly1305-pipelined-new-run \
+  --sizes 16,64,256,1024,1420,1920 --packets 4 --peak-bytes 0 \
+  --dirs both --taps all --seed 8439 --save-evidence \
+  --area-from-dir generated-files-verilog-shared-poly1305-pipelined-30mhz
+```
+
+`--continue` keeps build caches; `--reuse-syn` gives measurements the same
+behavior. An empty cache still requires synthesis. Timing/capacity acceptance
+uses each top's own confirmed report, never hardware timing in place of perf-top
+timing. Hardware and pipelined simulation builds pass `--stop_on_over_capacity`.
+Non-combinational measurements also audit the selected MAC's emitted arithmetic.
+Use `-j 1` on low-RAM systems: it serializes vendor-tool jobs, including
+automatic MCP characterization, but does not limit Vivado's internal threads.
+A single MCP synthesis can still consume several GiB.
+
+`--save-evidence` packages retained hardware/perf logs, input manifests,
+sweep histories, hash-matched constraints and an artifact checksum inventory
+into the measurement directory. Use a fresh label; original committed records
+remain historical evidence. Check them without rewriting:
+
+```sh
+./measure.py --check-record measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z
+```
+
+`validation/` is an ignored, disposable workspace, not commit evidence.
+Generated directories and earlier standalone smoke measurements are local too.
+The retired local `tests/` investigation directory is ignored and no normal
+build, testbench, measurement command or live document depends on its files.
+For background synthesis:
+
+```sh
+mkdir -p validation
+nohup ./build.py --shared --continue -j 1 \
+  > validation/shared-build.log 2>&1 < /dev/null &
+```
+
+After an interruption, inspect the precise failing vendor log. Rename only an
+identified incomplete/error cache log before using `--continue`; preserve good
+synthesis caches and do not restart the long sweep unnecessarily. A source or
+compiler change requires reviewing whether those cached observations still
+match the design; continuation is not permission to ignore source drift.
+
+Changing the clock uses the ordinary `--target-mhz` option; there are no
+special diagnostic builds or hidden shared-clock overrides. Generic compiler
+regressions are described in the [compiler-test handoff](COMPILER_TEST_HANDOFF.md).
 
 **Native Pypeline sim — non-synthesizable testbench (fastest to iterate on;
 `@sim_input`/`@sim_output`, on-the-fly random vectors — see "Testbench
@@ -101,7 +209,7 @@ what takes hours.
 
 **Measure QoR — fmax, area, throughput, latency (see "Measuring QoR" below):**
 ```bash
-./measure.py --label shared-80mhz   # autopipeline for 80 MHz, then measure (hours)
+./measure.py --label shared-30mhz-new-run # pipelined 30 MHz synthesis + measurement (hours)
 ./measure.py --label X --reuse-syn  # re-measure, reusing the cached synthesis
 ./build.py --shared --perf          # the underlying build/sim on its own
 ./build.py --shared --perf --comb    # fast rig check (no synthesis, no area/fmax)
@@ -121,8 +229,10 @@ src/
                                  (the shared design's per-direction instances that read/write
                                  this file's Wires — chacha20_pipeline_shared.c)
   poly1305/
-    poly1305.py                 u320 limb math + MAC FSM + poly1305_mac_instance
-                                 (FSM and MCP compute merged into one function; poly1305.h)
+    poly1305.py                 selectable legacy MAC FSM + MCP (poly1305.h)
+    poly1305_math.py            shared corrected limb and 130-bit-residue arithmetic
+    poly1305_mac_pipelined.py   interleaved II=1 MAC, automatic body/prologue/epilogue
+    poly1305_select.py          conditional import and per-direction metadata
     poly1305_verify_decrypt.py  tag comparison FSM
   prep_auth_data/
     prep_auth_data.py           AAD||ciphertext||lengths framing FSM (prep_auth_data_fsm,
@@ -142,7 +252,7 @@ src/
                                  make_decrypt_dataflow_core: factories returning the direct-call
                                  dataflow graph, parameterized by which chacha20 instance feeds
                                  it (see "Wiring Style: Old vs New" below)
-    encrypt_dataflow.py / decrypt_dataflow.py            standalone wiring MAINs (80 MHz):
+    encrypt_dataflow.py / decrypt_dataflow.py            standalone wiring MAINs (selected clock):
                                  instantiate the factory with chacha20.chacha20_instance
     encrypt_dataflow_shared.py / decrypt_dataflow_shared.py  shared design: instantiate the
                                  same factory with chacha20_pipeline_shared's
@@ -188,7 +298,7 @@ build.py         --perf selects the performance testbench (implies --sim --nativ
 measure.py       the QoR orchestrator: build+sim, parse fmax/area, merge, emit JSON/CSV/md
 bottleneck.py    internal taps -> per-block throughput/ceiling, an automated bottleneck
                  verdict, and the first-principles model cross-check (--selftest included)
-vivado_area.py   this repo's Vivado report_utilization parser (--selftest included)
+                 Vivado utilization, MCP HDL audit and evidence integrity live in measure.py
 measurements/    one directory per measured point (results.json, summary.csv, blocks.md, …)
 ```
 
@@ -276,21 +386,41 @@ machine-readable record per design variant, and the next variant's record diffs
 against it directly.
 
 ```bash
-./measure.py --label shared-80mhz          # THE measurement: fresh autopipelining + sim
+./measure.py --label shared-30mhz-poly1305-pipelined-new-run # fresh autopipelining + sim
 ./measure.py --label X --reuse-syn         # sim only, reusing the cached synthesis
 ./measure.py --label smoke --comb          # rig check in minutes (no Vivado, no area/fmax)
 ./measure.py --label X --parse-only        # re-merge an existing run's outputs
 ./measure.py --label X --sizes 64,1420 --packets 8 --peak-bytes 1920
 ./measure.py --label X --taps poly1305      # only the MAC's internal taps
 ./measure.py --label X --taps ''            # boundaries only, no internal taps
-./vivado_area.py --selftest                # area parser check against logs on disk
+./measure.py --selftest                   # area, acceptance, model and archive checks
 python3 src/chacha20poly1305/perf_probe.py --selftest   # metric math check (synthetic trace)
 ./bottleneck.py --selftest                 # block attribution + model math check
 ./bottleneck.py measurements/X/results.json  # re-print a run's block tables
 ```
 
+Use a new label for a new architecture; `shared-80mhz` and
+`shared-80mhz-probed` are retained legacy measurement snapshots. A complete
+new-only sweep, including DUT-only area from the preceding hardware build, is:
+
+```bash
+./measure.py --poly1305 pipelined --label shared-30mhz-poly1305-pipelined-new-run \
+  --sizes 16,64,256,1024,1420,1920 --packets 4 --peak-bytes 0 --dirs both --taps all \
+  --area-from-dir generated-files-verilog-shared-poly1305-pipelined-30mhz --save-evidence
+```
+
+The 1920-byte phase also uses four packets (`WG_PERF_PEAK_PACKETS`, default 4).
+Failed/incomplete runs retain diagnostic artifacts but cannot replace README
+results or return measurement success. Non-combinational measurements require
+both timing and area evidence; `--area-from-dir` also requires a confirmed
+hardware-top timing pass and available DUT-only area. Known resource
+over-capacity or inconsistent tap cycle counts fail the measurement, even if
+a synthesis-only timing estimate passes. `results.json` records these checks
+under `validation`. `--parse-only` retains saved build provenance and DUT-only
+area when regenerating reports.
+
 One `./measure.py` run is one `pypelinec` command line (`./build.py --shared
---perf`): it autopipelines the design for its `@MAIN(80.0)` goal through Vivado,
+--perf`): it autopipelines the design for its selected clock goal through Vivado,
 then runs the **native** simulation of exactly what it built, with the
 discovered per-stage latencies modeled — no cocotb/GHDL needed. So fmax, area,
 latency and throughput all describe the same build, and cannot drift apart.
@@ -299,7 +429,8 @@ latency and throughput all describe the same build, and cannot drift apart.
 
 - **fmax + pipeline depth** come from pypelinec's own numbers, not a
   reimplementation: the per-MAIN **`final` records** in
-  `<out_dir>/top/sweep_history.json` (schema 2). They describe the design as
+  `<out_dir>/<top-name>/sweep_history.json` (schema 3, with schema 2 supported;
+  default name `top`). They describe the design as
   built, after any pin-and-confirm confirmation run, restored best/met
   snapshot or as-written check. The build's printed outcome lines
   (`met timing, N slice(s) built …`,
@@ -319,11 +450,11 @@ latency and throughput all describe the same build, and cannot drift apart.
   `min_reported_mhz` carrying the lowest MHz actually measured.
   `limiting_main` names the MAIN that set the number.
 - **area** comes from `report_utilization` in that build's Vivado log, parsed by
-  this repo's own `vivado_area.py` — LUTs (logic vs memory vs SRL/DRAM), FFs,
+  this repo's own parser in `measure.py` — LUTs (logic vs memory vs SRL/DRAM), FFs,
   DSP48s, BRAM (tiles / RAMB36 / RAMB18) and CARRY4 all kept separate.
   PipelineC's `VIVADO.ParsedUtilizationReport` is deliberately unused: it is
   documented upstream as diagnostic-only and reports three fields.
-  `--selftest` parses two logs already in the tree and checks values read off
+  `measure.py --selftest` parses the two retained shared logs and checks values read off
   them by hand, so the parser has regression cover without a Vivado run.
   `perf_probe.py --selftest` does the same for the metric math itself, against a
   hand-worked synthetic beat trace — the definitions below are what every future
@@ -337,8 +468,8 @@ latency and throughput all describe the same build, and cannot drift apart.
 - **throughput, duty cycle and latency** come from the perf testbench
   (`src/chacha20poly1305/{encrypt,decrypt}_perf_tb.py`, measurement layer in
   `perf_probe.py`), which streams a **phase plan**: N back-to-back packets of
-  one size per phase, sweeping sizes, then a single long packet whose
-  steady-state rate is the peak. Encrypt and decrypt stream **concurrently**,
+  one size per phase, sweeping sizes, then four long packets for the peak
+  phase. Encrypt and decrypt stream **concurrently**,
   held in the same phase by a barrier, so every size sees the same contention on
   the shared ChaCha20 pipeline.
 
@@ -366,7 +497,7 @@ what makes attribution automatic:
 | `stall_cycles` | `valid & ~ready` — the **consumer** backpressured its producer. High here = this block is the slow one |
 | `starved_cycles` | `~valid & ready` — the consumer was ready and the **producer** had nothing. High here = the slowness is upstream |
 | `idle_cycles` | `~valid & ~ready` — neither side had work |
-| `service_period_cycles` | `(xfer+stall)/xfer` — cycles per accepted beat *while work was being offered*. **The per-block throughput number**: independent of how often the block is fed, so it is that block's ceiling in situ. Poly1305's `data_in` reads ≈6.0, ChaCha20's edges ≈1.0 |
+| `service_period_cycles` | `(xfer+stall)/xfer` — cycles per accepted beat *while work was being offered*. **The per-block throughput number**: independent of how often the block is fed, so it is that block's ceiling in situ. the pipelined Poly1305 body reads 1.0; legacy body was ≈6.0. Packet-boundary stalls remain visible at public ports |
 | `accept_rate` | `xfer/(xfer+stall)` — the same thing as a fraction (`1/service_period`) |
 | `ceiling_bytes_per_cycle` | `bytes_per_beat / service_period_cycles` — that ceiling in bytes/cycle, which is what makes "ChaCha20 is faster than Poly1305" a measured statement rather than an inference |
 | `states` / `dominant` (state taps) | cycles per FSM state, so a slow block also says *why* ("`FINISH_ITER` 83% of cycles" = waiting on the multi-cycle compute) |
@@ -378,7 +509,7 @@ near the bus width), so a trimmed-window rate would not describe a block.
 
 The testbench records **cycles, beats and bytes only**; `measure.py` multiplies
 by fmax afterwards. So the same measured run can be re-expressed at a different
-frequency without re-simulating, and `Gb/s @fmax` and `Gb/s @target` (80 MHz)
+frequency without re-simulating, and `Gb/s @fmax` and `Gb/s @target` (selected clock)
 are both reported.
 
 A perf run is also a functional run: every packet's ciphertext/tag (or
@@ -403,111 +534,75 @@ testbenches, where it cannot perturb a timing window.
 | `perf_raw.json` | the testbench's own cycle-domain output, rewritten after **every** phase (so a killed run still leaves data) |
 | `pypelinec.log` | the build/sim log, with the per-cycle `Clock: N` spam filtered out (counted, not kept) |
 
-### Current results: shared design, 80 MHz
+### Current results: shared design, pipelined Poly1305, 30 MHz
 
-This section holds the **current** record only. Every measured point, past and
-present, lives in its own `measurements/<label>/` directory; the table and the
-block summary below are **generated** from the latest one by
-`./measure.py … --update-readme`, so they cannot drift from its `results.json`.
-The table says *how fast*; the summary under it says *which block* is setting
-that, with the full per-phase, per-block tables left in the run's `blocks.md`.
+The latest shared run is
+[shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md).
+It completed on 2026-10-02: 48 packets, six sizes, four per size per direction,
+all taps. Original raw measurements and dirty-tree provenance are retained.
+The generated table and block summary below use that same `results.json`.
+
+The [comparison](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/comparison.md)
+keeps the recorded legacy 80 MHz results separate. The old limiting 80 MHz
+number was a lower bound, not a measured maximum. Neither legacy QoR nor
+legacy DUT-only area was rerun for this change.
 
 <!-- MEASURED-RESULTS:BEGIN -->
 
-_Measured by `./measure.py --label shared-80mhz-probed` on 2026-09-13T12:27:44+00:00 — wireguard-fpga `db70c9753c44`, PipelineC `32356330ec7c`, Vivado 2019.2, 11567 cycles. Regenerate with `./measure.py --label shared-80mhz-probed --parse-only --update-readme`._
+_Measured by `./measure.py --label shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z` on 2026-10-02T10:54:43+00:00 — wireguard-fpga `295ea46cbdd2`, PipelineC `0cc6aed9caf7`, Vivado 2019.2, 2351 cycles. Regenerate with `./measure.py --label shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z --parse-only --update-readme`._
 
-Design `shared` | target 80.0 MHz | measured fmax **80.00 MHz** | limiting MAIN `chacha20_pipeline_shared`
-Area (perf_tb_top): **31192 LUT** (30446 logic + 746 mem), **16049 FF**, **420 DSP48**, **11 BRAM tiles**, 5086 CARRY4
+Design `shared` | target 30.0 MHz | measured fmax **30.07 MHz** | limiting MAIN `chacha20_pipeline_shared`
+Area (perf_tb_top): **33778 LUT** (33642 logic + 136 mem), **9877 FF**, **448 DSP48**, **11 BRAM tiles**, 5193 CARRY4
+DUT-only area (external key/data ports): **42617 LUT**, **12934 FF**, **512 DSP48**, **11 BRAM tiles**.
+Hardware-top timing: PASS, 30.05 MHz against 30.0 MHz.
+Poly1305 implementation: `pipelined`.
 
-| phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | % line rate | Gb/s @80 MHz | in stall | cold head (clk) | total lat med (clk) |
-|---|---|---|---|---|---|---|---|---|---|---|
-| b2b-16 | 16 | 4 | encrypt | 0.516 | 31.0 | 3.2% | 0.330 | 0.040 | 41 | 99.5 |
-| b2b-16 | 16 | 4 | decrypt | 0.403 | 39.7 | 2.5% | 0.258 | 0.846 | 126 | 97.5 |
-| b2b-64 | 64 | 4 | encrypt | 1.306 | 49.0 | 8.2% | 0.836 | 0.031 | 43 | 141.5 |
-| b2b-64 | 64 | 4 | decrypt | 1.110 | 57.7 | 6.9% | 0.710 | 0.852 | 182 | 137.5 |
-| b2b-256 | 256 | 4 | encrypt | 2.116 | 121.0 | 13.2% | 1.354 | 0.016 | 43 | 303.5 |
-| b2b-256 | 256 | 4 | decrypt | 1.979 | 129.3 | 12.4% | 1.267 | 0.884 | 353 | 323.5 |
-| b2b-1024 | 1024 | 4 | encrypt | 2.448 | 418.3 | 15.3% | 1.567 | 0.655 | 43 | 742.5 |
-| b2b-1024 | 1024 | 4 | decrypt | 1.823 | 561.7 | 11.4% | 1.167 | 0.851 | 431 | 629.5 |
-| b2b-1420 | 1420 | 4 | encrypt | 2.510 | 565.7 | 15.7% | 1.607 | 0.615 | 43 | 1060.0 |
-| b2b-1420 | 1420 | 4 | decrypt | 1.656 | 857.7 | 10.3% | 1.060 | 0.869 | 582 | 852.5 |
-| peak-1920 | 1920 | 4 | encrypt | 2.532 | 758.3 | 15.8% | 1.620 | 0.688 | 43 | 990.0 |
-| peak-1920 | 1920 | 4 | decrypt | 1.846 | 1040.3 | 11.5% | 1.181 | 0.852 | 774 | 1130.5 |
+| phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | % line rate | Gb/s @fmax | Gb/s @target | in stall | cold head (clk) | total lat med (clk) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| b2b-16 | 16 | 4 | encrypt | 1.000 | 16.0 | 6.2% | 0.241 | 0.240 | 0.081 | 16 | 47.0 |
+| b2b-16 | 16 | 4 | decrypt | 0.889 | 18.0 | 5.6% | 0.214 | 0.213 | 0.818 | 66 | 49.0 |
+| b2b-64 | 64 | 4 | encrypt | 3.310 | 19.3 | 20.7% | 0.796 | 0.794 | 0.090 | 18 | 51.5 |
+| b2b-64 | 64 | 4 | decrypt | 2.341 | 27.3 | 14.6% | 0.563 | 0.562 | 0.738 | 59 | 50.5 |
+| b2b-256 | 256 | 4 | encrypt | 7.529 | 34.0 | 47.1% | 1.811 | 1.807 | 0.338 | 18 | 59.5 |
+| b2b-256 | 256 | 4 | decrypt | 5.774 | 44.3 | 36.1% | 1.389 | 1.386 | 0.525 | 50 | 70.0 |
+| b2b-1024 | 1024 | 4 | encrypt | 12.094 | 84.7 | 75.6% | 2.909 | 2.903 | 0.177 | 18 | 109.0 |
+| b2b-1024 | 1024 | 4 | decrypt | 10.105 | 101.3 | 63.2% | 2.431 | 2.425 | 0.275 | 94 | 171.0 |
+| b2b-1420 | 1420 | 4 | encrypt | 13.230 | 107.3 | 82.7% | 3.182 | 3.175 | 0.128 | 18 | 133.0 |
+| b2b-1420 | 1420 | 4 | decrypt | 10.493 | 135.3 | 65.6% | 2.524 | 2.518 | 0.270 | 135 | 227.0 |
+| b2b-1920 | 1920 | 4 | encrypt | 13.649 | 140.7 | 85.3% | 3.283 | 3.276 | 0.111 | 18 | 165.0 |
+| b2b-1920 | 1920 | 4 | decrypt | 12.152 | 158.0 | 75.9% | 2.923 | 2.916 | 0.173 | 150 | 284.0 |
 
 <!-- MEASURED-RESULTS:END -->
 
 <!-- BLOCK-RESULTS:BEGIN -->
 
-- **encrypt**: ChaCha20 serves **≥14.22 B/cyc** when fed (@256 B), Poly1305 **2.70 B/cyc** (@1920 B) — Poly1305 is the slower block by at least **5.3x**; at 1920 B the whole datapath delivers 2.53 B/cyc, **94% of Poly1305's ceiling**.
-- **decrypt**: ChaCha20 serves **6.83 B/cyc** when fed (@1920 B), Poly1305 **2.16 B/cyc** (@1920 B) — Poly1305 is the slower block by **3.2x**; at 1920 B the whole datapath delivers 1.85 B/cyc, **85% of Poly1305's ceiling**.
-- **Bottleneck verdict** (per phase × direction): **poly1305** 12/12.
-- **Poly1305 at 1920 B:** encrypt one beat per 5.93 cycles, stalling its producer 58% of cycles, FSM in FINISH_ITER 70%, IDLE 28%; decrypt one beat per 7.40 cycles, stalling its producer 75% of cycles, FSM in FINISH_ITER 70%, IDLE 20%.
-- **ChaCha20 relay-limited** — its own output backpressured by the MAC, so its in-situ ceiling there is only a lower bound (≥): encrypt at 6/6 sizes (own output stalled up to 57%, at 1920 B).
-- **Shared ChaCha20 pipeline at 1920 B:** encrypt launched on 124 of 2220 wanted cycles (pipeline not ready 47%, contention 18%, wasted slot 30%); decrypt launched on 124 of 1026 wanted cycles (pipeline not ready 40%, contention 39%, wasted slot 9%).
-- **Model cross-check:** Poly1305 block count × its 6-cycle block period accounts for encrypt 77%–98% (residual 7–20 cycles per packet); decrypt 61%–88% (residual 15–306 cycles per packet) of the measured packet period.
-- Full per-phase, per-block tables (FSM states, bottleneck evidence, arbitration, model): `measurements/shared-80mhz-probed/blocks.md`.
+Detailed per-block service/stall, shared arbitration and lifecycle measurements
+are in the [block report](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/blocks.md).
 
 <!-- BLOCK-RESULTS:END -->
 
-#### Analysis
+#### Interpretation
 
-- **Timing is met.** All three MAINs meet the 80 MHz goal:
-  `chacha20_pipeline_shared` needs 19 slices / 20 pipeline stages (bottleneck
-  `chacha20_block_step`), while `encrypt_dataflow_shared` /
-  `decrypt_dataflow_shared` have nothing sliceable and pass as written. Since the
-  limiting MAIN meets timing without a failing path, 80 MHz is a *lower bound* on
-  the real fmax, not a measurement of it.
-- **Poly1305 limits throughput, and ChaCha20 is nowhere near it.** Structurally,
-  Poly1305's compute is `make_stream_auto_multi_cycle(poly1305_mac_loop_body,
-  start_latency=5)` (the build keeps the known-good 5 cycles), whose
-  output is valid at `cycles_since_launch == latency+1` with `ready` re-armed that
-  same cycle — 6 cycles per 16 B block, a **2.667 B/cycle** ceiling, with
-  `data_in_if.ready` high only in `START_ITER`. ChaCha20 is a
-  `make_stream_auto_pipeline` (II = 1) fed 4 beats per 64 B block by its dwidth
-  converter — **16 B/cycle**, full line rate. Measured: encrypt's ChaCha20 serves
-  a beat every 1.12 cycles when it has slack (≥14.2 B/cycle), Poly1305 one every
-  5.93 (2.70 B/cycle) — at least **5.3×** apart. The datapath's 2.53 B/cycle at
-  1920 B (~16% of the bus) is **94% of the Poly1305 ceiling**: nothing else will
-  move until the MAC does, which is what `src/poly1305/throughput.md`'s
-  L-accumulator / II=1 redesign is for.
-- **At MTU, ChaCha20's in-situ numbers are Poly1305's, not its own.** At 1920 B
-  encrypt ChaCha20 appears to serve only 2.98 B/cycle, but its own output is
-  stalled 57% of cycles behind the MAC, so those input stalls are relayed and its
-  in-situ ceiling there is only a lower bound — which is why the summary quotes
-  ChaCha20 where it has slack.
-- **Decrypt loses more, mostly to the *shared* ChaCha20 pipeline reaching the MAC
-  through the ciphertext fork.** At 1420 B decrypt's packet period is 857.7 cycles
-  against encrypt's 565.7, and the Poly1305 model leaves 305.7 cycles per packet
-  unexplained on decrypt against 13.7 on encrypt. The gap is upstream of the MAC:
-  decrypt's Poly1305 is *starved* 19% of cycles (encrypt: 1%) and waits in
-  `START_ITER` for data 19% of cycles (encrypt: 1%), lifting its service period
-  from 5.93 to 7.55 cycles/beat. The fork (`axis128_2broadcast`) is an interlock —
-  prep can only take a beat when ChaCha20 can too — and decrypt's ChaCha20 cannot
-  launch: of the 1025 cycles it wants the shared pipeline it launches on 96,
-  losing 43% to the pipeline not being ready, 35% to contention and 13% to wasted
-  round-robin slots, while `shared/pipe.enc_out` is stalled 58% of cycles
-  (decrypt's side: 3%) with encrypt's finished blocks waiting behind encrypt's own
-  Poly1305. That points at **head-of-line blocking**: encrypt's MAC backpressure
-  holds up the one pipeline both directions share. The counters are per-phase
-  aggregates, so this is the strongly indicated mechanism rather than a
-  cycle-by-cycle proof; `./measure.py --label dec-alone --reuse-syn --dirs dec`
-  (sim time only) is the direct check. At small packets there is a second decrypt
-  effect: prep offers AAD before ChaCha20's poly key arrives, so the MAC sits in
-  `IDLE` (59% of cycles at 16 B) with data already stalled at its input.
-- **Small packets fall off a cliff.** 16 B packets run at 0.516 B/cycle encrypt
-  (3.2% of line rate) against 2.510 at 1420 B: per-packet fixed cost dominates
-  below a few hundred bytes. The packet period puts a number on it — 31 cycles for
-  a 16 B packet against the 24 the MAC alone needs (2 AAD blocks + 1 ciphertext
-  block + 1 length block, 6 cycles each).
-- **Encrypt latency is constant, decrypt latency scales with packet size.**
-  Encrypt's cold-start head latency sits at ~43 cycles regardless of size, while
-  decrypt's grows from 126 cycles (16 B) to 774 (1920 B). That is structural, not
-  a bug: `wait_to_verify` holds the entire plaintext until Poly1305 returns a
-  verdict, so decrypt cannot emit its first byte until the whole packet has been
-  MAC'd. Lower decrypt latency needs a different contract, not pipeline tuning.
-- **Area** is dominated by the ChaCha20 datapath's DSPs and the 20-stage
-  pipelining. `results.json`'s `area.per_module` breaks it down per module
-  (out-of-context, so folding-free but not additive).
+The external-port hardware passes synthesis timing at 30.05 MHz, with 42,617
+LUTs, 12,934 FFs, 512 DSP48s and 11 BRAM tiles. The performance top passes at
+30.069 MHz; its smaller area (33,778 LUTs, 448 DSPs) includes constant-key folding
+and is not the DUT-only resource count. Shared ChaCha is the limiting MAIN.
+
+At 1920 bytes, throughput at the actual target clocks rises from legacy
+1.620/1.181 Gb/s (encrypt/decrypt at 80 MHz) to 3.276/2.916 Gb/s at 30 MHz:
+2.02×/2.47×. At 1420 bytes it is 3.175/2.518 Gb/s. Small 16/64-byte packets are
+slower at the new actual clock despite lower cycle counts. Median 1920-byte
+packet latency is 165 cycles encrypt and 284 decrypt; plaintext still waits
+for authentication before release.
+
+Whole-packet rates include framing, input gaps, shared-resource arbitration,
+packet-boundary costs and backpressure. Detailed per-block and lifecycle
+measurements remain in the linked block reports.
+
+This comparison includes different arithmetic, compiler revisions and ChaCha
+depths; it is not an isolated MAC-only A/B. The source default change simply
+selects the already-measured explicit 30 MHz configuration; it does not retime
+the archived hardware. Synthesis capacity/timing is not routed sign-off.
 
 ### Re-measuring without re-synthesizing
 
@@ -840,38 +935,13 @@ arbitrary padding gaps as not-kept (previously used by this repo's decrypt
 testbenches to frame ciphertext-then-tag input) has been removed, and both
 sinks now assert Xilinx-style compliance on every beat they accept.
 
-### Fixed: Poly1305 320-bit math is now RFC 8439-correct
+### Arithmetic compatibility with the C originals
 
-`poly1305.py`'s limb math (originally ported line-for-line from
-`../pipelinec_build/src/poly1305/poly1305.h`) had three interlocking bugs
-that made its tag a non-standard MAC — internally self-consistent between
-this design's own encrypt and decrypt paths, but not interoperable with any
-spec-compliant ChaCha20-Poly1305 peer:
-
-1. `uint320_mul` truncated each 64×64-bit limb-pair product to its low 64
-   bits, discarding the high word (only addition-overflow carries propagated
-   between limbs).
-2. `uint320_mod_prime` used a wrong "bits below 2^130 within limb 2" mask
-   (`0x3FFFFFFFFFF`, 42 bits, instead of `0x3` — 2^130 is bit 2 of limb 2).
-3. `uint320_mod_prime` discarded limbs 3 and 4 outright instead of folding
-   them back in (harmless while bug 1 kept products artificially small, but
-   a real bug once the multiply is correct and products reach limb 3).
-
-All three are fixed here: `uint320_mul` now accumulates the full 128-bit
-product per limb pair with a standard carry chain, and `uint320_mod_prime`
-does three `uint320_fold` partial-reduction passes (`x = q*2^130 + rem ->
-rem + 5*q`, folding *all* bits at/above 2^130 from every limb) which bring
-any 320-bit value strictly below 2^130 before the final conditional subtract
-of `2^130 - 5`. The fixed math was validated against a big-integer Poly1305
-reference on thousands of random inputs and, end-to-end through the
-testbenches, against the `cryptography` package and the RFC 8439 §2.8.2
-known-answer vector (see `aead_ref_model.py`).
-
-**The C original still has all of these bugs** —
-`../pipelinec_build/src/poly1305/poly1305.h` (math bugs) and the C
-testbenches' padded-length framing — so this pypeline port now deliberately
-diverges from the C: the two produce different tags and different ciphertext
-lengths, and the C design's hardcoded test vectors do not apply here.
+This port fixes the original limb arithmetic and ciphertext-length bugs, so
+its tags and output lengths deliberately differ from the unfixed C designs.
+The full AEAD testbenches check interoperability with independent RFC 8439
+references. See the [arithmetic history](src/poly1305/throughput.md#legacy-arithmetic-corrections)
+for the component-level corrections.
 
 ## Wiring Style: Old vs New
 

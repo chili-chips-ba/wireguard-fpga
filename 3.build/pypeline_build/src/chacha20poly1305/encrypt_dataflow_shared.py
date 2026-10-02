@@ -21,7 +21,7 @@ encrypt_dataflow_core, encrypt_dataflow_core_t = make_encrypt_dataflow_core(
 )
 
 
-@MAIN(80.0)
+@MAIN(wireguard_env.TARGET_MHZ)
 def encrypt_dataflow_shared():
     # Crossing out of the implied-feedback world: the dataflow core is an
     # ordinary hw_func here, so the reverse halves go in as arguments and come

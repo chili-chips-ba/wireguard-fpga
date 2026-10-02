@@ -8,16 +8,16 @@
 
 What it does:
   1. runs `./build.py --shared --perf` -- ONE pypelinec command line that
-     autopipelines for the design's 80 MHz goal through Vivado and then runs the
+     autopipelines for the selected clock goal through Vivado and then runs the
      native simulation of exactly what it built (autopipelined latencies
      modeled), with the perf testbench's phase plan passed in via WG_PERF_* env
      so the elaborated hardware never changes between runs;
   2. reads fmax + pipeline depth from pypelinec's OWN numbers -- the per-MAIN
-     "final" records in <out_dir>/top/sweep_history.json (schema 2), with the
+     "final" records in <out_dir>/top/sweep_history.json (schemas 2/3), with the
      build's stdout outcome lines as cross-check -- timing parsing is not
      reimplemented here;
-  3. reads area from that same build's Vivado log via vivado_area.py
-     (this repo's own parser, not pypelinec's diagnostic-only one);
+  3. reads area from that same build's Vivado log using the utilization parser
+     below (not pypelinec's diagnostic-only one);
   4. merges everything into measurements/<label>/results.json (machine
      readable), summary.csv (one row per phase x direction), and a markdown
      table ready to paste into README.md;
@@ -30,7 +30,8 @@ testbench records cycles/beats/bytes only, so throughput can be re-expressed at
 a different fmax without re-simulating.
 
 Typical use:
-  ./measure.py --label shared-80mhz          # fresh autopipelining + sim (hours)
+  ./measure.py --label shared-30mhz          # pipelined MAC; synthesis + sim (hours)
+  ./measure.py --poly1305 legacy             # historical architecture, 80 MHz goal
   ./measure.py --label X --reuse-syn         # sim only, reuse cached synthesis
   ./measure.py --label smoke --comb          # fast rig check, no Vivado at all
   ./measure.py --label X --parse-only        # re-merge an existing run's outputs
@@ -38,23 +39,32 @@ Typical use:
 """
 
 import argparse
+import copy
 import csv
 import datetime
+import glob
+import hashlib
 import json
 import os
 import re
 import socket
+import shutil
 import subprocess
 import sys
 import time
+import tempfile
+from pathlib import Path
 
 import bottleneck
-import vivado_area
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "src"))
+from poly1305_config import (
+    IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
+    TARGETS_MHZ, default_target_mhz, target_out_dir,
+)
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
 BUS_BYTES = 16
-DEFAULT_TARGET_MHZ = 80.0  # @MAIN(80.0) on the dataflow MAINs
 
 # pypelinec stdout lines worth keeping as a cross-check on sweep_history.json.
 RE_FMAX = re.compile(r"(?:(PASS|FAIL)\s+)?Clock (\S+) FMAX: ([\d.]+) MHz \(([\d.]+) ns\)")
@@ -62,7 +72,7 @@ RE_SWEEP_ITER = re.compile(
     r"\[sweep\] iter=(\d+) main=(\S+) goal=([\d.]+)MHz got=([\d.]+)MHz"
 )
 RE_TIMING_NOT_MET = re.compile(r"ERROR: TIMING NOT MET: .*")
-# The FINAL per-MAIN outcome lines. A schema-2 sweep_history.json's "final"
+# The FINAL per-MAIN outcome lines. A schema-2/3 sweep_history.json's "final"
 # records are authoritative and these are the cross-check; for a schema-1 file
 # (an iteration log that could stop before the iteration that met timing, its
 # last entry a mid-sweep number) these lines are the only final numbers.
@@ -86,6 +96,353 @@ RE_CLOCK_LINE = re.compile(r"^Clock:\s+\d+\s*$")
 RE_SIM_SPEED = re.compile(r"(\d+) cycles in ([\d.]+)s")
 
 
+# Report row name (exact, after stripping indent and any trailing '*') -> key.
+# Section-qualified so e.g. a "RAMB18" row can never be confused with a
+# same-named primitive row.
+_ROW_KEYS = {
+    "slice logic": {
+        "Slice LUTs": "lut_total",
+        "CLB LUTs": "lut_total",  # UltraScale naming, harmless here
+        "LUT as Logic": "lut_logic",
+        "LUT as Memory": "lut_memory",
+        "LUT as Distributed RAM": "lut_dram",
+        "LUT as Shift Register": "lut_srl",
+        "Slice Registers": "ff_total",
+        "CLB Registers": "ff_total",
+        "Register as Flip Flop": "ff_flipflop",
+        "Register as Latch": "latches",
+        "F7 Muxes": "muxf7",
+        "F8 Muxes": "muxf8",
+    },
+    "memory": {
+        "Block RAM Tile": "bram_tiles",
+        "RAMB36/FIFO": "ramb36",
+        "RAMB18": "ramb18",
+    },
+    "dsp": {
+        "DSPs": "dsp48",
+    },
+    "primitives": {
+        "CARRY4": "carry4",
+    },
+}
+
+# Resources whose Available/Util% columns are worth keeping.
+_AVAIL_KEYS = {
+    "lut_total": "lut",
+    "ff_total": "ff",
+    "dsp48": "dsp",
+    "bram_tiles": "bram_tiles",
+}
+
+_SECTION_RE = re.compile(r"^\d+(?:\.\d+)*\.\s+(.*?)\s*$")
+_HEADER_RE = re.compile(r"^\|\s*(Design|Device|Design State|Tool Version)\s*:\s*(.*?)\s*$")
+_TABLE_HEADER_CELLS = ("Site Type", "Ref Name")
+
+
+def _num(cell):
+    """Vivado cells are ints ('26917'), floats ('8.5') or blank."""
+    cell = cell.strip()
+    if not cell:
+        return None
+    try:
+        return int(cell)
+    except ValueError:
+        pass
+    try:
+        return float(cell)
+    except ValueError:
+        return None
+
+
+def _row_cells(line):
+    """'| Slice LUTs* | 26917 | 0 | 134600 | 20.00 |' -> ['Slice LUTs*', '26917', ...]
+
+    Column widths vary per run (a small module's table is much narrower), so
+    split on '|' rather than slicing fixed offsets.
+    """
+    if not line.startswith("|"):
+        return None
+    inner = line.strip()
+    if inner.startswith("|"):
+        inner = inner[1:]
+    if inner.endswith("|"):
+        inner = inner[:-1]
+    return [c.strip() for c in inner.split("|")]
+
+
+def _split_blocks(text):
+    """One entry per `report_utilization` in the log. A synthesis-only run (the
+    pypelinec default, VIVADO.DO_PNR is None) has exactly one; a PnR run has
+    more, so callers must be able to choose."""
+    marker = "Utilization Design Information"
+    blocks = []
+    for m in re.finditer(re.escape(marker), text):
+        start = text.rfind("\n# report_utilization", 0, m.start())
+        if start == -1:
+            # No echoed command (e.g. hand-saved report): fall back to the
+            # report's own '---' header banner just above the marker.
+            start = max(0, m.start() - 2000)
+        # A block ends at the next echoed tcl command after the marker.
+        end = text.find("\n# ", m.end())
+        blocks.append(text[start : end if end != -1 else len(text)])
+    return blocks
+
+
+def parse_utilization(text):
+    """Parse one utilization block's text into a flat dict of area numbers."""
+    out = {
+        "design": None,
+        "part": None,
+        "design_state": None,
+        "vivado_version": None,
+        "available": {},
+        "util_pct": {},
+    }
+    section = None
+    in_table = False
+    for line in text.splitlines():
+        stripped = line.rstrip()
+        header = _HEADER_RE.match(stripped)
+        if header:
+            field, value = header.group(1), header.group(2)
+            if field == "Design":
+                out["design"] = value
+            elif field == "Device":
+                out["part"] = value
+            elif field == "Design State":
+                out["design_state"] = value
+            elif field == "Tool Version":
+                m = re.search(r"Vivado v\.?([\w.]+)", value)
+                out["vivado_version"] = m.group(1) if m else value
+            continue
+        sect = _SECTION_RE.match(stripped)
+        if sect:
+            section = sect.group(1).strip().lower()
+            in_table = False
+            continue
+        cells = _row_cells(stripped)
+        if not cells:
+            continue
+        if cells[0] in _TABLE_HEADER_CELLS:
+            in_table = True
+            continue
+        if not in_table or len(cells) < 2:
+            continue
+        name = cells[0].rstrip("*").strip()
+        keys = _ROW_KEYS.get(section, {})
+        key = keys.get(name)
+        if key is None:
+            continue
+        value = _num(cells[1])
+        if value is None:
+            continue
+        # First occurrence wins: Vivado's sub-rows ("1.1 Summary of Registers
+        # by Type") repeat names with different meanings.
+        out.setdefault(key, value)
+        avail_key = _AVAIL_KEYS.get(key)
+        if avail_key and len(cells) >= 5:
+            avail, pct = _num(cells[3]), _num(cells[4])
+            if avail is not None:
+                out["available"].setdefault(avail_key, avail)
+            if pct is not None:
+                out["util_pct"].setdefault(avail_key, pct)
+    return out
+
+
+def parse_log(path, prefer="last"):
+    """Parse the chosen utilization block of a pypelinec vivado log.
+
+    prefer: 'last' (default) takes the final block, preferring a routed report
+    over a synthesized one when both exist -- the routed numbers are the real
+    ones. With pypelinec's default synthesis-only flow there is just one block.
+    """
+    with open(path, "r", errors="replace") as f:
+        text = f.read()
+    blocks = _split_blocks(text)
+    if not blocks:
+        raise ValueError(f"no report_utilization block found in {path}")
+    parsed = [parse_utilization(b) for b in blocks]
+    routed = [p for p in parsed if (p.get("design_state") or "").lower().find("rout") >= 0]
+    if prefer == "last" and routed:
+        chosen = routed[-1]
+    else:
+        chosen = parsed[-1]
+    chosen["log"] = os.path.abspath(path)
+    chosen["blocks_found"] = len(blocks)
+    return chosen
+
+
+_MODULE_LOG_RE = re.compile(r"vivado_(\d+)CLK_[0-9a-f]+(?:_[0-9a-f]+)?\.log$")
+_TOP_LOG_RE = re.compile(r"vivado_([0-9a-f]+)(?:_[0-9a-f]+)?\.log$")
+
+
+def find_top_dir(out_dir):
+    """Support the default 'top' and hardware builds using --top <name>.
+
+    Module characterization logs have NCLK in their names; whole-design
+    sweep logs do not. Refuse ambiguous mixed output directories.
+    """
+    candidates = {os.path.dirname(path) for path in
+                  glob.glob(os.path.join(out_dir, "*", "sweep_history.json"))}
+    candidates.update(os.path.dirname(path) for path in
+                      glob.glob(os.path.join(out_dir, "*", "vivado_*.log"))
+                      if _TOP_LOG_RE.fullmatch(os.path.basename(path)))
+    if len(candidates) > 1:
+        raise ValueError("multiple hardware tops in output directory: " + ", ".join(sorted(candidates)))
+    return next(iter(candidates)) if candidates else os.path.join(out_dir, "top")
+
+
+def _instantiated_entities(path):
+    if not os.path.exists(path):
+        return None
+    with open(path) as source:
+        return set(re.findall(r"\bentity\s+work\.([a-z][a-z0-9_]*)", source.read().lower()))
+
+
+def _select_top_log(top_dir, logs):
+    # The final top drops the timing-snapshot hash, but instantiates the
+    # content-hashed MAIN entities that identify its actual built depths.
+    # Match those before using mtime: a sweep can restore an earlier winner.
+    top_name = os.path.basename(top_dir)
+    history_path = os.path.join(top_dir, "sweep_history.json")
+    if os.path.isfile(history_path):
+        with open(history_path) as source:
+            history = json.load(source)
+        retained = history.get("retained_observation") or {}
+        log = retained.get("log_path")
+        # Basename permits moving a complete output directory without losing provenance.
+        if history.get("build_complete") and log:
+            candidate = os.path.join(top_dir, os.path.basename(log))
+            if candidate in logs:
+                return candidate, "retained implementation and constraints from sweep history"
+    final_entities = _instantiated_entities(os.path.join(top_dir, top_name + ".vhd"))
+    if final_entities:
+        matching = []
+        for log in logs:
+            digest = _TOP_LOG_RE.fullmatch(os.path.basename(log)).group(1)
+            snapshot = os.path.join(top_dir, top_name + "_" + digest + ".vhd")
+            if _instantiated_entities(snapshot) == final_entities:
+                matching.append(log)
+        if not matching:
+            raise ValueError("no utilization snapshot matches the final HDL MAIN entities")
+        return max(matching, key=os.path.getmtime), "final HDL MAIN entities; latest matching run"
+    return max(logs, key=os.path.getmtime), "latest top-level run; no final HDL available"
+
+
+def parse_out_dir(out_dir, per_module=True):
+    """Parse a whole pypelinec output directory: the top-level design plus, if
+    asked, every module's out-of-context synthesis."""
+    result = {"out_dir": os.path.abspath(out_dir), "top": None, "per_module": {}}
+    top_dir = find_top_dir(out_dir)
+    top_logs = [path for path in glob.glob(os.path.join(top_dir, "vivado_*.log"))
+                if _TOP_LOG_RE.fullmatch(os.path.basename(path))]
+    if top_logs:
+        top_log, basis = _select_top_log(top_dir, top_logs)
+        result["top"] = parse_log(top_log)
+        result["top"]["logs_available"] = len(top_logs)
+        result["top"]["selection_basis"] = basis
+    if not per_module:
+        return result
+    for log in glob.glob(os.path.join(out_dir, "**", "vivado_*CLK_*.log"), recursive=True):
+        rel = os.path.relpath(os.path.dirname(log), out_dir)
+        m = _MODULE_LOG_RE.search(os.path.basename(log))
+        latency = int(m.group(1)) if m else None
+        try:
+            parsed = parse_log(log)
+        except ValueError:
+            continue
+        parsed["latency_clks"] = latency
+        prev = result["per_module"].get(rel)
+        # These are characterization data, not necessarily the final instance.
+        # Keep the deepest tried depth and label it explicitly.
+        parsed["selection_basis"] = "deepest characterized latency; not necessarily instantiated"
+        if prev is None or (latency or 0) >= (prev.get("latency_clks") or 0):
+            result["per_module"][rel] = parsed
+    return result
+
+
+_AREA_FIELDS = (
+    "lut_total",
+    "lut_logic",
+    "lut_memory",
+    "lut_dram",
+    "lut_srl",
+    "ff_total",
+    "ff_flipflop",
+    "latches",
+    "muxf7",
+    "muxf8",
+    "dsp48",
+    "bram_tiles",
+    "ramb36",
+    "ramb18",
+    "carry4",
+)
+
+
+def format_area(parsed):
+    lines = [
+        f"design      : {parsed.get('design')}",
+        f"part        : {parsed.get('part')}",
+        f"state       : {parsed.get('design_state')}  (vivado {parsed.get('vivado_version')})",
+    ]
+    for field in _AREA_FIELDS:
+        if parsed.get(field) is not None:
+            lines.append(f"{field:<12}: {parsed[field]}")
+    if parsed.get("util_pct"):
+        lines.append(f"util%       : {parsed['util_pct']}")
+    return "\n".join(lines)
+
+
+_SELFTEST_CASES = (
+    (
+        "measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/hardware-vivado.log",
+        {
+            "lut_total": 42617,
+            "ff_total": 12934,
+            "dsp48": 512,
+            "bram_tiles": 11,
+            "part": "7a200tffg1156-2",
+        },
+    ),
+    (
+        "measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/perf-vivado.log",
+        {"lut_total": 33778, "ff_total": 9877, "dsp48": 448, "bram_tiles": 11},
+    ),
+)
+
+
+def area_selftest(base_dir):
+    """Parse real logs already on disk and check the values read off them by
+    hand. Free regression cover for the parser -- no Vivado run needed."""
+    failures = []
+    ran = 0
+    for rel, expected in _SELFTEST_CASES:
+        path = os.path.join(base_dir, rel)
+        if not os.path.exists(path):
+            print(f"SKIP (missing): {rel}")
+            continue
+        ran += 1
+        parsed = parse_log(path)
+        for key, want in expected.items():
+            got = parsed.get(key)
+            if got != want:
+                failures.append(f"{rel}: {key} expected {want!r} got {got!r}")
+        for key in ("lut_total", "ff_total"):
+            if parsed.get(key) is None:
+                failures.append(f"{rel}: {key} missing")
+        print(f"OK: {rel} -> LUT {parsed.get('lut_total')} FF {parsed.get('ff_total')} "
+              f"DSP {parsed.get('dsp48')} BRAM {parsed.get('bram_tiles')} CARRY4 {parsed.get('carry4')}")
+    for f in failures:
+        print("FAIL: " + f)
+    if not ran:
+        print("no logs available to test against")
+        return 1
+    print("selftest: " + ("PASS" if not failures else f"{len(failures)} FAILURE(S)"))
+    return 1 if failures else 0
+
+
 def git_describe(repo):
     def run(*args):
         try:
@@ -102,10 +459,13 @@ def git_describe(repo):
     return sha + ("-dirty" if dirty else "")
 
 
-def out_dir_for(comb):
-    return os.path.join(
+def out_dir_for(comb, implementation, target_mhz=None):
+    if target_mhz is None:
+        target_mhz = default_target_mhz(implementation)
+    base = os.path.join(
         HERE, f"generated-files-perf-{'comb' if comb else 'pipe'}-shared-native"
     )
+    return target_out_dir(implementation_out_dir(base, implementation), target_mhz)
 
 
 def run_build(args, json_path, log_path):
@@ -116,6 +476,7 @@ def run_build(args, json_path, log_path):
     counted, which is how cycles_run is recovered.
     """
     env = dict(os.environ)
+    env["WG_POLY1305_IMPL"] = args.poly1305
     env["WG_PERF_JSON"] = json_path
     if not env.get("PYPELINEC"):
         candidate = os.path.join(DEFAULT_PIPELINEC_REPO, "src", "pypelinec")
@@ -133,12 +494,15 @@ def run_build(args, json_path, log_path):
         env["WG_PERF_PEAK_BYTES"] = str(args.peak_bytes)
     if args.dirs:
         env["WG_PERF_DIRS"] = args.dirs
-    if args.taps:
+    if args.taps is not None:
         env["WG_PERF_TAPS"] = args.taps
     if args.seed is not None:
         env["WG_PERF_SEED"] = str(args.seed)
 
-    cmd = [os.path.join(HERE, "build.py"), "--shared", "--perf"]
+    cmd = [os.path.join(HERE, "build.py"), "--shared", "--perf",
+           "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz)]
+    if args.jobs is not None:
+        cmd.extend(["-j", str(args.jobs)])
     if args.comb:
         cmd.append("--comb")
     if args.reuse_syn:
@@ -271,7 +635,7 @@ def parse_stdout(log_path):
     return info
 
 
-# Schema-2 sweep_history.json "final" field -> per_main field (the names the
+# Schema-2/3 sweep_history.json "final" field -> per_main field (the names the
 # stdout parser above already uses, so both sources merge the same way)
 HISTORY_FINAL_FIELDS = (
     ("met", "met"),
@@ -324,7 +688,7 @@ def cross_check_final(from_history, from_stdout):
 def parse_fmax(out_dir, stdout_info):
     """fmax + per-MAIN pipelining from pypelinec's own numbers.
 
-    A schema-2 `sweep_history.json` from a complete build carries one "final"
+    A schema-2/3 `sweep_history.json` from a complete build carries one "final"
     record per MAIN describing the design as built (after any confirmation run,
     restored snapshot or as-written check); those records are authoritative and
     the build's stdout outcome lines are only a cross-check
@@ -337,7 +701,7 @@ def parse_fmax(out_dir, stdout_info):
     timing path reported ... assuming met") has an unknown exact fmax; its goal
     is a lower bound -- `design_mhz_is_lower_bound` says when that is the case.
     """
-    sweep_path = os.path.join(out_dir, "top", "sweep_history.json")
+    sweep_path = os.path.join(find_top_dir(out_dir), "sweep_history.json")
     result = {
         "design_mhz": None,
         "design_mhz_is_lower_bound": False,
@@ -493,7 +857,7 @@ def parse_fmax(out_dir, stdout_info):
 
 def parse_area(out_dir, per_module=True):
     try:
-        parsed = vivado_area.parse_out_dir(out_dir, per_module=per_module)
+        parsed = parse_out_dir(out_dir, per_module=per_module)
     except Exception as exc:  # a missing/incomplete build must not lose the sim data
         return {"available": False, "reason": f"{type(exc).__name__}: {exc}"}
     if not parsed["top"]:
@@ -506,7 +870,13 @@ def parse_area(out_dir, per_module=True):
             "per_module": parsed["per_module"],
         }
     area = dict(parsed["top"])
+    area["resources_available"] = area.pop("available", {})
     area["available"] = True
+    area["over_capacity"] = {
+        name: percent for name, percent in area.get("util_pct", {}).items()
+        if percent is not None and percent > 100
+    }
+    area["fits_device"] = not area["over_capacity"] if area.get("util_pct") else None
     area["scope"] = "perf_tb_top"
     # The perf testbench drives key/nonce/aad as constants, so Vivado folds some
     # ChaCha20 logic away: this number is consistent ACROSS VARIANTS but is not
@@ -666,7 +1036,7 @@ def _fmt(value, spec=".3f"):
     return format(value, spec) if isinstance(value, (int, float)) else "-"
 
 
-def markdown_table(results):
+def markdown_table(results, include_mac_details=True):
     lines = []
     fmax = results["fmax"].get("design_mhz")
     area = results["area"]
@@ -682,6 +1052,34 @@ def markdown_table(results):
             f"**{area.get('ff_total')} FF**, **{area.get('dsp48')} DSP48**, "
             f"**{area.get('bram_tiles')} BRAM tiles**, {area.get('carry4')} CARRY4"
         )
+    hardware_area = results.get("area_hw_build") or {}
+    if hardware_area.get("available"):
+        lines.append(
+            f"DUT-only area (external key/data ports): **{hardware_area.get('lut_total')} LUT**, "
+            f"**{hardware_area.get('ff_total')} FF**, **{hardware_area.get('dsp48')} DSP48**, "
+            f"**{hardware_area.get('bram_tiles')} BRAM tiles**."
+        )
+    hardware_fmax = results.get("fmax_hw_build") or {}
+    if hardware_fmax:
+        hardware_outcome = "PASS" if hardware_fmax.get("timing_met") is True else "not confirmed"
+        lines.append(
+            f"Hardware-top timing: {hardware_outcome}, "
+            f"{_fmt(hardware_fmax.get('design_mhz'), '.2f')} MHz "
+            f"against {_fmt(hardware_fmax.get('target_mhz'), '.1f')} MHz."
+        )
+    mac = results.get("config", {}).get("poly1305") or {}
+    if mac:
+        lines.append(f"Poly1305 implementation: `{mac['implementation']}`.")
+        for direction, timing in (sorted(mac.get("directions", {}).items()) if include_mac_details else []):
+            details = (f"{direction}: body II={timing['body_ii']}, "
+                       f"accumulators={timing['accumulator_count']}")
+            if "body_latency" in timing:
+                details += (
+                    f", body response={timing['body_latency']} cycles"
+                    f", prologue response={timing['prologue_response_cycles']} cycles"
+                    f", epilogue response={timing['epilogue_response_cycles']} cycles"
+                )
+            lines.append(details + ".")
     lines.append("")
     target = results["fmax"].get("target_mhz")
     # When fmax is quoted as the met goal, @fmax and @target are the same number:
@@ -784,9 +1182,335 @@ def update_readme(table, results, block_summary=None):
         f.write(text)
 
 
+ENTITY = re.compile(r"^\s*entity\s+(\w+)\s+is\b", re.MULTILINE | re.IGNORECASE)
+CHILD = re.compile(r":\s*entity\s+work\.(\w+)", re.IGNORECASE)
+LATENCY = re.compile(r"ADDED_PIPELINE_LATENCY\s*:\s*integer\s*:=\s*(\d+)", re.IGNORECASE)
+MCP_BODY = re.compile(
+    r"^(prologue|epilogue)_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined"
+    r"_direction_(encrypt|decrypt)_\d+clk_", re.IGNORECASE)
+
+
+def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None):
+    out_dir = Path(out_dir).resolve()
+    if top_vhdl is None:
+        top_dir = Path(find_top_dir(str(out_dir)))
+        top_vhdl = top_dir / (top_dir.name + ".vhd")
+    top_vhdl = Path(top_vhdl).resolve()
+    if not top_vhdl.is_file():
+        raise ValueError(f"Final top HDL is missing: {top_vhdl}")
+    entities = {}
+    for path in out_dir.rglob("*.vhd"):
+        text = re.sub(r"--[^\n]*", "", path.read_text())
+        name = ENTITY.search(text)
+        if name:
+            latency = LATENCY.search(text)
+            entities[name.group(1).lower()] = {
+                "file": str(path.relative_to(out_dir)),
+                "latency": int(latency.group(1)) if latency else None,
+                "clocked": bool(re.search(r"\b(?:rising|falling)_edge\s*\(", text,
+                                          re.IGNORECASE)),
+                "children": [child.lower() for child in CHILD.findall(text)],
+            }
+    top_match = ENTITY.search(re.sub(r"--[^\n]*", "", top_vhdl.read_text()))
+    if not top_match:
+        raise ValueError(f"No entity declaration in {top_vhdl}")
+    errors = []
+
+    def walk(root):
+        seen = set()
+        pending = [root]
+        while pending:
+            entity = pending.pop()
+            if entity in seen:
+                continue
+            seen.add(entity)
+            info = entities.get(entity)
+            if info is None:
+                errors.append(f"Missing emitted entity: {entity}")
+                continue
+            pending.extend(info["children"])
+            yield entity, info
+
+    roots = {}
+    for entity, info in walk(top_match.group(1).lower()):
+        match = MCP_BODY.match(entity)
+        if match:
+            roots[(match.group(2).lower(), match.group(1).lower())] = entity
+    reports = {}
+    for direction in directions:
+        for phase in ("prologue", "epilogue"):
+            label = direction + "/" + phase
+            root = roots.get((direction, phase))
+            if root is None:
+                errors.append(f"Missing reachable MCP arithmetic: {label}")
+                continue
+            descendants = list(walk(root))
+            bad = [entity for entity, info in descendants
+                   if info["latency"] not in (None, 0) or info["clocked"]]
+            reports[label] = {"entity": root, "file": entities[root]["file"],
+                              "entities_checked": len(descendants),
+                              "registered_entities": bad}
+            for entity in bad:
+                errors.append(f"{label}: registered arithmetic inside MCP: {entity}")
+    return {"out_dir": str(out_dir), "top_vhdl": str(top_vhdl),
+            "scope": "emitted MCP arithmetic only; not timing/constraint sign-off",
+            "mcps": reports, "passed": not errors, "errors": errors}
+
+
+def measurement_errors(results):
+    """Acceptance checks; failed runs still retain all diagnostic artifacts."""
+    errors = []
+    returncode = results.get("provenance", {}).get("build_returncode")
+    if returncode:
+        errors.append(f"Build/simulation exited {returncode}")
+    checks = results.get("checks", {})
+    if not checks.get("functional_pass", False):
+        errors.append(f"Functional checks did not pass: {checks.get('errors')}")
+    if not results.get("sim", {}).get("finalized", False):
+        errors.append("Performance simulation did not finalize all phases")
+    area = results.get("area", {})
+    if not results.get("config", {}).get("comb", False):
+        if results.get("fmax", {}).get("timing_met") is not True:
+            errors.append("Measurement lacks a confirmed timing pass")
+        if area.get("available") is not True:
+            errors.append("Measurement lacks a synthesis area report")
+        requested = results.get("config", {}).get("requested_target_mhz")
+        if requested is not None and results.get("fmax", {}).get("target_mhz") != requested:
+            errors.append("Measurement timing clock differs from the requested clock")
+    hardware_area = results.get("area_hw_build")
+    if hardware_area is not None:
+        if hardware_area.get("available") is not True:
+            errors.append("Requested hardware-top area report is unavailable")
+        if results.get("fmax_hw_build", {}).get("timing_met") is not True:
+            errors.append("Hardware-top build lacks a confirmed timing pass")
+        requested = results.get("config", {}).get("requested_target_mhz")
+        if requested is not None and results.get("fmax_hw_build", {}).get("target_mhz") != requested:
+            errors.append("Hardware-top timing clock differs from the requested clock")
+    for scope, report in (("Measurement", area), ("Hardware-top", hardware_area or {})):
+        if report.get("fits_device") is False:
+            errors.append(f"{scope} synthesis exceeds the selected device's resource capacity")
+    for phase in results.get("phases", []):
+        if phase.get("taps_check", {}).get("consistent") is False:
+            errors.append(f"Phase {phase.get('name')}: performance taps disagree on cycle count")
+        for direction, life in phase.get("poly1305_lifecycle", {}).items():
+            label = f"Phase {phase.get('name')}/{direction}"
+            if life.get("body_launches") != life.get("body_retirements"):
+                errors.append(label + ": body launches/retirements differ")
+            for phase_name in ("prologue", "epilogue"):
+                launches = life.get(phase_name + "_launches")
+                if launches is not None and launches != life.get("completed_packets"):
+                    errors.append(label + ": " + phase_name + " launches differ from completed tags")
+    mac = results.get("config", {}).get("poly1305") or {}
+    if mac.get("implementation") == "pipelined":
+        if not mac.get("directions"):
+            errors.append("Pipelined measurement lacks resolved per-direction MAC metadata")
+        for direction, meta in mac.get("directions", {}).items():
+            depth = meta.get("body_core_latency")
+            latency = meta.get("body_latency")
+            if depth is None or latency != depth + 2 or meta.get("accumulator_count") != latency:
+                errors.append(direction + ": body D=P+2 and L=D metadata disagree")
+            if meta.get("body_ii") != 1:
+                errors.append(direction + ": pipelined body II is not 1")
+    for scope, audit in results.get("mcp_hdl_audits", {}).items():
+        if not audit.get("passed"):
+            errors.append(scope + ": emitted MCP arithmetic audit failed")
+    return errors
+
+
+def check_record(measurement_dir):
+    """Read-only acceptance/integrity check, also usable after caches are deleted.
+
+    Old records need no new metadata or manifest. When an archive manifest is
+    present, every listed byte is verified and the retained signatures and XDC
+    are checked together. Historical workspace paths are never dereferenced.
+    """
+    directory = Path(measurement_dir)
+    results = json.loads((directory / "results.json").read_text())
+    errors = measurement_errors(results)
+    manifest_path = directory / "artifact-manifest.json"
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text())
+        artifacts = manifest.get("artifacts", {})
+        if not artifacts:
+            errors.append("Archive inventory is empty")
+        for name, expected in artifacts.items():
+            if Path(name).name != name:
+                errors.append("Unsafe archive filename: " + name)
+                continue
+            path = directory / name
+            if not path.is_file():
+                errors.append("Missing archive artifact: " + name)
+            elif path.stat().st_size != expected["bytes"] or hashlib.sha256(path.read_bytes()).hexdigest() != expected["sha256"]:
+                errors.append("Archive bytes/checksum mismatch: " + name)
+        for prefix, area_key, timing_key in (("perf", "area", "fmax"),
+                                             ("hardware", "area_hw_build", "fmax_hw_build")):
+            if area_key not in results:
+                continue
+            try:
+                inputs = json.loads((directory / (prefix + "-inputs.json")).read_text())
+                history = json.loads((directory / (prefix + "-sweep-history.json")).read_text())
+                retained = history.get("retained_observation") or {}
+                if not history.get("build_complete") or retained.get("input_signature") != inputs.get("signature"):
+                    errors.append(prefix + ": incomplete/mismatched retained sweep observation")
+                original_log = results[area_key].get("log")
+                if not original_log or Path(original_log).name != Path(retained.get("log_path", "")).name:
+                    errors.append(prefix + ": area and retained timing observation differ")
+                entries = [entry for entry in inputs.get("inputs", [])
+                           if entry.get("kind") == "xdc" and entry.get("name") == "clocks.xdc"]
+                constraints = directory / (prefix + "-clocks.xdc")
+                if len(entries) != 1 or hashlib.sha256(constraints.read_bytes()).hexdigest() != entries[0]["sha256"]:
+                    errors.append(prefix + ": constraints differ from retained input manifest")
+                log = directory / (prefix + "-vivado.log")
+                text = log.read_text(errors="replace")
+                if re.search(r"^ERROR:", text, re.MULTILINE) or "Exiting Vivado at" not in text:
+                    errors.append(prefix + ": retained Vivado run has errors or is unfinished")
+                area = parse_log(log)
+                for field in _AREA_FIELDS:
+                    if field in results[area_key] and results[area_key][field] != area.get(field):
+                        errors.append(prefix + ": saved area differs from retained log: " + field)
+                for main, record in history.get("mains", {}).items():
+                    final = final_from_history(record.get("final") or {})
+                    saved = results[timing_key].get("per_main", {}).get(main, {})
+                    if not final.get("met") or cross_check_final(final, saved):
+                        errors.append(prefix + ": saved timing differs from confirmed final: " + main)
+            except (OSError, KeyError, ValueError) as exc:
+                errors.append(prefix + ": incomplete archived evidence: " + str(exc))
+    return {"measurement_dir": str(directory), "passed": not errors, "errors": errors,
+            "archive_verified": manifest_path.exists()}
+
+
+def save_evidence(measurement_dir, results):
+    """Package retained observations, without one-off workflow-runner state."""
+    directory = Path(measurement_dir)
+    if measurement_errors(results):
+        raise ValueError("Only accepted measurements can be packaged")
+    sources = {}
+    for prefix, area_key, timing_key in (("perf", "area", "fmax"),
+                                         ("hardware", "area_hw_build", "fmax_hw_build")):
+        if area_key not in results:
+            continue
+        area, timing = results[area_key], results[timing_key]
+        log = Path(area["log"])
+        input_path = log.with_suffix(".inputs.json")
+        inputs = json.loads(input_path.read_text())
+        entries = [entry for entry in inputs.get("inputs", [])
+                   if entry.get("kind") == "xdc" and entry.get("name") == "clocks.xdc"]
+        constraints = log.parent.parent / "clocks.xdc"
+        if len(entries) != 1 or hashlib.sha256(constraints.read_bytes()).hexdigest() != entries[0]["sha256"]:
+            raise ValueError(prefix + ": current constraints no longer match retained observation")
+        sources.update({prefix + "-vivado.log": log, prefix + "-inputs.json": input_path,
+                        prefix + "-sweep-history.json": Path(timing["source"]["sweep_history"]),
+                        prefix + "-clocks.xdc": constraints})
+    for name, source in sources.items():
+        destination = directory / name
+        if source.resolve() != destination.resolve():
+            shutil.copyfile(source, destination)
+    artifacts = {}
+    for path in sorted(directory.iterdir()):
+        if path.is_file() and path.name != "artifact-manifest.json":
+            artifacts[path.name] = {"original_path": str(sources.get(path.name, path)),
+                                    "bytes": path.stat().st_size,
+                                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    manifest = {"schema_version": 1, "archived_utc": datetime.datetime.now(
+        datetime.timezone.utc).isoformat(), "artifacts": artifacts,
+        "note": "Packaging retained evidence, not a new synthesis or simulation."}
+    (directory / "artifact-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    report = check_record(directory)
+    if not report["passed"]:
+        raise ValueError("; ".join(report["errors"]))
+
+
+def measurement_selftest():
+    """Measurement guards/models/archive checks; no compiler or Vivado runs."""
+    if area_selftest(HERE):
+        return 1
+    directory = Path(HERE) / Path(_SELFTEST_CASES[0][0]).parent
+    report = check_record(directory)
+    if not report["passed"]:
+        raise ValueError("; ".join(report["errors"]))
+    original = json.loads((directory / "results.json").read_text())
+    mutations = [
+        ("functional", lambda r: r["checks"].update(functional_pass=False)),
+        ("unfinished", lambda r: r["sim"].update(finalized=False)),
+        ("build failure", lambda r: r["provenance"].update(build_returncode=7)),
+        ("timing", lambda r: r["fmax"].update(timing_met=False)),
+        ("missing area", lambda r: r["area"].update(available=False)),
+        ("capacity", lambda r: r["area"].update(fits_device=False)),
+        ("hardware timing", lambda r: r["fmax_hw_build"].update(timing_met=False)),
+        ("missing hardware area", lambda r: r["area_hw_build"].update(available=False)),
+        ("clock mismatch", lambda r: r["fmax"].update(target_mhz=80)),
+        ("tap mismatch", lambda r: r["phases"][0].update(taps_check={"consistent": False})),
+        ("lane mismatch", lambda r: r["config"]["poly1305"]["directions"]["encrypt"].update(accumulator_count=3)),
+        ("II mismatch", lambda r: r["config"]["poly1305"]["directions"]["encrypt"].update(body_ii=2)),
+        ("unfinished body", lambda r: r["phases"][0]["poly1305_lifecycle"]["encrypt"].update(body_retirements=0)),
+        ("MCP audit", lambda r: r.update(mcp_hdl_audits={"perf": {"passed": False}})),
+    ]
+    for label, mutate in mutations:
+        changed = copy.deepcopy(original)
+        mutate(changed)
+        if not measurement_errors(changed):
+            raise ValueError("Guard accepted " + label)
+    # Metadata-free records must retain the historical model and saved provenance.
+    for label in ("shared-80mhz", "shared-80mhz-probed"):
+        historical = Path(HERE) / "measurements" / label
+        if not check_record(historical)["passed"]:
+            raise ValueError("Historical record rejected: " + label)
+    if bottleneck.model_for(1420, 29, None)["poly1305_body_ii"] != 6:
+        raise ValueError("Historical six-cycle fallback changed")
+    meta = original["config"]["poly1305"]["directions"]["encrypt"]
+    if bottleneck.model_for(1420, 29, None, mac_config=meta)["poly1305_body_ii"] != 1:
+        raise ValueError("Pipelined II model changed")
+    with tempfile.TemporaryDirectory(prefix="wg-measure-check-") as scratch:
+        scratch = Path(scratch)
+        # Mutate only copies. Refreshing the outer inventory must not conceal
+        # a bad retained input signature or stale production constraints.
+        archived = scratch / "archive"
+        shutil.copytree(directory, archived)
+        for name in ("perf-clocks.xdc", "perf-inputs.json", "perf-sweep-history.json"):
+            path = archived / name
+            if name.endswith(".xdc"):
+                path.write_bytes(path.read_bytes() + b"\n# stale constraint test\n")
+            else:
+                changed = json.loads(path.read_text())
+                if name.endswith("inputs.json"):
+                    changed["signature"] = "bad signature"
+                else:
+                    changed["build_complete"] = False
+                path.write_text(json.dumps(changed))
+            inventory = json.loads((directory / "artifact-manifest.json").read_text())
+            inventory["artifacts"][name].update(
+                bytes=path.stat().st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+            (archived / "artifact-manifest.json").write_text(json.dumps(inventory))
+            if check_record(archived)["passed"]:
+                raise ValueError("Archive guard accepted stale " + name)
+            shutil.copyfile(directory / name, path)
+        saved = copy.deepcopy(original)
+        saved["config"]["out_dir"] = str(scratch / "deleted-cache")
+        (scratch / "results.json").write_text(json.dumps(saved))
+        shutil.copyfile(directory / "perf_raw.json", scratch / "perf_raw.json")
+        shutil.copyfile(directory / "pypelinec.log", scratch / "pypelinec.log")
+        proc = subprocess.run([sys.executable, str(Path(HERE) / "measure.py"),
+                               "--label", str(scratch), "--parse-only", "--no-per-module-area"],
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        if proc.returncode:
+            raise ValueError("Cache-free parse-only failed: " + proc.stdout[-2000:])
+        parsed = json.loads((scratch / "results.json").read_text())
+        for key in ("provenance", "fmax", "area", "fmax_hw_build", "area_hw_build"):
+            if parsed.get(key) != saved.get(key):
+                raise ValueError("Cache-free parse-only replaced saved " + key)
+    print("measurement selftest: PASS (guards, models, saved provenance, archive integrity)")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--label", default=None, help="measurement name (dir under measurements/)")
+    ap.add_argument("--poly1305", choices=IMPLEMENTATIONS, default=None,
+                    help="MAC architecture (WG_POLY1305_IMPL, otherwise pipelined)")
+    ap.add_argument("--target-mhz", type=int, choices=TARGETS_MHZ, default=None,
+                    help="Clock goal (default: pipelined 30 MHz, legacy 80 MHz)")
+    ap.add_argument("-j", "--jobs", type=int, default=None,
+                    help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
     ap.add_argument("--reuse-syn", action="store_true", help="keep the out_dir so pypelinec re-reads its cached Vivado logs (sim-only re-measure)")
     ap.add_argument("--parse-only", action="store_true", help="run nothing; re-merge an existing run's perf JSON + build log")
@@ -799,14 +1523,59 @@ def main():
     ap.add_argument("--taps", default="all", help="internal taps to enable: 'all' (default), a block or direction prefix ('poly1305', 'encrypt'), or exact names; pass --taps '' to measure boundaries only (see src/perf_taps.py)")
     ap.add_argument("--seed", type=int, default=None, help="packet payload RNG seed")
     ap.add_argument("--update-readme", action="store_true", help="splice the results table into README.md between its MEASURED-RESULTS markers")
+    inspection = ap.add_mutually_exclusive_group()
+    inspection.add_argument("--check-record", metavar="DIRECTORY", help="read-only acceptance/archive-integrity check; never reformat original results")
+    inspection.add_argument("--audit-mcps", metavar="OUT_DIR", help="read-only recursive audit of emitted Poly1305 MCP arithmetic")
+    inspection.add_argument("--area-report", metavar="LOG_OR_OUT_DIR", help="print Vivado utilization without building or measuring")
+    inspection.add_argument("--selftest", action="store_true", help="check measurement guards, models, saved provenance and retained evidence; no synthesis")
+    ap.add_argument("--audit-directions", choices=("encrypt", "decrypt", "encrypt,decrypt"), default="encrypt,decrypt")
+    ap.add_argument("--per-module", action="store_true", help="include OOC modules in --area-report")
+    ap.add_argument("--json", action="store_true", help="JSON output for --area-report")
+    ap.add_argument("--save-evidence", action="store_true", help="package retained Vivado/input/sweep/constraint evidence and checksums with an accepted measurement")
     args = ap.parse_args()
+    try:
+        if args.selftest:
+            return measurement_selftest()
+        if args.check_record or args.audit_mcps:
+            report = (check_record(args.check_record) if args.check_record else
+                      audit_poly1305_hdl(args.audit_mcps, tuple(args.audit_directions.split(","))))
+            print(json.dumps(report, indent=2))
+            return 0 if report["passed"] else 1
+        if args.area_report:
+            if os.path.isdir(args.area_report):
+                report = parse_out_dir(args.area_report, per_module=args.per_module)
+                if args.json:
+                    print(json.dumps(report, indent=2))
+                else:
+                    print(format_area(report["top"]) if report["top"] else "no top-level log found")
+                    for name, module in sorted(report["per_module"].items()):
+                        print(name + ": " + format_area(module))
+            else:
+                report = parse_log(args.area_report)
+                print(json.dumps(report, indent=2) if args.json else format_area(report))
+            return 0
+    except (OSError, ValueError, KeyError) as exc:
+        print("ERROR: " + str(exc), file=sys.stderr)
+        return 1
+    if args.save_evidence and args.comb:
+        ap.error("--save-evidence requires synthesized timing/area evidence")
+    if args.jobs is not None and args.jobs < 1:
+        ap.error("--jobs must be at least 1")
+    try:
+        args.poly1305 = selected_implementation(args.poly1305)
+    except ValueError as exc:
+        ap.error(str(exc))
+    if args.target_mhz is None:
+        args.target_mhz = default_target_mhz(args.poly1305)
 
-    label = args.label or ("comb-smoke" if args.comb else "shared-80mhz")
+    label = args.label or (("comb-smoke" + (f"-{args.target_mhz}mhz" if args.target_mhz != 80 else "")
+                           if args.comb else f"shared-{args.target_mhz}mhz")
+                           + "-poly1305-" + args.poly1305)
     meas_dir = os.path.join(HERE, "measurements", label)
     os.makedirs(meas_dir, exist_ok=True)
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
-    out_dir = out_dir_for(args.comb)
+    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz)
 
     build_info = {"skipped": True}
     if not args.parse_only:
@@ -824,15 +1593,45 @@ def main():
     with open(json_path) as f:
         perf_raw = json.load(f)
 
+    # Historical records predate the selector and used unsuffixed output dirs.
+    # For parse-only runs the recorded design, not today's default, wins.
+    mac_config = perf_raw.get("config", {}).get("poly1305")
+    previous = {}
+    if args.parse_only:
+        previous_path = os.path.join(meas_dir, "results.json")
+        if os.path.exists(previous_path):
+            with open(previous_path) as f:
+                previous = json.load(f)
+            args.comb = previous.get("config", {}).get("comb", args.comb)
+        if mac_config:
+            args.poly1305 = mac_config["implementation"]
+            args.target_mhz = (previous.get("config", {}).get("target_mhz")
+                               or perf_raw.get("config", {}).get("target_mhz")
+                               or default_target_mhz(args.poly1305))
+            out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz)
+        else:
+            args.poly1305 = "legacy"
+            args.target_mhz = 80
+            out_dir = os.path.join(HERE, f"generated-files-perf-{'comb' if args.comb else 'pipe'}-shared-native")
+        recorded_dir = previous.get("config", {}).get("out_dir")
+        if recorded_dir:
+            out_dir = os.path.join(HERE, recorded_dir)
+
     stdout_info = parse_stdout(log_path)
     fmax = parse_fmax(out_dir, stdout_info)
     area = parse_area(out_dir, per_module=not args.no_per_module_area)
-    target_mhz = fmax.get("target_mhz") or DEFAULT_TARGET_MHZ
+    # Committed records remain reformatable after local synthesis caches are
+    # removed. Never replace their accepted evidence with "unavailable".
+    if args.parse_only and previous:
+        if not os.path.isdir(out_dir):
+            fmax = previous.get("fmax", fmax)
+            area = previous.get("area", area)
+    target_mhz = fmax.get("target_mhz") or args.target_mhz
     phases = derive_throughput(perf_raw, fmax.get("design_mhz"), target_mhz)
     # Internal taps -> per-block throughput/ceiling, a bottleneck verdict and the
     # model cross-check. A run with no taps leaves the phases untouched.
     aad_len = perf_raw.get("config", {}).get("aad_len") or 0
-    bottleneck.analyze(phases, aad_len=aad_len)
+    bottleneck.analyze(phases, aad_len=aad_len, mac_config=mac_config)
 
     results = {
         "schema_version": 1,
@@ -841,8 +1640,11 @@ def main():
         "config": dict(
             perf_raw.get("config", {}),
             comb=args.comb,
+            poly1305_impl=args.poly1305,
             out_dir=os.path.relpath(out_dir, HERE),
             target_mhz=target_mhz,
+            requested_target_mhz=(previous.get("config", {}).get("requested_target_mhz")
+                                  if args.parse_only else args.target_mhz),
             build_cmd=build_info.get("cmd"),
             reuse_syn=bool(args.reuse_syn),
         ),
@@ -873,14 +1675,46 @@ def main():
         "checks": perf_raw.get("checks", {}),
         "sim": perf_raw.get("sim", {}),
     }
+    # Reformatting a saved run must not replace its build provenance with the
+    # checkout doing the formatting, or silently drop its DUT-only area.
+    if args.parse_only and previous:
+        results["provenance"] = previous.get("provenance", results["provenance"])
+        for key in ("build_cmd", "reuse_syn"):
+            if key in previous.get("config", {}):
+                results["config"][key] = previous["config"][key]
+        if "area_hw_build" in previous:
+            results["area_hw_build"] = previous["area_hw_build"]
+        if "fmax_hw_build" in previous:
+            results["fmax_hw_build"] = previous["fmax_hw_build"]
     if args.area_from_dir:
+        hardware_out_dir = os.path.join(HERE, args.area_from_dir)
         results["area_hw_build"] = parse_area(
-            os.path.join(HERE, args.area_from_dir),
+            hardware_out_dir,
             per_module=not args.no_per_module_area,
         )
         results["area_hw_build"]["scope"] = "hardware_top"
         results["area_hw_build"]["constant_key_folding"] = False
+        results["area_hw_build"]["out_dir"] = os.path.relpath(hardware_out_dir, HERE)
+        # The hardware build's schema-2 final records are authoritative, even
+        # when its console log was saved outside the generated directory.
+        results["fmax_hw_build"] = parse_fmax(
+            hardware_out_dir, parse_stdout(os.path.join(hardware_out_dir, "pypelinec.log"))
+        )
 
+    if not args.parse_only and not args.comb and args.poly1305 == "pipelined":
+        results["mcp_hdl_audits"] = {}
+        for scope, directory in (("perf", out_dir), ("hardware", args.area_from_dir)):
+            if directory is None:
+                continue
+            try:
+                audit = audit_poly1305_hdl(os.path.join(HERE, directory))
+            except (OSError, ValueError) as exc:
+                audit = {"passed": False, "errors": [str(exc)]}
+            results["mcp_hdl_audits"][scope] = audit
+    elif args.parse_only and "mcp_hdl_audits" in previous:
+        results["mcp_hdl_audits"] = previous["mcp_hdl_audits"]
+    errors = measurement_errors(results)
+    results["validation"] = {"passed": not errors, "errors": errors}
     results_path = os.path.join(meas_dir, "results.json")
     with open(results_path, "w") as f:
         json.dump(results, f, indent=1)
@@ -895,15 +1729,27 @@ def main():
         block_table = bottleneck.markdown_blocks(phases)
         with open(blocks_path, "w") as f:
             f.write(block_table + "\n")
-    # The README gets a text summary only; the full tables stay in blocks.md.
-    # Always produced -- a run without taps yields a "no internal taps" note, so
-    # the README never pairs this run's table with a previous run's summary.
-    block_summary = bottleneck.markdown_summary(
-        phases, os.path.relpath(blocks_path, HERE)
+    # Keep the README at top-level QoR; component detail stays in blocks.md.
+    block_summary = (
+        "Detailed per-block service/stall, shared arbitration and lifecycle measurements\n"
+        f"are in the [block report]({os.path.relpath(blocks_path, HERE)})."
+        if block_table else "No internal taps were recorded for this run."
     )
 
-    if args.update_readme:
-        update_readme(table, results, block_summary)
+    if args.save_evidence and not errors:
+        try:
+            save_evidence(meas_dir, results)
+        except (OSError, ValueError, KeyError) as exc:
+            errors.append("Evidence packaging failed: " + str(exc))
+            results["validation"] = {"passed": False, "errors": errors}
+            with open(results_path, "w") as destination:
+                json.dump(results, destination, indent=1)
+    run_returncode = results["provenance"].get("build_returncode") or 0
+    measurement_ok = not errors
+    if args.update_readme and measurement_ok:
+        update_readme(markdown_table(results, include_mac_details=False), results, block_summary)
+    elif args.update_readme:
+        print("!! Incomplete or failing measurement; README results not replaced", file=sys.stderr)
 
     print()
     print(table)
@@ -933,11 +1779,9 @@ def main():
                 f"per-cycle rates are inflated",
                 file=sys.stderr,
             )
-    checks = results["checks"]
-    if not checks.get("functional_pass", True):
-        print(f"!! FUNCTIONAL FAILURES: {checks.get('errors')}", file=sys.stderr)
-        return 1
-    return 0
+    for error in errors:
+        print(f"!! {error}", file=sys.stderr)
+    return run_returncode or (1 if errors else 0)
 
 
 if __name__ == "__main__":

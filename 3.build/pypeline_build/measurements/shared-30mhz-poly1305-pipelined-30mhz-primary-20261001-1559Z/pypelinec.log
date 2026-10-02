@@ -1,0 +1,2929 @@
+
+██████╗ ██╗   ██╗██████╗ ███████╗██╗     ██╗███╗   ██╗███████╗ ██████╗
+██╔══██╗╚██╗ ██╔╝██╔══██╗██╔════╝██║     ██║████╗  ██║██╔════╝██╔════╝
+██████╔╝ ╚████╔╝ ██████╔╝█████╗  ██║     ██║██╔██╗ ██║█████╗  ██║     
+██╔═══╝   ╚██╔╝  ██╔═══╝ ██╔══╝  ██║     ██║██║╚██╗██║██╔══╝  ██║     
+██║        ██║   ██║     ███████╗███████╗██║██║ ╚████║███████╗╚██████╗
+╚═╝        ╚═╝   ╚═╝     ╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝
+
+Version: 0cc6aed
+Command: /media/1TB/Dropbox/PipelineC/git/PipelineC/src/pypelinec ./src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py --out_dir ./generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz --sim --run all --stop_on_over_capacity -j 1
+Parsing file: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py
+Output directory: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz
+================== Parsing C Code to Logical Hierarchy ================================
+PY_TO_LOGIC parsing: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py
+  elaborating func: chacha20_block_step
+  elaborating func: chacha20_block
+  elaborating func: chacha20_init
+  elaborating func: chacha20_loop_body
+  elaborating func: chacha20_fsm
+  elaborating func: chacha20_pipeline_shared_chacha_shared_pipeline
+  elaborating func: chacha20_pipeline_shared
+  elaborating func: chacha20_pipeline_shared_chacha20_encrypt_shared
+  elaborating func: chacha20_pipeline_shared_chacha20_decrypt_shared
+  elaborating func: prep_auth_data_fsm
+  elaborating func: append_auth_tag
+  elaborating func: encrypt_dataflow_shared
+  elaborating func: strip_auth_tag_axis128_early_tlast
+  elaborating func: strip_auth_tag
+  elaborating func: poly1305_verify_decrypt
+  elaborating func: wait_to_verify
+  elaborating func: decrypt_dataflow_shared
+  elaborating func: encrypt_perf_tb
+  elaborating func: decrypt_perf_tb
+  elaborating func: shared_perf_tb_finish_checker
+Doing simple logic trimming/collapsing...
+Matching clock domain: main function chacha20_pipeline_shared based on shared global variable chacha20_pipeline_shared_encrypt_pipeline_in_if used with clock domain for main function encrypt_dataflow_shared @ 30.0 MHz, Group: None
+Host software types: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/host/pypeline_host_types.py
+Vivado: /media/1TB/Programs/Linux/Xilinx/Vivado/2019.2/bin/vivado
+Using VIVADO synthesizing for part: xc7a200tffg1156-2
+================== Writing Resulting Logic to File ================================
+Writing output files before adding pipelining...
+Writing log of integer module instances: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/integer_module_instances.log
+Writing VHDL files for all functions (before any added pipelining)...
+Writing multi main top level files...
+Writing the constant struct+enum definitions as defined from C code...
+Writing global wire definitions as parsed from C code...
+================== Adding Timing Information from Synthesis Tool ================================
+Synthesizing before pipelining to get path delays...
+
+Function: MUX_chacha20_loop_body_in_t_axis_in_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_0156dfb4 cached path delay: 1.256 ns
+Function: MUX_uint1_t cached path delay: 1.256 ns
+Function: UNARY_OP_NOT_uint1_t cached path delay: 0.897 ns
+Function: MUX_stream_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_64_keep_uint1_t_64_016a47d5 cached path delay: 1.256 ns
+Function: BIN_OP_PLUS_uint32_t_uint32_t cached path delay: 2.409 ns
+Function: BIN_OP_XOR_uint32_t_uint32_t cached path delay: 1.019 ns
+Function: BIN_OP_XOR_uint8_t_uint8_t cached path delay: 1.019 ns
+Function: MUX_uint8_t cached path delay: 1.256 ns
+Synthesizing function: func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3 [stream_auto_pipeline.py:70]
+Synthesizing function: fifo_data_t_chacha_shared_pipeline_out_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_f9c04591_depth_2_0e2392cd [fifo.py:67]
+Function: BIN_OP_AND_uint1_t_uint1_t cached path delay: 1.019 ns
+Function: BIN_OP_XOR_uint1_t_uint1_t cached path delay: 1.019 ns
+Function: MUX_uint2_t cached path delay: 1.256 ns
+Function: BIN_OP_NEQ_uint1_t_uint1_t cached path delay: 1.019 ns
+Function: BIN_OP_OR_uint1_t_uint1_t cached path delay: 1.019 ns
+Synthesizing function: soft_cmp_prefix_common_t_uint2_t_greater_False_is_signed_False_l_t_uint2_t_n_bits_2_r_t_uint2_t_strict_True_tree_soft_9bbc4568 [soft_cmp.py:416]
+Synthesizing function: soft_cmp_prefix_common_t_uint2_t_greater_False_is_signed_False_l_t_uint2_t_n_bits_2_r_t_uint1_t_strict_True_tree_soft_f581b334 [soft_cmp.py:416]
+Function: BIN_OP_PLUS_uint2_t_uint1_t cached path delay: 1.274 ns
+Function: BIN_OP_MINUS_uint2_t_uint1_t cached path delay: 1.267 ns
+Synthesizing function: axis_broadcast_interlock_axis_intrf_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_366f5708 [axis.py:77]
+Function: MUX_uint130_t cached path delay: 1.256 ns
+Synthesizing function: VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88
+Function: BIN_OP_EQ_uint1_t_uint1_t cached path delay: 1.019 ns
+Synthesizing function: VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88
+Function: BIN_OP_PLUS_uint1_t_uint1_t cached path delay: 1.030 ns
+Function: MUX_uint130_t_2 cached path delay: 1.256 ns
+Synthesizing function: BIN_OP_EQ_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce [poly1305_mac_pipelined.py:203]
+Function: BIN_OP_AND_uint8_t_uint4_t cached path delay: 1.019 ns
+Function: BIN_OP_AND_uint8_t_uint8_t cached path delay: 1.019 ns
+Synthesizing function: clamp [poly1305_math.py:46]
+Function: MUX_uint128_t cached path delay: 1.256 ns
+Function: MUX_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce cached path delay: 1.256 ns
+Function: MUX_powers_t_values_uint130_t_2_direction_encrypt cached path delay: 1.256 ns
+Function: BIN_OP_EQ_uint2_t_uint1_t cached path delay: 1.256 ns
+Function: MUX_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_uint1_1ef56ac6 cached path delay: 1.256 ns
+Function: MUX_stream_intrf_data_t_uint256_t_feedback_t_uint1_t_feedback_t_ready_uint1_t cached path delay: 1.256 ns
+Function: BIN_OP_OR_uint130_t_uint129_t cached path delay: 1.019 ns
+Function: BIN_OP_INFERRED_MULT_uint130_t_uint130_t cached path delay: 19.319 ns
+Function: BIN_OP_PLUS_uint260_t_uint130_t cached path delay: 8.003 ns
+Function: BIN_OP_INFERRED_MULT_uint130_t_uint3_t cached path delay: 10.929 ns
+Function: BIN_OP_PLUS_uint130_t_uint133_t cached path delay: 4.792 ns
+Function: BIN_OP_INFERRED_MULT_uint3_t_uint3_t cached path delay: 1.468 ns
+Function: BIN_OP_PLUS_uint130_t_uint6_t cached path delay: 4.995 ns
+Function: BIN_OP_MINUS_uint131_t_uint130_t cached path delay: 4.780 ns
+Function: MUX_uint131_t cached path delay: 1.256 ns
+Synthesizing function: poly1305_body_encrypt [poly1305_mac_pipelined.py:51]
+Synthesizing function: func_mcp_func_prologue_direction_encrypt_s49d186255a80_latency_None_start_latency_None_max_latency_None_s328b0922776f [stream_multi_cycle.py:149]
+Synthesizing function: func_mcp_func_epilogue_direction_encrypt_s2daf617547e3_latency_None_start_latency_None_max_latency_None_sc837a7acf337 [stream_multi_cycle.py:149]
+Synthesizing function: chacha20_pipeline_shared_chacha20_encrypt_shared [chacha20_pipeline_shared.py:210]
+Synthesizing function: prep_auth_data_fsm [prep_auth_data.py:56]
+Synthesizing function: append_auth_tag [append_auth_tag.py:56]
+Function: MUX_powers_t_values_uint130_t_2_direction_decrypt cached path delay: 1.256 ns
+Synthesizing function: poly1305_body_decrypt [poly1305_mac_pipelined.py:56]
+Synthesizing function: func_mcp_func_prologue_direction_decrypt_sb4370c3c5534_latency_None_start_latency_None_max_latency_None_s97be5e150f75 [stream_multi_cycle.py:149]
+Synthesizing function: func_mcp_func_epilogue_direction_decrypt_se39729273383_latency_None_start_latency_None_max_latency_None_s0326bcc47617 [stream_multi_cycle.py:149]
+Synthesizing function: strip_auth_tag [strip_auth_tag.py:94]
+Synthesizing function: chacha20_pipeline_shared_chacha20_decrypt_shared [chacha20_pipeline_shared.py:239]
+Synthesizing function: poly1305_verify_decrypt [poly1305_verify_decrypt.py:51]
+Synthesizing function: wait_to_verify [wait_to_verify.py:58]
+Function 944/989, elapsed time 0:00:21.144440...
+...Waiting on synthesis for: func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/stream/stream_auto_pipeline.py/func_stream_from_stream_stream_auto_pipeline_make_stream_auto_pipeline_func_chacha_shared_pipeline/vivado_0CLK_a19e4b51_f4f91a8ed6175fc0.log
+func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3 Path delay (maybe to be pipelined): 157.422 ns
+Function 946/989, elapsed time 0:02:37.463348...
+...Waiting on synthesis for: fifo_data_t_chacha_shared_pipeline_out_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_f9c04591_depth_2_0e2392cd
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/fifo.py/fifo_from_fifo_depth_2_mode_fwft_data_t_chacha_shared_pipeline_out_t_is_encrypt_uint1_t_data_ndarray_fragment_t_ndims_1_frag_t_kept_data_bus_t_n_64_data_t_uint8_t/vivado_0CLK_de264c78_e266d68417468a27.log
+fifo_data_t_chacha_shared_pipeline_out_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_f9c04591_depth_2_0e2392cd Path delay (maybe to be pipelined): 2.210 ns
+Function 948/989, elapsed time 0:03:58.041741...
+...Waiting on synthesis for: soft_cmp_prefix_common_t_uint2_t_greater_False_is_signed_False_l_t_uint2_t_n_bits_2_r_t_uint2_t_strict_True_tree_soft_9bbc4568
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/operators/soft_cmp.py/soft_cmp_prefix_from_operators_soft_cmp_factory_greater_False_is_signed_False_n_bits_2_strict_True_common_t_uint2_t_u2_t_uint2_t_tree_soft_cmp_prefix_n_leaves_2_level_0_haf1720bab973/vivado_0CLK_c577bdbb_93e56521450ab327.log
+soft_cmp_prefix_common_t_uint2_t_greater_False_is_signed_False_l_t_uint2_t_n_bits_2_r_t_uint2_t_strict_True_tree_soft_9bbc4568 Path delay (maybe to be pipelined): 1.256 ns
+Function 949/989, elapsed time 0:05:12.670096...
+...Waiting on synthesis for: soft_cmp_prefix_common_t_uint2_t_greater_False_is_signed_False_l_t_uint2_t_n_bits_2_r_t_uint1_t_strict_True_tree_soft_f581b334
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/operators/soft_cmp.py/soft_cmp_prefix_from_operators_soft_cmp_factory_greater_False_is_signed_False_n_bits_2_strict_True_common_t_uint2_t_u2_t_uint2_t_tree_soft_cmp_prefix_n_leaves_2_level_0_he51d7532ddd0/vivado_0CLK_c577bdbb_71e737e10707f4c7.log
+soft_cmp_prefix_common_t_uint2_t_greater_False_is_signed_False_l_t_uint2_t_n_bits_2_r_t_uint1_t_strict_True_tree_soft_f581b334 Path delay (maybe to be pipelined): 1.256 ns
+Function 952/989, elapsed time 0:06:24.405081...
+...Waiting on synthesis for: axis_broadcast_interlock_axis_intrf_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_366f5708
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/axi/axis.py/axis_broadcast_interlock_from_axi_axis_n_2_axis_intrf_stream_intrf_feedback_t_uint1_t_data_t_ndarray_fragment_t_ndims_1_frag_t_kept_data_bus_t_n_16_data_t_uint8_t/vivado_0CLK_6ea1e0af_a26a68fb902f6a11.log
+axis_broadcast_interlock_axis_intrf_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_366f5708 Path delay (maybe to be pipelined): 1.274 ns
+Function 953/989, elapsed time 0:07:40.774087...
+...Waiting on synthesis for: VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/built_in/VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88/vivado_0CLK_74627d89_d755974b8a6c2fda.log
+VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88 Path delay (maybe to be pipelined): 1.256 ns
+Function 954/989, elapsed time 0:08:55.862226...
+...Waiting on synthesis for: VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/built_in/VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88/vivado_0CLK_1cf5c5d4_e7d7c31a7bbd9f61.log
+VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88 Path delay (maybe to be pipelined): 1.267 ns
+Function 955/989, elapsed time 0:10:12.020256...
+...Waiting on synthesis for: BIN_OP_EQ_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/built_in/BIN_OP_EQ_mac_state_t_from_poly1305_mac_pipelined_IDLE_0_PROLOGUE_LAUNCH_1_PROLOGUE_WAIT_2_STREAM_BODY_3_DRAIN_4_EPILOGUE_LAUNCH_5_EPILOGUE_WAIT_6_OUTPUT_TAG_7_mac_state_t_from_poly1305_mac_pipelined_IDLE_0_PROLOGUE_LAUNCH_1_h1893525f1681/vivado_0CLK_de264c78_b815398969e46a33.log
+BIN_OP_EQ_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce Path delay (maybe to be pipelined): 1.436 ns
+Function 956/989, elapsed time 0:11:26.364582...
+...Waiting on synthesis for: clamp
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/clamp/vivado_0CLK_fc2c68ca_266f2c8adb59773c.log
+clamp Path delay (maybe to be pipelined): 0.882 ns
+Function 969/989, elapsed time 0:12:41.355664...
+...Waiting on synthesis for: poly1305_body_encrypt
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/poly1305_body_encrypt/vivado_0CLK_09b9586c_5cd82e2782c3327c.log
+poly1305_body_encrypt Path delay (maybe to be pipelined): 30.682 ns
+Function 971/989, elapsed time 0:14:42.433141...
+...Waiting on synthesis for: func_mcp_func_prologue_direction_encrypt_s49d186255a80_latency_None_start_latency_None_max_latency_None_s328b0922776f
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/stream/stream_multi_cycle.py/func_mcp_from_stream_stream_multi_cycle_make_stream_auto_multi_cycle_latency_None_start_latency_None_max_latency_None_func_prologue_direction_encrypt/vivado_0CLK_d958e7b6_042b2ccc135d8b83.log
+func_mcp_func_prologue_direction_encrypt_s49d186255a80_latency_None_start_latency_None_max_latency_None_s328b0922776f FMAX: 34.364 MHz (29.100 ns path delay)
+Function 972/989, elapsed time 0:16:47.617262...
+...Waiting on synthesis for: func_mcp_func_epilogue_direction_encrypt_s2daf617547e3_latency_None_start_latency_None_max_latency_None_sc837a7acf337
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/stream/stream_multi_cycle.py/func_mcp_from_stream_stream_multi_cycle_make_stream_auto_multi_cycle_latency_None_start_latency_None_max_latency_None_func_epilogue_direction_encrypt/vivado_0CLK_6b6b0c88_0a57dc2ed31e6b7c.log
+func_mcp_func_epilogue_direction_encrypt_s2daf617547e3_latency_None_start_latency_None_max_latency_None_sc837a7acf337 FMAX: 22.422 MHz (44.600 ns path delay)
+Function 974/989, elapsed time 0:19:44.794950...
+...Waiting on synthesis for: chacha20_pipeline_shared_chacha20_encrypt_shared
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/chacha20_pipeline_shared_chacha20_encrypt_shared/vivado_0CLK_fd3bf4e3_b62328dc55b6e9ea.log
+chacha20_pipeline_shared_chacha20_encrypt_shared FMAX: 238.095 MHz (4.200 ns path delay)
+Function 975/989, elapsed time 0:21:46.352876...
+...Waiting on synthesis for: prep_auth_data_fsm
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/prep_auth_data_fsm/vivado_0CLK_d478c8f5_b10a3af30fca0441.log
+prep_auth_data_fsm FMAX: 156.250 MHz (6.400 ns path delay)
+Function 976/989, elapsed time 0:23:18.617659...
+...Waiting on synthesis for: append_auth_tag
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/append_auth_tag/vivado_0CLK_4c93283f_c58178613e751b9a.log
+append_auth_tag FMAX: 204.082 MHz (4.900 ns path delay)
+Function 979/989, elapsed time 0:25:01.684175...
+...Waiting on synthesis for: poly1305_body_decrypt
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/poly1305_body_decrypt/vivado_0CLK_09b9586c_4392911f1224bbab.log
+poly1305_body_decrypt Path delay (maybe to be pipelined): 30.682 ns
+Function 981/989, elapsed time 0:27:04.610099...
+...Waiting on synthesis for: func_mcp_func_prologue_direction_decrypt_sb4370c3c5534_latency_None_start_latency_None_max_latency_None_s97be5e150f75
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/stream/stream_multi_cycle.py/func_mcp_from_stream_stream_multi_cycle_make_stream_auto_multi_cycle_latency_None_start_latency_None_max_latency_None_func_prologue_direction_decrypt/vivado_0CLK_f996a3d2_a8165cc7dea3dca2.log
+func_mcp_func_prologue_direction_decrypt_sb4370c3c5534_latency_None_start_latency_None_max_latency_None_s97be5e150f75 FMAX: 34.364 MHz (29.100 ns path delay)
+Function 982/989, elapsed time 0:29:13.267817...
+...Waiting on synthesis for: func_mcp_func_epilogue_direction_decrypt_se39729273383_latency_None_start_latency_None_max_latency_None_s0326bcc47617
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/stream/stream_multi_cycle.py/func_mcp_from_stream_stream_multi_cycle_make_stream_auto_multi_cycle_latency_None_start_latency_None_max_latency_None_func_epilogue_direction_decrypt/vivado_0CLK_3d52b161_f4790a9a8e00ff1a.log
+func_mcp_func_epilogue_direction_decrypt_se39729273383_latency_None_start_latency_None_max_latency_None_s0326bcc47617 FMAX: 22.422 MHz (44.600 ns path delay)
+Function 984/989, elapsed time 0:32:10.394531...
+...Waiting on synthesis for: strip_auth_tag
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/strip_auth_tag/vivado_0CLK_6109d1f5_d8fe5175bfe50944.log
+strip_auth_tag FMAX: 142.857 MHz (7.000 ns path delay)
+Function 985/989, elapsed time 0:33:41.957016...
+...Waiting on synthesis for: chacha20_pipeline_shared_chacha20_decrypt_shared
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/chacha20_pipeline_shared_chacha20_decrypt_shared/vivado_0CLK_8e900123_77bfa90625b153eb.log
+chacha20_pipeline_shared_chacha20_decrypt_shared FMAX: 238.095 MHz (4.200 ns path delay)
+Function 986/989, elapsed time 0:35:43.411537...
+...Waiting on synthesis for: poly1305_verify_decrypt
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/poly1305_verify_decrypt/vivado_0CLK_6a2e9401_1ae41664288085d9.log
+poly1305_verify_decrypt FMAX: 277.778 MHz (3.600 ns path delay)
+Function 987/989, elapsed time 0:37:01.144879...
+...Waiting on synthesis for: wait_to_verify
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/wait_to_verify/vivado_0CLK_3298c92f_25a4cd9fb817ed8d.log
+PY_TO_LOGIC warning: in 'chacha20_loop_body': variable 'block' is not a legal VHDL identifier; auto-mangled to 'block_v'
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.182141 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.251466 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.279861 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.781506 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.736602 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.64249 to fit
+wait_to_verify FMAX: 333.333 MHz (3.000 ns path delay)
+Function: quarter_round_a_0_b_4_c_8_d_12_s31dcfdb36b82 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_1_b_5_c_9_d_13_s5881edf27190 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_2_b_6_c_10_d_14_s9dd00bdfea18 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_3_b_7_c_11_d_15_s47a156fd6afd estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_0_b_5_c_10_d_15_s97dfd05ecab8 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_1_b_6_c_11_d_12_sb772cbae8def estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_2_b_7_c_8_d_13_s23096f475527 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_3_b_4_c_9_d_14_s2fefba3dcfc3 estimated path delay: 13.600 ns (derived from submodules)
+Function: chacha20_block_step estimated path delay: 108.800 ns (derived from submodules)
+Function: chacha20_block estimated path delay: 1090.400 ns (derived from submodules)
+Function: chacha20_loop_body estimated path delay: 1092.600 ns (derived from submodules)
+Function: chacha20_pipeline_shared_chacha_shared_pipeline estimated path delay: 1092.600 ns (derived from submodules)
+Function: auto_pipelined_func_has_input_reg_has_output_reg_ea4c01cb_s8467e4d76e90 estimated path delay: 157.400 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_2_level_0_sf62b516f7ed5 estimated path delay: 3.200 ns (derived from submodules)
+Function: stream_auto_pipeline_func_chacha20_pipeline_shared_chacha_shared_pipeline_sb53102a93c50 estimated path delay: 165.000 ns (derived from submodules)
+Function: chacha20_pipeline_shared estimated path delay: 167.400 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_2_level_7_s093094f7ded2 estimated path delay: 3.200 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_3_level_6_s9c4ee2fa95a6 estimated path delay: 6.400 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_5_level_5_s4e91d34bbadc estimated path delay: 9.600 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_9_level_4_s9755b1208c40 estimated path delay: 12.800 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_17_level_3_s83f1490c597c estimated path delay: 16.000 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_33_level_2_s5c6e6556cc76 estimated path delay: 19.200 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_66_level_1_s52c9c1f5b23d estimated path delay: 22.400 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_131_level_0_s58aaeeb69d38 estimated path delay: 25.600 ns (derived from submodules)
+Function: soft_cmp_prefix_common_t_uint131_t_greater_True_is_signed_False_l_t_uint131_t_n_bits_131_r_t_uint130_t_strict_False_b8571ea1 estimated path delay: 33.000 ns (derived from submodules)
+Function: uint260_mod_prime estimated path delay: 56.100 ns (derived from submodules)
+Function: residue_mul_add_mod estimated path delay: 83.400 ns (derived from submodules)
+Function: poly1305_body estimated path delay: 84.400 ns (derived from submodules)
+Function: body_pipeline_direction_encrypt_sefef53af84fe estimated path delay: 30.600 ns (derived from submodules)
+Function: poly1305_mac_pipelined_direction_encrypt_s7ccde612a21f estimated path delay: 54.400 ns (derived from submodules)
+Function: encrypt_dataflow_core_chacha_func_chacha20_pipeline_shared_chacha20_encrypt_shared_s093261c3ecb4_iff6bda2d6 estimated path delay: 71.100 ns (derived from submodules)
+Function: encrypt_dataflow_shared estimated path delay: 71.100 ns (derived from submodules)
+Function: body_pipeline_direction_decrypt_sc2f50bfb3c73 estimated path delay: 30.600 ns (derived from submodules)
+Function: poly1305_mac_pipelined_direction_decrypt_s2a1547e84c1a estimated path delay: 54.400 ns (derived from submodules)
+Function: decrypt_dataflow_core_chacha_func_chacha20_pipeline_shared_chacha20_decrypt_shared_s0582e5b7a695_ifb0a600de estimated path delay: 75.600 ns (derived from submodules)
+Function: decrypt_dataflow_shared estimated path delay: 75.600 ns (derived from submodules)
+Isolated effective stage-delay estimate ~44.600 ns (~22.422 MHz), not a whole-design limit; MCP values use their current cycle allowance. Function: func_mcp_func_epilogue_direction_encrypt_s2daf617547e3_latency_None_start_latency_None_max_latency_None_sc837a7acf337 [stream_multi_cycle.py:149]
+Isolated effective stage-delay estimate ~44.600 ns (~22.422 MHz), not a whole-design limit; MCP values use their current cycle allowance. Function: func_mcp_func_epilogue_direction_decrypt_se39729273383_latency_None_start_latency_None_max_latency_None_s0326bcc47617 [stream_multi_cycle.py:149]
+================== Beginning Throughput Sweep ================================
+Function: chacha20_pipeline_shared Target MHz: 30.0
+Function: encrypt_dataflow_shared Target MHz: 30.0
+Function: decrypt_dataflow_shared Target MHz: 30.0
+Starting with no added pipelining...
+Starting planned throughput sweep...
+[sweep] AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_3: isolated endpoints ~44.668 ns raw; provisional seed 1->2
+[sweep] AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1: isolated endpoints ~44.668 ns raw; provisional seed 1->2
+[sweep] main=chacha20_pipeline_shared subtree=func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3 comb delay ~157.4 ns, target 33.3 ns (30.0 MHz), no estimated span limit below the goal
+[sweep] main=encrypt_dataflow_shared subtree=encrypt_dataflow_shared comb delay ~71.1 ns, target 33.3 ns (30.0 MHz), no estimated span limit below the goal
+[sweep] main=decrypt_dataflow_shared subtree=decrypt_dataflow_shared comb delay ~75.6 ns, target 33.3 ns (30.0 MHz), no estimated span limit below the goal
+Updating output files...
+Estimated register usage: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/top_81d8c0b8_registers.log
+[sweep] chacha20_pipeline_shared: about to synthesize, cuts=4, 4 slice(s) (5 pipeline stages)
+[sweep] encrypt_dataflow_shared: about to synthesize, cuts=0, 0 slice(s) (1 pipeline stages)
+[sweep] decrypt_dataflow_shared: about to synthesize, cuts=0, 0 slice(s) (1 pipeline stages)
+Running syn w timing params... (sweep iteration 1, decision 1)
+Elapsed time: 0:40:14.066343...
+WARNING: No frequency associated with clock clk_None. Missing MAIN_MHZ pragma? Setting to maximum rate = 1000MHz so timing report can be generated...
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/vivado_81d8c0b8_3d877d0bfdbd9255.log
+[sweep] iter=1 main=chacha20_pipeline_shared goal=30.00MHz got=30.07MHz (33.26ns) cuts=4 main_latency=0 pipeline_stages=5 predicted_stage=31.52ns action=met
+[sweep] iter=1 main=encrypt_dataflow_shared goal=30.00MHz got=33.52MHz (29.83ns) cuts=0 main_latency=0 pipeline_stages=1 predicted_stage=71.10ns action=met
+[sweep] iter=1 main=decrypt_dataflow_shared goal=30.00MHz got=34.14MHz (29.29ns) cuts=0 main_latency=0 pipeline_stages=1 predicted_stage=75.60ns action=met
+[sweep] Trimming stages: chacha20_pipeline_shared met at 4 cuts (known failing: None), retrying at ~3 cuts (trim 1/2)
+Updating output files...
+Estimated register usage: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/top_f7c161fa_registers.log
+[sweep] chacha20_pipeline_shared: about to synthesize, cuts=3, 3 slice(s) (4 pipeline stages)
+[sweep] encrypt_dataflow_shared: about to synthesize, cuts=0, 0 slice(s) (1 pipeline stages)
+[sweep] decrypt_dataflow_shared: about to synthesize, cuts=0, 0 slice(s) (1 pipeline stages)
+Running syn w timing params... (sweep iteration 2, decision 2)
+Elapsed time: 0:57:02.306575...
+WARNING: No frequency associated with clock clk_None. Missing MAIN_MHZ pragma? Setting to maximum rate = 1000MHz so timing report can be generated...
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/vivado_f7c161fa_dab7ba744d9557c4.log
+[sweep] iter=2 main=chacha20_pipeline_shared goal=30.00MHz got=24.37MHz (41.03ns) cuts=3 main_latency=0 pipeline_stages=4 predicted_stage=39.36ns bottleneck=chacha20_block_step local_stages=0 action=densify(chacha20_block_step x1.29)
+[sweep] iter=2 main=encrypt_dataflow_shared goal=30.00MHz got=33.52MHz (29.83ns) cuts=0 main_latency=0 pipeline_stages=1 predicted_stage=71.10ns action=met
+[sweep] iter=2 main=decrypt_dataflow_shared goal=30.00MHz got=34.14MHz (29.29ns) cuts=0 main_latency=0 pipeline_stages=1 predicted_stage=75.60ns action=met
+[sweep] Trim attempt failed timing; restoring met result with 4 cuts...
+Met timing...
+[sweep] chacha20_pipeline_shared: met timing, 4 slice(s) built (5 pipeline stages), cuts=4, locked=0 inst(s), iterations=2
+[sweep] encrypt_dataflow_shared: met timing, 0 slice(s) built (1 pipeline stages), cuts=0, locked=0 inst(s), iterations=2
+[sweep] decrypt_dataflow_shared: met timing, 0 slice(s) built (1 pipeline stages), cuts=0, locked=0 inst(s), iterations=2
+[sweep] AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0 (unconstrained): 1 cycle(s) constrained on 1 multi-cycle path(s)
+[sweep] AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1 (unconstrained): 2 cycle(s) constrained on 1 multi-cycle path(s)
+[sweep] AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_2 (unconstrained): 1 cycle(s) constrained on 1 multi-cycle path(s)
+[sweep] AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_3 (unconstrained): 2 cycle(s) constrained on 1 multi-cycle path(s)
+[sweep] Placement trace: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/placement_trace.json
+[sweep] History: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/sweep_history.json
+AUTO_PIPELINE: timing in the current latency-sized hardware is provisional; re-elaboration and confirmation are required.
+================== AUTO_PIPELINE Pass 2: Re-elaborating with Discovered Latencies ================================
+AUTO_PIPELINE func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3: 4 clks
+AUTO_PIPELINE poly1305_mac_pipelined_poly1305_body_decrypt: 0 clks
+AUTO_PIPELINE poly1305_mac_pipelined_poly1305_body_encrypt: 0 clks
+AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0: 1 cycles
+AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1: 2 cycles
+AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_2: 1 cycles
+AUTO_MULTI_CYCLE stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_3: 2 cycles
+PY_TO_LOGIC parsing: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py
+  elaborating func: chacha20_block_step
+  elaborating func: chacha20_block
+  elaborating func: chacha20_init
+  elaborating func: chacha20_loop_body
+  elaborating func: chacha20_fsm
+  elaborating func: chacha20_pipeline_shared_chacha_shared_pipeline
+  elaborating func: chacha20_pipeline_shared
+  elaborating func: chacha20_pipeline_shared_chacha20_encrypt_shared
+  elaborating func: chacha20_pipeline_shared_chacha20_decrypt_shared
+  elaborating func: prep_auth_data_fsm
+  elaborating func: append_auth_tag
+  elaborating func: encrypt_dataflow_shared
+  elaborating func: strip_auth_tag_axis128_early_tlast
+  elaborating func: strip_auth_tag
+  elaborating func: poly1305_verify_decrypt
+  elaborating func: wait_to_verify
+  elaborating func: decrypt_dataflow_shared
+  elaborating func: encrypt_perf_tb
+  elaborating func: decrypt_perf_tb
+  elaborating func: shared_perf_tb_finish_checker
+Doing simple logic trimming/collapsing...
+Matching clock domain: main function chacha20_pipeline_shared based on shared global variable chacha20_pipeline_shared_encrypt_pipeline_in_if used with clock domain for main function encrypt_dataflow_shared @ 30.0 MHz, Group: None
+Writing log of integer module instances: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/integer_module_instances.log
+Writing VHDL files for all functions (before any added pipelining)...
+Writing multi main top level files...
+Writing the constant struct+enum definitions as defined from C code...
+Writing global wire definitions as parsed from C code...
+Synthesizing before pipelining to get path delays...
+
+Function: MUX_chacha20_loop_body_in_t_axis_in_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_0156dfb4 cached path delay: 1.256 ns
+Function: MUX_uint1_t cached path delay: 1.256 ns
+Function: UNARY_OP_NOT_uint1_t cached path delay: 0.897 ns
+Function: MUX_stream_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_64_keep_uint1_t_64_016a47d5 cached path delay: 1.256 ns
+Function: BIN_OP_PLUS_uint32_t_uint32_t cached path delay: 2.409 ns
+Function: BIN_OP_XOR_uint32_t_uint32_t cached path delay: 1.019 ns
+Function: BIN_OP_XOR_uint8_t_uint8_t cached path delay: 1.019 ns
+Function: MUX_uint8_t cached path delay: 1.256 ns
+Synthesizing function: func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3 [stream_auto_pipeline.py:70]
+Synthesizing function: fifo_data_t_chacha_shared_pipeline_out_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_f9c04591_depth_6_2bbe28b0 [fifo.py:67]
+Function: BIN_OP_AND_uint1_t_uint1_t cached path delay: 1.019 ns
+Function: BIN_OP_XOR_uint1_t_uint1_t cached path delay: 1.019 ns
+Function: MUX_uint2_t cached path delay: 1.256 ns
+Function: BIN_OP_NEQ_uint1_t_uint1_t cached path delay: 1.019 ns
+Function: BIN_OP_OR_uint1_t_uint1_t cached path delay: 1.019 ns
+Synthesizing function: soft_cmp_prefix_common_t_uint3_t_greater_False_is_signed_False_l_t_uint3_t_n_bits_3_r_t_uint3_t_strict_True_tree_soft_493f0673 [soft_cmp.py:416]
+Function: BIN_OP_PLUS_uint3_t_uint1_t cached path delay: 1.280 ns
+Function: BIN_OP_MINUS_uint3_t_uint1_t cached path delay: 1.274 ns
+Function: MUX_uint3_t cached path delay: 1.256 ns
+Synthesizing function: axis_broadcast_interlock_axis_intrf_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_366f5708 [axis.py:77]
+Function: MUX_uint130_t cached path delay: 1.256 ns
+Synthesizing function: VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88
+Function: BIN_OP_EQ_uint1_t_uint1_t cached path delay: 1.019 ns
+Synthesizing function: VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88
+Function: BIN_OP_PLUS_uint1_t_uint1_t cached path delay: 1.030 ns
+Function: MUX_uint130_t_2 cached path delay: 1.256 ns
+Synthesizing function: BIN_OP_EQ_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce [poly1305_mac_pipelined.py:203]
+Function: BIN_OP_AND_uint8_t_uint4_t cached path delay: 1.019 ns
+Function: BIN_OP_AND_uint8_t_uint8_t cached path delay: 1.019 ns
+Synthesizing function: clamp [poly1305_math.py:46]
+Function: MUX_uint128_t cached path delay: 1.256 ns
+Function: MUX_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce cached path delay: 1.256 ns
+Function: MUX_powers_t_values_uint130_t_2_direction_encrypt cached path delay: 1.256 ns
+Function: BIN_OP_EQ_uint2_t_uint1_t cached path delay: 1.256 ns
+Function: MUX_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_uint1_1ef56ac6 cached path delay: 1.256 ns
+Function: MUX_stream_intrf_data_t_uint256_t_feedback_t_uint1_t_feedback_t_ready_uint1_t cached path delay: 1.256 ns
+Function: BIN_OP_PLUS_uint2_t_uint1_t cached path delay: 1.274 ns
+Function: BIN_OP_MINUS_uint2_t_uint1_t cached path delay: 1.267 ns
+Function: BIN_OP_OR_uint130_t_uint129_t cached path delay: 1.019 ns
+Function: BIN_OP_INFERRED_MULT_uint130_t_uint130_t cached path delay: 19.319 ns
+Function: BIN_OP_PLUS_uint260_t_uint130_t cached path delay: 8.003 ns
+Function: BIN_OP_INFERRED_MULT_uint130_t_uint3_t cached path delay: 10.929 ns
+Function: BIN_OP_PLUS_uint130_t_uint133_t cached path delay: 4.792 ns
+Function: BIN_OP_INFERRED_MULT_uint3_t_uint3_t cached path delay: 1.468 ns
+Function: BIN_OP_PLUS_uint130_t_uint6_t cached path delay: 4.995 ns
+Function: BIN_OP_MINUS_uint131_t_uint130_t cached path delay: 4.780 ns
+Function: MUX_uint131_t cached path delay: 1.256 ns
+Synthesizing function: poly1305_body_encrypt [poly1305_mac_pipelined.py:51]
+Function: func_mcp_func_prologue_direction_encrypt_s49d186255a80_latency_None_start_latency_None_max_latency_None_s328b0922776f delay ~29.120 ns per cycle from isolated multi-cycle evidence of the same datapath (not re-synthesized)
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/stream/stream_auto_pipeline.py/func_stream_from_stream_stream_auto_pipeline_make_stream_auto_pipeline_func_chacha_shared_pipeline/vivado_0CLK_a19e4b51_f4f91a8ed6175fc0.log
+Function: func_mcp_func_epilogue_direction_encrypt_s2daf617547e3_latency_None_start_latency_None_max_latency_None_sec918f18bbdb delay ~22.334 ns per cycle from isolated multi-cycle evidence of the same datapath (not re-synthesized)
+Synthesizing function: chacha20_pipeline_shared_chacha20_encrypt_shared [chacha20_pipeline_shared.py:210]
+Synthesizing function: prep_auth_data_fsm [prep_auth_data.py:56]
+Synthesizing function: append_auth_tag [append_auth_tag.py:56]
+Function: MUX_powers_t_values_uint130_t_2_direction_decrypt cached path delay: 1.256 ns
+Synthesizing function: poly1305_body_decrypt [poly1305_mac_pipelined.py:56]
+Function: func_mcp_func_prologue_direction_decrypt_sb4370c3c5534_latency_None_start_latency_None_max_latency_None_s97be5e150f75 delay ~29.120 ns per cycle from isolated multi-cycle evidence of the same datapath (not re-synthesized)
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/fifo.py/fifo_from_fifo_depth_6_mode_fwft_data_t_chacha_shared_pipeline_out_t_is_encrypt_uint1_t_data_ndarray_fragment_t_ndims_1_frag_t_kept_data_bus_t_n_64_data_t_uint8_t/vivado_0CLK_de264c78_151eac9921b84ff7.log
+Function: func_mcp_func_epilogue_direction_decrypt_se39729273383_latency_None_start_latency_None_max_latency_None_s7123d087457f delay ~22.334 ns per cycle from isolated multi-cycle evidence of the same datapath (not re-synthesized)
+Synthesizing function: strip_auth_tag [strip_auth_tag.py:94]
+Synthesizing function: chacha20_pipeline_shared_chacha20_decrypt_shared [chacha20_pipeline_shared.py:239]
+Synthesizing function: poly1305_verify_decrypt [poly1305_verify_decrypt.py:51]
+Synthesizing function: wait_to_verify [wait_to_verify.py:58]
+Function 954/995, elapsed time 1:14:42.661112...
+...Waiting on synthesis for: func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3
+func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2d2dc41f9fa3 Path delay (maybe to be pipelined): 157.422 ns
+Function 956/995, elapsed time 1:14:42.663961...
+...Waiting on synthesis for: fifo_data_t_chacha_shared_pipeline_out_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_f9c04591_depth_6_2bbe28b0
+fifo_data_t_chacha_shared_pipeline_out_t_data_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_f9c04591_depth_6_2bbe28b0 Path delay (maybe to be pipelined): 3.021 ns
+Function 959/995, elapsed time 1:16:03.285783...
+...Waiting on synthesis for: soft_cmp_prefix_common_t_uint3_t_greater_False_is_signed_False_l_t_uint3_t_n_bits_3_r_t_uint3_t_strict_True_tree_soft_493f0673
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/operators/soft_cmp.py/soft_cmp_prefix_from_operators_soft_cmp_factory_greater_False_is_signed_False_n_bits_3_strict_True_common_t_uint3_t_u2_t_uint2_t_tree_soft_cmp_prefix_n_leaves_3_level_0/vivado_0CLK_e08e9af4_a8dd7926787f4b0f.log
+soft_cmp_prefix_common_t_uint3_t_greater_False_is_signed_False_l_t_uint3_t_n_bits_3_r_t_uint3_t_strict_True_tree_soft_493f0673 Path delay (maybe to be pipelined): 1.436 ns
+Function 962/995, elapsed time 1:17:18.170958...
+...Waiting on synthesis for: axis_broadcast_interlock_axis_intrf_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_366f5708
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/include/pypeline/axi/axis.py/axis_broadcast_interlock_from_axi_axis_n_2_axis_intrf_stream_intrf_feedback_t_uint1_t_data_t_ndarray_fragment_t_ndims_1_frag_t_kept_data_bus_t_n_16_data_t_uint8_t/vivado_0CLK_6ea1e0af_a26a68fb902f6a11.log
+axis_broadcast_interlock_axis_intrf_stream_intrf_data_t_ndarray_fragment_t_frag_kept_data_bus_t_data_uint8_t_16_keep_366f5708 Path delay (maybe to be pipelined): 1.274 ns
+Function 963/995, elapsed time 1:17:18.341058...
+...Waiting on synthesis for: VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/built_in/VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88/vivado_0CLK_74627d89_d755974b8a6c2fda.log
+VAR_REF_RD_uint130_t_uint130_t_2_VAR_5e88 Path delay (maybe to be pipelined): 1.256 ns
+Function 964/995, elapsed time 1:17:18.478275...
+...Waiting on synthesis for: VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/built_in/VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88/vivado_0CLK_1cf5c5d4_e7d7c31a7bbd9f61.log
+VAR_REF_ASSIGN_uint130_t_2_uint130_t_2_VAR_5e88 Path delay (maybe to be pipelined): 1.267 ns
+Function 965/995, elapsed time 1:17:18.598796...
+...Waiting on synthesis for: BIN_OP_EQ_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/built_in/BIN_OP_EQ_mac_state_t_from_poly1305_mac_pipelined_IDLE_0_PROLOGUE_LAUNCH_1_PROLOGUE_WAIT_2_STREAM_BODY_3_DRAIN_4_EPILOGUE_LAUNCH_5_EPILOGUE_WAIT_6_OUTPUT_TAG_7_mac_state_t_from_poly1305_mac_pipelined_IDLE_0_PROLOGUE_LAUNCH_1_h1893525f1681/vivado_0CLK_de264c78_b815398969e46a33.log
+BIN_OP_EQ_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce_mac_state_t_IDLE_PROLOGUE_LAUNCH_PROLOGUE_WAIT_STREAM_BODY_DRAIN_EPILOGUE_LAUNCH_ab1036ce Path delay (maybe to be pipelined): 1.436 ns
+Function 966/995, elapsed time 1:17:18.750314...
+...Waiting on synthesis for: clamp
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/clamp/vivado_0CLK_fc2c68ca_266f2c8adb59773c.log
+clamp Path delay (maybe to be pipelined): 0.882 ns
+Function 979/995, elapsed time 1:17:18.890181...
+...Waiting on synthesis for: poly1305_body_encrypt
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/poly1305_body_encrypt/vivado_0CLK_09b9586c_5cd82e2782c3327c.log
+poly1305_body_encrypt Path delay (maybe to be pipelined): 30.682 ns
+func_mcp_func_prologue_direction_encrypt_s49d186255a80_latency_None_start_latency_None_max_latency_None_s328b0922776f FMAX: 34.364 MHz (29.100 ns path delay)
+func_mcp_func_epilogue_direction_encrypt_s2daf617547e3_latency_None_start_latency_None_max_latency_None_sec918f18bbdb FMAX: 44.843 MHz (22.300 ns path delay)
+Function 982/995, elapsed time 1:17:19.309466...
+...Waiting on synthesis for: chacha20_pipeline_shared_chacha20_encrypt_shared
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/chacha20_pipeline_shared_chacha20_encrypt_shared/vivado_0CLK_fd3bf4e3_0e64089bc9abf89e.log
+chacha20_pipeline_shared_chacha20_encrypt_shared FMAX: 238.095 MHz (4.200 ns path delay)
+Function 983/995, elapsed time 1:19:21.031657...
+...Waiting on synthesis for: prep_auth_data_fsm
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/prep_auth_data_fsm/vivado_0CLK_d478c8f5_b10a3af30fca0441.log
+prep_auth_data_fsm FMAX: 156.250 MHz (6.400 ns path delay)
+Function 984/995, elapsed time 1:19:21.507779...
+...Waiting on synthesis for: append_auth_tag
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/append_auth_tag/vivado_0CLK_4c93283f_c58178613e751b9a.log
+append_auth_tag FMAX: 204.082 MHz (4.900 ns path delay)
+Function 987/995, elapsed time 1:19:21.875978...
+...Waiting on synthesis for: poly1305_body_decrypt
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/poly1305_body_decrypt/vivado_0CLK_09b9586c_4392911f1224bbab.log
+poly1305_body_decrypt Path delay (maybe to be pipelined): 30.682 ns
+func_mcp_func_prologue_direction_decrypt_sb4370c3c5534_latency_None_start_latency_None_max_latency_None_s97be5e150f75 FMAX: 34.364 MHz (29.100 ns path delay)
+func_mcp_func_epilogue_direction_decrypt_se39729273383_latency_None_start_latency_None_max_latency_None_s7123d087457f FMAX: 44.843 MHz (22.300 ns path delay)
+Function 990/995, elapsed time 1:19:22.200435...
+...Waiting on synthesis for: strip_auth_tag
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/strip_auth_tag/vivado_0CLK_6109d1f5_d8fe5175bfe50944.log
+strip_auth_tag FMAX: 142.857 MHz (7.000 ns path delay)
+Function 991/995, elapsed time 1:19:22.542479...
+...Waiting on synthesis for: chacha20_pipeline_shared_chacha20_decrypt_shared
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/chacha20_pipeline_shared_chacha20_decrypt_shared/vivado_0CLK_8e900123_75f743fcb0941bb3.log
+chacha20_pipeline_shared_chacha20_decrypt_shared FMAX: 238.095 MHz (4.200 ns path delay)
+Function 992/995, elapsed time 1:21:24.431328...
+...Waiting on synthesis for: poly1305_verify_decrypt
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/poly1305_verify_decrypt/vivado_0CLK_6a2e9401_1ae41664288085d9.log
+poly1305_verify_decrypt FMAX: 277.778 MHz (3.600 ns path delay)
+Function 993/995, elapsed time 1:21:24.627411...
+...Waiting on synthesis for: wait_to_verify
+Reading log /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/wait_to_verify/vivado_0CLK_3298c92f_25a4cd9fb817ed8d.log
+PY_TO_LOGIC warning: in 'chacha20_loop_body': variable 'block' is not a legal VHDL identifier; auto-mangled to 'block_v'
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.182141 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.250863 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.278659 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.781506 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.872112 to fit
+dot: graph is too large for cairo-renderer bitmaps. Scaling by 0.73434 to fit
+wait_to_verify FMAX: 333.333 MHz (3.000 ns path delay)
+Function: quarter_round_a_0_b_4_c_8_d_12_s31dcfdb36b82 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_1_b_5_c_9_d_13_s5881edf27190 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_2_b_6_c_10_d_14_s9dd00bdfea18 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_3_b_7_c_11_d_15_s47a156fd6afd estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_0_b_5_c_10_d_15_s97dfd05ecab8 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_1_b_6_c_11_d_12_sb772cbae8def estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_2_b_7_c_8_d_13_s23096f475527 estimated path delay: 13.600 ns (derived from submodules)
+Function: quarter_round_a_3_b_4_c_9_d_14_s2fefba3dcfc3 estimated path delay: 13.600 ns (derived from submodules)
+Function: chacha20_block_step estimated path delay: 108.800 ns (derived from submodules)
+Function: chacha20_block estimated path delay: 1090.400 ns (derived from submodules)
+Function: chacha20_loop_body estimated path delay: 1092.600 ns (derived from submodules)
+Function: chacha20_pipeline_shared_chacha_shared_pipeline estimated path delay: 1092.600 ns (derived from submodules)
+Function: auto_pipelined_func_has_input_reg_has_output_reg_ea4c01cb_s8467e4d76e90 estimated path delay: 157.400 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_2_level_1_s75f13f2451f0 estimated path delay: 3.200 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_3_level_0_s70cdeb1300ad estimated path delay: 6.400 ns (derived from submodules)
+Function: stream_auto_pipeline_func_chacha20_pipeline_shared_chacha_shared_pipeline_s2a99760ab79d estimated path delay: 165.800 ns (derived from submodules)
+Function: chacha20_pipeline_shared estimated path delay: 168.200 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_2_level_7_s093094f7ded2 estimated path delay: 3.200 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_3_level_6_s9c4ee2fa95a6 estimated path delay: 6.400 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_5_level_5_s4e91d34bbadc estimated path delay: 9.600 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_9_level_4_s9755b1208c40 estimated path delay: 12.800 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_17_level_3_s83f1490c597c estimated path delay: 16.000 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_33_level_2_s5c6e6556cc76 estimated path delay: 19.200 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_66_level_1_s52c9c1f5b23d estimated path delay: 22.400 ns (derived from submodules)
+Function: soft_cmp_prefix_n_leaves_131_level_0_s58aaeeb69d38 estimated path delay: 25.600 ns (derived from submodules)
+Function: soft_cmp_prefix_common_t_uint131_t_greater_True_is_signed_False_l_t_uint131_t_n_bits_131_r_t_uint130_t_strict_False_b8571ea1 estimated path delay: 33.000 ns (derived from submodules)
+Function: uint260_mod_prime estimated path delay: 56.100 ns (derived from submodules)
+Function: residue_mul_add_mod estimated path delay: 83.400 ns (derived from submodules)
+Function: poly1305_body estimated path delay: 84.400 ns (derived from submodules)
+Function: body_pipeline_direction_encrypt_sefef53af84fe estimated path delay: 30.600 ns (derived from submodules)
+Function: poly1305_mac_pipelined_direction_encrypt_s682a8df6a0cf estimated path delay: 36.800 ns (derived from submodules)
+Function: encrypt_dataflow_core_chacha_func_chacha20_pipeline_shared_chacha20_encrypt_shared_s5a98de5b51e9_if6ad3fe0a estimated path delay: 53.500 ns (derived from submodules)
+Function: encrypt_dataflow_shared estimated path delay: 53.500 ns (derived from submodules)
+Function: body_pipeline_direction_decrypt_sc2f50bfb3c73 estimated path delay: 30.600 ns (derived from submodules)
+Function: poly1305_mac_pipelined_direction_decrypt_sb9c8ff95d74e estimated path delay: 36.800 ns (derived from submodules)
+Function: decrypt_dataflow_core_chacha_func_chacha20_pipeline_shared_chacha20_decrypt_shared_sf34ffc3f704c_if502f800e estimated path delay: 58.000 ns (derived from submodules)
+Function: decrypt_dataflow_shared estimated path delay: 58.000 ns (derived from submodules)
+Estimated register usage: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/top_fb27be13_registers.log
+[sweep] chacha20_pipeline_shared: about to synthesize (pinned from previous pass), cuts=0, 4 pipeline register stage(s) (5 pipeline stages)
+[sweep] encrypt_dataflow_shared: about to synthesize (pinned from previous pass), cuts=0, 0 pipeline register stage(s) (1 pipeline stages)
+[sweep] decrypt_dataflow_shared: about to synthesize (pinned from previous pass), cuts=0, 0 pipeline register stage(s) (1 pipeline stages)
+Running confirmation synthesis with pipelining pinned from the previous pass...
+WARNING: No frequency associated with clock clk_None. Missing MAIN_MHZ pragma? Setting to maximum rate = 1000MHz so timing report can be generated...
+Running: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/vivado_fb27be13_0e836d3d80832d75.log
+PASS chacha20_pipeline_shared: 30.07 MHz vs 30.00 MHz goal; worst reported path (confirmation run)
+PASS decrypt_dataflow_shared: 34.14 MHz vs 30.00 MHz goal; worst reported path (confirmation run)
+PASS encrypt_dataflow_shared: 33.52 MHz vs 30.00 MHz goal; worst reported path (confirmation run)
+[sweep] History: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/sweep_history.json
+================== Writing Results of Throughput Sweep ================================
+[sweep] Pipeline depth summary:
+[sweep]   chacha20_pipeline_shared: 4 slice(s) total (5 pipeline stages: comb regions separated by those slices)
+[sweep]   encrypt_dataflow_shared: 0 slice(s) total (1 pipeline stages: comb regions separated by those slices)
+[sweep]   decrypt_dataflow_shared: 0 slice(s) total (1 pipeline stages: comb regions separated by those slices)
+[sweep] History: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/top/sweep_history.json
+WARNING: No frequency associated with clock clk_None. Missing MAIN_MHZ pragma? Setting to maximum rate = 1000MHz so timing report can be generated...
+Output VHDL files: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz/read_vhdl.tcl
+=== ChaCha20-Poly1305 PERFORMANCE measurement (encrypt side) ===
+Encrypt: phases = ['b2b-16', 'b2b-64', 'b2b-256', 'b2b-1024', 'b2b-1420', 'b2b-1920']
+Encrypt: seed = 8439, json = /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/perf_raw.json
+=== ChaCha20-Poly1305 PERFORMANCE measurement (decrypt side) ===
+Decrypt: phases = ['b2b-16', 'b2b-64', 'b2b-256', 'b2b-1024', 'b2b-1420', 'b2b-1920']
+Decrypt: seed = 8439, json = /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/perf_raw.json
+encrypt: phase 0 'b2b-16': 4 x 16 B queued
+decrypt: phase 0 'b2b-16': 4 x 16 B queued
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+encrypt: phase 0 'b2b-16' DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+decrypt: phase 0 'b2b-16' DONE
+decrypt: phase 1 'b2b-64': 4 x 64 B queued
+
+encrypt: phase 1 'b2b-64': 4 x 64 B queued
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+encrypt: phase 1 'b2b-64' DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+decrypt: phase 1 'b2b-64' DONE
+decrypt: phase 2 'b2b-256': 4 x 256 B queued
+
+encrypt: phase 2 'b2b-256': 4 x 256 B queued
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+encrypt: phase 2 'b2b-256' DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+decrypt: phase 2 'b2b-256' DONE
+decrypt: phase 3 'b2b-1024': 4 x 1024 B queued
+
+encrypt: phase 3 'b2b-1024': 4 x 1024 B queued
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+encrypt: phase 3 'b2b-1024' DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+decrypt: phase 3 'b2b-1024' DONE
+decrypt: phase 4 'b2b-1420': 4 x 1420 B queued
+
+encrypt: phase 4 'b2b-1420': 4 x 1420 B queued
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+encrypt: phase 4 'b2b-1420' DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+decrypt: phase 4 'b2b-1420' DONE
+decrypt: phase 5 'b2b-1920': 4 x 1920 B queued
+
+encrypt: phase 5 'b2b-1920': 4 x 1920 B queued
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+encrypt: phase 5 'b2b-1920' DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+decrypt: phase 5 'b2b-1920' DONE
+
+sim_finish() called — stopping early at cycle 2350
+2351 cycles in 3196.936s  (1359.82 ms/cycle, 0.7 cycles/s)
+PERF:       b2b-16 encrypt   0.865 B/cyc window=74 cold_head=16
+PERF:       b2b-16 decrypt   0.529 B/cyc window=121 cold_head=66
+PERF:       b2b-64 encrypt   2.876 B/cyc window=89 cold_head=18
+PERF:       b2b-64 decrypt   1.766 B/cyc window=145 cold_head=59
+PERF:      b2b-256 encrypt   7.062 B/cyc window=145 cold_head=18
+PERF:      b2b-256 decrypt   5.120 B/cyc window=200 cold_head=50
+PERF:     b2b-1024 encrypt  11.872 B/cyc window=345 cold_head=18
+PERF:     b2b-1024 decrypt   8.866 B/cyc window=462 cold_head=94
+PERF:     b2b-1420 encrypt  12.938 B/cyc window=439 cold_head=18
+PERF:     b2b-1420 decrypt   9.016 B/cyc window=630 cold_head=135
+PERF:     b2b-1920 encrypt  13.497 B/cyc window=569 cold_head=18
+PERF:     b2b-1920 decrypt  10.323 B/cyc window=744 cold_head=150
+PERF: wrote /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/perf_raw.json
+Done.
+--> --perf implies --sim
+--> --perf implies --native
+--> Clock target: 30 MHz
+--- Preparing output directory: ./generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz ---
+--> --continue active: Skipping output directory cleanup.
+
+--- Running Command ---
+/media/1TB/Dropbox/PipelineC/git/PipelineC/src/pypelinec ./src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py --out_dir ./generated-files-perf-pipe-shared-native-poly1305-pipelined-30mhz --sim --run all --stop_on_over_capacity -j 1
+

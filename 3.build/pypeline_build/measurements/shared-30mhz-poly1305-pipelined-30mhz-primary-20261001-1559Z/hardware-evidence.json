@@ -1,0 +1,174 @@
+{
+  "target_mhz": 30,
+  "fmax": {
+    "design_mhz": 30.05,
+    "design_mhz_is_lower_bound": false,
+    "design_mhz_basis": "slowest MAIN's reported achieved MHz",
+    "min_reported_mhz": 30.05,
+    "limiting_main": "chacha20_pipeline_shared",
+    "target_mhz": 30.0,
+    "timing_met": true,
+    "per_main": {
+      "chacha20_pipeline_shared": {
+        "sweep_iters": 3,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 30.05,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "confirmation_run",
+        "autopipelined": true,
+        "slices": 4,
+        "pipeline_stages": 5
+      },
+      "encrypt_dataflow_shared": {
+        "sweep_iters": 3,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 33.519,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "confirmation_run",
+        "autopipelined": true,
+        "slices": 0,
+        "pipeline_stages": 1
+      },
+      "decrypt_dataflow_shared": {
+        "sweep_iters": 3,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 33.519,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "confirmation_run",
+        "autopipelined": true,
+        "slices": 0,
+        "pipeline_stages": 1
+      }
+    },
+    "source": {
+      "sweep_history": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-verilog-shared-poly1305-pipelined-30mhz/chacha20poly1305_encrypt_decrypt_shared/sweep_history.json",
+      "sweep_history_schema": 3,
+      "final_basis": "sweep_history.json final records",
+      "cross_check_mismatches": {},
+      "stdout_fmax_lines": [],
+      "final_outcomes": {
+        "chacha20_pipeline_shared": {
+          "met": true,
+          "slices": 4,
+          "pipeline_stages": 5,
+          "final_cuts": 4,
+          "locked_instances": 0,
+          "iterations": 2,
+          "outcome": "met timing (achieved MHz not reported)",
+          "autopipelined": true
+        },
+        "encrypt_dataflow_shared": {
+          "met": true,
+          "slices": 0,
+          "pipeline_stages": 1,
+          "final_cuts": 0,
+          "locked_instances": 0,
+          "iterations": 2,
+          "outcome": "met timing (achieved MHz not reported)",
+          "autopipelined": true
+        },
+        "decrypt_dataflow_shared": {
+          "met": true,
+          "slices": 0,
+          "pipeline_stages": 1,
+          "final_cuts": 0,
+          "locked_instances": 0,
+          "iterations": 2,
+          "outcome": "met timing (achieved MHz not reported)",
+          "autopipelined": true
+        }
+      }
+    },
+    "pipeline_depth_summary": [
+      "[sweep] Pipeline depth summary:",
+      "[sweep]   chacha20_pipeline_shared: 4 slice(s) total (5 pipeline stages: comb regions separated by those slices)",
+      "[sweep]   encrypt_dataflow_shared: 0 slice(s) total (1 pipeline stages: comb regions separated by those slices)",
+      "[sweep]   decrypt_dataflow_shared: 0 slice(s) total (1 pipeline stages: comb regions separated by those slices)",
+      "[sweep] History: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-verilog-shared-poly1305-pipelined-30mhz/chacha20poly1305_encrypt_decrypt_shared/sweep_history.json"
+    ],
+    "timing_not_met": []
+  },
+  "area": {
+    "design": "chacha20poly1305_encrypt_decrypt_shared_c52db4be",
+    "part": "7a200tffg1156-2",
+    "design_state": "Synthesized",
+    "vivado_version": "2019.2",
+    "util_pct": {
+      "lut": 31.66,
+      "ff": 4.8,
+      "bram_tiles": 3.01,
+      "dsp": 69.19
+    },
+    "lut_total": 42617,
+    "lut_logic": 41654,
+    "lut_memory": 963,
+    "lut_dram": 0,
+    "lut_srl": 963,
+    "ff_total": 12934,
+    "ff_flipflop": 12934,
+    "latches": 0,
+    "muxf7": 4,
+    "muxf8": 0,
+    "bram_tiles": 11,
+    "ramb36": 10,
+    "ramb18": 2,
+    "dsp48": 512,
+    "carry4": 5603,
+    "log": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-verilog-shared-poly1305-pipelined-30mhz/chacha20poly1305_encrypt_decrypt_shared/vivado_c52db4be_7dae095601422195.log",
+    "blocks_found": 1,
+    "logs_available": 3,
+    "selection_basis": "retained implementation and constraints from sweep history",
+    "resources_available": {
+      "lut": 134600,
+      "ff": 269200,
+      "bram_tiles": 365,
+      "dsp": 740
+    },
+    "available": true,
+    "over_capacity": {},
+    "fits_device": true,
+    "scope": "hardware_top",
+    "constant_key_folding": false,
+    "per_module": {}
+  },
+  "mcp_hdl_audit": {
+    "out_dir": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-verilog-shared-poly1305-pipelined-30mhz",
+    "top_vhdl": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-verilog-shared-poly1305-pipelined-30mhz/chacha20poly1305_encrypt_decrypt_shared/chacha20poly1305_encrypt_decrypt_shared.vhd",
+    "scope": "emitted MCP arithmetic only; not timing/constraint sign-off",
+    "mcps": {
+      "encrypt/prologue": {
+        "entity": "prologue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_encrypt_0clk_e52b50c1",
+        "file": "prologue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_encrypt/prologue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_encrypt_0CLK_e52b50c1.vhd",
+        "entities_checked": 26,
+        "registered_entities": []
+      },
+      "encrypt/epilogue": {
+        "entity": "epilogue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_encrypt_0clk_a4c0d93e",
+        "file": "epilogue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_encrypt/epilogue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_encrypt_0CLK_a4c0d93e.vhd",
+        "entities_checked": 38,
+        "registered_entities": []
+      },
+      "decrypt/prologue": {
+        "entity": "prologue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_decrypt_0clk_5afa3ac3",
+        "file": "prologue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_decrypt/prologue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_decrypt_0CLK_5afa3ac3.vhd",
+        "entities_checked": 26,
+        "registered_entities": []
+      },
+      "decrypt/epilogue": {
+        "entity": "epilogue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_decrypt_0clk_753cb18e",
+        "file": "epilogue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_decrypt/epilogue_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined_direction_decrypt_0CLK_753cb18e.vhd",
+        "entities_checked": 38,
+        "registered_entities": []
+      }
+    },
+    "passed": true,
+    "errors": []
+  },
+  "scope": "synthesis timing and capacity; not routed sign-off"
+}

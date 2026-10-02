@@ -25,7 +25,7 @@ from interface.interface_func import make_hw_func_from_interface_func
 
 import strip_auth_tag
 import prep_auth_data
-import poly1305
+from poly1305_select import make_poly1305_mac
 import poly1305_verify_decrypt
 import wait_to_verify
 
@@ -51,6 +51,8 @@ def make_decrypt_dataflow_core(chacha_func):
     chacha20_pipeline_shared.chacha20_decrypt_shared (uses the arbitrated
     shared pipeline)."""
 
+    mac_func = make_poly1305_mac("decrypt")
+
     def decrypt_dataflow_core(
         axis_in_if: axis128_intrf,
         key: uint8_t[CHACHA20_KEY_SIZE],
@@ -69,7 +71,7 @@ def make_decrypt_dataflow_core(chacha_func):
             aad=aad, aad_len=aad_len, axis_in_if=bcast.axis_out_if[0]
         )
         # poly1305_mac recomputes the tag from the poly key + the framed data
-        mac = poly1305.poly1305_mac_instance(key_if=chacha.key_if, data_in_if=prep.axis_if)
+        mac = mac_func(key_if=chacha.key_if, data_in_if=prep.axis_if)
         # ...which is compared against the tag stripped off the input
         verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
             auth_tag_if=strip.auth_tag_out_if, calc_tag_if=mac.auth_tag_if

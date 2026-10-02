@@ -15,6 +15,9 @@ of those onto sys.path itself before importing any design file.
 
 import os
 import sys
+from poly1305_config import selected_target
+
+TARGET_MHZ = float(selected_target())
 
 _here = os.path.dirname(os.path.abspath(__file__))
 
