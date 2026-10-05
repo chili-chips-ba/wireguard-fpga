@@ -2,7 +2,7 @@
 
 Pypeline (Python front-end for PipelineC) port of the C designs in
 `../pipelinec_build/`. Three design variants target Artix-7
-xc7a200tffg1156-2: **pipelined Poly1305 at 30 MHz by default**, or the
+xc7a200tffg1156-2: **pipelined Poly1305, sharing both at 60 MHz by default**, or the
 selectable **legacy Poly1305 at 80 MHz**. The C originals' Poly1305 math
 and ciphertext-length bugs are fixed, so this port is RFC 8439-conformant and its
 tags/ciphertext lengths deliberately differ from the (still-unfixed) C
@@ -12,6 +12,41 @@ Each of the three design variants has **two testbench styles**: a
 synthesizable-style testbench (fixed vectors, compiles through cocotb/GHDL or
 real hardware) and a non-synthesizable testbench (`@sim_input`/`@sim_output`,
 on-the-fly random vectors, native sim only) — see "Testbench Styles" below.
+
+Combined builds share both ChaCha20 and the Poly1305 setup/finalization
+resources by default. Sharing is independently selectable; standalone
+encrypt/decrypt builds keep their compute resources private. Sharing-both
+defaults to the verified **60 MHz** point; other pipelined selections retain
+their **30 MHz** defaults. The sharing-both configuration has a passing
+external-port hardware checkpoint at 30 MHz and native fixed-vector plus QoR
+testbench results at a **60 MHz** goal.
+
+The latest six-size QoR run passed all **48 packet checks**, synthesis timing,
+capacity, and archived-evidence integrity. At 1920 bytes it sustains
+**6.312 Gb/s encrypt / 4.800 Gb/s decrypt at 60 MHz**. The performance top's
+synthesis estimate is **63.032 MHz**, using **640 of 740 DSPs**.
+Both authentication bodies accept one block per cycle. These are
+performance-testbench results, **not external-port hardware timing/area at
+60 MHz or routed sign-off**. The passing fixed-vector testbench used 704
+DSPs; different fixtures permit different optimizations.
+
+See the [component design and validation](src/poly1305/throughput.md#independent-mcp-sharing)
+for arithmetic, arbitration, latency sizing and deferred higher-clock issues.
+The latest packet results and historical comparison are below.
+
+The [sharing-both hardware evidence](measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/hardware-evidence.json)
+retains the confirmed external-port synthesis, constraints, input signatures,
+source hashes and [validation summary](measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/validation-summary.json):
+
+| Shared resources | Goal / synthesis fmax | LUT | FF | DSP48 | BRAM tiles |
+| --- | --- | ---: | ---: | ---: | ---: |
+| ChaCha20 only (recorded baseline) | 30 / 30.05 MHz | 42,617 | 12,934 | 512 | 11 |
+| ChaCha20 + Poly1305 MCPs | 30 / 30.05 MHz | 36,830 | 11,771 | 320 | 11 |
+
+The new design saves 192 DSPs (37.5%). Both use corrected pipelined arithmetic,
+but compiler revisions differ: new checkpoint `6bec6290`, baseline compiler
+provenance below. This is not a controlled compiler-only area comparison,
+a throughput claim, or routed timing sign-off. Existing QoR archives are unchanged.
 
 <p align="center">
   <img width="90%" src="0.doc/wireguard-pypeline-sim-light.png"
@@ -25,31 +60,55 @@ Run from `3.build/pypeline_build` in the primary WireGuard checkout. Set
 `measure.py` also discovers the sibling PipelineC
 checkout. The compiler revision used for the completed run and its original
 dirty-tree provenance are preserved with the measurements.
-The completed run used Vivado 2019.2 and the compiler tree identified as
+The latest QoR used Vivado 2019.2 and PipelineC
+`ff0a3ec6835bac3cb3c33e3c413738baa2e3c673-dirty`; exact frozen design/include
+hashes are retained with its evidence. The archived ChaCha-only run used
+the compiler tree identified as
 `0cc6aed9caf7d6cfbdb7dd345e12d950e3303300-dirty` at QoR launch. A compatible
 PipelineC checkout needs the MCP, sweep-confirmation, package-rewrite and
 `--stop_on_over_capacity` support; see the archived source hashes for the
 exact tested code rather than assuming the revision alone implies a clean tree.
 
-### Validated profiles
+### Design and sharing selection
 
-| Command | Poly1305 | Clock goal | Shared hardware output directory |
-| --- | --- | ---: | --- |
-| `./build.py --shared` | pipelined | 30 MHz | `generated-files-verilog-shared-poly1305-pipelined-30mhz` |
-| `./build.py --shared --poly1305 legacy` | legacy | 80 MHz | `generated-files-verilog-shared-poly1305-legacy` |
+| Selection (also accepted by `measure.py` for combined designs) | ChaCha20 shared | Poly1305 setup/finalization shared |
+| --- | --- | --- |
+| No sharing flags, or `--shared` | Yes | Yes |
+| `--share-chacha20` | Yes | No |
+| `--share-poly1305` | No | Yes |
+| Both sharing flags | Yes | Yes |
+| `--enc` or `--dec` (`build.py` only) | No | No |
 
-An explicit `--target-mhz {30,40,80}` overrides the profile clock. Both
+A supplied sharing flag selects the complete set, not an extra resource added
+to the default. Sharing flags cannot be combined with `--enc`/`--dec`.
+Explicit selections override `WG_SHARE_CHACHA20` / `WG_SHARE_POLY1305`
+(0 or 1); direct compiler invocation uses those variables. Legacy combined
+builds require `--share-chacha20 --poly1305 legacy`: the implicit sharing-both
+default and `--shared` are rejected with legacy.
+
+| Hardware command | Default clock | Output directory |
+| --- | ---: | --- |
+| `./build.py` or `./build.py --shared` | 60 MHz | `generated-files-verilog-shared-poly1305-pipelined-share-chacha20-poly1305-60mhz` |
+| `./build.py --share-chacha20` | 30 MHz | `generated-files-verilog-shared-poly1305-pipelined-share-chacha20-30mhz` |
+| `./build.py --share-poly1305` | 30 MHz | `generated-files-verilog-shared-poly1305-pipelined-share-poly1305-30mhz` |
+| `./build.py --share-chacha20 --poly1305 legacy` | 80 MHz | `generated-files-verilog-shared-poly1305-legacy-share-chacha20` |
+
+An explicit
+`--target-mhz {30,40,50,60,70,80}` overrides the profile clock. Both
 `build.py` and `measure.py` support `--poly1305 {pipelined,legacy}`; explicit
 selection overrides `WG_POLY1305_IMPL`, otherwise it selects the implementation
-(default `pipelined`). Their clock defaults follow the selected implementation
+(default `pipelined`). Their clock defaults follow the selected implementation and sharing set
 and override inherited `WG_TARGET_MHZ`. Direct compiler invocation instead
-honors `WG_TARGET_MHZ`, falling back to the same profile clocks. Only the chosen
+honors `WG_TARGET_MHZ`, falling back to those clocks using `WG_SHARE_*`
+(both enabled by default); use an explicit clock or disable both sharing flags
+when invoking a standalone private design directly. `build.py --enc`/`--dec`
+default to 30 MHz. Only the chosen
 MAC module is imported: the selector adds no hardware mux or unused legacy FSM.
 
-Outputs include the implementation and, except for the historical 80 MHz
+Outputs include the implementation, sharing selection and, except for the historical 80 MHz
 naming, the clock suffix. This applies to hardware and every simulation mode;
 switching profiles cannot reuse the other profile's cache. The 30 MHz shared
-configuration is a completed synthesis/functional checkpoint, not an 80 MHz
+ChaCha-only configuration is a completed synthesis/functional checkpoint, not an 80 MHz
 pipelined timing pass or routed implementation sign-off. Separate encrypt/decrypt
 variants passed the integration tests; the archived DUT-only area is for shared.
 
@@ -63,15 +122,18 @@ hardware, correctness-testbench and shared-performance modes.
 All automatic compute blocks now take `start_latency` hints from the
 clock-indexed table in [src/poly1305_config.py](src/poly1305_config.py), selected
 alongside the clock in `wireguard_env.py`. The shared-design hints come from
-the confirmed 30 MHz hardware build; private cores reuse equivalent-core
-hints and legacy retains its historical seed. 40/80 MHz currently reuse the
-same table until their own profiles are characterized. These are neither
+the confirmed 30 MHz hardware builds; the new shared Poly1305 services have
+also confirmed the same one/two-cycle seeds as their private two-lane counterparts.
+The 60 MHz entry uses the confirmed sharing-both fixed-vector build;
+private-resource hints still fall back to their 30 MHz values. Other
+uncharacterized clocks reuse the 30 MHz table until characterized. These are neither
 fixed latencies nor maximum limits: the sweep still checks timing and can
 change them, and latency-dependent storage is sized from the actual pipeline
 depth. To add a characterized clock, add a complete entry to
 `START_LATENCIES_BY_MHZ`: pipeline values count core registers, excluding I/O
 registers, and MCP values count setup cycles, excluding the handshake cycle.
-The committed measurements below were made before these hints were added.
+The latest 60 MHz QoR was collected before the new 60 MHz hints were added;
+changing hints does not change its saved evidence or force its final depths.
 Current source requires compiler support for
 `make_stream_auto_pipeline(..., start_latency=...)` and forwarding that option
 to its internal automatic pipeline.
@@ -80,15 +142,15 @@ Use `--out-dir` to compare a fresh build without disturbing the previous cache:
 
 ```sh
 ./build.py --shared --target-mhz 30 -j 1 \
-  --out-dir generated-files-verilog-shared-poly1305-pipelined-30mhz-seeded
+  --out-dir generated-files-verilog-shared-poly1305-pipelined-share-chacha20-poly1305-30mhz-seeded
 ```
 
 An explicitly selected output directory must be empty for a fresh build;
 `--continue --out-dir ...` resumes it without clearing files. Default output
-directory naming and cleanup behavior are unchanged. Keep separate caches
+directory names now include sharing selection; cleanup is unchanged. Keep separate caches
 when comparing clocks, architectures or starting-guess profiles.
 
-The fresh shared 30 MHz hardware build on 2026-10-02 confirmed the same
+The fresh ChaCha-only shared 30 MHz hardware build on 2026-10-02 confirmed the same
 latencies, 30.05 MHz limiting synthesis result and DUT area as the archived
 unseeded build. Whole-design synthesis runs fell from three to two: the
 four-stage ChaCha pipeline passed first, a three-stage trim failed, and the
@@ -97,13 +159,14 @@ additional pin-and-confirm synthesis pass. Aggregate whole-design synthesis
 elapsed time was 34.5 minutes versus 93.1 minutes previously; machine load
 also affects this comparison. Individual module characterization still runs.
 Final HDL/input hashes, MCP setup/hold constraints and arithmetic HDL audits
-passed. This validates the shared 30 MHz hints; other clock profiles still
-need their own timing characterization. This validation used Vivado 2019.2
+passed. This validates the shared 30 MHz hints; the newer 60 MHz entry is
+derived from its passing fixed-vector build, but a seeded 60 MHz synthesis
+comparison is not yet measured. This validation used Vivado 2019.2
 and PipelineC `1c32492-dirty`, including the stream-wrapper forwarding fix.
 
 ### Acceptance and QoR
 
-The completed run tested both native testbench styles in combinational mode for
+The archived ChaCha-only run tested both native testbench styles in combinational mode for
 all three variants, legacy fallback smoke checks for all three, two standalone
 MAC GHDL configurations, and randomized native plus fixed GHDL pipelined checks
 for all three. Arithmetic, II=1 acceptance, lane forwarding, drain, key changes,
@@ -111,12 +174,12 @@ input gaps, stable tags under backpressure, framing/keep masks, and tampered-tag
 rejection are covered. Durable test/source records are in the latest shared run's
 [workflow evidence](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/workflow-evidence.json).
 
-Reproduce the 15-case integration/fallback matrix using ordinary builds
+Reproduce the historical 15-case integration/fallback matrix using ordinary builds
 (stop on the first failure):
 
 ```sh
 set -e
-for design in enc dec shared; do
+for design in enc dec share-chacha20; do
   ./build.py --"$design" --sim --comb --native --continue
   ./build.py --"$design" --sim --comb --syn_tb --native --continue
   ./build.py --"$design" --poly1305 legacy --sim --comb --syn_tb --native --continue
@@ -125,15 +188,21 @@ for design in enc dec shared; do
 done
 ```
 
-Reproduce external-port hardware and the exact fresh QoR plan:
+Sharing validation uses both native testbench styles for standalone enc/dec
+and all three sharing configurations, plus a legacy ChaCha-only smoke test.
+The component's directed sharing test is documented separately. The sharing-both
+60 MHz native synthesis-backed testbench passed 10 encrypt and 11 decrypt
+fixed-vector tests; the latest QoR passed all 48 reference-checked packets.
+
+Reproduce the archived ChaCha-only external-port hardware/QoR plan:
 
 ```sh
-./build.py --shared --continue -j 1
-./measure.py --poly1305 pipelined --target-mhz 30 -j 1 \
+./build.py --share-chacha20 --continue -j 1
+./measure.py --share-chacha20 --poly1305 pipelined --target-mhz 30 -j 1 \
   --label shared-30mhz-poly1305-pipelined-new-run \
   --sizes 16,64,256,1024,1420,1920 --packets 4 --peak-bytes 0 \
   --dirs both --taps all --seed 8439 --save-evidence \
-  --area-from-dir generated-files-verilog-shared-poly1305-pipelined-30mhz
+  --area-from-dir generated-files-verilog-shared-poly1305-pipelined-share-chacha20-30mhz
 ```
 
 `--continue` keeps build caches; `--reuse-syn` gives measurements the same
@@ -141,12 +210,30 @@ behavior. An empty cache still requires synthesis. Timing/capacity acceptance
 uses each top's own confirmed report, never hardware timing in place of perf-top
 timing. Hardware and pipelined simulation builds pass `--stop_on_over_capacity`.
 Non-combinational measurements also audit the selected MAC's emitted arithmetic.
+The accepted sharing-both 60 MHz experiment went directly from the
+correctness testbench to `measure.py --shared --target-mhz 60 --reuse-syn`,
+without `--area-from-dir`. Completed signed synthesis observations can seed
+the next top's cache; only matching HDL/constraint/tool-input signatures are
+reusable. Different testbench wrappers can still require a new top-level
+timing confirmation. These QoR results report perf-testbench area (including
+constant-key folding), not external-port DUT area or a hardware-top 60 MHz
+pass. A failed fixed-vector fixture timing result must remain separate from
+native functional checks and the perf top's own timing/capacity acceptance.
+An external-port build can be added later when that evidence is needed.
+Native sources present words in `@sim_input` but advance and count transfers
+only in `@sim_output`, after ready has converged. The perf top retains the
+decrypt verification bit as a real output; the native checker alone is
+removed from HDL. Historical perf archives did not expose that output and
+may remove unobserved authentication arithmetic as well as fold constant
+keys. Their area/timing are not a controlled comparison with the corrected
+measurement wrapper. They remain unchanged historical records.
 Use `-j 1` on low-RAM systems: it serializes vendor-tool jobs, including
 automatic MCP characterization, but does not limit Vivado's internal threads.
 A single MCP synthesis can still consume several GiB.
 
 `--save-evidence` packages retained hardware/perf logs, input manifests,
-sweep histories, hash-matched constraints and an artifact checksum inventory
+sweep histories, frozen design/include source hashes when available,
+hash-matched constraints and an artifact checksum inventory
 into the measurement directory. Use a fresh label; original committed records
 remain historical evidence. Check them without rewriting:
 
@@ -174,7 +261,7 @@ match the design; continuation is not permission to ignore source drift.
 
 Changing the clock uses the ordinary `--target-mhz` option; there are no
 special diagnostic builds or hidden shared-clock overrides. Generic compiler
-regressions are described in the [compiler-test handoff](COMPILER_TEST_HANDOFF.md).
+regressions belong in PipelineC's own suite, not a WireGuard test-runner directory.
 
 **Native Pypeline sim — non-synthesizable testbench (fastest to iterate on;
 `@sim_input`/`@sim_output`, on-the-fly random vectors — see "Testbench
@@ -274,7 +361,8 @@ src/
   poly1305/
     poly1305.py                 selectable legacy MAC FSM + MCP (poly1305.h)
     poly1305_math.py            shared corrected limb and 130-bit-residue arithmetic
-    poly1305_mac_pipelined.py   interleaved II=1 MAC, automatic body/prologue/epilogue
+    poly1305_mac_pipelined.py   interleaved II=1 MAC, private body/packet context
+    poly1305_mcp_shared.py      independent tagged prologue/epilogue round-robin services
     poly1305_select.py          conditional import and per-direction metadata
     poly1305_verify_decrypt.py  tag comparison FSM
   prep_auth_data/
@@ -293,17 +381,17 @@ src/
     chacha20poly1305_decrypt_ports.py / chacha20poly1305_decrypt_hw_io.py
     encrypt_dataflow_core.py / decrypt_dataflow_core.py   make_encrypt_dataflow_core /
                                  make_decrypt_dataflow_core: factories returning the direct-call
-                                 dataflow graph, parameterized by which chacha20 instance feeds
-                                 it (see "Wiring Style: Old vs New" below)
+                                 dataflow graph, parameterized by ChaCha20 instance and optional
+                                 MAC instance (see "Wiring Style: Old vs New" below)
     encrypt_dataflow.py / decrypt_dataflow.py            standalone wiring MAINs (selected clock):
                                  instantiate the factory with chacha20.chacha20_instance
     encrypt_dataflow_shared.py / decrypt_dataflow_shared.py  shared design: instantiate the
-                                 same factory with chacha20_pipeline_shared's
-                                 chacha20_encrypt_shared / chacha20_decrypt_shared
+                                 same factories with independently selected private/shared
+                                 ChaCha20 and authentication resources
     tb_common.py                 synthesizable-style testbench's fixed 10-string vectors,
                                   computed once at elaboration time
     tb_common_sim.py             non-synthesizable testbench's shared support: fixed
-                                  KEY/NONCE/AAD + on-the-fly random-packet-length helper
+                                  KEY/NONCE/AAD, converged source handshakes and random lengths
                                   (no precomputed vectors — those are generated lazily,
                                   per packet, during simulation)
     aead_ref_model.py            pure-Python (no pypeline/hardware dependency) reference
@@ -444,13 +532,17 @@ python3 src/chacha20poly1305/perf_probe.py --selftest   # metric math check (syn
 
 Use a new label for a new architecture; `shared-80mhz` and
 `shared-80mhz-probed` are retained legacy measurement snapshots. A complete
-new-only sweep, including DUT-only area from the preceding hardware build, is:
+sharing-both sweep matching the latest plan is:
 
 ```bash
-./measure.py --poly1305 pipelined --label shared-30mhz-poly1305-pipelined-new-run \
-  --sizes 16,64,256,1024,1420,1920 --packets 4 --peak-bytes 0 --dirs both --taps all \
-  --area-from-dir generated-files-verilog-shared-poly1305-pipelined-30mhz --save-evidence
+./measure.py --shared --poly1305 pipelined --target-mhz 60 -j 1 \
+  --label shared-60mhz-poly1305-pipelined-new-run --reuse-syn \
+  --sizes 16,64,256,1024,1420,1920 --packets 4 --peak-bytes 0 \
+  --dirs both --taps all --seed 8439 --save-evidence
 ```
+
+This reports perf-top area/timing only. Include `--area-from-dir` only after
+the external-port hardware top has independently passed at the same goal.
 
 The 1920-byte phase also uses four packets (`WG_PERF_PEAK_PACKETS`, default 4).
 Failed/incomplete runs retain diagnostic artifacts but cannot replace README
@@ -580,72 +672,78 @@ testbenches, where it cannot perturb a timing window.
 ### Current results: shared design, pipelined Poly1305, 30 MHz
 
 The latest shared run is
-[shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md).
-It completed on 2026-10-02: 48 packets, six sizes, four per size per direction,
+[sharing-both 60 MHz](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/summary.md).
+It completed on 2026-10-04: 48 packets, six sizes, four per size per direction,
 all taps. Original raw measurements and dirty-tree provenance are retained.
-The generated table and block summary below use that same `results.json`.
+The table below comes directly from that record's `results.json`.
 
-The [comparison](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/comparison.md)
-keeps the recorded legacy 80 MHz results separate. The old limiting 80 MHz
-number was a lower bound, not a measured maximum. Neither legacy QoR nor
-legacy DUT-only area was rerun for this change.
+The [comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/comparison.md)
+keeps the archived ChaCha-only 30 MHz and legacy 80 MHz results separate.
+Neither historical QoR nor legacy DUT-only area was rerun. The legacy 80 MHz
+timing number was a lower bound, not a measured maximum.
 
 <!-- MEASURED-RESULTS:BEGIN -->
 
-_Measured by `./measure.py --label shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z` on 2026-10-02T10:54:43+00:00 — wireguard-fpga `295ea46cbdd2`, PipelineC `0cc6aed9caf7`, Vivado 2019.2, 2351 cycles. Regenerate with `./measure.py --label shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z --parse-only --update-readme`._
+_Measured on 2026-10-04T20:50:26+00:00 — wireguard-fpga `214bcf56934b-dirty`, PipelineC `ff0a3ec6835b-dirty`, Vivado 2019.2, 3012 cycles. Regenerate with `./measure.py --label shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004 --parse-only --update-readme`._
 
-Design `shared` | target 30.0 MHz | measured fmax **30.07 MHz** | limiting MAIN `chacha20_pipeline_shared`
-Area (perf_tb_top): **33778 LUT** (33642 logic + 136 mem), **9877 FF**, **448 DSP48**, **11 BRAM tiles**, 5193 CARRY4
-DUT-only area (external key/data ports): **42617 LUT**, **12934 FF**, **512 DSP48**, **11 BRAM tiles**.
-Hardware-top timing: PASS, 30.05 MHz against 30.0 MHz.
+Design `shared` | target 60.0 MHz | measured fmax **63.03 MHz** | limiting MAIN `chacha20_pipeline_shared`
+Area (perf_tb_top): **44442 LUT** (43695 logic + 747 mem), **17935 FF**, **640 DSP48**, **11 BRAM tiles**, 6369 CARRY4
+Shared resources: `chacha20-poly1305`.
 Poly1305 implementation: `pipelined`.
 
 | phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | % line rate | Gb/s @fmax | Gb/s @target | in stall | cold head (clk) | total lat med (clk) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| b2b-16 | 16 | 4 | encrypt | 1.000 | 16.0 | 6.2% | 0.241 | 0.240 | 0.081 | 16 | 47.0 |
-| b2b-16 | 16 | 4 | decrypt | 0.889 | 18.0 | 5.6% | 0.214 | 0.213 | 0.818 | 66 | 49.0 |
-| b2b-64 | 64 | 4 | encrypt | 3.310 | 19.3 | 20.7% | 0.796 | 0.794 | 0.090 | 18 | 51.5 |
-| b2b-64 | 64 | 4 | decrypt | 2.341 | 27.3 | 14.6% | 0.563 | 0.562 | 0.738 | 59 | 50.5 |
-| b2b-256 | 256 | 4 | encrypt | 7.529 | 34.0 | 47.1% | 1.811 | 1.807 | 0.338 | 18 | 59.5 |
-| b2b-256 | 256 | 4 | decrypt | 5.774 | 44.3 | 36.1% | 1.389 | 1.386 | 0.525 | 50 | 70.0 |
-| b2b-1024 | 1024 | 4 | encrypt | 12.094 | 84.7 | 75.6% | 2.909 | 2.903 | 0.177 | 18 | 109.0 |
-| b2b-1024 | 1024 | 4 | decrypt | 10.105 | 101.3 | 63.2% | 2.431 | 2.425 | 0.275 | 94 | 171.0 |
-| b2b-1420 | 1420 | 4 | encrypt | 13.230 | 107.3 | 82.7% | 3.182 | 3.175 | 0.128 | 18 | 133.0 |
-| b2b-1420 | 1420 | 4 | decrypt | 10.493 | 135.3 | 65.6% | 2.524 | 2.518 | 0.270 | 135 | 227.0 |
-| b2b-1920 | 1920 | 4 | encrypt | 13.649 | 140.7 | 85.3% | 3.283 | 3.276 | 0.111 | 18 | 165.0 |
-| b2b-1920 | 1920 | 4 | decrypt | 12.152 | 158.0 | 75.9% | 2.923 | 2.916 | 0.173 | 150 | 284.0 |
+| b2b-16 | 16 | 4 | encrypt | 0.593 | 27.0 | 3.7% | 0.299 | 0.284 | 0.023 | 31 | 85.0 |
+| b2b-16 | 16 | 4 | decrypt | 0.440 | 36.3 | 2.8% | 0.222 | 0.211 | 0.840 | 109 | 84.0 |
+| b2b-64 | 64 | 4 | encrypt | 2.133 | 30.0 | 13.3% | 1.076 | 1.024 | 0.029 | 31 | 87.5 |
+| b2b-64 | 64 | 4 | decrypt | 1.627 | 39.3 | 10.2% | 0.820 | 0.781 | 0.792 | 118 | 93.0 |
+| b2b-256 | 256 | 4 | encrypt | 6.095 | 42.0 | 38.1% | 3.074 | 2.926 | 0.027 | 31 | 99.5 |
+| b2b-256 | 256 | 4 | decrypt | 4.955 | 51.7 | 31.0% | 2.499 | 2.378 | 0.686 | 112 | 117.5 |
+| b2b-1024 | 1024 | 4 | encrypt | 11.378 | 90.0 | 71.1% | 5.737 | 5.461 | 0.134 | 31 | 142.5 |
+| b2b-1024 | 1024 | 4 | decrypt | 7.837 | 130.7 | 49.0% | 3.952 | 3.762 | 0.413 | 120 | 199.0 |
+| b2b-1420 | 1420 | 4 | encrypt | 12.241 | 116.0 | 76.5% | 6.173 | 5.876 | 0.101 | 31 | 169.0 |
+| b2b-1420 | 1420 | 4 | decrypt | 8.353 | 170.0 | 52.2% | 4.212 | 4.009 | 0.378 | 145 | 266.5 |
+| b2b-1920 | 1920 | 4 | encrypt | 13.151 | 146.0 | 82.2% | 6.631 | 6.312 | 0.108 | 31 | 198.0 |
+| b2b-1920 | 1920 | 4 | decrypt | 10.000 | 192.0 | 62.5% | 5.043 | 4.800 | 0.291 | 176 | 316.5 |
 
 <!-- MEASURED-RESULTS:END -->
 
 <!-- BLOCK-RESULTS:BEGIN -->
 
 Detailed per-block service/stall, shared arbitration and lifecycle measurements
-are in the [block report](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/blocks.md).
+are in the [block report](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/blocks.md).
 
 <!-- BLOCK-RESULTS:END -->
 
 #### Interpretation
 
-The external-port hardware passes synthesis timing at 30.05 MHz, with 42,617
-LUTs, 12,934 FFs, 512 DSP48s and 11 BRAM tiles. The performance top passes at
-30.069 MHz; its smaller area (33,778 LUTs, 448 DSPs) includes constant-key folding
-and is not the DUT-only resource count. Shared ChaCha is the limiting MAIN.
+At 1920 bytes, the latest run sustains **6.312/4.800 Gb/s** at the 60 MHz
+target (encrypt/decrypt), versus the archived ChaCha-only 30 MHz run's
+3.276/2.916 Gb/s and legacy 80 MHz run's 1.620/1.181 Gb/s. That is
+**1.93×/1.65×** versus the former, or **3.90×/4.06×** versus legacy.
+At 1420 bytes the new rates are 5.876/4.009 Gb/s. Small-packet setup costs
+remain significant; 16-byte decrypt is slightly slower than the 30 MHz record.
 
-At 1920 bytes, throughput at the actual target clocks rises from legacy
-1.620/1.181 Gb/s (encrypt/decrypt at 80 MHz) to 3.276/2.916 Gb/s at 30 MHz:
-2.02×/2.47×. At 1420 bytes it is 3.175/2.518 Gb/s. Small 16/64-byte packets are
-slower at the new actual clock despite lower cycle counts. Median 1920-byte
-packet latency is 165 cycles encrypt and 284 decrypt; plaintext still waits
-for authentication before release.
+Clock-normalized packet costs did not improve: the 1920-byte completion
+period is 146/192 cycles versus 140.7/158 previously. Higher clock, rather
+than lower cycles per packet, drives the gain. Median packet latency is
+198/316.5 cycles (3.30/5.28 µs at 60 MHz); plaintext still waits for
+authentication before release.
+
+The latest perf top passes synthesis timing at 63.032 MHz and uses 44,442 LUTs,
+17,935 FFs, 640 DSPs and 11 BRAM tiles. This is not DUT-only area:
+keys and the native fixture permit constant folding/context optimization.
+The distinct fixed-vector top passes the 60 MHz goal with 704 DSPs.
+External-port shared hardware is validated only at 30 MHz, where sharing
+setup/finalization reduces DSPs from 512 to 320. No 60 MHz hardware-top
+timing/capacity result or routed sign-off is implied.
 
 Whole-packet rates include framing, input gaps, shared-resource arbitration,
-packet-boundary costs and backpressure. Detailed per-block and lifecycle
-measurements remain in the linked block reports.
-
-This comparison includes different arithmetic, compiler revisions and ChaCha
-depths; it is not an isolated MAC-only A/B. The source default change simply
-selects the already-measured explicit 30 MHz configuration; it does not retime
-the archived hardware. Synthesis capacity/timing is not routed sign-off.
+packet-boundary costs and backpressure. Both private body pipelines accept
+one offered block per cycle; setup, finalization and arbitration waits are
+reported separately in the block report. Compiler revisions, arithmetic
+(versus legacy), clocks, depths and the corrected measurement wrapper differ.
+This is not an isolated sharing-only or compiler-only A/B.
 
 ### Re-measuring without re-synthesizing
 
@@ -758,9 +856,10 @@ result at the real pipelined timing with fmax and area attached.
 - **Area scope.** The measured build is the perf testbench top, which drives
   `key`/`nonce`/`aad` as constants, so Vivado folds some ChaCha20 logic away
   (`area.scope = "perf_tb_top"`, `constant_key_folding: true`). It is a
-  *consistent-across-variants* number, not an absolute DUT area. For a
-  folding-free cross-check: `./build.py --shared` then
-  `./measure.py --area-from-dir generated-files-verilog-shared`. The per-module
+  fixture-specific number, not absolute DUT area or a controlled comparison
+  when the wrapper changes. For a folding-free cross-check, build the external
+  ports at the same goal, then supply its exact output directory with
+  `--area-from-dir` (see the commands above). The per-module
   areas are out-of-context syntheses — folding-free, but they do **not** sum to
   the top-level total.
 - **No output backpressure.** `AxisSimSink` always presents `ready=1`, so every
@@ -779,8 +878,9 @@ result at the real pipelined timing with fmax and area attached.
   acceptance. Each direction's ready is independent of its own valid, and both
   see pipeline readiness while idle. The `shared/pipe.arb` tap reports the actual
   grant and separates contention from wasted slots, which should now be zero.
-  The archived measurements above used the previous unconditional alternation,
-  which could waste every other slot when only one direction had work.
+  Historical archives may use previous unconditional alternation, which could
+  waste every other slot when only one direction had work. The latest run
+  uses request-aware arbitration for each selected shared resource.
 
 ## Test Vectors
 
@@ -1029,23 +1129,18 @@ source uses this directly:
   the datapath side) already do their own internal `AUTO_PIPELINE`
   wrapping and expose purely `Reg`-driven `ready` outputs — so this is an
   ordering fix, not a new combinational loop.
-- **Factory functions for the one real axis of variation**: chacha20 is the
-  only component whose concrete instance differs between the standalone
-  build (owns a private pipeline) and the shared build (uses an arbitrated
-  pipeline shared between encrypt and decrypt). Rather than keep it as a
-  special external-argument exception, `encrypt_dataflow_core.py`/
-  `decrypt_dataflow_core.py` are `make_encrypt_dataflow_core(chacha_func)`/
-  `make_decrypt_dataflow_core(chacha_func)` factories — elaboration-time
-  Python closures, the same idiom `chacha20.py`'s `make_quarter_round` and
-  Pypeline's own `make_stream_auto_pipeline`/`make_stream_multi_cycle` already use.
-  `encrypt_dataflow.py` instantiates the factory once with
-  `chacha20.chacha20_instance`; `encrypt_dataflow_shared.py` instantiates the
-  same factory with `chacha20_pipeline_shared.chacha20_encrypt_shared`.
-- **The one deliberate remaining `Wire` boundary**: `chacha20_pipeline_shared.py`
-  still exposes 8 `Wire`s and stays a separate `@MAIN`, because it's a
-  genuinely arbitrated resource shared across two otherwise-independent
-  dataflow graphs (encrypt and decrypt don't call each other or share any
-  other state) — not an artifact of the old wiring style.
+- **Factory functions for selected resources**: `encrypt_dataflow_core.py` /
+  `decrypt_dataflow_core.py` take a `chacha_func` and optional `mac_func`.
+  Standalone builds use private instances. Combined builds select private or
+  shared resources independently, without a run-time architecture mux.
+  These are elaboration-time Python closures, like the library's stream
+  factories; omitted `mac_func` retains the standalone default.
+- **Deliberate shared-resource `Wire` boundaries**:
+  `chacha20_pipeline_shared.py` and `poly1305_mcp_shared.py` expose the
+  request/response wires owned by their separate arbitration MAINs.
+  They bridge otherwise-independent encrypt/decrypt graphs; packet contexts
+  remain private. These are resource-sharing boundaries, not remnants of the
+  old wiring style.
 
 ### Interface ports and generated reverse wiring
 
@@ -1129,9 +1224,9 @@ things beyond plain chaining show up here:
   get no reverse companion, and `is_verified_out` is a plain field riding in
   the same return bundle as the `axis_out` interface port.
 - **Factory parameterization still works.** Both cores are factories over
-  `chacha_func`, so the generated module names fold in that parameter — the
-  standalone and shared builds instantiate four distinct cores from two
-  factories without a canonical-name collision.
+  `chacha_func` and the selected MAC instance. Generated module names fold in
+  those parameters, isolating independent sharing selections without a
+  canonical-name collision.
 
 The four `@MAIN`s (`{encrypt,decrypt}_dataflow{,_shared}.py`) then cross back
 out of the implied-feedback world by hand, which is what a top level always
@@ -1167,7 +1262,7 @@ elaboration do not catch this — only real synthesis does.
 ## Conventions vs the C sources:
 
 - C's `#define INST_NAME` + re-`#include` per-instance trick, where it still
-  applies (the ports/hw_io modules, and `chacha20_pipeline_shared.py`'s
+  applies (the ports/hw_io modules and the shared-resource modules'
   Wires), becomes a module-name prefix on the global wire name (e.g.
   `chacha20_pipeline_shared.py`'s `encrypt_pipeline_in` elaborates as
   `chacha20_pipeline_shared_encrypt_pipeline_in`). Elsewhere it's gone
@@ -1181,10 +1276,11 @@ elaboration do not catch this — only real synthesis does.
   `make_stream_fifo` instances, called directly from the function they back
   (`chacha20.chacha20_instance`, `poly1305.poly1305_mac_instance`,
   `wait_to_verify.wait_to_verify`) rather than wired up in a separate `@MAIN`
-  — except `chacha20_pipeline_shared.py`, which is the one case that
-  legitimately stays a dedicated `@MAIN` (see above).
-- Every top `.py` imports ALL hardware modules explicitly (sub-module imports
-  are not followed for hardware elaboration).
+  — except the shared arbitration services, which legitimately remain
+  dedicated MAINs (see above).
+- Resource modules that own MAINs must be reachable through module-level
+  imports. The combined dataflows conditionally import the selected service
+  modules there; importing a MAIN owner only inside a function is rejected.
 - MAINs compute into locals and drive each global wire exactly once at the end
   (a function may not both read and write the same wire).
 - Cross-module wire references (`module.wire`) support nested field/array

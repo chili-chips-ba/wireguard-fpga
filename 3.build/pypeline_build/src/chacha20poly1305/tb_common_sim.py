@@ -11,6 +11,41 @@ generated packet, during live simulation.
 
 import random
 
+
+class ConvergedAxisSource:
+    """Unpaused AXIS source with separate presentation and acceptance.
+
+    Call drive() from @sim_input and commit(ready) from @sim_output. Ready
+    can depend on same-cycle downstream arbitration: sampling it before
+    convergence can discard a word the DUT never accepted. The underlying
+    AxisSimSource is held with ready=0 until the converged handshake commits.
+    Source pauses are intentionally not supported by this adapter.
+    """
+
+    def __init__(self, axis_intrf, bus_bytes):
+        from axi.axis_sim import AxisSimSource
+
+        self._source = AxisSimSource(axis_intrf, bus_bytes)
+        self._offered = None
+
+    def send(self, frame):
+        self._source.send(frame)
+
+    def idle(self):
+        return self._source.idle()
+
+    def drive(self):
+        self._offered = self._source.step(0)
+        return self._offered
+
+    def commit(self, ready):
+        accepted = bool(self._offered is not None and self._offered.stream.valid and ready)
+        if accepted:
+            self._source.step(1)
+        self._offered = None
+        return accepted
+
+
 # Test vectors (same fixed values as tb_common.py)
 KEY = list(range(0x80, 0xA0))  # 0x80, 0x81, ... 0x9f
 

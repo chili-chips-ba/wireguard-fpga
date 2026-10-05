@@ -352,6 +352,8 @@ def poly1305_lifecycle(taps, direction):
         "tag_stalls_per_packet": tag.get("stall_cycles", 0) / packets if packets else None,
         "prologue_launches": (_get(taps, direction, "poly1305.prologue_in") or {}).get("xfer_cycles"),
         "epilogue_launches": (_get(taps, direction, "poly1305.epilogue_in") or {}).get("xfer_cycles"),
+        "prologue_request_wait_cycles": (_get(taps, direction, "poly1305.prologue_in") or {}).get("stall_cycles"),
+        "epilogue_request_wait_cycles": (_get(taps, direction, "poly1305.epilogue_in") or {}).get("stall_cycles"),
     }
 
 
@@ -413,7 +415,7 @@ def analyze_phase(phase, aad_len=0, mac_config=None):
         lifecycle = poly1305_lifecycle(taps, label)
         if lifecycle:
             phase.setdefault("poly1305_lifecycle", {})[label] = lifecycle
-    # The shared ChaCha20 pipeline's arbitration is not per-direction.
+    # Shared resource arbitration is not part of either direction's body II.
     arb = {k: v for k, v in taps.items() if (v or {}).get("kind") == "arb"}
     if blocks:
         phase["blocks"] = blocks
@@ -423,6 +425,20 @@ def analyze_phase(phase, aad_len=0, mac_config=None):
         phase["model"] = model
     if arb:
         phase["arbitration"] = arb
+    services = {}
+    for name in ("prologue", "epilogue"):
+        prefix = "shared/poly1305." + name
+        service_state = (taps.get(prefix + ".service") or {}).get("states", {})
+        if service_state:
+            services[name] = {
+                "compute_cycles": service_state.get("COMPUTE", {}).get("cycles", 0),
+                "response_valid_cycles": service_state.get("OUTPUT", {}).get("cycles", 0),
+                "response_stall_cycles": (taps.get(prefix + ".service_out") or {}).get("stall_cycles"),
+                "launches": (taps.get(prefix + ".service_in") or {}).get("xfer_cycles"),
+                "responses": (taps.get(prefix + ".service_out") or {}).get("xfer_cycles"),
+            }
+    if services:
+        phase["poly1305_shared_services"] = services
     return phase
 
 
@@ -619,6 +635,10 @@ def markdown_blocks(phases):
     if lifecycle_lines:
         lines.append("")
         lines.extend(lifecycle_lines)
+    service_lines = markdown_poly1305_services(phases)
+    if service_lines:
+        lines.append("")
+        lines.extend(service_lines)
     return "\n".join(lines)
 
 
@@ -774,7 +794,7 @@ def markdown_summary(phases, detail_path=None):
 
 
 def markdown_arbitration(phases):
-    """The shared ChaCha20 pipeline's round-robin cost, per direction."""
+    """Round-robin cost per resource and direction, including shared MCPs."""
     rows = []
     for phase in phases:
         for name, tap in sorted((phase.get("arbitration") or {}).items()):
@@ -793,7 +813,7 @@ def markdown_arbitration(phases):
                         - per["wasted_slot_cycles"]
                     )
                 rows.append(
-                    f"| {phase['name']} | {phase['packet_bytes']} | {label} "
+                    f"| {phase['name']} | {phase['packet_bytes']} | {name} | {label} "
                     f"| {req} | {per['xfer_cycles']} "
                     f"| {_pct(blocked / req)} "
                     f"| {_pct(per['contention_frac'])} "
@@ -802,18 +822,17 @@ def markdown_arbitration(phases):
     if not rows:
         return []
     head = [
-        "**Shared-pipeline arbitration** — of the cycles a direction wanted to "
-        "launch into the shared ChaCha20 pipeline: *pipeline not ready* is its "
-        "own slot with the pipeline unable to accept (a full pipeline — including "
-        "head-of-line blocking by the OTHER direction's blocks waiting at the "
-        "shared output), *contention* is the other side holding the slot and "
-        "wanting it, *wasted slot* is the other side holding the slot with nothing "
-        "to launch (`is_encrypt` flips every cycle unconditionally; a "
-        "request-aware arbiter would recover these):",
+        "**Shared-pipeline arbitration** — includes ChaCha20 and each shared "
+        "Poly1305 MCP separately. *Resource not ready* means the selected "
+        "request cannot launch (compute busy or output backpressure); "
+        "*contention* means the other side holds the slot and wants it; "
+        "*wasted slot* means the other side holds an empty slot. Current "
+        "request-aware arbiters recover lone requests; historical arbiters "
+        "may have wasted slots. These waits are not body-pipeline II:",
         "",
-        "| phase | bytes | dir | wanted (clk) | launched (clk) | pipeline not ready "
+        "| phase | bytes | resource | dir | wanted (clk) | launched (clk) | resource not ready "
         "| contention | wasted slot |",
-        "|---|---|---|---|---|---|---|---|",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     return head + rows
 
@@ -828,7 +847,9 @@ def markdown_poly1305_lifecycle(phases):
                 f"| {_num(lifecycle.get('body_service_cycles'))} "
                 + "".join(f"| {_num(per.get(key))} " for key in
                           ("setup", "body", "drain", "finalization", "tag_output"))
-                + f"| {_num(lifecycle.get('tag_stalls_per_packet'))} |"
+                + f"| {_num(lifecycle.get('tag_stalls_per_packet'))} "
+                + f"| {_num(lifecycle.get('prologue_request_wait_cycles'))} "
+                + f"| {_num(lifecycle.get('epilogue_request_wait_cycles'))} |"
             )
     if not rows:
         return []
@@ -838,11 +859,41 @@ def markdown_poly1305_lifecycle(phases):
         "input gaps; setup includes the prologue handshake; finalization includes "
         "the epilogue handshake. Tag stalls are a subset of tag-output cycles, "
         "not an additional cost. IDLE/key wait and settle cycles remain in JSON. "
-        "These are MAC-local costs, not additive whole-datapath latency:",
+        "MCP request waits (total clocks in the window) are subsets of "
+        "setup/finalization, including sharing contention. These are MAC-local "
+        "costs, not additive whole-datapath latency:",
         "",
         "| phase | dir | body service (clk/block) | setup (clk/pkt) | body (clk/pkt) "
-        "| drain (clk/pkt) | finalization (clk/pkt) | tag output (clk/pkt) | tag stalls (clk/pkt) |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| drain (clk/pkt) | finalization (clk/pkt) | tag output (clk/pkt) | tag stalls (clk/pkt) "
+        "| prologue request wait (clk) | epilogue request wait (clk) |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
+    ] + rows
+
+
+def markdown_poly1305_services(phases):
+    rows = []
+    for phase in phases:
+        for name, service in (phase.get("poly1305_shared_services") or {}).items():
+            launches = service.get("launches")
+            compute = service.get("compute_cycles")
+            per_request = compute / launches if launches and compute is not None else None
+            rows.append(
+                f"| {phase['name']} | {name} | {_num(launches, '.0f')} "
+                f"| {_num(service.get('responses'), '.0f')} | {_num(compute, '.0f')} "
+                f"| {_num(per_request)} | {_num(service.get('response_valid_cycles'), '.0f')} "
+                f"| {_num(service.get('response_stall_cycles'), '.0f')} |"
+            )
+    if not rows:
+        return []
+    return [
+        "**Shared Poly1305 MCP service** — physical-service occupancy, separate "
+        "from each requester's arbitration wait and private body II. Compute "
+        "cycles run from accepted launch until a valid response; output stalls "
+        "are a subset of response-valid cycles, not additional compute time:",
+        "",
+        "| phase | service | requests | responses | compute (clk) | compute (clk/request) "
+        "| response valid (clk) | response stalls (clk) |",
+        "|---|---|---|---|---|---|---|---|",
     ] + rows
 
 
@@ -1090,6 +1141,14 @@ def _selftest():
             failures.append(f"sweep headline missing {needle!r}: {sweep_head!r}")
 
     table = markdown_blocks([phase])
+    service_table = markdown_poly1305_services([{
+        "name": "b2b-16", "poly1305_shared_services": {
+            "epilogue": {"launches": 8, "responses": 8, "compute_cycles": 24,
+                         "response_valid_cycles": 12, "response_stall_cycles": 4}
+        }
+    }])
+    if "| b2b-16 | epilogue | 8 | 8 | 24 | 3.00 | 12 | 4 |" not in "\n".join(service_table):
+        failures.append("shared MCP service occupancy table missing or malformed")
     if "≥10.000" not in table:
         failures.append("relay-limited ceiling not marked as a lower bound in the table")
     if "Shared-pipeline arbitration" not in table or "| 40 | 20 |" not in table:

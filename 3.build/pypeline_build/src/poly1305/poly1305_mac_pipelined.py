@@ -79,13 +79,23 @@ class mac_result_t(NamedTuple):
     auth_tag_if: poly1305_auth_tag_stream_intrf.fwd_t
 
 
-def make_poly1305_mac_pipelined(direction):
+_body_auto_pipelines = {}
+
+
+def get_body_auto_pipeline(direction):
+    """One stable tag per direction, also used to size shared MCP arrays."""
     if direction not in ("encrypt", "decrypt"):
         raise ValueError("Poly1305 direction must be encrypt or decrypt")
-    body_func = poly1305_body_encrypt if direction == "encrypt" else poly1305_body_decrypt
-    body_ap = AUTO_PIPELINE(
-        body_func, start_latency=wireguard_env.START_LATENCIES[f"poly1305_body_{direction}"]
-    )
+    if direction not in _body_auto_pipelines:
+        body_func = poly1305_body_encrypt if direction == "encrypt" else poly1305_body_decrypt
+        _body_auto_pipelines[direction] = AUTO_PIPELINE(
+            body_func, start_latency=wireguard_env.START_LATENCIES[f"poly1305_body_{direction}"]
+        )
+    return _body_auto_pipelines[direction]
+
+
+def make_poly1305_mac_pipelined(direction, share_mcp=False):
+    body_ap = get_body_auto_pipeline(direction)
     lanes = body_ap.latency + 2
     lane_t = make_uint_t(max(1, (lanes - 1).bit_length()))
     count_t = make_uint_t(lanes.bit_length())
@@ -141,12 +151,18 @@ def make_poly1305_mac_pipelined(direction):
         tag: uint128_t = low + x.s
         return tag
 
-    prologue_mcp, prologue_result_t = make_stream_auto_multi_cycle(
-        prologue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_prologue_{direction}"]
-    )
-    epilogue_mcp, epilogue_result_t = make_stream_auto_multi_cycle(
-        epilogue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_epilogue_{direction}"]
-    )
+    if share_mcp:
+        from poly1305_mcp_shared import make_shared_adapters
+        prologue_mcp, prologue_result_t, epilogue_mcp, epilogue_result_t = (
+            make_shared_adapters(direction, lanes, powers_t, epilogue_in_t)
+        )
+    else:
+        prologue_mcp, prologue_result_t = make_stream_auto_multi_cycle(
+            prologue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_prologue_{direction}"]
+        )
+        epilogue_mcp, epilogue_result_t = make_stream_auto_multi_cycle(
+            epilogue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_epilogue_{direction}"]
+        )
 
     @hw_func
     def poly1305_mac_pipelined(
@@ -164,7 +180,7 @@ def make_poly1305_mac_pipelined(direction):
         outstanding: Reg[count_t]
         tag: Reg[uint128_t]
 
-        # These are same-cycle wires, driven by the private compute blocks
+        # These are same-cycle wires, driven by private blocks or shared adapters
         # at the end of the function. Their registered outputs break the loop.
         prologue_result: Feedback[prologue_result_t]
         epilogue_result: Feedback[epilogue_result_t]
@@ -301,4 +317,5 @@ def make_poly1305_mac_pipelined(direction):
     poly1305_mac_pipelined.epilogue_mcp = epilogue_mcp
     poly1305_mac_pipelined.prologue = prologue
     poly1305_mac_pipelined.epilogue = epilogue
+    poly1305_mac_pipelined.shared_mcps = bool(share_mcp)
     return poly1305_mac_pipelined

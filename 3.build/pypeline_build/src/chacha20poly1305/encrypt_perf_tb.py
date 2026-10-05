@@ -30,12 +30,12 @@ from aead_types import (
     AAD_MAX_LEN,
     axis128_intrf,
 )
-from axi.axis_sim import AxisSimSource, AxisSimSink, Scoreboard
+from axi.axis_sim import AxisSimSink, Scoreboard
 import tb_common_sim as common
 import perf_tb_common as perf
 
 _scoreboard = Scoreboard()
-_src = AxisSimSource(axis128_intrf, perf.BUS_BYTES)
+_src = common.ConvergedAxisSource(axis128_intrf, perf.BUS_BYTES)
 _snk = AxisSimSink(axis128_intrf, perf.BUS_BYTES, scoreboard=_scoreboard)
 _runner = perf.make_runner(
     "encrypt", _src, _snk, _scoreboard, perf.encrypt_frame_builder
@@ -49,20 +49,7 @@ def _keep_count(stream):
 @sim_input
 def drive_in_word() -> axis128_intrf.stream_t:
     _runner.prepare_input()
-    # axis_in_if.ready is Reg-driven downstream (buffer-occupancy based, not a
-    # same-cycle function of this cycle's valid), so it is stable at the start
-    # of the cycle -- safe to read here to tell an accepted beat from a stall.
-    ready = 1 if chacha20poly1305_encrypt_ports.axis_in_if.ready else 0
-    word = _src.step(ready)
-    stream = word.stream
-    valid = 1 if stream.valid else 0
-    _runner.note_in(
-        valid=valid,
-        ready=ready,
-        keep_count=_keep_count(stream) if valid else 0,
-        eod=1 if stream.data.eod[0] else 0,
-    )
-    return stream
+    return _src.drive().stream
 
 
 @initial(sim=True)
@@ -74,6 +61,13 @@ def announce():
 
 @sim_output
 def measure_out():
+    incoming = chacha20poly1305_encrypt_ports.axis_in_if.stream
+    ready = int(chacha20poly1305_encrypt_ports.axis_in_if.ready)
+    valid = int(incoming.valid)
+    _runner.note_in(valid=valid, ready=ready,
+                    keep_count=_keep_count(incoming) if valid else 0,
+                    eod=int(incoming.data.eod[0]))
+    _src.commit(ready)
     stream = chacha20poly1305_encrypt_ports.axis_out_if.stream
     valid = 1 if stream.valid else 0
     _runner.note_out(

@@ -87,6 +87,8 @@ _MAIN_LABELS = {
     "encrypt_dataflow": "encrypt",
     "decrypt_dataflow": "decrypt",
     "chacha20_pipeline_shared": "shared",
+    "poly1305_prologue_shared": "shared",
+    "poly1305_epilogue_shared": "shared",
 }
 
 

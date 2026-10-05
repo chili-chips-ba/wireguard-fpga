@@ -7,9 +7,11 @@ __pycache__/
 /lextab.py
 /yacctab.py
 
-# Only the latest shared 30 MHz characterization is part of this change.
+# Standalone development smoke measurements remain local.
 /measurements/poly1305-pipelined-comb-smoke/
 /measurements/poly1305-pipelined-residue130-comb-smoke/
 
 # These selected evidence logs are intentionally durable (root ignores *.log).
 !/measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/*.log
+!/measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/*.log
+!/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/*.log

@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "archived_utc": "2026-10-04T23:19:10.548475+00:00",
+  "updated_utc": "2026-10-05T12:53:03+00:00",
+  "artifacts": {
+    "blocks.csv": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/blocks.csv",
+      "bytes": 14123,
+      "sha256": "56c3348514360f8af37f5e252d0597e7d33609cd9500be48b50c9e93c21539e5"
+    },
+    "blocks.md": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/blocks.md",
+      "bytes": 18120,
+      "sha256": "2f77dcd0a91690a2fb662632febbd3ed76270c1290ac49938a938ce2a95aa19a"
+    },
+    "comparison.md": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/comparison.md",
+      "bytes": 6333,
+      "sha256": "3ce6f44b9c0cf9ecddadc81ea8fd0102d3bc6e12da4b2eea18d518538834c597"
+    },
+    "perf-clocks.xdc": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz/clocks.xdc",
+      "bytes": 2815,
+      "sha256": "3319846643928f20ea72871079142cd24920658f500b8f6e4766194a4be22f5e"
+    },
+    "perf-inputs.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz/top/vivado_0e9bae28_a4cd83751edc3552.inputs.json",
+      "bytes": 70434,
+      "sha256": "c255ba7e26bc5d75a46aeb6b0580ce5779930f917b43bf3a9df291a8cf37c347"
+    },
+    "perf-source-provenance.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz/source_provenance.json",
+      "bytes": 12672,
+      "sha256": "356555250a28d98c5a604fd034495659d4e2b56afbf93474e0688cc7e8cf31f4"
+    },
+    "perf-sweep-history.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz/top/sweep_history.json",
+      "bytes": 196731,
+      "sha256": "1a210039e9dd0a863f814e8702e58c154bd456136c004dd4ce249dfce4815056"
+    },
+    "perf-vivado.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz/top/vivado_0e9bae28_a4cd83751edc3552.log",
+      "bytes": 8292347,
+      "sha256": "54f808dcd1443f3754fdb1e8ded755eea1fa3e40b0de1a5066a31aa421394276"
+    },
+    "perf_raw.json": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/perf_raw.json",
+      "bytes": 267599,
+      "sha256": "a8f42e44d821239680a56f9dccbf218daffb9c31ec220616c8f27fbe93406767"
+    },
+    "pypelinec.log": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/pypelinec.log",
+      "bytes": 114388,
+      "sha256": "f92b40e6b3304c92e524b7cdbd6b9a1ef5efb646489c6ffa575cdac958feed9b"
+    },
+    "results.json": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/results.json",
+      "bytes": 446202,
+      "sha256": "67c65405f5f1f6ab174f107a381891bd451bc2f2c7bb78fc91fb97194b48758c"
+    },
+    "summary.csv": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/summary.csv",
+      "bytes": 4355,
+      "sha256": "f3d7f843a4df0b830f9369d154ff52b58e6a759e774bccc9a08e62cf7290550b"
+    },
+    "summary.md": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/summary.md",
+      "bytes": 2035,
+      "sha256": "8d6524e2312267dcaa19b8c2389be107aadff3a2c22f0ae99cbc5595f252b9bd"
+    },
+    "syn-tb-build.log": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/syn-tb-build.log",
+      "bytes": 99265,
+      "sha256": "eabcdb291b91816da0d532518f82dda0d7eeafe05c3a5c9ce88fdf9a7b0c9fd4"
+    },
+    "taps.csv": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/taps.csv",
+      "bytes": 95128,
+      "sha256": "ebbf5253f6cd0ef645ed590aef4a5a92cec0893cdb772ad236558a33f6613950"
+    },
+    "workflow-evidence.json": {
+      "original_path": "measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/workflow-evidence.json",
+      "bytes": 23235,
+      "sha256": "4afa604dbb394ab79a542622f8ea24d2f32f0bf5bf663240227001f09997696f"
+    }
+  },
+  "note": "Packaging retained evidence, not a new synthesis or simulation."
+}

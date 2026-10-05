@@ -1,11 +1,12 @@
 # pyright: reportInvalidTypeForm=none
-"""Hardware top for the shared encrypt+decrypt design: encrypt and decrypt
-datapaths sharing one ChaCha20 compute pipeline, with both sides' flattened
-top level IO ports.
+"""Hardware top for the combined encrypt+decrypt design with external ports.
+
+ChaCha20 pipeline and Poly1305 prologue/epilogue sharing are independently
+selected; sharing both is the default. MAC bodies and packet state are private.
 
 Pypeline port of ../pipelinec_build/src/chacha20poly1305_encrypt_decrypt_shared.c.
 
-Build (from pypeline_build/): ./build_verilog_shared.sh
+Build (from pypeline_build/): ./build.py --shared
 """
 import sys, os
 

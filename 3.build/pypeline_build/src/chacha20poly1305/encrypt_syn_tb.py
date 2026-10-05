@@ -15,7 +15,6 @@ import wireguard_env  # noqa: F401
 from pypeline import (
     MAIN,
     Wire,
-    wires,
     Feedback,
     Reg,
     uint1_t,
@@ -97,9 +96,10 @@ def announce():
     sim_print("AAD (29 bytes): Additional authenticated data")
 
 
-# CSR values available all at once do not need to be static=registers
+# This testbench has real registers, counters and stream source/sink logic.
+# Keep it a timed MAIN; @wires would falsely promise no logic or registers.
+# CSR constants do not change that requirement.
 @MAIN
-@wires
 def encrypt_syn_tb() -> axis128_intrf.fwd_t:
     # Test vectors
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY

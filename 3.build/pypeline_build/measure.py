@@ -31,7 +31,7 @@ a different fmax without re-simulating.
 
 Typical use:
   ./measure.py --label shared-30mhz          # pipelined MAC; synthesis + sim (hours)
-  ./measure.py --poly1305 legacy             # historical architecture, 80 MHz goal
+  ./measure.py --share-chacha20 --poly1305 legacy # historical architecture, 80 MHz goal
   ./measure.py --label X --reuse-syn         # sim only, reuse cached synthesis
   ./measure.py --label smoke --comb          # fast rig check, no Vivado at all
   ./measure.py --label X --parse-only        # re-merge an existing run's outputs
@@ -62,6 +62,7 @@ sys.path.insert(0, os.path.join(HERE, "src"))
 from poly1305_config import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
     TARGETS_MHZ, default_target_mhz, target_out_dir,
+    add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
 BUS_BYTES = 16
@@ -85,7 +86,8 @@ RE_STANDALONE = re.compile(
     r"([\d.]+) MHz vs ([\d.]+) MHz goal - (PASS|FAIL)"
 )
 RE_CONFIRM = re.compile(
-    r"^(PASS|FAIL)\s+(\S+): ([\d.]+) MHz vs ([\d.]+) MHz goal \(confirmation run\)"
+    r"^(PASS|FAIL)\s+(\S+): ([\d.]+) MHz vs ([\d.]+) MHz goal"
+    r"(?:; worst reported path)? \(confirmation run\)"
 )
 RE_NOT_MET_MAIN = re.compile(
     r"ERROR: TIMING NOT MET: (\S+) achieved ([\d.]+) MHz vs ([\d.]+) MHz goal"
@@ -281,13 +283,18 @@ def find_top_dir(out_dir):
     """Support the default 'top' and hardware builds using --top <name>.
 
     Module characterization logs have NCLK in their names; whole-design
-    sweep logs do not. Refuse ambiguous mixed output directories.
+    sweep logs do not. Signed caches copied from other tops are not active
+    builds: prefer directories with sweep history or final top HDL. Keep
+    log-only historical support, and refuse genuinely mixed output directories.
     """
-    candidates = {os.path.dirname(path) for path in
-                  glob.glob(os.path.join(out_dir, "*", "sweep_history.json"))}
-    candidates.update(os.path.dirname(path) for path in
-                      glob.glob(os.path.join(out_dir, "*", "vivado_*.log"))
-                      if _TOP_LOG_RE.fullmatch(os.path.basename(path)))
+    histories = {os.path.dirname(path) for path in
+                 glob.glob(os.path.join(out_dir, "*", "sweep_history.json"))}
+    log_dirs = {os.path.dirname(path) for path in
+                glob.glob(os.path.join(out_dir, "*", "vivado_*.log"))
+                if _TOP_LOG_RE.fullmatch(os.path.basename(path))}
+    built = histories | {path for path in log_dirs
+                         if os.path.isfile(os.path.join(path, os.path.basename(path) + ".vhd"))}
+    candidates = built or log_dirs
     if len(candidates) > 1:
         raise ValueError("multiple hardware tops in output directory: " + ", ".join(sorted(candidates)))
     return next(iter(candidates)) if candidates else os.path.join(out_dir, "top")
@@ -459,13 +466,19 @@ def git_describe(repo):
     return sha + ("-dirty" if dirty else "")
 
 
-def out_dir_for(comb, implementation, target_mhz=None):
+def out_dir_for(comb, implementation, target_mhz=None, sharing=None):
     if target_mhz is None:
-        target_mhz = default_target_mhz(implementation)
+        # Records without sharing metadata predate the sharing-both default.
+        historical_sharing = {"chacha20": True, "poly1305": False}
+        target_mhz = default_target_mhz(implementation, sharing if sharing is not None else historical_sharing)
     base = os.path.join(
         HERE, f"generated-files-perf-{'comb' if comb else 'pipe'}-shared-native"
     )
-    return target_out_dir(implementation_out_dir(base, implementation), target_mhz)
+    base = implementation_out_dir(base, implementation)
+    # None means a historical record, whose directory predates sharing flags.
+    if sharing is not None:
+        base = sharing_out_dir(base, sharing)
+    return target_out_dir(base, target_mhz)
 
 
 def run_build(args, json_path, log_path):
@@ -477,6 +490,8 @@ def run_build(args, json_path, log_path):
     """
     env = dict(os.environ)
     env["WG_POLY1305_IMPL"] = args.poly1305
+    env["WG_SHARE_CHACHA20"] = str(int(args.sharing["chacha20"]))
+    env["WG_SHARE_POLY1305"] = str(int(args.sharing["poly1305"]))
     env["WG_PERF_JSON"] = json_path
     if not env.get("PYPELINEC"):
         candidate = os.path.join(DEFAULT_PIPELINEC_REPO, "src", "pypelinec")
@@ -499,8 +514,11 @@ def run_build(args, json_path, log_path):
     if args.seed is not None:
         env["WG_PERF_SEED"] = str(args.seed)
 
-    cmd = [os.path.join(HERE, "build.py"), "--shared", "--perf",
+    cmd = [os.path.join(HERE, "build.py"), "--perf",
            "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz)]
+    for name in ("chacha20", "poly1305"):
+        if args.sharing[name]:
+            cmd.append("--share-" + name)
     if args.jobs is not None:
         cmd.extend(["-j", str(args.jobs)])
     if args.comb:
@@ -1068,8 +1086,21 @@ def markdown_table(results, include_mac_details=True):
             f"against {_fmt(hardware_fmax.get('target_mhz'), '.1f')} MHz."
         )
     mac = results.get("config", {}).get("poly1305") or {}
+    sharing = results.get("config", {}).get("sharing")
+    if sharing is not None:
+        lines.append(f"Shared resources: `{sharing_name(sharing)}`.")
+    else:
+        lines.append("Historical sharing metadata absent: interpreted as ChaCha20-only sharing.")
     if mac:
         lines.append(f"Poly1305 implementation: `{mac['implementation']}`.")
+        service = mac.get("shared_mcps")
+        if service and include_mac_details:
+            lines.append(
+                f"Shared MCP capacity={service['capacity_lanes']} lanes; "
+                f"prologue constraint={service['prologue_mcp_latency']} cycles, "
+                f"epilogue constraint={service['epilogue_mcp_latency']} cycles. "
+                "Each response adds one handshake cycle; arbitration waits are measured separately."
+            )
         for direction, timing in (sorted(mac.get("directions", {}).items()) if include_mac_details else []):
             details = (f"{direction}: body II={timing['body_ii']}, "
                        f"accumulators={timing['accumulator_count']}")
@@ -1187,10 +1218,13 @@ CHILD = re.compile(r":\s*entity\s+work\.(\w+)", re.IGNORECASE)
 LATENCY = re.compile(r"ADDED_PIPELINE_LATENCY\s*:\s*integer\s*:=\s*(\d+)", re.IGNORECASE)
 MCP_BODY = re.compile(
     r"^(prologue|epilogue)_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined"
-    r"_direction_(encrypt|decrypt)_\d+clk_", re.IGNORECASE)
+    r"_direction_(encrypt|decrypt)(?:_share_mcp_false)?_\d+clk_", re.IGNORECASE)
+SHARED_MCP_BODY = re.compile(
+    r"^(prologue|epilogue)_from_poly1305_mcp_shared_make_shared_compute"
+    r"_capacity_\d+_\d+clk_", re.IGNORECASE)
 
 
-def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None):
+def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None, shared=None):
     out_dir = Path(out_dir).resolve()
     if top_vhdl is None:
         top_dir = Path(find_top_dir(str(out_dir)))
@@ -1231,29 +1265,60 @@ def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None
             pending.extend(info["children"])
             yield entity, info
 
-    roots = {}
-    for entity, info in walk(top_match.group(1).lower()):
+    roots, physical_counts = {}, {}
+    # Counting distinct entity TYPES would miss two physical instances of the
+    # same shared kernel. Traverse instantiation edges (duplicates included),
+    # stopping at the arithmetic roots, then audit each root's descendants.
+    pending = [(top_match.group(1).lower(), ())]
+    while pending:
+        entity, ancestors = pending.pop()
+        if entity in ancestors:
+            errors.append("Cyclic HDL instantiation: " + entity)
+            continue
         match = MCP_BODY.match(entity)
+        shared_match = SHARED_MCP_BODY.match(entity)
+        label = None
         if match:
-            roots[(match.group(2).lower(), match.group(1).lower())] = entity
+            label = (match.group(2).lower(), match.group(1).lower())
+        elif shared_match:
+            label = ("shared", shared_match.group(1).lower())
+        if label is not None:
+            roots[label] = entity
+            physical_counts[label] = physical_counts.get(label, 0) + 1
+            continue
+        info = entities.get(entity)
+        if info is None:
+            errors.append("Missing emitted entity: " + entity)
+            continue
+        pending.extend((child, ancestors + (entity,)) for child in info["children"])
+    detected_shared = any(direction == "shared" for direction, _ in roots)
+    if shared is not None and bool(shared) != detected_shared:
+        errors.append("Emitted MCP sharing does not match requested architecture")
+    if detected_shared and any(direction != "shared" for direction, _ in roots):
+        errors.append("Both shared and private MCP arithmetic is reachable")
     reports = {}
-    for direction in directions:
+    for direction in (("shared",) if detected_shared else directions):
         for phase in ("prologue", "epilogue"):
             label = direction + "/" + phase
             root = roots.get((direction, phase))
             if root is None:
                 errors.append(f"Missing reachable MCP arithmetic: {label}")
                 continue
+            count = physical_counts[(direction, phase)]
+            if count != 1:
+                errors.append(f"{label}: expected one physical MCP arithmetic instance, got {count}")
             descendants = list(walk(root))
             bad = [entity for entity, info in descendants
                    if info["latency"] not in (None, 0) or info["clocked"]]
             reports[label] = {"entity": root, "file": entities[root]["file"],
+                              "physical_instances": count,
                               "entities_checked": len(descendants),
                               "registered_entities": bad}
             for entity in bad:
                 errors.append(f"{label}: registered arithmetic inside MCP: {entity}")
     return {"out_dir": str(out_dir), "top_vhdl": str(top_vhdl),
             "scope": "emitted MCP arithmetic only; not timing/constraint sign-off",
+            "shared": detected_shared,
             "mcps": reports, "passed": not errors, "errors": errors}
 
 
@@ -1292,6 +1357,23 @@ def measurement_errors(results):
     for phase in results.get("phases", []):
         if phase.get("taps_check", {}).get("consistent") is False:
             errors.append(f"Phase {phase.get('name')}: performance taps disagree on cycle count")
+        # New rigs commit source acceptance after convergence. Keep old records
+        # readable, but require exact byte accounting from the corrected rig.
+        if results.get("config", {}).get("source_handshake") == "converged":
+            for direction in results.get("config", {}).get("dirs", []):
+                stats = phase.get(direction, {})
+                payload = phase["packet_bytes"] * phase["num_packets"]
+                tags = 16 * phase["num_packets"]
+                expected_in = payload + (tags if direction == "decrypt" else 0)
+                expected_out = payload + (tags if direction == "encrypt" else 0)
+                label = f"Phase {phase.get('name')}/{direction}"
+                if stats.get("in_payload_bytes") != expected_in:
+                    errors.append(label + ": input bytes differ from the planned frames")
+                if stats.get("out_payload_bytes") != expected_out:
+                    errors.append(label + ": output bytes differ from the planned frames")
+                tap = phase.get("taps", {}).get(direction + "/chacha20.axis_in")
+                if tap and tap.get("bytes") != payload:
+                    errors.append(label + ": source byte accounting disagrees with converged DUT acceptance")
         for direction, life in phase.get("poly1305_lifecycle", {}).items():
             label = f"Phase {phase.get('name')}/{direction}"
             if life.get("body_launches") != life.get("body_retirements"):
@@ -1311,6 +1393,29 @@ def measurement_errors(results):
                 errors.append(direction + ": body D=P+2 and L=D metadata disagree")
             if meta.get("body_ii") != 1:
                 errors.append(direction + ": pipelined body II is not 1")
+        sharing = results.get("config", {}).get("sharing") or {}
+        if sharing.get("poly1305"):
+            if results.get("config", {}).get("source_handshake") != "converged":
+                errors.append("Shared MCP measurement lacks converged source handshakes")
+            if results.get("config", {}).get("decrypt_verification_retained") is not True:
+                errors.append("Shared MCP measurement does not retain decrypt verification in HDL")
+            service = mac.get("shared_mcps") or {}
+            counts = [m.get("accumulator_count") for m in mac.get("directions", {}).values()]
+            if not counts or None in counts or service.get("capacity_lanes") != max(counts):
+                errors.append("Shared MCP capacity does not match the maximum local lane count")
+            for direction, meta in mac.get("directions", {}).items():
+                if meta.get("shared_mcps") is not True:
+                    errors.append(direction + ": expected shared MCP metadata")
+                for phase in ("prologue", "epilogue"):
+                    key = phase + "_mcp_latency"
+                    if service.get(key) is None or meta.get(key) != service[key]:
+                        errors.append(direction + ": shared " + phase + " latency metadata disagree")
+            for phase in results.get("phases", []):
+                completed = sum(life.get("completed_packets", 0)
+                                for life in phase.get("poly1305_lifecycle", {}).values())
+                for name, service_counts in phase.get("poly1305_shared_services", {}).items():
+                    if service_counts.get("launches") != completed or service_counts.get("responses") != completed:
+                        errors.append(f"Phase {phase.get('name')}: shared {name} request/response accounting differs from completed tags")
     for scope, audit in results.get("mcp_hdl_audits", {}).items():
         if not audit.get("passed"):
             errors.append(scope + ": emitted MCP arithmetic audit failed")
@@ -1401,6 +1506,12 @@ def save_evidence(measurement_dir, results):
         sources.update({prefix + "-vivado.log": log, prefix + "-inputs.json": input_path,
                         prefix + "-sweep-history.json": Path(timing["source"]["sweep_history"]),
                         prefix + "-clocks.xdc": constraints})
+        # A dirty checkout's revision alone cannot identify the design bytes.
+        # Preserve the compiler's frozen design/include hashes when available;
+        # historical outputs legitimately predate this manifest.
+        provenance = log.parent.parent / "source_provenance.json"
+        if provenance.is_file():
+            sources[prefix + "-source-provenance.json"] = provenance
     for name, source in sources.items():
         destination = directory / name
         if source.resolve() != destination.resolve():
@@ -1450,6 +1561,42 @@ def measurement_selftest():
         mutate(changed)
         if not measurement_errors(changed):
             raise ValueError("Guard accepted " + label)
+    # Shared metadata/accounting guards must not be exercised only by private
+    # historical records. Use a copy; never alter the archived measurement.
+    shared = copy.deepcopy(original)
+    shared["config"]["sharing"] = {"chacha20": True, "poly1305": True}
+    shared["config"].update(source_handshake="converged", decrypt_verification_retained=True)
+    directions = shared["config"]["poly1305"]["directions"]
+    service = {"capacity_lanes": max(m["accumulator_count"] for m in directions.values())}
+    for name in ("prologue", "epilogue"):
+        key = name + "_mcp_latency"
+        service[key] = directions["encrypt"][key]
+        for meta in directions.values():
+            meta["shared_mcps"] = True
+            meta[key] = service[key]
+    shared["config"]["poly1305"]["shared_mcps"] = service
+    for phase in shared["phases"]:
+        completed = sum(life["completed_packets"] for life in phase["poly1305_lifecycle"].values())
+        phase["poly1305_shared_services"] = {
+            name: {"launches": completed, "responses": completed}
+            for name in ("prologue", "epilogue")
+        }
+    if measurement_errors(shared):
+        raise ValueError("Valid shared metadata rejected: " + repr(measurement_errors(shared)))
+    for label, mutate in (
+        ("shared capacity", lambda r: r["config"]["poly1305"]["shared_mcps"].update(capacity_lanes=99)),
+        ("shared latency", lambda r: r["config"]["poly1305"]["shared_mcps"].update(epilogue_mcp_latency=99)),
+        ("shared owner", lambda r: r["config"]["poly1305"]["directions"]["decrypt"].update(shared_mcps=False)),
+        ("shared accounting", lambda r: r["phases"][0]["poly1305_shared_services"]["epilogue"].update(responses=0)),
+        ("source handshake", lambda r: r["config"].update(source_handshake="early")),
+        ("verification output", lambda r: r["config"].update(decrypt_verification_retained=False)),
+        ("source bytes", lambda r: r["phases"][0]["encrypt"].update(in_payload_bytes=0)),
+        ("output bytes", lambda r: r["phases"][0]["encrypt"].update(out_payload_bytes=0)),
+    ):
+        changed = copy.deepcopy(shared)
+        mutate(changed)
+        if not measurement_errors(changed):
+            raise ValueError("Guard accepted " + label)
     # Metadata-free records must retain the historical model and saved provenance.
     for label in ("shared-80mhz", "shared-80mhz-probed"):
         historical = Path(HERE) / "measurements" / label
@@ -1462,6 +1609,47 @@ def measurement_selftest():
         raise ValueError("Pipelined II model changed")
     with tempfile.TemporaryDirectory(prefix="wg-measure-check-") as scratch:
         scratch = Path(scratch)
+        # Confirmation overrides provisional standalone checks. Support both
+        # compiler print formats, including a final FAIL (never mask it).
+        stdout = scratch / "confirmation.log"
+        for qualifier in ("", "; worst reported path"):
+            for verdict in ("PASS", "FAIL"):
+                stdout.write_text(
+                    "[sweep] example synthesized as written (standalone check): "
+                    "34.34 MHz vs 60.00 MHz goal - FAIL\n"
+                    f"{verdict} example: 69.42 MHz vs 60.00 MHz goal{qualifier} "
+                    "(confirmation run)\n"
+                )
+                final = parse_stdout(str(stdout))["final"]["example"]
+                expected = {"met": verdict == "PASS", "achieved_mhz": 69.42,
+                            "standalone_mhz": 34.34}
+                if final.get("outcome") != "confirmation run" or cross_check_final(expected, final):
+                    raise ValueError("Confirmation stdout parsing changed: " + repr(final))
+        # Cache seeding can carry logs from another named hardware top,
+        # without importing that top's HDL/history into the current build.
+        mixed = scratch / "mixed-cache"
+        active, cached = mixed / "top", mixed / "other_hardware"
+        active.mkdir(parents=True)
+        cached.mkdir()
+        (active / "sweep_history.json").write_text("{}")
+        (cached / "vivado_abcd_1234.log").write_text("cache fixture")
+        if find_top_dir(str(mixed)) != str(active):
+            raise ValueError("Copied top logs were mistaken for an active build")
+        # Real second builds must still be rejected, with either final HDL
+        # or a sweep history claiming that output directory.
+        for artifact in ("other_hardware.vhd", "sweep_history.json"):
+            path = cached / artifact
+            path.write_text("fixture")
+            try:
+                find_top_dir(str(mixed))
+            except ValueError:
+                pass
+            else:
+                raise ValueError("Ambiguous active tops accepted: " + artifact)
+            path.unlink()
+        (active / "sweep_history.json").unlink()
+        if find_top_dir(str(mixed)) != str(cached):
+            raise ValueError("Historical log-only top discovery changed")
         # Mutate only copies. Refreshing the outer inventory must not conceal
         # a bad retained input signature or stale production constraints.
         archived = scratch / "archive"
@@ -1505,10 +1693,12 @@ def measurement_selftest():
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--label", default=None, help="measurement name (dir under measurements/)")
+    ap.add_argument("--shared", action="store_true", help="Share both resources (default)")
+    add_sharing_arguments(ap)
     ap.add_argument("--poly1305", choices=IMPLEMENTATIONS, default=None,
                     help="MAC architecture (WG_POLY1305_IMPL, otherwise pipelined)")
     ap.add_argument("--target-mhz", type=int, choices=TARGETS_MHZ, default=None,
-                    help="Clock goal (default: pipelined 30 MHz, legacy 80 MHz)")
+                    help="Clock goal (default: sharing-both 60 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     ap.add_argument("-j", "--jobs", type=int, default=None,
                     help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
@@ -1563,19 +1753,26 @@ def main():
         ap.error("--jobs must be at least 1")
     try:
         args.poly1305 = selected_implementation(args.poly1305)
+        # A saved record supplies its own architecture; do not reject an old
+        # legacy record using today's default sharing-both selection.
+        args.sharing = None if args.parse_only else sharing_from_args(args)
     except ValueError as exc:
         ap.error(str(exc))
     if args.target_mhz is None:
-        args.target_mhz = default_target_mhz(args.poly1305)
+        # Parse-only has no current sharing selection: old metadata, not
+        # inherited sharing environment variables, will supply its clock.
+        args.target_mhz = default_target_mhz(args.poly1305, args.sharing if args.sharing is not None
+                                           else {"chacha20": True, "poly1305": False})
 
     label = args.label or (("comb-smoke" + (f"-{args.target_mhz}mhz" if args.target_mhz != 80 else "")
                            if args.comb else f"shared-{args.target_mhz}mhz")
-                           + "-poly1305-" + args.poly1305)
+                           + "-poly1305-" + args.poly1305
+                           + ("-share-" + sharing_name(args.sharing) if args.sharing is not None else ""))
     meas_dir = os.path.join(HERE, "measurements", label)
     os.makedirs(meas_dir, exist_ok=True)
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
-    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz)
+    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing)
 
     build_info = {"skipped": True}
     if not args.parse_only:
@@ -1605,10 +1802,12 @@ def main():
             args.comb = previous.get("config", {}).get("comb", args.comb)
         if mac_config:
             args.poly1305 = mac_config["implementation"]
+            recorded_sharing = perf_raw.get("config", {}).get("sharing")
             args.target_mhz = (previous.get("config", {}).get("target_mhz")
                                or perf_raw.get("config", {}).get("target_mhz")
-                               or default_target_mhz(args.poly1305))
-            out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz)
+                               or default_target_mhz(args.poly1305, recorded_sharing if recorded_sharing is not None
+                                                     else {"chacha20": True, "poly1305": False}))
+            out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, recorded_sharing)
         else:
             args.poly1305 = "legacy"
             args.target_mhz = 80
@@ -1616,6 +1815,7 @@ def main():
         recorded_dir = previous.get("config", {}).get("out_dir")
         if recorded_dir:
             out_dir = os.path.join(HERE, recorded_dir)
+        args.sharing = perf_raw.get("config", {}).get("sharing", {"chacha20": True, "poly1305": False})
 
     stdout_info = parse_stdout(log_path)
     fmax = parse_fmax(out_dir, stdout_info)
@@ -1641,6 +1841,7 @@ def main():
             perf_raw.get("config", {}),
             comb=args.comb,
             poly1305_impl=args.poly1305,
+            sharing=args.sharing,
             out_dir=os.path.relpath(out_dir, HERE),
             target_mhz=target_mhz,
             requested_target_mhz=(previous.get("config", {}).get("requested_target_mhz")
@@ -1707,7 +1908,7 @@ def main():
             if directory is None:
                 continue
             try:
-                audit = audit_poly1305_hdl(os.path.join(HERE, directory))
+                audit = audit_poly1305_hdl(os.path.join(HERE, directory), shared=args.sharing["poly1305"])
             except (OSError, ValueError) as exc:
                 audit = {"passed": False, "errors": [str(exc)]}
             results["mcp_hdl_audits"][scope] = audit

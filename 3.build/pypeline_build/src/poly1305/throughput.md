@@ -1,21 +1,156 @@
-# Pipelined Poly1305: design and measured checkpoint
+# Pipelined Poly1305: design and measured checkpoints
 
-The shared design is characterized at **30 MHz**, now the default selected by
-`build.py` and `measure.py`. Use `--poly1305 legacy` for the historical
-80 MHz architecture, or `--target-mhz` to override the profile clock. Outputs
-are isolated by implementation and target. Automatic body/MCP discovery
-uses clock-profile starting guesses and remains uncapped; the sweep can
-adjust them. The packet QoR record below was produced by the unseeded source.
+Combined builds share ChaCha20 and the Poly1305 prologue/epilogue MCPs by
+default, targeting the verified **60 MHz** point. Other pipelined sharing sets
+and standalone directions retain 30 MHz defaults. Passing external-port
+hardware evidence is at **30 MHz**; the sharing-both **60 MHz** fixed-vector and
+performance testbenches pass synthesis timing, capacity and native
+functional checks. This is synthesis evidence, not routed sign-off; an
+external-port hardware build at 60 MHz remains deferred.
 
-The completed 2026-10-02 run's [summary](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md),
-[comparison](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/comparison.md),
-and [hardware evidence](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/hardware-evidence.json)
-are durable. Scratch `validation/` and generated caches are not required to
-read these results. Legacy QoR was not rerun.
+The latest [packet summary](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/summary.md),
+[block report](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/blocks.md),
+[comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/comparison.md),
+and [workflow record](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/workflow-evidence.json)
+are durable. The earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
+and legacy 80 MHz archives are unchanged; no historical QoR was rerun.
+Scratch `validation/` and generated caches are not needed to read results.
+
+## Independent MCP sharing
+
+Current combined builds select sharing independently: no flags or `--shared`
+select both; either `--share-chacha20` or `--share-poly1305` alone selects only
+that resource; both positive flags select both. Single-direction builds reject
+sharing selectors. Legacy combined builds require
+`--share-chacha20 --poly1305 legacy`. Direct compiler invocation uses
+`WG_SHARE_CHACHA20` / `WG_SHARE_POLY1305`; explicit CLI selection overrides
+those settings. Cache names include implementation, sharing set and clock.
+
+`poly1305_mcp_shared.py` owns two independent request-aware round-robin
+arbiters and two whole-function automatic MCPs: one prologue, one epilogue.
+A lone requester is served immediately. Priority changes only on accepted
+requests; a stalled grant/payload remains stable under the requester's
+valid/ready contract. A direction bit travels through each MCP and routes
+its response independently of current priority. Responses remain valid and
+stable until accepted. There is **no packet-wide ownership lock**: encrypt's
+prologue and decrypt's epilogue can execute concurrently.
+
+Each MAC retains its private free-running, valid-only body pipeline and
+key/powers/accumulator context. For each direction,
+`L_direction = body_core_latency + 2`, including the two actual body boundary
+registers. Shared capacity is `C = max(L_encrypt, L_decrypt)`, derived from
+the consumed automatic depths and checked through re-elaboration/confirmation.
+The body callable identities do not depend on C or L.
+
+The shared prologue computes powers through `r^C`; each client keeps its own
+prefix and uses `r^L_direction` as the body stride. Epilogue requests carry
+local L, the next-dispatch lane, s, and zero-padded accumulators/powers.
+Rotation uses **local L, not C**. One product per capacity slot and a balanced
+modular sum remain inside the epilogue MCP; inactive slots contribute zero.
+There are no inverse powers, fixed production depths or automatic maximums.
+
+### Confirmed checkpoints
+
+| Top / goal | ChaCha core | Body cores enc/dec | Local L enc/dec | C | Prologue / epilogue setup cycles | DSP48 | Outcome |
+| --- | ---: | --- | --- | ---: | --- | ---: | --- |
+| External-port hardware / 30 MHz | 4 | 0 / 0 | 2 / 2 | 2 | 1 / 2 | 320 | PASS, synthesis 30.05 MHz |
+| Fixed-vector native syn_tb / 60 MHz | 17 | 3 / 3 | 5 / 5 | 5 | 6 / 5 | 704 | PASS, 21 checks, 688 cycles |
+| Perf/native QoR / 60 MHz | 17 | 3 / 0 | 5 / 2 | 5 | 6 / 5 | 640 | PASS, 48 packets, 3012 cycles, synthesis 63.032 MHz |
+
+MCP setup cycles exclude the one response handshake cycle: the latest
+prologue/epilogue responses take seven/six cycles before arbitration wait.
+The fixed-vector top passes the 60 MHz goal; its lowest measured compute
+MAIN is ChaCha at 62.889 MHz, but an unmeasured finish checker means the
+whole-top fmax claim remains a 60 MHz lower bound. The perf top has measured
+final MAIN timing and 44,442 LUTs, 17,935 FFs and 11 BRAM tiles.
+
+The latest perf wrapper retains `decrypt_perf_verified` as a real HDL
+output, unlike the historical wrappers. Its decrypt body nevertheless
+retains zero extra core registers. Different native/testbench contexts and
+constant inputs permit optimization; do not treat that depth or its 640-DSP
+area as an unconstrained-key external-port result. Separate direction
+identities permit unequal depths, and the full QoR exercises correct local
+rotation with L=5 and L=2 through the same C=5 services. The fixed-vector
+top retains L=5 for both directions.
+
+The 30 MHz [hardware checkpoint](../../measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/hardware-evidence.json)
+saves **192 DSPs (37.5%)** versus the archived private-MCP design's 512.
+Measured 64-DSP full-width multipliers predict sharing-both capacity C=5
+at 704 DSPs, C=6 at 832, C=7 at 960 when both bodies remain present.
+Actual synthesis/capacity evidence is authoritative; the performance
+wrapper's smaller optimized area is not that hardware budget.
+
+### Functional coverage and corrected native sources
+
+Both native testbench styles passed for standalone enc/dec and all three
+sharing sets; a legacy ChaCha-only fixed-vector smoke test also passed.
+The existing standalone Poly1305 testbench's `sharing` mode checks
+concurrent and lone requests, alternating ties, held grants, response
+backpressure/ownership, simultaneous response/relaunch and independent
+phases. Pure five-slot checks exercise local lane counts 2, 3 and 5, every
+rotation, inactive nonzero slots and zero/unit/maximal keys. Normal MAC tests
+cover short/long packets, changing/repeated keys, forwarding, drain and
+stable held tags. The 60 MHz fixed-vector integration checks also cover
+ciphertext/plaintext, tag, framing, keep masks and tampered-tag rejection.
+
+The final commit regression passed 14 checks: 11 native combinational
+integration/fallback builds, the directed sharing mode, and two seeded-60
+no-synthesis HDL checks. The hardware HDL check exercises the new 60 MHz
+default without WG_TARGET_MHZ. Results are retained in the workflow record
+linked above; these HDL checks are not additional synthesis timing evidence.
+
+An initial full QoR attempt was correctly rejected when five encrypt frames
+were 16 bytes short. A replay proved that the native source advanced on
+pre-convergence ready at cycle 46; the DUT never accepted those beats.
+`ConvergedAxisSource` now presents without advancing in `@sim_input` and
+commits `valid & ready` in the converged `@sim_output` callback.
+Input accounting uses that same handshake. This is a WireGuard testbench
+correction, not a Poly1305 arithmetic or compiler change. The strict
+eight-packet replay and corrected full 48-packet sweep pass exact
+byte/tap accounting and reference checks. Historical records remain unchanged.
+
+Measurement metadata records the implementation, shared capacity, local
+body/core latencies and MCP cycles. HDL auditing checks **one physical MCP
+per shared phase** and no registered arithmetic inside either MCP.
+The block report separates private body service (II=1) from setup, drain,
+finalization, tag stalls, arbitration waits and physical MCP service time.
+Prologue and epilogue each handled eight requests per size, taking six
+and five compute cycles respectively, without response stalls.
+
+### Starting hints and higher-clock limitations
+
+The 30 MHz profile is unchanged. A new 60 MHz starting profile uses the
+confirmed fixed-vector ChaCha=17, bodies=3/3, shared MCPs=6/5 result;
+private ChaCha/MCP hints remain their 30 MHz fallback. The perf-only
+decrypt depth of zero is not used as a hardware hint. Profiles remain
+unrestricted starting guesses; subsequent sweeps may change them.
+The QoR archive records the original discovery source, before this hint
+update. No new timing pass or synthesis-run reduction is claimed from the
+updated hints until a seeded synthesis is measured.
+
+There is no accepted 80 MHz result: private encrypt's confirmation exceeded
+the 740-DSP device budget (896 DSPs) and also suffered an OOM kill.
+Private enc/dec 70 MHz native syn_tb passed, each with 640 DSPs and body
+core=3/L=5. Sharing-both 70 MHz instead confirmed C=7 at **960/740 DSPs**.
+Its real fixed-vector critical path plateaued around 65.39 MHz through the
+fixture's byte counter, shared ChaCha request/ready arbitration and packet
+counter. Compute-depth growth did not split that boundary path; hotspot
+attribution and restored-snapshot selection remain deferred sweep issues.
+The 44-stage ChaCha result from that failed run is not the accepted 17-stage
+60 MHz result. Failed timing/capacity results are not functional waivers.
+
+Earlier compiler fixes for conditional MAIN discovery and native Reg-array
+augmented assignment were made by the compiler session, not this session.
+Stateful WireGuard fixed-vector MAINs were also incorrectly tagged
+`@wires`; removing that promise gives them normal timing checks. The current
+shared builds, native simulations and measurement acceptance report no
+new blocking compiler issue. Generic sweep/compiler regressions belong in
+PipelineC's suite, not a WireGuard `tests/` directory. Directed checks use
+the existing unit testbench directly; see [standalone commands](#standalone-testbenches).
 
 ## Logical checkpoint at 30 MHz
 
-The primary shared hardware build confirmed an automatic body core latency of
+The archived ChaCha-only shared hardware build confirmed an automatic body core latency of
 zero for both directions. The actual body still has its explicit input and
 output registers: `D = 2`, `L = 2`. It accepts one block per cycle; zero *extra*
 core stages does not mean zero latency or a single-accumulator MCP loop. The
@@ -40,9 +175,9 @@ Reproducible unit checks live in one standalone testbench invoked directly by
 [standalone commands](#standalone-testbenches). Its isolated fixed-depth stress
 configurations exercise L=2,3,5,8 without changing the automatic production
 factory or claiming timing passes at those depths.
-Compiler cache/re-elaboration/sweep regressions are described in the
-[compiler-test handoff](../../COMPILER_TEST_HANDOFF.md), not a WireGuard
-unit-test directory.
+Compiler cache/re-elaboration/sweep regressions belong in PipelineC's own
+suite, not a WireGuard unit-test directory. Local compiler handoffs and repros
+remain in the disposable validation workspace.
 
 The body-rate ceiling at 30 MHz is `16*30 = 480 MB/s` (3.84 Gb/s), versus the
 recorded legacy six-cycle loop's `16*80/6` MB/s (1.707 Gb/s) at 80 MHz: a 2.25x
@@ -402,9 +537,9 @@ elaboration via these environment variables; no special runner is needed:
 
 | Variable | Choices / default | Coverage |
 | --- | --- | --- |
-| WG_POLY1305_TB_MODE | mac (default), body, arithmetic, components | Independent reference tags; exact body latency/bubbles; integer-oracle arithmetic; production power graph and rotated final sum. |
+| WG_POLY1305_TB_MODE | mac (default), body, arithmetic, components, sharing | Reference tags; body latency/bubbles; integer-oracle arithmetic; power graph/rotation; independent shared MCP arbitration and response ownership. |
 | WG_POLY1305_TB_DIRECTION | encrypt (default), decrypt | Select the direction's stable body callable identity. |
-| WG_POLY1305_TB_BODY_DEPTH | unset (automatic), or 0,1,3,6 | Testbench-only fixed stages, giving L=2,3,5,8; not valid in arithmetic mode. |
+| WG_POLY1305_TB_BODY_DEPTH | unset (automatic), or 0,1,3,6 | Testbench-only fixed stages, giving L=2,3,5,8; not valid in arithmetic or sharing mode. |
 
 MAC cases cross each length 1..2L+1 and 4L+1 with zero/unit/maximal/random
 keys, then repeat a key and change s. They check input gaps, continuous II=1,
@@ -418,7 +553,7 @@ retained):
 
 ```sh
 set -e
-for mode in arithmetic body components mac; do
+for mode in arithmetic body components mac sharing; do
   WG_POLY1305_IMPL=pipelined WG_TARGET_MHZ=30 \
   WG_POLY1305_TB_MODE="$mode" WG_POLY1305_TB_DIRECTION=encrypt \
   WG_POLY1305_TB_BODY_DEPTH= \
@@ -467,11 +602,13 @@ The shared production build's emitted MCP arithmetic can be audited without
 another synthesis:
 
 ```sh
-./measure.py --audit-mcps generated-files-verilog-shared-poly1305-pipelined-30mhz
+./measure.py --audit-mcps generated-files-verilog-shared-poly1305-pipelined-share-chacha20-poly1305-30mhz
 ```
 
-This rejects registered arithmetic descendants inside all four MCPs; wrapper
-and body registers are allowed. It is not timing/constraint sign-off.
+This checks exactly one physical MCP per shared phase and rejects registered
+arithmetic descendants. ChaCha-only builds instead require each direction's
+private prologue and epilogue (four MCPs). Wrapper and body registers are
+allowed. It is not timing/constraint sign-off.
 Fresh non-combinational measurements run this audit as part of acceptance.
 
 ## Legacy arithmetic corrections

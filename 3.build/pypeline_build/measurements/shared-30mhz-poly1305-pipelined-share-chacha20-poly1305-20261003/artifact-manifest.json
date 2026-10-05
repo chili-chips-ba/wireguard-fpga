@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "archived_utc": "2026-10-03T12:26:50.726079+00:00",
+  "scope": "accepted hardware checkpoint only; no results.json or packet-QoR acceptance claimed",
+  "artifacts": {
+    "hardware-clocks.xdc": {
+      "bytes": 2632,
+      "sha256": "74770f34da7314480086f7b1fc8cdc6c02f8aa975fa5e1755ffa2cc04d28c078"
+    },
+    "hardware-evidence.json": {
+      "bytes": 8840,
+      "sha256": "cacd009c5ad8cc417cf934589203c95481920ac87bcd4f0b674af303ebbbacd6"
+    },
+    "hardware-inputs.json": {
+      "bytes": 62472,
+      "sha256": "cfd19292fe5988aa3e7fcb32d358665f8ae305373d3b63779be88327a0ed3c97"
+    },
+    "hardware-source-provenance.json": {
+      "bytes": 11699,
+      "sha256": "804c537a2df0768e2c913dc0dc7f0284ba2c3db3a0bb59f7f1ea20bf5c7c54ae"
+    },
+    "hardware-sweep-history.json": {
+      "bytes": 85703,
+      "sha256": "ef00db6d3093bd7dff501aee73252b852f62ecaf63ceb2edd3960ae70ea80eb4"
+    },
+    "hardware-vivado.log": {
+      "bytes": 5545556,
+      "sha256": "3708a5971d0037914ed68ea33325809542dbb0eb2239a841d3d5683a31760f39"
+    },
+    "validation-summary.json": {
+      "bytes": 790,
+      "sha256": "9e3972a0ab01f1605caf7a20b15a22739d01c8809c3f7215cdfb4ca75873f21d"
+    }
+  }
+}

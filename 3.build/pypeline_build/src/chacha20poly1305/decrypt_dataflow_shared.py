@@ -1,7 +1,8 @@
 # pyright: reportInvalidTypeForm=none
-"""Decrypt dataflow for the shared design — identical to decrypt_dataflow.py
-except the chacha20 instance is chacha20_pipeline_shared.chacha20_decrypt_shared
-(which uses the shared compute pipeline).
+"""Decrypt dataflow for the combined design with independently selected sharing.
+
+ChaCha20 can use its shared pipeline; Poly1305 can use shared prologue/epilogue
+services. The MAC body pipeline and packet state always remain private.
 
 Pypeline port of ../pipelinec_build/src/chacha20poly1305/decrypt_dataflow.c
 as included by decrypt_shared.c.
@@ -11,13 +12,23 @@ import wireguard_env  # noqa: F401
 from pypeline import MAIN
 
 import chacha20poly1305_decrypt_ports
-import chacha20_pipeline_shared
+from poly1305_select import make_poly1305_mac
+
+sharing = wireguard_env.sharing()
+if sharing["chacha20"]:
+    import chacha20_pipeline_shared
+    chacha_func = chacha20_pipeline_shared.chacha20_decrypt_shared
+else:
+    import chacha20
+    chacha_func = chacha20.chacha20_instance
+if sharing["poly1305"]:
+    import poly1305_mcp_shared  # noqa: F401
 
 from aead_types import axis128_intrf
 from decrypt_dataflow_core import make_decrypt_dataflow_core
 
 decrypt_dataflow_core, decrypt_dataflow_core_t = make_decrypt_dataflow_core(
-    chacha20_pipeline_shared.chacha20_decrypt_shared
+    chacha_func, make_poly1305_mac("decrypt", share_mcp=sharing["poly1305"])
 )
 
 

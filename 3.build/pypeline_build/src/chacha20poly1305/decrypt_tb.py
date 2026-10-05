@@ -52,7 +52,7 @@ from aead_types import (
     AAD_MAX_LEN,
     axis128_intrf,
 )
-from axi.axis_sim import AxisSimSource, AxisSimSink, Scoreboard
+from axi.axis_sim import AxisSimSink, Scoreboard
 from aead_ref_model import generate_encrypt_vector
 import tb_common_sim as common
 
@@ -71,7 +71,7 @@ _dec_state = {
 }
 
 _scoreboard = Scoreboard()
-_src = AxisSimSource(axis128_intrf, 16)
+_src = common.ConvergedAxisSource(axis128_intrf, 16)
 _snk = AxisSimSink(axis128_intrf, 16, scoreboard=_scoreboard)
 
 
@@ -122,11 +122,7 @@ def drive_in_word() -> axis128_intrf.stream_t:
         _src.send(pkt["ciphertext"] + pkt["tag"])
         _dec_state["in_packet_idx"] += 1
 
-    # axis_in_ready is Reg-driven downstream (buffer-occupancy-based, not a
-    # same-cycle combinational function of this cycle's axis_in.valid), so it
-    # already holds a stable value at the start of the cycle -- safe to read
-    # directly here to decide whether this word was accepted.
-    return _src.step(chacha20poly1305_decrypt_ports.axis_in_if.ready).stream
+    return _src.drive().stream
 
 
 @initial(sim=True)
@@ -152,6 +148,7 @@ def report_new_packets():
 
 @sim_output
 def check_out():
+    _src.commit(chacha20poly1305_decrypt_ports.axis_in_if.ready)
     out = chacha20poly1305_decrypt_ports.axis_out_if.stream
     # is_verified_out rides alongside the whole output packet (constant for
     # its duration), so sampling it once when the frame completes below is

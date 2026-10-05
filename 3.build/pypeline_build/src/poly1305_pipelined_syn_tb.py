@@ -6,7 +6,7 @@ Checks run in native or GHDL simulation. Normal MAC/body builds consume the
 discovered automatic latency. WG_POLY1305_TB_BODY_DEPTH inserts real fixed
 stages ONLY in an isolated testbench configuration, never production/QoR.
 
-Set WG_POLY1305_TB_MODE=mac|body|arithmetic|components (default mac), and
+Set WG_POLY1305_TB_MODE=mac|body|arithmetic|components|sharing (default mac), and
 WG_POLY1305_TB_DIRECTION=encrypt|decrypt (default encrypt). See src/poly1305/throughput.md
 for direct native/GHDL commands and isolated output-directory conventions.
 """
@@ -31,9 +31,9 @@ PART("xc7a200tffg1156-2")
 MODE = os.environ.get("WG_POLY1305_TB_MODE", "mac")
 DIRECTION = os.environ.get("WG_POLY1305_TB_DIRECTION", "encrypt")
 DEPTH = os.environ.get("WG_POLY1305_TB_BODY_DEPTH", "")
-if MODE not in ("mac", "body", "arithmetic", "components"):
+if MODE not in ("mac", "body", "arithmetic", "components", "sharing"):
     raise ValueError("Invalid standalone Poly1305 testbench mode")
-if DEPTH and (int(DEPTH) not in (0, 1, 3, 6) or MODE == "arithmetic"):
+if DEPTH and (int(DEPTH) not in (0, 1, 3, 6) or MODE in ("arithmetic", "sharing")):
     raise ValueError("Invalid standalone testbench body depth")
 P = (1 << 130) - 5
 MASK128 = (1 << 128) - 1
@@ -44,7 +44,7 @@ uint260_t = arithmetic.uint260_t
 uint320_t = arithmetic.uint320_t
 uint130_t = arithmetic.uint130_t
 
-if MODE != "arithmetic":
+if MODE not in ("arithmetic", "sharing"):
     # Restore the binding immediately; no production source/API/cache edits.
     original_auto_pipeline = design.AUTO_PIPELINE
     try:
@@ -64,7 +64,193 @@ if MODE != "arithmetic":
     epilogue_stream_t = mac.epilogue_mcp.in_intrf.stream_t
     print(f"Poly1305 {MODE} TB: {DIRECTION}, P={mac.body_auto_pipeline.latency}, D=L={LANES}")
 
-if MODE == "mac":
+if MODE == "sharing":
+    import poly1305_mcp_shared as shared
+
+    C = shared.CAPACITY
+    REQUESTS = 12
+    rng = random.Random(130513)
+    CLAMP_MASK = 0x0ffffffc0ffffffc0ffffffc0fffffff
+    R = [0, 1, CLAMP_MASK] + [rng.getrandbits(128) & CLAMP_MASK for _ in range(7)]
+    R += [R[-1], R[-1]]  # Repeated keys must still run the prologue.
+    PRO_R = R + list(reversed(R))
+    PRO_EXPECTED = [pow(r, j + 1, P) for r in PRO_R for j in range(C)]
+    COUNTS = [(i % C) + 1 for i in range(2 * REQUESTS)]
+    NEXT = [i % COUNTS[i] for i in range(2 * REQUESTS)]
+    SALTS = [rng.getrandbits(128) for _ in range(2 * REQUESTS)]
+    ACCUM = [rng.randrange(P) for _ in range(2 * REQUESTS * C)]
+    EPI_POWERS = [pow(PRO_R[i], j + 1, P) for i in range(2 * REQUESTS) for j in range(C)]
+    EPI_EXPECTED = [((sum(ACCUM[i * C + j] * EPI_POWERS[i * C + (NEXT[i] - 1 - j) % COUNTS[i]]
+                         for j in range(COUNTS[i])) % P) + SALTS[i]) & MASK128
+                    for i in range(2 * REQUESTS)]
+    PRO_ARRAY_SIZE = 2 * REQUESTS * C
+
+    # A pure five-slot kernel checks the important unequal-lane case without
+    # inserting guessed/fixed stages into either production body pipeline.
+    pro5, epi5, powers5_t, epi5_in_t = shared.make_shared_compute(5)
+    PURE_CASES = [(lanes, q, r) for lanes in (2, 3, 5) for q in range(lanes)
+                  for r in (0, 1, CLAMP_MASK, P - 1)]
+    PURE_N = len(PURE_CASES)
+    PURE_LANES = [x[0] for x in PURE_CASES]
+    PURE_NEXT = [x[1] for x in PURE_CASES]
+    PURE_R = [x[2] for x in PURE_CASES]
+    PURE_S = [rng.getrandbits(128) for _ in PURE_CASES]
+    PURE_A = [rng.randrange(P) for _ in range(5 * PURE_N)]
+    PURE_POW = [pow(r, j + 1, P) for r in PURE_R for j in range(5)]
+    PURE_TAG = [((sum(PURE_A[i * 5 + j] * PURE_POW[i * 5 + (PURE_NEXT[i] - 1 - j) % PURE_LANES[i]]
+                         for j in range(PURE_LANES[i])) % P) + PURE_S[i]) & MASK128
+                for i in range(PURE_N)]
+    PURE_ARRAY_SIZE = 5 * PURE_N
+
+    @hw_func
+    def run_testbench() -> uint128_t:
+        cycle: Reg[uint32_t]
+        sent: Reg[uint32_t[4]]
+        received: Reg[uint32_t[4]]
+        held: Reg[uint1_t[4]]
+        relaunch_seen: Reg[uint1_t]
+        independent_seen: Reg[uint1_t]
+        stall_seen: Reg[uint1_t]
+        pro_launches: Reg[uint32_t]
+        last_pro_encrypt: Reg[uint1_t]
+        r: uint130_t[2 * REQUESTS] = PRO_R
+        expected_powers: uint130_t[PRO_ARRAY_SIZE] = PRO_EXPECTED
+        counts: uint32_t[2 * REQUESTS] = COUNTS
+        next_lane: uint32_t[2 * REQUESTS] = NEXT
+        salts: uint128_t[2 * REQUESTS] = SALTS
+        accum: uint130_t[PRO_ARRAY_SIZE] = ACCUM
+        epi_powers: uint130_t[PRO_ARRAY_SIZE] = EPI_POWERS
+        expected_tags: uint128_t[2 * REQUESTS] = EPI_EXPECTED
+        pro_enc: shared.prologue_in_intrf.stream_t
+        pro_dec: shared.prologue_in_intrf.stream_t
+        epi_enc: shared.epilogue_in_intrf.stream_t
+        epi_dec: shared.epilogue_in_intrf.stream_t
+        # Early requests stay continuously asserted to check alternating ties;
+        # later absolute start times add lone requesters without withdrawing a
+        # valid that is stalled. Payload changes only after an input handshake.
+        pro_enc.valid = (sent[0] < REQUESTS) & ((sent[0] < 6) | (cycle >= sent[0] * 9))
+        pro_dec.valid = (sent[1] < REQUESTS) & ((sent[1] < 6) | (cycle >= sent[1] * 13))
+        epi_enc.valid = (sent[2] < REQUESTS) & ((sent[2] < 6) | (cycle >= sent[2] * 11))
+        epi_dec.valid = (sent[3] < REQUESTS) & ((sent[3] < 6) | (cycle >= sent[3] * 7))
+        pro_enc.data = r[sent[0] % REQUESTS]
+        pro_dec.data = r[REQUESTS + sent[1] % REQUESTS]
+        enc_index: uint32_t = sent[2] % REQUESTS
+        dec_index: uint32_t = REQUESTS + sent[3] % REQUESTS
+        epi_enc.data.lane_count = counts[enc_index]
+        epi_dec.data.lane_count = counts[dec_index]
+        epi_enc.data.next_lane = next_lane[enc_index]
+        epi_dec.data.next_lane = next_lane[dec_index]
+        epi_enc.data.s = salts[enc_index]
+        epi_dec.data.s = salts[dec_index]
+        for j in range(C):
+            # Inactive slots deliberately contain nonzero values. They must
+            # contribute zero even when local lane count is less than capacity.
+            epi_enc.data.accumulators[j] = accum[enc_index * C + j]
+            epi_dec.data.accumulators[j] = accum[dec_index * C + j]
+            epi_enc.data.powers.values[j] = epi_powers[enc_index * C + j]
+            epi_dec.data.powers.values[j] = epi_powers[dec_index * C + j]
+        # Check the actual production-capacity request arithmetic separately
+        # from arbitration/capture, including nonzero inactive slots.
+        enc_direct = shared.epilogue(epi_enc.data)
+        dec_direct = shared.epilogue(epi_dec.data)
+        sim_assert(enc_direct == expected_tags[enc_index], "direct encrypt epilogue mismatch")
+        sim_assert(dec_direct == expected_tags[dec_index],
+                   f"direct decrypt epilogue mismatch: cycle={cycle}, got={dec_direct}, expected={expected_tags[dec_index]}")
+        ready: uint1_t[4]
+        ready[0] = (cycle >= 30) & (cycle % 11 >= 4)
+        ready[1] = (cycle >= 16) & (cycle % 13 >= 3)
+        ready[2] = (cycle >= 12) & (cycle % 7 >= 2)
+        ready[3] = (cycle >= 7) & (cycle % 9 >= 2)
+        p_enc = shared.encrypt_prologue_client(shared.prologue_in_intrf.fwd_t(pro_enc),
+                                               shared.prologue_out_intrf.fb_t(ready[0]))
+        p_dec = shared.decrypt_prologue_client(shared.prologue_in_intrf.fwd_t(pro_dec),
+                                               shared.prologue_out_intrf.fb_t(ready[1]))
+        e_enc = shared.encrypt_epilogue_client(shared.epilogue_in_intrf.fwd_t(epi_enc),
+                                               shared.epilogue_out_intrf.fb_t(ready[2]))
+        e_dec = shared.decrypt_epilogue_client(shared.epilogue_in_intrf.fwd_t(epi_dec),
+                                               shared.epilogue_out_intrf.fb_t(ready[3]))
+        launches: uint1_t[4]
+        launches[0] = pro_enc.valid & p_enc.stream_in_if.ready
+        launches[1] = pro_dec.valid & p_dec.stream_in_if.ready
+        launches[2] = epi_enc.valid & e_enc.stream_in_if.ready
+        launches[3] = epi_dec.valid & e_dec.stream_in_if.ready
+        valid: uint1_t[4]
+        valid[0] = p_enc.stream_out_if.stream.valid
+        valid[1] = p_dec.stream_out_if.stream.valid
+        valid[2] = e_enc.stream_out_if.stream.valid
+        valid[3] = e_dec.stream_out_if.stream.valid
+        sim_assert(~(launches[0] & launches[1]), "prologue accepted both clients")
+        sim_assert(~(launches[2] & launches[3]), "epilogue accepted both clients")
+        sim_assert(~(valid[0] & valid[1]), "prologue response delivered twice")
+        sim_assert(~(valid[2] & valid[3]), "epilogue response delivered twice")
+        if launches[0] | launches[1]:
+            if pro_launches == 0:
+                sim_assert(launches[1], "initial tied grant did not go to decrypt")
+            elif (sent[0] < 6) & (sent[1] < 6):
+                sim_assert(launches[0] != last_pro_encrypt, "continuous ties did not alternate")
+            last_pro_encrypt = launches[0]
+            pro_launches += 1
+        for j in range(C):
+            if valid[0]:
+                sim_assert(p_enc.stream_out_if.stream.data.values[j] == expected_powers[(received[0] % REQUESTS) * C + j],
+                           "encrypt prologue ordering/data/stability mismatch")
+            if valid[1]:
+                sim_assert(p_dec.stream_out_if.stream.data.values[j] == expected_powers[(REQUESTS + received[1] % REQUESTS) * C + j],
+                           "decrypt prologue ordering/data/stability mismatch")
+        if valid[2]:
+            sim_assert(e_enc.stream_out_if.stream.data == expected_tags[received[2] % REQUESTS],
+                       "encrypt epilogue ownership/rotation/stability mismatch")
+        if valid[3]:
+            sim_assert(e_dec.stream_out_if.stream.data == expected_tags[REQUESTS + received[3] % REQUESTS],
+                       f"decrypt epilogue ownership/rotation/stability mismatch: cycle={cycle}, response={received[3]}, got={e_dec.stream_out_if.stream.data}, expected={expected_tags[REQUESTS + received[3] % REQUESTS]}")
+        if ((valid[2] & ready[2]) | (valid[3] & ready[3])) & (received[0] + received[1] == 0):
+            independent_seen = 1
+        if ((launches[0] | launches[1]) & ((valid[0] & ready[0]) | (valid[1] & ready[1]))) | (
+            (launches[2] | launches[3]) & ((valid[2] & ready[2]) | (valid[3] & ready[3]))):
+            relaunch_seen = 1
+        for i in range(4):
+            if held[i]:
+                sim_assert(valid[i], "shared MCP withdrew a stalled response")
+            held[i] = valid[i] & ~ready[i]
+            if held[i]:
+                stall_seen = 1
+            if valid[i]:
+                sim_assert(received[i] < sent[i], "response without a matching accepted request")
+            if launches[i]:
+                sent[i] += 1
+            if valid[i] & ready[i]:
+                received[i] += 1
+
+        pure_counts: uint32_t[PURE_N] = PURE_LANES
+        pure_next: uint32_t[PURE_N] = PURE_NEXT
+        pure_r: uint130_t[PURE_N] = PURE_R
+        pure_s: uint128_t[PURE_N] = PURE_S
+        pure_a: uint130_t[PURE_ARRAY_SIZE] = PURE_A
+        pure_pow: uint130_t[PURE_ARRAY_SIZE] = PURE_POW
+        pure_tag: uint128_t[PURE_N] = PURE_TAG
+        idx: uint32_t = cycle % PURE_N
+        x: epi5_in_t
+        x.lane_count = pure_counts[idx]
+        x.next_lane = pure_next[idx]
+        x.s = pure_s[idx]
+        for j in range(5):
+            x.accumulators[j] = pure_a[idx * 5 + j]
+            x.powers.values[j] = pure_pow[idx * 5 + j]
+        tag = epi5(x)
+        power = pro5(pure_r[idx])
+        sim_assert(tag == pure_tag[idx], "unequal-lane shared epilogue mismatch")
+        for j in range(5):
+            sim_assert(power.values[j] == pure_pow[idx * 5 + j], "shared power graph mismatch")
+        if (received[0] == REQUESTS) & (received[1] == REQUESTS) & (
+            received[2] == REQUESTS) & (received[3] == REQUESTS) & (cycle >= PURE_N):
+            sim_assert(relaunch_seen & independent_seen & stall_seen,
+                       "directed sharing scenarios were not all exercised")
+            sim_finish()
+        sim_assert(cycle < 1000, "shared MCP testbench timed out/starved")
+        cycle += 1
+        return tag
+
+elif MODE == "mac":
     counts = sorted(set(range(1, 2 * LANES + 2)) | {4 * LANES + 1})
     rng = random.Random(8439)
     key_bytes = [bytes(32), (1).to_bytes(16, "little") + bytes([255] * 16),

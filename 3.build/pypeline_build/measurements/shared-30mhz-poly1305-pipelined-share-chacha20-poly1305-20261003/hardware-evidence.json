@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "status": "hardware synthesis checkpoint; packet QoR pending",
+  "target_mhz": 30,
+  "sharing": {
+    "chacha20": true,
+    "poly1305": true
+  },
+  "poly1305": {
+    "implementation": "pipelined",
+    "body_ii": 1,
+    "body_core_latency": {
+      "encrypt": 0,
+      "decrypt": 0
+    },
+    "local_lanes": {
+      "encrypt": 2,
+      "decrypt": 2
+    },
+    "shared_capacity_lanes": 2,
+    "shared_prologue_mcp_cycles": 1,
+    "shared_epilogue_mcp_cycles": 2
+  },
+  "chacha20_core_latency": 4,
+  "fmax": {
+    "design_mhz": 30.05,
+    "design_mhz_is_lower_bound": false,
+    "design_mhz_basis": "slowest MAIN's reported achieved MHz",
+    "min_reported_mhz": 30.05,
+    "limiting_main": "chacha20_pipeline_shared",
+    "target_mhz": 30.0,
+    "timing_met": true,
+    "per_main": {
+      "chacha20_pipeline_shared": {
+        "sweep_iters": 2,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 30.05,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "planned_sweep",
+        "autopipelined": true,
+        "slices": 4,
+        "pipeline_stages": 5,
+        "final_cuts": 4,
+        "locked_instances": 0
+      },
+      "poly1305_mcp_shared_poly1305_prologue_shared": {
+        "sweep_iters": 2,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 34.141,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "as_written",
+        "standalone_mhz": 34.341,
+        "autopipelined": false
+      },
+      "poly1305_mcp_shared_poly1305_epilogue_shared": {
+        "sweep_iters": 2,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 44.204,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "as_written",
+        "standalone_mhz": 44.611,
+        "autopipelined": false
+      },
+      "encrypt_dataflow_shared": {
+        "sweep_iters": 2,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 33.519,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "planned_sweep",
+        "autopipelined": true,
+        "slices": 0,
+        "pipeline_stages": 1,
+        "final_cuts": 0,
+        "locked_instances": 0
+      },
+      "decrypt_dataflow_shared": {
+        "sweep_iters": 2,
+        "goal_mhz": 30.0,
+        "met": true,
+        "achieved_mhz": 33.519,
+        "mhz_is_lower_bound": false,
+        "met_basis": "measured",
+        "outcome": "planned_sweep",
+        "autopipelined": true,
+        "slices": 0,
+        "pipeline_stages": 1,
+        "final_cuts": 0,
+        "locked_instances": 0
+      }
+    },
+    "source": {
+      "sweep_history": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003/chacha20poly1305_encrypt_decrypt_shared/sweep_history.json",
+      "sweep_history_schema": 3,
+      "final_basis": "sweep_history.json final records",
+      "cross_check_mismatches": {},
+      "stdout_fmax_lines": [],
+      "final_outcomes": {
+        "poly1305_mcp_shared_poly1305_prologue_shared": {
+          "standalone_mhz": 34.34,
+          "goal_mhz": 30.0,
+          "met": true,
+          "autopipelined": false,
+          "outcome": "synthesized as written (standalone check)"
+        },
+        "poly1305_mcp_shared_poly1305_epilogue_shared": {
+          "standalone_mhz": 44.61,
+          "goal_mhz": 30.0,
+          "met": true,
+          "autopipelined": false,
+          "outcome": "synthesized as written (standalone check)"
+        },
+        "chacha20_pipeline_shared": {
+          "met": true,
+          "slices": 4,
+          "pipeline_stages": 5,
+          "final_cuts": 4,
+          "locked_instances": 0,
+          "iterations": 2,
+          "outcome": "met timing (achieved MHz not reported)",
+          "autopipelined": true
+        },
+        "encrypt_dataflow_shared": {
+          "met": true,
+          "slices": 0,
+          "pipeline_stages": 1,
+          "final_cuts": 0,
+          "locked_instances": 0,
+          "iterations": 2,
+          "outcome": "met timing (achieved MHz not reported)",
+          "autopipelined": true
+        },
+        "decrypt_dataflow_shared": {
+          "met": true,
+          "slices": 0,
+          "pipeline_stages": 1,
+          "final_cuts": 0,
+          "locked_instances": 0,
+          "iterations": 2,
+          "outcome": "met timing (achieved MHz not reported)",
+          "autopipelined": true
+        }
+      }
+    },
+    "pipeline_depth_summary": [
+      "[sweep] Pipeline depth summary:",
+      "[sweep]   chacha20_pipeline_shared: 4 slice(s) total (5 pipeline stages: comb regions separated by those slices)",
+      "[sweep]   poly1305_mcp_shared_poly1305_prologue_shared: not auto-pipelined (nothing sliceable; meets its goal as written if at all)",
+      "[sweep]   poly1305_mcp_shared_poly1305_epilogue_shared: not auto-pipelined (nothing sliceable; meets its goal as written if at all)",
+      "[sweep]   encrypt_dataflow_shared: 0 slice(s) total (1 pipeline stages: comb regions separated by those slices)",
+      "[sweep]   decrypt_dataflow_shared: 0 slice(s) total (1 pipeline stages: comb regions separated by those slices)",
+      "[sweep] History: /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003/chacha20poly1305_encrypt_decrypt_shared/sweep_history.json"
+    ],
+    "timing_not_met": []
+  },
+  "area": {
+    "design": "chacha20poly1305_encrypt_decrypt_shared_c5e81627",
+    "part": "7a200tffg1156-2",
+    "design_state": "Synthesized",
+    "vivado_version": "2019.2",
+    "util_pct": {
+      "lut": 27.36,
+      "ff": 4.37,
+      "bram_tiles": 3.01,
+      "dsp": 43.24
+    },
+    "lut_total": 36830,
+    "lut_logic": 35867,
+    "lut_memory": 963,
+    "lut_dram": 0,
+    "lut_srl": 963,
+    "ff_total": 11771,
+    "ff_flipflop": 11771,
+    "latches": 0,
+    "muxf7": 4,
+    "muxf8": 0,
+    "bram_tiles": 11,
+    "ramb36": 10,
+    "ramb18": 2,
+    "dsp48": 320,
+    "carry4": 4543,
+    "log": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003/chacha20poly1305_encrypt_decrypt_shared/vivado_c5e81627_8516a3be6ee8ce59.log",
+    "blocks_found": 1,
+    "logs_available": 2,
+    "selection_basis": "retained implementation and constraints from sweep history",
+    "resources_available": {
+      "lut": 134600,
+      "ff": 269200,
+      "bram_tiles": 365,
+      "dsp": 740
+    },
+    "available": true,
+    "over_capacity": {},
+    "fits_device": true,
+    "scope": "hardware_top",
+    "constant_key_folding": false,
+    "per_module": {}
+  },
+  "mcp_hdl_audit": {
+    "out_dir": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003",
+    "top_vhdl": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003/chacha20poly1305_encrypt_decrypt_shared/chacha20poly1305_encrypt_decrypt_shared.vhd",
+    "scope": "emitted MCP arithmetic only; not timing/constraint sign-off",
+    "shared": true,
+    "mcps": {
+      "shared/prologue": {
+        "entity": "prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0clk_26673d7b",
+        "file": "prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_2/prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0CLK_26673d7b.vhd",
+        "physical_instances": 1,
+        "entities_checked": 26,
+        "registered_entities": []
+      },
+      "shared/epilogue": {
+        "entity": "epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0clk_a5530d1a",
+        "file": "epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_2/epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0CLK_a5530d1a.vhd",
+        "physical_instances": 1,
+        "entities_checked": 41,
+        "registered_entities": []
+      }
+    },
+    "passed": true,
+    "errors": []
+  },
+  "pipelinec_git": "6bec62900f57212f992bf6db164883659a68c381",
+  "wireguard_git_base": "214bcf56934b71d6f1459f80d64cb68cd5ba86b2",
+  "wireguard_worktree": "uncommitted independent-sharing changes; exact design hashes retained",
+  "scope": "external key/data ports; synthesis timing, not routed sign-off",
+  "comparison": {
+    "baseline": "../shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/hardware-evidence.json",
+    "baseline_sharing": "ChaCha20 only; private Poly1305 MCPs",
+    "baseline_dsp48": 512,
+    "current_dsp48": 320,
+    "dsp48_saved": 192,
+    "dsp48_saved_fraction": 0.375,
+    "caveat": "Compiler revisions differ; both pipelined MACs use corrected residue130 arithmetic. Not an isolated compiler-controlled area A/B or a throughput comparison."
+  }
+}

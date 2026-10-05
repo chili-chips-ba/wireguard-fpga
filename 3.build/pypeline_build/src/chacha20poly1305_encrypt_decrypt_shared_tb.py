@@ -2,14 +2,16 @@
 """Simulation top for the shared encrypt+decrypt design — both the encrypt
 and decrypt side non-synthesizable testbenches (@sim_input/@sim_output,
 on-the-fly random vectors) running at the same time against the design
-sharing one ChaCha20 compute pipeline. For the synthesizable-style variant
+using the selected independent ChaCha20/Poly1305 sharing configuration.
+For the synthesizable-style variant
 (fixed 10-string vectors), see chacha20poly1305_encrypt_decrypt_shared_syn_tb.py.
 
-Only runs under native --sim (no cocotb/GHDL, no real autopipelining):
+Only runs under native --sim (no cocotb/GHDL):
 @sim_input/@sim_output calls are elaborated away entirely for any real-VHDL
-path, so this variant has no cocotb/pipe equivalent.
+path. Without --comb, synthesis discovers the real automatic latencies and
+the native simulator models them; stimulus/checkers still remain Python.
 
-Build/sim (from pypeline_build/): ./build_sim_comb_shared_native.sh
+Build/sim (from pypeline_build/): ./build.py --shared --sim --comb --native
 """
 import sys, os
 

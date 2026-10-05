@@ -44,14 +44,15 @@ class decrypt_dataflow_core_ports(NamedTuple):
     is_verified_out: uint1_t  # plain sideband, no reverse companion
 
 
-def make_decrypt_dataflow_core(chacha_func):
+def make_decrypt_dataflow_core(chacha_func, mac_func=None):
     """chacha_func(key, nonce, axis_in_if, key_if, axis_out_if) ->
     chacha20.chacha20_ports -- either chacha20.chacha20_instance (owns its own
     private pipeline) or a shared-pipeline instance such as
     chacha20_pipeline_shared.chacha20_decrypt_shared (uses the arbitrated
     shared pipeline)."""
 
-    mac_func = make_poly1305_mac("decrypt")
+    if mac_func is None:
+        mac_func = make_poly1305_mac("decrypt")
 
     def decrypt_dataflow_core(
         axis_in_if: axis128_intrf,

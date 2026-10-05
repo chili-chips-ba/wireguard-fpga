@@ -1,0 +1,31 @@
+{
+  "native_comb_top_level": {
+    "passed": true,
+    "runs": [
+      "enc-fixed",
+      "dec-fixed",
+      "enc-random",
+      "both-fixed",
+      "dec-random",
+      "both-random",
+      "chacha-fixed",
+      "poly-fixed",
+      "chacha-random",
+      "legacy-chacha-fixed",
+      "poly-random"
+    ]
+  },
+  "directed_mcp_sharing": {
+    "passed": true,
+    "cycles": 147
+  },
+  "standalone_mac": {
+    "passed": true,
+    "cycles": 969
+  },
+  "compiler_repros": "both import controls and both Reg array counter variants pass",
+  "measurement_selftests": "measurement guards/archive integrity and bottleneck reports pass",
+  "hardware_gate_passed": true,
+  "synthesis_observations": 2,
+  "caveat": "80 MHz acceptance, synthesized sharing testbench and fresh packet QoR remain pending"
+}

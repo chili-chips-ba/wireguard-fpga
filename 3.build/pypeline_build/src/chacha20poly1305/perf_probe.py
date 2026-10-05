@@ -17,15 +17,15 @@ Shape of a run (see perf_tb_common.py for the plan and the singletons):
              -> drain -> barrier -> phase 1 ...
 
 One `DirectionMeter` per direction owns that direction's counters and its own
-cycle counter, fed from the testbench's `@sim_input` (input side) and
-`@sim_output` (output side) glue -- the same "stepped once per cycle from a
+cycle counter, fed from the testbench's converged `@sim_output` glue for
+both input and output -- the same "stepped once per cycle from a
 sim callback" shape as `AxisSimSource`/`AxisSimSink` in PipelineC's
 include/pypeline/axi/axis_sim.py.
 
-Cycle numbering: `note_in(...)` is called from `@sim_input` during the
-convergence loop of cycle N, `note_out(...)`/`tick()` from `@sim_output` in the
-final (converged) pass of the same cycle N, and `tick()` increments the counter
-last -- so both sides of a cycle agree on N. `note_in`/`note_out` are
+Cycle numbering: `note_in(...)`, `note_out(...)` and source acceptance are
+called from `@sim_output` in the final (converged) pass of cycle N, and
+`tick()` increments the counter last -- so both sides agree on N and a source
+never advances using stale pre-convergence ready. `note_in`/`note_out` are
 idempotent per cycle, so a convergence re-entry can never double-count.
 
 Alongside the boundary meters, `HandshakeTap`/`StateTap`/`ArbTap` (+ the
@@ -576,7 +576,7 @@ class DirectionMeter:
         self.in_trace = []  # [(cycle, cumulative_accepted_in_bytes)], likewise
         self.last_activity_cycle = self.cycle
 
-    # ---- input side, called once per cycle from @sim_input ----------------
+    # ---- input side, called once per cycle after convergence -------------
     def note_in(self, valid, ready, keep_count, eod):
         if self._in_noted_cycle == self.cycle:
             return False
@@ -844,7 +844,7 @@ class DirectionRunner:
         return None
 
     def prepare_input(self):
-        """Queue the whole phase's packets at once (AxisSimSource streams them
+        """Queue the whole phase's packets at once (the source streams them
         back-to-back with no inter-packet gap), from @sim_input."""
         phase = self.phase
         if phase is None or self.queued:

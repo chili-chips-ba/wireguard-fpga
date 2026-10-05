@@ -4,12 +4,12 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 """PERFORMANCE measurement top for the shared encrypt+decrypt design: both
-perf testbenches stream concurrently against the design sharing one ChaCha20
-compute pipeline -- the configuration whose (fmax, area, throughput, latency)
-this repo actually cares about.
+perf testbenches stream concurrently with independently selected ChaCha20
+pipeline and Poly1305 MCP sharing. Metadata records the selected resources
+alongside fmax, area, throughput and latency.
 
 Both directions are held in the same phase by perf_probe.PhaseBarrier, so every
-measured packet size sees the same contention on the shared pipeline. Results
+measured packet size sees concurrent traffic on the selected shared resources. Results
 are written incrementally to $WG_PERF_JSON (see perf_tb_common.py) and merged
 with the synthesis fmax/area numbers by ../measure.py.
 

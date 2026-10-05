@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src
 from poly1305_config import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
     TARGETS_MHZ, default_target_mhz, target_out_dir, starting_latencies,
+    add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 
 
@@ -24,11 +25,12 @@ def main():
     design = parser.add_mutually_exclusive_group()
     design.add_argument("--enc", action="store_true", help="Encrypt top")
     design.add_argument("--dec", action="store_true", help="Decrypt top")
-    design.add_argument("--shared", action="store_true", help="Shared encrypt/decrypt top (default)")
+    design.add_argument("--shared", action="store_true", help="Share both ChaCha20 and Poly1305 MCPs (default)")
+    add_sharing_arguments(parser)
     parser.add_argument("--poly1305", choices=IMPLEMENTATIONS,
                         help="MAC architecture (WG_POLY1305_IMPL, otherwise pipelined)")
     parser.add_argument("--target-mhz", type=int, choices=TARGETS_MHZ,
-                        help="Clock goal (default: pipelined 30 MHz, legacy 80 MHz)")
+                        help="Clock goal (default: sharing-both 60 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     parser.add_argument("--sim", action="store_true", help="Run simulation instead of producing Verilog")
     parser.add_argument("--comb", action="store_true", help="Simulate without automatic slicing")
     parser.add_argument("--syn_tb", action="store_true", help="Use the fixed-vector synthesizable testbench")
@@ -52,12 +54,15 @@ def main():
         args.sim = args.native = True
     try:
         args.poly1305 = selected_implementation(args.poly1305)
+        sharing = sharing_from_args(args, standalone=args.enc or args.dec)
     except ValueError as exc:
         parser.error(str(exc))
     if args.target_mhz is None:
-        args.target_mhz = default_target_mhz(args.poly1305)
+        args.target_mhz = default_target_mhz(args.poly1305, sharing)
     build_env = dict(os.environ, WG_POLY1305_IMPL=args.poly1305,
-                     WG_TARGET_MHZ=str(args.target_mhz))
+                     WG_TARGET_MHZ=str(args.target_mhz),
+                     WG_SHARE_CHACHA20=str(int(sharing["chacha20"])),
+                     WG_SHARE_POLY1305=str(int(sharing["poly1305"])))
 
     if args.enc:
         design_name, design_short = "encrypt", "enc"
@@ -87,7 +92,7 @@ def main():
         out_dir = f"./generated-files-verilog-{suffix}"
         options = ["--top", f"chacha20poly1305_{design_name}", "--verilog"]
 
-    out_dir = target_out_dir(implementation_out_dir(out_dir, args.poly1305), args.target_mhz)
+    out_dir = target_out_dir(sharing_out_dir(implementation_out_dir(out_dir, args.poly1305), sharing), args.target_mhz)
     if args.out_dir:
         out_dir = args.out_dir
     cmd = [pipelinec_bin, src_file, "--out_dir", out_dir] + options
@@ -97,6 +102,7 @@ def main():
         cmd.extend(["-j", str(args.jobs)])
 
     print(f"--> {design_short}: Poly1305 {args.poly1305}, clock target {args.target_mhz} MHz")
+    print(f"--> Shared resources: {sharing_name(sharing)}")
     print(f"--> Automatic starting latencies: {starting_latencies(args.target_mhz)}")
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)

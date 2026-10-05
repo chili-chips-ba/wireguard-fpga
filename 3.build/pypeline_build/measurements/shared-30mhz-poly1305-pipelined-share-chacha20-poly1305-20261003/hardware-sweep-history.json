@@ -1,0 +1,1979 @@
+{
+ "schema_version": 3,
+ "build_complete": true,
+ "stop_on_over_capacity": true,
+ "observations": [
+  {
+   "run": 1,
+   "iteration": 1,
+   "auto_pipeline_pass": 1,
+   "log_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003/chacha20poly1305_encrypt_decrypt_shared/vivado_c5e81627_8516a3be6ee8ce59.log",
+   "cache_hit": false,
+   "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+   "elapsed_seconds": 774.5095432361122,
+   "optional_report_ms": 4132,
+   "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+   "utilization": {
+    "status": "within_reported_limits",
+    "resources": {
+     "Slice LUTs": {
+      "used": 36830,
+      "available": 134600
+     },
+     "LUT as Logic": {
+      "used": 35867,
+      "available": 134600
+     },
+     "LUT as Memory": {
+      "used": 963,
+      "available": 46200
+     },
+     "Slice Registers": {
+      "used": 11771,
+      "available": 269200
+     },
+     "Register as Flip Flop": {
+      "used": 11771,
+      "available": 269200
+     },
+     "Register as Latch": {
+      "used": 0,
+      "available": 269200
+     },
+     "F7 Muxes": {
+      "used": 4,
+      "available": 67300
+     },
+     "F8 Muxes": {
+      "used": 0,
+      "available": 33650
+     },
+     "Block RAM Tile": {
+      "used": 11,
+      "available": 365
+     },
+     "RAMB36/FIFO": {
+      "used": 10,
+      "available": 365
+     },
+     "RAMB18": {
+      "used": 2,
+      "available": 730
+     },
+     "DSPs": {
+      "used": 320,
+      "available": 740
+     },
+     "Bonded IOB": {
+      "used": 0,
+      "available": 500
+     },
+     "Bonded IPADs": {
+      "used": 0,
+      "available": 50
+     },
+     "Bonded OPADs": {
+      "used": 0,
+      "available": 32
+     },
+     "PHY_CONTROL": {
+      "used": 0,
+      "available": 10
+     },
+     "PHASER_REF": {
+      "used": 0,
+      "available": 10
+     },
+     "OUT_FIFO": {
+      "used": 0,
+      "available": 40
+     },
+     "IN_FIFO": {
+      "used": 0,
+      "available": 40
+     },
+     "IDELAYCTRL": {
+      "used": 0,
+      "available": 10
+     },
+     "IBUFDS": {
+      "used": 0,
+      "available": 480
+     },
+     "GTPE2_CHANNEL": {
+      "used": 0,
+      "available": 16
+     },
+     "PHASER_OUT/PHASER_OUT_PHY": {
+      "used": 0,
+      "available": 40
+     },
+     "PHASER_IN/PHASER_IN_PHY": {
+      "used": 0,
+      "available": 40
+     },
+     "IDELAYE2/IDELAYE2_FINEDELAY": {
+      "used": 0,
+      "available": 500
+     },
+     "IBUFDS_GTE2": {
+      "used": 0,
+      "available": 8
+     },
+     "ILOGIC": {
+      "used": 0,
+      "available": 500
+     },
+     "OLOGIC": {
+      "used": 0,
+      "available": 500
+     },
+     "BUFGCTRL": {
+      "used": 0,
+      "available": 32
+     },
+     "BUFIO": {
+      "used": 0,
+      "available": 40
+     },
+     "MMCME2_ADV": {
+      "used": 0,
+      "available": 10
+     },
+     "PLLE2_ADV": {
+      "used": 0,
+      "available": 10
+     },
+     "BUFMRCE": {
+      "used": 0,
+      "available": 20
+     },
+     "BUFHCE": {
+      "used": 0,
+      "available": 120
+     },
+     "BUFR": {
+      "used": 0,
+      "available": 40
+     },
+     "BSCANE2": {
+      "used": 0,
+      "available": 4
+     },
+     "CAPTUREE2": {
+      "used": 0,
+      "available": 1
+     },
+     "DNA_PORT": {
+      "used": 0,
+      "available": 1
+     },
+     "EFUSE_USR": {
+      "used": 0,
+      "available": 1
+     },
+     "FRAME_ECCE2": {
+      "used": 0,
+      "available": 1
+     },
+     "ICAPE2": {
+      "used": 0,
+      "available": 2
+     },
+     "PCIE_2_1": {
+      "used": 0,
+      "available": 1
+     },
+     "STARTUPE2": {
+      "used": 0,
+      "available": 1
+     },
+     "XADC": {
+      "used": 0,
+      "available": 1
+     }
+    },
+    "overutilization": []
+   },
+   "latencies": {
+    "MAIN:chacha20_pipeline_shared": 0,
+    "MAIN:chacha20poly1305_decrypt_hw_io_chacha20poly1305_decrypt_io_wires": 0,
+    "MAIN:chacha20poly1305_encrypt_hw_io_chacha20poly1305_encrypt_io_wires": 0,
+    "MAIN:decrypt_dataflow_shared": 0,
+    "MAIN:encrypt_dataflow_shared": 0,
+    "MAIN:poly1305_mcp_shared_poly1305_epilogue_shared": 0,
+    "MAIN:poly1305_mcp_shared_poly1305_prologue_shared": 0,
+    "AUTO_PIPELINE:chacha20_pipeline_shared:func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4": 4,
+    "AUTO_PIPELINE:decrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0": 0,
+    "AUTO_PIPELINE:encrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0": 0
+   },
+   "auto_pipeline_instances": {
+    "AUTO_PIPELINE:chacha20_pipeline_shared:func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4": [
+     "chacha20_pipeline_shared____pipeline_func[chacha20_pipeline_shared_py_l219_c13_el222_ec5]____auto_pipelined_func[stream_auto_pipeline_py_l130_c36_ec72]____func_stream[pypeline_py_l2264_c14_ec24]"
+    ],
+    "AUTO_PIPELINE:decrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0": [
+     "decrypt_dataflow_shared____decrypt_dataflow_core[decrypt_dataflow_shared_py_l41_c8_el50_ec5]____mac_func[ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_decrypt[poly1305_mac_pipelined_py_l111_c17_ec35]"
+    ],
+    "AUTO_PIPELINE:encrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0": [
+     "encrypt_dataflow_shared____encrypt_dataflow_core[encrypt_dataflow_shared_py_l43_c8_el52_ec5]____mac_func[ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_encrypt[poly1305_mac_pipelined_py_l111_c17_ec35]"
+    ]
+   },
+   "latency_changes_since_fit": {},
+   "auto_multi_cycle_ncycles": {
+    "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+    "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+   },
+   "coverage": {
+    "main:chacha20_pipeline_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:decrypt_dataflow_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:encrypt_dataflow_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:poly1305_mcp_shared_poly1305_epilogue_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "mcp:poly1305_mcp_shared_poly1305_epilogue_shared____epilogue_arbiter[poly1305_mcp_shared_py_l233_c8_el238_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:poly1305_mcp_shared_poly1305_prologue_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "mcp:poly1305_mcp_shared_poly1305_prologue_shared____prologue_arbiter[poly1305_mcp_shared_py_l219_c8_el224_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "failing": {
+     "count": 0,
+     "limit": 4096,
+     "truncated": false,
+     "complete": true,
+     "parsed_count": 0
+    }
+   },
+   "paths": [
+    {
+     "scope": null,
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_79a3ed89/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l133_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][1][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_79a3ed89/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/out_reg_reg[data][data][frag][data][23][7]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": 0.055,
+     "path_delay_ns": 33.278,
+     "data_path_ns": null,
+     "logic_levels": 127,
+     "member_count": 1,
+     "query_scopes": [
+      "clock_worst",
+      "main:chacha20_pipeline_shared"
+     ]
+    },
+    {
+     "scope": "main:decrypt_dataflow_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "decrypt_dataflow_shared_0CLK_77790926/decrypt_dataflow_core_decrypt_dataflow_shared_py_l41_c8_el50_ec5/mac_func_ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/poly1305_body_decrypt_poly1305_mac_pipelined_py_l111_c17_ec35/poly1305_mac_pipelined_poly1305_body_poly1305_mac_pipelined_py_l57_c11_ec27/residue_mul_add_mod_poly1305_mac_pipelined_py_l43_c13_ec70/BIN_OP_INFERRED_MULT_poly1305_math_py_l199_c25_ec30/return_output0__55",
+     "end_reg_name": "decrypt_dataflow_shared_0CLK_77790926/decrypt_dataflow_core_decrypt_dataflow_shared_py_l41_c8_el50_ec5/mac_func_ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/output_reg_reg[data][103]",
+     "start_pin_name": "CLK",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": 3.499,
+     "path_delay_ns": 29.834,
+     "data_path_ns": 29.789,
+     "logic_levels": 99,
+     "member_count": 1,
+     "query_scopes": [
+      "main:decrypt_dataflow_shared"
+     ]
+    },
+    {
+     "scope": "main:encrypt_dataflow_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "encrypt_dataflow_shared_0CLK_0ca1138e/encrypt_dataflow_core_encrypt_dataflow_shared_py_l43_c8_el52_ec5/mac_func_ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/poly1305_body_encrypt_poly1305_mac_pipelined_py_l111_c17_ec35/poly1305_mac_pipelined_poly1305_body_poly1305_mac_pipelined_py_l52_c11_ec27/residue_mul_add_mod_poly1305_mac_pipelined_py_l43_c13_ec70/BIN_OP_INFERRED_MULT_poly1305_math_py_l199_c25_ec30/return_output0__55",
+     "end_reg_name": "encrypt_dataflow_shared_0CLK_0ca1138e/encrypt_dataflow_core_encrypt_dataflow_shared_py_l43_c8_el52_ec5/mac_func_ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/output_reg_reg[data][103]",
+     "start_pin_name": "CLK",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": 3.499,
+     "path_delay_ns": 29.834,
+     "data_path_ns": 29.789,
+     "logic_levels": 99,
+     "member_count": 1,
+     "query_scopes": [
+      "main:encrypt_dataflow_shared"
+     ]
+    },
+    {
+     "scope": "main:poly1305_mcp_shared_poly1305_prologue_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "poly1305_mcp_shared_poly1305_prologue_shared_0CLK_838a3185/prologue_arbiter_poly1305_mcp_shared_py_l219_c8_el224_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/launch_reg[data][33]",
+     "end_reg_name": "poly1305_mcp_shared_poly1305_prologue_shared_0CLK_838a3185/prologue_arbiter_poly1305_mcp_shared_py_l219_c8_el224_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/capture_reg[data][values][1][101]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": 4.043,
+     "path_delay_ns": 29.29,
+     "data_path_ns": 29.244,
+     "logic_levels": 99,
+     "member_count": 1,
+     "query_scopes": [
+      "main:poly1305_mcp_shared_poly1305_prologue_shared",
+      "mcp:poly1305_mcp_shared_poly1305_prologue_shared____prologue_arbiter[poly1305_mcp_shared_py_l219_c8_el224_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture"
+     ]
+    },
+    {
+     "scope": "main:poly1305_mcp_shared_poly1305_epilogue_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "poly1305_mcp_shared_poly1305_epilogue_shared_0CLK_9d93c3f6/epilogue_arbiter_poly1305_mcp_shared_py_l233_c8_el238_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/launch_reg[data][next_lane][0]",
+     "end_reg_name": "poly1305_mcp_shared_poly1305_epilogue_shared_0CLK_9d93c3f6/epilogue_arbiter_poly1305_mcp_shared_py_l233_c8_el238_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/capture_reg[data][125]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 66.666,
+     "slack_ns": 21.421,
+     "path_delay_ns": 22.6225,
+     "data_path_ns": 45.229,
+     "logic_levels": 201,
+     "member_count": 1,
+     "query_scopes": [
+      "main:poly1305_mcp_shared_poly1305_epilogue_shared",
+      "mcp:poly1305_mcp_shared_poly1305_epilogue_shared____epilogue_arbiter[poly1305_mcp_shared_py_l233_c8_el238_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture"
+     ]
+    }
+   ],
+   "estimated_main_ffs": {
+    "chacha20poly1305_encrypt_hw_io_chacha20poly1305_encrypt_io_wires": 0,
+    "chacha20poly1305_decrypt_hw_io_chacha20poly1305_decrypt_io_wires": 0,
+    "chacha20_pipeline_shared": 10906,
+    "poly1305_mcp_shared_poly1305_prologue_shared": 404,
+    "poly1305_mcp_shared_poly1305_epilogue_shared": 793,
+    "encrypt_dataflow_shared": 3324,
+    "decrypt_dataflow_shared": 3724
+   },
+   "mains_with_reported_failure": [],
+   "register_growth_without_prior_failure": {}
+  },
+  {
+   "run": 1,
+   "iteration": 2,
+   "auto_pipeline_pass": 1,
+   "log_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003/chacha20poly1305_encrypt_decrypt_shared/vivado_f668f538_d6bffa1ba0b20790.log",
+   "cache_hit": false,
+   "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+   "elapsed_seconds": 867.6261507978197,
+   "optional_report_ms": 14423,
+   "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+   "utilization": {
+    "status": "within_reported_limits",
+    "resources": {
+     "Slice LUTs": {
+      "used": 37258,
+      "available": 134600
+     },
+     "LUT as Logic": {
+      "used": 36295,
+      "available": 134600
+     },
+     "LUT as Memory": {
+      "used": 963,
+      "available": 46200
+     },
+     "Slice Registers": {
+      "used": 11258,
+      "available": 269200
+     },
+     "Register as Flip Flop": {
+      "used": 11258,
+      "available": 269200
+     },
+     "Register as Latch": {
+      "used": 0,
+      "available": 269200
+     },
+     "F7 Muxes": {
+      "used": 4,
+      "available": 67300
+     },
+     "F8 Muxes": {
+      "used": 0,
+      "available": 33650
+     },
+     "Block RAM Tile": {
+      "used": 11,
+      "available": 365
+     },
+     "RAMB36/FIFO": {
+      "used": 10,
+      "available": 365
+     },
+     "RAMB18": {
+      "used": 2,
+      "available": 730
+     },
+     "DSPs": {
+      "used": 320,
+      "available": 740
+     },
+     "Bonded IOB": {
+      "used": 0,
+      "available": 500
+     },
+     "Bonded IPADs": {
+      "used": 0,
+      "available": 50
+     },
+     "Bonded OPADs": {
+      "used": 0,
+      "available": 32
+     },
+     "PHY_CONTROL": {
+      "used": 0,
+      "available": 10
+     },
+     "PHASER_REF": {
+      "used": 0,
+      "available": 10
+     },
+     "OUT_FIFO": {
+      "used": 0,
+      "available": 40
+     },
+     "IN_FIFO": {
+      "used": 0,
+      "available": 40
+     },
+     "IDELAYCTRL": {
+      "used": 0,
+      "available": 10
+     },
+     "IBUFDS": {
+      "used": 0,
+      "available": 480
+     },
+     "GTPE2_CHANNEL": {
+      "used": 0,
+      "available": 16
+     },
+     "PHASER_OUT/PHASER_OUT_PHY": {
+      "used": 0,
+      "available": 40
+     },
+     "PHASER_IN/PHASER_IN_PHY": {
+      "used": 0,
+      "available": 40
+     },
+     "IDELAYE2/IDELAYE2_FINEDELAY": {
+      "used": 0,
+      "available": 500
+     },
+     "IBUFDS_GTE2": {
+      "used": 0,
+      "available": 8
+     },
+     "ILOGIC": {
+      "used": 0,
+      "available": 500
+     },
+     "OLOGIC": {
+      "used": 0,
+      "available": 500
+     },
+     "BUFGCTRL": {
+      "used": 0,
+      "available": 32
+     },
+     "BUFIO": {
+      "used": 0,
+      "available": 40
+     },
+     "MMCME2_ADV": {
+      "used": 0,
+      "available": 10
+     },
+     "PLLE2_ADV": {
+      "used": 0,
+      "available": 10
+     },
+     "BUFMRCE": {
+      "used": 0,
+      "available": 20
+     },
+     "BUFHCE": {
+      "used": 0,
+      "available": 120
+     },
+     "BUFR": {
+      "used": 0,
+      "available": 40
+     },
+     "BSCANE2": {
+      "used": 0,
+      "available": 4
+     },
+     "CAPTUREE2": {
+      "used": 0,
+      "available": 1
+     },
+     "DNA_PORT": {
+      "used": 0,
+      "available": 1
+     },
+     "EFUSE_USR": {
+      "used": 0,
+      "available": 1
+     },
+     "FRAME_ECCE2": {
+      "used": 0,
+      "available": 1
+     },
+     "ICAPE2": {
+      "used": 0,
+      "available": 2
+     },
+     "PCIE_2_1": {
+      "used": 0,
+      "available": 1
+     },
+     "STARTUPE2": {
+      "used": 0,
+      "available": 1
+     },
+     "XADC": {
+      "used": 0,
+      "available": 1
+     }
+    },
+    "overutilization": []
+   },
+   "latencies": {
+    "MAIN:chacha20_pipeline_shared": 0,
+    "MAIN:chacha20poly1305_decrypt_hw_io_chacha20poly1305_decrypt_io_wires": 0,
+    "MAIN:chacha20poly1305_encrypt_hw_io_chacha20poly1305_encrypt_io_wires": 0,
+    "MAIN:decrypt_dataflow_shared": 0,
+    "MAIN:encrypt_dataflow_shared": 0,
+    "MAIN:poly1305_mcp_shared_poly1305_epilogue_shared": 0,
+    "MAIN:poly1305_mcp_shared_poly1305_prologue_shared": 0,
+    "AUTO_PIPELINE:chacha20_pipeline_shared:func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4": 3,
+    "AUTO_PIPELINE:decrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0": 0,
+    "AUTO_PIPELINE:encrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0": 0
+   },
+   "auto_pipeline_instances": {
+    "AUTO_PIPELINE:chacha20_pipeline_shared:func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4": [
+     "chacha20_pipeline_shared____pipeline_func[chacha20_pipeline_shared_py_l219_c13_el222_ec5]____auto_pipelined_func[stream_auto_pipeline_py_l130_c36_ec72]____func_stream[pypeline_py_l2264_c14_ec24]"
+    ],
+    "AUTO_PIPELINE:decrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0": [
+     "decrypt_dataflow_shared____decrypt_dataflow_core[decrypt_dataflow_shared_py_l41_c8_el50_ec5]____mac_func[ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_decrypt[poly1305_mac_pipelined_py_l111_c17_ec35]"
+    ],
+    "AUTO_PIPELINE:encrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0": [
+     "encrypt_dataflow_shared____encrypt_dataflow_core[encrypt_dataflow_shared_py_l43_c8_el52_ec5]____mac_func[ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_encrypt[poly1305_mac_pipelined_py_l111_c17_ec35]"
+    ]
+   },
+   "latency_changes_since_fit": {
+    "AUTO_PIPELINE:chacha20_pipeline_shared:func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4": {
+     "previous": 4,
+     "current": 3
+    }
+   },
+   "auto_multi_cycle_ncycles": {
+    "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+    "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+   },
+   "coverage": {
+    "main:chacha20_pipeline_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:decrypt_dataflow_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:encrypt_dataflow_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:poly1305_mcp_shared_poly1305_epilogue_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "mcp:poly1305_mcp_shared_poly1305_epilogue_shared____epilogue_arbiter[poly1305_mcp_shared_py_l233_c8_el238_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "main:poly1305_mcp_shared_poly1305_prologue_shared": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "mcp:poly1305_mcp_shared_poly1305_prologue_shared____prologue_arbiter[poly1305_mcp_shared_py_l219_c8_el224_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture": {
+     "count": 1,
+     "limit": 1,
+     "truncated": false,
+     "complete": false,
+     "parsed_count": 1
+    },
+    "failing": {
+     "count": 2049,
+     "limit": 4096,
+     "truncated": false,
+     "complete": true,
+     "parsed_count": 2049
+    }
+   },
+   "paths": [
+    {
+     "scope": null,
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][3][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/out_reg_reg[data][data][frag][data][19][7]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -7.721,
+     "path_delay_ns": 41.054,
+     "data_path_ns": null,
+     "logic_levels": 157,
+     "member_count": 384,
+     "query_scopes": [
+      "clock_worst",
+      "failing",
+      "main:chacha20_pipeline_shared"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][1][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/BIN_OP_XOR_chacha20_py_l76_c24_ec39/io_registers_r_reg[output_regs][return_output][31]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -7.305,
+     "path_delay_ns": 40.638,
+     "data_path_ns": 40.592,
+     "logic_levels": 157,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/in_reg_reg[data][data][key][4][4]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/BIN_OP_PLUS_chacha20_py_l75_c19_ec42/manual_registers_r_reg[raw_hdl_pipeline][0][carry][0]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -6.549,
+     "path_delay_ns": 39.882,
+     "data_path_ns": 39.853,
+     "logic_levels": 151,
+     "member_count": 1,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][3][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/BIN_OP_PLUS_chacha20_py_l75_c19_ec42/io_registers_r_reg[output_regs][return_output][29]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -6.512,
+     "path_delay_ns": 39.845,
+     "data_path_ns": 39.829,
+     "logic_levels": 156,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][1][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_BIN_OP_PLUS_chacha20_py_l79_c19_ec26_left_reg[29]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -6.497,
+     "path_delay_ns": 39.83,
+     "data_path_ns": 39.814,
+     "logic_levels": 156,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/in_reg_reg[data][data][key][4][4]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/BIN_OP_PLUS_chacha20_py_l75_c19_ec42/manual_registers_r_reg[raw_hdl_pipeline][0][full_width_return_output][13]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -6.47,
+     "path_delay_ns": 39.803,
+     "data_path_ns": 39.787,
+     "logic_levels": 150,
+     "member_count": 16,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_BIN_OP_PLUS_chacha20_py_l77_c19_ec34_left_reg[1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/out_reg_reg[data][data][frag][data][23][7]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -6.015,
+     "path_delay_ns": 39.348,
+     "data_path_ns": 39.302,
+     "logic_levels": 151,
+     "member_count": 128,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/in_reg_reg[data][data][key][4][4]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/BIN_OP_PLUS_chacha20_py_l75_c19_ec42/manual_registers_r_reg[raw_hdl_pipeline][0][right_resized][6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -5.785,
+     "path_delay_ns": 39.117999999999995,
+     "data_path_ns": 39.072,
+     "logic_levels": 147,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/in_reg_reg[data][data][key][0][4]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][4][6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -5.766,
+     "path_delay_ns": 39.099,
+     "data_path_ns": 39.053,
+     "logic_levels": 147,
+     "member_count": 384,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][3][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_BIN_OP_XOR_chacha20_py_l78_c24_ec39_left_reg[6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -5.435,
+     "path_delay_ns": 38.768,
+     "data_path_ns": 38.722,
+     "logic_levels": 149,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][1][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_BIN_OP_XOR_chacha20_py_l78_c24_ec39_left_reg[6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -5.42,
+     "path_delay_ns": 38.753,
+     "data_path_ns": 38.707,
+     "logic_levels": 149,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][1][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][6][6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -5.413,
+     "path_delay_ns": 38.745999999999995,
+     "data_path_ns": 38.7,
+     "logic_levels": 149,
+     "member_count": 288,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][2][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][6][6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -5.403,
+     "path_delay_ns": 38.736,
+     "data_path_ns": 38.69,
+     "logic_levels": 149,
+     "member_count": 288,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/BIN_OP_PLUS_chacha20_py_l75_c19_ec42/manual_registers_r_reg[raw_hdl_pipeline][0][left_resized][17]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][5][6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -5.019,
+     "path_delay_ns": 38.352,
+     "data_path_ns": 38.306,
+     "logic_levels": 145,
+     "member_count": 96,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/in_reg_reg[data][data][key][9][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_BIN_OP_PLUS_chacha20_py_l77_c19_ec34_left_reg[29]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -4.869,
+     "path_delay_ns": 38.202,
+     "data_path_ns": 38.186,
+     "logic_levels": 145,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][2][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_BIN_OP_PLUS_chacha20_py_l77_c19_ec34_left_reg[29]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -4.605,
+     "path_delay_ns": 37.938,
+     "data_path_ns": 37.922,
+     "logic_levels": 148,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][2][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_BIN_OP_PLUS_chacha20_py_l77_c19_ec34_left_reg[29]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -4.595,
+     "path_delay_ns": 37.928,
+     "data_path_ns": 37.912,
+     "logic_levels": 148,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_BIN_OP_PLUS_chacha20_py_l77_c19_ec34_left_reg[1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l132_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][4][6]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -3.933,
+     "path_delay_ns": 37.266,
+     "data_path_ns": 37.22,
+     "logic_levels": 143,
+     "member_count": 96,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/in_reg_reg[data][data][key][13][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_BIN_OP_XOR_chacha20_py_l76_c24_ec39_left_reg[7]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -3.658,
+     "path_delay_ns": 36.991,
+     "data_path_ns": 36.945,
+     "logic_levels": 138,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/REG_STAGE0_s_reg[state][1][1]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l130_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_BIN_OP_XOR_chacha20_py_l76_c24_ec39_left_reg[7]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -3.528,
+     "path_delay_ns": 36.861,
+     "data_path_ns": 36.815,
+     "logic_levels": 141,
+     "member_count": 32,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "failing",
+     "path_group": "clk_30p0",
+     "start_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/in_reg_reg[data][data][key][0][4]",
+     "end_reg_name": "chacha20_pipeline_shared_0CLK_2ef1d9c6/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l127_c12_ec38/quarter_round_0_5_10_15_chacha20_py_l112_c13_ec44/BIN_OP_PLUS_chacha20_py_l75_c19_ec42/manual_registers_r_reg[raw_hdl_pipeline][0][left_resized][29]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": -3.066,
+     "path_delay_ns": 36.399,
+     "data_path_ns": 36.383,
+     "logic_levels": 138,
+     "member_count": 16,
+     "query_scopes": [
+      "failing"
+     ]
+    },
+    {
+     "scope": "main:decrypt_dataflow_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "decrypt_dataflow_shared_0CLK_77790926/decrypt_dataflow_core_decrypt_dataflow_shared_py_l41_c8_el50_ec5/mac_func_ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/poly1305_body_decrypt_poly1305_mac_pipelined_py_l111_c17_ec35/poly1305_mac_pipelined_poly1305_body_poly1305_mac_pipelined_py_l57_c11_ec27/residue_mul_add_mod_poly1305_mac_pipelined_py_l43_c13_ec70/BIN_OP_INFERRED_MULT_poly1305_math_py_l199_c25_ec30/return_output0__55",
+     "end_reg_name": "decrypt_dataflow_shared_0CLK_77790926/decrypt_dataflow_core_decrypt_dataflow_shared_py_l41_c8_el50_ec5/mac_func_ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/output_reg_reg[data][103]",
+     "start_pin_name": "CLK",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": 3.499,
+     "path_delay_ns": 29.834,
+     "data_path_ns": 29.789,
+     "logic_levels": 99,
+     "member_count": 1,
+     "query_scopes": [
+      "main:decrypt_dataflow_shared"
+     ]
+    },
+    {
+     "scope": "main:encrypt_dataflow_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "encrypt_dataflow_shared_0CLK_0ca1138e/encrypt_dataflow_core_encrypt_dataflow_shared_py_l43_c8_el52_ec5/mac_func_ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/poly1305_body_encrypt_poly1305_mac_pipelined_py_l111_c17_ec35/poly1305_mac_pipelined_poly1305_body_poly1305_mac_pipelined_py_l52_c11_ec27/residue_mul_add_mod_poly1305_mac_pipelined_py_l43_c13_ec70/BIN_OP_INFERRED_MULT_poly1305_math_py_l199_c25_ec30/return_output0__55",
+     "end_reg_name": "encrypt_dataflow_shared_0CLK_0ca1138e/encrypt_dataflow_core_encrypt_dataflow_shared_py_l43_c8_el52_ec5/mac_func_ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/output_reg_reg[data][103]",
+     "start_pin_name": "CLK",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": 3.499,
+     "path_delay_ns": 29.834,
+     "data_path_ns": 29.789,
+     "logic_levels": 99,
+     "member_count": 1,
+     "query_scopes": [
+      "main:encrypt_dataflow_shared"
+     ]
+    },
+    {
+     "scope": "main:poly1305_mcp_shared_poly1305_prologue_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "poly1305_mcp_shared_poly1305_prologue_shared_0CLK_838a3185/prologue_arbiter_poly1305_mcp_shared_py_l219_c8_el224_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/launch_reg[data][33]",
+     "end_reg_name": "poly1305_mcp_shared_poly1305_prologue_shared_0CLK_838a3185/prologue_arbiter_poly1305_mcp_shared_py_l219_c8_el224_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/capture_reg[data][values][1][101]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 33.333,
+     "slack_ns": 4.043,
+     "path_delay_ns": 29.29,
+     "data_path_ns": 29.244,
+     "logic_levels": 99,
+     "member_count": 1,
+     "query_scopes": [
+      "main:poly1305_mcp_shared_poly1305_prologue_shared",
+      "mcp:poly1305_mcp_shared_poly1305_prologue_shared____prologue_arbiter[poly1305_mcp_shared_py_l219_c8_el224_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture"
+     ]
+    },
+    {
+     "scope": "main:poly1305_mcp_shared_poly1305_epilogue_shared",
+     "path_group": "clk_30p0",
+     "start_reg_name": "poly1305_mcp_shared_poly1305_epilogue_shared_0CLK_9d93c3f6/epilogue_arbiter_poly1305_mcp_shared_py_l233_c8_el238_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/launch_reg[data][next_lane][0]",
+     "end_reg_name": "poly1305_mcp_shared_poly1305_epilogue_shared_0CLK_9d93c3f6/epilogue_arbiter_poly1305_mcp_shared_py_l233_c8_el238_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/capture_reg[data][125]",
+     "start_pin_name": "C",
+     "end_pin_name": "D",
+     "source_ns_per_clock": 33.333,
+     "requirement_ns": 66.666,
+     "slack_ns": 21.421,
+     "path_delay_ns": 22.6225,
+     "data_path_ns": 45.229,
+     "logic_levels": 201,
+     "member_count": 1,
+     "query_scopes": [
+      "main:poly1305_mcp_shared_poly1305_epilogue_shared",
+      "mcp:poly1305_mcp_shared_poly1305_epilogue_shared____epilogue_arbiter[poly1305_mcp_shared_py_l233_c8_el238_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture"
+     ]
+    }
+   ],
+   "estimated_main_ffs": {
+    "chacha20poly1305_encrypt_hw_io_chacha20poly1305_encrypt_io_wires": 0,
+    "chacha20poly1305_decrypt_hw_io_chacha20poly1305_decrypt_io_wires": 0,
+    "chacha20_pipeline_shared": 8583,
+    "poly1305_mcp_shared_poly1305_prologue_shared": 404,
+    "poly1305_mcp_shared_poly1305_epilogue_shared": 793,
+    "encrypt_dataflow_shared": 3324,
+    "decrypt_dataflow_shared": 3724
+   },
+   "mains_with_reported_failure": [
+    "chacha20_pipeline_shared"
+   ],
+   "register_growth_without_prior_failure": {
+    "chacha20poly1305_encrypt_hw_io_chacha20poly1305_encrypt_io_wires": 0,
+    "chacha20poly1305_decrypt_hw_io_chacha20poly1305_decrypt_io_wires": 0,
+    "chacha20_pipeline_shared": 0,
+    "poly1305_mcp_shared_poly1305_prologue_shared": 0,
+    "poly1305_mcp_shared_poly1305_epilogue_shared": 0,
+    "encrypt_dataflow_shared": 0,
+    "decrypt_dataflow_shared": 0
+   }
+  }
+ ],
+ "fit_status": "within_reported_limits",
+ "mains": {
+  "chacha20_pipeline_shared": {
+   "goal_mhz": 30.0,
+   "iterations": [
+    {
+     "iter": 1,
+     "main": "chacha20_pipeline_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 30.05,
+     "met": true,
+     "cuts": 4,
+     "main_latency": 0,
+     "pipeline_stages": 5,
+     "predicted_stage_ns": 0.0,
+     "bottleneck": null,
+     "max_cap_violations": null,
+     "action": "met",
+     "auto_pipeline_regions": [
+      {
+       "inst": "chacha20_pipeline_shared____pipeline_func[chacha20_pipeline_shared_py_l219_c13_el222_ec5]____auto_pipelined_func[stream_auto_pipeline_py_l130_c36_ec72]____func_stream[pypeline_py_l2264_c14_ec24]",
+       "key": "func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4",
+       "constraint": "start_latency=4",
+       "realized_latency": 4,
+       "cuts": 4,
+       "scale": 0.847
+      }
+     ],
+     "auto_multi_cycle_ncycles": {
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+     },
+     "run": 1,
+     "index": 0,
+     "decision": 1,
+     "synthesis_observations": 1,
+     "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+     "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+     "observation_origin": "synthesis"
+    },
+    {
+     "iter": 2,
+     "main": "chacha20_pipeline_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 24.358,
+     "met": false,
+     "cuts": 3,
+     "main_latency": 0,
+     "pipeline_stages": 4,
+     "predicted_stage_ns": 0.0,
+     "bottleneck": "chacha20_block_step",
+     "max_cap_violations": null,
+     "action": "grow_auto_pipeline(func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4 x1.10)",
+     "auto_pipeline_regions": [
+      {
+       "inst": "chacha20_pipeline_shared____pipeline_func[chacha20_pipeline_shared_py_l219_c13_el222_ec5]____auto_pipelined_func[stream_auto_pipeline_py_l130_c36_ec72]____func_stream[pypeline_py_l2264_c14_ec24]",
+       "key": "func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4",
+       "constraint": "start_latency=4",
+       "realized_latency": 3,
+       "cuts": 3,
+       "scale": 1.0954
+      }
+     ],
+     "auto_multi_cycle_ncycles": {
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+     },
+     "run": 1,
+     "index": 1,
+     "decision": 2,
+     "synthesis_observations": 2,
+     "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+     "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+     "observation_origin": "synthesis"
+    }
+   ],
+   "final": {
+    "met": true,
+    "achieved_mhz": 30.05,
+    "mhz_is_lower_bound": false,
+    "lower_bound_mhz": null,
+    "met_basis": "measured",
+    "source": "planned_sweep",
+    "run": 1,
+    "iter": 1,
+    "iteration_index": 0,
+    "failure_reason": null,
+    "auto_pipelined": true,
+    "slices_built": 4,
+    "pipeline_stages": 5,
+    "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+    "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+    "observation_origin": "synthesis",
+    "stopped_reason": null,
+    "cuts": 4,
+    "locked_instances": 0,
+    "auto_pipeline_regions": [
+     {
+      "inst": "chacha20_pipeline_shared____pipeline_func[chacha20_pipeline_shared_py_l219_c13_el222_ec5]____auto_pipelined_func[stream_auto_pipeline_py_l130_c36_ec72]____func_stream[pypeline_py_l2264_c14_ec24]",
+      "key": "func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4",
+      "constraint": "start_latency=4",
+      "realized_latency": 4,
+      "cuts": 4,
+      "scale": 0.847
+     }
+    ]
+   }
+  },
+  "poly1305_mcp_shared_poly1305_prologue_shared": {
+   "goal_mhz": 30.0,
+   "iterations": [
+    {
+     "iter": 1,
+     "main": "poly1305_mcp_shared_poly1305_prologue_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 34.141,
+     "met": true,
+     "action": "as_written",
+     "run": 1,
+     "index": 0,
+     "decision": 1,
+     "synthesis_observations": 1,
+     "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+     "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+     "observation_origin": "synthesis"
+    },
+    {
+     "iter": 2,
+     "main": "poly1305_mcp_shared_poly1305_prologue_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 34.141,
+     "met": true,
+     "action": "as_written",
+     "run": 1,
+     "index": 1,
+     "decision": 2,
+     "synthesis_observations": 2,
+     "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+     "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+     "observation_origin": "synthesis"
+    }
+   ],
+   "final": {
+    "met": true,
+    "achieved_mhz": 34.141,
+    "mhz_is_lower_bound": false,
+    "lower_bound_mhz": null,
+    "met_basis": "measured",
+    "source": "as_written",
+    "run": 1,
+    "iter": 2,
+    "iteration_index": 1,
+    "failure_reason": null,
+    "auto_pipelined": false,
+    "slices_built": null,
+    "pipeline_stages": null,
+    "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+    "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+    "observation_origin": "synthesis",
+    "standalone_mhz": 34.341
+   }
+  },
+  "poly1305_mcp_shared_poly1305_epilogue_shared": {
+   "goal_mhz": 30.0,
+   "iterations": [
+    {
+     "iter": 1,
+     "main": "poly1305_mcp_shared_poly1305_epilogue_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 44.204,
+     "met": true,
+     "action": "as_written",
+     "run": 1,
+     "index": 0,
+     "decision": 1,
+     "synthesis_observations": 1,
+     "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+     "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+     "observation_origin": "synthesis"
+    },
+    {
+     "iter": 2,
+     "main": "poly1305_mcp_shared_poly1305_epilogue_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 44.204,
+     "met": true,
+     "action": "as_written",
+     "run": 1,
+     "index": 1,
+     "decision": 2,
+     "synthesis_observations": 2,
+     "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+     "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+     "observation_origin": "synthesis"
+    }
+   ],
+   "final": {
+    "met": true,
+    "achieved_mhz": 44.204,
+    "mhz_is_lower_bound": false,
+    "lower_bound_mhz": null,
+    "met_basis": "measured",
+    "source": "as_written",
+    "run": 1,
+    "iter": 2,
+    "iteration_index": 1,
+    "failure_reason": null,
+    "auto_pipelined": false,
+    "slices_built": null,
+    "pipeline_stages": null,
+    "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+    "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+    "observation_origin": "synthesis",
+    "standalone_mhz": 44.611
+   }
+  },
+  "encrypt_dataflow_shared": {
+   "goal_mhz": 30.0,
+   "iterations": [
+    {
+     "iter": 1,
+     "main": "encrypt_dataflow_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 33.519,
+     "met": true,
+     "cuts": 0,
+     "main_latency": 0,
+     "pipeline_stages": 1,
+     "predicted_stage_ns": 27.7,
+     "bottleneck": null,
+     "max_cap_violations": null,
+     "action": "met",
+     "auto_pipeline_regions": [
+      {
+       "inst": "encrypt_dataflow_shared____encrypt_dataflow_core[encrypt_dataflow_shared_py_l43_c8_el52_ec5]____mac_func[ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_encrypt[poly1305_mac_pipelined_py_l111_c17_ec35]",
+       "key": "poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0",
+       "constraint": "start_latency=0",
+       "realized_latency": 0,
+       "cuts": 0,
+       "scale": 1.088
+      }
+     ],
+     "auto_multi_cycle_ncycles": {
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+     },
+     "run": 1,
+     "index": 0,
+     "decision": 1,
+     "synthesis_observations": 1,
+     "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+     "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+     "observation_origin": "synthesis"
+    },
+    {
+     "iter": 2,
+     "main": "encrypt_dataflow_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 33.519,
+     "met": true,
+     "cuts": 0,
+     "main_latency": 0,
+     "pipeline_stages": 1,
+     "predicted_stage_ns": 27.7,
+     "bottleneck": null,
+     "max_cap_violations": null,
+     "action": "met",
+     "auto_pipeline_regions": [
+      {
+       "inst": "encrypt_dataflow_shared____encrypt_dataflow_core[encrypt_dataflow_shared_py_l43_c8_el52_ec5]____mac_func[ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_encrypt[poly1305_mac_pipelined_py_l111_c17_ec35]",
+       "key": "poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0",
+       "constraint": "start_latency=0",
+       "realized_latency": 0,
+       "cuts": 0,
+       "scale": 1.088
+      }
+     ],
+     "auto_multi_cycle_ncycles": {
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+     },
+     "run": 1,
+     "index": 1,
+     "decision": 2,
+     "synthesis_observations": 2,
+     "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+     "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+     "observation_origin": "synthesis"
+    }
+   ],
+   "final": {
+    "met": true,
+    "achieved_mhz": 33.519,
+    "mhz_is_lower_bound": false,
+    "lower_bound_mhz": null,
+    "met_basis": "measured",
+    "source": "planned_sweep",
+    "run": 1,
+    "iter": 1,
+    "iteration_index": 0,
+    "failure_reason": null,
+    "auto_pipelined": true,
+    "slices_built": 0,
+    "pipeline_stages": 1,
+    "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+    "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+    "observation_origin": "synthesis",
+    "stopped_reason": null,
+    "cuts": 0,
+    "locked_instances": 0,
+    "auto_pipeline_regions": [
+     {
+      "inst": "encrypt_dataflow_shared____encrypt_dataflow_core[encrypt_dataflow_shared_py_l43_c8_el52_ec5]____mac_func[ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_encrypt[poly1305_mac_pipelined_py_l111_c17_ec35]",
+      "key": "poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0",
+      "constraint": "start_latency=0",
+      "realized_latency": 0,
+      "cuts": 0,
+      "scale": 1.088
+     }
+    ]
+   }
+  },
+  "decrypt_dataflow_shared": {
+   "goal_mhz": 30.0,
+   "iterations": [
+    {
+     "iter": 1,
+     "main": "decrypt_dataflow_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 33.519,
+     "met": true,
+     "cuts": 0,
+     "main_latency": 0,
+     "pipeline_stages": 1,
+     "predicted_stage_ns": 32.2,
+     "bottleneck": null,
+     "max_cap_violations": null,
+     "action": "met",
+     "auto_pipeline_regions": [
+      {
+       "inst": "decrypt_dataflow_shared____decrypt_dataflow_core[decrypt_dataflow_shared_py_l41_c8_el50_ec5]____mac_func[ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_decrypt[poly1305_mac_pipelined_py_l111_c17_ec35]",
+       "key": "poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0",
+       "constraint": "start_latency=0",
+       "realized_latency": 0,
+       "cuts": 0,
+       "scale": 1.088
+      }
+     ],
+     "auto_multi_cycle_ncycles": {
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+     },
+     "run": 1,
+     "index": 0,
+     "decision": 1,
+     "synthesis_observations": 1,
+     "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+     "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+     "observation_origin": "synthesis"
+    },
+    {
+     "iter": 2,
+     "main": "decrypt_dataflow_shared",
+     "goal_mhz": 30.0,
+     "achieved_mhz": 33.519,
+     "met": true,
+     "cuts": 0,
+     "main_latency": 0,
+     "pipeline_stages": 1,
+     "predicted_stage_ns": 32.2,
+     "bottleneck": null,
+     "max_cap_violations": null,
+     "action": "met",
+     "auto_pipeline_regions": [
+      {
+       "inst": "decrypt_dataflow_shared____decrypt_dataflow_core[decrypt_dataflow_shared_py_l41_c8_el50_ec5]____mac_func[ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_decrypt[poly1305_mac_pipelined_py_l111_c17_ec35]",
+       "key": "poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0",
+       "constraint": "start_latency=0",
+       "realized_latency": 0,
+       "cuts": 0,
+       "scale": 1.088
+      }
+     ],
+     "auto_multi_cycle_ncycles": {
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+      "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+     },
+     "run": 1,
+     "index": 1,
+     "decision": 2,
+     "synthesis_observations": 2,
+     "implementation_signature": "c18ccf6112b7ed6cc341f38f1916f0fa2fb133e226da1618aa5cb39aebfbeef5",
+     "input_signature": "d6bffa1ba0b2079063053b92103a96a98f782a9e46ae17bc2241e0499ee92e60",
+     "observation_origin": "synthesis"
+    }
+   ],
+   "final": {
+    "met": true,
+    "achieved_mhz": 33.519,
+    "mhz_is_lower_bound": false,
+    "lower_bound_mhz": null,
+    "met_basis": "measured",
+    "source": "planned_sweep",
+    "run": 1,
+    "iter": 1,
+    "iteration_index": 0,
+    "failure_reason": null,
+    "auto_pipelined": true,
+    "slices_built": 0,
+    "pipeline_stages": 1,
+    "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+    "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+    "observation_origin": "synthesis",
+    "stopped_reason": null,
+    "cuts": 0,
+    "locked_instances": 0,
+    "auto_pipeline_regions": [
+     {
+      "inst": "decrypt_dataflow_shared____decrypt_dataflow_core[decrypt_dataflow_shared_py_l41_c8_el50_ec5]____mac_func[ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_decrypt[poly1305_mac_pipelined_py_l111_c17_ec35]",
+      "key": "poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0",
+      "constraint": "start_latency=0",
+      "realized_latency": 0,
+      "cuts": 0,
+      "scale": 1.088
+     }
+    ]
+   }
+  }
+ },
+ "synthesis_cost": {
+  "observations": 2,
+  "new_backend_launches": 2,
+  "cache_reads": 0,
+  "unknown_cache_origin": 0,
+  "distinct_implementations": 2,
+  "estimated_registers_added_without_prior_failure": 0
+ },
+ "retained_observation": {
+  "run": 1,
+  "iteration": 1,
+  "auto_pipeline_pass": 1,
+  "log_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-sharing-both-hardware-30mhz-20261003/chacha20poly1305_encrypt_decrypt_shared/vivado_c5e81627_8516a3be6ee8ce59.log",
+  "cache_hit": false,
+  "input_signature": "8516a3be6ee8ce59dcb5de666554ae3ed4b593cce293f512fddab374fb62fa3d",
+  "elapsed_seconds": 774.5095432361122,
+  "optional_report_ms": 4132,
+  "implementation_signature": "25c4fa8e6ee793f7be1428ca58397da19fc757dbc8c733b4ed662f3f9195bd00",
+  "utilization": {
+   "status": "within_reported_limits",
+   "resources": {
+    "Slice LUTs": {
+     "used": 36830,
+     "available": 134600
+    },
+    "LUT as Logic": {
+     "used": 35867,
+     "available": 134600
+    },
+    "LUT as Memory": {
+     "used": 963,
+     "available": 46200
+    },
+    "Slice Registers": {
+     "used": 11771,
+     "available": 269200
+    },
+    "Register as Flip Flop": {
+     "used": 11771,
+     "available": 269200
+    },
+    "Register as Latch": {
+     "used": 0,
+     "available": 269200
+    },
+    "F7 Muxes": {
+     "used": 4,
+     "available": 67300
+    },
+    "F8 Muxes": {
+     "used": 0,
+     "available": 33650
+    },
+    "Block RAM Tile": {
+     "used": 11,
+     "available": 365
+    },
+    "RAMB36/FIFO": {
+     "used": 10,
+     "available": 365
+    },
+    "RAMB18": {
+     "used": 2,
+     "available": 730
+    },
+    "DSPs": {
+     "used": 320,
+     "available": 740
+    },
+    "Bonded IOB": {
+     "used": 0,
+     "available": 500
+    },
+    "Bonded IPADs": {
+     "used": 0,
+     "available": 50
+    },
+    "Bonded OPADs": {
+     "used": 0,
+     "available": 32
+    },
+    "PHY_CONTROL": {
+     "used": 0,
+     "available": 10
+    },
+    "PHASER_REF": {
+     "used": 0,
+     "available": 10
+    },
+    "OUT_FIFO": {
+     "used": 0,
+     "available": 40
+    },
+    "IN_FIFO": {
+     "used": 0,
+     "available": 40
+    },
+    "IDELAYCTRL": {
+     "used": 0,
+     "available": 10
+    },
+    "IBUFDS": {
+     "used": 0,
+     "available": 480
+    },
+    "GTPE2_CHANNEL": {
+     "used": 0,
+     "available": 16
+    },
+    "PHASER_OUT/PHASER_OUT_PHY": {
+     "used": 0,
+     "available": 40
+    },
+    "PHASER_IN/PHASER_IN_PHY": {
+     "used": 0,
+     "available": 40
+    },
+    "IDELAYE2/IDELAYE2_FINEDELAY": {
+     "used": 0,
+     "available": 500
+    },
+    "IBUFDS_GTE2": {
+     "used": 0,
+     "available": 8
+    },
+    "ILOGIC": {
+     "used": 0,
+     "available": 500
+    },
+    "OLOGIC": {
+     "used": 0,
+     "available": 500
+    },
+    "BUFGCTRL": {
+     "used": 0,
+     "available": 32
+    },
+    "BUFIO": {
+     "used": 0,
+     "available": 40
+    },
+    "MMCME2_ADV": {
+     "used": 0,
+     "available": 10
+    },
+    "PLLE2_ADV": {
+     "used": 0,
+     "available": 10
+    },
+    "BUFMRCE": {
+     "used": 0,
+     "available": 20
+    },
+    "BUFHCE": {
+     "used": 0,
+     "available": 120
+    },
+    "BUFR": {
+     "used": 0,
+     "available": 40
+    },
+    "BSCANE2": {
+     "used": 0,
+     "available": 4
+    },
+    "CAPTUREE2": {
+     "used": 0,
+     "available": 1
+    },
+    "DNA_PORT": {
+     "used": 0,
+     "available": 1
+    },
+    "EFUSE_USR": {
+     "used": 0,
+     "available": 1
+    },
+    "FRAME_ECCE2": {
+     "used": 0,
+     "available": 1
+    },
+    "ICAPE2": {
+     "used": 0,
+     "available": 2
+    },
+    "PCIE_2_1": {
+     "used": 0,
+     "available": 1
+    },
+    "STARTUPE2": {
+     "used": 0,
+     "available": 1
+    },
+    "XADC": {
+     "used": 0,
+     "available": 1
+    }
+   },
+   "overutilization": []
+  },
+  "latencies": {
+   "MAIN:chacha20_pipeline_shared": 0,
+   "MAIN:chacha20poly1305_decrypt_hw_io_chacha20poly1305_decrypt_io_wires": 0,
+   "MAIN:chacha20poly1305_encrypt_hw_io_chacha20poly1305_encrypt_io_wires": 0,
+   "MAIN:decrypt_dataflow_shared": 0,
+   "MAIN:encrypt_dataflow_shared": 0,
+   "MAIN:poly1305_mcp_shared_poly1305_epilogue_shared": 0,
+   "MAIN:poly1305_mcp_shared_poly1305_prologue_shared": 0,
+   "AUTO_PIPELINE:chacha20_pipeline_shared:func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4": 4,
+   "AUTO_PIPELINE:decrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0": 0,
+   "AUTO_PIPELINE:encrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0": 0
+  },
+  "auto_pipeline_instances": {
+   "AUTO_PIPELINE:chacha20_pipeline_shared:func_stream_func_chacha20_pipeline_shared_chacha_shared_pipeline_latency_None_start_latency_4_max_latency_None_sde4955853930_start_latency_4": [
+    "chacha20_pipeline_shared____pipeline_func[chacha20_pipeline_shared_py_l219_c13_el222_ec5]____auto_pipelined_func[stream_auto_pipeline_py_l130_c36_ec72]____func_stream[pypeline_py_l2264_c14_ec24]"
+   ],
+   "AUTO_PIPELINE:decrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_decrypt_start_latency_0": [
+    "decrypt_dataflow_shared____decrypt_dataflow_core[decrypt_dataflow_shared_py_l41_c8_el50_ec5]____mac_func[ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_decrypt[poly1305_mac_pipelined_py_l111_c17_ec35]"
+   ],
+   "AUTO_PIPELINE:encrypt_dataflow_shared:poly1305_mac_pipelined_poly1305_body_encrypt_start_latency_0": [
+    "encrypt_dataflow_shared____encrypt_dataflow_core[encrypt_dataflow_shared_py_l43_c8_el52_ec5]____mac_func[ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92]____body_pipeline[poly1305_mac_pipelined_py_l290_c18_ec40]____poly1305_body_encrypt[poly1305_mac_pipelined_py_l111_c17_ec35]"
+   ]
+  },
+  "latency_changes_since_fit": {},
+  "auto_multi_cycle_ncycles": {
+   "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+   "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+  },
+  "coverage": {
+   "main:chacha20_pipeline_shared": {
+    "count": 1,
+    "limit": 1,
+    "truncated": false,
+    "complete": false,
+    "parsed_count": 1
+   },
+   "main:decrypt_dataflow_shared": {
+    "count": 1,
+    "limit": 1,
+    "truncated": false,
+    "complete": false,
+    "parsed_count": 1
+   },
+   "main:encrypt_dataflow_shared": {
+    "count": 1,
+    "limit": 1,
+    "truncated": false,
+    "complete": false,
+    "parsed_count": 1
+   },
+   "main:poly1305_mcp_shared_poly1305_epilogue_shared": {
+    "count": 1,
+    "limit": 1,
+    "truncated": false,
+    "complete": false,
+    "parsed_count": 1
+   },
+   "mcp:poly1305_mcp_shared_poly1305_epilogue_shared____epilogue_arbiter[poly1305_mcp_shared_py_l233_c8_el238_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture": {
+    "count": 1,
+    "limit": 1,
+    "truncated": false,
+    "complete": false,
+    "parsed_count": 1
+   },
+   "main:poly1305_mcp_shared_poly1305_prologue_shared": {
+    "count": 1,
+    "limit": 1,
+    "truncated": false,
+    "complete": false,
+    "parsed_count": 1
+   },
+   "mcp:poly1305_mcp_shared_poly1305_prologue_shared____prologue_arbiter[poly1305_mcp_shared_py_l219_c8_el224_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture": {
+    "count": 1,
+    "limit": 1,
+    "truncated": false,
+    "complete": false,
+    "parsed_count": 1
+   },
+   "failing": {
+    "count": 0,
+    "limit": 4096,
+    "truncated": false,
+    "complete": true,
+    "parsed_count": 0
+   }
+  },
+  "paths": [
+   {
+    "scope": null,
+    "path_group": "clk_30p0",
+    "start_reg_name": "chacha20_pipeline_shared_0CLK_79a3ed89/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/func_stream_pypeline_py_l2264_c14_ec24/chacha20_pipeline_shared_chacha_shared_pipeline_stream_auto_pipeline_py_l85_c14_ec26/chacha20_loop_body_chacha20_pipeline_shared_py_l87_c19_ec59/chacha20_block_chacha20_py_l207_c12_ec33/chacha20_block_step_chacha20_py_l133_c12_ec38/quarter_round_0_4_8_12_chacha20_py_l108_c13_ec43/REG_STAGE0_s_reg[state][1][1]",
+    "end_reg_name": "chacha20_pipeline_shared_0CLK_79a3ed89/pipeline_func_chacha20_pipeline_shared_py_l219_c13_el222_ec5/auto_pipelined_func_stream_auto_pipeline_py_l130_c36_ec72/out_reg_reg[data][data][frag][data][23][7]",
+    "start_pin_name": "C",
+    "end_pin_name": "D",
+    "source_ns_per_clock": 33.333,
+    "requirement_ns": 33.333,
+    "slack_ns": 0.055,
+    "path_delay_ns": 33.278,
+    "data_path_ns": null,
+    "logic_levels": 127,
+    "member_count": 1,
+    "query_scopes": [
+     "clock_worst",
+     "main:chacha20_pipeline_shared"
+    ]
+   },
+   {
+    "scope": "main:decrypt_dataflow_shared",
+    "path_group": "clk_30p0",
+    "start_reg_name": "decrypt_dataflow_shared_0CLK_77790926/decrypt_dataflow_core_decrypt_dataflow_shared_py_l41_c8_el50_ec5/mac_func_ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/poly1305_body_decrypt_poly1305_mac_pipelined_py_l111_c17_ec35/poly1305_mac_pipelined_poly1305_body_poly1305_mac_pipelined_py_l57_c11_ec27/residue_mul_add_mod_poly1305_mac_pipelined_py_l43_c13_ec70/BIN_OP_INFERRED_MULT_poly1305_math_py_l199_c25_ec30/return_output0__55",
+    "end_reg_name": "decrypt_dataflow_shared_0CLK_77790926/decrypt_dataflow_core_decrypt_dataflow_shared_py_l41_c8_el50_ec5/mac_func_ifgen_decrypt_dataflow_core_decrypt_dataflow_core_if508c7ccd_py_l22_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/output_reg_reg[data][103]",
+    "start_pin_name": "CLK",
+    "end_pin_name": "D",
+    "source_ns_per_clock": 33.333,
+    "requirement_ns": 33.333,
+    "slack_ns": 3.499,
+    "path_delay_ns": 29.834,
+    "data_path_ns": 29.789,
+    "logic_levels": 99,
+    "member_count": 1,
+    "query_scopes": [
+     "main:decrypt_dataflow_shared"
+    ]
+   },
+   {
+    "scope": "main:encrypt_dataflow_shared",
+    "path_group": "clk_30p0",
+    "start_reg_name": "encrypt_dataflow_shared_0CLK_0ca1138e/encrypt_dataflow_core_encrypt_dataflow_shared_py_l43_c8_el52_ec5/mac_func_ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/poly1305_body_encrypt_poly1305_mac_pipelined_py_l111_c17_ec35/poly1305_mac_pipelined_poly1305_body_poly1305_mac_pipelined_py_l52_c11_ec27/residue_mul_add_mod_poly1305_mac_pipelined_py_l43_c13_ec70/BIN_OP_INFERRED_MULT_poly1305_math_py_l199_c25_ec30/return_output0__55",
+    "end_reg_name": "encrypt_dataflow_shared_0CLK_0ca1138e/encrypt_dataflow_core_encrypt_dataflow_shared_py_l43_c8_el52_ec5/mac_func_ifgen_encrypt_dataflow_core_encrypt_dataflow_core_if46677ace_py_l17_c10_ec92/body_pipeline_poly1305_mac_pipelined_py_l290_c18_ec40/output_reg_reg[data][103]",
+    "start_pin_name": "CLK",
+    "end_pin_name": "D",
+    "source_ns_per_clock": 33.333,
+    "requirement_ns": 33.333,
+    "slack_ns": 3.499,
+    "path_delay_ns": 29.834,
+    "data_path_ns": 29.789,
+    "logic_levels": 99,
+    "member_count": 1,
+    "query_scopes": [
+     "main:encrypt_dataflow_shared"
+    ]
+   },
+   {
+    "scope": "main:poly1305_mcp_shared_poly1305_prologue_shared",
+    "path_group": "clk_30p0",
+    "start_reg_name": "poly1305_mcp_shared_poly1305_prologue_shared_0CLK_838a3185/prologue_arbiter_poly1305_mcp_shared_py_l219_c8_el224_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/launch_reg[data][33]",
+    "end_reg_name": "poly1305_mcp_shared_poly1305_prologue_shared_0CLK_838a3185/prologue_arbiter_poly1305_mcp_shared_py_l219_c8_el224_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/capture_reg[data][values][1][101]",
+    "start_pin_name": "C",
+    "end_pin_name": "D",
+    "source_ns_per_clock": 33.333,
+    "requirement_ns": 33.333,
+    "slack_ns": 4.043,
+    "path_delay_ns": 29.29,
+    "data_path_ns": 29.244,
+    "logic_levels": 99,
+    "member_count": 1,
+    "query_scopes": [
+     "main:poly1305_mcp_shared_poly1305_prologue_shared",
+     "mcp:poly1305_mcp_shared_poly1305_prologue_shared____prologue_arbiter[poly1305_mcp_shared_py_l219_c8_el224_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture"
+    ]
+   },
+   {
+    "scope": "main:poly1305_mcp_shared_poly1305_epilogue_shared",
+    "path_group": "clk_30p0",
+    "start_reg_name": "poly1305_mcp_shared_poly1305_epilogue_shared_0CLK_9d93c3f6/epilogue_arbiter_poly1305_mcp_shared_py_l233_c8_el238_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/launch_reg[data][next_lane][0]",
+    "end_reg_name": "poly1305_mcp_shared_poly1305_epilogue_shared_0CLK_9d93c3f6/epilogue_arbiter_poly1305_mcp_shared_py_l233_c8_el238_ec5/mcp_poly1305_mcp_shared_py_l188_c13_ec82/capture_reg[data][125]",
+    "start_pin_name": "C",
+    "end_pin_name": "D",
+    "source_ns_per_clock": 33.333,
+    "requirement_ns": 66.666,
+    "slack_ns": 21.421,
+    "path_delay_ns": 22.6225,
+    "data_path_ns": 45.229,
+    "logic_levels": 201,
+    "member_count": 1,
+    "query_scopes": [
+     "main:poly1305_mcp_shared_poly1305_epilogue_shared",
+     "mcp:poly1305_mcp_shared_poly1305_epilogue_shared____epilogue_arbiter[poly1305_mcp_shared_py_l233_c8_el238_ec5]____mcp[poly1305_mcp_shared_py_l188_c13_ec82]:launch:capture"
+    ]
+   }
+  ],
+  "estimated_main_ffs": {
+   "chacha20poly1305_encrypt_hw_io_chacha20poly1305_encrypt_io_wires": 0,
+   "chacha20poly1305_decrypt_hw_io_chacha20poly1305_decrypt_io_wires": 0,
+   "chacha20_pipeline_shared": 10906,
+   "poly1305_mcp_shared_poly1305_prologue_shared": 404,
+   "poly1305_mcp_shared_poly1305_epilogue_shared": 793,
+   "encrypt_dataflow_shared": 3324,
+   "decrypt_dataflow_shared": 3724
+  },
+  "mains_with_reported_failure": [],
+  "register_growth_without_prior_failure": {}
+ },
+ "auto_multi_cycle_ncycles": {
+  "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_0_start_latency_1": 1,
+  "stream.stream_multi_cycle.make_stream_auto_multi_cycle_line137_1_start_latency_2": 2
+ }
+}

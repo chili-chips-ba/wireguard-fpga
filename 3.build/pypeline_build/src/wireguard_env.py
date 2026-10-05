@@ -20,6 +20,13 @@ from poly1305_config import selected_target, starting_latencies
 TARGET_MHZ = float(selected_target())
 START_LATENCIES = starting_latencies(TARGET_MHZ)
 
+
+def sharing():
+    # Resolve only in combined dataflows. Standalone direct-tool invocation
+    # must not accidentally import a second direction or any shared MAIN.
+    from poly1305_config import selected_sharing
+    return selected_sharing()
+
 _here = os.path.dirname(os.path.abspath(__file__))
 
 

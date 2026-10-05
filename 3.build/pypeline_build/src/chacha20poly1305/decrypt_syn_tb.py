@@ -19,7 +19,6 @@ import wireguard_env  # noqa: F401
 from pypeline import (
     MAIN,
     Wire,
-    wires,
     Feedback,
     Reg,
     uint1_t,
@@ -106,8 +105,9 @@ def announce():
     sim_print("AAD (29 bytes): Additional authenticated data")
 
 
+# Counters, ROM selection and stream source/sink are real testbench hardware.
+# Time this MAIN normally rather than falsely declaring it wires-only.
 @MAIN
-@wires
 def decrypt_syn_tb() -> axis128_intrf.fwd_t:
     # Test vectors
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY
