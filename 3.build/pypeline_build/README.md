@@ -21,18 +21,28 @@ their **30 MHz** defaults. The sharing-both configuration has a passing
 external-port hardware checkpoint at 30 MHz and native fixed-vector plus QoR
 testbench results at a **60 MHz** goal.
 
-The latest six-size QoR run passed all **48 packet checks**, synthesis timing,
-capacity, and archived-evidence integrity. At 1920 bytes it sustains
-**6.312 Gb/s encrypt / 4.800 Gb/s decrypt at 60 MHz**. The performance top's
-synthesis estimate is **63.032 MHz**, using **640 of 740 DSPs**.
-Both authentication bodies accept one block per cycle. These are
-performance-testbench results, **not external-port hardware timing/area at
-60 MHz or routed sign-off**. The passing fixed-vector testbench used 704
-DSPs; different fixtures permit different optimizations.
+The latest six-size QoR run (2026-10-06) passed all **48 packet checks**,
+synthesis timing, capacity, and archived-evidence integrity. At 1920 bytes it
+sustains **6.255 Gb/s encrypt / 6.269 Gb/s decrypt at 60 MHz**; at 1420 bytes,
+**5.842 / 5.859 Gb/s**. The performance top's synthesis estimate is
+**63.032 MHz**, using **704 of 740 DSPs**. Both authentication bodies accept
+one block per cycle. These are performance-testbench results, **not new
+external-port hardware timing/area at 60 MHz or routed sign-off**.
 
 See the [component design and validation](src/poly1305/throughput.md#independent-mcp-sharing)
 for arithmetic, arbitration, latency sizing and deferred higher-clock issues.
 The latest packet results and historical comparison are below.
+
+Pipelined decrypt buffers ciphertext on its authentication fork, before
+framing: 64 memory beats plus one FIFO output beat. ChaCha can advance while
+authentication waits for its key/setup. Pipelined encrypt has a two-slot,
+II=1 output register slice (one unstalled output cycle) to hold external AXIS
+words stable under backpressure. Legacy has neither new buffer; the common
+tag packer also corrects partial-tail validity under stalls. The
+[recovery comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md)
+separates compiler-wrapper changes from the FIFO's measured benefit and
+explains the scope of the remedy for
+[Issue #39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39).
 
 The [sharing-both hardware evidence](measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/hardware-evidence.json)
 retains the confirmed external-port synthesis, constraints, input signatures,
@@ -58,10 +68,9 @@ a throughput claim, or routed timing sign-off. Existing QoR archives are unchang
 Run from `3.build/pypeline_build` in the primary WireGuard checkout. Set
 `PYPELINEC` to `<PipelineC checkout>/src/pypelinec`, or put it on PATH.
 `measure.py` also discovers the sibling PipelineC
-checkout. The compiler revision used for the completed run and its original
-dirty-tree provenance are preserved with the measurements.
-The latest QoR used Vivado 2019.2 and PipelineC
-`ff0a3ec6835bac3cb3c33e3c413738baa2e3c673-dirty`; exact frozen design/include
+checkout. Both repositories' revisions and design-source hashes are preserved
+with each measurement. The latest QoR used Vivado 2019.2 and clean PipelineC
+`b47d0fcdf8c36fa615b8759c6bbf6cc099b2780f`; exact frozen design/include
 hashes are retained with its evidence. The archived ChaCha-only run used
 the compiler tree identified as
 `0cc6aed9caf7d6cfbdb7dd345e12d950e3303300-dirty` at QoR launch. A compatible
@@ -132,8 +141,11 @@ change them, and latency-dependent storage is sized from the actual pipeline
 depth. To add a characterized clock, add a complete entry to
 `START_LATENCIES_BY_MHZ`: pipeline values count core registers, excluding I/O
 registers, and MCP values count setup cycles, excluding the handshake cycle.
-The latest 60 MHz QoR was collected before the new 60 MHz hints were added;
-changing hints does not change its saved evidence or force its final depths.
+The latest 60 MHz recovery QoR confirmed those hints: ChaCha core 17,
+both authentication body cores 3, and shared MCP setup cycles 6/5.
+Only two sweep iterations were needed; the consumed and built latencies
+matched, so no extra pin-and-confirm pass was required. This is not a
+controlled wall-time comparison with earlier compiler versions or machine load.
 Current source requires compiler support for
 `make_stream_auto_pipeline(..., start_latency=...)` and forwarding that option
 to its internal automatic pipeline.
@@ -160,8 +172,8 @@ elapsed time was 34.5 minutes versus 93.1 minutes previously; machine load
 also affects this comparison. Individual module characterization still runs.
 Final HDL/input hashes, MCP setup/hold constraints and arithmetic HDL audits
 passed. This validates the shared 30 MHz hints; the newer 60 MHz entry is
-derived from its passing fixed-vector build, but a seeded 60 MHz synthesis
-comparison is not yet measured. This validation used Vivado 2019.2
+derived from its passing fixed-vector build and confirmed by the latest
+recovery QoR. The earlier 30 MHz hint validation used Vivado 2019.2
 and PipelineC `1c32492-dirty`, including the stream-wrapper forwarding fix.
 
 ### Acceptance and QoR
@@ -171,7 +183,7 @@ all three variants, legacy fallback smoke checks for all three, two standalone
 MAC GHDL configurations, and randomized native plus fixed GHDL pipelined checks
 for all three. Arithmetic, II=1 acceptance, lane forwarding, drain, key changes,
 input gaps, stable tags under backpressure, framing/keep masks, and tampered-tag
-rejection are covered. Durable test/source records are in the latest shared run's
+rejection are covered. Durable test/source records for that earlier run are in its
 [workflow evidence](measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/workflow-evidence.json).
 
 Reproduce the historical 15-case integration/fallback matrix using ordinary builds
@@ -192,7 +204,23 @@ Sharing validation uses both native testbench styles for standalone enc/dec
 and all three sharing configurations, plus a legacy ChaCha-only smoke test.
 The component's directed sharing test is documented separately. The sharing-both
 60 MHz native synthesis-backed testbench passed 10 encrypt and 11 decrypt
-fixed-vector tests; the latest QoR passed all 48 reference-checked packets.
+fixed-vector tests. For the recovery change, 11 native combinational builds
+passed 205 packet checks across the selections/styles and legacy smoke;
+the sharing-both stress run passed 16 encrypt and 17 decrypt checks. The fresh
+QoR passed all 48 reference-checked packets at its actual converged depths.
+Completed recorded-depth replays and their limitations are retained in the
+[recovery workflow record](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/workflow-evidence.json).
+
+The random native testbenches also support `WG_TB_STRESS=1`. This selects
+16 directed packets through 1920 bytes, input gaps and prolonged/periodic
+output backpressure (plus decrypt's tampered-tag packet). Sources commit only
+converged handshakes; sinks count only `valid && ready` and assert that a
+stalled output's data, keep, last and verification status remain stable.
+The performance testbench does **not** use these pauses.
+
+```sh
+WG_TB_STRESS=1 ./build.py --shared --sim --comb --native --continue
+```
 
 Reproduce the archived ChaCha-only external-port hardware/QoR plan:
 
@@ -339,7 +367,7 @@ what takes hours.
 
 **Measure QoR — fmax, area, throughput, latency (see "Measuring QoR" below):**
 ```bash
-./measure.py --label shared-30mhz-new-run # pipelined 30 MHz synthesis + measurement (hours)
+./measure.py --label shared-60mhz-new-run # default sharing-both 60 MHz synthesis + measurement (hours)
 ./measure.py --label X --reuse-syn  # re-measure, reusing the cached synthesis
 ./build.py --shared --perf          # the underlying build/sim on its own
 ./build.py --shared --perf --comb    # fast rig check (no synthesis, no area/fmax)
@@ -349,8 +377,8 @@ what takes hours.
 
 ```
 src/
-  pypeline_env.py               sys.path bootstrap (import first in every file)
-  aead_types.py                 shared sizes/types (axis128/axis512, streams, null helpers)
+  wireguard_env.py              sys.path bootstrap + architecture/sharing/clock profile
+  aead_types.py                 shared sizes/types, auth FIFO and output-slice factories
   chacha20/
     chacha20.py                 ChaCha20 math + pipeline-control FSM + chacha20_instance
                                  (FSM and stream pipeline merged into one function; chacha20.h)
@@ -405,7 +433,7 @@ src/
     perf_probe.py                plain-Python QoR measurement layer: per-cycle handshake/byte
                                   accounting, per-packet latency, phase sequencer + barrier,
                                   incremental JSON writer, and the internal-tap metric classes
-                                  (HandshakeTap/StateTap/ArbTap/TapRegistry)
+                                  (HandshakeTap/BufferTap/StateTap/ArbTap/TapRegistry)
                                   (no pypeline import) — see "Measuring QoR" above
     perf_tb_common.py            the phase plan + WG_PERF_* env knobs + frame builders and the
                                   shared barrier/recorder/tap singletons (no pypeline import)
@@ -441,7 +469,7 @@ stimulus is generated and outputs checked:
 
 - **Synthesizable-style** (`encrypt_syn_tb.py`/`decrypt_syn_tb.py`, driven by
   the `_syn_tb.py` tops): a `@MAIN` hardware state machine streams/checks a
-  fixed batch of test vectors — 8 plaintext strings, chosen to cover the
+  fixed batch of test vectors — 10 plaintext strings, chosen to cover the
   partial-final-word and block-boundary corner cases — computed once via
   `aead_ref_model.py` at elaboration time and baked into fixed-size
   `Reg[uint8_t[N]]` hardware register arrays (`tb_common.py`). Because this
@@ -517,11 +545,12 @@ machine-readable record per design variant, and the next variant's record diffs
 against it directly.
 
 ```bash
-./measure.py --label shared-30mhz-poly1305-pipelined-new-run # fresh autopipelining + sim
+./measure.py --label shared-60mhz-poly1305-pipelined-new-run # fresh default autopipelining + sim
 ./measure.py --label X --reuse-syn         # sim only, reusing the cached synthesis
 ./measure.py --label smoke --comb          # rig check in minutes (no Vivado, no area/fmax)
 ./measure.py --label X --parse-only        # re-merge an existing run's outputs
 ./measure.py --label X --sizes 64,1420 --packets 8 --peak-bytes 1920
+./measure.py --label X --out-dir generated-files-perf-X # isolated fresh cache
 ./measure.py --label X --taps poly1305      # only the MAC's internal taps
 ./measure.py --label X --taps ''            # boundaries only, no internal taps
 ./measure.py --selftest                   # area, acceptance, model and archive checks
@@ -637,6 +666,13 @@ what makes attribution automatic:
 | `ceiling_bytes_per_cycle` | `bytes_per_beat / service_period_cycles` — that ceiling in bytes/cycle, which is what makes "ChaCha20 is faster than Poly1305" a measured statement rather than an inference |
 | `states` / `dominant` (state taps) | cycles per FSM state, so a slow block also says *why* ("`FINISH_ITER` 83% of cycles" = waiting on the multi-cycle compute) |
 | `contention` / `wasted_slot` (arbitration tap) | cycles a direction wanted the shared ChaCha20 pipeline but did not have the slot, split into "the other side wanted it too" and "the selected side had nothing" — wasted slots should be zero with the current request-aware arbiter |
+| Buffer occupancy | accepted minus retired transfers, including the FIFO output register or both register-slice slots; report capacity, high water, simultaneous transfers and end fill. Occupancy survives phase-counter resets; settled phases must drain to zero |
+
+`throughput_comparison` also reports a common contention window when there are
+enough samples: after both directions' second completion and before either's
+last ChaCha admission. Only completion intervals wholly inside it count.
+Short four-packet bursts can have no eligible intervals; their sustained rates
+remain the historical completion-period metric, not a steady-contention proof.
 
 Note these are **offered/accepted ratios, not windowed rates**, deliberately:
 accepts in this design are bursty (that is why `steady_in_bytes_per_cycle` reads
@@ -669,74 +705,91 @@ testbenches, where it cannot perturb a timing window.
 | `perf_raw.json` | the testbench's own cycle-domain output, rewritten after **every** phase (so a killed run still leaves data) |
 | `pypelinec.log` | the build/sim log, with the per-cycle `Clock: N` spam filtered out (counted, not kept) |
 
-### Current results: shared design, pipelined Poly1305, 30 MHz
+### Current results: sharing-both design, decrypt buffering, 60 MHz
 
 The latest shared run is
-[sharing-both 60 MHz](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/summary.md).
-It completed on 2026-10-04: 48 packets, six sizes, four per size per direction,
-all taps. Original raw measurements and dirty-tree provenance are retained.
+[sharing-both 60 MHz with decrypt recovery](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/summary.md).
+It completed on 2026-10-06: 48 packets, six sizes, four per size per direction,
+all taps, 2459 cycles. Raw measurements, frozen design/include hashes and
+retained synthesis observations are archived alongside the record.
 The table below comes directly from that record's `results.json`.
 
-The [comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/comparison.md)
-keeps the archived ChaCha-only 30 MHz and legacy 80 MHz results separate.
+The [comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md)
+keeps the pre-buffering 60 MHz, ChaCha-only 30 MHz and legacy 80 MHz records separate.
 Neither historical QoR nor legacy DUT-only area was rerun. The legacy 80 MHz
 timing number was a lower bound, not a measured maximum.
 
 <!-- MEASURED-RESULTS:BEGIN -->
 
-_Measured on 2026-10-04T20:50:26+00:00 — wireguard-fpga `214bcf56934b-dirty`, PipelineC `ff0a3ec6835b-dirty`, Vivado 2019.2, 3012 cycles. Regenerate with `./measure.py --label shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004 --parse-only --update-readme`._
+_Measured on 2026-10-06T15:06:28+00:00 — wireguard-fpga `77116452cdf9-dirty`, PipelineC `b47d0fcdf8c3` (clean), Vivado 2019.2, 2459 cycles. Retained record: `measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/results.json`._
 
 Design `shared` | target 60.0 MHz | measured fmax **63.03 MHz** | limiting MAIN `chacha20_pipeline_shared`
-Area (perf_tb_top): **44442 LUT** (43695 logic + 747 mem), **17935 FF**, **640 DSP48**, **11 BRAM tiles**, 6369 CARRY4
+Area (perf_tb_top): **48497 LUT** (47749 logic + 748 mem), **20540 FF**, **704 DSP48**, **13.5 BRAM tiles**, 6752 CARRY4
 Shared resources: `chacha20-poly1305`.
+Buffer `decrypt/auth_fifo`: 64 memory beats + 1 output beat; 65 total capacity.
+Register slice `encrypt/output_slice`: mode `full`, 2 slots, 1 unstalled cycle(s), II=1.
 Poly1305 implementation: `pipelined`.
 
 | phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | % line rate | Gb/s @fmax | Gb/s @target | in stall | cold head (clk) | total lat med (clk) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| b2b-16 | 16 | 4 | encrypt | 0.593 | 27.0 | 3.7% | 0.299 | 0.284 | 0.023 | 31 | 85.0 |
-| b2b-16 | 16 | 4 | decrypt | 0.440 | 36.3 | 2.8% | 0.222 | 0.211 | 0.840 | 109 | 84.0 |
-| b2b-64 | 64 | 4 | encrypt | 2.133 | 30.0 | 13.3% | 1.076 | 1.024 | 0.029 | 31 | 87.5 |
-| b2b-64 | 64 | 4 | decrypt | 1.627 | 39.3 | 10.2% | 0.820 | 0.781 | 0.792 | 118 | 93.0 |
-| b2b-256 | 256 | 4 | encrypt | 6.095 | 42.0 | 38.1% | 3.074 | 2.926 | 0.027 | 31 | 99.5 |
-| b2b-256 | 256 | 4 | decrypt | 4.955 | 51.7 | 31.0% | 2.499 | 2.378 | 0.686 | 112 | 117.5 |
-| b2b-1024 | 1024 | 4 | encrypt | 11.378 | 90.0 | 71.1% | 5.737 | 5.461 | 0.134 | 31 | 142.5 |
-| b2b-1024 | 1024 | 4 | decrypt | 7.837 | 130.7 | 49.0% | 3.952 | 3.762 | 0.413 | 120 | 199.0 |
-| b2b-1420 | 1420 | 4 | encrypt | 12.241 | 116.0 | 76.5% | 6.173 | 5.876 | 0.101 | 31 | 169.0 |
-| b2b-1420 | 1420 | 4 | decrypt | 8.353 | 170.0 | 52.2% | 4.212 | 4.009 | 0.378 | 145 | 266.5 |
-| b2b-1920 | 1920 | 4 | encrypt | 13.151 | 146.0 | 82.2% | 6.631 | 6.312 | 0.108 | 31 | 198.0 |
-| b2b-1920 | 1920 | 4 | decrypt | 10.000 | 192.0 | 62.5% | 5.043 | 4.800 | 0.291 | 176 | 316.5 |
+| b2b-16 | 16 | 4 | encrypt | 0.578 | 27.7 | 3.6% | 0.292 | 0.278 | 0.038 | 32 | 88.0 |
+| b2b-16 | 16 | 4 | decrypt | 0.436 | 36.7 | 2.7% | 0.220 | 0.209 | 0.479 | 58 | 82.0 |
+| b2b-64 | 64 | 4 | encrypt | 2.087 | 30.7 | 13.0% | 1.052 | 1.002 | 0.035 | 32 | 90.0 |
+| b2b-64 | 64 | 4 | decrypt | 1.574 | 40.7 | 9.8% | 0.794 | 0.755 | 0.417 | 61 | 91.0 |
+| b2b-256 | 256 | 4 | encrypt | 6.000 | 42.7 | 37.5% | 3.026 | 2.880 | 0.026 | 32 | 102.0 |
+| b2b-256 | 256 | 4 | decrypt | 4.151 | 61.7 | 25.9% | 2.093 | 1.993 | 0.241 | 73 | 134.5 |
+| b2b-1024 | 1024 | 4 | encrypt | 11.212 | 91.3 | 70.1% | 5.654 | 5.382 | 0.166 | 32 | 147.0 |
+| b2b-1024 | 1024 | 4 | decrypt | 11.253 | 91.0 | 70.3% | 5.674 | 5.401 | 0.135 | 121 | 217.0 |
+| b2b-1420 | 1420 | 4 | encrypt | 12.171 | 116.7 | 76.1% | 6.138 | 5.842 | 0.133 | 32 | 173.0 |
+| b2b-1420 | 1420 | 4 | decrypt | 12.206 | 116.3 | 76.3% | 6.155 | 5.859 | 0.108 | 146 | 267.5 |
+| b2b-1920 | 1920 | 4 | encrypt | 13.032 | 147.3 | 81.4% | 6.571 | 6.255 | 0.105 | 32 | 203.0 |
+| b2b-1920 | 1920 | 4 | decrypt | 13.061 | 147.0 | 81.6% | 6.586 | 6.269 | 0.084 | 177 | 329.0 |
 
 <!-- MEASURED-RESULTS:END -->
 
 <!-- BLOCK-RESULTS:BEGIN -->
 
-Detailed per-block service/stall, shared arbitration and lifecycle measurements
-are in the [block report](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/blocks.md).
+Detailed per-block service/stall, shared arbitration, lifecycle and buffer
+measurements are in the [block report](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/blocks.md).
 
 <!-- BLOCK-RESULTS:END -->
 
 #### Interpretation
 
-At 1920 bytes, the latest run sustains **6.312/4.800 Gb/s** at the 60 MHz
-target (encrypt/decrypt), versus the archived ChaCha-only 30 MHz run's
-3.276/2.916 Gb/s and legacy 80 MHz run's 1.620/1.181 Gb/s. That is
-**1.93×/1.65×** versus the former, or **3.90×/4.06×** versus legacy.
-At 1420 bytes the new rates are 5.876/4.009 Gb/s. Small-packet setup costs
-remain significant; 16-byte decrypt is slightly slower than the 30 MHz record.
+At 1920 bytes the latest run sustains **6.255/6.269 Gb/s** at 60 MHz
+(encrypt/decrypt), versus pre-buffering 60 MHz's **6.312/4.800 Gb/s**:
+decrypt gains **30.6%**, while encrypt falls **0.9%**. At 1420 bytes the
+rates are **5.842/5.859 Gb/s**. Decrypt/encrypt parity exceeds 99% at both
+large sizes, and both bodies retain II=1. Small-packet setup/framing costs
+remain: the 16/64/256-byte results are not equal between directions.
 
-Clock-normalized packet costs did not improve: the 1920-byte completion
-period is 146/192 cycles versus 140.7/158 previously. Higher clock, rather
-than lower cycles per packet, drives the gain. Median packet latency is
-198/316.5 cycles (3.30/5.28 µs at 60 MHz); plaintext still waits for
-authentication before release.
+The controlled, fixed-wrapper native comparison separately isolates the FIFO:
+1920-byte periods change from 146/194⅔ to 147/147 cycles, a 32.4% decrypt gain
+and 0.68% encrypt loss. The final QoR instead uses both body cores at depth 3,
+not the older fixture's 3/0, so it is not that controlled A/B. Sixteen-packet
+replays show near-equal large-packet completion periods at both recorded
+depth profiles. The planned baseline overlap extension was omitted at the
+user's request after QoR acceptance; no eight-interval before/after
+contention-window qualification is claimed.
 
-The latest perf top passes synthesis timing at 63.032 MHz and uses 44,442 LUTs,
-17,935 FFs, 640 DSPs and 11 BRAM tiles. This is not DUT-only area:
+Against the archived ChaCha-only 30 MHz rates (3.276/2.916 Gb/s at 1920),
+the new actual-clock rates are **1.91×/2.15×**; against legacy 80 MHz
+(1.620/1.181 Gb/s), **3.86×/5.31×**. These are historical, not isolated
+architecture comparisons. New 1920-byte completion periods are
+147⅓/147 cycles; median packet latency is 203/329 cycles
+(3.38/5.48 µs at 60 MHz). Decrypt still withholds plaintext until verification;
+equal sustained goodput does not imply equal cold latency.
+
+The latest perf top passes synthesis timing at 63.032 MHz and uses **48,497
+LUTs, 20,540 FFs, 704 DSPs and 13.5 BRAM tiles**. This is not DUT-only area:
 keys and the native fixture permit constant folding/context optimization.
-The distinct fixed-vector top passes the 60 MHz goal with 704 DSPs.
-External-port shared hardware is validated only at 30 MHz, where sharing
-setup/finalization reduces DSPs from 512 to 320. No 60 MHz hardware-top
-timing/capacity result or routed sign-off is implied.
+The earlier perf top used 640 DSPs and unequal body depths; the 64-DSP increase
+is not a FIFO multiplier cost. Both bodies now retain depth 3/local L=5, as
+did the earlier fixed-vector top. FIFO high water reaches 56 of 65 beats;
+every phase conserves transfers and ends empty. No key FIFO was needed.
+External-port shared hardware remains validated only at the earlier 30 MHz
+checkpoint, where sharing setup/finalization reduced DSPs from 512 to 320.
+No new hardware-top timing/capacity result or routed sign-off is implied.
 
 Whole-packet rates include framing, input gaps, shared-resource arbitration,
 packet-boundary costs and backpressure. Both private body pipelines accept
@@ -862,15 +915,15 @@ result at the real pipelined timing with fmax and area attached.
   `--area-from-dir` (see the commands above). The per-module
   areas are out-of-context syntheses — folding-free, but they do **not** sum to
   the top-level total.
-- **No output backpressure.** `AxisSimSink` always presents `ready=1`, so every
+- **No output backpressure in QoR.** Performance sinks always present `ready=1`, so every
   throughput number is an upper bound with an infinitely fast consumer.
-- **Packet size ceiling 2048 B.** `wait_to_verify` holds decrypt ciphertext in a
+- **Packet size ceiling 2048 B.** `wait_to_verify` holds decrypt plaintext in a
   128-deep × 16 B FIFO until Poly1305 returns a verdict, so a bigger packet
   deadlocks instead of measuring; `perf_tb_common.MAX_PACKET_BYTES` (2032 B =
   2048 − tag) asserts this at import rather than hanging.
-- **Native sim costs ≈ 0.7–0.8 s per cycle** for this design (the default plan
-  is ~11.6k cycles, ≈ 2.5 h), which is why it is a few thousand cycles per size
-  rather than a full MTU sweep at high packet counts. A phase that sees no beat for 1000 cycles is declared
+- **Native sim cost depends on compiler and machine load.** The latest sweep
+  simulated 2459 cycles in 5192.8 seconds (about 2.1 s/cycle), which is why
+  packet counts are modest rather than a full MTU sweep. A phase that sees no beat for 1000 cycles is declared
   deadlocked and reported, rather than running to the cycle cap.
 - **Shared-pipeline arbitration.** `chacha20_pipeline_shared` serves a lone
   requester immediately and uses round-robin priority when both request.
@@ -1194,7 +1247,9 @@ dataflow core can still be handed either.
 
 `encrypt_dataflow_core.py` and `decrypt_dataflow_core.py` are the two files
 that hand-threaded the most `Feedback` in this design, and both are now
-interface functions. The decrypt body is the whole graph:
+interface functions. The decrypt body is the whole graph; `prep_func` is
+framing preceded by the authentication FIFO for pipelined MACs, or the
+original framing function for legacy:
 
 ```python
 def decrypt_dataflow_core(axis_in_if: axis128_intrf, key, nonce, aad, aad_len
@@ -1202,9 +1257,9 @@ def decrypt_dataflow_core(axis_in_if: axis128_intrf, key, nonce, aad, aad_len
     strip  = strip_auth_tag.strip_auth_tag(axis_in=axis_in_if)
     bcast  = axis128_2broadcast(axis_in=strip.axis_out)
     chacha = chacha_func(key=key, nonce=nonce, axis_in_if=bcast.axis_out[1])
-    prep   = prep_auth_data.prep_auth_data_fsm(
+    prep   = prep_func(
         aad=aad, aad_len=aad_len, axis_in=bcast.axis_out[0])
-    mac    = poly1305.poly1305_mac_instance(key_if=chacha.key_if, data_in_if=prep.axis)
+    mac    = mac_func(key_if=chacha.key_if, data_in_if=prep.axis)
     verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
         auth_tag=strip.auth_tag_out, calc_tag=mac.auth_tag_if)
     wtv    = wait_to_verify.wait_to_verify(
@@ -1213,8 +1268,8 @@ def decrypt_dataflow_core(axis_in_if: axis128_intrf, key, nonce, aad, aad_len
                                        is_verified_out=wtv.is_verified_out)
 ```
 
-Nine `Feedback` declarations are generated from that (six for encrypt). Three
-things beyond plain chaining show up here:
+The required `Feedback` declarations are generated from the selected graph.
+Three things beyond plain chaining show up here:
 
 - **Fan-out** goes through `axis128_2broadcast`, whose `axis_out` is an
   **array interface port** (`axis_t[2]` paired with `axis_fb_t[2]`). Each fork

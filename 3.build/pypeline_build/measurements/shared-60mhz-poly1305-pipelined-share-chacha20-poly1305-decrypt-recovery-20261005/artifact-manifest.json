@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "archived_utc": "2026-10-06T15:35:34.493486+00:00",
+  "artifacts": {
+    "blocks.csv": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/blocks.csv",
+      "bytes": 15966,
+      "sha256": "688a97fccbbe7c925634aac3eb7bc37dcf8287ae7ee9c021861fbfdf7fb2e490"
+    },
+    "blocks.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/blocks.md",
+      "bytes": 20210,
+      "sha256": "a1979a2fe6340213a6a7240bc8627ff491eb335b60c1c32ca13dc9cd23ce7f67"
+    },
+    "comparison.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md",
+      "bytes": 11546,
+      "sha256": "a072ecfa6809280870dff061dd75103a6e735dc97c4cde9f201bb2136b4ce926"
+    },
+    "native-fifo64-pilot.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/native-fifo64-pilot.json",
+      "bytes": 43402,
+      "sha256": "be3867902c7b8c911a143d27ffb5486e98b6012c2ae736270e36fa41b996a2bc"
+    },
+    "perf-clocks.xdc": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz-decrypt-recovery-20261005/clocks.xdc",
+      "bytes": 2815,
+      "sha256": "469f8b8f40e6a123c876289153c27baab33a9563c332175c2230919c8c7b51ab"
+    },
+    "perf-inputs.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz-decrypt-recovery-20261005/top/vivado_834d3be8_bb37c24b4008efa9.inputs.json",
+      "bytes": 70975,
+      "sha256": "d8118e79d48e9bfa5eb164118d8fa5fba5d608bd272537a5657c68aabdf2d34c"
+    },
+    "perf-source-provenance.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz-decrypt-recovery-20261005/source_provenance.json",
+      "bytes": 12672,
+      "sha256": "4432a3bcbe7f16f4abc4419c6f278251f7affa8e60d7fd6219747b775bd2b751"
+    },
+    "perf-sweep-history.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz-decrypt-recovery-20261005/top/sweep_history.json",
+      "bytes": 67108,
+      "sha256": "c17d4f1f6d4b4a4c7517c1001a7a1cc83ac58b147c8992be4500ecb378bb0ed5"
+    },
+    "perf-vivado.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files-perf-pipe-shared-native-poly1305-pipelined-share-chacha20-poly1305-60mhz-decrypt-recovery-20261005/top/vivado_834d3be8_bb37c24b4008efa9.log",
+      "bytes": 8681542,
+      "sha256": "4dc603b7013bb3ba86ad91465fba572803f57156d233b6fc92a25d5433924cb4"
+    },
+    "perf_raw.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/perf_raw.json",
+      "bytes": 317875,
+      "sha256": "7307fe248f6ca947baf063d51e0635480ba603f9ccaac3c1faf1fbcda2499e6a"
+    },
+    "pypelinec.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/pypelinec.log",
+      "bytes": 44326,
+      "sha256": "c2885a771fa64880fdd357bd039c5fe15de4820efe283964593ea6fb3979e908"
+    },
+    "results.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/results.json",
+      "bytes": 513640,
+      "sha256": "aa4e302c2850943692c98238f945c01a462cf305773f62c812a87fc58fafc5a4"
+    },
+    "summary.csv": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/summary.csv",
+      "bytes": 4416,
+      "sha256": "92736879ed1e9b1b674761a55e496a17a9b29648b63d5f63c265a9df94809b7a"
+    },
+    "summary.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/summary.md",
+      "bytes": 2204,
+      "sha256": "654ece461db54509f99422d98759709066c08d54aa7ee5bd65a0d1f5152038f3"
+    },
+    "taps.csv": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/taps.csv",
+      "bytes": 104271,
+      "sha256": "4c03c2d549a781bc4429a3309508537b21695ad3731efb5439e780f8cbc209c0"
+    },
+    "workflow-evidence.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/workflow-evidence.json",
+      "bytes": 42904,
+      "sha256": "4c445e0474713cf8097be5f33c69940c07b18d13e443ed540e953fa342049b7a"
+    }
+  },
+  "note": "Packaging retained evidence and final documentation, not a new synthesis, simulation or traffic comparison."
+}

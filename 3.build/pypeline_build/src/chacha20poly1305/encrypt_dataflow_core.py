@@ -2,7 +2,7 @@
 """The encrypt dataflow graph, directly instantiating every component as a
 submodule call:
   chacha20 -> [broadcast: prep_auth_data, append_auth_tag]
-  prep_auth_data -> poly1305_mac -> append_auth_tag -> output
+  prep_auth_data -> poly1305_mac -> append_auth_tag -> output register slice
 
 This is an *interface function*: the body below is the whole design. Every
 component's ready signal, and the ordering feedback needed because the graph is
@@ -23,7 +23,7 @@ from interface.interface import interface
 from interface.interface_func import make_hw_func_from_interface_func
 
 import prep_auth_data
-from poly1305_select import make_poly1305_mac
+from poly1305_select import IMPLEMENTATION, make_poly1305_mac
 import append_auth_tag
 
 from aead_types import (
@@ -32,6 +32,7 @@ from aead_types import (
     AAD_MAX_LEN,
     axis128_intrf,
     axis128_2broadcast,
+    make_aead_output_slice,
 )
 
 
@@ -49,6 +50,24 @@ def make_encrypt_dataflow_core(chacha_func, mac_func=None):
 
     if mac_func is None:
         mac_func = make_poly1305_mac("encrypt")
+    append_func = append_auth_tag.append_auth_tag
+    if IMPLEMENTATION == "pipelined":
+        output_slice = make_aead_output_slice(axis128_intrf, "output_slice", "encrypt")
+
+        def buffered_append(
+            axis_in_if: axis128_intrf,
+            auth_tag_in_if: append_auth_tag.poly1305_auth_tag_stream_intrf,
+        ) -> encrypt_dataflow_core_ports:
+            packed = append_auth_tag.append_auth_tag(
+                axis_in_if=axis_in_if, auth_tag_in_if=auth_tag_in_if
+            )
+            # The comb ciphertext interlock may suppress valid when the other
+            # fork stalls. Do not expose that directly as external AXIS valid;
+            # the registered slice holds accepted words until external ready.
+            sliced = output_slice(stream_in_if=packed.axis_out_if)
+            return encrypt_dataflow_core_ports(axis_out_if=sliced.stream_out_if)
+
+        append_func, _append_t = make_hw_func_from_interface_func(buffered_append)
 
     def encrypt_dataflow_core(
         axis_in_if: axis128_intrf,
@@ -68,7 +87,7 @@ def make_encrypt_dataflow_core(chacha_func, mac_func=None):
         # poly1305_mac computes the tag from the poly key + the framed data
         mac = mac_func(key_if=chacha.key_if, data_in_if=prep.axis_if)
         # append_auth_tag appends the tag onto the other ciphertext fork
-        append = append_auth_tag.append_auth_tag(
+        append = append_func(
             axis_in_if=bcast.axis_out_if[1], auth_tag_in_if=mac.auth_tag_if
         )
         return encrypt_dataflow_core_ports(axis_out_if=append.axis_out_if)

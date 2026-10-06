@@ -68,7 +68,7 @@ import os
 import pypeline
 from pypeline import sim_input, sim_output
 
-from perf_probe import ArbTap, HandshakeTap, StateTap, TapRegistry
+from perf_probe import ArbTap, BufferTap, HandshakeTap, StateTap, TapRegistry
 
 # One registry per run, created ONCE and only ever mutated in place: a
 # @sim_output body executes against a rebuilt, detached copy of its module's
@@ -152,6 +152,27 @@ def _note_state(name, value, names, epoch):
     REGISTRY.tap(_qualified(name), StateTap).sample(epoch, (value, names))
 
 
+def _note_fifo_hs(name, valid, ready, data, epoch):
+    # AXIS data carries byte keeps; scalar key FIFOs deliberately count words.
+    keep = getattr(getattr(data, "frag", None), "keep", None)
+    _note_hs(name, valid, ready, keep, epoch)
+
+
+def _note_buffer(name, in_valid, in_ready, out_valid, out_ready, memory_depth, epoch):
+    if not REGISTRY.any_enabled():
+        return
+    capacity = (1 << (int(memory_depth) - 1).bit_length()) + 1
+    _note_slots(name, in_valid, in_ready, out_valid, out_ready, capacity, epoch)
+
+
+def _note_slots(name, in_valid, in_ready, out_valid, out_ready, capacity, epoch):
+    if not REGISTRY.any_enabled():
+        return
+    REGISTRY.tap(_qualified(name), BufferTap).sample(
+        epoch, (bool(in_valid and in_ready), bool(out_valid and out_ready), capacity)
+    )
+
+
 def _note_arb(name, sel, req_a, req_b, granted, label_a, label_b, epoch):
     if not REGISTRY.any_enabled():
         return
@@ -169,6 +190,27 @@ def hs(name, valid, ready, keep=None):
     """
     _epoch_tick()
     _note_hs(name, valid, ready, keep, _EPOCH[0])
+
+
+@sim_output
+def fifo_hs(name, valid, ready, data):
+    """FIFO transfer accounting for either AXIS fragments or scalar keys."""
+    _epoch_tick()
+    _note_fifo_hs(name, valid, ready, data, _EPOCH[0])
+
+
+@sim_output
+def slots(name, in_valid, in_ready, out_valid, out_ready, capacity):
+    """Track a register slice's explicit total storage-slot capacity."""
+    _epoch_tick()
+    _note_slots(name, in_valid, in_ready, out_valid, out_ready, capacity, _EPOCH[0])
+
+
+@sim_output
+def buffer(name, in_valid, in_ready, out_valid, out_ready, memory_depth):
+    """Track total FIFO occupancy, including its separate output register."""
+    _epoch_tick()
+    _note_buffer(name, in_valid, in_ready, out_valid, out_ready, memory_depth, _EPOCH[0])
 
 
 @sim_output

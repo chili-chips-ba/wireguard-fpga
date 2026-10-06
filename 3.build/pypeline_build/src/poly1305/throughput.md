@@ -3,15 +3,15 @@
 Combined builds share ChaCha20 and the Poly1305 prologue/epilogue MCPs by
 default, targeting the verified **60 MHz** point. Other pipelined sharing sets
 and standalone directions retain 30 MHz defaults. Passing external-port
-hardware evidence is at **30 MHz**; the sharing-both **60 MHz** fixed-vector and
-performance testbenches pass synthesis timing, capacity and native
-functional checks. This is synthesis evidence, not routed sign-off; an
+hardware evidence is at the earlier **30 MHz** checkpoint; the sharing-both
+**60 MHz** fixed-vector checkpoint and latest buffered performance testbench
+pass synthesis timing, capacity and native functional checks. This is synthesis evidence, not routed sign-off; an
 external-port hardware build at 60 MHz remains deferred.
 
-The latest [packet summary](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/summary.md),
-[block report](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/blocks.md),
-[comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/comparison.md),
-and [workflow record](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/workflow-evidence.json)
+The latest [packet summary](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/summary.md),
+[block report](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/blocks.md),
+[comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
+and [workflow record](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/workflow-evidence.json)
 are durable. The earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
 and legacy 80 MHz archives are unchanged; no historical QoR was rerun.
 Scratch `validation/` and generated caches are not needed to read results.
@@ -55,30 +55,31 @@ There are no inverse powers, fixed production depths or automatic maximums.
 | --- | ---: | --- | --- | ---: | --- | ---: | --- |
 | External-port hardware / 30 MHz | 4 | 0 / 0 | 2 / 2 | 2 | 1 / 2 | 320 | PASS, synthesis 30.05 MHz |
 | Fixed-vector native syn_tb / 60 MHz | 17 | 3 / 3 | 5 / 5 | 5 | 6 / 5 | 704 | PASS, 21 checks, 688 cycles |
-| Perf/native QoR / 60 MHz | 17 | 3 / 0 | 5 / 2 | 5 | 6 / 5 | 640 | PASS, 48 packets, 3012 cycles, synthesis 63.032 MHz |
+| Earlier perf/native QoR / 60 MHz, unbuffered | 17 | 3 / 0 | 5 / 2 | 5 | 6 / 5 | 640 | PASS, 48 packets, 3012 cycles, synthesis 63.032 MHz |
+| Latest perf/native QoR / 60 MHz, buffered | 17 | 3 / 3 | 5 / 5 | 5 | 6 / 5 | 704 | PASS, 48 packets, 2459 cycles, synthesis 63.032 MHz |
 
 MCP setup cycles exclude the one response handshake cycle: the latest
 prologue/epilogue responses take seven/six cycles before arbitration wait.
 The fixed-vector top passes the 60 MHz goal; its lowest measured compute
 MAIN is ChaCha at 62.889 MHz, but an unmeasured finish checker means the
 whole-top fmax claim remains a 60 MHz lower bound. The perf top has measured
-final MAIN timing and 44,442 LUTs, 17,935 FFs and 11 BRAM tiles.
+final MAIN timing and 48,497 LUTs, 20,540 FFs and 13.5 BRAM tiles.
 
 The latest perf wrapper retains `decrypt_perf_verified` as a real HDL
-output, unlike the historical wrappers. Its decrypt body nevertheless
-retains zero extra core registers. Different native/testbench contexts and
-constant inputs permit optimization; do not treat that depth or its 640-DSP
-area as an unconstrained-key external-port result. Separate direction
-identities permit unequal depths, and the full QoR exercises correct local
-rotation with L=5 and L=2 through the same C=5 services. The fixed-vector
-top retains L=5 for both directions.
+output, unlike the historical wrappers. Both latest body cores retain three
+registers and L=5, matching the earlier fixed-vector checkpoint. The earlier
+perf record retained encrypt L=5/decrypt L=2 and exercised unequal local
+rotation through the same C=5 services. Different fixtures and compiler
+revisions permit different optimizations: neither record is an arbitrary-key
+external-port area result. In particular, the new FIFO does not introduce
+arithmetic multipliers; do not attribute the 640-to-704 DSP change solely to it.
 
 The 30 MHz [hardware checkpoint](../../measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/hardware-evidence.json)
 saves **192 DSPs (37.5%)** versus the archived private-MCP design's 512.
 Measured 64-DSP full-width multipliers predict sharing-both capacity C=5
 at 704 DSPs, C=6 at 832, C=7 at 960 when both bodies remain present.
 Actual synthesis/capacity evidence is authoritative; the performance
-wrapper's smaller optimized area is not that hardware budget.
+wrapper's fixture-specific area is not an external-port hardware budget.
 
 ### Functional coverage and corrected native sources
 
@@ -93,11 +94,16 @@ cover short/long packets, changing/repeated keys, forwarding, drain and
 stable held tags. The 60 MHz fixed-vector integration checks also cover
 ciphertext/plaintext, tag, framing, keep masks and tampered-tag rejection.
 
-The final commit regression passed 14 checks: 11 native combinational
+The earlier sharing commit regression passed 14 checks: 11 native combinational
 integration/fallback builds, the directed sharing mode, and two seeded-60
 no-synthesis HDL checks. The hardware HDL check exercises the new 60 MHz
-default without WG_TARGET_MHZ. Results are retained in the workflow record
-linked above; these HDL checks are not additional synthesis timing evidence.
+default without WG_TARGET_MHZ. Those earlier results remain in their
+[workflow record](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/workflow-evidence.json);
+these HDL checks are not additional synthesis timing evidence. The recovery
+change passed another 11-build comb matrix (205 packet checks), a 33-packet
+stress run, recorded-depth replays and the latest 48-packet QoR. The new
+workflow record retains completed evidence and explicitly notes omitted
+extended-overlap and standalone-performance comparisons.
 
 An initial full QoR attempt was correctly rejected when five encrypt frames
 were 16 bytes short. A replay proved that the native source advanced on
@@ -124,9 +130,10 @@ confirmed fixed-vector ChaCha=17, bodies=3/3, shared MCPs=6/5 result;
 private ChaCha/MCP hints remain their 30 MHz fallback. The perf-only
 decrypt depth of zero is not used as a hardware hint. Profiles remain
 unrestricted starting guesses; subsequent sweeps may change them.
-The QoR archive records the original discovery source, before this hint
-update. No new timing pass or synthesis-run reduction is claimed from the
-updated hints until a seeded synthesis is measured.
+The latest recovery QoR confirms those seeds unchanged in two sweep iterations;
+all consumed depths matched the built pipelines, avoiding another
+pin-and-confirm pass. This is not a controlled synthesis wall-time comparison.
+The older QoR archive still records its pre-hint discovery source.
 
 There is no accepted 80 MHz result: private encrypt's confirmation exceeded
 the 740-DSP device budget (896 DSPs) and also suffered an OOM kill.
@@ -147,6 +154,67 @@ shared builds, native simulations and measurement acceptance report no
 new blocking compiler issue. Generic sweep/compiler regressions belong in
 PipelineC's suite, not a WireGuard `tests/` directory. Directed checks use
 the existing unit testbench directly; see [standalone commands](#standalone-testbenches).
+
+## Decrypt fork decoupling — accepted QoR, 2026-10-06
+
+The pipelined dataflow now adds a ciphertext FIFO after decrypt's fork and
+before authentication framing. It does not change the MAC's complete-16-byte
+authentication-block contract, arithmetic, lane sizing or body II=1 pipeline.
+The selected depth is 64 memory beats plus the FWFT output register
+(65 beats total). A 32-beat native candidate passed correctness but reached
+only 91.25% decrypt/encrypt parity at 1920 bytes (146/160-cycle periods),
+below the 95% goal. The 64-beat candidate reaches parity; 128 was unnecessary.
+Size against the full key/setup and packet-boundary wait, not just the 17-stage
+ChaCha core. These are storage budgets, not automatic compute latency limits.
+Legacy dataflow wiring is unchanged.
+
+This implements the ciphertext-buffer position proposed by
+[Issue #39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39) for the
+pipelined Pypeline design. It allows ChaCha to accept ciphertext while the MAC
+waits for its key/prologue. It does not eliminate common AAD/length overhead,
+change the C design, or guarantee isolation from arbitrary peer stalls.
+No per-direction key FIFOs were needed for the measured workload. Shared
+result buffering and prolonged peer-stall isolation were not redesigned.
+
+The compiler's stream-wrapper credit fix was established before the hardware
+change. Under matched recorded depths, the fixed-wrapper baseline still
+stalled decrypt on MAC key/setup; the FIFO removes those observed extra waits.
+The fresh shared 60 MHz performance build then passed with the actual
+converged ChaCha/body/MCP latencies 17 / 3,3 / 6,5. Its 1420-byte sustained
+rates are 5.842/5.859 Gb/s and its 1920-byte rates 6.255/6.269 Gb/s
+(encrypt/decrypt at target). Both body service periods remain one cycle.
+This is performance-top synthesis and native QoR, not new external-port
+timing/area or routed sign-off.
+
+The completed FIFO-only 1920-byte native pilot (four packets/direction) has
+147/147-clock encrypt/decrypt periods, versus 146/194⅔ for the fixed-wrapper
+baseline. All 16 before/after packet checks passed; captured compiler-source
+hashes match. Extra decrypt key waits and body gaps both disappear, with body
+II=1 unchanged. This isolates the FIFO's 32.4% decrypt gain and 0.68% encrypt
+loss from compiler changes, but is recorded-depth replay evidence, not
+synthesized QoR. The final output-slice source also passes at those modeled
+depths. Sixteen-packet replays at both 3/0 and 3/3 body profiles give near-equal
+large-packet completion periods. The earlier 1420-byte baseline has only seven
+decrypt intervals in the common contention window, below the planned eight;
+the user accepted final QoR without requesting its 32-packet extension.
+No stronger steady-contention before/after acceptance is claimed. Relevant
+numbers, hashes and completion timelines are retained outside `validation/`.
+
+Backpressure qualification additionally found the tag packer advertising a
+partial ciphertext tail before it could be merged, then withdrawing valid on
+ready. It now holds that tail internally without offering a malformed beat.
+The combinational fork's valid interlock must not be exposed directly at the
+external encrypt port either. Pipelined encrypt therefore has a full two-slot
+output register slice (II=1, one unstalled cycle), outside the MAC/body pipeline.
+Body D=P+2 and L=D are unchanged. Legacy wiring remains unchanged; the common
+partial-tail protocol correction applies to both architectures. Final-source
+comb stress covers input gaps, simultaneous FIFO transfers, partial keeps,
+prolonged output stalls and tampered tags. Latest QoR high water is 56/65
+auth beats; all size phases conserve accepted/retired beats and drain to zero.
+Equal sustained large-packet goodput does not eliminate cold verification
+latency or small-packet framing/setup overhead. Thus the primary decrypt
+key-wait throughput concern in Issue #39 is addressed here, not every
+per-packet overhead or the untouched C/legacy path.
 
 ## Logical checkpoint at 30 MHz
 

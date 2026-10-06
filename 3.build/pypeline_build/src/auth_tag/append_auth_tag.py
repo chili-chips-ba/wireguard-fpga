@@ -94,10 +94,21 @@ def append_auth_tag(
         o.axis_in_if.ready = axis_out_if.ready
         # Except for eod/tlast -- TAG_TAIL emits the true last beat
         o.axis_out_if.stream.data.eod[0] = 0
+        keep_count: axis128_keep_count_t = axis128_keep_count(
+            axis_in_if.stream.data.frag
+        )
+        if axis_in_if.stream.data.eod[0] & (keep_count != POLY1305_AUTH_TAG_SIZE):
+            # A partial ciphertext tail is not itself an output beat: it must
+            # first merge with tag bytes. Suppress it even while the output is
+            # stalled, otherwise valid advertises a partial non-last beat and
+            # then withdraws when ready rises. The holding register is free in
+            # this state, so accept the tail without waiting for output ready.
+            # This ready decision uses data, NOT valid: the ciphertext fork
+            # interlocks valid with ready, and a valid-dependent ready would
+            # form a combinational loop when the authentication branch stalls.
+            o.axis_out_if.stream.valid = 0
+            o.axis_in_if.ready = 1
         if axis_in_if.stream.data.eod[0] & axis_in_if.stream.valid & o.axis_in_if.ready:
-            keep_count: axis128_keep_count_t = axis128_keep_count(
-                axis_in_if.stream.data.frag
-            )
             sim_assert(
                 keep_count != 0,
                 "append_auth_tag: zero-length payload (tlast beat with tkeep all zero)",
@@ -114,7 +125,6 @@ def append_auth_tag(
                 # ready: this copy and poly1305_mac's are two ends of one
                 # axis128_2broadcast, so the MAC cannot see this word until
                 # this copy is taken -- waiting for the tag would deadlock.
-                o.axis_out_if.stream.valid = 0
                 state = append_auth_tag_state_t.MERGED_WORD
     elif state == append_auth_tag_state_t.MERGED_WORD:
         # r ct bytes || tag[0 : 16-r], full keep, not yet eod (r < 16 here)

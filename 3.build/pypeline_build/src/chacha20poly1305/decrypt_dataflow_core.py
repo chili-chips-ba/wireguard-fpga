@@ -1,7 +1,7 @@
 # pyright: reportInvalidTypeForm=none
 """The decrypt dataflow graph, directly instantiating every component as a
 submodule call:
-  strip_auth_tag -> [broadcast: prep_auth_data, chacha20]
+  strip_auth_tag -> [broadcast: auth FIFO -> prep_auth_data, chacha20]
   chacha20 -> wait_to_verify
   prep_auth_data -> poly1305_mac -> poly1305_verify_decrypt -> wait_to_verify
 
@@ -25,7 +25,7 @@ from interface.interface_func import make_hw_func_from_interface_func
 
 import strip_auth_tag
 import prep_auth_data
-from poly1305_select import make_poly1305_mac
+from poly1305_select import IMPLEMENTATION, make_poly1305_mac
 import poly1305_verify_decrypt
 import wait_to_verify
 
@@ -34,7 +34,10 @@ from aead_types import (
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
     axis128_intrf,
+    axis128_frag_t,
     axis128_2broadcast,
+    DECRYPT_AUTH_FIFO_DEPTH,
+    make_aead_fifo,
 )
 
 
@@ -44,7 +47,12 @@ class decrypt_dataflow_core_ports(NamedTuple):
     is_verified_out: uint1_t  # plain sideband, no reverse companion
 
 
-def make_decrypt_dataflow_core(chacha_func, mac_func=None):
+@interface
+class buffered_prep_ports(NamedTuple):
+    axis_if: axis128_intrf
+
+
+def make_decrypt_dataflow_core(chacha_func, mac_func=None, auth_fifo_depth=None):
     """chacha_func(key, nonce, axis_in_if, key_if, axis_out_if) ->
     chacha20.chacha20_ports -- either chacha20.chacha20_instance (owns its own
     private pipeline) or a shared-pipeline instance such as
@@ -53,6 +61,28 @@ def make_decrypt_dataflow_core(chacha_func, mac_func=None):
 
     if mac_func is None:
         mac_func = make_poly1305_mac("decrypt")
+    if auth_fifo_depth is None:
+        auth_fifo_depth = DECRYPT_AUTH_FIFO_DEPTH
+
+    # Select plain Python wiring, not a hardware mux. Legacy keeps its original
+    # unbuffered graph. The depth parameter also permits isolated native sizing
+    # experiments without adding diagnostic switches to build.py.
+    prep_func = prep_auth_data.prep_auth_data_fsm
+    if IMPLEMENTATION == "pipelined" and auth_fifo_depth:
+        auth_fifo = make_aead_fifo(axis128_frag_t, auth_fifo_depth, "auth_fifo", "decrypt")
+
+        def buffered_prep(
+            aad: uint8_t[AAD_MAX_LEN],
+            aad_len: uint8_t,
+            axis_in_if: axis128_intrf,
+        ) -> buffered_prep_ports:
+            queued = auth_fifo(in_stream_if=axis_in_if)
+            framed = prep_auth_data.prep_auth_data_fsm(
+                aad=aad, aad_len=aad_len, axis_in_if=queued.out_stream_if
+            )
+            return buffered_prep_ports(axis_if=framed.axis_if)
+
+        prep_func, _prep_t = make_hw_func_from_interface_func(buffered_prep)
 
     def decrypt_dataflow_core(
         axis_in_if: axis128_intrf,
@@ -67,8 +97,9 @@ def make_decrypt_dataflow_core(chacha_func, mac_func=None):
         bcast = axis128_2broadcast(axis_in_if=strip.axis_out_if)
         # chacha20 decrypts (keystream XOR); its poly key seeds poly1305_mac
         chacha = chacha_func(key=key, nonce=nonce, axis_in_if=bcast.axis_out_if[1])
-        # prep_auth_data frames AAD+ciphertext+lengths for the MAC
-        prep = prep_auth_data.prep_auth_data_fsm(
+        # Pipelined MACs buffer the authentication fork, letting ChaCha consume
+        # ciphertext during MAC key/setup waits. Legacy uses framing directly.
+        prep = prep_func(
             aad=aad, aad_len=aad_len, axis_in_if=bcast.axis_out_if[0]
         )
         # poly1305_mac recomputes the tag from the poly key + the framed data

@@ -5,8 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 Pypeline (Python front-end for PipelineC) port of the C ChaCha20-Poly1305 AEAD
-designs in `../pipelinec_build/`. Same three design variants and Artix-7
-xc7a200tffg1156-2 @ 80 MHz target, but with the C originals' Poly1305 math and
+designs in `../pipelinec_build/`. Three design variants target Artix-7
+xc7a200tffg1156-2: pipelined Poly1305 with both resources shared at **60 MHz**
+by default; other pipelined selections default to 30 MHz, legacy to 80 MHz.
+The C originals' Poly1305 math and
 ciphertext-length bugs fixed — this port is RFC 8439-conformant and its
 tags/ciphertext lengths **deliberately differ** from the still-unfixed C
 designs. Do not port fixes back to `../pipelinec_build/` without being asked;
@@ -32,6 +34,14 @@ Run from `pypeline_build/` (not `src/`):
 ./build.py --enc|--dec|--shared [--sim [--syn_tb] [--comb] [--native]] [--continue]
 ```
 
+- No design selector or `--shared` shares ChaCha20 and Poly1305 prologue/epilogue
+  MCPs, while body pipelines and packet contexts stay private. Explicit
+  `--share-chacha20` / `--share-poly1305` select the complete sharing set;
+  both selects both. These cannot be combined with `--enc`/`--dec`.
+- `--poly1305 legacy` requires `--share-chacha20` for combined builds.
+  `--target-mhz {30,40,50,60,70,80}` overrides the default clock.
+  Automatic compute blocks use clock-profile starting hints, not fixed or
+  maximum latencies. Cache identities include architecture, sharing and clock.
 - No `--sim`: generate final Verilog (`--enc`/`--dec`/`--shared` select
   `src/chacha20poly1305_{encrypt,decrypt,encrypt_decrypt_shared}.py`).
 - `--sim --native`: Pypeline's own Python simulator, no cocotb/GHDL needed.
@@ -42,6 +52,8 @@ Run from `pypeline_build/` (not `src/`):
 - `--sim --syn_tb` (no `--native`): the real acceptance test — cocotb + GHDL
   against generated VHDL. `--comb` is quick; the pipelined form takes hours.
 - `--continue`: skip clearing the output dir (`./generated-files*-<variant>`).
+  `--out-dir` selects an isolated cache; after interruption preserve good
+  synthesis logs and rename only an identified incomplete/error vendor log.
 
 Pass criteria for every sim build: process exits zero — never eyeball logs for
 `ERROR`. `*_syn_tb` testbenches call `sim_assert(...)` per check, so a failure
@@ -75,7 +87,7 @@ section for the full per-file breakdown.
 ## Testbench Styles (every one of the 3 design variants has both)
 
 - **Synthesizable-style** (`*_syn_tb.py`): a `@MAIN` hardware FSM streams/checks
-  8 fixed plaintext strings (chosen to hit partial-word/block-boundary corner
+  10 fixed plaintext strings (chosen to hit partial-word/block-boundary corner
   cases), vectors computed once at elaboration by `aead_ref_model.py` and
   baked into `Reg[uint8_t[N]]` arrays (`tb_common.py`). Synthesizable, so it
   runs through cocotb+GHDL — this is the acceptance test.
@@ -85,6 +97,12 @@ section for the full per-file breakdown.
   tampered-tag reject-path packet. `@sim_input`/`@sim_output` are stripped
   entirely from real hardware elaboration, so this style has **no cocotb/GHDL
   form** — `--native` is the only way to run it.
+
+`WG_TB_STRESS=1` selects sixteen directed native packets through 1920 bytes,
+source gaps and prolonged/periodic output stalls, plus decrypt's tampered-tag
+packet. Sources advance on converged `valid && ready` in `@sim_output`; sinks
+count only transfers and assert stable stalled data/keep/last/verification.
+The performance testbench uses unpaused sources and always-ready sinks.
 
 `aead_ref_model.py` is a standalone reference model (no pypeline/hardware
 imports) using the `cryptography` package, with an RFC 8439 §2.8.2
@@ -97,14 +115,25 @@ runs `./build.py --shared --perf` (autopipeline + native sim of exactly what it
 built) and merges everything into `measurements/<label>/`. Cycle-domain
 measurement lives in `src/chacha20poly1305/perf_probe.py` (no pypeline import,
 `--selftest`-able), the phase plan and `WG_PERF_*` knobs in `perf_tb_common.py`,
-and block-level attribution in `bottleneck.py` (`--selftest`-able).
+and block-level attribution in `bottleneck.py` (`--selftest`-able). Existing
+FIFO/slice adapters also report simulation-only occupancy and conservation.
+`measure.py --out-dir ... --reuse-syn` can retain an isolated cache.
+
+The current buffered 60 MHz QoR and compact native evidence are in
+`measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/`.
+Use its actual automatic depths and retained signatures, not a guessed
+latency or a stale earlier top. Area is performance-testbench area and timing
+is synthesis evidence, not new DUT-only area or routed sign-off. Critical
+results belong in `measurements/` or component docs; `validation/` is a
+disposable local workspace and is not committed. No separate `tests/` runner
+directory or diagnostic build modes are needed; compiler regressions belong
+in PipelineC's own suite.
 
 **Internal taps go inside the design's own hardware functions**, via
 `src/perf_taps.py`: `perf_taps.hs(name, valid, ready, keep=None)`,
 `perf_taps.state(name, reg, NAMES_TUPLE)`, `perf_taps.arb(...)`. These are
 `@sim_output` shims and the elaborator deletes calls to them, so they cost **no
-hardware** (same 220 VHDL modules, same content-hash filenames, verified by
-diffing a Verilog build with and against without them). Caveat: generated VHDL
+hardware**. Caveat: generated VHDL
 embeds source line numbers in comments and signal names, so adding or MOVING a
 probe shifts those and costs one re-synthesis of the enclosing hierarchy; once
 the probes are in place, `measure.py --reuse-syn` re-measures in sim time alone
@@ -156,14 +185,18 @@ consumes a value its own private pipeline produces — feedforward `Feedback`
 too). Only the top-level `@MAIN`s cross back out of implied-feedback into
 explicit `Wire` assignments, since that's what a hardware top always needs.
 
-Both dataflow cores are `make_{encrypt,decrypt}_dataflow_core(chacha_func)`
-factories (elaboration-time closures) — the standalone build instantiates the
-factory with `chacha20.chacha20_instance` (private pipeline), the shared
-build with `chacha20_pipeline_shared.chacha20_{encrypt,decrypt}_shared`
-(arbitrated shared pipeline). `chacha20_pipeline_shared.py` is the one
-deliberate remaining bare-`Wire` `@MAIN` boundary, since its pipeline is a
-genuinely arbitrated resource shared across the otherwise-independent encrypt
-and decrypt dataflow graphs.
+Both dataflow cores are `make_{encrypt,decrypt}_dataflow_core(chacha_func, mac_func=None)`
+factories (elaboration-time closures), choosing private/shared resources at
+elaboration. `chacha20_pipeline_shared.py` and `poly1305_mcp_shared.py` own
+the deliberately explicit shared-resource `Wire`/`@MAIN` boundaries. Poly1305
+prologue and epilogue arbitration are independent, not a packet ownership lock.
+
+Pipelined decrypt has a 64-memory-beat ciphertext FIFO after its fork, before
+framing (65 slots including the FWFT output register). Pipelined encrypt has
+a full two-slot, II=1 output register slice, one unstalled cycle, outside the
+MAC body. Legacy has neither new buffer; the common tag packer suppresses a
+partial tail until it can merge tag bytes. These adapters live in existing
+`aead_types.py`; no new production helper module is necessary.
 
 Gotcha: interface port names become VHDL identifiers and can collide with
 enum literals (a port must not be named e.g. `poly_key` if

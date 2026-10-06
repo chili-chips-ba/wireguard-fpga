@@ -27,6 +27,7 @@ import wireguard_env
 
 import perf_taps
 from poly1305_select import implementation_metadata
+from aead_types import buffering_metadata, stream_slice_metadata
 import tb_common_sim as common
 from aead_ref_model import generate_encrypt_vector
 from perf_probe import DirectionRunner, PerfRecorder, PhaseBarrier
@@ -130,6 +131,8 @@ CONFIG = {
     "target_mhz": wireguard_env.TARGET_MHZ,
     "poly1305": implementation_metadata(),
     "sharing": wireguard_env.sharing(),
+    "buffering": buffering_metadata(),
+    "stream_slices": stream_slice_metadata(),
     "source_handshake": "converged",
     "decrypt_verification_retained": True,
     "bus_bytes": BUS_BYTES,

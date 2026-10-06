@@ -39,6 +39,7 @@ from pypeline import (
     sim_input,
     sim_output,
     sim_print,
+    uint1_t,
     uint8_t,
     wires,
 )
@@ -51,7 +52,7 @@ from aead_types import (
     AAD_MAX_LEN,
     axis128_intrf,
 )
-from axi.axis_sim import AxisSimSink, Scoreboard
+from axi.axis_sim import Scoreboard
 from aead_ref_model import generate_encrypt_vector
 import tb_common_sim as common
 
@@ -67,11 +68,12 @@ _enc_state = {
     "printed_gen_count": 0,
     "out_packet_idx": 0,  # count of packets checked so far; read externally by
     # chacha20poly1305_encrypt_tb.py's finish-checker to know when to sim_finish()
+    "cycle": 0,
 }
 
 _scoreboard = Scoreboard()
 _src = common.ConvergedAxisSource(axis128_intrf, 16)
-_snk = AxisSimSink(axis128_intrf, 16, scoreboard=_scoreboard)
+_snk = common.ConvergedAxisSink(axis128_intrf, 16, scoreboard=_scoreboard)
 
 
 @sim_input
@@ -92,7 +94,12 @@ def drive_in_word() -> axis128_intrf.stream_t:
         _src.send(plaintext)
         _enc_state["in_packet_idx"] += 1
 
-    return _src.drive().stream
+    return _src.drive(common.input_paused("encrypt", _enc_state["cycle"])).stream
+
+
+@sim_input
+def drive_out_ready() -> uint1_t:
+    return common.output_ready("encrypt", _enc_state["cycle"])
 
 
 @initial(sim=True)
@@ -117,8 +124,10 @@ def report_new_packets():
 
 @sim_output
 def check_out():
+    _enc_state["cycle"] += 1
     _src.commit(chacha20poly1305_encrypt_ports.axis_in_if.ready)
-    _snk.step(axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream))
+    _snk.step(axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream),
+              ready=chacha20poly1305_encrypt_ports.axis_out_if.ready)
     result = _snk.check_nowait()
     if result is None:
         return
@@ -165,6 +174,8 @@ def encrypt_tb() -> axis128_intrf.fwd_t:
 
     chacha20poly1305_encrypt_ports.axis_in_if.stream = drive_in_word()
     chacha20poly1305_encrypt_ports.axis_out_if.ready = 1
+    if common.STRESS:
+        chacha20poly1305_encrypt_ports.axis_out_if.ready = drive_out_ready()
 
     report_new_packets()
     check_out()

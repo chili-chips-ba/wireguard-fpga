@@ -1,0 +1,1392 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-06",
+  "scope": "Packaging existing native validation and recorded-depth replay evidence; no new tests or builds.",
+  "completion_decision": "User accepted final QoR and requested no further comparisons or tests on 2026-10-06; no 32-packet extension or new candidate single-direction performance measurement was run.",
+  "limitations": [
+    "Previously analyzed 1420-byte 16-packet baseline contention window had seven decrypt intervals (eleven encrypt), below the originally planned eight. No stronger long-overlap before/after acceptance is claimed.",
+    "Replay profiles are in-memory experiments, not fixed production latencies or new synthesis evidence.",
+    "Early baseline functions remained loaded unchanged despite later on-disk source drift.",
+    "Matched sizes/counts/seed do not assert byte-identical random payloads across process hash seeds.",
+    "Post-buffer standalone-direction validation is functional comb testing, not new standalone performance measurements."
+  ],
+  "comb_matrix": {
+    "builds": 11,
+    "packet_checks": 205,
+    "cases": [
+      {
+        "file": "final64-enc-random-comb.log",
+        "fingerprint": {
+          "bytes": 9121,
+          "sha256": "e228ef934a08f89f5cf52949cb1c8b6d54e48fc01c724763b4b3a27a92abf8e8"
+        },
+        "packet_checks": 12,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 422",
+          "423 cycles in 888.931s  (2101.49 ms/cycle, 0.5 cycles/s)"
+        ],
+        "name": "final64-enc-random-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--enc",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-enc-syn-tb-comb.log",
+        "fingerprint": {
+          "bytes": 5986,
+          "sha256": "d2734351a547ac43e04db62c3f304d103ca4d455763231b55d1881ed2c73b46f"
+        },
+        "packet_checks": 10,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 203",
+          "204 cycles in 264.484s  (1296.49 ms/cycle, 0.8 cycles/s)"
+        ],
+        "name": "final64-enc-syn-tb-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--enc",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-dec-random-comb.log",
+        "fingerprint": {
+          "bytes": 10009,
+          "sha256": "392fbabd25b95a8146782f207d4fd9b39df1bc190122a304c2ab162e18e54e8a"
+        },
+        "packet_checks": 13,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 483",
+          "484 cycles in 1107.549s  (2288.32 ms/cycle, 0.4 cycles/s)"
+        ],
+        "name": "final64-dec-random-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--dec",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-dec-syn-tb-comb.log",
+        "fingerprint": {
+          "bytes": 6194,
+          "sha256": "6bfb97b2cc26526d924042be74953f931be7031ff246438ad335d6ed5a2db781"
+        },
+        "packet_checks": 11,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 215",
+          "216 cycles in 265.203s  (1227.79 ms/cycle, 0.8 cycles/s)"
+        ],
+        "name": "final64-dec-syn-tb-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--dec",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-shared-random-comb.log",
+        "fingerprint": {
+          "bytes": 13844,
+          "sha256": "c8eb4189d022ec5b10f8bad81eecbc78736ee196df66ce04ba8c24d7856369aa"
+        },
+        "packet_checks": 25,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 695",
+          "696 cycles in 938.090s  (1347.83 ms/cycle, 0.7 cycles/s)"
+        ],
+        "name": "final64-shared-random-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--shared",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-shared-syn-tb-comb.log",
+        "fingerprint": {
+          "bytes": 9365,
+          "sha256": "c21832b72df19ebcd86425609db440f350d3750b4055beaf53256f0169796324"
+        },
+        "packet_checks": 21,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 399",
+          "400 cycles in 379.718s  (949.30 ms/cycle, 1.1 cycles/s)"
+        ],
+        "name": "final64-shared-syn-tb-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--shared",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-share-chacha20-random-comb.log",
+        "fingerprint": {
+          "bytes": 11851,
+          "sha256": "69ad8b025c9576e8c1206e8bca5e9b84167317429a64b43d6d61847a7be6f513"
+        },
+        "packet_checks": 25,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 540",
+          "541 cycles in 813.379s  (1503.47 ms/cycle, 0.7 cycles/s)"
+        ],
+        "name": "final64-share-chacha20-random-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--share-chacha20",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-share-chacha20-syn-tb-comb.log",
+        "fingerprint": {
+          "bytes": 7580,
+          "sha256": "45cc68a2ccaec07ac3edcccdf6527e96ba38244bc9a4c58ea8822123fa2a3451"
+        },
+        "packet_checks": 21,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 260",
+          "261 cycles in 237.293s  (909.17 ms/cycle, 1.1 cycles/s)"
+        ],
+        "name": "final64-share-chacha20-syn-tb-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--share-chacha20",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-share-poly1305-random-comb.log",
+        "fingerprint": {
+          "bytes": 11111,
+          "sha256": "3f7f3517c3065a705d30797b83759f9e03b43f0f89dd9ac3c66930b5a1e5699a"
+        },
+        "packet_checks": 25,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 483",
+          "484 cycles in 1898.760s  (3923.06 ms/cycle, 0.3 cycles/s)"
+        ],
+        "name": "final64-share-poly1305-random-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--share-poly1305",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-share-poly1305-syn-tb-comb.log",
+        "fingerprint": {
+          "bytes": 6996,
+          "sha256": "8d65fe05c0f4d76b77f1fef5002ca04e4e79bc3000a3b929981147f22a4a61ff"
+        },
+        "packet_checks": 21,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 215",
+          "216 cycles in 512.103s  (2370.85 ms/cycle, 0.4 cycles/s)"
+        ],
+        "name": "final64-share-poly1305-syn-tb-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--share-poly1305",
+          "--poly1305",
+          "pipelined",
+          "--sim",
+          "--comb",
+          "--native"
+        ]
+      },
+      {
+        "file": "final64-legacy-chacha-only-comb.log",
+        "fingerprint": {
+          "bytes": 14377,
+          "sha256": "1e70660732110dcef47ba80edf436ed043f64004c9f8f22e030d480f7f000d44"
+        },
+        "packet_checks": 21,
+        "completion": [
+          "sim_finish() called — stopping early at cycle 784",
+          "785 cycles in 600.748s  (765.28 ms/cycle, 1.3 cycles/s)"
+        ],
+        "name": "final64-legacy-chacha-only-comb",
+        "returncode": 0,
+        "build_arguments": [
+          "--share-chacha20",
+          "--poly1305",
+          "legacy",
+          "--sim",
+          "--comb",
+          "--syn_tb",
+          "--native"
+        ]
+      }
+    ],
+    "final_loaded_source_sha256": {
+      "src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py": "c390a8ea1e037f4ca65335612e16c21728601a1a3de6444150acf736d3326a84",
+      "src/chacha20poly1305_encrypt.py": "ceeef8e7e72b9e8e8e19d661e82f63a226163b2fe59cbea8a431c3206c866613",
+      "src/chacha20poly1305_decrypt.py": "754c2e082aaec2586d22ce88a36a6ca84a696a8633eb9f9be4af736787679f26",
+      "src/chacha20poly1305_encrypt_decrypt_shared.py": "ef787c2655e405cdfbdedbdd38962fbf48d9ba0120cbae5c2ecdf94a00626ab7",
+      "src/chacha20poly1305_decrypt_tb.py": "228ba8ec752dcdd8e7b6f90b15e21d5a133a8e354cc897e027a7d4c749da79c7",
+      "src/wireguard_env.py": "626cd024962d05fa9bafe2f7cea346a6944c1940ef351d0c42bc4d603d9b66dd",
+      "src/perf_taps.py": "dc9ef0b818378099f4211b998984c415436f4fb25848be5b6966d9091998b470",
+      "src/chacha20poly1305_encrypt_decrypt_shared_tb.py": "9c4bca5593933559a90735a0ae4ae9044273eb469a2e48b39a2d8dcfe93b7850",
+      "src/aead_types.py": "68a599780da25aa21f0f78fb1d71c4456191354c25def44e8131cdfaa7527b41",
+      "src/poly1305_config.py": "2be3ca1622e0e400a16f966e060bf3eb8ad1ff5ed4dc130964f1cba3a49501f7",
+      "src/poly1305_pipelined_syn_tb.py": "54e8a2044570adbdb58e808b3d98d86e42876006491c8753758d85c7a7c717f1",
+      "src/chacha20poly1305_encrypt_syn_tb.py": "313b42a0547725d2c2a9740893b06586214a3a14f935cec77b909f9ead5776f7",
+      "src/chacha20poly1305_decrypt_syn_tb.py": "379764b1d132132de71db392bad02da4312fe6d4ffbb30172b5c1f5a3a9297ca",
+      "src/chacha20poly1305_encrypt_decrypt_shared_syn_tb.py": "07b7e6d9e57f98ef2621692836c826fd8c22e178d88b525ba24b715977a5437a",
+      "src/chacha20poly1305_encrypt_tb.py": "266c15cf60c39e86d4a971b524dbac80a7f1914ecf8f8e21002d4cfed1df3e69",
+      "src/chacha20poly1305/perf_tb_common.py": "d90c4f6a3cf34449bfa7fe155ba0de5d7243888be5903328e33279ce20262dd5",
+      "src/chacha20poly1305/encrypt_dataflow_core.py": "ce8581b3e93e921e91056120449b4d688bda07158e741701ef6c2953dab2b236",
+      "src/chacha20poly1305/chacha20poly1305_decrypt_ports.py": "a2acac9429e41df35a50c2e38d745694b198b19c07d244e431a172b2eaeca608",
+      "src/chacha20poly1305/encrypt_syn_tb.py": "592383c2ee57b8c6994773d5d9b2e73c983ad72469baff4e17dec11b3e87c3aa",
+      "src/chacha20poly1305/tb_common.py": "300b3f19ffc99ec550617f9d11c3e0870d7db1ef9694149518b949ff1af23432",
+      "src/chacha20poly1305/encrypt_dataflow_shared.py": "5704b502ef193a26696539f681cea64479044e24f33bb825550ef8c5f533f4f6",
+      "src/chacha20poly1305/decrypt_perf_tb.py": "95186f35cadbe97c239f56983b9ef02460d25dbfc3f3f0138a953f3668e17fe3",
+      "src/chacha20poly1305/perf_probe.py": "223e1f0a402f7c7b8472162fcb271429bc68b169fce9637534348fb697a41089",
+      "src/chacha20poly1305/encrypt_dataflow.py": "f9afb77b752899c27baf53679106b002b016c8dee0c00af4fa8c3a44e70fe5b3",
+      "src/chacha20poly1305/encrypt_tb.py": "83c2a7a17787f724797348bd7c1d8d1b60301b8006b59c723befff7edbd63bd6",
+      "src/chacha20poly1305/decrypt_dataflow_core.py": "2b6188d237d0e1420ebc71dff46ca1820ccd873af2054a4fef24155fe77099f1",
+      "src/chacha20poly1305/decrypt_dataflow_shared.py": "f9f401f0b8109a335cdd2f20978c5bc81a6d2018a1db5032efccd71b783e1b0a",
+      "src/chacha20poly1305/chacha20poly1305_encrypt_ports.py": "746765a5c9e115e0bcd0790d155cb9e1427963d7d8316188b803cd317bdef99f",
+      "src/chacha20poly1305/aead_ref_model.py": "dbe38076f4fe28264230f61fccc07402251c9a0931a83765e7e6fa7dcb134921",
+      "src/chacha20poly1305/chacha20poly1305_encrypt_hw_io.py": "df863ec9447b13f2b5740045096b7e150e1c146240b6b0f4f630ade5fe40be5c",
+      "src/chacha20poly1305/decrypt_syn_tb.py": "748270cfaf23785d9a96ef4a2e2f7be1cca3ba3b5fe384eba0743d251d7e984c",
+      "src/chacha20poly1305/tb_common_sim.py": "eedf481dfa9343ba6c9488090dcc810faf61fc06bc299e8c8753fa3c100c88bc",
+      "src/chacha20poly1305/decrypt_tb.py": "1dd451db1cf54f0b5274161e439fd2d613dc3a212f6a18712e80daf49719ce27",
+      "src/chacha20poly1305/encrypt_perf_tb.py": "8ef949340f56fe0593e935ca7ccfd725f5f8103983879aa15ec47cb7904f8d3e",
+      "src/chacha20poly1305/chacha20poly1305_decrypt_hw_io.py": "8152f292246405212815ce77872bc9efeae1c0cc9787b235a9619b72f3ae8e01",
+      "src/chacha20poly1305/decrypt_dataflow.py": "69a1d3cb913552bee0f6e59b6f330f4c1bfa8c78b88983c9b31b14cde44eb098",
+      "src/poly1305/poly1305_mac_pipelined.py": "da60ef1ec47de37497946ab1256fd6afc16d104b1843d3abf7b78383cce516da",
+      "src/poly1305/poly1305_verify_decrypt.py": "ee06f75c4e3bfb617d9f7e965b46e79ec0a7e87c0b5b624f26d88e5d25460c74",
+      "src/poly1305/poly1305.py": "b0fb69856bc83eaa03fe3c56dd098258d6cd085d5f09acafececeb340d7edd58",
+      "src/poly1305/poly1305_mcp_shared.py": "13eef3f15ae21ce1e949c1ee50b12b73e0497f68875d1bd5f5258da843ee446b",
+      "src/poly1305/poly1305_select.py": "6cf79a69f94bd320445b170a7c31b6fee638aab45ab643146406fea838d4202d",
+      "src/poly1305/poly1305_math.py": "56066b7902e8520dad324cfbb784dca76c0712bbc278e38088dc94cd103a2f54",
+      "src/prep_auth_data/prep_auth_data.py": "6bf83fd6a7b61cc58cf9aee90fe34bbeb0fc0b237123b7dbbd1e1df87880e6bd",
+      "src/auth_tag/strip_auth_tag.py": "8ea3ef93d85cf71e0c7226e1944354194d4bab418bf4d87543cfa809ab4e0d62",
+      "src/auth_tag/wait_to_verify.py": "d089c7451a02a5bba00cd9c022343b52302ce0b82a0a150cf056fbdfe6f259a9",
+      "src/auth_tag/append_auth_tag.py": "bd92acb72267b44f606d643eeac65410e4dea2b8c20b9ac50604b09cb6fd5a28",
+      "src/chacha20/chacha20_pipeline_shared.py": "d18ee64d6f6d3c93957f1a010cdf87af8211a5f49e26a1f39a6654ced833ceaf",
+      "src/chacha20/chacha20.py": "169bca17e73f776520f3041dc88470846de76eadf0b36553ee719d35b27e406f"
+    }
+  },
+  "final_comb_stress": {
+    "file": "sharing-both-stress-sliced.log",
+    "fingerprint": {
+      "bytes": 39751,
+      "sha256": "913abfbd0fe75c98554156e34b12067eee4a39bc8d1db2b16f6251052d73336b"
+    },
+    "packet_checks": 33,
+    "completion": [
+      "sim_finish() called — stopping early at cycle 2530",
+      "2531 cycles in 3770.607s  (1489.77 ms/cycle, 0.7 cycles/s)"
+    ],
+    "returncode": 0,
+    "environment": {
+      "WG_TB_STRESS": "1"
+    },
+    "cycles": 2531
+  },
+  "native_latency_replays": [
+    {
+      "name": "baseline-perf60-long",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 64,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 6009,
+        "finalized": true
+      },
+      "compiler_git": "44a38950b98062e0a9dd13b732f960d35c30b822",
+      "raw_fingerprint": {
+        "bytes": 105379,
+        "sha256": "b10d81ca4b907f6ebe3f45b4f95adee7d911ea2177d1a2fff1dbc6831c8e6d3c"
+      },
+      "manifest_fingerprint": {
+        "bytes": 11527,
+        "sha256": "3237cbe0768a6227363c06eda1e317020f2d507ad71f5597a51a58ec11f9f6af"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 0,
+          "body_latency": 2,
+          "accumulator_count": 2,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1420,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 116.66666666666667,
+            "sustained_bytes_per_cycle": 12.17142857142857,
+            "completion_cycles": [
+              137,
+              253,
+              369,
+              485,
+              603,
+              719,
+              837,
+              953,
+              1069,
+              1187,
+              1303,
+              1421,
+              1537,
+              1653,
+              1771,
+              1887
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 167.33333333333334,
+            "sustained_bytes_per_cycle": 8.48605577689243,
+            "completion_cycles": [
+              233,
+              411,
+              623,
+              797,
+              999,
+              1207,
+              1381,
+              1583,
+              1791,
+              1965,
+              2113,
+              2239,
+              2365,
+              2491,
+              2617,
+              2743
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        },
+        {
+          "packet_bytes": 1920,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 146,
+            "sustained_bytes_per_cycle": 13.150684931506849,
+            "completion_cycles": [
+              2919,
+              3065,
+              3211,
+              3357,
+              3503,
+              3649,
+              3795,
+              3941,
+              4087,
+              4233,
+              4379,
+              4525,
+              4671,
+              4817,
+              4963,
+              5109
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 196.8,
+            "sustained_bytes_per_cycle": 9.75609756097561,
+            "completion_cycles": [
+              3047,
+              3257,
+              3455,
+              3695,
+              3893,
+              4133,
+              4331,
+              4571,
+              4769,
+              5009,
+              5207,
+              5383,
+              5537,
+              5691,
+              5845,
+              5999
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        }
+      ]
+    },
+    {
+      "name": "baseline-hardware60-long",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 64,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 6015,
+        "finalized": true
+      },
+      "compiler_git": "44a38950b98062e0a9dd13b732f960d35c30b822",
+      "raw_fingerprint": {
+        "bytes": 105079,
+        "sha256": "4c6f59595ab599e31dc3e27ea702f0f5516ef03c201f8b0f1e8a396e0b0b2a9f"
+      },
+      "manifest_fingerprint": {
+        "bytes": 11535,
+        "sha256": "69779a0493f05e604a7656b7d420aeb4a9446d5f08a264648baf0918f38eb1c0"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1420,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 116.66666666666667,
+            "sustained_bytes_per_cycle": 12.17142857142857,
+            "completion_cycles": [
+              137,
+              253,
+              369,
+              485,
+              603,
+              719,
+              837,
+              953,
+              1069,
+              1187,
+              1303,
+              1421,
+              1537,
+              1653,
+              1771,
+              1887
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 167.46666666666667,
+            "sustained_bytes_per_cycle": 8.479299363057324,
+            "completion_cycles": [
+              234,
+              414,
+              626,
+              800,
+              1002,
+              1210,
+              1384,
+              1586,
+              1794,
+              1968,
+              2116,
+              2242,
+              2368,
+              2494,
+              2620,
+              2746
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        },
+        {
+          "packet_bytes": 1920,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 146,
+            "sustained_bytes_per_cycle": 13.150684931506849,
+            "completion_cycles": [
+              2922,
+              3068,
+              3214,
+              3360,
+              3506,
+              3652,
+              3798,
+              3944,
+              4090,
+              4236,
+              4382,
+              4528,
+              4674,
+              4820,
+              4966,
+              5112
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 196.93333333333334,
+            "sustained_bytes_per_cycle": 9.74949221394719,
+            "completion_cycles": [
+              3051,
+              3263,
+              3461,
+              3701,
+              3899,
+              4139,
+              4337,
+              4577,
+              4775,
+              5015,
+              5213,
+              5389,
+              5543,
+              5697,
+              5851,
+              6005
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        }
+      ]
+    },
+    {
+      "name": "baseline-enc-long",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 32,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 4251,
+        "finalized": true
+      },
+      "compiler_git": "44a38950b98062e0a9dd13b732f960d35c30b822",
+      "raw_fingerprint": {
+        "bytes": 86540,
+        "sha256": "c405adc3cc6a7ec46c9aa3309c4632339be35d93f98a186bdd4e2e201985bb21"
+      },
+      "manifest_fingerprint": {
+        "bytes": 11458,
+        "sha256": "8ad5f5e8788f6b578d372059b942e98b34bdd38cfd656fe9ec81f44243f945ef"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 0,
+          "body_latency": 2,
+          "accumulator_count": 2,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1420,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 116,
+            "sustained_bytes_per_cycle": 12.241379310344827,
+            "completion_cycles": [
+              137,
+              253,
+              369,
+              485,
+              601,
+              717,
+              833,
+              949,
+              1065,
+              1181,
+              1297,
+              1413,
+              1529,
+              1645,
+              1761,
+              1877
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        },
+        {
+          "packet_bytes": 1920,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 146,
+            "sustained_bytes_per_cycle": 13.150684931506849,
+            "completion_cycles": [
+              2052,
+              2198,
+              2344,
+              2490,
+              2636,
+              2782,
+              2928,
+              3074,
+              3220,
+              3366,
+              3512,
+              3658,
+              3804,
+              3950,
+              4096,
+              4242
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        }
+      ]
+    },
+    {
+      "name": "baseline-dec-long",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 32,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 4728,
+        "finalized": true
+      },
+      "compiler_git": "44a38950b98062e0a9dd13b732f960d35c30b822",
+      "raw_fingerprint": {
+        "bytes": 87708,
+        "sha256": "eea49945c333fd6b85924b4479d59b4e89e52540b8c99852fc391cce50ad0407"
+      },
+      "manifest_fingerprint": {
+        "bytes": 11523,
+        "sha256": "de6e9b5bebad7b52457d13a735ad687fece13787cb3565f37aa7e6360e1bbd28"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 0,
+          "body_latency": 2,
+          "accumulator_count": 2,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1420,
+          "num_packets": 16,
+          "decrypt": {
+            "packet_period_cycles": 126,
+            "sustained_bytes_per_cycle": 11.26984126984127,
+            "completion_cycles": [
+              224,
+              350,
+              476,
+              602,
+              728,
+              854,
+              980,
+              1106,
+              1232,
+              1358,
+              1484,
+              1610,
+              1736,
+              1862,
+              1988,
+              2114
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        },
+        {
+          "packet_bytes": 1920,
+          "num_packets": 16,
+          "decrypt": {
+            "packet_period_cycles": 154,
+            "sustained_bytes_per_cycle": 12.467532467532468,
+            "completion_cycles": [
+              2409,
+              2563,
+              2717,
+              2871,
+              3025,
+              3179,
+              3333,
+              3487,
+              3641,
+              3795,
+              3949,
+              4103,
+              4257,
+              4411,
+              4565,
+              4719
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {}
+        }
+      ]
+    },
+    {
+      "name": "auth32-perf60-r2-four",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 8,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 785,
+        "finalized": true
+      },
+      "compiler_git": "44a38950b98062e0a9dd13b732f960d35c30b822",
+      "raw_fingerprint": {
+        "bytes": 54998,
+        "sha256": "88b26f3a7c7d2b2d6e3bd3175d40df3f7d8e099b05a03af6708ea1f3e92f1760"
+      },
+      "manifest_fingerprint": {
+        "bytes": 10843,
+        "sha256": "911f1c45b0a123a8495b0d3b3a25bef817baa313914cf04300795b56650cf358"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 0,
+          "body_latency": 2,
+          "accumulator_count": 2,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1920,
+          "num_packets": 4,
+          "encrypt": {
+            "packet_period_cycles": 146,
+            "sustained_bytes_per_cycle": 13.150684931506849,
+            "completion_cycles": [
+              167,
+              313,
+              459,
+              605
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 160,
+            "sustained_bytes_per_cycle": 12,
+            "completion_cycles": [
+              295,
+              441,
+              609,
+              775
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {
+            "decrypt/auth_fifo.occupancy": {
+              "capacity_beats": 33,
+              "high_water_beats": 33,
+              "accepted_beats": 480,
+              "retired_beats": 480,
+              "end_occupancy": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "auth64-final-perf60-four",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 8,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 746,
+        "finalized": true
+      },
+      "compiler_git": "ee523a87e61d68b9f249e193cd6f9d2095e3541c",
+      "raw_fingerprint": {
+        "bytes": 57066,
+        "sha256": "75e0622badd301f969edf8c2766921b7e3b0839a270fe97c58ebdd7e8129ff01"
+      },
+      "manifest_fingerprint": {
+        "bytes": 10370,
+        "sha256": "3d663dacab9f9b154c900f776d37096bcc5c29e051c68010a9fa8ec60ac04cce"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 0,
+          "body_latency": 2,
+          "accumulator_count": 2,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1920,
+          "num_packets": 4,
+          "encrypt": {
+            "packet_period_cycles": 147,
+            "sustained_bytes_per_cycle": 13.061224489795919,
+            "completion_cycles": [
+              168,
+              315,
+              462,
+              609
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 147,
+            "sustained_bytes_per_cycle": 13.061224489795919,
+            "completion_cycles": [
+              295,
+              442,
+              589,
+              736
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {
+            "decrypt/auth_fifo.occupancy": {
+              "capacity_beats": 65,
+              "high_water_beats": 55,
+              "accepted_beats": 480,
+              "retired_beats": 480,
+              "end_occupancy": 0
+            },
+            "encrypt/output_slice.occupancy": {
+              "capacity_beats": 2,
+              "high_water_beats": 1,
+              "accepted_beats": 484,
+              "retired_beats": 484,
+              "end_occupancy": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "auth64-final-perf60-long",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 64,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 4492,
+        "finalized": true
+      },
+      "compiler_git": "ee523a87e61d68b9f249e193cd6f9d2095e3541c",
+      "raw_fingerprint": {
+        "bytes": 121912,
+        "sha256": "1e66e0b3b803577ef3bcb56fd7caf3b76b46f8904658886f91bd1d68f991342e"
+      },
+      "manifest_fingerprint": {
+        "bytes": 10307,
+        "sha256": "3f16daae9bb857d0c808bb7b2dcb67ebba1627e307e526ca0626fc91086f06d8"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 0,
+          "body_latency": 2,
+          "accumulator_count": 2,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1420,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 116,
+            "sustained_bytes_per_cycle": 12.241379310344827,
+            "completion_cycles": [
+              138,
+              254,
+              370,
+              486,
+              602,
+              718,
+              834,
+              950,
+              1066,
+              1182,
+              1298,
+              1414,
+              1530,
+              1646,
+              1762,
+              1878
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 116,
+            "sustained_bytes_per_cycle": 12.241379310344827,
+            "completion_cycles": [
+              233,
+              349,
+              465,
+              581,
+              697,
+              813,
+              929,
+              1045,
+              1161,
+              1277,
+              1393,
+              1509,
+              1625,
+              1741,
+              1857,
+              1973
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {
+            "decrypt/auth_fifo.occupancy": {
+              "capacity_beats": 65,
+              "high_water_beats": 56,
+              "accepted_beats": 1424,
+              "retired_beats": 1424,
+              "end_occupancy": 0
+            },
+            "encrypt/output_slice.occupancy": {
+              "capacity_beats": 2,
+              "high_water_beats": 1,
+              "accepted_beats": 1440,
+              "retired_beats": 1440,
+              "end_occupancy": 0
+            }
+          }
+        },
+        {
+          "packet_bytes": 1920,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 147,
+            "sustained_bytes_per_cycle": 13.061224489795919,
+            "completion_cycles": [
+              2150,
+              2297,
+              2444,
+              2591,
+              2738,
+              2885,
+              3032,
+              3179,
+              3326,
+              3473,
+              3620,
+              3767,
+              3914,
+              4061,
+              4208,
+              4355
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 147,
+            "sustained_bytes_per_cycle": 13.061224489795919,
+            "completion_cycles": [
+              2277,
+              2424,
+              2571,
+              2718,
+              2865,
+              3012,
+              3159,
+              3306,
+              3453,
+              3600,
+              3747,
+              3894,
+              4041,
+              4188,
+              4335,
+              4482
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {
+            "decrypt/auth_fifo.occupancy": {
+              "capacity_beats": 65,
+              "high_water_beats": 55,
+              "accepted_beats": 1920,
+              "retired_beats": 1920,
+              "end_occupancy": 0
+            },
+            "encrypt/output_slice.occupancy": {
+              "capacity_beats": 2,
+              "high_water_beats": 1,
+              "accepted_beats": 1936,
+              "retired_beats": 1936,
+              "end_occupancy": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "auth64-final-hardware60-long",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 32,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": null,
+        "finalized": false
+      },
+      "compiler_git": "b47d0fcdf8c36fa615b8759c6bbf6cc099b2780f",
+      "raw_fingerprint": {
+        "bytes": 60658,
+        "sha256": "32f7d7b0bfab29c4c98dc57708eed4b2fb1c364bb04b6d67782f3b4420b442c6"
+      },
+      "manifest_fingerprint": {
+        "bytes": 10257,
+        "sha256": "a827fe9b4d1751f5a17493c49b3a46787c2f2738be9bad2111bf4a94b2df17b3"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1420,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 116.53333333333333,
+            "sustained_bytes_per_cycle": 12.185354691075515,
+            "completion_cycles": [
+              138,
+              255,
+              371,
+              488,
+              604,
+              721,
+              837,
+              954,
+              1070,
+              1187,
+              1303,
+              1420,
+              1536,
+              1653,
+              1769,
+              1886
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 116.46666666666667,
+            "sustained_bytes_per_cycle": 12.192329708070979,
+            "completion_cycles": [
+              234,
+              350,
+              467,
+              583,
+              700,
+              816,
+              933,
+              1049,
+              1166,
+              1282,
+              1399,
+              1515,
+              1632,
+              1748,
+              1865,
+              1981
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {
+            "decrypt/auth_fifo.occupancy": {
+              "capacity_beats": 65,
+              "high_water_beats": 56,
+              "accepted_beats": 1424,
+              "retired_beats": 1424,
+              "end_occupancy": 0
+            },
+            "encrypt/output_slice.occupancy": {
+              "capacity_beats": 2,
+              "high_water_beats": 1,
+              "accepted_beats": 1440,
+              "retired_beats": 1440,
+              "end_occupancy": 0
+            }
+          }
+        }
+      ],
+      "limitation": "Completed 1420-byte phase only. Interrupted before 1920 completed; resume1920 separately covers that size. Not a completed full run."
+    },
+    {
+      "name": "auth64-hardware60-resume1920",
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 32,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 2511,
+        "finalized": true
+      },
+      "compiler_git": "b47d0fcdf8c36fa615b8759c6bbf6cc099b2780f",
+      "raw_fingerprint": {
+        "bytes": 63077,
+        "sha256": "ff07bc4eb1c62035986631ef6e6e326d0dbb58be1119761fd9b3b7370a1a673b"
+      },
+      "manifest_fingerprint": {
+        "bytes": 10173,
+        "sha256": "52ce3940649719883eec3b2a7d6da39dfd6960b5b9c9697524ebb4c301fad1b7"
+      },
+      "profile": {
+        "encrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        },
+        "decrypt": {
+          "body_core_latency": 3,
+          "body_latency": 5,
+          "accumulator_count": 5,
+          "prologue_mcp_latency": 6,
+          "epilogue_mcp_latency": 5
+        }
+      },
+      "phases": [
+        {
+          "packet_bytes": 1920,
+          "num_packets": 16,
+          "encrypt": {
+            "packet_period_cycles": 147.06666666666666,
+            "sustained_bytes_per_cycle": 13.055303717135086,
+            "completion_cycles": [
+              168,
+              316,
+              463,
+              610,
+              757,
+              904,
+              1051,
+              1198,
+              1345,
+              1492,
+              1639,
+              1786,
+              1933,
+              2080,
+              2227,
+              2374
+            ],
+            "body_service_period_cycles": 1
+          },
+          "decrypt": {
+            "packet_period_cycles": 147,
+            "sustained_bytes_per_cycle": 13.061224489795919,
+            "completion_cycles": [
+              296,
+              443,
+              590,
+              737,
+              884,
+              1031,
+              1178,
+              1325,
+              1472,
+              1619,
+              1766,
+              1913,
+              2060,
+              2207,
+              2354,
+              2501
+            ],
+            "body_service_period_cycles": 1
+          },
+          "buffers": {
+            "decrypt/auth_fifo.occupancy": {
+              "capacity_beats": 65,
+              "high_water_beats": 55,
+              "accepted_beats": 1920,
+              "retired_beats": 1920,
+              "end_occupancy": 0
+            },
+            "encrypt/output_slice.occupancy": {
+              "capacity_beats": 2,
+              "high_water_beats": 1,
+              "accepted_beats": 1936,
+              "retired_beats": 1936,
+              "end_occupancy": 0
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "pre_synthesis_hdl_audit": {
+    "out_dir": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/validation/poly1305/decrypt-recovery-20261005/auth64-sliced-hdl",
+    "top_vhdl": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/validation/poly1305/decrypt-recovery-20261005/auth64-sliced-hdl/top/top_1c97fdd9.vhd",
+    "scope": "emitted MCP arithmetic only; not timing/constraint sign-off",
+    "shared": true,
+    "mcps": {
+      "shared/prologue": {
+        "entity": "prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0clk_26673d7b",
+        "file": "prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_2/prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0CLK_26673d7b.vhd",
+        "physical_instances": 1,
+        "entities_checked": 26,
+        "registered_entities": []
+      },
+      "shared/epilogue": {
+        "entity": "epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0clk_a5530d1a",
+        "file": "epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_2/epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_2_0CLK_a5530d1a.vhd",
+        "physical_instances": 1,
+        "entities_checked": 41,
+        "registered_entities": []
+      }
+    },
+    "passed": true,
+    "errors": []
+  },
+  "accepted_qor": {
+    "record": "results.json",
+    "checks": {
+      "functional_pass": true,
+      "packets_checked": 48,
+      "errors": []
+    },
+    "sim": {
+      "total_cycles": 2459,
+      "finalized": true
+    },
+    "validation": {
+      "passed": true,
+      "errors": []
+    },
+    "target_mhz": 60,
+    "synthesis_fmax_mhz": 63.032,
+    "area_scope": "perf_tb_top",
+    "dsp48": 704,
+    "compiler_git": "b47d0fcdf8c36fa615b8759c6bbf6cc099b2780f",
+    "mcp_audit": "results.json:mcp_hdl_audits.perf"
+  },
+  "original_archive_integrity_check": {
+    "passed": true,
+    "archive_verified": true,
+    "checked_before_doc_repackaging": true
+  },
+  "retention": "Summaries, hashes, completion lines and packet completion timelines are embedded here. Baseline and FIFO-only loaded-source provenance is retained in native-fifo64-pilot.json. Original local runners, logs and large traces are disposable."
+}

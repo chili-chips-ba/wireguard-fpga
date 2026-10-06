@@ -40,6 +40,7 @@ from pypeline import (
     sim_input,
     sim_output,
     sim_print,
+    uint1_t,
     uint8_t,
     wires,
 )
@@ -52,7 +53,7 @@ from aead_types import (
     AAD_MAX_LEN,
     axis128_intrf,
 )
-from axi.axis_sim import AxisSimSink, Scoreboard
+from axi.axis_sim import Scoreboard
 from aead_ref_model import generate_encrypt_vector
 import tb_common_sim as common
 
@@ -68,11 +69,12 @@ _dec_state = {
     "printed_gen_count": 0,
     "out_packet_idx": 0,  # count of packets checked so far; read externally by
     # chacha20poly1305_decrypt_tb.py's finish-checker to know when to sim_finish()
+    "cycle": 0,
 }
 
 _scoreboard = Scoreboard()
 _src = common.ConvergedAxisSource(axis128_intrf, 16)
-_snk = AxisSimSink(axis128_intrf, 16, scoreboard=_scoreboard)
+_snk = common.ConvergedAxisSink(axis128_intrf, 16, scoreboard=_scoreboard)
 
 
 def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
@@ -122,7 +124,12 @@ def drive_in_word() -> axis128_intrf.stream_t:
         _src.send(pkt["ciphertext"] + pkt["tag"])
         _dec_state["in_packet_idx"] += 1
 
-    return _src.drive().stream
+    return _src.drive(common.input_paused("decrypt", _dec_state["cycle"])).stream
+
+
+@sim_input
+def drive_out_ready() -> uint1_t:
+    return common.output_ready("decrypt", _dec_state["cycle"])
 
 
 @initial(sim=True)
@@ -148,13 +155,16 @@ def report_new_packets():
 
 @sim_output
 def check_out():
+    _dec_state["cycle"] += 1
     _src.commit(chacha20poly1305_decrypt_ports.axis_in_if.ready)
     out = chacha20poly1305_decrypt_ports.axis_out_if.stream
     # is_verified_out rides alongside the whole output packet (constant for
     # its duration), so sampling it once when the frame completes below is
     # equivalent to checking every beat.
     got_verified = chacha20poly1305_decrypt_ports.is_verified_out
-    _snk.step(axis128_intrf.fwd_t(out))
+    _snk.step(axis128_intrf.fwd_t(out),
+              ready=chacha20poly1305_decrypt_ports.axis_out_if.ready,
+              sideband=got_verified)
     result = _snk.check_nowait()
     if result is None:
         return
@@ -209,6 +219,8 @@ def decrypt_tb() -> axis128_intrf.fwd_t:
 
     chacha20poly1305_decrypt_ports.axis_in_if.stream = drive_in_word()
     chacha20poly1305_decrypt_ports.axis_out_if.ready = 1
+    if common.STRESS:
+        chacha20poly1305_decrypt_ports.axis_out_if.ready = drive_out_ready()
 
     report_new_packets()
     check_out()

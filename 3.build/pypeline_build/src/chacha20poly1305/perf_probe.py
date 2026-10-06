@@ -116,6 +116,11 @@ class HandshakeTap(_EpochTap):
     kind = "handshake"
 
     def _commit(self, args):
+        if args[0] and args[1] and self._epoch is not None:
+            cycle = self._epoch - 1  # perf_taps starts epoch 1 on simulation cycle 0
+            if self.first_transfer_cycle is None:
+                self.first_transfer_cycle = cycle
+            self.last_transfer_cycle = cycle
         self.note(*args)
 
     def reset(self):
@@ -128,6 +133,8 @@ class HandshakeTap(_EpochTap):
         self.idle_cycles = 0  # ~valid & ~ready
         self.bytes = 0
         self.has_bytes = False
+        self.first_transfer_cycle = None
+        self.last_transfer_cycle = None
 
     def note(self, valid, ready, nbytes=None):
         valid = 1 if valid else 0
@@ -159,6 +166,8 @@ class HandshakeTap(_EpochTap):
             "stall_cycles": self.stall_cycles,
             "starved_cycles": self.starved_cycles,
             "idle_cycles": self.idle_cycles,
+            "first_transfer_cycle": self.first_transfer_cycle,
+            "last_transfer_cycle": self.last_transfer_cycle,
             "offered_cycles": offered,
             # The block's in-situ ceiling: how it serves work that IS offered.
             "accept_rate": (self.xfer_cycles / offered) if offered else None,
@@ -178,6 +187,60 @@ class HandshakeTap(_EpochTap):
                 (self.bytes / self.xfer_cycles) if self.xfer_cycles else None
             )
         return snap
+
+
+class BufferTap(_EpochTap):
+    """Occupancy reconstructed from converged FIFO input/output transfers.
+
+    Includes the FWFT FIFO's output register. Occupancy survives a phase reset;
+    counters do not, so a phase boundary cannot silently invent an empty FIFO.
+    No hardware occupancy counter or extra registers are introduced.
+    """
+
+    kind = "buffer"
+
+    def __init__(self, name):
+        self.occupancy = 0
+        self.capacity = None
+        super().__init__(name)
+
+    def _commit(self, args):
+        self.note(*args)
+
+    def reset(self):
+        self.cycles = 0
+        self.start_occupancy = self.occupancy
+        self.high_water = self.occupancy
+        self.accepted = 0
+        self.retired = 0
+        self.simultaneous_cycles = 0
+        self.full_cycles = 0
+        self.empty_cycles = 0
+
+    def note(self, accepted, retired, capacity):
+        accepted, retired, capacity = int(bool(accepted)), int(bool(retired)), int(capacity)
+        if self.capacity is not None and self.capacity != capacity:
+            raise ValueError(self.name + ": buffer capacity changed during simulation")
+        self.capacity = capacity
+        self.cycles += 1
+        self.empty_cycles += self.occupancy == 0
+        self.full_cycles += self.occupancy == capacity
+        self.accepted += accepted
+        self.retired += retired
+        self.simultaneous_cycles += accepted and retired
+        self.occupancy += accepted - retired
+        if not 0 <= self.occupancy <= capacity:
+            raise ValueError(self.name + ": FIFO occupancy outside physical capacity")
+        self.high_water = max(self.high_water, self.occupancy)
+
+    def snapshot(self):
+        return {
+            "kind": self.kind, "cycles": self.cycles, "capacity_beats": self.capacity,
+            "start_occupancy": self.start_occupancy, "end_occupancy": self.occupancy,
+            "high_water_beats": self.high_water, "accepted_beats": self.accepted,
+            "retired_beats": self.retired, "simultaneous_cycles": self.simultaneous_cycles,
+            "full_cycles": self.full_cycles, "empty_cycles": self.empty_cycles,
+        }
 
 
 class StateTap(_EpochTap):
@@ -713,6 +776,7 @@ class DirectionMeter:
                     "in_bytes": in_pkt["bytes"] if in_pkt else None,
                     "out_bytes": out_pkt["bytes"],
                     "first_in": in_pkt["first_in"] if in_pkt else None,
+                    "last_in": in_pkt["last_in"] if in_pkt else None,
                     "first_out": out_pkt["first_out"],
                     "last_out": out_pkt["last_out"],
                     "head_latency": head,
@@ -1106,6 +1170,25 @@ def _selftest():
             f"xfer={fsnap['xfer_cycles']} stall={fsnap['stall_cycles']} "
             "(the converged, last firing of each cycle must win)"
         )
+
+    bt = BufferTap("decrypt/auth_fifo.occupancy")
+    bt.sample(1, (1, 0, 3))
+    bt.sample(1, (0, 0, 3))
+    bt.sample(1, (1, 0, 3))  # last converged firing wins
+    bt.sample(2, (1, 1, 3))
+    bt.flush()
+    if bt.snapshot()["end_occupancy"] != 1 or bt.accepted != 2 or bt.retired != 1:
+        failures.append("buffer tap: convergence/simultaneous transfers counted incorrectly")
+    bt.reset()
+    bt.note(0, 1, 3)
+    if bt.start_occupancy != 1 or bt.occupancy != 0:
+        failures.append("buffer tap: phase reset lost resident data")
+    try:
+        bt.note(0, 1, 3)
+    except ValueError:
+        pass
+    else:
+        failures.append("buffer tap: missed underflow")
 
     # State histogram: 0-based enum values index the declaration-order names.
     st = reg.tap("encrypt/poly1305.fsm", StateTap)

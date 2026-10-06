@@ -1,0 +1,898 @@
+{
+  "date": "2026-10-05",
+  "scope": "completed native FIFO-only pilot, not final source or synthesized QoR",
+  "limitations": [
+    "four-packet finite burst; no adequate long overlap window yet",
+    "predates encrypt output register slice and backpressure fixes",
+    "strict native latency replay, not synthesis/area/routed evidence",
+    "matched sizes/counts/seed and depths; byte-identical random payloads not asserted"
+  ],
+  "cases": {
+    "baseline-perf60-four": {
+      "config": {
+        "design": "shared",
+        "target_mhz": 60.0,
+        "poly1305": {
+          "implementation": "pipelined",
+          "directions": {
+            "encrypt": {
+              "body_core_latency": 3,
+              "body_latency": 5,
+              "accumulator_count": 5,
+              "body_ii": 1,
+              "shared_mcps": true,
+              "prologue_mcp_latency": 6,
+              "epilogue_mcp_latency": 5,
+              "prologue_response_cycles": 7,
+              "epilogue_response_cycles": 6
+            },
+            "decrypt": {
+              "body_core_latency": 0,
+              "body_latency": 2,
+              "accumulator_count": 2,
+              "body_ii": 1,
+              "shared_mcps": true,
+              "prologue_mcp_latency": 6,
+              "epilogue_mcp_latency": 5,
+              "prologue_response_cycles": 7,
+              "epilogue_response_cycles": 6
+            }
+          },
+          "arithmetic": "residue130",
+          "shared_mcps": {
+            "capacity_lanes": 5,
+            "prologue_mcp_latency": 6,
+            "epilogue_mcp_latency": 5
+          }
+        },
+        "sharing": {
+          "chacha20": true,
+          "poly1305": true
+        },
+        "source_handshake": "converged",
+        "decrypt_verification_retained": true,
+        "bus_bytes": 16,
+        "dirs": [
+          "encrypt",
+          "decrypt"
+        ],
+        "seed": 8439,
+        "sizes": [
+          1920
+        ],
+        "packets_per_size": 4,
+        "peak_bytes": 0,
+        "peak_packets": 4,
+        "max_cycles_per_phase": 20000,
+        "stall_timeout_cycles": 1000,
+        "settle_cycles": 8,
+        "taps": [
+          "all"
+        ],
+        "phase_plan": [
+          {
+            "name": "b2b-1920",
+            "packet_bytes": 1920,
+            "num_packets": 4
+          }
+        ],
+        "max_packet_bytes": 2032,
+        "key": "808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f",
+        "nonce": "070000004041424344454647",
+        "aad_len": 29,
+        "taps_active": [
+          "decrypt/chacha20.axis_in",
+          "decrypt/chacha20.axis_out",
+          "decrypt/chacha20.from_pipeline",
+          "decrypt/chacha20.in_state",
+          "decrypt/chacha20.key_out",
+          "decrypt/chacha20.out_state",
+          "decrypt/chacha20.to_pipeline",
+          "decrypt/poly1305.data_in",
+          "decrypt/poly1305.epilogue_in",
+          "decrypt/poly1305.epilogue_out",
+          "decrypt/poly1305.from_compute",
+          "decrypt/poly1305.fsm",
+          "decrypt/poly1305.key_in",
+          "decrypt/poly1305.prologue_in",
+          "decrypt/poly1305.prologue_out",
+          "decrypt/poly1305.tag_out",
+          "decrypt/poly1305.to_compute",
+          "decrypt/prep.axis_in",
+          "decrypt/prep.axis_out",
+          "decrypt/prep.fsm",
+          "decrypt/strip.axis_in",
+          "decrypt/strip.axis_out",
+          "decrypt/strip.tag_out",
+          "decrypt/verify.auth_tag",
+          "decrypt/verify.calc_tag",
+          "decrypt/verify.fsm",
+          "decrypt/verify.tags_match",
+          "decrypt/wtv.axis_in",
+          "decrypt/wtv.axis_out",
+          "decrypt/wtv.fsm",
+          "decrypt/wtv.verify_bit",
+          "encrypt/append.axis_in",
+          "encrypt/append.axis_out",
+          "encrypt/append.fsm",
+          "encrypt/append.tag_in",
+          "encrypt/chacha20.axis_in",
+          "encrypt/chacha20.axis_out",
+          "encrypt/chacha20.from_pipeline",
+          "encrypt/chacha20.in_state",
+          "encrypt/chacha20.key_out",
+          "encrypt/chacha20.out_state",
+          "encrypt/chacha20.to_pipeline",
+          "encrypt/poly1305.data_in",
+          "encrypt/poly1305.epilogue_in",
+          "encrypt/poly1305.epilogue_out",
+          "encrypt/poly1305.from_compute",
+          "encrypt/poly1305.fsm",
+          "encrypt/poly1305.key_in",
+          "encrypt/poly1305.prologue_in",
+          "encrypt/poly1305.prologue_out",
+          "encrypt/poly1305.tag_out",
+          "encrypt/poly1305.to_compute",
+          "encrypt/prep.axis_in",
+          "encrypt/prep.axis_out",
+          "encrypt/prep.fsm",
+          "shared/pipe.arb",
+          "shared/pipe.dec_in",
+          "shared/pipe.dec_out",
+          "shared/pipe.enc_in",
+          "shared/pipe.enc_out",
+          "shared/poly1305.epilogue.arb",
+          "shared/poly1305.epilogue.dec_in",
+          "shared/poly1305.epilogue.dec_out",
+          "shared/poly1305.epilogue.enc_in",
+          "shared/poly1305.epilogue.enc_out",
+          "shared/poly1305.epilogue.service",
+          "shared/poly1305.epilogue.service_in",
+          "shared/poly1305.epilogue.service_out",
+          "shared/poly1305.prologue.arb",
+          "shared/poly1305.prologue.dec_in",
+          "shared/poly1305.prologue.dec_out",
+          "shared/poly1305.prologue.enc_in",
+          "shared/poly1305.prologue.enc_out",
+          "shared/poly1305.prologue.service",
+          "shared/poly1305.prologue.service_in",
+          "shared/poly1305.prologue.service_out"
+        ]
+      },
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 8,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 889,
+        "finalized": true
+      },
+      "metrics": [
+        {
+          "direction": "encrypt",
+          "packet_period_cycles": 146.0,
+          "sustained_bytes_per_cycle": 13.150684931506849,
+          "output_packet_timelines": [
+            {
+              "idx": 0,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 2,
+              "first_out": 33,
+              "last_out": 167,
+              "head_latency": 31,
+              "total_latency": 165
+            },
+            {
+              "idx": 1,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 122,
+              "first_out": 179,
+              "last_out": 313,
+              "head_latency": 57,
+              "total_latency": 191
+            },
+            {
+              "idx": 2,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 244,
+              "first_out": 325,
+              "last_out": 459,
+              "head_latency": 81,
+              "total_latency": 215
+            },
+            {
+              "idx": 3,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 396,
+              "first_out": 471,
+              "last_out": 605,
+              "head_latency": 75,
+              "total_latency": 209
+            }
+          ],
+          "mac_packets": [
+            {
+              "index": 0,
+              "key": 22,
+              "first_body": 31,
+              "last_body": 153,
+              "tag": 167,
+              "body_gaps": 0,
+              "extra_key_wait": null
+            },
+            {
+              "index": 1,
+              "key": 168,
+              "first_body": 177,
+              "last_body": 299,
+              "tag": 313,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            },
+            {
+              "index": 2,
+              "key": 314,
+              "first_body": 323,
+              "last_body": 445,
+              "tag": 459,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            },
+            {
+              "index": 3,
+              "key": 460,
+              "first_body": 469,
+              "last_body": 591,
+              "tag": 605,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            }
+          ],
+          "body_ii": 1
+        },
+        {
+          "direction": "decrypt",
+          "packet_period_cycles": 194.66666666666666,
+          "sustained_bytes_per_cycle": 9.863013698630137,
+          "output_packet_timelines": [
+            {
+              "idx": 0,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 0,
+              "first_out": 176,
+              "last_out": 295,
+              "head_latency": 176,
+              "total_latency": 295
+            },
+            {
+              "idx": 1,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 160,
+              "first_out": 386,
+              "last_out": 505,
+              "head_latency": 226,
+              "total_latency": 345
+            },
+            {
+              "idx": 2,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 372,
+              "first_out": 584,
+              "last_out": 703,
+              "head_latency": 212,
+              "total_latency": 331
+            },
+            {
+              "idx": 3,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 570,
+              "first_out": 760,
+              "last_out": 879,
+              "head_latency": 190,
+              "total_latency": 309
+            }
+          ],
+          "mac_packets": [
+            {
+              "index": 0,
+              "key": 23,
+              "first_body": 38,
+              "last_body": 160,
+              "tag": 173,
+              "body_gaps": 0,
+              "extra_key_wait": null
+            },
+            {
+              "index": 1,
+              "key": 211,
+              "first_body": 220,
+              "last_body": 372,
+              "tag": 383,
+              "body_gaps": 30,
+              "extra_key_wait": 37
+            },
+            {
+              "index": 2,
+              "key": 417,
+              "first_body": 426,
+              "last_body": 570,
+              "tag": 581,
+              "body_gaps": 22,
+              "extra_key_wait": 33
+            },
+            {
+              "index": 3,
+              "key": 615,
+              "first_body": 624,
+              "last_body": 746,
+              "tag": 757,
+              "body_gaps": 0,
+              "extra_key_wait": 33
+            }
+          ],
+          "body_ii": 1
+        }
+      ],
+      "source_manifest": {
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py": "c390a8ea1e037f4ca65335612e16c21728601a1a3de6444150acf736d3326a84",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt.py": "ceeef8e7e72b9e8e8e19d661e82f63a226163b2fe59cbea8a431c3206c866613",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_decrypt.py": "754c2e082aaec2586d22ce88a36a6ca84a696a8633eb9f9be4af736787679f26",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared.py": "ef787c2655e405cdfbdedbdd38962fbf48d9ba0120cbae5c2ecdf94a00626ab7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_decrypt_tb.py": "228ba8ec752dcdd8e7b6f90b15e21d5a133a8e354cc897e027a7d4c749da79c7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py": "626cd024962d05fa9bafe2f7cea346a6944c1940ef351d0c42bc4d603d9b66dd",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/perf_taps.py": "1d106b0737162cee0490c3157b53ef6b88c018023b8fcc9b726dc3d0679fbcb4",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_tb.py": "9c4bca5593933559a90735a0ae4ae9044273eb469a2e48b39a2d8dcfe93b7850",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/aead_types.py": "a682f6dde6eaaba68ff60f807d58e45460b23615b32db578a1b35f79295cef9b",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305_config.py": "2be3ca1622e0e400a16f966e060bf3eb8ad1ff5ed4dc130964f1cba3a49501f7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305_pipelined_syn_tb.py": "54e8a2044570adbdb58e808b3d98d86e42876006491c8753758d85c7a7c717f1",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_syn_tb.py": "313b42a0547725d2c2a9740893b06586214a3a14f935cec77b909f9ead5776f7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_decrypt_syn_tb.py": "379764b1d132132de71db392bad02da4312fe6d4ffbb30172b5c1f5a3a9297ca",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_syn_tb.py": "07b7e6d9e57f98ef2621692836c826fd8c22e178d88b525ba24b715977a5437a",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_tb.py": "266c15cf60c39e86d4a971b524dbac80a7f1914ecf8f8e21002d4cfed1df3e69",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py": "5980b3b5b8bf4ef4516558fbf1df97918dc41000b1e9a26c753c5da757d7da90",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow_core.py": "fb07256b3d94cbeda906d13c2f6c59fc8446cb786ef409caac87e1692f565a3f",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_decrypt_ports.py": "a2acac9429e41df35a50c2e38d745694b198b19c07d244e431a172b2eaeca608",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_syn_tb.py": "592383c2ee57b8c6994773d5d9b2e73c983ad72469baff4e17dec11b3e87c3aa",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/tb_common.py": "300b3f19ffc99ec550617f9d11c3e0870d7db1ef9694149518b949ff1af23432",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow_shared.py": "5704b502ef193a26696539f681cea64479044e24f33bb825550ef8c5f533f4f6",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_perf_tb.py": "95186f35cadbe97c239f56983b9ef02460d25dbfc3f3f0138a953f3668e17fe3",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_probe.py": "aa669af63e1e4df220ccde6b6febb46249f725abd119e0ca30475eb3fc0d4943",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow.py": "f9afb77b752899c27baf53679106b002b016c8dee0c00af4fa8c3a44e70fe5b3",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_tb.py": "e832b210479edcd51f17ae40045ba711461a72109f7f19c900fe377b3adac385",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow_core.py": "038df6c7653f388b6cdc4fb335ef142e3e3de6ea297e995d158a77c6301e638e",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow_shared.py": "f9f401f0b8109a335cdd2f20978c5bc81a6d2018a1db5032efccd71b783e1b0a",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_encrypt_ports.py": "746765a5c9e115e0bcd0790d155cb9e1427963d7d8316188b803cd317bdef99f",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/aead_ref_model.py": "dbe38076f4fe28264230f61fccc07402251c9a0931a83765e7e6fa7dcb134921",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_encrypt_hw_io.py": "df863ec9447b13f2b5740045096b7e150e1c146240b6b0f4f630ade5fe40be5c",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_syn_tb.py": "748270cfaf23785d9a96ef4a2e2f7be1cca3ba3b5fe384eba0743d251d7e984c",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/tb_common_sim.py": "b01c9ca5780945fbae13766a9682d32503925154220afd1b18bd8ab1118e3bd4",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_tb.py": "709a8da56d9c10b0795271083479d66e3e8719c4295539b9433cd0cc719f51a1",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_perf_tb.py": "8ef949340f56fe0593e935ca7ccfd725f5f8103983879aa15ec47cb7904f8d3e",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_decrypt_hw_io.py": "8152f292246405212815ce77872bc9efeae1c0cc9787b235a9619b72f3ae8e01",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow.py": "69a1d3cb913552bee0f6e59b6f330f4c1bfa8c78b88983c9b31b14cde44eb098",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_mac_pipelined.py": "da60ef1ec47de37497946ab1256fd6afc16d104b1843d3abf7b78383cce516da",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_verify_decrypt.py": "ee06f75c4e3bfb617d9f7e965b46e79ec0a7e87c0b5b624f26d88e5d25460c74",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305.py": "b0fb69856bc83eaa03fe3c56dd098258d6cd085d5f09acafececeb340d7edd58",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_mcp_shared.py": "13eef3f15ae21ce1e949c1ee50b12b73e0497f68875d1bd5f5258da843ee446b",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_select.py": "6cf79a69f94bd320445b170a7c31b6fee638aab45ab643146406fea838d4202d",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_math.py": "56066b7902e8520dad324cfbb784dca76c0712bbc278e38088dc94cd103a2f54",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/prep_auth_data/prep_auth_data.py": "6bf83fd6a7b61cc58cf9aee90fe34bbeb0fc0b237123b7dbbd1e1df87880e6bd",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/strip_auth_tag.py": "8ea3ef93d85cf71e0c7226e1944354194d4bab418bf4d87543cfa809ab4e0d62",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/wait_to_verify.py": "d089c7451a02a5bba00cd9c022343b52302ce0b82a0a150cf056fbdfe6f259a9",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/append_auth_tag.py": "3987111e75b0bf04c38ac6bd625f72b71096da0d7800bc7971d245f8726de6ac",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20/chacha20_pipeline_shared.py": "d18ee64d6f6d3c93957f1a010cdf87af8211a5f49e26a1f39a6654ced833ceaf",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20/chacha20.py": "169bca17e73f776520f3041dc88470846de76eadf0b36553ee719d35b27e406f",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/src/pypeline.py": "f259749521ba1e3b88d7dfc2032d331b08983fe704dc374451cefaec8a347d74",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/src/pypeline_sim.py": "31b3981d78124ce6c5dcd2d9fa3e6a70a02960744dd9d2a7b278dc3ddc13dc31",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/include/pypeline/stream/stream_auto_pipeline.py": "844bfac41f003728697533fa72ac916ef83805f91d4dfc4a019adfa940f96934",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/include/pypeline/stream/stream_multi_cycle.py": "ce403f880440c947244d16490234ad7085c41e9953f75b2336aac12ffaa7ccc0",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/include/pypeline/fifo.py": "f650369c682389b36fde1de1af3bc4a2557aad39ee91bd6416231c07eee130a1"
+      },
+      "compiler_git": "44a38950b98062e0a9dd13b732f960d35c30b822",
+      "artifacts": {
+        "perf_raw.json": {
+          "sha256": "8fe6ea70b89632e57a9a5100b5485eb030e6f86fccef6229840f271a6c90bf21",
+          "bytes": 49095
+        },
+        "tap-trace.jsonl": {
+          "sha256": "fc31905ca5ead84166217dd8337c0cd308b1e8bd22eee6ad569b886efc90e912",
+          "bytes": 5413544
+        },
+        "run.json": {
+          "sha256": "eadadaa17644a7620fedf790ea413aa0df8cc5bfeff0f6143e9ca2052e98ef3c",
+          "bytes": 11151
+        }
+      },
+      "buffers": {}
+    },
+    "auth64-perf60-four": {
+      "config": {
+        "design": "shared",
+        "target_mhz": 60.0,
+        "poly1305": {
+          "implementation": "pipelined",
+          "directions": {
+            "encrypt": {
+              "body_core_latency": 3,
+              "body_latency": 5,
+              "accumulator_count": 5,
+              "body_ii": 1,
+              "shared_mcps": true,
+              "prologue_mcp_latency": 6,
+              "epilogue_mcp_latency": 5,
+              "prologue_response_cycles": 7,
+              "epilogue_response_cycles": 6
+            },
+            "decrypt": {
+              "body_core_latency": 0,
+              "body_latency": 2,
+              "accumulator_count": 2,
+              "body_ii": 1,
+              "shared_mcps": true,
+              "prologue_mcp_latency": 6,
+              "epilogue_mcp_latency": 5,
+              "prologue_response_cycles": 7,
+              "epilogue_response_cycles": 6
+            }
+          },
+          "arithmetic": "residue130",
+          "shared_mcps": {
+            "capacity_lanes": 5,
+            "prologue_mcp_latency": 6,
+            "epilogue_mcp_latency": 5
+          }
+        },
+        "sharing": {
+          "chacha20": true,
+          "poly1305": true
+        },
+        "buffering": {
+          "decrypt/auth_fifo": {
+            "memory_depth_beats": 64,
+            "capacity_beats": 65,
+            "output_register_beats": 1
+          }
+        },
+        "source_handshake": "converged",
+        "decrypt_verification_retained": true,
+        "bus_bytes": 16,
+        "dirs": [
+          "encrypt",
+          "decrypt"
+        ],
+        "seed": 8439,
+        "sizes": [
+          1920
+        ],
+        "packets_per_size": 4,
+        "peak_bytes": 0,
+        "peak_packets": 4,
+        "max_cycles_per_phase": 20000,
+        "stall_timeout_cycles": 1000,
+        "settle_cycles": 8,
+        "taps": [
+          "all"
+        ],
+        "phase_plan": [
+          {
+            "name": "b2b-1920",
+            "packet_bytes": 1920,
+            "num_packets": 4
+          }
+        ],
+        "max_packet_bytes": 2032,
+        "key": "808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f",
+        "nonce": "070000004041424344454647",
+        "aad_len": 29,
+        "taps_active": [
+          "decrypt/auth_fifo.in",
+          "decrypt/auth_fifo.occupancy",
+          "decrypt/auth_fifo.out",
+          "decrypt/chacha20.axis_in",
+          "decrypt/chacha20.axis_out",
+          "decrypt/chacha20.from_pipeline",
+          "decrypt/chacha20.in_state",
+          "decrypt/chacha20.key_out",
+          "decrypt/chacha20.out_state",
+          "decrypt/chacha20.to_pipeline",
+          "decrypt/poly1305.data_in",
+          "decrypt/poly1305.epilogue_in",
+          "decrypt/poly1305.epilogue_out",
+          "decrypt/poly1305.from_compute",
+          "decrypt/poly1305.fsm",
+          "decrypt/poly1305.key_in",
+          "decrypt/poly1305.prologue_in",
+          "decrypt/poly1305.prologue_out",
+          "decrypt/poly1305.tag_out",
+          "decrypt/poly1305.to_compute",
+          "decrypt/prep.axis_in",
+          "decrypt/prep.axis_out",
+          "decrypt/prep.fsm",
+          "decrypt/strip.axis_in",
+          "decrypt/strip.axis_out",
+          "decrypt/strip.tag_out",
+          "decrypt/verify.auth_tag",
+          "decrypt/verify.calc_tag",
+          "decrypt/verify.fsm",
+          "decrypt/verify.tags_match",
+          "decrypt/wtv.axis_in",
+          "decrypt/wtv.axis_out",
+          "decrypt/wtv.fsm",
+          "decrypt/wtv.verify_bit",
+          "encrypt/append.axis_in",
+          "encrypt/append.axis_out",
+          "encrypt/append.fsm",
+          "encrypt/append.tag_in",
+          "encrypt/chacha20.axis_in",
+          "encrypt/chacha20.axis_out",
+          "encrypt/chacha20.from_pipeline",
+          "encrypt/chacha20.in_state",
+          "encrypt/chacha20.key_out",
+          "encrypt/chacha20.out_state",
+          "encrypt/chacha20.to_pipeline",
+          "encrypt/poly1305.data_in",
+          "encrypt/poly1305.epilogue_in",
+          "encrypt/poly1305.epilogue_out",
+          "encrypt/poly1305.from_compute",
+          "encrypt/poly1305.fsm",
+          "encrypt/poly1305.key_in",
+          "encrypt/poly1305.prologue_in",
+          "encrypt/poly1305.prologue_out",
+          "encrypt/poly1305.tag_out",
+          "encrypt/poly1305.to_compute",
+          "encrypt/prep.axis_in",
+          "encrypt/prep.axis_out",
+          "encrypt/prep.fsm",
+          "shared/pipe.arb",
+          "shared/pipe.dec_in",
+          "shared/pipe.dec_out",
+          "shared/pipe.enc_in",
+          "shared/pipe.enc_out",
+          "shared/poly1305.epilogue.arb",
+          "shared/poly1305.epilogue.dec_in",
+          "shared/poly1305.epilogue.dec_out",
+          "shared/poly1305.epilogue.enc_in",
+          "shared/poly1305.epilogue.enc_out",
+          "shared/poly1305.epilogue.service",
+          "shared/poly1305.epilogue.service_in",
+          "shared/poly1305.epilogue.service_out",
+          "shared/poly1305.prologue.arb",
+          "shared/poly1305.prologue.dec_in",
+          "shared/poly1305.prologue.dec_out",
+          "shared/poly1305.prologue.enc_in",
+          "shared/poly1305.prologue.enc_out",
+          "shared/poly1305.prologue.service",
+          "shared/poly1305.prologue.service_in",
+          "shared/poly1305.prologue.service_out"
+        ]
+      },
+      "checks": {
+        "functional_pass": true,
+        "packets_checked": 8,
+        "errors": []
+      },
+      "sim": {
+        "total_cycles": 746,
+        "finalized": true
+      },
+      "metrics": [
+        {
+          "direction": "encrypt",
+          "packet_period_cycles": 147.0,
+          "sustained_bytes_per_cycle": 13.061224489795919,
+          "output_packet_timelines": [
+            {
+              "idx": 0,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 2,
+              "last_in": 121,
+              "first_out": 33,
+              "last_out": 167,
+              "head_latency": 31,
+              "total_latency": 165
+            },
+            {
+              "idx": 1,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 122,
+              "last_in": 249,
+              "first_out": 180,
+              "last_out": 314,
+              "head_latency": 58,
+              "total_latency": 192
+            },
+            {
+              "idx": 2,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 250,
+              "last_in": 396,
+              "first_out": 327,
+              "last_out": 461,
+              "head_latency": 77,
+              "total_latency": 211
+            },
+            {
+              "idx": 3,
+              "in_bytes": 1920,
+              "out_bytes": 1936,
+              "first_in": 397,
+              "last_in": 543,
+              "first_out": 474,
+              "last_out": 608,
+              "head_latency": 77,
+              "total_latency": 211
+            }
+          ],
+          "mac_packets": [
+            {
+              "index": 0,
+              "key": 22,
+              "first_body": 31,
+              "last_body": 153,
+              "tag": 167,
+              "body_gaps": 0,
+              "extra_key_wait": null
+            },
+            {
+              "index": 1,
+              "key": 168,
+              "first_body": 178,
+              "last_body": 300,
+              "tag": 314,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            },
+            {
+              "index": 2,
+              "key": 315,
+              "first_body": 325,
+              "last_body": 447,
+              "tag": 461,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            },
+            {
+              "index": 3,
+              "key": 462,
+              "first_body": 472,
+              "last_body": 594,
+              "tag": 608,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            }
+          ],
+          "body_ii": 1
+        },
+        {
+          "direction": "decrypt",
+          "packet_period_cycles": 147.0,
+          "sustained_bytes_per_cycle": 13.061224489795919,
+          "output_packet_timelines": [
+            {
+              "idx": 0,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 0,
+              "last_in": 122,
+              "first_out": 176,
+              "last_out": 295,
+              "head_latency": 176,
+              "total_latency": 295
+            },
+            {
+              "idx": 1,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 123,
+              "last_in": 250,
+              "first_out": 323,
+              "last_out": 442,
+              "head_latency": 200,
+              "total_latency": 319
+            },
+            {
+              "idx": 2,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 251,
+              "last_in": 397,
+              "first_out": 470,
+              "last_out": 589,
+              "head_latency": 219,
+              "total_latency": 338
+            },
+            {
+              "idx": 3,
+              "in_bytes": 1936,
+              "out_bytes": 1920,
+              "first_in": 398,
+              "last_in": 544,
+              "first_out": 617,
+              "last_out": 736,
+              "head_latency": 219,
+              "total_latency": 338
+            }
+          ],
+          "mac_packets": [
+            {
+              "index": 0,
+              "key": 23,
+              "first_body": 38,
+              "last_body": 160,
+              "tag": 173,
+              "body_gaps": 0,
+              "extra_key_wait": null
+            },
+            {
+              "index": 1,
+              "key": 174,
+              "first_body": 184,
+              "last_body": 306,
+              "tag": 320,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            },
+            {
+              "index": 2,
+              "key": 321,
+              "first_body": 331,
+              "last_body": 453,
+              "tag": 467,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            },
+            {
+              "index": 3,
+              "key": 468,
+              "first_body": 478,
+              "last_body": 600,
+              "tag": 614,
+              "body_gaps": 0,
+              "extra_key_wait": 0
+            }
+          ],
+          "body_ii": 1
+        }
+      ],
+      "source_manifest": {
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_perf_tb.py": "c390a8ea1e037f4ca65335612e16c21728601a1a3de6444150acf736d3326a84",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt.py": "ceeef8e7e72b9e8e8e19d661e82f63a226163b2fe59cbea8a431c3206c866613",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_decrypt.py": "754c2e082aaec2586d22ce88a36a6ca84a696a8633eb9f9be4af736787679f26",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared.py": "ef787c2655e405cdfbdedbdd38962fbf48d9ba0120cbae5c2ecdf94a00626ab7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_decrypt_tb.py": "228ba8ec752dcdd8e7b6f90b15e21d5a133a8e354cc897e027a7d4c749da79c7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py": "626cd024962d05fa9bafe2f7cea346a6944c1940ef351d0c42bc4d603d9b66dd",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/perf_taps.py": "c0e1fb27cce4907570b465274565df5205575c6b95702ca42fd8e63ff54df485",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_tb.py": "9c4bca5593933559a90735a0ae4ae9044273eb469a2e48b39a2d8dcfe93b7850",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/aead_types.py": "6bc30204224918a2d2d8860723997167eb11f55e833736e75e8fb6d799216040",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305_config.py": "2be3ca1622e0e400a16f966e060bf3eb8ad1ff5ed4dc130964f1cba3a49501f7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305_pipelined_syn_tb.py": "54e8a2044570adbdb58e808b3d98d86e42876006491c8753758d85c7a7c717f1",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_syn_tb.py": "313b42a0547725d2c2a9740893b06586214a3a14f935cec77b909f9ead5776f7",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_decrypt_syn_tb.py": "379764b1d132132de71db392bad02da4312fe6d4ffbb30172b5c1f5a3a9297ca",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_decrypt_shared_syn_tb.py": "07b7e6d9e57f98ef2621692836c826fd8c22e178d88b525ba24b715977a5437a",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_encrypt_tb.py": "266c15cf60c39e86d4a971b524dbac80a7f1914ecf8f8e21002d4cfed1df3e69",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py": "58ad15a459ae44df6a0531046c13e654dd7dab21bdc54d0e497c2142e6c25ccc",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow_core.py": "fb07256b3d94cbeda906d13c2f6c59fc8446cb786ef409caac87e1692f565a3f",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_decrypt_ports.py": "a2acac9429e41df35a50c2e38d745694b198b19c07d244e431a172b2eaeca608",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_syn_tb.py": "592383c2ee57b8c6994773d5d9b2e73c983ad72469baff4e17dec11b3e87c3aa",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/tb_common.py": "300b3f19ffc99ec550617f9d11c3e0870d7db1ef9694149518b949ff1af23432",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow_shared.py": "5704b502ef193a26696539f681cea64479044e24f33bb825550ef8c5f533f4f6",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_perf_tb.py": "95186f35cadbe97c239f56983b9ef02460d25dbfc3f3f0138a953f3668e17fe3",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_probe.py": "223e1f0a402f7c7b8472162fcb271429bc68b169fce9637534348fb697a41089",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow.py": "f9afb77b752899c27baf53679106b002b016c8dee0c00af4fa8c3a44e70fe5b3",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_tb.py": "83c2a7a17787f724797348bd7c1d8d1b60301b8006b59c723befff7edbd63bd6",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow_core.py": "2b6188d237d0e1420ebc71dff46ca1820ccd873af2054a4fef24155fe77099f1",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow_shared.py": "f9f401f0b8109a335cdd2f20978c5bc81a6d2018a1db5032efccd71b783e1b0a",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_encrypt_ports.py": "746765a5c9e115e0bcd0790d155cb9e1427963d7d8316188b803cd317bdef99f",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/aead_ref_model.py": "dbe38076f4fe28264230f61fccc07402251c9a0931a83765e7e6fa7dcb134921",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_encrypt_hw_io.py": "df863ec9447b13f2b5740045096b7e150e1c146240b6b0f4f630ade5fe40be5c",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_syn_tb.py": "748270cfaf23785d9a96ef4a2e2f7be1cca3ba3b5fe384eba0743d251d7e984c",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/tb_common_sim.py": "eedf481dfa9343ba6c9488090dcc810faf61fc06bc299e8c8753fa3c100c88bc",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_tb.py": "1dd451db1cf54f0b5274161e439fd2d613dc3a212f6a18712e80daf49719ce27",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_perf_tb.py": "8ef949340f56fe0593e935ca7ccfd725f5f8103983879aa15ec47cb7904f8d3e",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_decrypt_hw_io.py": "8152f292246405212815ce77872bc9efeae1c0cc9787b235a9619b72f3ae8e01",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow.py": "69a1d3cb913552bee0f6e59b6f330f4c1bfa8c78b88983c9b31b14cde44eb098",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_mac_pipelined.py": "da60ef1ec47de37497946ab1256fd6afc16d104b1843d3abf7b78383cce516da",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_verify_decrypt.py": "ee06f75c4e3bfb617d9f7e965b46e79ec0a7e87c0b5b624f26d88e5d25460c74",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305.py": "b0fb69856bc83eaa03fe3c56dd098258d6cd085d5f09acafececeb340d7edd58",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_mcp_shared.py": "13eef3f15ae21ce1e949c1ee50b12b73e0497f68875d1bd5f5258da843ee446b",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_select.py": "6cf79a69f94bd320445b170a7c31b6fee638aab45ab643146406fea838d4202d",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_math.py": "56066b7902e8520dad324cfbb784dca76c0712bbc278e38088dc94cd103a2f54",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/prep_auth_data/prep_auth_data.py": "6bf83fd6a7b61cc58cf9aee90fe34bbeb0fc0b237123b7dbbd1e1df87880e6bd",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/strip_auth_tag.py": "8ea3ef93d85cf71e0c7226e1944354194d4bab418bf4d87543cfa809ab4e0d62",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/wait_to_verify.py": "d089c7451a02a5bba00cd9c022343b52302ce0b82a0a150cf056fbdfe6f259a9",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/append_auth_tag.py": "3987111e75b0bf04c38ac6bd625f72b71096da0d7800bc7971d245f8726de6ac",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20/chacha20_pipeline_shared.py": "d18ee64d6f6d3c93957f1a010cdf87af8211a5f49e26a1f39a6654ced833ceaf",
+        "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20/chacha20.py": "169bca17e73f776520f3041dc88470846de76eadf0b36553ee719d35b27e406f",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/src/pypeline.py": "f259749521ba1e3b88d7dfc2032d331b08983fe704dc374451cefaec8a347d74",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/src/pypeline_sim.py": "31b3981d78124ce6c5dcd2d9fa3e6a70a02960744dd9d2a7b278dc3ddc13dc31",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/include/pypeline/stream/stream_auto_pipeline.py": "844bfac41f003728697533fa72ac916ef83805f91d4dfc4a019adfa940f96934",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/include/pypeline/stream/stream_multi_cycle.py": "ce403f880440c947244d16490234ad7085c41e9953f75b2336aac12ffaa7ccc0",
+        "/media/1TB/Dropbox/PipelineC/git/PipelineC/include/pypeline/fifo.py": "f650369c682389b36fde1de1af3bc4a2557aad39ee91bd6416231c07eee130a1"
+      },
+      "compiler_git": "44a38950b98062e0a9dd13b732f960d35c30b822",
+      "artifacts": {
+        "perf_raw.json": {
+          "sha256": "75139ef01f37ee252384c7ac569c72312aec33ab00c155bbe4e75a9b25a49b82",
+          "bytes": 55210
+        },
+        "tap-trace.jsonl": {
+          "sha256": "9e88e17523c8455fc06d90f864b785db45cae4f1e98ec19e34ac06e361dd1b10",
+          "bytes": 4697161
+        },
+        "run.json": {
+          "sha256": "b068513d5bc00e753243b0b5e104c113166347cef251150aa7a32607028b6551",
+          "bytes": 10117
+        }
+      },
+      "buffers": {
+        "decrypt/auth_fifo.occupancy": {
+          "kind": "buffer",
+          "cycles": 745,
+          "capacity_beats": 65,
+          "start_occupancy": 0,
+          "end_occupancy": 0,
+          "high_water_beats": 55,
+          "accepted_beats": 480,
+          "retired_beats": 480,
+          "simultaneous_cycles": 402,
+          "full_cycles": 0,
+          "empty_cycles": 149
+        }
+      }
+    }
+  },
+  "comparison": {
+    "passed": true,
+    "errors": [],
+    "phases": [
+      {
+        "packet_bytes": 1920,
+        "decrypt_to_encrypt_ratio": 1.0,
+        "encrypt_after_to_before_ratio": 0.9931972789115647,
+        "decrypt_after_to_before_ratio": 1.3242630385487528,
+        "before": {
+          "full_phase_decrypt_to_encrypt_ratio": 0.7500000000000001,
+          "contention_window": {
+            "available": false
+          }
+        },
+        "after": {
+          "full_phase_decrypt_to_encrypt_ratio": 1.0,
+          "contention_window": {
+            "available": true,
+            "first_cycle": 442,
+            "last_cycle": 545,
+            "encrypt": {
+              "intervals": 0,
+              "packet_period_cycles": null,
+              "bytes_per_cycle": null
+            },
+            "decrypt": {
+              "intervals": 0,
+              "packet_period_cycles": null,
+              "bytes_per_cycle": null
+            },
+            "enough_intervals": false
+          }
+        }
+      }
+    ],
+    "criteria": {
+      "minimum_decrypt_to_encrypt_ratio": 0.95,
+      "minimum_encrypt_after_to_before_ratio": 0.98
+    }
+  },
+  "captured_compiler_hashes_identical": true
+}

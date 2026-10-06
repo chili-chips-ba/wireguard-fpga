@@ -78,6 +78,13 @@ BLOCKS = {
         "state": "prep.fsm",
         "what": "AAD||ciphertext||lengths framing for the MAC",
     },
+    "auth_buffer": {
+        "consumes": "auth_fifo.in",
+        "produces": "auth_fifo.out",
+        "downstream": ("prep_auth_data",),
+        "state": None,
+        "what": "ciphertext FIFO decoupling decrypt key/setup waits",
+    },
     "poly1305": {
         "consumes": "poly1305.data_in",
         "produces": "poly1305.tag_out",
@@ -88,14 +95,21 @@ BLOCKS = {
     "append_auth_tag": {
         "consumes": "append.axis_in",
         "produces": "append.axis_out",
-        "downstream": (),
+        "downstream": ("output_slice",),
         "state": "append.fsm",
         "what": "tag merge into the ciphertext tail (encrypt out)",
+    },
+    "output_slice": {
+        "consumes": "output_slice.in",
+        "produces": "output_slice.out",
+        "downstream": (),
+        "state": None,
+        "what": "II=1 registered encrypt AXIS output boundary",
     },
     "strip_auth_tag": {
         "consumes": "strip.axis_in",
         "produces": "strip.axis_out",
-        "downstream": ("chacha20", "prep_auth_data"),
+        "downstream": ("chacha20", "auth_buffer", "prep_auth_data"),
         "state": None,
         "what": "tag split off the ciphertext tail (decrypt in)",
     },
@@ -383,6 +397,9 @@ def check_taps(taps):
 
 def analyze_phase(phase, aad_len=0, mac_config=None):
     """Add `blocks`, `bottleneck` and `model` to one phase dict, in place."""
+    comparison = concurrent_throughput(phase)
+    if comparison:
+        phase["throughput_comparison"] = comparison
     taps = phase.get("taps")
     if not taps:
         return phase
@@ -448,6 +465,42 @@ def analyze(phases, aad_len=0, mac_config=None):
     return phases
 
 
+def concurrent_throughput(phase):
+    """Compare equal-size traffic, with a separate genuinely contending window.
+
+    The full-phase metric intentionally preserves historical interpretation.
+    The overlap metric drops the first two output completions and stops when
+    either direction admits its final ChaCha request. It never includes an
+    interval straddling either boundary. Short bursts may have no such interval.
+    """
+    directions = {d: phase.get(d, {}) for d in DIRECTIONS}
+    rates = {d: v.get("sustained_bytes_per_cycle") for d, v in directions.items()}
+    if not all(rates.values()):
+        return None
+    result = {"full_phase_decrypt_to_encrypt_ratio": rates["decrypt"] / rates["encrypt"]}
+    packets = {d: v.get("packets", []) for d, v in directions.items()}
+    ends = [(phase.get("taps", {}).get(d + "/chacha20.to_pipeline") or {}).get(
+        "last_transfer_cycle") for d in DIRECTIONS]
+    if any(len(p) < 3 for p in packets.values()) or any(e is None for e in ends):
+        result["contention_window"] = {"available": False}
+        return result
+    first = max(p[1]["last_out"] for p in packets.values())
+    last = min(ends)
+    overlap = {"available": True, "first_cycle": first, "last_cycle": last}
+    for d, entries in packets.items():
+        periods = [b["last_out"] - a["last_out"] for a, b in zip(entries, entries[1:])
+                   if first <= a["last_out"] < b["last_out"] <= last]
+        period = sum(periods) / len(periods) if periods else None
+        overlap[d] = {"intervals": len(periods), "packet_period_cycles": period,
+                      "bytes_per_cycle": phase["packet_bytes"] / period if period else None}
+    overlap["enough_intervals"] = all(overlap[d]["intervals"] >= 8 for d in DIRECTIONS)
+    if all(overlap[d]["bytes_per_cycle"] for d in DIRECTIONS):
+        overlap["decrypt_to_encrypt_ratio"] = (overlap["decrypt"]["bytes_per_cycle"] /
+                                               overlap["encrypt"]["bytes_per_cycle"])
+    result["contention_window"] = overlap
+    return result
+
+
 # --- reporting ---------------------------------------------------------------
 BLOCK_CSV_COLUMNS = (
     "label", "phase", "packet_bytes", "direction", "block",
@@ -476,6 +529,8 @@ TAP_CSV_COLUMNS = (
     "stall_cycles", "starved_cycles", "idle_cycles", "accept_rate",
     "service_period_cycles", "beats_per_cycle", "bytes_per_cycle",
     "stall_frac", "starve_frac", "dominant_state",
+    "capacity_beats", "high_water_beats", "start_occupancy", "end_occupancy",
+    "accepted_beats", "retired_beats", "simultaneous_cycles",
 )
 
 
@@ -491,6 +546,10 @@ def tap_rows(label, phases):
                 tap.get("accept_rate"), tap.get("service_period_cycles"),
                 tap.get("beats_per_cycle"), tap.get("bytes_per_cycle"),
                 tap.get("stall_frac"), tap.get("starve_frac"), tap.get("dominant"),
+                tap.get("capacity_beats"), tap.get("high_water_beats"),
+                tap.get("start_occupancy"), tap.get("end_occupancy"),
+                tap.get("accepted_beats"), tap.get("retired_beats"),
+                tap.get("simultaneous_cycles"),
             ]
 
 
@@ -639,6 +698,16 @@ def markdown_blocks(phases):
     if service_lines:
         lines.append("")
         lines.extend(service_lines)
+    buffers = [(phase, name, tap) for phase in phases
+               for name, tap in phase.get("taps", {}).items() if tap.get("kind") == "buffer"]
+    if buffers:
+        lines.extend(["", "**Buffers** (total storage capacity, including any output register):", "",
+                      "| phase | buffer | capacity | high water | accepted | retired | simultaneous | end fill |",
+                      "|---|---|---:|---:|---:|---:|---:|---:|"])
+        for phase, name, tap in buffers:
+            lines.append(f"| {phase['name']} | {name} | {tap['capacity_beats']} | "
+                         f"{tap['high_water_beats']} | {tap['accepted_beats']} | "
+                         f"{tap['retired_beats']} | {tap['simultaneous_cycles']} | {tap['end_occupancy']} |")
     return "\n".join(lines)
 
 

@@ -521,6 +521,8 @@ def run_build(args, json_path, log_path):
             cmd.append("--share-" + name)
     if args.jobs is not None:
         cmd.extend(["-j", str(args.jobs)])
+    if args.out_dir:
+        cmd.extend(["--out-dir", args.out_dir])
     if args.comb:
         cmd.append("--comb")
     if args.reuse_syn:
@@ -1091,6 +1093,14 @@ def markdown_table(results, include_mac_details=True):
         lines.append(f"Shared resources: `{sharing_name(sharing)}`.")
     else:
         lines.append("Historical sharing metadata absent: interpreted as ChaCha20-only sharing.")
+    for name, buffer in sorted(results.get("config", {}).get("buffering", {}).items()):
+        lines.append(f"Buffer `{name}`: {buffer['memory_depth_beats']} memory beats + "
+                     f"{buffer['output_register_beats']} output beat; "
+                     f"{buffer['capacity_beats']} total capacity.")
+    for name, stream_slice in sorted(results.get("config", {}).get("stream_slices", {}).items()):
+        lines.append(f"Register slice `{name}`: mode `{stream_slice['mode']}`, "
+                     f"{stream_slice['capacity_beats']} slots, "
+                     f"{stream_slice['latency_cycles']} unstalled cycle(s), II=1.")
     if mac:
         lines.append(f"Poly1305 implementation: `{mac['implementation']}`.")
         service = mac.get("shared_mcps")
@@ -1357,6 +1367,49 @@ def measurement_errors(results):
     for phase in results.get("phases", []):
         if phase.get("taps_check", {}).get("consistent") is False:
             errors.append(f"Phase {phase.get('name')}: performance taps disagree on cycle count")
+        for name, buffer in results.get("config", {}).get("buffering", {}).items():
+            depth = buffer.get("memory_depth_beats", 0)
+            if depth < 2 or buffer.get("capacity_beats") != (1 << (depth - 1).bit_length()) + 1:
+                errors.append(name + ": FIFO capacity metadata disagree")
+                continue
+            counts = phase.get("taps", {}).get(name + ".occupancy")
+            if counts is None:
+                if "all" in results.get("config", {}).get("taps", []):
+                    errors.append(name + ": enabled buffer occupancy tap missing")
+                continue
+            label = f"Phase {phase.get('name')}/{name}"
+            if counts.get("capacity_beats") != buffer["capacity_beats"]:
+                errors.append(label + ": measured and configured buffer capacities differ")
+            if counts.get("high_water_beats", 0) > buffer["capacity_beats"]:
+                errors.append(label + ": buffer overflow")
+            if counts.get("start_occupancy", 0) + counts.get("accepted_beats", 0) - counts.get(
+                    "retired_beats", 0) != counts.get("end_occupancy"):
+                errors.append(label + ": buffer transfer conservation failed")
+            if counts.get("end_occupancy") != 0:
+                errors.append(label + ": settled performance phase left buffered data")
+            for suffix, field in (("in", "accepted_beats"), ("out", "retired_beats")):
+                hs = phase.get("taps", {}).get(name + "." + suffix)
+                if hs and hs.get("xfer_cycles") != counts.get(field):
+                    errors.append(label + ": occupancy disagrees with " + suffix + " transfers")
+        for name, stream_slice in results.get("config", {}).get("stream_slices", {}).items():
+            label = f"Phase {phase.get('name')}/{name}"
+            if stream_slice.get("mode") != "full" or stream_slice.get("capacity_beats") != 2 or stream_slice.get("latency_cycles") != 1:
+                errors.append(label + ": output slice metadata disagree with its implementation")
+            counts = phase.get("taps", {}).get(name + ".occupancy")
+            if counts is None:
+                if "all" in results.get("config", {}).get("taps", []):
+                    errors.append(label + ": enabled slice occupancy tap missing")
+                continue
+            if counts.get("capacity_beats") != 2 or counts.get("high_water_beats", 0) > 2:
+                errors.append(label + ": invalid slice capacity/occupancy")
+            if counts.get("start_occupancy", 0) + counts.get("accepted_beats", 0) - counts.get("retired_beats", 0) != counts.get("end_occupancy"):
+                errors.append(label + ": slice transfer conservation failed")
+            if counts.get("end_occupancy") != 0:
+                errors.append(label + ": settled performance phase left buffered output")
+            for suffix, field in (("in", "accepted_beats"), ("out", "retired_beats")):
+                hs = phase.get("taps", {}).get(name + "." + suffix)
+                if hs and hs.get("xfer_cycles") != counts.get(field):
+                    errors.append(label + ": slice occupancy disagrees with " + suffix + " transfers")
         # New rigs commit source acceptance after convergence. Keep old records
         # readable, but require exact byte accounting from the corrected rig.
         if results.get("config", {}).get("source_handshake") == "converged":
@@ -1420,6 +1473,57 @@ def measurement_errors(results):
         if not audit.get("passed"):
             errors.append(scope + ": emitted MCP arithmetic audit failed")
     return errors
+
+
+def compare_throughput(before, after):
+    """Read-only recovery criteria for matched, same-clock concurrent workloads.
+
+    These thresholds are not universal measurement acceptance rules: legacy
+    records remain valid, and short-packet asymmetry is reported, not rejected.
+    Callers retain source/latency provenance alongside this cycle-domain report.
+    """
+    errors = []
+    for key in ("target_mhz", "dirs", "seed", "sizes", "packets_per_size"):
+        if before.get("config", {}).get(key) != after.get("config", {}).get(key):
+            errors.append("Comparison workload/config differs: " + key)
+    old = {p["packet_bytes"]: p for p in before.get("phases", [])}
+    phases = []
+    for phase in after.get("phases", []):
+        if phase["packet_bytes"] not in (1420, 1920):
+            continue
+        baseline = old.get(phase["packet_bytes"])
+        if baseline is None:
+            errors.append("Missing baseline for " + str(phase["packet_bytes"]))
+            continue
+        comparisons = [bottleneck.concurrent_throughput(p) for p in (baseline, phase)]
+        if not all(comparisons):
+            errors.append("Comparison requires completed concurrent traffic in both directions")
+            continue
+        parity = comparisons[1]["full_phase_decrypt_to_encrypt_ratio"]
+        enc_gain = phase["encrypt"]["sustained_bytes_per_cycle"] / baseline["encrypt"][
+            "sustained_bytes_per_cycle"]
+        entry = {"packet_bytes": phase["packet_bytes"], "decrypt_to_encrypt_ratio": parity,
+                 "encrypt_after_to_before_ratio": enc_gain,
+                 "decrypt_after_to_before_ratio": phase["decrypt"]["sustained_bytes_per_cycle"] /
+                 baseline["decrypt"]["sustained_bytes_per_cycle"],
+                 "before": comparisons[0], "after": comparisons[1]}
+        if parity < .95 or enc_gain < .98:
+            errors.append(str(phase["packet_bytes"]) + ": full-phase recovery criteria not met")
+        if phase["num_packets"] >= 16:
+            windows = [c["contention_window"] for c in comparisons]
+            if not all(w.get("enough_intervals") for w in windows):
+                errors.append(str(phase["packet_bytes"]) + ": need at least eight overlap intervals; extend run")
+            else:
+                overlap_gain = windows[1]["encrypt"]["bytes_per_cycle"] / windows[0]["encrypt"]["bytes_per_cycle"]
+                entry["overlap_encrypt_after_to_before_ratio"] = overlap_gain
+                if windows[1].get("decrypt_to_encrypt_ratio", 0) < .95 or overlap_gain < .98:
+                    errors.append(str(phase["packet_bytes"]) + ": contention-window recovery criteria not met")
+        phases.append(entry)
+    if not phases:
+        errors.append("No large-packet phases to compare")
+    return {"passed": not errors, "errors": errors, "phases": phases,
+            "criteria": {"minimum_decrypt_to_encrypt_ratio": .95,
+                         "minimum_encrypt_after_to_before_ratio": .98}}
 
 
 def check_record(measurement_dir):
@@ -1533,6 +1637,25 @@ def save_evidence(measurement_dir, results):
 
 def measurement_selftest():
     """Measurement guards/models/archive checks; no compiler or Vivado runs."""
+    def concurrent_fixture(decrypt_period):
+        phase = {"name": "b2b-1920", "packet_bytes": 1920, "num_packets": 16, "taps": {}}
+        for direction, first, period in (("encrypt", 200, 100), ("decrypt", 320, decrypt_period)):
+            phase[direction] = {"sustained_bytes_per_cycle": 1920 / period,
+                                "packets": [{"last_out": first + i * period} for i in range(16)]}
+            phase["taps"][direction + "/chacha20.to_pipeline"] = {"last_transfer_cycle": 1750}
+        return {"config": {"target_mhz": 60, "dirs": ["encrypt", "decrypt"], "seed": 8439,
+                           "sizes": [1920], "packets_per_size": 16}, "phases": [phase]}
+
+    baseline = concurrent_fixture(130)
+    improved = concurrent_fixture(102)
+    if not compare_throughput(baseline, improved)["passed"]:
+        raise ValueError("Throughput recovery comparison rejected passing full/overlap periods")
+    if compare_throughput(baseline, concurrent_fixture(110))["passed"]:
+        raise ValueError("Throughput recovery comparison accepted decrypt below parity threshold")
+    slow_enc = copy.deepcopy(improved)
+    slow_enc["phases"][0]["encrypt"]["sustained_bytes_per_cycle"] *= .97
+    if compare_throughput(baseline, slow_enc)["passed"]:
+        raise ValueError("Throughput recovery comparison accepted an encrypt regression")
     if area_selftest(HERE):
         return 1
     directory = Path(HERE) / Path(_SELFTEST_CASES[0][0]).parent
@@ -1703,6 +1826,7 @@ def main():
                     help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
     ap.add_argument("--reuse-syn", action="store_true", help="keep the out_dir so pypelinec re-reads its cached Vivado logs (sim-only re-measure)")
+    ap.add_argument("--out-dir", help="Explicit performance build cache (same rules as build.py --out-dir)")
     ap.add_argument("--parse-only", action="store_true", help="run nothing; re-merge an existing run's perf JSON + build log")
     ap.add_argument("--area-from-dir", default=None, help="also parse DUT-only area from another build's out_dir (e.g. generated-files-verilog-shared)")
     ap.add_argument("--no-per-module-area", action="store_true", help="skip per-module out-of-context area parsing")
@@ -1773,6 +1897,8 @@ def main():
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
     out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing)
+    if args.out_dir:
+        out_dir = os.path.abspath(args.out_dir)
 
     build_info = {"skipped": True}
     if not args.parse_only:
