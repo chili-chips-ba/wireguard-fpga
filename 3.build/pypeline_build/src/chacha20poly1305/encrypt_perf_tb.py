@@ -4,9 +4,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 """Encrypt-side PERFORMANCE testbench: streams the perf_tb_common.py phase plan
-(N back-to-back packets per packet size, then one long packet) through the
+(N back-to-back packets per packet size, then the long-packet peak) through the
 encrypt datapath with zero source gaps and no output backpressure, while
-perf_probe.py measures duty cycle, per-packet latency and window cycles.
+PipelineC's stream_perf.py measures duty cycle, per-packet latency and window cycles.
 
 This is a measurement rig, not a replacement for encrypt_tb.py / encrypt_syn_tb.py:
 it still checks every packet's ciphertext+tag against the reference model (a perf

@@ -41,7 +41,7 @@ from interface.interface_func import make_hw_func_from_interface_func
 from stream.stream import make_stream_interface
 from stream.stream_multi_cycle import make_stream_auto_multi_cycle
 
-import perf_taps
+from stream import stream_perf_probe as perf_taps
 
 from aead_types import (
     POLY1305_BLOCK_SIZE,
@@ -157,7 +157,7 @@ def poly1305_mac_fsm(
     r: Reg[u320_t]
     s: Reg[u320_t]
 
-    # Perf probe (sim-only, elaborated away -- see src/perf_taps.py). Sampled
+    # Perf probe (sim-only, elaborated away -- see stream/stream_perf_probe.py). Sampled
     # HERE, before the FSM body runs, because `state` reads back the NEXT state
     # once assigned: the trailing `if state == START_ITER` below deliberately
     # relies on that same-cycle readback, so a probe at the end of the body
@@ -226,7 +226,7 @@ def poly1305_mac_fsm(
         if o.to_compute_if.stream.valid & o.data_in_if.ready:
             state = poly1305_state_t.FINISH_ITER
 
-    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py). At the
+    # Perf probes (sim-only, elaborated away -- see stream/stream_perf_probe.py). At the
     # end of the body so every o.* reverse/forward field below is final.
     #
     # `poly1305.data_in` is THE bottleneck measurement for this design:

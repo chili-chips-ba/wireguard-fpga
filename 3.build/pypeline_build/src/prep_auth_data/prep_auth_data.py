@@ -22,7 +22,7 @@ from pypeline import (
     uint16_t,
 )
 
-import perf_taps
+from stream import stream_perf_probe as perf_taps
 
 import aead_types
 from aead_types import (
@@ -41,7 +41,7 @@ class prep_auth_data_state_t:
 
 
 # Member names in declaration order for the perf_taps state histogram -- plain
-# Python, never elaborated. See src/perf_taps.py.
+# Python, never elaborated. See stream/stream_perf_probe.py.
 PREP_AUTH_DATA_STATE_NAMES = tuple(prep_auth_data_state_t.__members__)
 
 
@@ -155,10 +155,10 @@ def prep_auth_data_fsm(
         if o.axis_if.stream.valid & axis_if.ready:
             state = prep_auth_data_state_t.IDLE
 
-    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py). prep sits
-    # directly between the ciphertext fork and the MAC, so comparing these two
-    # taps separates "the MAC is slow" (axis_out stalls, axis_in starves in
-    # AAD/LENGTHS) from "prep itself is slow".
+    # Perf probes (sim-only, elaborated away -- see stream/stream_perf_probe.py).
+    # prep sits directly between the ciphertext fork and the MAC, so comparing
+    # these two taps separates "the MAC is slow" (axis_out stalls, axis_in
+    # starves in AAD/LENGTHS) from "prep itself is slow".
     perf_taps.hs(
         "prep.axis_in",
         axis_in_if.stream.valid,

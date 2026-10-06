@@ -30,7 +30,7 @@ from pypeline import (
 from stream.stream import make_stream_interface
 from stream.stream_auto_pipeline import make_stream_auto_pipeline
 
-import perf_taps
+from stream import stream_perf_probe as perf_taps
 
 import chacha20
 from chacha20 import (
@@ -162,7 +162,7 @@ def chacha20_pipeline_shared():
         pipeline_in_s.data.data = decrypt_pipeline_in_if.stream.data
         pipeline_in_s.valid = decrypt_valid
 
-    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py) sample
+    # Perf probes (sim-only, elaborated away -- see stream/stream_perf_probe.py) sample
     # this cycle's actual grant, including a lone requester or held grant.
     perf_taps.arb(
         "pipe.arb",

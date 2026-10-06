@@ -137,3 +137,16 @@ def sharing_name(sharing):
 
 def sharing_out_dir(base, sharing):
     return f"{base}-share-{sharing_name(sharing)}"
+
+
+# Every build/measure output directory lives under generated-files/<name>/.
+GENERATED_FILES = "generated-files"
+
+
+def generated_out_dir(path):
+    """Map a pre-relayout `generated-files-<name>` path to `generated-files/<name>`."""
+    head, name = os.path.split(os.path.normpath(path))
+    prefix = GENERATED_FILES + "-"
+    if name.startswith(prefix) and not os.path.exists(path):
+        return os.path.join(head, GENERATED_FILES, name[len(prefix):])
+    return path

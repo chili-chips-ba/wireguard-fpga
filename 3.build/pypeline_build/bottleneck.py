@@ -7,11 +7,19 @@
 bottleneck, so "where is the time going" is an output of the measurement rather
 than a reading exercise.
 
-Consumed by measure.py; importable and `--selftest`-able on its own (no
-pypeline, no build, no Vivado -- same convention as perf_probe.py and
-measure.py).
+The generic analysis (block rollup, bottleneck walk, headline, tables, CSV
+rows) is PipelineC's stream performance library,
+include/pypeline/stream/stream_bottleneck.py (guide:
+include/pypeline/stream/pypeline_stream_perf_guide.md). This file holds what is
+WireGuard's own: the AEAD block graph below, the Poly1305/ChaCha20 cost model,
+the Poly1305 lifecycle and shared-MCP service tables, and WireGuard's report
+wording.
 
-Three things are derived from the taps that perf_taps.py collects:
+Consumed by measure.py; importable and `--selftest`-able on its own (no
+pypeline, no build, no Vivado).
+
+Three things are derived from the taps the design's stream_perf_probe calls
+collect:
 
 1. **Per-block throughput and ceiling.** A block's input tap says how many bytes
    it actually moved (`bytes_per_cycle`) and -- via `service_period_cycles`,
@@ -33,7 +41,26 @@ Three things are derived from the taps that perf_taps.py collects:
 
 import json
 import math
+import os
 import sys
+
+# The library lives in PipelineC's include/pypeline: find the checkout the way
+# measure.py does ($PYPELINEC = <repo>/src/pypelinec, else a sibling checkout).
+_PYPELINEC = os.environ.get("PYPELINEC")
+PIPELINEC_REPO = (
+    os.path.dirname(os.path.dirname(os.path.abspath(_PYPELINEC))) if _PYPELINEC
+    else os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                      "..", "..", "..", "PipelineC"))
+)
+_PYPELINE_INCLUDE = os.path.join(PIPELINEC_REPO, "include", "pypeline")
+if _PYPELINE_INCLUDE not in sys.path:
+    sys.path.insert(0, _PYPELINE_INCLUDE)
+
+from stream import stream_bottleneck as lib  # noqa: E402
+from stream.stream_bottleneck import (  # noqa: E402,F401  (re-exported)
+    best_ceiling, blocked_frac, bottleneck_tally, check_taps, get_tap, num, pct,
+    TAP_CSV_COLUMNS, tap_rows,
+)
 
 # --- design facts the model needs -------------------------------------------
 # Historical records used make_valid_ready_mcp(poly1305_mac_loop_body, 5).
@@ -132,154 +159,15 @@ BLOCKS = {
 DIRECTIONS = ("encrypt", "decrypt")
 
 
-def _get(taps, label, name):
-    return (taps or {}).get(f"{label}/{name}")
-
-
-def _bytes_per_beat(tap):
-    if not tap:
-        return None
-    bpb = tap.get("bytes_per_beat")
-    if bpb:
-        return bpb
-    return BUS_BYTES if tap.get("xfer_cycles") else None
-
-
 def block_rollup(taps, label):
     """Per-block achieved throughput, in-situ ceiling and stall split."""
-    out = {}
-    for name, spec in BLOCKS.items():
-        tap_in = _get(taps, label, spec["consumes"])
-        if not tap_in:
-            continue
-        tap_out = _get(taps, label, spec["produces"]) if spec["produces"] else None
-        state = _get(taps, label, spec["state"]) if spec["state"] else None
-        period = tap_in.get("service_period_cycles")
-        per_beat = _bytes_per_beat(tap_in)
-        entry = {
-            "what": spec["what"],
-            "in_tap": spec["consumes"],
-            "cycles": tap_in.get("cycles"),
-            "beats": tap_in.get("xfer_cycles"),
-            # What it actually moved, over the whole phase window.
-            "bytes_per_cycle": tap_in.get("bytes_per_cycle"),
-            # What it could move if never starved: bytes/beat over cycles/beat
-            # measured only across the cycles work was being offered to it.
-            "ceiling_bytes_per_cycle": (
-                (per_beat / period) if (per_beat and period) else None
-            ),
-            "service_period_cycles": period,
-            "accept_rate": tap_in.get("accept_rate"),
-            # Stall = this block backpressuring its producer (its own slowness).
-            # Starve = this block waiting on its producer (somebody else's).
-            "in_stall_frac": tap_in.get("stall_frac"),
-            "in_starve_frac": tap_in.get("starve_frac"),
-            "out_stall_frac": tap_out.get("stall_frac") if tap_out else None,
-        }
-        # Relay-limited: the block's own consumer pushed back on it at least as
-        # hard as the block pushed back on its producer. Its input stalls are
-        # then (at least partly) somebody else's, so its service period only
-        # bounds its true speed from above and the ceiling is a LOWER bound.
-        # (Measured case: encrypt ChaCha20 at 1920 B serves a beat every 5.4
-        # cycles while its output stalls 57% of cycles behind Poly1305; with
-        # slack at 256 B the same block serves one every 1.12 cycles.)
-        out_stall = entry["out_stall_frac"] or 0.0
-        in_stall = entry["in_stall_frac"] or 0.0
-        entry["relay_limited"] = bool(
-            tap_out and out_stall > 0.02 and out_stall >= in_stall * 0.9
-        )
-        if state:
-            entry["dominant_state"] = state.get("dominant")
-            entry["state_fracs"] = {
-                k: v["frac"] for k, v in (state.get("states") or {}).items()
-            }
-        out[name] = entry
-    return out
+    return lib.block_rollup(taps, label, BLOCKS, BUS_BYTES)
 
 
 def find_bottleneck(blocks):
-    """Name the block whose own slowness limits the direction.
-
-    Ranked by how much of the phase it spent backpressuring its producer. A
-    block that is itself backpressured at least as hard on its output is only
-    relaying, so the walk continues downstream to the block actually causing it.
-    """
-    if not blocks:
-        return None
-    ranked = sorted(
-        blocks.items(),
-        key=lambda kv: (kv[1].get("in_stall_frac") or 0.0),
-        reverse=True,
-    )
-    name, entry = ranked[0]
-    seen = set()
-    while True:
-        seen.add(name)
-        out_stall = entry.get("out_stall_frac") or 0.0
-        in_stall = entry.get("in_stall_frac") or 0.0
-        # Relaying: it holds up its producer only because its own consumer holds
-        # IT up just as hard. Follow the hardest-stalling consumer we can see.
-        candidates = [
-            n
-            for n in BLOCKS.get(name, {}).get("downstream", ())
-            if n in blocks and n not in seen
-        ]
-        if candidates and out_stall >= in_stall * 0.9:
-            nxt = max(candidates, key=lambda n: blocks[n].get("in_stall_frac") or 0.0)
-            name, entry = nxt, blocks[nxt]
-            continue
-        break
-    runner_up = next(((n, e) for n, e in ranked if n != name), None)
-    verdict = {
-        "block": name,
-        "what": entry.get("what"),
-        "in_stall_frac": entry.get("in_stall_frac"),
-        "in_starve_frac": entry.get("in_starve_frac"),
-        "service_period_cycles": entry.get("service_period_cycles"),
-        "ceiling_bytes_per_cycle": entry.get("ceiling_bytes_per_cycle"),
-        "dominant_state": entry.get("dominant_state"),
-    }
-    if runner_up:
-        verdict["runner_up"] = {
-            "block": runner_up[0],
-            "in_stall_frac": runner_up[1].get("in_stall_frac"),
-            "in_starve_frac": runner_up[1].get("in_starve_frac"),
-        }
-    verdict["evidence"] = _evidence_line(name, entry, runner_up)
-    return verdict
-
-
-def _pct(value):
-    return "-" if value is None else f"{value * 100:.0f}%"
-
-
-def _num(value, spec=".2f"):
-    return "-" if not isinstance(value, (int, float)) else format(value, spec)
-
-
-def _evidence_line(name, entry, runner_up):
-    parts = [
-        f"{name} backpressured its producer {_pct(entry.get('in_stall_frac'))} of the "
-        f"phase (accept rate {_num(entry.get('accept_rate'), '.3f')}, "
-        f"{_num(entry.get('service_period_cycles'))} cyc/beat while offered work, "
-        f"ceiling {_num(entry.get('ceiling_bytes_per_cycle'))} B/cyc)"
-    ]
-    fracs = entry.get("state_fracs") or {}
-    if fracs:
-        # Top two states, not just the dominant one: on decrypt the MAC's IDLE
-        # share (waiting for ChaCha20's poly key while prep already presents
-        # AAD) is the part of its stall that is not the MCP itself.
-        top = sorted(fracs.items(), key=lambda kv: kv[1], reverse=True)[:2]
-        shown = [f"{n} {_pct(f)}" for n, f in top if f >= 0.10] or [
-            f"{top[0][0]} {_pct(top[0][1])}"
-        ]
-        parts.append(f"its FSM sat in {', '.join(shown)} of cycles")
-    if runner_up:
-        parts.append(
-            f"next-worst {runner_up[0]} stalled {_pct(runner_up[1].get('in_stall_frac'))} "
-            f"but was itself starved {_pct(runner_up[1].get('in_starve_frac'))}"
-        )
-    return "; ".join(parts)
+    """Name the block whose own slowness limits the direction (see
+    stream_bottleneck.find_bottleneck)."""
+    return lib.find_bottleneck(blocks, BLOCKS)
 
 
 def model_for(packet_bytes, aad_len, measured_period, poly_tap=None, mac_config=None):
@@ -336,13 +224,13 @@ def poly1305_lifecycle(taps, direction):
     Per-packet values average over completed tags in this measurement window;
     IDLE includes both upstream key wait and measurement settle cycles.
     """
-    state = _get(taps, direction, "poly1305.fsm") or {}
+    state = get_tap(taps, direction, "poly1305.fsm") or {}
     states = state.get("states") or {}
     if "STREAM_BODY" not in states:
         return None
-    tag = _get(taps, direction, "poly1305.tag_out") or {}
-    body = _get(taps, direction, "poly1305.to_compute") or {}
-    retire = _get(taps, direction, "poly1305.from_compute") or {}
+    tag = get_tap(taps, direction, "poly1305.tag_out") or {}
+    body = get_tap(taps, direction, "poly1305.to_compute") or {}
+    retire = get_tap(taps, direction, "poly1305.from_compute") or {}
     packets = tag.get("xfer_cycles", 0)
     groups = {
         "idle": ("IDLE",),
@@ -364,84 +252,40 @@ def poly1305_lifecycle(taps, direction):
         "body_input_gap_cycles": cycles["body"] - body.get("xfer_cycles", 0),
         "tag_stall_cycles": tag.get("stall_cycles"),
         "tag_stalls_per_packet": tag.get("stall_cycles", 0) / packets if packets else None,
-        "prologue_launches": (_get(taps, direction, "poly1305.prologue_in") or {}).get("xfer_cycles"),
-        "epilogue_launches": (_get(taps, direction, "poly1305.epilogue_in") or {}).get("xfer_cycles"),
-        "prologue_request_wait_cycles": (_get(taps, direction, "poly1305.prologue_in") or {}).get("stall_cycles"),
-        "epilogue_request_wait_cycles": (_get(taps, direction, "poly1305.epilogue_in") or {}).get("stall_cycles"),
+        "prologue_launches": (get_tap(taps, direction, "poly1305.prologue_in") or {}).get("xfer_cycles"),
+        "epilogue_launches": (get_tap(taps, direction, "poly1305.epilogue_in") or {}).get("xfer_cycles"),
+        "prologue_request_wait_cycles": (get_tap(taps, direction, "poly1305.prologue_in") or {}).get("stall_cycles"),
+        "epilogue_request_wait_cycles": (get_tap(taps, direction, "poly1305.epilogue_in") or {}).get("stall_cycles"),
     }
 
-
-def check_taps(taps):
-    """Every probe fires exactly once per simulated cycle, so within a phase all
-    taps must report the SAME cycle count.
-
-    This is the guard on the epoch de-duplication in perf_probe._EpochTap: a body
-    declaring Feedback[T] re-executes until it converges, and if that buffering
-    ever broke, the taps inside such a body (chacha20_fsm, the shared-pipeline
-    MAIN) would inflate while the ones outside it would not -- which shows up
-    here as a spread, and would silently overstate every per-cycle rate.
-    """
-    counts = sorted({(t or {}).get("cycles") for t in taps.values()} - {None})
-    if not counts:
-        return None
-    check = {"cycles": counts[0], "consistent": len(counts) == 1}
-    if not check["consistent"]:
-        check["cycles_seen"] = counts
-        check["disagreeing_taps"] = sorted(
-            name
-            for name, t in taps.items()
-            if (t or {}).get("cycles") not in (None, counts[0])
-        )
-    return check
-
-
 def analyze_phase(phase, aad_len=0, mac_config=None):
-    """Add `blocks`, `bottleneck` and `model` to one phase dict, in place."""
+    """Add the library's `taps_check`/`blocks`/`bottleneck`/`arbitration`, plus
+    WireGuard's `throughput_comparison`, `model`, `poly1305_lifecycle` and
+    `poly1305_shared_services`, to one phase dict, in place."""
     comparison = concurrent_throughput(phase)
     if comparison:
         phase["throughput_comparison"] = comparison
     taps = phase.get("taps")
     if not taps:
         return phase
-    check = check_taps(taps)
-    if check:
-        phase["taps_check"] = check
-    blocks, bottleneck, model = {}, {}, {}
-    for label in DIRECTIONS:
-        rollup = block_rollup(taps, label)
-        if not rollup:
-            continue
-        # A direction disabled via WG_PERF_DIRS (measure.py --dirs enc|dec) still
-        # has probes firing -- its blocks just sit idle all run. Reporting a
-        # "bottleneck" for a direction that moved nothing is noise, so an idle
-        # direction is dropped rather than rolled up.
-        if not any(entry.get("beats") for entry in rollup.values()):
-            continue
-        blocks[label] = rollup
-        verdict = find_bottleneck(rollup)
-        if verdict:
-            bottleneck[label] = verdict
+    # A direction disabled via WG_PERF_DIRS (measure.py --dirs enc|dec) still
+    # has probes firing; the library drops a label whose blocks moved nothing.
+    lib.analyze_phase(phase, BLOCKS, DIRECTIONS, BUS_BYTES)
+    model = {}
+    for label in phase.get("blocks", {}):
         direction = phase.get(label) or {}
         model[label] = model_for(
             phase.get("packet_bytes"),
             aad_len,
             direction.get("packet_period_cycles"),
-            _get(taps, label, BLOCKS["poly1305"]["consumes"]),
+            get_tap(taps, label, BLOCKS["poly1305"]["consumes"]),
             ((mac_config or {}).get("directions") or {}).get(label),
         )
         lifecycle = poly1305_lifecycle(taps, label)
         if lifecycle:
             phase.setdefault("poly1305_lifecycle", {})[label] = lifecycle
-    # Shared resource arbitration is not part of either direction's body II.
-    arb = {k: v for k, v in taps.items() if (v or {}).get("kind") == "arb"}
-    if blocks:
-        phase["blocks"] = blocks
-    if bottleneck:
-        phase["bottleneck"] = bottleneck
     if model:
         phase["model"] = model
-    if arb:
-        phase["arbitration"] = arb
     services = {}
     for name in ("prologue", "epilogue"):
         prefix = "shared/poly1305." + name
@@ -502,229 +346,52 @@ def concurrent_throughput(phase):
 
 
 # --- reporting ---------------------------------------------------------------
-BLOCK_CSV_COLUMNS = (
-    "label", "phase", "packet_bytes", "direction", "block",
-    "cycles", "beats", "bytes_per_cycle", "ceiling_bytes_per_cycle",
-    "service_period_cycles", "accept_rate", "in_stall_frac", "in_starve_frac",
-    "out_stall_frac", "dominant_state",
-)
+# WireGuard's block CSV keeps its historical `direction` column name.
+BLOCK_CSV_COLUMNS = ("label", "phase", "packet_bytes", "direction") + lib.BLOCK_CSV_COLUMNS[4:]
+block_rows = lib.block_rows
 
+HEADLINE_COMPARE = ("chacha20", "poly1305")
+HEADLINE_NAMES = {"chacha20": "ChaCha20", "poly1305": "Poly1305"}
 
-def block_rows(label, phases):
-    for phase in phases:
-        for direction, blocks in (phase.get("blocks") or {}).items():
-            for name, e in blocks.items():
-                yield [
-                    label, phase["name"], phase["packet_bytes"], direction, name,
-                    e.get("cycles"), e.get("beats"), e.get("bytes_per_cycle"),
-                    e.get("ceiling_bytes_per_cycle"), e.get("service_period_cycles"),
-                    e.get("accept_rate"), e.get("in_stall_frac"),
-                    e.get("in_starve_frac"), e.get("out_stall_frac"),
-                    e.get("dominant_state"),
-                ]
-
-
-TAP_CSV_COLUMNS = (
-    "label", "phase", "packet_bytes", "tap", "kind", "cycles", "xfer_cycles",
-    "stall_cycles", "starved_cycles", "idle_cycles", "accept_rate",
-    "service_period_cycles", "beats_per_cycle", "bytes_per_cycle",
-    "stall_frac", "starve_frac", "dominant_state",
-    "capacity_beats", "high_water_beats", "start_occupancy", "end_occupancy",
-    "accepted_beats", "retired_beats", "simultaneous_cycles",
-)
-
-
-def tap_rows(label, phases):
-    for phase in phases:
-        for name, tap in sorted((phase.get("taps") or {}).items()):
-            if not tap:
-                continue
-            yield [
-                label, phase["name"], phase["packet_bytes"], name, tap.get("kind"),
-                tap.get("cycles"), tap.get("xfer_cycles"), tap.get("stall_cycles"),
-                tap.get("starved_cycles"), tap.get("idle_cycles"),
-                tap.get("accept_rate"), tap.get("service_period_cycles"),
-                tap.get("beats_per_cycle"), tap.get("bytes_per_cycle"),
-                tap.get("stall_frac"), tap.get("starve_frac"), tap.get("dominant"),
-                tap.get("capacity_beats"), tap.get("high_water_beats"),
-                tap.get("start_occupancy"), tap.get("end_occupancy"),
-                tap.get("accepted_beats"), tap.get("retired_beats"),
-                tap.get("simultaneous_cycles"),
-            ]
-
-
-def best_ceiling(phases, direction, block):
-    """(ceiling B/cyc, phase, exact?) for one block across the whole sweep.
-
-    Contamination only ever ADDS stall cycles to a block's input, so a service
-    period is an upper bound on the block's true period. For a block that is not
-    relay-limited the largest packet size is the cleanest reading; for a
-    relay-limited one the best (highest) observation is the tightest lower bound.
-    """
-    rows = []
-    for phase in phases:
-        entry = ((phase.get("blocks") or {}).get(direction) or {}).get(block)
-        if entry and entry.get("ceiling_bytes_per_cycle"):
-            rows.append((phase, entry))
-    if not rows:
-        return None
-    phase, entry = max(rows, key=lambda r: r[0].get("packet_bytes") or 0)
-    if not entry.get("relay_limited"):
-        return entry["ceiling_bytes_per_cycle"], phase, True
-    phase, entry = max(rows, key=lambda r: r[1]["ceiling_bytes_per_cycle"])
-    return entry["ceiling_bytes_per_cycle"], phase, False
+# Wording overrides that keep blocks.md identical to the pre-library reports.
+TEXT = {
+    "label_header": "dir",
+    "label_noun": "direction",
+    "no_taps": (
+        "_No internal taps in this run — re-measure with "
+        "`./measure.py --taps all` to populate this section._"
+    ),
+    "arbitration_intro": (
+        "**Shared-pipeline arbitration** — includes ChaCha20 and each shared "
+        "Poly1305 MCP separately. *Resource not ready* means the selected "
+        "request cannot launch (compute busy or output backpressure); "
+        "*contention* means the other side holds the slot and wants it; "
+        "*wasted slot* means the other side holds an empty slot. Current "
+        "request-aware arbiters recover lone requests; historical arbiters "
+        "may have wasted slots. These waits are not body-pipeline II:"
+    ),
+}
 
 
 def headline(phases):
-    """One generated sentence per direction answering the question the whole tap
-    system exists for: which block is slower, by how much, and how close to that
-    block's ceiling the design is already running.
-
-    Taken from the largest packet size measured, where per-packet fixed costs are
-    most amortised and the block ceilings are therefore most visible.
-    """
-    out = []
-    for direction in DIRECTIONS:
-        chacha = best_ceiling(phases, direction, "chacha20")
-        poly = best_ceiling(phases, direction, "poly1305")
-        if not (chacha and poly):
-            continue
-        (c_val, c_phase, c_exact), (p_val, p_phase, p_exact) = chacha, poly
-        slower = "Poly1305" if p_val < c_val else "ChaCha20"
-        s_val, s_phase = (p_val, p_phase) if slower == "Poly1305" else (c_val, c_phase)
-        ratio = max(c_val, p_val) / min(c_val, p_val)
-        at_least = "at least " if not (c_exact and p_exact) else ""
-        text = (
-            f"- **{direction}**: ChaCha20 serves **{'' if c_exact else '≥'}"
-            f"{_num(c_val)} B/cyc** when fed (@{c_phase['packet_bytes']} B), "
-            f"Poly1305 **{'' if p_exact else '≥'}{_num(p_val)} B/cyc** "
-            f"(@{p_phase['packet_bytes']} B) — {slower} is the slower block by "
-            f"{at_least}**{_num(ratio, '.1f')}x**"
-        )
-        achieved = (s_phase.get(direction) or {}).get("sustained_bytes_per_cycle")
-        if achieved:
-            text += (
-                f"; at {s_phase['packet_bytes']} B the whole datapath delivers "
-                f"{_num(achieved)} B/cyc, **{_pct(achieved / s_val)} of "
-                f"{slower}'s ceiling**"
-            )
-        out.append(text + ".")
-    if not out:
-        return []
-    return [
-        "**Headline.** A block that is not relay-limited is quoted at the largest "
-        "packet size (least per-packet overhead); a relay-limited one (its own "
-        "output backpressured, so its in-situ ceiling is only a lower bound, "
-        "marked ≥) is quoted at its best observation across the sweep:",
-        "",
-    ] + out
+    """One generated sentence per direction: which of ChaCha20/Poly1305 is the
+    slower block, by how much, and how close the datapath runs to its ceiling."""
+    return lib.headline(phases, DIRECTIONS, HEADLINE_COMPARE, HEADLINE_NAMES)
 
 
 def markdown_blocks(phases):
     """The generated block-level table + per-phase bottleneck verdicts."""
-    any_blocks = any(p.get("blocks") for p in phases)
-    if not any_blocks:
-        return (
-            "_No internal taps in this run — re-measure with "
-            "`./measure.py --taps all` to populate this section._"
-        )
-    lines = []
-    head = headline(phases)
-    if head:
-        lines.extend(head)
-        lines.append("")
-    lines.append(
-        "| phase | bytes | dir | block | B/cyc | ceiling B/cyc | svc period (clk) "
-        "| in stall | in starved | dominant FSM state |"
+    return lib.markdown_blocks(
+        phases, DIRECTIONS, BLOCKS, HEADLINE_COMPARE, HEADLINE_NAMES,
+        extra_sections=(markdown_model(phases), markdown_poly1305_lifecycle(phases),
+                        markdown_poly1305_services(phases)),
+        text=TEXT,
     )
-    lines.append("|---|---|---|---|---|---|---|---|---|---|")
-    table_start = len(lines)
-    for phase in phases:
-        for direction in DIRECTIONS:
-            blocks = (phase.get("blocks") or {}).get(direction)
-            if not blocks:
-                continue
-            order = [b for b in BLOCKS if b in blocks]
-            for name in order:
-                e = blocks[name]
-                state = e.get("dominant_state") or "-"
-                frac = (e.get("state_fracs") or {}).get(e.get("dominant_state"))
-                if frac is not None:
-                    state = f"{state} ({_pct(frac)})"
-                lines.append(
-                    f"| {phase['name']} | {phase['packet_bytes']} | {direction} "
-                    f"| {name} | {_num(e.get('bytes_per_cycle'), '.3f')} "
-                    f"| {'≥' if e.get('relay_limited') else ''}"
-                    f"{_num(e.get('ceiling_bytes_per_cycle'), '.3f')} "
-                    f"| {_num(e.get('service_period_cycles'))} "
-                    f"| {_pct(e.get('in_stall_frac'))} "
-                    f"| {_pct(e.get('in_starve_frac'))} | {state} |"
-                )
-    lines.append("")
-    lines.append(
-        "`ceiling B/cyc` marked **≥** is a lower bound: that block's own output was "
-        "backpressured at least as hard as its input, so part of its input stall "
-        "is relayed from downstream rather than its own."
-    )
-    lines.append("")
-    lines.append("**Bottleneck per phase** (the block whose own service rate limits "
-                 "the direction, after walking past blocks that only relay "
-                 "backpressure):")
-    lines.append("")
-    lines.append("| phase | bytes | dir | bottleneck | why |")
-    lines.append("|---|---|---|---|---|")
-    for phase in phases:
-        for direction in DIRECTIONS:
-            verdict = (phase.get("bottleneck") or {}).get(direction)
-            if not verdict:
-                continue
-            lines.append(
-                f"| {phase['name']} | {phase['packet_bytes']} | {direction} "
-                f"| **{verdict['block']}** | {verdict['evidence']} |"
-            )
-    arb_lines = markdown_arbitration(phases)
-    if arb_lines:
-        lines.append("")
-        lines.extend(arb_lines)
-    model_lines = markdown_model(phases)
-    if model_lines:
-        lines.append("")
-        lines.extend(model_lines)
-    lifecycle_lines = markdown_poly1305_lifecycle(phases)
-    if lifecycle_lines:
-        lines.append("")
-        lines.extend(lifecycle_lines)
-    service_lines = markdown_poly1305_services(phases)
-    if service_lines:
-        lines.append("")
-        lines.extend(service_lines)
-    buffers = [(phase, name, tap) for phase in phases
-               for name, tap in phase.get("taps", {}).items() if tap.get("kind") == "buffer"]
-    if buffers:
-        lines.extend(["", "**Buffers** (total storage capacity, including any output register):", "",
-                      "| phase | buffer | capacity | high water | accepted | retired | simultaneous | end fill |",
-                      "|---|---|---:|---:|---:|---:|---:|---:|"])
-        for phase, name, tap in buffers:
-            lines.append(f"| {phase['name']} | {name} | {tap['capacity_beats']} | "
-                         f"{tap['high_water_beats']} | {tap['accepted_beats']} | "
-                         f"{tap['retired_beats']} | {tap['simultaneous_cycles']} | {tap['end_occupancy']} |")
-    return "\n".join(lines)
 
 
-def _blocked_frac(per):
-    """Share of a requester's wanted cycles spent on its own slot with the shared
-    resource not ready. Derived from the partition identity when an older
-    snapshot has no blocked_cycles field."""
-    req = per.get("req_cycles") or 0
-    if not req:
-        return None
-    blocked = per.get("blocked_cycles")
-    if blocked is None:
-        blocked = (
-            req - per["xfer_cycles"] - per["contention_cycles"]
-            - per["wasted_slot_cycles"]
-        )
-    return blocked / req
+def markdown_arbitration(phases):
+    """Round-robin cost per resource and direction, including shared MCPs."""
+    return lib.markdown_arbitration(phases, TEXT)
 
 
 def markdown_summary(phases, detail_path=None):
@@ -744,16 +411,7 @@ def markdown_summary(phases, detail_path=None):
     lines = [line for line in headline(phases) if line.startswith("- ")]
 
     # Bottleneck verdict across every phase x direction.
-    verdicts = {}
-    total = 0
-    for phase in analysed:
-        for direction in DIRECTIONS:
-            verdict = (phase.get("bottleneck") or {}).get(direction)
-            if verdict:
-                verdicts.setdefault(verdict["block"], []).append(
-                    f"{direction} @ {phase['packet_bytes']} B"
-                )
-                total += 1
+    verdicts, total = bottleneck_tally(analysed, DIRECTIONS)
     if verdicts:
         parts = []
         for name in sorted(verdicts, key=lambda n: -len(verdicts[n])):
@@ -777,10 +435,10 @@ def markdown_summary(phases, detail_path=None):
         top = sorted(
             (entry.get("state_fracs") or {}).items(), key=lambda kv: kv[1], reverse=True
         )[:2]
-        states = ", ".join(f"{n} {_pct(f)}" for n, f in top if f >= 0.10)
+        states = ", ".join(f"{n} {pct(f)}" for n, f in top if f >= 0.10)
         text = (
-            f"{direction} one beat per {_num(entry.get('service_period_cycles'))} "
-            f"cycles, stalling its producer {_pct(entry.get('in_stall_frac'))} of cycles"
+            f"{direction} one beat per {num(entry.get('service_period_cycles'))} "
+            f"cycles, stalling its producer {pct(entry.get('in_stall_frac'))} of cycles"
         )
         if states:
             text += f", FSM in {states}"
@@ -801,7 +459,7 @@ def markdown_summary(phases, detail_path=None):
             p, e = max(limited, key=lambda pe: pe[1].get("out_stall_frac") or 0.0)
             relay.append(
                 f"{direction} at {len(limited)}/{len(seen)} sizes (own output stalled "
-                f"up to {_pct(e.get('out_stall_frac'))}, at {p['packet_bytes']} B)"
+                f"up to {pct(e.get('out_stall_frac'))}, at {p['packet_bytes']} B)"
             )
     if relay:
         lines.append(
@@ -819,9 +477,9 @@ def markdown_summary(phases, detail_path=None):
                 continue
             parts.append(
                 f"{label} launched on {per['xfer_cycles']} of {per['req_cycles']} "
-                f"wanted cycles (pipeline not ready {_pct(_blocked_frac(per))}, "
-                f"contention {_pct(per.get('contention_frac'))}, wasted slot "
-                f"{_pct(per.get('wasted_slot_frac'))})"
+                f"wanted cycles (pipeline not ready {pct(blocked_frac(per))}, "
+                f"contention {pct(per.get('contention_frac'))}, wasted slot "
+                f"{pct(per.get('wasted_slot_frac'))})"
             )
         if parts:
             lines.append(
@@ -841,8 +499,8 @@ def markdown_summary(phases, detail_path=None):
         fr = [m["poly1305_frac_of_period"] for m in models]
         rs = [m["residual_cycles"] for m in models]
         fits.append(
-            f"{direction} {_pct(min(fr))}–{_pct(max(fr))} (residual "
-            f"{_num(min(rs), '.0f')}–{_num(max(rs), '.0f')} cycles per packet)"
+            f"{direction} {pct(min(fr))}–{pct(max(fr))} (residual "
+            f"{num(min(rs), '.0f')}–{num(max(rs), '.0f')} cycles per packet)"
         )
     if fits:
         periods = sorted({m["poly1305_block_period_cycles"]
@@ -862,50 +520,6 @@ def markdown_summary(phases, detail_path=None):
     return "\n".join(lines)
 
 
-def markdown_arbitration(phases):
-    """Round-robin cost per resource and direction, including shared MCPs."""
-    rows = []
-    for phase in phases:
-        for name, tap in sorted((phase.get("arbitration") or {}).items()):
-            for label, per in (tap.get("per_requester") or {}).items():
-                req = per.get("req_cycles")
-                if not req:
-                    continue
-                # Every wanted cycle is exactly one of: launched, selected but the
-                # pipeline not ready, other side selected and wanting it
-                # (contention), other side selected and idle (wasted slot). Older
-                # snapshots lack blocked_cycles, so derive it from that identity.
-                blocked = per.get("blocked_cycles")
-                if blocked is None:
-                    blocked = (
-                        req - per["xfer_cycles"] - per["contention_cycles"]
-                        - per["wasted_slot_cycles"]
-                    )
-                rows.append(
-                    f"| {phase['name']} | {phase['packet_bytes']} | {name} | {label} "
-                    f"| {req} | {per['xfer_cycles']} "
-                    f"| {_pct(blocked / req)} "
-                    f"| {_pct(per['contention_frac'])} "
-                    f"| {_pct(per['wasted_slot_frac'])} |"
-                )
-    if not rows:
-        return []
-    head = [
-        "**Shared-pipeline arbitration** — includes ChaCha20 and each shared "
-        "Poly1305 MCP separately. *Resource not ready* means the selected "
-        "request cannot launch (compute busy or output backpressure); "
-        "*contention* means the other side holds the slot and wants it; "
-        "*wasted slot* means the other side holds an empty slot. Current "
-        "request-aware arbiters recover lone requests; historical arbiters "
-        "may have wasted slots. These waits are not body-pipeline II:",
-        "",
-        "| phase | bytes | resource | dir | wanted (clk) | launched (clk) | resource not ready "
-        "| contention | wasted slot |",
-        "|---|---|---|---|---|---|---|---|---|",
-    ]
-    return head + rows
-
-
 def markdown_poly1305_lifecycle(phases):
     rows = []
     for phase in phases:
@@ -913,12 +527,12 @@ def markdown_poly1305_lifecycle(phases):
             per = lifecycle["cycles_per_packet"]
             rows.append(
                 f"| {phase['name']} | {direction} "
-                f"| {_num(lifecycle.get('body_service_cycles'))} "
-                + "".join(f"| {_num(per.get(key))} " for key in
+                f"| {num(lifecycle.get('body_service_cycles'))} "
+                + "".join(f"| {num(per.get(key))} " for key in
                           ("setup", "body", "drain", "finalization", "tag_output"))
-                + f"| {_num(lifecycle.get('tag_stalls_per_packet'))} "
-                + f"| {_num(lifecycle.get('prologue_request_wait_cycles'))} "
-                + f"| {_num(lifecycle.get('epilogue_request_wait_cycles'))} |"
+                + f"| {num(lifecycle.get('tag_stalls_per_packet'))} "
+                + f"| {num(lifecycle.get('prologue_request_wait_cycles'))} "
+                + f"| {num(lifecycle.get('epilogue_request_wait_cycles'))} |"
             )
     if not rows:
         return []
@@ -947,10 +561,10 @@ def markdown_poly1305_services(phases):
             compute = service.get("compute_cycles")
             per_request = compute / launches if launches and compute is not None else None
             rows.append(
-                f"| {phase['name']} | {name} | {_num(launches, '.0f')} "
-                f"| {_num(service.get('responses'), '.0f')} | {_num(compute, '.0f')} "
-                f"| {_num(per_request)} | {_num(service.get('response_valid_cycles'), '.0f')} "
-                f"| {_num(service.get('response_stall_cycles'), '.0f')} |"
+                f"| {phase['name']} | {name} | {num(launches, '.0f')} "
+                f"| {num(service.get('responses'), '.0f')} | {num(compute, '.0f')} "
+                f"| {num(per_request)} | {num(service.get('response_valid_cycles'), '.0f')} "
+                f"| {num(service.get('response_stall_cycles'), '.0f')} |"
             )
     if not rows:
         return []
@@ -976,10 +590,10 @@ def markdown_model(phases):
             rows.append(
                 f"| {phase['name']} | {phase['packet_bytes']} | {direction} "
                 f"| {m['poly1305_blocks']} | {m['poly1305_model_cycles']} "
-                f"| {_num(m.get('poly1305_measured_block_period_cycles'))} "
-                f"| {_num(m['measured_packet_period_cycles'], '.1f')} "
-                f"| {_pct(m.get('poly1305_frac_of_period'))} "
-                f"| {_num(m.get('residual_cycles'), '.1f')} |"
+                f"| {num(m.get('poly1305_measured_block_period_cycles'))} "
+                f"| {num(m['measured_packet_period_cycles'], '.1f')} "
+                f"| {pct(m.get('poly1305_frac_of_period'))} "
+                f"| {num(m.get('residual_cycles'), '.1f')} |"
             )
     if not rows:
         return []

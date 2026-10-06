@@ -8,7 +8,7 @@ perf testbenches stream concurrently with independently selected ChaCha20
 pipeline and Poly1305 MCP sharing. Metadata records the selected resources
 alongside fmax, area, throughput and latency.
 
-Both directions are held in the same phase by perf_probe.PhaseBarrier, so every
+Both directions are held in the same phase by stream_perf.PhaseBarrier, so every
 measured packet size sees concurrent traffic on the selected shared resources. Results
 are written incrementally to $WG_PERF_JSON (see perf_tb_common.py) and merged
 with the synthesis fmax/area numbers by ../measure.py.

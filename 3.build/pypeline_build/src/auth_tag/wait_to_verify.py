@@ -3,9 +3,9 @@
 then stream it out alongside the verification result.
 
 Pypeline port of ../pipelinec_build/src/auth_tag/wait_to_verify.c.
-Wire names elaborate as wait_to_verify_<wire> to match the C globals;
-the C GLOBAL_STREAM_FIFO(axis128_intrf.fwd_t, verify_fifo, 128) becomes a
-make_stream_fifo instance in its own MAIN with verify_fifo_* wires.
+The C GLOBAL_STREAM_FIFO(axis128_intrf.fwd_t, verify_fifo, 128) becomes a
+make_stream_fifo instance called inside this hw_func, its handshake closed
+through Feedback[T] locals rather than global wires.
 """
 import wireguard_env  # noqa: F401
 
@@ -22,7 +22,7 @@ from pypeline import (
 )
 from stream.stream_fifo import make_stream_fifo
 
-import perf_taps
+from stream import stream_perf_probe as perf_taps
 
 from aead_types import (
     axis128_intrf,
@@ -62,9 +62,9 @@ def wait_to_verify(
 ) -> wait_to_verify_out_t:
     o: wait_to_verify_out_t
     state: Reg[wait_to_verify_state_t]
-    # Sampled before the FSM reassigns it -- see src/perf_taps.py. Time spent in
-    # WAIT_TO_VERIFY_BIT is exactly the decrypt-side latency penalty of holding
-    # the whole plaintext until Poly1305 returns its verdict.
+    # Sampled before the FSM reassigns it (see stream/stream_perf_probe.py).
+    # Time spent in WAIT_TO_VERIFY_BIT is exactly the decrypt-side latency
+    # penalty of holding the whole plaintext until Poly1305 returns its verdict.
     perf_taps.state("wtv.fsm", state, WAIT_TO_VERIFY_STATE_NAMES)
     # Reg to hold the received verification result (tags_match)
     tags_match_reg: Reg[uint1_t]
@@ -137,7 +137,7 @@ def wait_to_verify(
     verify_fifo_out = fifo_result.out_stream_if.stream
     verify_fifo_in_ready = fifo_result.in_stream_if.ready
 
-    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), last
+    # Perf probes (sim-only, elaborated away -- see stream/stream_perf_probe.py), last
     # so every o.* field above is final.
     perf_taps.hs(
         "wtv.axis_in",

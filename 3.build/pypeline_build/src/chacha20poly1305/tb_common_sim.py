@@ -13,83 +13,13 @@ import os
 import random
 
 
-class ConvergedAxisSource:
-    """AXIS source with separate presentation and converged acceptance.
-
-    Call drive() from @sim_input and commit(ready) from @sim_output. Ready
-    can depend on same-cycle downstream arbitration: sampling it before
-    convergence can discard a word the DUT never accepted. The underlying
-    AxisSimSource is held with ready=0 until the converged handshake commits.
-    drive(pause=True) inserts a gap only between accepted beats: an already
-    stalled valid beat is held unchanged until accepted. Do not attach a pause
-    generator to the underlying source, whose step() also runs at commit.
-    """
-
-    def __init__(self, axis_intrf, bus_bytes):
-        from axi.axis_sim import AxisSimSource
-        from pypeline import sim_zero
-
-        self._source = AxisSimSource(axis_intrf, bus_bytes)
-        self._offered = None
-        self._held = False
-        self._null = sim_zero(axis_intrf.fwd_t)
-
-    def send(self, frame):
-        self._source.send(frame)
-
-    def idle(self):
-        return self._source.idle()
-
-    def drive(self, pause=False):
-        self._offered = self._null if pause and not self._held else self._source.step(0)
-        self._held = bool(self._offered.stream.valid)
-        return self._offered
-
-    def commit(self, ready):
-        accepted = bool(self._offered is not None and self._offered.stream.valid and ready)
-        if accepted:
-            self._source.step(1)
-            self._held = False
-        self._offered = None
-        return accepted
-
-
-class ConvergedAxisSink:
-    """Scoreboard sink accepting only transfers, checking stalled stability."""
-
-    def __init__(self, axis_intrf, bus_bytes, scoreboard):
-        from axi.axis_sim import AxisSimSink
-
-        self._sink = AxisSimSink(axis_intrf, bus_bytes, scoreboard=scoreboard)
-        self._bus_bytes = bus_bytes
-        self._stalled = None
-        self.accepted_beats = 0
-        self.stalled_cycles = 0
-
-    def step(self, word, ready=1, sideband=None):
-        stream = word.stream
-        payload = (
-            tuple(int(stream.data.frag.data[i]) for i in range(self._bus_bytes)),
-            tuple(int(stream.data.frag.keep[i]) for i in range(self._bus_bytes)),
-            int(stream.data.eod[0]),
-            None if sideband is None else int(sideband),
-        )
-        if self._stalled is not None:
-            assert stream.valid and payload == self._stalled, (
-                "AXIS output changed or withdrew valid while stalled"
-            )
-        self._stalled = payload if stream.valid and not ready else None
-        if stream.valid and not ready:
-            self.stalled_cycles += 1
-        if stream.valid and ready:
-            self.accepted_beats += 1
-            self._sink.step(word)
-
-    def check_nowait(self):
-        return self._sink.check_nowait()
-
-    def empty(self):
-        return self._sink.empty()
+# Converged-handshake AXIS source/sink (present in @sim_input, commit on the
+# converged ready in @sim_output) live in PipelineC's axi/axis_sim.py; the
+# WireGuard testbenches keep their original names.
+from axi.axis_sim import (
+    ConvergedAxisSimSink as ConvergedAxisSink,
+    ConvergedAxisSimSource as ConvergedAxisSource,
+)
 
 
 # Optional native functional stress. Performance testbenches never use these

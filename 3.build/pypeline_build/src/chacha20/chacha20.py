@@ -31,7 +31,7 @@ from stream.stream import make_stream_interface
 from stream.stream_auto_pipeline import make_stream_auto_pipeline
 from axi.axis import make_dwidth_widen, make_dwidth_narrow
 
-import perf_taps
+from stream import stream_perf_probe as perf_taps
 
 from aead_types import (
     CHACHA20_STATE_NWORDS,
@@ -233,7 +233,7 @@ class chacha20_state_t:
 
 # Member names in declaration order for the perf_taps state histograms (pypeline
 # @enum + auto() numbers members 0..n-1 in this order). Plain Python, never
-# elaborated -- see src/perf_taps.py.
+# elaborated -- see stream/stream_perf_probe.py.
 CHACHA20_STATE_NAMES = tuple(chacha20_state_t.__members__)
 
 
@@ -274,7 +274,7 @@ def chacha20_fsm(
     # Pipeline input muxing FSM
     input_side_state: Reg[chacha20_state_t]
     block_count: Reg[uint32_t]
-    # Perf probe (sim-only, elaborated away -- see src/perf_taps.py). Sampled
+    # Perf probe (sim-only, elaborated away -- see stream/stream_perf_probe.py). Sampled
     # before the FSM below can reassign the register, so the histogram counts
     # the state actually occupied this cycle rather than the next one.
     perf_taps.state("chacha20.in_state", input_side_state, CHACHA20_STATE_NAMES)
@@ -372,7 +372,7 @@ def chacha20_fsm(
     o.axis_out_if = block_to_out.narrow_out_if
     block_to_out_axis_in_ready = block_to_out.wide_in_if.ready  # FEEDBACK
 
-    # Perf probes (sim-only, elaborated away -- see src/perf_taps.py), placed
+    # Perf probes (sim-only, elaborated away -- see stream/stream_perf_probe.py), placed
     # last so every o.* field above is final. The structural point of comparison
     # against Poly1305: this compute is a make_stream_auto_pipeline (II=1), fed 4 x
     # 16 B beats per 64 B block through the dwidth converter, so axis_in's

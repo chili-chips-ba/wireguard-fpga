@@ -108,8 +108,9 @@ extended-overlap and standalone-performance comparisons.
 An initial full QoR attempt was correctly rejected when five encrypt frames
 were 16 bytes short. A replay proved that the native source advanced on
 pre-convergence ready at cycle 46; the DUT never accepted those beats.
-`ConvergedAxisSource` now presents without advancing in `@sim_input` and
-commits `valid & ready` in the converged `@sim_output` callback.
+The converged AXIS source (`tb_common_sim.ConvergedAxisSource`, now PipelineC's
+`axi.axis_sim.ConvergedAxisSimSource`) presents without advancing in
+`@sim_input` and commits `valid & ready` in the converged `@sim_output` callback.
 Input accounting uses that same handshake. This is a WireGuard testbench
 correction, not a Poly1305 arithmetic or compiler change. The strict
 eight-packet replay and corrected full 48-packet sweep pass exact
@@ -291,7 +292,7 @@ The development sketch with multiple staggered MCP engines was not implemented.
 The current design instead has one feed-forward body pipeline per MAC; lane
 count follows its complete registered latency, not a guessed MCP cycle count.
 
-# New Design
+## Pipelined MAC design
 
 ## Implemented contract
 
@@ -562,14 +563,15 @@ passed in 348 cycles. Packet throughput measurements above remain the original
 unseeded QoR record; this run validated hardware/build convergence.
 
 The generated output directory is
-`generated-files-verilog-shared-poly1305-pipelined-30mhz-seeded-20261002-1939Z`.
+`generated-files/verilog-shared-poly1305-pipelined-30mhz-seeded-20261002-1939Z`.
 This validation used Vivado 2019.2 and PipelineC `1c32492-dirty`, including
 the stream-wrapper latency-option forwarding fix.
 Its retained report is `chacha20poly1305_encrypt_decrypt_shared/`
 `vivado_68754b09_bb94084203cc6c2b.log`, with input signature
 `bb94084203cc6c2bc8ffdcab8dd4b1b9b87ed9c076549900d2f4fac70816e795`.
-Build profile values remain hints, and uncharacterized 40/80 MHz targets
-reuse the 30 MHz profile until independent measurements are available.
+Build profile values remain hints. Since then 60 MHz has its own entry;
+clocks without one (40/50/70/80 MHz) reuse the 30 MHz profile until
+characterized.
 
 ## Area/latency alternatives, not implemented
 
@@ -627,7 +629,7 @@ for mode in arithmetic body components mac sharing; do
   WG_POLY1305_TB_BODY_DEPTH= \
     "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
       --sim --comb --run all \
-      --out_dir "generated-files-poly1305-$mode-encrypt-comb-native"
+      --out_dir "generated-files/poly1305-$mode-encrypt-comb-native"
 done
 ```
 
@@ -639,7 +641,7 @@ WG_POLY1305_TB_MODE=mac WG_POLY1305_TB_DIRECTION=encrypt \
 WG_POLY1305_TB_BODY_DEPTH= \
   "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
     --sim --cocotb --ghdl --run all -j 1 --stop_on_over_capacity \
-    --out_dir generated-files-poly1305-mac-encrypt-pipe-30mhz
+    --out_dir generated-files/poly1305-mac-encrypt-pipe-30mhz
 ```
 
 Add `--cocotb --ghdl` to native commands for RTL checks and use separate
@@ -660,7 +662,7 @@ for direction in encrypt decrypt; do
       WG_POLY1305_TB_BODY_DEPTH="$depth" \
         "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
           --sim --comb --run all \
-          --out_dir "generated-files-poly1305-$mode-$direction-depth$depth-native"
+          --out_dir "generated-files/poly1305-$mode-$direction-depth$depth-native"
     done
   done
 done
@@ -670,7 +672,7 @@ The shared production build's emitted MCP arithmetic can be audited without
 another synthesis:
 
 ```sh
-./measure.py --audit-mcps generated-files-verilog-shared-poly1305-pipelined-share-chacha20-poly1305-30mhz
+./measure.py --audit-mcps generated-files/verilog-shared-poly1305-pipelined-share-chacha20-poly1305-30mhz
 ```
 
 This checks exactly one physical MCP per shared phase and rejects registered

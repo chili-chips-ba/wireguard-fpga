@@ -8,14 +8,12 @@ the design readable). Matches the C #defines in
 """
 import wireguard_env  # noqa: F401
 
-from pypeline import uint1_t, uint8_t, make_uint_t, hw_func
+from pypeline import uint1_t, uint8_t, make_uint_t
 from kept_data_bus import make_kept_data_bus_t
 from ndarray import make_ndarray_fragment_t
 from stream.stream import make_stream_interface
-from stream.stream_fifo import make_stream_fifo
-from stream.skid_buffer import make_skid_buffer
 from axi.axis import make_keep_count, make_count_to_keep, make_axis_broadcast_interlock
-import perf_taps
+from stream.stream_perf_probe import make_probed_stream_fifo, make_probed_skid_buffer
 
 # ChaCha20 sizes
 CHACHA20_STATE_NWORDS = 16
@@ -82,28 +80,14 @@ _stream_slices = {}
 
 
 def make_aead_fifo(data_t, depth, tap_name, direction):
-    """Existing stream FIFO with simulation-only handshake/occupancy probes."""
-    fifo, result_t = make_stream_fifo(data_t, depth)
-    intrf = fifo.stream_intrf
+    """Stream FIFO with simulation-only handshake/occupancy probes."""
+    fifo, _ = make_probed_stream_fifo(data_t, depth, tap_name)
     _buffering[direction + "/" + tap_name] = {
         "memory_depth_beats": depth,
-        "capacity_beats": (1 << (depth - 1).bit_length()) + 1,
+        "capacity_beats": fifo.capacity_beats,
         "output_register_beats": 1,
     }
-
-    @hw_func
-    def aead_fifo(in_stream_if: intrf.fwd_t, out_stream_if: intrf.fb_t) -> result_t:
-        result = fifo(in_stream_if=in_stream_if, out_stream_if=out_stream_if)
-        perf_taps.fifo_hs(tap_name + ".in", in_stream_if.stream.valid,
-                          result.in_stream_if.ready, in_stream_if.stream.data)
-        perf_taps.fifo_hs(tap_name + ".out", result.out_stream_if.stream.valid,
-                          out_stream_if.ready, result.out_stream_if.stream.data)
-        perf_taps.buffer(tap_name + ".occupancy", in_stream_if.stream.valid,
-                         result.in_stream_if.ready, result.out_stream_if.stream.valid,
-                         out_stream_if.ready, depth)
-        return result
-
-    return aead_fifo
+    return fifo
 
 
 def buffering_metadata():
@@ -112,25 +96,12 @@ def buffering_metadata():
 
 def make_aead_output_slice(intrf, tap_name, direction):
     """Two-slot output register slice; II=1 and stable valid under stalls."""
-    skid, result_t = make_skid_buffer(intrf, mode="full")
+    skid, _ = make_probed_skid_buffer(intrf, tap_name, mode="full")
     _stream_slices[direction + "/" + tap_name] = {
-        "mode": skid.mode, "capacity_beats": skid.n_slots,
+        "mode": skid.mode, "capacity_beats": skid.capacity_beats,
         "latency_cycles": skid.latency,
     }
-
-    @hw_func
-    def aead_output_slice(stream_in_if: intrf.fwd_t, stream_out_if: intrf.fb_t) -> result_t:
-        result = skid(stream_in_if=stream_in_if, stream_out_if=stream_out_if)
-        perf_taps.fifo_hs(tap_name + ".in", stream_in_if.stream.valid,
-                          result.stream_in_if.ready, stream_in_if.stream.data)
-        perf_taps.fifo_hs(tap_name + ".out", result.stream_out_if.stream.valid,
-                          stream_out_if.ready, result.stream_out_if.stream.data)
-        perf_taps.slots(tap_name + ".occupancy", stream_in_if.stream.valid,
-                        result.stream_in_if.ready, result.stream_out_if.stream.valid,
-                        stream_out_if.ready, skid.n_slots)
-        return result
-
-    return aead_output_slice
+    return skid
 
 
 def stream_slice_metadata():

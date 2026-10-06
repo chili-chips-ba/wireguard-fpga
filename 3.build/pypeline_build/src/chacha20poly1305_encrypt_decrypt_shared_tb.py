@@ -34,7 +34,7 @@ import tb_common_sim as common
 
 # Both encrypt_tb() and decrypt_tb() run concurrently in this build, each
 # generating/checking its own random packets independently -- only stop the
-# whole simulation once BOTH are done (encrypt: 10 packets, decrypt: 11), or
+# whole simulation once BOTH are done (encrypt: 12 packets, decrypt: 13), or
 # whichever finishes first would silently cut off the other's remaining
 # checks. See chacha20poly1305_encrypt_tb.py's matching checker for why
 # referencing _enc_state/_dec_state directly here is safe.

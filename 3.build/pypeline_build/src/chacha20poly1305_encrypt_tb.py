@@ -4,11 +4,11 @@ testbench (@sim_input/@sim_output, 12 on-the-fly random packets). For the
 synthesizable-style variant (fixed 10-string vectors), see
 chacha20poly1305_encrypt_syn_tb.py.
 
-Only runs under native --sim (no cocotb/GHDL, no real autopipelining):
-@sim_input/@sim_output calls are elaborated away entirely for any real-VHDL
-path, so this variant has no cocotb/pipe equivalent.
+Only runs under native --sim (no cocotb/GHDL): @sim_input/@sim_output calls
+are elaborated away for any real-VHDL path. Without --comb, pypelinec first
+autopipelines and then native-sims the built latencies.
 
-Build/sim (from pypeline_build/): ./build_sim_comb_native.sh
+Build/sim (from pypeline_build/): ./build.py --enc --sim --native [--comb]
 """
 import sys, os
 

@@ -8,7 +8,7 @@ Pypeline port of ../pipelinec_build/src/chacha20poly1305_decrypt_tb.c.
 (The C #define SIMULATION -> here: the flattened hardware IO module
 chacha20poly1305_decrypt_hw_io is simply not imported.)
 
-Build/sim (from pypeline_build/): ./build_syn_tb_comb_dec.sh
+Build/sim (from pypeline_build/): ./build.py --dec --sim --syn_tb [--comb] [--native]
 """
 import sys, os
 

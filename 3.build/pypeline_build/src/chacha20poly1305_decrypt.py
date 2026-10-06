@@ -4,7 +4,7 @@ flattened top level IO ports.
 
 Pypeline port of ../pipelinec_build/src/chacha20poly1305_decrypt.c.
 
-Build (from pypeline_build/): ./build_verilog_decrypt.sh
+Build (from pypeline_build/): ./build.py --dec
 """
 import sys, os
 

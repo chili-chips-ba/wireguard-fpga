@@ -11,7 +11,7 @@ from stream.stream import make_stream_interface
 from stream.stream_multi_cycle import make_stream_auto_multi_cycle
 from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod
 from poly1305_mac_pipelined import get_body_auto_pipeline
-import perf_taps
+from stream import stream_perf_probe as perf_taps
 
 CAPACITY = max(get_body_auto_pipeline(d).latency + 2 for d in ("encrypt", "decrypt"))
 

@@ -6,10 +6,10 @@
 (encrypt_perf_tb.py / decrypt_perf_tb.py /
 chacha20poly1305_encrypt_decrypt_shared_perf_tb.py).
 
-The measurement math itself stays in perf_probe.py, which imports no pypeline
-at all (so `perf_probe.py --selftest` runs standalone). This file does import
-`perf_taps` -- the design-side @sim_output probe shims -- purely to share its
-one TapRegistry; nothing here is baked into hardware either way.
+The measurement math (taps, StreamMeter/PhaseRunner, barrier, recorder) is
+PipelineC's stream performance library, include/pypeline/stream/stream_perf.py;
+the design-side @sim_output probes are stream/stream_perf_probe.py, whose one
+tap REGISTRY this file enables. See pypeline_stream_perf_guide.md there.
 
 Every knob here is read from the environment at import time and NOTHING is
 baked into hardware: the phase plan, packet sizes, counts and payload bytes
@@ -25,12 +25,24 @@ Key/nonce/AAD are reused from tb_common_sim.py rather than duplicated.
 import os
 import wireguard_env
 
-import perf_taps
+from stream import stream_perf_probe
+from stream.stream_perf import PerfRecorder, PhaseBarrier, PhaseRunner, packet_size_phases
 from poly1305_select import implementation_metadata
 from aead_types import buffering_metadata, stream_slice_metadata
 import tb_common_sim as common
 from aead_ref_model import generate_encrypt_vector
-from perf_probe import DirectionRunner, PerfRecorder, PhaseBarrier
+
+# MAIN name -> short label that qualifies tap names (`encrypt/chacha20.in`).
+# Update in place: the probes read this exact dict object.
+stream_perf_probe.MAIN_LABELS.update({
+    "encrypt_dataflow_shared": "encrypt",
+    "decrypt_dataflow_shared": "decrypt",
+    "encrypt_dataflow": "encrypt",
+    "decrypt_dataflow": "decrypt",
+    "chacha20_pipeline_shared": "shared",
+    "poly1305_prologue_shared": "shared",
+    "poly1305_epilogue_shared": "shared",
+})
 
 # ---------------------------------------------------------------------------
 # Hard design limit: wait_to_verify buffers the decrypt-side ciphertext in a
@@ -42,11 +54,11 @@ from perf_probe import DirectionRunner, PerfRecorder, PhaseBarrier
 MAX_PACKET_BYTES = 2032
 BUS_BYTES = 16  # axis128_intrf: 16 byte lanes per beat
 
-# Default plan sized against MEASURED native-sim speed: this design simulates
-# at roughly 0.5 s per cycle (2 cycles/s), so the whole plan below is a few
-# thousand cycles / order of an hour, not a day. Packet sizes are a log-ish
-# sweep from one bus beat to MTU; the final single long packet is the peak
-# (steady-state) point. Widen it with WG_PERF_SIZES / WG_PERF_PACKETS or
+# Default plan sized against MEASURED native-sim speed: the 60 MHz shared
+# perf top simulates at roughly 2 s per cycle, so the whole plan below is a few
+# thousand cycles / order of an hour or two, not a day. Packet sizes are a
+# log-ish sweep from one bus beat to MTU; the final long-packet phase is the
+# peak (steady-state) point. Widen it with WG_PERF_SIZES / WG_PERF_PACKETS or
 # measure.py --sizes/--packets -- re-measuring needs NO re-synthesis
 # (measure.py --reuse-syn), so more curve points cost only sim time.
 DEFAULT_SIZES = (16, 64, 256, 1024, 1420)
@@ -98,33 +110,9 @@ else:
     raise ValueError(f"WG_PERF_DIRS must be both|enc|dec, got {DIRS!r}")
 
 
-def _build_phases():
-    """Back-to-back phases (throughput vs packet size), then a single long
-    packet whose steady-state rate is the peak-throughput number."""
-    phases = []
-    for size in SIZES:
-        phases.append(
-            {"name": f"b2b-{size}", "packet_bytes": size, "num_packets": PACKETS}
-        )
-    if PEAK_BYTES:
-        phases.append(
-            {
-                "name": f"peak-{PEAK_BYTES}",
-                "packet_bytes": PEAK_BYTES,
-                "num_packets": PEAK_PACKETS,
-            }
-        )
-    for phase in phases:
-        if not 0 < phase["packet_bytes"] <= MAX_PACKET_BYTES:
-            raise ValueError(
-                f"phase {phase['name']}: packet_bytes must be in "
-                f"1..{MAX_PACKET_BYTES} (wait_to_verify FIFO limit), got "
-                f"{phase['packet_bytes']}"
-            )
-    return phases
-
-
-PHASES = _build_phases()
+# Back-to-back phases (throughput vs packet size), then the long-packet peak.
+# MAX_PACKET_BYTES is the wait_to_verify FIFO limit above.
+PHASES = packet_size_phases(SIZES, PACKETS, PEAK_BYTES, PEAK_PACKETS, MAX_PACKET_BYTES)
 
 CONFIG = {
     "design": "shared",
@@ -138,6 +126,10 @@ CONFIG = {
     "bus_bytes": BUS_BYTES,
     "dirs": ENABLED_DIRS,
     "seed": SEED,
+    # PhaseRunner seeds with the string "<seed>/<phase>/<runner>", so --seed
+    # reproduces payload bytes. Records without this key used a tuple seed
+    # whose hash varied per process (cycle results unaffected).
+    "payload_seeding": "string seed/phase/runner (reproducible)",
     "sizes": SIZES,
     "packets_per_size": PACKETS,
     "peak_bytes": PEAK_BYTES,
@@ -155,11 +147,10 @@ CONFIG = {
 
 BARRIER = PhaseBarrier(ENABLED_DIRS)
 RECORDER = PerfRecorder(JSON_PATH, CONFIG)
-# The ONE registry for the whole run, owned by perf_taps so the design's own
-# probe call sites (which import perf_taps, never this file) and the testbench
-# share it. Enable in place -- never rebind perf_taps.REGISTRY, see its module
-# docstring on @sim_output's detached globals.
-TAPS = perf_taps.REGISTRY
+# The ONE registry for the whole run, owned by stream_perf_probe so the design's
+# own probe call sites (which never import this file) and the testbench share
+# it. It starts empty; enable in place -- never rebind it.
+TAPS = stream_perf_probe.REGISTRY
 TAPS.enable(TAP_NAMES)
 
 _RUNNERS = {}
@@ -194,9 +185,9 @@ def decrypt_frame_builder(length, rng):
 
 
 def make_runner(direction, src, snk, scoreboard, frame_builder):
-    """One DirectionRunner per direction; a direction disabled via
+    """One PhaseRunner per direction; a direction disabled via
     WG_PERF_DIRS gets an empty phase plan (drives valid=0 for the whole run)."""
-    runner = DirectionRunner(
+    runner = PhaseRunner(
         name=direction,
         phases=PHASES if is_enabled(direction) else [],
         barrier=BARRIER,

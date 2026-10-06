@@ -21,7 +21,7 @@ from poly1305_math import (
     u8_16_t, uint128_t, uint130_t, clamp,
     residue_add_mod, residue_mul_mod, residue_mul_add_mod,
 )
-import perf_taps
+from stream import stream_perf_probe as perf_taps
 
 
 @struct

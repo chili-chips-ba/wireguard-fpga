@@ -21,16 +21,22 @@ What it does:
   4. merges everything into measurements/<label>/results.json (machine
      readable), summary.csv (one row per phase x direction), and a markdown
      table ready to paste into README.md;
-  5. rolls the run's INTERNAL taps (src/perf_taps.py probes inside the design's
-     own hardware functions) up into per-block throughput/stall numbers and an
-     automated bottleneck verdict per phase -- see bottleneck.py.
+  5. rolls the run's INTERNAL taps (PipelineC stream/stream_perf_probe.py calls
+     inside the design's own hardware functions) up into per-block
+     throughput/stall numbers and an automated bottleneck verdict per phase --
+     see bottleneck.py.
+
+The generic report math (MHz conversion, summary, CSV rows, boundary table,
+README marker splicing) is PipelineC's stream/stream_perf_report.py; this file
+adds WireGuard's build orchestration, fmax/area parsing, acceptance checks and
+evidence handling.
 
 Cycle-domain measurements and MHz live in separate steps on purpose: the
 testbench records cycles/beats/bytes only, so throughput can be re-expressed at
 a different fmax without re-simulating.
 
 Typical use:
-  ./measure.py --label shared-30mhz          # pipelined MAC; synthesis + sim (hours)
+  ./measure.py --label shared-60mhz          # default sharing-both 60 MHz; synthesis + sim (hours)
   ./measure.py --share-chacha20 --poly1305 legacy # historical architecture, 80 MHz goal
   ./measure.py --label X --reuse-syn         # sim only, reuse cached synthesis
   ./measure.py --label smoke --comb          # fast rig check, no Vivado at all
@@ -40,7 +46,6 @@ Typical use:
 
 import argparse
 import copy
-import csv
 import datetime
 import glob
 import hashlib
@@ -55,13 +60,16 @@ import time
 import tempfile
 from pathlib import Path
 
-import bottleneck
+import bottleneck  # also puts PipelineC's include/pypeline on sys.path
+from stream import stream_perf_report as perf_report
+from stream.stream_bottleneck import buffer_tap_errors
+from stream.stream_perf import stream_fifo_capacity_beats
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "src"))
 from poly1305_config import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
-    TARGETS_MHZ, default_target_mhz, target_out_dir,
+    TARGETS_MHZ, default_target_mhz, target_out_dir, GENERATED_FILES, generated_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
@@ -472,7 +480,7 @@ def out_dir_for(comb, implementation, target_mhz=None, sharing=None):
         historical_sharing = {"chacha20": True, "poly1305": False}
         target_mhz = default_target_mhz(implementation, sharing if sharing is not None else historical_sharing)
     base = os.path.join(
-        HERE, f"generated-files-perf-{'comb' if comb else 'pipe'}-shared-native"
+        HERE, GENERATED_FILES, f"perf-{'comb' if comb else 'pipe'}-shared-native"
     )
     base = implementation_out_dir(base, implementation)
     # None means a historical record, whose directory predates sharing flags.
@@ -908,152 +916,42 @@ def parse_area(out_dir, per_module=True):
     return area
 
 
+DIRECTIONS = bottleneck.DIRECTIONS
+
+
 def derive_throughput(perf_raw, fmax_mhz, target_mhz):
     """Add MHz-dependent columns to the testbench's cycle-domain numbers."""
-    phases = []
-    for phase in perf_raw.get("phases", []):
-        entry = {
-            k: phase[k]
-            for k in ("name", "packet_bytes", "num_packets")
-            if k in phase
-        }
-        if "taps" in phase:
-            entry["taps"] = phase["taps"]
-        if phase.get("timed_out"):
-            entry["timed_out"] = True
-        for direction in ("encrypt", "decrypt"):
-            res = phase.get(direction)
-            if not res:
-                continue
-            res = dict(res)
-            bpc = res.get("bytes_per_cycle")
-            steady_in = res.get("steady_in_bytes_per_cycle")
-            # Primary throughput figure: the sustained (inter-packet period) rate
-            # averaged over the phase's same-size packets, which is what a long
-            # stream of that size would achieve. Falls back to the whole-window
-            # rate for a phase with a single packet (no period to measure).
-            rate = res.get("sustained_bytes_per_cycle") or bpc
-            res["throughput_bytes_per_cycle"] = rate
-            res["throughput_basis"] = (
-                "sustained (inter-packet period)"
-                if res.get("sustained_bytes_per_cycle")
-                else "whole window (single packet)"
-            )
-            res["line_rate_frac"] = (rate / BUS_BYTES) if rate else None
-            if rate and fmax_mhz:
-                res["gbps_at_fmax"] = rate * 8 * fmax_mhz / 1000.0
-            if rate and target_mhz:
-                res["gbps_at_target"] = rate * 8 * target_mhz / 1000.0
-            if bpc and fmax_mhz:
-                res["window_gbps_at_fmax"] = bpc * 8 * fmax_mhz / 1000.0
-            # Only the INPUT-side steady rate is a throughput figure; the
-            # output-side one is a drain rate (see perf_probe's docstring).
-            if steady_in and fmax_mhz:
-                res["steady_in_gbps_at_fmax"] = steady_in * 8 * fmax_mhz / 1000.0
-            entry[direction] = res
-        phases.append(entry)
-    return phases
+    return perf_report.derive_throughput(perf_raw, fmax_mhz, target_mhz, BUS_BYTES, DIRECTIONS)
 
 
 def summarize(phases):
-    summary = {}
-    for phase in phases:
-        for direction in ("encrypt", "decrypt"):
-            res = phase.get(direction)
-            if not res:
-                continue
-            key = f"{phase['name']}_{direction}"
-            summary[key] = {
-                "bytes_per_cycle": res.get("bytes_per_cycle"),
-                "sustained_bytes_per_cycle": res.get("sustained_bytes_per_cycle"),
-                "line_rate_frac": res.get("line_rate_frac"),
-                "gbps_at_fmax": res.get("gbps_at_fmax"),
-                "steady_in_bytes_per_cycle": res.get("steady_in_bytes_per_cycle"),
-                "total_latency_med": res.get("latency_cycles", {}).get("total_med"),
-            }
-    # Headline peak is the window-based goodput rate: conservative, end-to-end,
-    # and immune to the output-burst artifact that makes a decrypt phase's
-    # output-side steady rate read as full line rate.
-    for direction in ("encrypt", "decrypt"):
-        rates = [
-            phase[direction].get("bytes_per_cycle") or 0
-            for phase in phases
-            if phase.get(direction)
-        ]
-        sustained = [
-            phase[direction].get("throughput_bytes_per_cycle") or 0
-            for phase in phases
-            if phase.get(direction)
-        ]
-        summary[f"peak_bytes_per_cycle_{direction}"] = max(rates) if rates else None
-        summary[f"peak_sustained_bytes_per_cycle_{direction}"] = (
-            max(sustained) if sustained else None
-        )
-    return summary
+    return perf_report.summarize(phases, DIRECTIONS)
 
 
-CSV_COLUMNS = (
-    "label", "phase", "packet_bytes", "num_packets", "direction",
-    "window_cycles", "goodput_bytes", "in_beats", "out_beats",
-    "bytes_per_cycle", "sustained_bytes_per_cycle", "packet_period_cycles",
-    "steady_in_bytes_per_cycle", "steady_out_bytes_per_cycle", "line_rate_frac",
-    "gbps_at_fmax", "gbps_at_target", "in_duty", "out_duty", "in_stall_frac",
-    "cold_head_latency", "head_med", "total_med", "total_max", "timed_out",
-)
+# WireGuard's summary.csv keeps its historical `direction` column name.
+CSV_COLUMNS = perf_report.CSV_COLUMNS[:4] + ("direction",) + perf_report.CSV_COLUMNS[5:]
 
 
 def write_csv(path, label, phases):
-    with open(path, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(CSV_COLUMNS)
-        for phase in phases:
-            for direction in ("encrypt", "decrypt"):
-                res = phase.get(direction)
-                if not res:
-                    continue
-                lat = res.get("latency_cycles", {})
-                writer.writerow([
-                    label, phase["name"], phase["packet_bytes"], phase["num_packets"],
-                    direction, res.get("window_cycles"), res.get("goodput_bytes"),
-                    res.get("in_beats"), res.get("out_beats"),
-                    res.get("bytes_per_cycle"),
-                    res.get("sustained_bytes_per_cycle"),
-                    res.get("packet_period_cycles"),
-                    res.get("steady_in_bytes_per_cycle"),
-                    res.get("steady_out_bytes_per_cycle"),
-                    res.get("line_rate_frac"), res.get("gbps_at_fmax"),
-                    res.get("gbps_at_target"), res.get("in_duty"), res.get("out_duty"),
-                    res.get("in_stall_frac"), lat.get("cold_head"), lat.get("head_med"),
-                    lat.get("total_med"), lat.get("total_max"),
-                    res.get("timed_out"),
-                ])
+    perf_report.write_csv(path, CSV_COLUMNS, perf_report.csv_rows(label, phases, DIRECTIONS))
 
 
 def write_tap_csvs(meas_dir, label, phases):
     """Per-tap and per-block rows, one file each -- the internal-stall curve, in
     the same flat shape as summary.csv so the two diff/plot the same way."""
     written = []
-    tap_rows = list(bottleneck.tap_rows(label, phases))
-    if tap_rows:
-        path = os.path.join(meas_dir, "taps.csv")
-        with open(path, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(bottleneck.TAP_CSV_COLUMNS)
-            writer.writerows(tap_rows)
-        written.append(path)
-    block_rows = list(bottleneck.block_rows(label, phases))
-    if block_rows:
-        path = os.path.join(meas_dir, "blocks.csv")
-        with open(path, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(bottleneck.BLOCK_CSV_COLUMNS)
-            writer.writerows(block_rows)
-        written.append(path)
+    for name, columns, rows in (
+        ("taps.csv", bottleneck.TAP_CSV_COLUMNS, list(bottleneck.tap_rows(label, phases))),
+        ("blocks.csv", bottleneck.BLOCK_CSV_COLUMNS, list(bottleneck.block_rows(label, phases))),
+    ):
+        if rows:  # no empty files for a run without taps
+            path = os.path.join(meas_dir, name)
+            perf_report.write_csv(path, columns, rows)
+            written.append(path)
     return written
 
 
-def _fmt(value, spec=".3f"):
-    return format(value, spec) if isinstance(value, (int, float)) else "-"
+_fmt = perf_report.fmt
 
 
 def markdown_table(results, include_mac_details=True):
@@ -1122,39 +1020,8 @@ def markdown_table(results, include_mac_details=True):
                 )
             lines.append(details + ".")
     lines.append("")
-    target = results["fmax"].get("target_mhz")
-    # When fmax is quoted as the met goal, @fmax and @target are the same number:
-    # printing both columns would just be noise.
-    same_mhz = bool(fmax and target and abs(fmax - target) < 1e-9)
-    mhz_cols = (
-        f"Gb/s @{_fmt(fmax, '.0f')} MHz |"
-        if same_mhz
-        else "Gb/s @fmax | Gb/s @target |"
-    )
-    lines.append(
-        "| phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | "
-        "% line rate | " + mhz_cols + " in stall | cold head (clk) | total lat med (clk) |"
-    )
-    lines.append("|---|---|---|---|---|---|---|---|---|---|---|" + ("" if same_mhz else "---|"))
-    for phase in results["phases"]:
-        for direction in ("encrypt", "decrypt"):
-            res = phase.get(direction)
-            if not res:
-                continue
-            lat = res.get("latency_cycles", {})
-            frac = res.get("line_rate_frac")
-            gbps = f"| {_fmt(res.get('gbps_at_fmax'))} "
-            if not same_mhz:
-                gbps += f"| {_fmt(res.get('gbps_at_target'))} "
-            lines.append(
-                f"| {phase['name']} | {phase['packet_bytes']} | {phase['num_packets']} "
-                f"| {direction} | {_fmt(res.get('throughput_bytes_per_cycle'))} "
-                f"| {_fmt(res.get('packet_period_cycles'), '.1f')} "
-                f"| {_fmt(frac * 100 if frac else None, '.1f')}% "
-                + gbps
-                + f"| {_fmt(res.get('in_stall_frac'))} | {lat.get('cold_head')} "
-                f"| {lat.get('total_med')} |"
-            )
+    lines.extend(perf_report.markdown_boundary_table(
+        results["phases"], DIRECTIONS, fmax, results["fmax"].get("target_mhz"), label_header="dir"))
     return "\n".join(lines)
 
 
@@ -1177,21 +1044,15 @@ def _stamp(results):
     )
 
 
-def _splice(text, begin, end, body):
-    """Replace whatever sits between two markers. None if they are not there."""
-    if begin not in text or end not in text:
-        return None
-    head, rest = text.split(begin, 1)
-    _, tail = rest.split(end, 1)
-    return head + f"{begin}\n\n{body}\n\n{end}" + tail
+_splice = perf_report.splice_markers
 
 
 def update_readme(table, results, block_summary=None):
     """Splice the generated results into README.md so their numbers are never
     hand-copied (and so re-measuring a variant updates the docs in one step).
 
-    The README carries exactly one table -- the boundary QoR table -- plus a text
-    summary of the block analysis; the full block tables live in the run's
+    The README carries exactly one table -- the boundary QoR table -- plus a
+    pointer to the block analysis; the full block tables live in the run's
     measurements/<label>/blocks.md."""
     path = os.path.join(HERE, "README.md")
     with open(path) as f:
@@ -1367,49 +1228,23 @@ def measurement_errors(results):
     for phase in results.get("phases", []):
         if phase.get("taps_check", {}).get("consistent") is False:
             errors.append(f"Phase {phase.get('name')}: performance taps disagree on cycle count")
+        # Metadata must match each buffer's implementation; the occupancy taps
+        # are then checked against that capacity by the library's buffer checks
+        # (capacity, overflow, conservation, drained when settled, in/out taps).
+        buffers = {}
         for name, buffer in results.get("config", {}).get("buffering", {}).items():
             depth = buffer.get("memory_depth_beats", 0)
-            if depth < 2 or buffer.get("capacity_beats") != (1 << (depth - 1).bit_length()) + 1:
+            if depth < 2 or buffer.get("capacity_beats") != stream_fifo_capacity_beats(depth):
                 errors.append(name + ": FIFO capacity metadata disagree")
                 continue
-            counts = phase.get("taps", {}).get(name + ".occupancy")
-            if counts is None:
-                if "all" in results.get("config", {}).get("taps", []):
-                    errors.append(name + ": enabled buffer occupancy tap missing")
-                continue
-            label = f"Phase {phase.get('name')}/{name}"
-            if counts.get("capacity_beats") != buffer["capacity_beats"]:
-                errors.append(label + ": measured and configured buffer capacities differ")
-            if counts.get("high_water_beats", 0) > buffer["capacity_beats"]:
-                errors.append(label + ": buffer overflow")
-            if counts.get("start_occupancy", 0) + counts.get("accepted_beats", 0) - counts.get(
-                    "retired_beats", 0) != counts.get("end_occupancy"):
-                errors.append(label + ": buffer transfer conservation failed")
-            if counts.get("end_occupancy") != 0:
-                errors.append(label + ": settled performance phase left buffered data")
-            for suffix, field in (("in", "accepted_beats"), ("out", "retired_beats")):
-                hs = phase.get("taps", {}).get(name + "." + suffix)
-                if hs and hs.get("xfer_cycles") != counts.get(field):
-                    errors.append(label + ": occupancy disagrees with " + suffix + " transfers")
+            buffers[name] = buffer["capacity_beats"]
         for name, stream_slice in results.get("config", {}).get("stream_slices", {}).items():
-            label = f"Phase {phase.get('name')}/{name}"
             if stream_slice.get("mode") != "full" or stream_slice.get("capacity_beats") != 2 or stream_slice.get("latency_cycles") != 1:
-                errors.append(label + ": output slice metadata disagree with its implementation")
-            counts = phase.get("taps", {}).get(name + ".occupancy")
-            if counts is None:
-                if "all" in results.get("config", {}).get("taps", []):
-                    errors.append(label + ": enabled slice occupancy tap missing")
-                continue
-            if counts.get("capacity_beats") != 2 or counts.get("high_water_beats", 0) > 2:
-                errors.append(label + ": invalid slice capacity/occupancy")
-            if counts.get("start_occupancy", 0) + counts.get("accepted_beats", 0) - counts.get("retired_beats", 0) != counts.get("end_occupancy"):
-                errors.append(label + ": slice transfer conservation failed")
-            if counts.get("end_occupancy") != 0:
-                errors.append(label + ": settled performance phase left buffered output")
-            for suffix, field in (("in", "accepted_beats"), ("out", "retired_beats")):
-                hs = phase.get("taps", {}).get(name + "." + suffix)
-                if hs and hs.get("xfer_cycles") != counts.get(field):
-                    errors.append(label + ": slice occupancy disagrees with " + suffix + " transfers")
+                errors.append(f"Phase {phase.get('name')}/{name}: output slice metadata disagree with its implementation")
+            buffers[name] = 2  # a full-mode skid buffer always holds two beats
+        errors.extend(buffer_tap_errors(
+            phase, buffers, taps_required="all" in results.get("config", {}).get("taps", []),
+            settled=True))
         # New rigs commit source acceptance after convergence. Keep old records
         # readable, but require exact byte accounting from the corrected rig.
         if results.get("config", {}).get("source_handshake") == "converged":
@@ -1828,13 +1663,13 @@ def main():
     ap.add_argument("--reuse-syn", action="store_true", help="keep the out_dir so pypelinec re-reads its cached Vivado logs (sim-only re-measure)")
     ap.add_argument("--out-dir", help="Explicit performance build cache (same rules as build.py --out-dir)")
     ap.add_argument("--parse-only", action="store_true", help="run nothing; re-merge an existing run's perf JSON + build log")
-    ap.add_argument("--area-from-dir", default=None, help="also parse DUT-only area from another build's out_dir (e.g. generated-files-verilog-shared)")
+    ap.add_argument("--area-from-dir", default=None, help="also parse DUT-only area from another build's out_dir (e.g. generated-files/verilog-shared)")
     ap.add_argument("--no-per-module-area", action="store_true", help="skip per-module out-of-context area parsing")
     ap.add_argument("--sizes", default=None, help="comma-separated packet sizes (default: see perf_tb_common.py)")
     ap.add_argument("--packets", type=int, default=None, help="back-to-back packets per size")
     ap.add_argument("--peak-bytes", type=int, default=None, help="single long packet size for the peak phase (0 disables)")
     ap.add_argument("--dirs", default=None, choices=("both", "enc", "dec"), help="which directions to stream")
-    ap.add_argument("--taps", default="all", help="internal taps to enable: 'all' (default), a block or direction prefix ('poly1305', 'encrypt'), or exact names; pass --taps '' to measure boundaries only (see src/perf_taps.py)")
+    ap.add_argument("--taps", default="all", help="internal taps to enable: 'all' (default), a block or direction prefix ('poly1305', 'encrypt'), or exact names; pass --taps '' to measure boundaries only (see PipelineC stream/stream_perf_probe.py)")
     ap.add_argument("--seed", type=int, default=None, help="packet payload RNG seed")
     ap.add_argument("--update-readme", action="store_true", help="splice the results table into README.md between its MEASURED-RESULTS markers")
     inspection = ap.add_mutually_exclusive_group()
@@ -1852,12 +1687,12 @@ def main():
             return measurement_selftest()
         if args.check_record or args.audit_mcps:
             report = (check_record(args.check_record) if args.check_record else
-                      audit_poly1305_hdl(args.audit_mcps, tuple(args.audit_directions.split(","))))
+                      audit_poly1305_hdl(generated_out_dir(args.audit_mcps), tuple(args.audit_directions.split(","))))
             print(json.dumps(report, indent=2))
             return 0 if report["passed"] else 1
         if args.area_report:
             if os.path.isdir(args.area_report):
-                report = parse_out_dir(args.area_report, per_module=args.per_module)
+                report = parse_out_dir(generated_out_dir(args.area_report), per_module=args.per_module)
                 if args.json:
                     print(json.dumps(report, indent=2))
                 else:
@@ -1937,10 +1772,10 @@ def main():
         else:
             args.poly1305 = "legacy"
             args.target_mhz = 80
-            out_dir = os.path.join(HERE, f"generated-files-perf-{'comb' if args.comb else 'pipe'}-shared-native")
+            out_dir = os.path.join(HERE, GENERATED_FILES, f"perf-{'comb' if args.comb else 'pipe'}-shared-native")
         recorded_dir = previous.get("config", {}).get("out_dir")
         if recorded_dir:
-            out_dir = os.path.join(HERE, recorded_dir)
+            out_dir = generated_out_dir(os.path.join(HERE, recorded_dir))
         args.sharing = perf_raw.get("config", {}).get("sharing", {"chacha20": True, "poly1305": False})
 
     stdout_info = parse_stdout(log_path)
@@ -2014,7 +1849,7 @@ def main():
         if "fmax_hw_build" in previous:
             results["fmax_hw_build"] = previous["fmax_hw_build"]
     if args.area_from_dir:
-        hardware_out_dir = os.path.join(HERE, args.area_from_dir)
+        hardware_out_dir = generated_out_dir(os.path.join(HERE, args.area_from_dir))
         results["area_hw_build"] = parse_area(
             hardware_out_dir,
             per_module=not args.no_per_module_area,
@@ -2093,7 +1928,7 @@ def main():
     elif perf_raw.get("config", {}).get("taps"):
         print(
             "!! taps were requested but none fired -- check the names against "
-            "src/perf_taps.py's probe call sites",
+            "the design's stream_perf_probe call sites",
             file=sys.stderr,
         )
     for phase in phases:

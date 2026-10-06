@@ -14,10 +14,11 @@ tags/ciphertext lengths **deliberately differ** from the still-unfixed C
 designs. Do not port fixes back to `../pipelinec_build/` without being asked;
 they are intentionally different designs now.
 
-The `$PYPELINEC` environment variable must point to the PipelineC executable
-(`<PipelineC repo>/src/pypelinec`) before running any build script — both
-`build.py` and every design file's `sys.path` bootstrap use it to locate the
-repo (falling back to a sibling `../../../PipelineC` checkout).
+Set `$PYPELINEC` to the PipelineC executable (`<PipelineC repo>/src/pypelinec`)
+before running any build script; `build.py` falls back to `pypelinec` on PATH.
+`measure.py` and `bottleneck.py` derive the PipelineC repo from it (falling
+back to a sibling `../../../PipelineC` checkout) and put its
+`include/pypeline` on `sys.path` for the stream performance library.
 
 Every design/test file starts with `import wireguard_env  # noqa: F401` —
 this must be the first import; it's this tree's own `sys.path` bootstrap
@@ -51,7 +52,10 @@ Run from `pypeline_build/` (not `src/`):
   pipelined native sim (runs real autopipelining first to discover latencies).
 - `--sim --syn_tb` (no `--native`): the real acceptance test — cocotb + GHDL
   against generated VHDL. `--comb` is quick; the pipelined form takes hours.
-- `--continue`: skip clearing the output dir (`./generated-files*-<variant>`).
+- `--continue`: skip clearing the output dir (`./generated-files/<variant>`;
+  every build/measure cache lives under `generated-files/`, named from
+  `poly1305_config.GENERATED_FILES` — old `generated-files-<name>` paths in
+  records resolve there via `generated_out_dir`).
   `--out-dir` selects an isolated cache; after interruption preserve good
   synthesis logs and rename only an identified incomplete/error vendor log.
 
@@ -112,11 +116,17 @@ known-answer self-test at import time — the DUT never validates itself.
 
 `./measure.py` is the one automated (fmax, area, throughput, latency) step; it
 runs `./build.py --shared --perf` (autopipeline + native sim of exactly what it
-built) and merges everything into `measurements/<label>/`. Cycle-domain
-measurement lives in `src/chacha20poly1305/perf_probe.py` (no pypeline import,
-`--selftest`-able), the phase plan and `WG_PERF_*` knobs in `perf_tb_common.py`,
-and block-level attribution in `bottleneck.py` (`--selftest`-able). Existing
-FIFO/slice adapters also report simulation-only occupancy and conservation.
+built) and merges everything into `measurements/<label>/`. The design-agnostic
+half is PipelineC's stream performance library (`include/pypeline/stream/`
+`stream_perf.py`, `stream_perf_probe.py`, `stream_bottleneck.py`,
+`stream_perf_report.py`, plus `axi/axis_sim.py`'s converged source/sink; guide
+`pypeline_stream_perf_guide.md`, metric tests in PipelineC's
+`stream_perf_test.py`). WireGuard keeps the phase plan, `WG_PERF_*` knobs and
+MAIN labels in `perf_tb_common.py`, the block graph/model/report wording in
+`bottleneck.py` (`--selftest`-able), and fmax/area parsing, acceptance and
+evidence in `measure.py` (`--selftest`-able). Library bugs go to the user, not
+a local copy. `aead_types.py`'s FIFO/slice factories use the library's probed
+buffers, which report simulation-only occupancy and conservation.
 `measure.py --out-dir ... --reuse-syn` can retain an isolated cache.
 
 The current buffered 60 MHz QoR and compact native evidence are in
@@ -130,10 +140,11 @@ directory or diagnostic build modes are needed; compiler regressions belong
 in PipelineC's own suite.
 
 **Internal taps go inside the design's own hardware functions**, via
-`src/perf_taps.py`: `perf_taps.hs(name, valid, ready, keep=None)`,
-`perf_taps.state(name, reg, NAMES_TUPLE)`, `perf_taps.arb(...)`. These are
-`@sim_output` shims and the elaborator deletes calls to them, so they cost **no
-hardware**. Caveat: generated VHDL
+`from stream import stream_perf_probe as perf_taps`: `perf_taps.hs(name, valid,
+ready, keep=None)`, `perf_taps.state(name, reg, NAMES_TUPLE)`,
+`perf_taps.arb(...)` (see the guide for `stream_hs`/`occupancy`/`arb_n`). These
+are `@sim_output` calls and the elaborator deletes them, so they cost **no
+hardware**; they fire once per cycle, Feedback bodies included. Caveat: generated VHDL
 embeds source line numbers in comments and signal names, so adding or MOVING a
 probe shifts those and costs one re-synthesis of the enclosing hierarchy; once
 the probes are in place, `measure.py --reuse-syn` re-measures in sim time alone
@@ -146,22 +157,24 @@ as before. Rules when adding one:
 - **state** probes at the TOP of an FSM body (a `Reg` reads back the next state
   once assigned), **handshake** probes at the bottom (every `o.*` field final);
 - names are auto-qualified per direction from the executing MAIN
-  (`encrypt/poly1305.data_in`), so the twice-instantiated FSMs stay separate;
+  (`encrypt/poly1305.data_in`) via `perf_tb_common.py`'s
+  `stream_perf_probe.MAIN_LABELS.update(...)` (update in place, never rebind),
+  so the twice-instantiated FSMs stay separate;
 - a new block needs an entry in `bottleneck.py`'s `BLOCKS` to appear in the
   rollup.
 
 **README.md holds only the CURRENT QoR record and analysis** — it is not a
 history or change log, and it carries exactly ONE results table: the boundary
-QoR table between the `MEASURED-RESULTS` markers. The block analysis goes between
-the `BLOCK-RESULTS` markers as a short generated TEXT summary
-(`bottleneck.markdown_summary`, no tables) — the full per-block, FSM-state,
-bottleneck-evidence, arbitration and model tables stay in the run's
-`measurements/<label>/blocks.md`. Both regions are written by
+QoR table between the `MEASURED-RESULTS` markers. The `BLOCK-RESULTS` region
+holds only a generated link to the run's `measurements/<label>/blocks.md`,
+which carries the full per-block, FSM-state, bottleneck-evidence, arbitration,
+lifecycle, model and buffer tables. Both regions are written by
 `./measure.py … --update-readme` (one provenance stamp, from the latest run); the
-hand-written `#### Analysis`
+hand-written `#### Interpretation`
 beneath them describes that run in the present tense and is rewritten, not
 appended to, when a new run replaces it. Past measured points live only in
-their own `measurements/<label>/` directories.
+their own `measurements/<label>/` directories, and fix histories belong in
+git history or component docs, not the README.
 
 See README.md's "Measuring QoR" and "Probing inside the design" sections.
 
@@ -203,6 +216,6 @@ enum literals (a port must not be named e.g. `poly_key` if
 `POLY_KEY` is an enum member) — native sim/elaboration won't catch this, only
 real synthesis will.
 
-See `README.md`'s "Wiring Style: Old vs New" section for the full worked
+See `README.md`'s "Wiring Style" section for the full worked
 example (the decrypt dataflow core's body) and the complete conventions list
 vs. the C sources.

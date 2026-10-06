@@ -13,7 +13,7 @@ decrypt_syn_tb.py, where it cannot perturb a timing window.
 
 Note the decrypt input frame carries 16 bytes of auth tag on top of the
 plaintext length, so its line bytes exceed the encrypt side's for the same
-goodput -- perf_probe.py records goodput and line bytes separately rather than
+goodput -- stream_perf.py records goodput and line bytes separately rather than
 averaging the asymmetry away.
 
 Only runs under Pypeline's native --sim mode (`./build.py --shared --perf`).

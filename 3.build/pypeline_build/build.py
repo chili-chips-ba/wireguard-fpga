@@ -15,7 +15,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 from poly1305_config import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
-    TARGETS_MHZ, default_target_mhz, target_out_dir, starting_latencies,
+    TARGETS_MHZ, default_target_mhz, target_out_dir, starting_latencies, GENERATED_FILES,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 
@@ -76,10 +76,10 @@ def main():
         tb_type = "perf_tb" if args.perf else "syn_tb" if args.syn_tb else "tb"
         src_file = f"./src/chacha20poly1305_{design_name}_{tb_type}.py"
         kind = "perf" if args.perf else "syn-tb" if args.syn_tb else "sim"
-        dir_parts = ["generated-files", kind, "comb" if args.comb else "pipe", design_short]
+        dir_parts = [kind, "comb" if args.comb else "pipe", design_short]
         if args.native:
             dir_parts.append("native")
-        out_dir = "./" + "-".join(dir_parts)
+        out_dir = os.path.join(".", GENERATED_FILES, "-".join(dir_parts))
         options = ["--sim"]
         if args.comb:
             options.append("--comb")
@@ -89,7 +89,7 @@ def main():
     else:
         src_file = f"./src/chacha20poly1305_{design_name}.py"
         suffix = "shared" if design_short == "shared" else design_name
-        out_dir = f"./generated-files-verilog-{suffix}"
+        out_dir = os.path.join(".", GENERATED_FILES, f"verilog-{suffix}")
         options = ["--top", f"chacha20poly1305_{design_name}", "--verilog"]
 
     out_dir = target_out_dir(sharing_out_dir(implementation_out_dir(out_dir, args.poly1305), sharing), args.target_mhz)
