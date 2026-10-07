@@ -39,7 +39,7 @@ import encrypt_syn_tb  # noqa: F401
 # ever reaching the is_c_built_in/IS_SIM_CTRL_FUNC_NAME check that only
 # applies to the sim_finish() submodule instance itself, not its containing
 # MAIN).
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def encrypt_syn_tb_finish_checker():
     if encrypt_syn_tb.encrypt_all_done:

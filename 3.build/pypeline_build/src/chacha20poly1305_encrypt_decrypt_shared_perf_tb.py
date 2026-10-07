@@ -59,7 +59,7 @@ def write_results():
 
 # @wires: nothing here to synthesize/measure a path delay for -- see
 # chacha20poly1305_encrypt_syn_tb.py's matching checker comment.
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def shared_perf_tb_finish_checker():
     check_all_done()

@@ -97,7 +97,7 @@ def measure_out():
     _runner.tick()
 
 
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def encrypt_perf_tb() -> axis128_intrf.fwd_t:
     key: uint8_t[CHACHA20_KEY_SIZE] = common.KEY

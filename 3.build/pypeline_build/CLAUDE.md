@@ -130,7 +130,7 @@ buffers, which report simulation-only occupancy and conservation.
 `measure.py --out-dir ... --reuse-syn` can retain an isolated cache.
 
 The current buffered 60 MHz QoR and compact native evidence are in
-`measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/`.
+`measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/`.
 Use its actual automatic depths and retained signatures, not a guessed
 latency or a stale earlier top. Area is performance-testbench area and timing
 is synthesis evidence, not new DUT-only area or routed sign-off. Critical
@@ -138,6 +138,11 @@ results belong in `measurements/` or component docs; `validation/` is a
 disposable local workspace and is not committed. No separate `tests/` runner
 directory or diagnostic build modes are needed; compiler regressions belong
 in PipelineC's own suite.
+
+Keep the compiler checkout stable during long builds. The current run completed
+native simulation with an isolated original PipelineC revision after a live
+checkout update interrupted it; `recovery.json` records the exact retained
+latencies and verified frozen source hashes. It reused the completed synthesis.
 
 **Internal taps go inside the design's own hardware functions**, via
 `from stream import stream_perf_probe as perf_taps`: `perf_taps.hs(name, valid,
@@ -204,8 +209,17 @@ elaboration. `chacha20_pipeline_shared.py` and `poly1305_mcp_shared.py` own
 the deliberately explicit shared-resource `Wire`/`@MAIN` boundaries. Poly1305
 prologue and epilogue arbitration are independent, not a packet ownership lock.
 
-Pipelined decrypt has a 64-memory-beat ciphertext FIFO after its fork, before
-framing (65 slots including the FWFT output register). Pipelined encrypt has
+Pipelined decrypt has an automatically sized ciphertext FIFO after its fork,
+before framing. The selected ChaCha credits and prologue latency drive the
+conservative budget in `aead_types.decrypt_auth_fifo_sizing`; the retained
+60 MHz profile needs 115 beats, rounded to 128 memory beats plus the FWFT
+output register. Read actual pipeline metadata, never starting hints. The
+private/shared ChaCha callables expose their selected `.pipeline_func`;
+PipelineC must provide `.auto_pipeline` and `.max_in_flight` on that wrapper.
+Explicit factory depth overrides (including zero) remain available. All MAINs
+declare `wireguard_env.TARGET_MHZ`, including disconnected simulation checkers,
+so their erased simulation calls cannot leave a `clk_None` constraint.
+Pipelined encrypt has
 a full two-slot, II=1 output register slice, one unstalled cycle, outside the
 MAC body. Legacy has neither new buffer; the common tag packer suppresses a
 partial tail until it can merge tag bytes. These adapters live in existing

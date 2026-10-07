@@ -99,7 +99,7 @@ def announce():
 # This testbench has real registers, counters and stream source/sink logic.
 # Keep it a timed MAIN; @wires would falsely promise no logic or registers.
 # CSR constants do not change that requirement.
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 def encrypt_syn_tb() -> axis128_intrf.fwd_t:
     # Test vectors
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY

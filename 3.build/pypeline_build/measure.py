@@ -995,6 +995,14 @@ def markdown_table(results, include_mac_details=True):
         lines.append(f"Buffer `{name}`: {buffer['memory_depth_beats']} memory beats + "
                      f"{buffer['output_register_beats']} output beat; "
                      f"{buffer['capacity_beats']} total capacity.")
+        sizing = buffer.get("sizing", {})
+        if sizing.get("method") == "chacha-credit-bound-v1":
+            lines.append(
+                f"Automatic sizing: {sizing['required_beats']} required beats; "
+                f"ChaCha core={sizing['chacha20_core_latency']}, "
+                f"credits={sizing['chacha20_max_in_flight_blocks']} blocks, "
+                f"prologue MCP={sizing['prologue_mcp_latency']} cycles."
+            )
     for name, stream_slice in sorted(results.get("config", {}).get("stream_slices", {}).items()):
         lines.append(f"Register slice `{name}`: mode `{stream_slice['mode']}`, "
                      f"{stream_slice['capacity_beats']} slots, "
@@ -1193,9 +1201,51 @@ def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None
             "mcps": reports, "passed": not errors, "errors": errors}
 
 
+def auth_fifo_sizing_errors(config):
+    """Check new automatic budgets; historical/explicit records stay readable."""
+    buffer = config.get("buffering", {}).get("decrypt/auth_fifo", {})
+    sizing = buffer.get("sizing", {})
+    if sizing.get("method") != "chacha-credit-bound-v1":
+        return []
+    label = "decrypt/auth_fifo: "
+    keys = ("chacha20_core_latency", "chacha20_max_in_flight_blocks",
+            "chacha20_block_beats", "prologue_mcp_latency", "max_aad_beats")
+    values = [sizing.get(key) for key in keys]
+    if any(type(value) is not int or value < 0 for value in values):
+        return [label + "automatic sizing inputs are missing/invalid"]
+    core, credits, ratio, prologue, aad = values
+    if credits != core + 5 or ratio < 1 or prologue < 1:
+        return [label + "automatic sizing inputs disagree with stream contracts"]
+    shared = sizing.get("shared_mcps")
+    if type(shared) is not bool:
+        return [label + "automatic sizing lacks MCP sharing selection"]
+    expected = {
+        "pipeline_credits": ratio * credits,
+        "widening_storage": ratio + 1,
+        "fork_copy_lead": 1,
+        "fifo_startup": 2,
+        "framing_idle": 1,
+        "prologue_service": (1 + int(shared)) * (prologue + 1),
+        "mac_transitions": 2,
+        "aad_framing": aad,
+    }
+    required = sum(expected.values())
+    depth = 1 << (max(2, required) - 1).bit_length()
+    errors = []
+    if sizing.get("terms_beats") != expected or sizing.get("required_beats") != required:
+        errors.append(label + "automatic sizing budget disagrees with resolved inputs")
+    if sizing.get("memory_depth_beats") != depth or buffer.get("memory_depth_beats") != depth:
+        errors.append(label + "automatic sizing disagrees with allocated memory")
+    mac = config.get("poly1305", {}).get("directions", {}).get("decrypt", {})
+    if mac.get("prologue_mcp_latency") != prologue or bool(mac.get("shared_mcps")) != shared:
+        errors.append(label + "automatic sizing disagrees with selected MAC metadata")
+    return errors
+
+
 def measurement_errors(results):
     """Acceptance checks; failed runs still retain all diagnostic artifacts."""
     errors = []
+    errors.extend(auth_fifo_sizing_errors(results.get("config", {})))
     returncode = results.get("provenance", {}).get("build_returncode")
     if returncode:
         errors.append(f"Build/simulation exited {returncode}")
@@ -1493,6 +1543,43 @@ def measurement_selftest():
         raise ValueError("Throughput recovery comparison accepted an encrypt regression")
     if area_selftest(HERE):
         return 1
+    # Resolved credits and MCP selection must drive allocation, not a stale
+    # starting guess or a requested depth mistaken for physical memory.
+    sizing_config = {
+        "poly1305": {"directions": {"decrypt": {
+            "prologue_mcp_latency": 6, "shared_mcps": True,
+        }}},
+        "buffering": {"decrypt/auth_fifo": {
+            "memory_depth_beats": 128,
+            "sizing": {
+                "method": "chacha-credit-bound-v1",
+                "chacha20_core_latency": 17, "chacha20_max_in_flight_blocks": 22,
+                "chacha20_block_beats": 4, "prologue_mcp_latency": 6,
+                "shared_mcps": True, "max_aad_beats": 2,
+                "terms_beats": {"pipeline_credits": 88, "widening_storage": 5,
+                                "fork_copy_lead": 1, "fifo_startup": 2,
+                                "framing_idle": 1, "prologue_service": 14,
+                                "mac_transitions": 2, "aad_framing": 2},
+                "required_beats": 115, "memory_depth_beats": 128,
+            },
+        }},
+    }
+    if auth_fifo_sizing_errors(sizing_config):
+        raise ValueError("Valid automatic FIFO sizing rejected")
+    for section, key, value in (
+        ("buffer", "memory_depth_beats", 64),
+        ("sizing", "chacha20_max_in_flight_blocks", 9),
+        ("sizing", "prologue_mcp_latency", 1),
+        ("sizing", "required_beats", 64),
+        ("sizing", "shared_mcps", False),
+        ("sizing", "memory_depth_beats", 64),
+    ):
+        changed = copy.deepcopy(sizing_config)
+        buffer = changed["buffering"]["decrypt/auth_fifo"]
+        target = buffer if section == "buffer" else buffer["sizing"]
+        target[key] = value
+        if not auth_fifo_sizing_errors(changed):
+            raise ValueError("Sizing guard accepted stale " + key)
     directory = Path(HERE) / Path(_SELFTEST_CASES[0][0]).parent
     report = check_record(directory)
     if not report["passed"]:

@@ -36,7 +36,7 @@ from aead_types import (
     axis128_intrf,
     axis128_frag_t,
     axis128_2broadcast,
-    DECRYPT_AUTH_FIFO_DEPTH,
+    decrypt_auth_fifo_sizing,
     make_aead_fifo,
 )
 
@@ -61,15 +61,24 @@ def make_decrypt_dataflow_core(chacha_func, mac_func=None, auth_fifo_depth=None)
 
     if mac_func is None:
         mac_func = make_poly1305_mac("decrypt")
-    if auth_fifo_depth is None:
-        auth_fifo_depth = DECRYPT_AUTH_FIFO_DEPTH
+    sizing = None
+    if IMPLEMENTATION == "pipelined":
+        if auth_fifo_depth is None:
+            sizing = decrypt_auth_fifo_sizing(chacha_func, mac_func)
+            auth_fifo_depth = sizing["memory_depth_beats"]
+        elif type(auth_fifo_depth) is not int or (auth_fifo_depth != 0 and auth_fifo_depth < 2):
+            raise ValueError("auth_fifo_depth must be None, 0, or an integer >= 2")
+        else:
+            sizing = {"method": "explicit"}
 
     # Select plain Python wiring, not a hardware mux. Legacy keeps its original
     # unbuffered graph. The depth parameter also permits isolated native sizing
     # experiments without adding diagnostic switches to build.py.
     prep_func = prep_auth_data.prep_auth_data_fsm
     if IMPLEMENTATION == "pipelined" and auth_fifo_depth:
-        auth_fifo = make_aead_fifo(axis128_frag_t, auth_fifo_depth, "auth_fifo", "decrypt")
+        auth_fifo = make_aead_fifo(
+            axis128_frag_t, auth_fifo_depth, "auth_fifo", "decrypt", sizing=sizing
+        )
 
         def buffered_prep(
             aad: uint8_t[AAD_MAX_LEN],

@@ -38,6 +38,7 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     CHACHA20_BLOCK_SIZE,
+    AXIS128_BEAT_BYTES,
     POLY1305_KEY_SIZE,
     axis128_intrf,
     axis512_frag_t,
@@ -238,8 +239,9 @@ CHACHA20_STATE_NAMES = tuple(chacha20_state_t.__members__)
 
 
 # Data width converters to-from 512b wide blocks and the 128b bus
-axis128_to_axis512, _, _ = make_dwidth_widen(uint8_t, 16, 4)
-axis512_to_axis128, _, _ = make_dwidth_narrow(uint8_t, 16, 4)
+_block_beats = CHACHA20_BLOCK_SIZE // AXIS128_BEAT_BYTES
+axis128_to_axis512, _, _ = make_dwidth_widen(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
+axis512_to_axis128, _, _ = make_dwidth_narrow(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
 
 
 @struct
@@ -449,3 +451,4 @@ def chacha20_instance_wiring(
 chacha20_instance, chacha20_stream_out_t = make_hw_func_from_interface_func(
     chacha20_instance_wiring
 )
+chacha20_instance.pipeline_func = pipeline_func

@@ -107,7 +107,7 @@ def announce():
 
 # Counters, ROM selection and stream source/sink are real testbench hardware.
 # Time this MAIN normally rather than falsely declaring it wires-only.
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 def decrypt_syn_tb() -> axis128_intrf.fwd_t:
     # Test vectors
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY

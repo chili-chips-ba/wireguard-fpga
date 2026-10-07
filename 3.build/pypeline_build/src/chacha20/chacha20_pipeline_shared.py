@@ -111,7 +111,7 @@ decrypt_pipeline_out_if: Wire[axis512_intrf]
 # demux, combined into one MAIN (used to be two: chacha20_pipeline +
 # chacha20_sharing_mux, joined by pipeline_in/pipeline_in_ready/pipeline_out/
 # pipeline_out_ready global wires).
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 def chacha20_pipeline_shared():
     pipeline_in_ready: Feedback[uint1_t]
     pipeline_out: Feedback[chacha_shared_pipeline_out_stream_intrf.stream_t]
@@ -285,3 +285,8 @@ def chacha20_decrypt_shared(
     decrypt_pipeline_in_if.stream = fsm_out.to_pipeline_if.stream
     decrypt_pipeline_out_if.ready = fsm_out.from_pipeline_if.ready
     return o
+
+
+# Plain elaboration metadata: size consumers from this selected shared wrapper.
+chacha20_encrypt_shared.pipeline_func = pipeline_func
+chacha20_decrypt_shared.pipeline_func = pipeline_func

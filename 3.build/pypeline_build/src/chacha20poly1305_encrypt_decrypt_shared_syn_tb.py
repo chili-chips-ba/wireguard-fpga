@@ -36,7 +36,7 @@ import decrypt_syn_tb  # noqa: F401
 #
 # @wires: nothing here to actually synthesize/measure a path delay for --
 # see encrypt_syn_tb_finish_checker's matching comment.
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def shared_syn_tb_finish_checker():
     if encrypt_syn_tb.encrypt_all_done & decrypt_syn_tb.decrypt_all_done:

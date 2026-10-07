@@ -57,7 +57,7 @@ decrypt_m_verified: Output[uint1_t]
 
 
 # For real hardware connect top level ports to these wires
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def chacha20poly1305_decrypt_io_wires():
     # Convert flattened multiple input wires to the axis128 stream wire

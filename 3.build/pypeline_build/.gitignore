@@ -16,3 +16,4 @@ __pycache__/
 !/measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/*.log
 !/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/*.log
 !/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/*.log
+!/measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/*.log

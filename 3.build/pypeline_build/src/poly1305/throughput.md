@@ -8,11 +8,12 @@ hardware evidence is at the earlier **30 MHz** checkpoint; the sharing-both
 pass synthesis timing, capacity and native functional checks. This is synthesis evidence, not routed sign-off; an
 external-port hardware build at 60 MHz remains deferred.
 
-The latest [packet summary](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/summary.md),
-[block report](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/blocks.md),
-[comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
-and [workflow record](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/workflow-evidence.json)
-are durable. The earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
+The latest [packet summary](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/summary.md),
+[block report](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/blocks.md),
+[validation notes](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/validation.md),
+and [workflow record](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/workflow-evidence.json)
+are durable. The original [buffering comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
+earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
 and legacy 80 MHz archives are unchanged; no historical QoR was rerun.
 Scratch `validation/` and generated caches are not needed to read results.
 
@@ -63,7 +64,7 @@ prologue/epilogue responses take seven/six cycles before arbitration wait.
 The fixed-vector top passes the 60 MHz goal; its lowest measured compute
 MAIN is ChaCha at 62.889 MHz, but an unmeasured finish checker means the
 whole-top fmax claim remains a 60 MHz lower bound. The perf top has measured
-final MAIN timing and 48,497 LUTs, 20,540 FFs and 13.5 BRAM tiles.
+final MAIN timing and 48,498 LUTs, 20,541 FFs and 13.5 BRAM tiles.
 
 The latest perf wrapper retains `decrypt_perf_verified` as a real HDL
 output, unlike the historical wrappers. Both latest body cores retain three
@@ -101,7 +102,7 @@ default without WG_TARGET_MHZ. Those earlier results remain in their
 [workflow record](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/workflow-evidence.json);
 these HDL checks are not additional synthesis timing evidence. The recovery
 change passed another 11-build comb matrix (205 packet checks), a 33-packet
-stress run, recorded-depth replays and the latest 48-packet QoR. The new
+stress run, recorded-depth replays and a 48-packet QoR. Its historical
 workflow record retains completed evidence and explicitly notes omitted
 extended-overlap and standalone-performance comparisons.
 
@@ -161,13 +162,83 @@ the existing unit testbench directly; see [standalone commands](#standalone-test
 The pipelined dataflow now adds a ciphertext FIFO after decrypt's fork and
 before authentication framing. It does not change the MAC's complete-16-byte
 authentication-block contract, arithmetic, lane sizing or body II=1 pipeline.
-The selected depth is 64 memory beats plus the FWFT output register
-(65 beats total). A 32-beat native candidate passed correctness but reached
+The accepted recovery measurement used 64 memory beats plus the FWFT output
+register (65 beats total). A 32-beat native candidate passed correctness but reached
 only 91.25% decrypt/encrypt parity at 1920 bytes (146/160-cycle periods),
-below the 95% goal. The 64-beat candidate reaches parity; 128 was unnecessary.
-Size against the full key/setup and packet-boundary wait, not just the 17-stage
-ChaCha core. These are storage budgets, not automatic compute latency limits.
-Legacy dataflow wiring is unchanged.
+below the 95% goal. The 64-beat candidate reached parity; 128 was unnecessary
+for that measured workload. The current default instead uses the conservative
+automatic derivation below, covering all ChaCha credits rather than only the
+observed concurrent occupancy. These are storage budgets, not automatic compute
+latency limits. Legacy dataflow wiring is unchanged.
+
+### Automatic authentication FIFO sizing
+
+`aead_types.decrypt_auth_fifo_sizing` reads the **selected** private/shared
+ChaCha stream wrapper's `.max_in_flight` and `.auto_pipeline.latency`, plus
+the selected MAC's `.prologue_mcp.mcp.latency`. PipelineC's normal
+pin-and-confirm re-elaboration regenerates the depth and native metadata from
+the final latencies. Starting hints are never used as final storage limits.
+The upstream metadata prerequisite is recorded in
+[PIPELINEC_PLAN.md](../../PIPELINEC_PLAN.md).
+
+Let `R = CHACHA20_BLOCK_SIZE / AXIS128_BEAT_BYTES = 4`,
+`C = ChaCha max_in_flight = core_latency + 5`,
+`P = prologue MCP latency`, `S = 1` when MCPs are shared (`0` otherwise), and
+`A = ceil(AAD_MAX_LEN / AXIS128_BEAT_BYTES) = 2`. The beat budget is:
+
+```text
+required = R*C + (R+1) + 1 + 2 + 1 + (1+S)*(P+1) + 2 + A
+memory_depth = ceil_pow2(max(2, required))
+total_capacity = memory_depth + 1
+```
+
+| Term | Storage or bounded wait |
+| --- | --- |
+| `R*C` | All shared-pipeline credits may belong to decrypt; each holds at most R ciphertext beats |
+| `R+1` | Widening accumulator (R) plus its narrow input register (1) |
+| `1` | Authentication fork can accept one copy ahead of ChaCha |
+| `2` | FWFT push-to-valid startup |
+| `1` | Framing IDLE-to-AAD/ciphertext transition |
+| `(1+S)*(P+1)` | Own prologue service plus one preceding peer service when shared; each includes its response handshake |
+| `2` | MAC key-to-prologue launch and response-to-body transitions |
+| `A` | Maximum padded AAD beats before ciphertext |
+
+At a next-key barrier ChaCha cannot retire that packet's payload until the
+MAC accepts the key. Accepted ciphertext is therefore bounded by pipeline
+credits, widening storage, and the fork's copy lead. Body drain, epilogue and
+tag-output waits occur behind that barrier: they can fill the credit budget
+but do not require an additional unbounded time-to-beats term. Once the key
+is accepted, ingress can add at most one beat per setup/framing cycle; when
+ciphertext framing starts, the II=1 body keeps pace. The service bound assumes
+the existing two-client arbitration and both MACs promptly consuming their
+prologue response. Prolonged external stalls still propagate backpressure.
+
+For retained 60 MHz depths, `C=22`, `P=6`, `S=1`: the terms total **115
+beats**, rounded to **128 memory beats / 129 total slots**. The confirmed
+30 MHz shared hints (`C=9`, `P=1`) give 53 beats, rounded to 64 memory beats.
+This is conservative automatic sizing, not a claim that the smallest FIFO
+meeting a particular throughput target is 128 beats.
+
+The decrypt factory retains `auth_fifo_depth=None` for automatic sizing,
+an integer at least two for explicit sizing, and zero to disable the FIFO.
+Legacy bypasses sizing altogether. Buffering metadata records the derivation,
+requested memory depth, actual rounded memory depth, and output register;
+measurement acceptance checks new automatic budgets while accepting older
+records without sizing metadata.
+
+The automatic-sizing qualification completed on **2026-10-07**: all 48
+six-size QoR checks passed at retained depths 17 / 3,3 / 6,5, with 63.032 MHz
+synthesis timing. Matched-depth native runs of automatic 128 and explicit 64
+memory beats passed 32 checks and gave identical goodput at 1420/1920 bytes.
+The fresh record's high water is 56/129 slots; all phases conserve transfers
+and drain to zero. Explicit target rates on every WireGuard MAIN also remove
+the unused finish checker's `clk_None` port: HDL/XDC contains only `clk_60p0`,
+and Vivado reports no unclocked register or unconstrained internal pins.
+The [validation notes](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/validation.md)
+retain the functional/stress/AAD checks and explain recovery with an isolated
+original compiler after the live checkout changed during synthesis.
+
+### Original 64-beat recovery qualification
 
 This implements the ciphertext-buffer position proposed by
 [Issue #39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39) for the
@@ -210,7 +281,7 @@ output register slice (II=1, one unstalled cycle), outside the MAC/body pipeline
 Body D=P+2 and L=D are unchanged. Legacy wiring remains unchanged; the common
 partial-tail protocol correction applies to both architectures. Final-source
 comb stress covers input gaps, simultaneous FIFO transfers, partial keeps,
-prolonged output stalls and tampered tags. Latest QoR high water is 56/65
+prolonged output stalls and tampered tags. Original recovery QoR high water is 56/65
 auth beats; all size phases conserve accepted/retired beats and drain to zero.
 Equal sustained large-packet goodput does not eliminate cold verification
 latency or small-packet framing/setup overhead. Thus the primary decrypt

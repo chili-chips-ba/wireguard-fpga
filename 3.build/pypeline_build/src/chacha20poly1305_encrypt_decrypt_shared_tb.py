@@ -49,7 +49,7 @@ def check_both_done():
 
 # @wires: nothing here to actually synthesize/measure a path delay for -- see
 # chacha20poly1305_encrypt_syn_tb.py's matching checker comment.
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def shared_tb_finish_checker():
     check_both_done()

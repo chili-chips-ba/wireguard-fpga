@@ -54,7 +54,7 @@ encrypt_m_axis_tready: Input[uint1_t]
 
 
 # For real hardware connect top level ports to these wires
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def chacha20poly1305_encrypt_io_wires():
     # Convert flattened multiple input wires to the axis128 stream wire

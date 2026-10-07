@@ -21,7 +21,7 @@ their **30 MHz** defaults. The sharing-both configuration has a passing
 external-port hardware checkpoint at 30 MHz and native fixed-vector plus QoR
 testbench results at a **60 MHz** goal.
 
-The latest six-size QoR run (2026-10-06) passed all **48 packet checks**,
+The latest six-size QoR run (2026-10-07) passed all **48 packet checks**,
 synthesis timing, capacity, and archived-evidence integrity. At 1920 bytes it
 sustains **6.255 Gb/s encrypt / 6.269 Gb/s decrypt at 60 MHz**; at 1420 bytes,
 **5.842 / 5.859 Gb/s**. The performance top's synthesis estimate is
@@ -37,8 +37,12 @@ for arithmetic, arbitration, latency sizing, every confirmed checkpoint and
 deferred higher-clock issues. The latest packet results are below.
 
 Pipelined decrypt buffers ciphertext on its authentication fork, before
-framing: 64 memory beats plus one FIFO output beat. ChaCha can advance while
-authentication waits for its key/setup. Pipelined encrypt has a two-slot,
+framing. Its memory depth is derived from the selected ChaCha pipeline's
+credits and bounded authentication setup, then rounded to a power of two;
+the retained 60 MHz depths give 128 memory beats plus one FIFO output beat.
+ChaCha can advance while authentication waits for its key/setup. See the
+[sizing derivation](src/poly1305/throughput.md#automatic-authentication-fifo-sizing).
+Pipelined encrypt has a two-slot,
 II=1 output register slice (one unstalled output cycle) to hold external AXIS
 words stable under backpressure. Legacy has neither buffer. The
 [recovery comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md)
@@ -58,7 +62,8 @@ Run from `3.build/pypeline_build` in the primary WireGuard checkout. Set
 `measure.py` and `bottleneck.py` also discover a sibling PipelineC
 checkout (`../../../PipelineC`). Both repositories' revisions and
 design-source hashes are preserved with each measurement. The latest QoR used
-Vivado 2019.2 and clean PipelineC `b47d0fcdf8c36fa615b8759c6bbf6cc099b2780f`;
+Vivado 2019.2 and an isolated, clean PipelineC
+`7f96bc54c6dafc673b75d512ba44ff07df807c9f`;
 exact frozen design/include hashes are retained with its evidence. Use the
 archived source hashes for the exact tested code rather than assuming a
 revision alone implies a clean tree.
@@ -217,6 +222,18 @@ An explicitly selected output directory must be empty for a fresh build;
 `--continue --out-dir ...` resumes it without clearing files. Keep separate caches
 when comparing clocks, architectures or starting-guess profiles.
 
+### Clock declarations
+
+Every design and testbench `@MAIN` declares `wireguard_env.TARGET_MHZ`,
+including simulation finish checkers. A bare checker whose `@sim_output`
+call disappears during hardware elaboration has no shared wires from which
+the compiler can infer its clock. Previously this produced an unused
+`clk_None` top port and a fallback 1000 MHz constraint. The historical recovery
+HDL contains that name only in the port declaration; Vivado reports the port
+as unconnected and zero register pins without clocks. Explicit rates remove
+the phantom clock. The fresh 60 MHz build has only `clk_60p0`, no missing-frequency
+warning, zero unclocked register pins, and zero unconstrained internal pins.
+
 ### Acceptance testing
 
 The integration/fallback matrix, using ordinary builds (stop on the first
@@ -241,8 +258,13 @@ fixed-vector tests. For the decrypt-buffering change, 11 native combinational
 builds passed 205 packet checks across the selections/styles and legacy smoke;
 the sharing-both stress run passed 16 encrypt and 17 decrypt checks. The
 latest QoR passed all 48 reference-checked packets at its actual converged
-depths. Test records are retained in the
-[recovery workflow record](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/workflow-evidence.json).
+depths. Automatic sizing and explicit clocks also passed the 11-case native
+matrix, AAD boundaries at 0/1/16/17/32 bytes, and the stress case. A matched-depth
+comparison with explicit 64-beat storage passed 32 packet checks and retained
+identical goodput at 1420/1920 bytes. Current test records are retained in the
+[workflow record](measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/workflow-evidence.json);
+the earlier [recovery record](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/workflow-evidence.json)
+preserves the original buffering qualification.
 
 The random native testbenches also support `WG_TB_STRESS=1`. This selects
 16 directed packets through 1920 bytes, input gaps and prolonged/periodic
@@ -515,7 +537,7 @@ into the measurement directory. Use a fresh label; committed records
 remain historical evidence. Check one without rewriting it:
 
 ```sh
-./measure.py --check-record measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005
+./measure.py --check-record measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006
 ```
 
 ### What is measured, and how
@@ -612,28 +634,31 @@ testbenches, where it cannot perturb a timing window.
 | `pypelinec.log` | the build/sim log, with the per-cycle `Clock: N` spam filtered out (counted, not kept) |
 | `perf-*.json` / `perf-vivado.log` / `perf-clocks.xdc`, `artifact-manifest.json` | with `--save-evidence`: input manifests, sweep history, source provenance, the timing log, constraints and a checksum inventory (`--check-record` verifies them) |
 
-### Current results: sharing-both design, decrypt buffering, 60 MHz
+### Current results: sharing-both design, automatic FIFO sizing, 60 MHz
 
 The latest shared run is
-[sharing-both 60 MHz with decrypt recovery](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/summary.md).
-It completed on 2026-10-06: 48 packets, six sizes, four per size per direction,
+[sharing-both 60 MHz with automatic FIFO sizing and explicit clocks](measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/summary.md).
+It started on 2026-10-06 and completed on 2026-10-07: 48 packets, six sizes, four per size per direction,
 all taps, 2459 cycles. Raw measurements, frozen design/include hashes and
 retained synthesis observations are archived alongside the record.
-The table below comes directly from that record's `results.json`.
+The table below comes directly from that record's `results.json`; the
+[validation notes](measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/validation.md)
+explain the sizing, clock audit and simulation recovery.
 
-The [comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md)
+The historical [buffering comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md)
 keeps the pre-buffering 60 MHz, ChaCha-only 30 MHz and legacy 80 MHz records separate.
 Neither historical QoR nor legacy DUT-only area was rerun. The legacy 80 MHz
 timing number was a lower bound, not a measured maximum.
 
 <!-- MEASURED-RESULTS:BEGIN -->
 
-_Measured on 2026-10-06T15:06:28+00:00 — wireguard-fpga `77116452cdf9-dirty`, PipelineC `b47d0fcdf8c3` (clean), Vivado 2019.2, 2459 cycles. Retained record: `measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/results.json`._
+_Measured by `./measure.py --label shared-60mhz-auto-auth-fifo-explicit-clocks-20261006` on 2026-10-07T09:15:56+00:00 — wireguard-fpga `0df483d239c0`, PipelineC `7f96bc54c6da`, Vivado 2019.2, 2459 cycles. Regenerate with `./measure.py --label shared-60mhz-auto-auth-fifo-explicit-clocks-20261006 --parse-only --update-readme`._
 
 Design `shared` | target 60.0 MHz | measured fmax **63.03 MHz** | limiting MAIN `chacha20_pipeline_shared`
-Area (perf_tb_top): **48497 LUT** (47749 logic + 748 mem), **20540 FF**, **704 DSP48**, **13.5 BRAM tiles**, 6752 CARRY4
+Area (perf_tb_top): **48498 LUT** (47750 logic + 748 mem), **20541 FF**, **704 DSP48**, **13.5 BRAM tiles**, 6752 CARRY4
 Shared resources: `chacha20-poly1305`.
-Buffer `decrypt/auth_fifo`: 64 memory beats + 1 output beat; 65 total capacity.
+Buffer `decrypt/auth_fifo`: 128 memory beats + 1 output beat; 129 total capacity.
+Automatic sizing: 115 required beats; ChaCha core=17, credits=22 blocks, prologue MCP=6 cycles.
 Register slice `encrypt/output_slice`: mode `full`, 2 slots, 1 unstalled cycle(s), II=1.
 Poly1305 implementation: `pipelined`.
 
@@ -656,53 +681,50 @@ Poly1305 implementation: `pipelined`.
 
 <!-- BLOCK-RESULTS:BEGIN -->
 
-Detailed per-block service/stall, shared arbitration, lifecycle and buffer
-measurements are in the [block report](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/blocks.md).
+Detailed per-block service/stall, shared arbitration and lifecycle measurements
+are in the [block report](measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/blocks.md).
 
 <!-- BLOCK-RESULTS:END -->
 
 #### Interpretation
 
 At 1920 bytes the latest run sustains **6.255/6.269 Gb/s** at 60 MHz
-(encrypt/decrypt), versus pre-buffering 60 MHz's **6.312/4.800 Gb/s**:
-decrypt gains **30.6%**, while encrypt falls **0.9%**. At 1420 bytes the
-rates are **5.842/5.859 Gb/s**. Decrypt/encrypt parity exceeds 99% at both
-large sizes, and both bodies retain II=1. Small-packet setup/framing costs
-remain: the 16/64/256-byte results are not equal between directions.
+(encrypt/decrypt); at 1420 bytes it sustains **5.842/5.859 Gb/s**. These match
+the earlier buffered 64-beat record. A matched-depth native comparison of
+automatic 128-beat and explicit 64-beat storage passed all 32 packet checks
+with identical goodput in both directions at both sizes. Small-packet
+setup/framing costs remain, and decrypt still withholds plaintext until
+verification; equal sustained goodput does not imply equal cold latency.
 
-The controlled, fixed-wrapper native comparison separately isolates the FIFO:
-1920-byte periods change from 146/194⅔ to 147/147 cycles, a 32.4% decrypt gain
-and 0.68% encrypt loss. The final QoR instead uses both body cores at depth 3,
-not the older fixture's 3/0, so it is not that controlled A/B. Sixteen-packet
-replays show near-equal large-packet completion periods at both recorded
-depth profiles. No eight-interval before/after contention-window
-qualification is claimed.
+The automatic budget is **115 beats**, derived from 22 selected ChaCha
+pipeline credits and bounded widening, fork, setup and framing overhead.
+Power-of-two allocation gives **128 memory beats plus one output beat**.
+This covers the structural bound; the previous 64-beat allocation was
+sufficient for the measured workload. High water reaches 56 of 129 slots;
+every phase conserves transfers and ends empty. The resolved derivation is
+saved in the record and checked by measurement acceptance.
 
-Against the archived ChaCha-only 30 MHz rates (3.276/2.916 Gb/s at 1920),
-the new actual-clock rates are **1.91×/2.15×**; against legacy 80 MHz
-(1.620/1.181 Gb/s), **3.86×/5.31×**. These are historical, not isolated
-architecture comparisons. New 1920-byte completion periods are
-147⅓/147 cycles; median packet latency is 203/329 cycles
-(3.38/5.48 µs at 60 MHz). Decrypt still withholds plaintext until verification;
-equal sustained goodput does not imply equal cold latency.
+The fresh performance top passes synthesis timing at **63.032 MHz** and uses
+**48,498 LUTs, 20,541 FFs, 704 DSPs and 13.5 BRAM tiles**. Relative to the
+earlier buffered performance record, that is one additional LUT and FF,
+with unchanged DSP and BRAM totals. Both bodies retain core depth 3/local
+L=5 and II=1. Area includes the fixture and its constant-folding context.
+External-port shared hardware remains validated at the earlier 30 MHz
+checkpoint; this run provides performance-top synthesis and native QoR,
+without a new external-port 60 MHz build or routed sign-off.
 
-The latest perf top passes synthesis timing at 63.032 MHz and uses **48,497
-LUTs, 20,540 FFs, 704 DSPs and 13.5 BRAM tiles**. This is not DUT-only area:
-keys and the native fixture permit constant folding/context optimization.
-The earlier perf top used 640 DSPs and unequal body depths; the 64-DSP increase
-is not a FIFO multiplier cost. Both bodies now retain depth 3/local L=5, as
-did the earlier fixed-vector top. FIFO high water reaches 56 of 65 beats;
-every phase conserves transfers and ends empty. No key FIFO was needed.
-External-port shared hardware remains validated only at the earlier 30 MHz
-checkpoint, where sharing setup/finalization reduced DSPs from 512 to 320.
-No new hardware-top timing/capacity result or routed sign-off is implied.
+All 23 WireGuard MAINs now declare the target clock, including the isolated
+simulation finish checker. Fresh HDL/XDC has only `clk_60p0`; the missing-frequency
+warning is gone, and Vivado reports zero unclocked register pins and zero
+unconstrained internal pins. The old `clk_None` belonged to an unused checker
+port, rather than clocked hardware missing its timing constraint.
 
-Whole-packet rates include framing, input gaps, shared-resource arbitration,
-packet-boundary costs and backpressure. Both private body pipelines accept
-one offered block per cycle; setup, finalization and arbitration waits are
-reported separately in the block report. Compiler revisions, arithmetic
-(versus legacy), clocks, depths and the corrected measurement wrapper differ.
-This is not an isolated sharing-only or compiler-only A/B.
+The initial native phase failed before checking packets after the live
+PipelineC checkout changed during synthesis. Simulation was completed using
+an isolated checkout of the original compiler revision, verified frozen
+source hashes, and the exact retained automatic pipeline/MCP latencies.
+Synthesis was reused. The [recovery record](measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/recovery.json)
+and failed-attempt log preserve that distinction.
 
 ### Re-measuring without re-synthesizing
 
@@ -805,7 +827,7 @@ result at the real pipelined timing with fmax and area attached.
   reproducible. Cycle results are unaffected either way: the datapath is
   constant-time in payload content, and every packet is reference-checked.
 - **Native sim cost depends on compiler and machine load.** The latest sweep
-  simulated 2459 cycles in 5192.8 seconds (about 2.1 s/cycle), which is why
+  simulated 2459 cycles in 4039.6 seconds (about 1.6 s/cycle), which is why
   packet counts are modest rather than a full MTU sweep. A phase that sees no beat for 1000 cycles is declared
   deadlocked and reported, rather than running to the cycle cap.
 - **Shared-pipeline arbitration.** `chacha20_pipeline_shared` serves a lone

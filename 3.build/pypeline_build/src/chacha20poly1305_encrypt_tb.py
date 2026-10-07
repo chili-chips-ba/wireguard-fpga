@@ -41,7 +41,7 @@ def check_done():
 # chacha20poly1305_encrypt_syn_tb.py's matching checker comment (this variant
 # never reaches real synthesis anyway, per the module docstring, but marking
 # it keeps the pattern consistent with the syn_tb checkers).
-@MAIN
+@MAIN(wireguard_env.TARGET_MHZ)
 @wires
 def encrypt_tb_finish_checker():
     check_done()
