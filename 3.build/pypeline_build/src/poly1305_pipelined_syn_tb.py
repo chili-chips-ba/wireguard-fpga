@@ -3,11 +3,11 @@
 
 MAC tags use cryptography; arithmetic/components use Python integer oracles.
 Checks run in native or GHDL simulation. Normal MAC/body builds consume the
-discovered automatic latency. WG_POLY1305_TB_BODY_DEPTH inserts real fixed
+discovered automatic latency. -D POLY1305_TB_BODY_DEPTH inserts real fixed
 stages ONLY in an isolated testbench configuration, never production/QoR.
 
-Set WG_POLY1305_TB_MODE=mac|body|arithmetic|components|sharing (default mac), and
-WG_POLY1305_TB_DIRECTION=encrypt|decrypt (default encrypt). See src/poly1305/throughput.md
+Set -D POLY1305_TB_MODE=mac|body|arithmetic|components|sharing (default mac), and
+-D POLY1305_TB_DIRECTION=encrypt|decrypt (default encrypt). See src/poly1305/throughput.md
 for direct native/GHDL commands and isolated output-directory conventions.
 """
 import os
@@ -18,7 +18,7 @@ import wireguard_env  # noqa: F401
 
 from cryptography.hazmat.primitives.poly1305 import Poly1305
 from pypeline import (
-    AUTO_PIPELINE, MAIN, PART, Reg, hw_func, uint1_t, uint8_t, uint32_t,
+    MAIN, PART, DesignParamError, Reg, hw_func, param, uint1_t, uint8_t, uint32_t,
     array_to_uint_le, make_uint_t, sim_assert, sim_finish,
 )
 from aead_types import (
@@ -28,13 +28,14 @@ import poly1305_math as arithmetic
 import poly1305_mac_pipelined as design
 
 PART("xc7a200tffg1156-2")
-MODE = os.environ.get("WG_POLY1305_TB_MODE", "mac")
-DIRECTION = os.environ.get("WG_POLY1305_TB_DIRECTION", "encrypt")
-DEPTH = os.environ.get("WG_POLY1305_TB_BODY_DEPTH", "")
-if MODE not in ("mac", "body", "arithmetic", "components", "sharing"):
-    raise ValueError("Invalid standalone Poly1305 testbench mode")
-if DEPTH and (int(DEPTH) not in (0, 1, 3, 6) or MODE in ("arithmetic", "sharing")):
-    raise ValueError("Invalid standalone testbench body depth")
+MODE = param("POLY1305_TB_MODE", "mac", choices=("mac", "body", "arithmetic", "components", "sharing"),
+             help="which standalone Poly1305 check to build")
+DIRECTION = param("POLY1305_TB_DIRECTION", "encrypt", choices=("encrypt", "decrypt"),
+                  help="the direction's stable body callable identity")
+DEPTH = param("POLY1305_TB_BODY_DEPTH", type=int, choices=(0, 1, 3, 6),
+              help="testbench-only fixed body stages (L = DEPTH + 2); default: automatic")
+if DEPTH is not None and MODE in ("arithmetic", "sharing"):
+    raise DesignParamError("POLY1305_TB_BODY_DEPTH applies to the mac, body and components modes")
 P = (1 << 130) - 5
 MASK128 = (1 << 128) - 1
 MASK320 = (1 << 320) - 1
@@ -45,18 +46,9 @@ uint320_t = arithmetic.uint320_t
 uint130_t = arithmetic.uint130_t
 
 if MODE not in ("arithmetic", "sharing"):
-    # Restore the binding immediately; no production source/API/cache edits.
-    original_auto_pipeline = design.AUTO_PIPELINE
-    try:
-        if DEPTH:
-            # A fixed-depth stress case replaces, rather than combines with,
-            # the production starting guess (fixed latency and hints conflict).
-            def fixed_auto_pipeline(func, *, start_latency=None):
-                return AUTO_PIPELINE(func, latency=int(DEPTH))
-            design.AUTO_PIPELINE = fixed_auto_pipeline
-        mac = design.make_poly1305_mac_pipelined(DIRECTION)
-    finally:
-        design.AUTO_PIPELINE = original_auto_pipeline
+    # A fixed-depth stress case replaces, rather than combines with, the
+    # production starting guess (fixed latency and hints conflict).
+    mac = design.make_poly1305_mac_pipelined(DIRECTION, body_latency=DEPTH)
     LANES = mac.accumulator_count
     body_pipeline = mac.body_pipeline
     prologue = mac.prologue

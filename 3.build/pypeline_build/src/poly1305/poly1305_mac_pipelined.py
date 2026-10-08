@@ -5,6 +5,7 @@ The body is free running and valid-only. L = AUTO_PIPELINE.latency + 2
 includes its explicit input/output registers. Same-cycle retirement bypass
 lets a lane be revisited exactly L accepted-beat cycles after its launch.
 """
+import functools
 import wireguard_env  # noqa: F401
 
 from enum import auto
@@ -79,23 +80,23 @@ class mac_result_t(NamedTuple):
     auth_tag_if: poly1305_auth_tag_stream_intrf.fwd_t
 
 
-_body_auto_pipelines = {}
-
-
-def get_body_auto_pipeline(direction):
-    """One stable tag per direction, also used to size shared MCP arrays."""
+@functools.lru_cache(maxsize=None)
+def get_body_auto_pipeline(direction, body_latency=None):
+    """One stable tag per direction, also used to size shared MCP arrays.
+    body_latency: a fixed body depth instead of the automatic one -- only the
+    standalone testbench (poly1305_pipelined_syn_tb.py) sets it."""
     if direction not in ("encrypt", "decrypt"):
         raise ValueError("Poly1305 direction must be encrypt or decrypt")
-    if direction not in _body_auto_pipelines:
-        body_func = poly1305_body_encrypt if direction == "encrypt" else poly1305_body_decrypt
-        _body_auto_pipelines[direction] = AUTO_PIPELINE(
-            body_func, start_latency=wireguard_env.START_LATENCIES[f"poly1305_body_{direction}"]
-        )
-    return _body_auto_pipelines[direction]
+    body_func = poly1305_body_encrypt if direction == "encrypt" else poly1305_body_decrypt
+    if body_latency is not None:
+        return AUTO_PIPELINE(body_func, latency=body_latency)
+    return AUTO_PIPELINE(
+        body_func, start_latency=wireguard_env.START_LATENCIES[f"poly1305_body_{direction}"]
+    )
 
 
-def make_poly1305_mac_pipelined(direction, share_mcp=False):
-    body_ap = get_body_auto_pipeline(direction)
+def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None):
+    body_ap = get_body_auto_pipeline(direction, body_latency)
     lanes = body_ap.latency + 2
     lane_t = make_uint_t(max(1, (lanes - 1).bit_length()))
     count_t = make_uint_t(lanes.bit_length())

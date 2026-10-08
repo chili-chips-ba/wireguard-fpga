@@ -9,10 +9,11 @@ component's ready signal, and the ordering feedback needed because the graph is
 not a straight line, is generated from it -- see the call graph in the docstring
 above, which the body now reproduces one-for-one.
 
-The only thing that differs between the standalone build (encrypt_dataflow.py)
-and the shared-pipeline build (encrypt_dataflow_shared.py) is which chacha20
-instance feeds this graph, so encrypt_dataflow_core is a factory parameterized
-by that one callable (same elaboration-time-closure idiom as
+What differs between the encrypt design and the combined design with shared
+resources (both built by encrypt_dataflow.py, chosen by -D DESIGN/SHARE) is
+which chacha20 instance and which MAC feed this graph, so
+encrypt_dataflow_core is a factory parameterized by those callables (same
+elaboration-time-closure idiom as
 chacha20.make_quarter_round/stream.make_stream_auto_pipeline).
 """
 import wireguard_env  # noqa: F401

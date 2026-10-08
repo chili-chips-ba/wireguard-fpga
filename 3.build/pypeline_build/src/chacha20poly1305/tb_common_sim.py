@@ -1,5 +1,5 @@
 """Shared support for the non-synthesizable @sim_input/@sim_output
-testbenches (plain Python data/helpers, no hardware, no pypeline import).
+testbenches (plain Python data/helpers, no hardware).
 
 KEY/NONCE/AAD match tb_common.py's synthesizable-style vectors (duplicated
 here rather than cross-imported, so the two testbench styles stay fully
@@ -9,8 +9,9 @@ aead_ref_model.generate_encrypt_vector(...) lazily, once per randomly
 generated packet, during live simulation.
 """
 
-import os
 import random
+
+from pypeline import param
 
 
 # Converged-handshake AXIS source/sink (present in @sim_input, commit on the
@@ -22,9 +23,10 @@ from axi.axis_sim import (
 )
 
 
-# Optional native functional stress. Performance testbenches never use these
-# pauses: their sinks remain always ready and their sources always offer work.
-STRESS = os.environ.get("WG_TB_STRESS", "0") == "1"
+# Optional native functional stress (-D TB_STRESS=1). Performance testbenches
+# never use these pauses: their sinks remain always ready and their sources
+# always offer work.
+STRESS = param("TB_STRESS", False, help="random testbenches: 16 directed packets, input gaps and output backpressure")
 
 
 def input_paused(direction, cycle):

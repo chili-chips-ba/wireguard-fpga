@@ -159,11 +159,11 @@ hours.
 | `--enc` or `--dec` (`build.py` only) | No | No |
 
 A supplied sharing flag selects the complete set, not an extra resource added
-to the default. Sharing flags cannot be combined with `--enc`/`--dec`.
-Explicit selections override `WG_SHARE_CHACHA20` / `WG_SHARE_POLY1305`
-(0 or 1); direct compiler invocation uses those variables. Legacy combined
-builds require `--share-chacha20 --poly1305 legacy`: the implicit sharing-both
-default and `--shared` are rejected with legacy.
+to the default; `--share-none` builds the combined design with private
+resources for each direction. Sharing flags cannot be combined with
+`--enc`/`--dec`. Legacy combined builds require `--share-chacha20 --poly1305
+legacy`: the implicit sharing-both default and `--shared` are rejected with
+legacy.
 
 | Hardware command | Default clock | Output directory |
 | --- | ---: | --- |
@@ -174,15 +174,26 @@ default and `--shared` are rejected with legacy.
 
 An explicit
 `--target-mhz {30,40,50,60,70,80}` overrides the profile clock. Both
-`build.py` and `measure.py` support `--poly1305 {pipelined,legacy}`; explicit
-selection overrides `WG_POLY1305_IMPL`, otherwise it selects the implementation
-(default `pipelined`). Their clock defaults follow the selected implementation and sharing set
-and override inherited `WG_TARGET_MHZ`. Direct compiler invocation instead
-honors `WG_TARGET_MHZ`, falling back to those clocks using `WG_SHARE_*`
-(both enabled by default); use an explicit clock or disable both sharing flags
-when invoking a standalone private design directly. `build.py --enc`/`--dec`
-default to 30 MHz. Only the chosen
-MAC module is imported: the selector adds no hardware mux or unused legacy FSM.
+`build.py` and `measure.py` support `--poly1305 {pipelined,legacy}` (default
+`pipelined`). Their clock defaults follow the selected implementation and
+sharing set; `build.py --enc`/`--dec` default to 30 MHz. Only the chosen MAC
+module is imported: the selector adds no hardware mux or unused legacy FSM.
+
+`build.py` turns these flags into PipelineC design parameters on the
+`pypelinec` command line (`-D DESIGN=encrypt|decrypt|shared`, `-D
+POLY1305_IMPL`, `-D SHARE=none|chacha20|poly1305|both`, `-D TARGET_MHZ`), all
+declared in [src/wireguard_env.py](src/wireguard_env.py). A direct `pypelinec`
+run takes the same parameters and resolves the same profile defaults, so it
+builds exactly what `build.py` would; for example the decrypt hardware at its
+default 30 MHz:
+
+```sh
+pypelinec ./src/chacha20poly1305.py --top chacha20poly1305_decrypt --verilog -D DESIGN=decrypt
+pypelinec ./src/chacha20poly1305.py --list_params   # every parameter, its choices and default
+```
+
+`build.py -D NAME=VALUE` passes any other design parameter through (the
+stress and performance knobs below).
 
 Output directory names carry the implementation, sharing selection and,
 except for the historical 80 MHz naming, the clock suffix — for hardware and
@@ -197,8 +208,8 @@ hardware, correctness-testbench and shared-performance modes.
 ### Automatic starting guesses
 
 All automatic compute blocks take `start_latency` hints from the
-clock-indexed table in [src/poly1305_config.py](src/poly1305_config.py), selected
-alongside the clock in `wireguard_env.py`. The shared-design hints come from
+clock-indexed table in [src/wireguard_env.py](src/wireguard_env.py), selected
+alongside the clock. The shared-design hints come from
 the confirmed 30 MHz hardware builds; the shared Poly1305 services use the
 same one/two-cycle seeds as their private two-lane counterparts. The 60 MHz
 entry uses the confirmed sharing-both fixed-vector build, and the latest
@@ -266,7 +277,7 @@ identical goodput at 1420/1920 bytes. Current test records are retained in the
 the earlier [recovery record](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/workflow-evidence.json)
 preserves the original buffering qualification.
 
-The random native testbenches also support `WG_TB_STRESS=1`. This selects
+The random native testbenches also support `-D TB_STRESS=1`. This selects
 16 directed packets through 1920 bytes, input gaps and prolonged/periodic
 output backpressure (plus decrypt's tampered-tag packet). Sources present
 words in `@sim_input` but commit only converged handshakes in `@sim_output`;
@@ -275,15 +286,21 @@ keep, last and verification status remain stable. The performance testbench
 does **not** use these pauses.
 
 ```sh
-WG_TB_STRESS=1 ./build.py --shared --sim --comb --native --continue
+./build.py --shared --sim --comb --native --continue -D TB_STRESS=1
 ```
 
 `--continue` keeps build caches; `measure.py --reuse-syn` gives measurements
-the same behavior. An empty cache still requires synthesis. Hardware and
-pipelined simulation builds pass `--stop_on_over_capacity`. Use `-j 1` on
-low-RAM systems: it serializes vendor-tool jobs, including automatic MCP
-characterization, but does not limit Vivado's internal threads. A single MCP
-synthesis can still consume several GiB.
+the same behavior. Every build also shares the synthesis store
+`generated-files/syn_cache` (`build.py --syn-cache DIR|none`): a run whose exact
+synthesis inputs were already synthesized for any profile or output directory
+is reused instead of re-run, so a cleared output directory or another clock
+profile pays only for what actually changed. A reused run restores its log, not
+its Vivado checkpoint (`.dcp`); build into a fresh output directory with
+`--syn-cache none` when you need one. An empty store still requires synthesis.
+Hardware and pipelined simulation builds pass `--stop_on_over_capacity`. Use
+`-j 1` on low-RAM systems: it serializes vendor-tool jobs, including automatic
+MCP characterization, but does not limit Vivado's internal threads. A single
+MCP synthesis can still consume several GiB.
 
 `validation/` is an ignored, disposable workspace, not commit evidence; so
 are `generated-files/` and the earlier standalone smoke measurements. For
@@ -309,9 +326,10 @@ regressions belong in PipelineC's own suite, not a WireGuard test-runner directo
 
 ```
 src/
-  wireguard_env.py              sys.path bootstrap + architecture/sharing/clock profile
-  poly1305_config.py            implementation/clock/sharing profiles, starting latencies,
-                                 output-directory naming (no hardware imports)
+  wireguard_env.py              sys.path bootstrap; the build parameters (-D DESIGN,
+                                 POLY1305_IMPL, SHARE, TARGET_MHZ) and the profile they
+                                 select; starting latencies; output-directory naming
+                                 (plain Python, also imported by build.py/measure.py)
   aead_types.py                 shared sizes/types, probed auth FIFO and output-slice factories
   chacha20/
     chacha20.py                 ChaCha20 math + pipeline-control FSM + chacha20_instance
@@ -345,11 +363,9 @@ src/
                                  make_decrypt_dataflow_core: factories returning the direct-call
                                  dataflow graph, parameterized by ChaCha20 instance and optional
                                  MAC instance (see "Wiring Style" below)
-    encrypt_dataflow.py / decrypt_dataflow.py            standalone wiring MAINs (selected clock):
-                                 instantiate the factory with chacha20.chacha20_instance
-    encrypt_dataflow_shared.py / decrypt_dataflow_shared.py  shared design: instantiate the
-                                 same factories with independently selected private/shared
-                                 ChaCha20 and authentication resources
+    encrypt_dataflow.py / decrypt_dataflow.py            wiring MAINs (selected clock):
+                                 instantiate the factory with the private or shared ChaCha20
+                                 and MAC resources -D SHARE selects
     tb_common.py                 synthesizable-style testbench's fixed 10-string vectors,
                                   computed once at elaboration time
     tb_common_sim.py             non-synthesizable testbench's shared support: fixed
@@ -365,15 +381,14 @@ src/
     encrypt_tb.py / decrypt_tb.py           non-synthesizable testbench MAINs
                                   (@sim_input/@sim_output, on-the-fly random vectors,
                                   native sim only) — see "Testbench Styles" below
-    perf_tb_common.py            the phase plan + WG_PERF_* env knobs + frame builders, the
+    perf_tb_common.py            the phase plan + -D PERF_* knobs + frame builders, the
                                   MAIN-to-direction tap labels, and the shared barrier/
                                   recorder/runners from PipelineC's stream_perf library
     encrypt_perf_tb.py / decrypt_perf_tb.py  performance testbench MAINs: stream the phase plan
                                   with zero source gaps and measure, while still checking every
                                   packet against the reference model (native sim only)
-  chacha20poly1305_encrypt.py / _tb.py / _syn_tb.py                    tops (hw / sim non-synth / sim synth)
-  chacha20poly1305_decrypt.py / _tb.py / _syn_tb.py
-  chacha20poly1305_encrypt_decrypt_shared.py / _tb.py / _syn_tb.py / _perf_tb.py
+  chacha20poly1305.py / _tb.py / _syn_tb.py / _perf_tb.py   tops (hw / sim non-synth / sim synth /
+                                 perf), each for -D DESIGN=encrypt|decrypt|shared
   poly1305_pipelined_syn_tb.py  standalone pipelined-MAC testbench top (see throughput.md)
 ```
 
@@ -450,9 +465,9 @@ latency-emulated simulation against the real cocotb+GHDL VHDL simulation —
 both post-autopipelining, cycle by cycle:
 
 ```bash
-pypeline_sim_debug.py ./src/chacha20poly1305_encrypt_syn_tb.py --sim --run all
-pypeline_sim_debug.py ./src/chacha20poly1305_decrypt_syn_tb.py --sim --run all
-pypeline_sim_debug.py ./src/chacha20poly1305_encrypt_decrypt_shared_syn_tb.py --sim --run all
+pypeline_sim_debug.py ./src/chacha20poly1305_syn_tb.py --sim --run all -D DESIGN=encrypt
+pypeline_sim_debug.py ./src/chacha20poly1305_syn_tb.py --sim --run all -D DESIGN=decrypt
+pypeline_sim_debug.py ./src/chacha20poly1305_syn_tb.py --sim --run all -D DESIGN=shared
 ```
 
 Each run does a full synthesis build first (both the native and VHDL sides
@@ -729,11 +744,11 @@ and failed-attempt log preserve that distinction.
 ### Re-measuring without re-synthesizing
 
 Every stimulus knob — packet sizes, counts, payload bytes, seed — lives in
-Python (`@sim_input`/`@sim_output`, configured through `WG_PERF_*` env vars set
-by `measure.py`), and **nothing** about the plan is baked into hardware. The
-elaborated design therefore stays bit-identical between runs, so pypelinec
-re-reads its hash-named cached `vivado_*.log` files instead of re-running the
-1–3 hour autopipelining sweep: `./measure.py --reuse-syn --sizes …` re-measures
+Python (`@sim_input`/`@sim_output`, configured through `-D PERF_*` design
+parameters that `measure.py` passes), and **nothing** about the plan is baked
+into hardware. The elaborated design therefore stays bit-identical between
+runs, so pypelinec reuses its synthesis results (identical inputs) instead of
+re-running the 1–3 hour autopipelining sweep: `./measure.py --reuse-syn --sizes …` re-measures
 in sim time alone. Sweeping more curve points is cheap; changing the *design* is
 what costs a fresh sweep — and so, once, does adding or moving an internal probe,
 because generated VHDL names embed source line numbers.
@@ -883,7 +898,7 @@ which the all-valid vectors never hit.
 
 `tb_common_sim.py` reuses the same fixed `KEY`/`NONCE`/`AAD` as
 `tb_common.py`, but does not precompute any ciphertext/tag vectors — instead
-it holds `NUM_RANDOM_PACKETS = 12` (16 with `WG_TB_STRESS=1`), the
+it holds `NUM_RANDOM_PACKETS = 12` (16 with `-D TB_STRESS=1`), the
 `PACKET_LEN_MIN`/`PACKET_LEN_MAX` range (1-1024 bytes), the stratified
 `CORNER_CASE_LENS` list (`[15, 16, 17, 31, 64, 128]`, matching the
 synthesizable variant's coverage of the partial-final-word and block-boundary

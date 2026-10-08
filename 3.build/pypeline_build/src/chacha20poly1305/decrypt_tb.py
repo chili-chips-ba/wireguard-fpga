@@ -68,7 +68,7 @@ _dec_state = {
     "gen_log": [],  # [(plaintext_len, expected_verified), ...] for reporting only
     "printed_gen_count": 0,
     "out_packet_idx": 0,  # count of packets checked so far; read externally by
-    # chacha20poly1305_decrypt_tb.py's finish-checker to know when to sim_finish()
+    # chacha20poly1305_tb.py's finish-checker to know when to sim_finish()
     "cycle": 0,
 }
 

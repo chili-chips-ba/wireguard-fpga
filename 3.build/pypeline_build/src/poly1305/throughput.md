@@ -23,9 +23,9 @@ Current combined builds select sharing independently: no flags or `--shared`
 select both; either `--share-chacha20` or `--share-poly1305` alone selects only
 that resource; both positive flags select both. Single-direction builds reject
 sharing selectors. Legacy combined builds require
-`--share-chacha20 --poly1305 legacy`. Direct compiler invocation uses
-`WG_SHARE_CHACHA20` / `WG_SHARE_POLY1305`; explicit CLI selection overrides
-those settings. Cache names include implementation, sharing set and clock.
+`--share-chacha20 --poly1305 legacy`. Direct compiler invocation takes the same
+selection as the `-D SHARE=none|chacha20|poly1305|both` design parameter (see
+`src/wireguard_env.py`). Cache names include implementation, sharing set and clock.
 
 `poly1305_mcp_shared.py` owns two independent request-aware round-robin
 arbiters and two whole-function automatic MCPs: one prologue, one epilogue.
@@ -98,7 +98,7 @@ ciphertext/plaintext, tag, framing, keep masks and tampered-tag rejection.
 The earlier sharing commit regression passed 14 checks: 11 native combinational
 integration/fallback builds, the directed sharing mode, and two seeded-60
 no-synthesis HDL checks. The hardware HDL check exercises the new 60 MHz
-default without WG_TARGET_MHZ. Those earlier results remain in their
+default without an explicit clock. Those earlier results remain in their
 [workflow record](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/workflow-evidence.json);
 these HDL checks are not additional synthesis timing evidence. The recovery
 change passed another 11-build comb matrix (205 packet checks), a 33-packet
@@ -664,7 +664,7 @@ does not implement.
 The final 128-bit addition of s is included in the whole epilogue MCP. It is
 not assumed to cost zero constrained cycles; the auto characterization measures
 the whole function. Current source seeds the known-good starting counts from
-`src/poly1305_config.py`; these are setup counts, not the MCP's count+1 stream
+`src/wireguard_env.py`; these are setup counts, not the MCP's count+1 stream
 response cycles. This is a build-time optimization, not part of the unseeded
 design that produced the recorded results. The fresh shared 30 MHz build
 above confirmed timing and convergence with these hints.
@@ -674,13 +674,14 @@ above confirmed timing and convergence with these hints.
 
 Run from `3.build/pypeline_build`, using `PYPELINEC` or `pypelinec` on PATH.
 The single source `src/poly1305_pipelined_syn_tb.py` selects its cases at
-elaboration via these environment variables; no special runner is needed:
+elaboration through these design parameters (`-D NAME=VALUE`; `--list_params`
+prints them); no special runner is needed:
 
-| Variable | Choices / default | Coverage |
+| Parameter | Choices / default | Coverage |
 | --- | --- | --- |
-| WG_POLY1305_TB_MODE | mac (default), body, arithmetic, components, sharing | Reference tags; body latency/bubbles; integer-oracle arithmetic; power graph/rotation; independent shared MCP arbitration and response ownership. |
-| WG_POLY1305_TB_DIRECTION | encrypt (default), decrypt | Select the direction's stable body callable identity. |
-| WG_POLY1305_TB_BODY_DEPTH | unset (automatic), or 0,1,3,6 | Testbench-only fixed stages, giving L=2,3,5,8; not valid in arithmetic or sharing mode. |
+| POLY1305_TB_MODE | mac (default), body, arithmetic, components, sharing | Reference tags; body latency/bubbles; integer-oracle arithmetic; power graph/rotation; independent shared MCP arbitration and response ownership. |
+| POLY1305_TB_DIRECTION | encrypt (default), decrypt | Select the direction's stable body callable identity. |
+| POLY1305_TB_BODY_DEPTH | unset (automatic), or 0,1,3,6 | Testbench-only fixed stages, giving L=2,3,5,8; not valid in arithmetic or sharing mode. |
 
 MAC cases cross each length 1..2L+1 and 4L+1 with zero/unit/maximal/random
 keys, then repeat a key and change s. They check input gaps, continuous II=1,
@@ -695,24 +696,20 @@ retained):
 ```sh
 set -e
 for mode in arithmetic body components mac sharing; do
-  WG_POLY1305_IMPL=pipelined WG_TARGET_MHZ=30 \
-  WG_POLY1305_TB_MODE="$mode" WG_POLY1305_TB_DIRECTION=encrypt \
-  WG_POLY1305_TB_BODY_DEPTH= \
-    "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
-      --sim --comb --run all \
-      --out_dir "generated-files/poly1305-$mode-encrypt-comb-native"
+  "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
+    --sim --comb --run all -D TARGET_MHZ=30 \
+    -D POLY1305_TB_MODE="$mode" -D POLY1305_TB_DIRECTION=encrypt \
+    --out_dir "generated-files/poly1305-$mode-encrypt-comb-native"
 done
 ```
 
 For automatically sized MAC RTL at the selected 30 MHz goal:
 
 ```sh
-WG_POLY1305_IMPL=pipelined WG_TARGET_MHZ=30 \
-WG_POLY1305_TB_MODE=mac WG_POLY1305_TB_DIRECTION=encrypt \
-WG_POLY1305_TB_BODY_DEPTH= \
-  "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
-    --sim --cocotb --ghdl --run all -j 1 --stop_on_over_capacity \
-    --out_dir generated-files/poly1305-mac-encrypt-pipe-30mhz
+"${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
+  --sim --cocotb --ghdl --run all -j 1 --stop_on_over_capacity \
+  -D TARGET_MHZ=30 -D POLY1305_TB_MODE=mac -D POLY1305_TB_DIRECTION=encrypt \
+  --out_dir generated-files/poly1305-mac-encrypt-pipe-30mhz
 ```
 
 Add `--cocotb --ghdl` to native commands for RTL checks and use separate
@@ -728,12 +725,10 @@ set -e
 for direction in encrypt decrypt; do
   for depth in 0 1 3 6; do
     for mode in body components mac; do
-      WG_POLY1305_IMPL=pipelined WG_TARGET_MHZ=30 \
-      WG_POLY1305_TB_MODE="$mode" WG_POLY1305_TB_DIRECTION="$direction" \
-      WG_POLY1305_TB_BODY_DEPTH="$depth" \
-        "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
-          --sim --comb --run all \
-          --out_dir "generated-files/poly1305-$mode-$direction-depth$depth-native"
+      "${PYPELINEC:-pypelinec}" ./src/poly1305_pipelined_syn_tb.py \
+        --sim --comb --run all -D TARGET_MHZ=30 -D POLY1305_TB_MODE="$mode" \
+        -D POLY1305_TB_DIRECTION="$direction" -D POLY1305_TB_BODY_DEPTH="$depth" \
+        --out_dir "generated-files/poly1305-$mode-$direction-depth$depth-native"
     done
   done
 done

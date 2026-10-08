@@ -268,7 +268,7 @@ def analyze_phase(phase, aad_len=0, mac_config=None):
     taps = phase.get("taps")
     if not taps:
         return phase
-    # A direction disabled via WG_PERF_DIRS (measure.py --dirs enc|dec) still
+    # A direction disabled via PERF_DIRS (measure.py --dirs enc|dec) still
     # has probes firing; the library drops a label whose blocks moved nothing.
     lib.analyze_phase(phase, BLOCKS, DIRECTIONS, BUS_BYTES)
     model = {}

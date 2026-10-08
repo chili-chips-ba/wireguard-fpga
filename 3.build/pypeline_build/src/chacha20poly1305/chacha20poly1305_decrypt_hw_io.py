@@ -3,7 +3,7 @@
 the standalone decrypt design, and the just-wires MAIN converting them to the
 nice struct/array wires in chacha20poly1305_decrypt_ports.py.
 
-Only imported by the hardware top (chacha20poly1305_decrypt.py) — the sim
+Only imported by the hardware top (chacha20poly1305.py) — the sim
 testbench drives the ports wires directly instead
 (the C header's #ifndef SIMULATION block).
 

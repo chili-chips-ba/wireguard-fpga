@@ -11,10 +11,11 @@ not a straight line, is generated from it -- the body is a one-for-one
 transcription of the call graph in the docstring above. `is_verified_out` shows
 a plain (non-interface) output riding along in the same return bundle.
 
-The only thing that differs between the standalone build (decrypt_dataflow.py)
-and the shared-pipeline build (decrypt_dataflow_shared.py) is which chacha20
-instance feeds this graph, so decrypt_dataflow_core is a factory parameterized
-by that one callable (mirrors encrypt_dataflow_core's make_encrypt_dataflow_core).
+What differs between the decrypt design and the combined design with shared
+resources (both built by decrypt_dataflow.py, chosen by -D DESIGN/SHARE) is
+which chacha20 instance and which MAC feed this graph, so
+decrypt_dataflow_core is a factory parameterized by those callables (mirrors
+encrypt_dataflow_core's make_encrypt_dataflow_core).
 """
 import wireguard_env  # noqa: F401
 

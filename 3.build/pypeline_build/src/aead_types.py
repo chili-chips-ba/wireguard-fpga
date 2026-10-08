@@ -97,12 +97,8 @@ def decrypt_auth_fifo_sizing(chacha_func, mac_func):
     pipeline = getattr(chacha_func, "pipeline_func", None)
     if pipeline is None:
         raise ValueError("Automatic decrypt FIFO sizing requires chacha_func.pipeline_func")
-    if not hasattr(pipeline, "auto_pipeline") or not hasattr(pipeline, "max_in_flight"):
-        raise RuntimeError(
-            "PipelineC prerequisite missing: make_stream_auto_pipeline must expose "
-            ".auto_pipeline and .max_in_flight; update the PipelineC checkout "
-            "(see PIPELINEC_PLAN.md) or supply an explicit auth_fifo_depth"
-        )
+    # make_stream_auto_pipeline's documented sizing attributes (PipelineC
+    # pypeline_guide.md, "Passing a bottom-up value to the rest of the design")
     core_latency = pipeline.auto_pipeline.latency
     credits = pipeline.max_in_flight
     prologue_latency = mac_func.prologue_mcp.mcp.latency

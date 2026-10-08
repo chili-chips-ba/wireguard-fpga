@@ -1,8 +1,7 @@
-"""Import only the selected MAC; selection creates no hardware mux."""
-import wireguard_env  # noqa: F401
-from poly1305_config import selected_implementation
+"""Import only the selected MAC (-D POLY1305_IMPL); selection creates no hardware mux."""
+import wireguard_env
 
-IMPLEMENTATION = selected_implementation()
+IMPLEMENTATION = wireguard_env.POLY1305_IMPL
 _instances = {}
 
 if IMPLEMENTATION == "pipelined":

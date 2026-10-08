@@ -10,8 +10,8 @@ What it does:
   1. runs `./build.py --shared --perf` -- ONE pypelinec command line that
      autopipelines for the selected clock goal through Vivado and then runs the
      native simulation of exactly what it built (autopipelined latencies
-     modeled), with the perf testbench's phase plan passed in via WG_PERF_* env
-     so the elaborated hardware never changes between runs;
+     modeled), with the perf testbench's phase plan passed in as -D PERF_*
+     design parameters, so the elaborated hardware never changes between runs;
   2. reads fmax + pipeline depth from pypelinec's OWN numbers -- the per-MAIN
      "final" records in <out_dir>/top/sweep_history.json (schemas 2/3), with the
      build's stdout outcome lines as cross-check -- timing parsing is not
@@ -67,7 +67,7 @@ from stream.stream_perf import stream_fifo_capacity_beats
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "src"))
-from poly1305_config import (
+from wireguard_env import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
     TARGETS_MHZ, default_target_mhz, target_out_dir, GENERATED_FILES, generated_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
@@ -497,10 +497,6 @@ def run_build(args, json_path, log_path):
     counted, which is how cycles_run is recovered.
     """
     env = dict(os.environ)
-    env["WG_POLY1305_IMPL"] = args.poly1305
-    env["WG_SHARE_CHACHA20"] = str(int(args.sharing["chacha20"]))
-    env["WG_SHARE_POLY1305"] = str(int(args.sharing["poly1305"]))
-    env["WG_PERF_JSON"] = json_path
     if not env.get("PYPELINEC"):
         candidate = os.path.join(DEFAULT_PIPELINEC_REPO, "src", "pypelinec")
         if os.path.exists(candidate):
@@ -509,24 +505,30 @@ def run_build(args, json_path, log_path):
             # same PipelineC checkout the build actually used.
             os.environ["PYPELINEC"] = candidate
             print(f"--> $PYPELINEC not set, using {candidate}")
+    # The perf testbench's phase plan: simulation-only design parameters
+    defines = [f"PERF_JSON={json_path}"]
     if args.sizes:
-        env["WG_PERF_SIZES"] = args.sizes
+        defines.append(f"PERF_SIZES={args.sizes}")
     if args.packets:
-        env["WG_PERF_PACKETS"] = str(args.packets)
+        defines.append(f"PERF_PACKETS={args.packets}")
     if args.peak_bytes is not None:
-        env["WG_PERF_PEAK_BYTES"] = str(args.peak_bytes)
+        defines.append(f"PERF_PEAK_BYTES={args.peak_bytes}")
     if args.dirs:
-        env["WG_PERF_DIRS"] = args.dirs
+        defines.append(f"PERF_DIRS={args.dirs}")
     if args.taps is not None:
-        env["WG_PERF_TAPS"] = args.taps
+        defines.append(f"PERF_TAPS={args.taps}")
     if args.seed is not None:
-        env["WG_PERF_SEED"] = str(args.seed)
+        defines.append(f"PERF_SEED={args.seed}")
 
     cmd = [os.path.join(HERE, "build.py"), "--perf",
            "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz)]
     for name in ("chacha20", "poly1305"):
         if args.sharing[name]:
             cmd.append("--share-" + name)
+    if not (args.sharing["chacha20"] or args.sharing["poly1305"]):
+        cmd.append("--share-none")
+    for define in defines:
+        cmd.extend(["-D", define])
     if args.jobs is not None:
         cmd.extend(["-j", str(args.jobs)])
     if args.out_dir:
@@ -1741,7 +1743,7 @@ def main():
     ap.add_argument("--shared", action="store_true", help="Share both resources (default)")
     add_sharing_arguments(ap)
     ap.add_argument("--poly1305", choices=IMPLEMENTATIONS, default=None,
-                    help="MAC architecture (WG_POLY1305_IMPL, otherwise pipelined)")
+                    help="MAC architecture (default pipelined)")
     ap.add_argument("--target-mhz", type=int, choices=TARGETS_MHZ, default=None,
                     help="Clock goal (default: sharing-both 60 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     ap.add_argument("-j", "--jobs", type=int, default=None,
@@ -1805,8 +1807,8 @@ def main():
     except ValueError as exc:
         ap.error(str(exc))
     if args.target_mhz is None:
-        # Parse-only has no current sharing selection: old metadata, not
-        # inherited sharing environment variables, will supply its clock.
+        # Parse-only has no current sharing selection: old metadata will
+        # supply its clock.
         args.target_mhz = default_target_mhz(args.poly1305, args.sharing if args.sharing is not None
                                            else {"chacha20": True, "poly1305": False})
 

@@ -25,7 +25,13 @@ this must be the first import; it's this tree's own `sys.path` bootstrap
 (adds `src/{chacha20,poly1305,prep_auth_data,auth_tag,chacha20poly1305}` so
 files import each other with flat names like `import chacha20`). It's
 separate from `pypelinec`'s own bootstrapping of the PipelineC repo's
-`src/`/`include/pypeline/` onto `sys.path`.
+`src/`/`include/pypeline/` onto `sys.path`. It also declares the build
+parameters (`param()`, set with `pypelinec -D NAME=VALUE`): `DESIGN`
+(encrypt|decrypt|shared), `POLY1305_IMPL`, `SHARE` and `TARGET_MHZ`, resolved
+by `resolve_profile` into `DESIGN`/`ENCRYPT`/`DECRYPT`/`SHARING`/`TARGET_MHZ`/
+`START_LATENCIES`. build.py and measure.py import the same module for the
+profile tables and output-directory names. Design configuration never comes
+from environment variables.
 
 ## Build Commands
 
@@ -38,13 +44,17 @@ Run from `pypeline_build/` (not `src/`):
 - No design selector or `--shared` shares ChaCha20 and Poly1305 prologue/epilogue
   MCPs, while body pipelines and packet contexts stay private. Explicit
   `--share-chacha20` / `--share-poly1305` select the complete sharing set;
-  both selects both. These cannot be combined with `--enc`/`--dec`.
+  both selects both; `--share-none` keeps both private. These cannot be
+  combined with `--enc`/`--dec`. build.py passes the profile to pypelinec as
+  `-D DESIGN/POLY1305_IMPL/SHARE/TARGET_MHZ`; `-D NAME=VALUE` on build.py
+  passes anything else through (`-D TB_STRESS=1`, `-D PERF_*`).
 - `--poly1305 legacy` requires `--share-chacha20` for combined builds.
   `--target-mhz {30,40,50,60,70,80}` overrides the default clock.
   Automatic compute blocks use clock-profile starting hints, not fixed or
   maximum latencies. Cache identities include architecture, sharing and clock.
-- No `--sim`: generate final Verilog (`--enc`/`--dec`/`--shared` select
-  `src/chacha20poly1305_{encrypt,decrypt,encrypt_decrypt_shared}.py`).
+- No `--sim`: generate final Verilog from `src/chacha20poly1305.py`
+  (`--enc`/`--dec`/`--shared` select `-D DESIGN`; the Verilog top keeps its
+  `chacha20poly1305_{encrypt,decrypt,encrypt_decrypt_shared}` name via `--top`).
 - `--sim --native`: Pypeline's own Python simulator, no cocotb/GHDL needed.
   Add `--syn_tb` for the fixed-vector synthesizable-style TB, omit it for the
   random-vector non-synthesizable TB (that style is native-only — see below).
@@ -54,8 +64,10 @@ Run from `pypeline_build/` (not `src/`):
   against generated VHDL. `--comb` is quick; the pipelined form takes hours.
 - `--continue`: skip clearing the output dir (`./generated-files/<variant>`;
   every build/measure cache lives under `generated-files/`, named from
-  `poly1305_config.GENERATED_FILES` — old `generated-files-<name>` paths in
-  records resolve there via `generated_out_dir`).
+  `wireguard_env.GENERATED_FILES` — old `generated-files-<name>` paths in
+  records resolve there via `generated_out_dir`). Every build also shares the
+  synthesis store `generated-files/syn_cache` (`--syn-cache DIR|none`):
+  identical synthesis inputs are reused across profiles and output dirs.
   `--out-dir` selects an isolated cache; after interruption preserve good
   synthesis logs and rename only an identified incomplete/error vendor log.
 
@@ -73,7 +85,7 @@ run is reproducible.
 sim against real cocotb+GHDL VHDL sim, cycle by cycle, using the `syn_tb`
 tops' `sim_print(..., debug=True)` probes):
 ```bash
-pypeline_sim_debug.py ./src/chacha20poly1305_encrypt_syn_tb.py --sim --run all
+pypeline_sim_debug.py ./src/chacha20poly1305_syn_tb.py --sim --run all -D DESIGN=encrypt
 ```
 
 ## Source Layout (mirrors `../pipelinec_build/src/`)
@@ -84,8 +96,8 @@ types (`axis128_intrf`/`axis512_intrf` etc., built via
 `poly1305/`, `prep_auth_data/`, `auth_tag/`, and `chacha20poly1305/` (the
 per-direction dataflow wiring + both testbench styles' shared support:
 `aead_ref_model.py`, `tb_common.py`, `tb_common_sim.py`) · top-level
-`chacha20poly1305_{encrypt,decrypt,encrypt_decrypt_shared}{,_tb,_syn_tb}.py`
-(hw / sim-non-synth / sim-synth tops). See `README.md`'s "Source Layout"
+`chacha20poly1305{,_tb,_syn_tb,_perf_tb}.py` (hw / sim-non-synth / sim-synth /
+perf tops, each for `-D DESIGN=encrypt|decrypt|shared`). See `README.md`'s "Source Layout"
 section for the full per-file breakdown.
 
 ## Testbench Styles (every one of the 3 design variants has both)
@@ -102,7 +114,7 @@ section for the full per-file breakdown.
   entirely from real hardware elaboration, so this style has **no cocotb/GHDL
   form** — `--native` is the only way to run it.
 
-`WG_TB_STRESS=1` selects sixteen directed native packets through 1920 bytes,
+`-D TB_STRESS=1` selects sixteen directed native packets through 1920 bytes,
 source gaps and prolonged/periodic output stalls, plus decrypt's tampered-tag
 packet. Sources advance on converged `valid && ready` in `@sim_output`; sinks
 count only transfers and assert stable stalled data/keep/last/verification.
@@ -121,7 +133,7 @@ half is PipelineC's stream performance library (`include/pypeline/stream/`
 `stream_perf.py`, `stream_perf_probe.py`, `stream_bottleneck.py`,
 `stream_perf_report.py`, plus `axi/axis_sim.py`'s converged source/sink; guide
 `pypeline_stream_perf_guide.md`, metric tests in PipelineC's
-`stream_perf_test.py`). WireGuard keeps the phase plan, `WG_PERF_*` knobs and
+`stream_perf_test.py`). WireGuard keeps the phase plan, `-D PERF_*` knobs and
 MAIN labels in `perf_tb_common.py`, the block graph/model/report wording in
 `bottleneck.py` (`--selftest`-able), and fmax/area parsing, acceptance and
 evidence in `measure.py` (`--selftest`-able). Library bugs go to the user, not
@@ -215,7 +227,8 @@ conservative budget in `aead_types.decrypt_auth_fifo_sizing`; the retained
 60 MHz profile needs 115 beats, rounded to 128 memory beats plus the FWFT
 output register. Read actual pipeline metadata, never starting hints. The
 private/shared ChaCha callables expose their selected `.pipeline_func`;
-PipelineC must provide `.auto_pipeline` and `.max_in_flight` on that wrapper.
+`make_stream_auto_pipeline` documents `.auto_pipeline` and `.max_in_flight` on
+that wrapper as its sizing contract.
 Explicit factory depth overrides (including zero) remain available. All MAINs
 declare `wireguard_env.TARGET_MHZ`, including disconnected simulation checkers,
 so their erased simulation calls cannot leave a `clk_None` constraint.
