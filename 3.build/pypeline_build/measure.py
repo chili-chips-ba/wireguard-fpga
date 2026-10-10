@@ -36,7 +36,7 @@ testbench records cycles/beats/bytes only, so throughput can be re-expressed at
 a different fmax without re-simulating.
 
 Typical use:
-  ./measure.py --label shared-60mhz          # default sharing-both 60 MHz; synthesis + sim (hours)
+  ./measure.py --label shared-85mhz          # default sharing-both 85 MHz; synthesis + sim (hours)
   ./measure.py --share-chacha20 --poly1305 legacy # historical architecture, 80 MHz goal
   ./measure.py --label X --reuse-syn         # sim only, reuse cached synthesis
   ./measure.py --label smoke --comb          # fast rig check, no Vivado at all
@@ -69,7 +69,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "src"))
 from wireguard_env import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
-    TARGETS_MHZ, default_target_mhz, target_out_dir, GENERATED_FILES, generated_out_dir,
+    selected_target, default_target_mhz, target_out_dir, GENERATED_FILES, generated_out_dir,
+    MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
@@ -474,11 +475,19 @@ def git_describe(repo):
     return sha + ("-dirty" if dirty else "")
 
 
-def out_dir_for(comb, implementation, target_mhz=None, sharing=None):
+def historical_target_mhz(implementation, sharing=None):
+    """Clock fallback for saved records created before the multiplier selector."""
+    if (implementation == "pipelined" and sharing is not None
+            and sharing["chacha20"] and sharing["poly1305"]):
+        return 60
+    return default_target_mhz(implementation, {"chacha20": True, "poly1305": False})
+
+
+def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=None):
     if target_mhz is None:
         # Records without sharing metadata predate the sharing-both default.
-        historical_sharing = {"chacha20": True, "poly1305": False}
-        target_mhz = default_target_mhz(implementation, sharing if sharing is not None else historical_sharing)
+        target_mhz = (historical_target_mhz(implementation, sharing) if multiplier is None
+                      else default_target_mhz(implementation, sharing))
     base = os.path.join(
         HERE, GENERATED_FILES, f"perf-{'comb' if comb else 'pipe'}-shared-native"
     )
@@ -486,7 +495,17 @@ def out_dir_for(comb, implementation, target_mhz=None, sharing=None):
     # None means a historical record, whose directory predates sharing flags.
     if sharing is not None:
         base = sharing_out_dir(base, sharing)
-    return target_out_dir(base, target_mhz)
+    return target_out_dir(mult_out_dir(base, multiplier), target_mhz)
+
+
+def build_mult_impl(out_dir):
+    """Read the compiler's actual selection, including pre-selector inferred builds."""
+    path = Path(out_dir) / "source_provenance.json"
+    if not path.is_file():
+        return None
+    provenance = json.loads(path.read_text())
+    params = {entry["name"]: entry["value"] for entry in provenance.get("design_params", [])}
+    return params.get("POLY1305_MULT_IMPL", "inferred")
 
 
 def run_build(args, json_path, log_path):
@@ -521,7 +540,8 @@ def run_build(args, json_path, log_path):
         defines.append(f"PERF_SEED={args.seed}")
 
     cmd = [os.path.join(HERE, "build.py"), "--perf",
-           "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz)]
+           "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz),
+           "--poly1305-mult", args.poly1305_mult]
     for name in ("chacha20", "poly1305"):
         if args.sharing[name]:
             cmd.append("--share-" + name)
@@ -965,6 +985,7 @@ def markdown_table(results, include_mac_details=True):
         f"{_fmt(results['fmax'].get('target_mhz'), '.1f')} MHz | measured fmax "
         f"**{_fmt(fmax, '.2f')} MHz** | limiting MAIN `{results['fmax'].get('limiting_main')}`"
     )
+    lines.append("Poly1305 multiplier: `" + results["config"].get("poly1305_mult_impl", "inferred") + "`.")
     if area.get("available"):
         lines.append(
             f"Area ({area['scope']}): **{area.get('lut_total')} LUT** "
@@ -1247,6 +1268,14 @@ def auth_fifo_sizing_errors(config):
 def measurement_errors(results):
     """Acceptance checks; failed runs still retain all diagnostic artifacts."""
     errors = []
+    config = results.get("config", {})
+    requested_mult = config.get("requested_poly1305_mult_impl")
+    if requested_mult is not None:
+        if config.get("poly1305_mult_impl") != requested_mult:
+            errors.append("Performance simulation multiplier differs from the requested implementation")
+        for scope, actual in results.get("build_mult_impls", {}).items():
+            if actual != requested_mult:
+                errors.append(scope + ": emitted multiplier selection differs from the request or is unknown")
     errors.extend(auth_fifo_sizing_errors(results.get("config", {})))
     returncode = results.get("provenance", {}).get("build_returncode")
     if returncode:
@@ -1744,8 +1773,10 @@ def main():
     add_sharing_arguments(ap)
     ap.add_argument("--poly1305", choices=IMPLEMENTATIONS, default=None,
                     help="MAC architecture (default pipelined)")
-    ap.add_argument("--target-mhz", type=int, choices=TARGETS_MHZ, default=None,
-                    help="Clock goal (default: sharing-both 60 MHz, other pipelined 30 MHz, legacy 80 MHz)")
+    ap.add_argument("--poly1305-mult", choices=MULT_IMPLEMENTATIONS,
+                    help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
+    ap.add_argument("--target-mhz", type=selected_target, default=None,
+                    help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     ap.add_argument("-j", "--jobs", type=int, default=None,
                     help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
@@ -1801,6 +1832,7 @@ def main():
         ap.error("--jobs must be at least 1")
     try:
         args.poly1305 = selected_implementation(args.poly1305)
+        args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
         # A saved record supplies its own architecture; do not reject an old
         # legacy record using today's default sharing-both selection.
         args.sharing = None if args.parse_only else sharing_from_args(args)
@@ -1815,12 +1847,13 @@ def main():
     label = args.label or (("comb-smoke" + (f"-{args.target_mhz}mhz" if args.target_mhz != 80 else "")
                            if args.comb else f"shared-{args.target_mhz}mhz")
                            + "-poly1305-" + args.poly1305
-                           + ("-share-" + sharing_name(args.sharing) if args.sharing is not None else ""))
+                           + ("-share-" + sharing_name(args.sharing) if args.sharing is not None else "")
+                           + "-mult-" + args.poly1305_mult)
     meas_dir = os.path.join(HERE, "measurements", label)
     os.makedirs(meas_dir, exist_ok=True)
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
-    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing)
+    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing, args.poly1305_mult)
     if args.out_dir:
         out_dir = os.path.abspath(args.out_dir)
 
@@ -1845,6 +1878,8 @@ def main():
     mac_config = perf_raw.get("config", {}).get("poly1305")
     previous = {}
     if args.parse_only:
+        recorded_multiplier = perf_raw.get("config", {}).get("poly1305_mult_impl")
+        args.poly1305_mult = recorded_multiplier or "inferred"
         previous_path = os.path.join(meas_dir, "results.json")
         if os.path.exists(previous_path):
             with open(previous_path) as f:
@@ -1855,9 +1890,9 @@ def main():
             recorded_sharing = perf_raw.get("config", {}).get("sharing")
             args.target_mhz = (previous.get("config", {}).get("target_mhz")
                                or perf_raw.get("config", {}).get("target_mhz")
-                               or default_target_mhz(args.poly1305, recorded_sharing if recorded_sharing is not None
-                                                     else {"chacha20": True, "poly1305": False}))
-            out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, recorded_sharing)
+                               or historical_target_mhz(args.poly1305, recorded_sharing))
+            out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, recorded_sharing,
+                                  recorded_multiplier)
         else:
             args.poly1305 = "legacy"
             args.target_mhz = 80
@@ -1891,6 +1926,8 @@ def main():
             perf_raw.get("config", {}),
             comb=args.comb,
             poly1305_impl=args.poly1305,
+            poly1305_mult_impl=perf_raw.get("config", {}).get("poly1305_mult_impl", "inferred"),
+            requested_poly1305_mult_impl=None if args.parse_only else args.poly1305_mult,
             sharing=args.sharing,
             out_dir=os.path.relpath(out_dir, HERE),
             target_mhz=target_mhz,
@@ -1937,8 +1974,15 @@ def main():
             results["area_hw_build"] = previous["area_hw_build"]
         if "fmax_hw_build" in previous:
             results["fmax_hw_build"] = previous["fmax_hw_build"]
+        if "build_mult_impls" in previous:
+            results["build_mult_impls"] = previous["build_mult_impls"]
+        results["config"]["requested_poly1305_mult_impl"] = previous.get("config", {}).get(
+            "requested_poly1305_mult_impl")
+    elif not args.parse_only:
+        results["build_mult_impls"] = {"perf": build_mult_impl(out_dir)}
     if args.area_from_dir:
         hardware_out_dir = generated_out_dir(os.path.join(HERE, args.area_from_dir))
+        results.setdefault("build_mult_impls", {})["hardware"] = build_mult_impl(hardware_out_dir)
         results["area_hw_build"] = parse_area(
             hardware_out_dir,
             per_module=not args.no_per_module_area,

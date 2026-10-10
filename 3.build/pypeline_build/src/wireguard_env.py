@@ -18,15 +18,18 @@ It does three things:
      POLY1305_IMPL  pipelined | legacy (default pipelined)
      SHARE          auto | none | chacha20 | poly1305 | both. auto means both
                     resources for the shared design, none for one direction
-     TARGET_MHZ     30..80 (default: the profile's clock, see default_target_mhz)
+     POLY1305_MULT_IMPL inferred | hybrid | hybrid_square (default hybrid_square;
+                       legacy uses inferred)
+     TARGET_MHZ     positive integer MHz (default: the profile's clock)
 3. Resolves them into this build's profile: DESIGN, ENCRYPT, DECRYPT,
-   POLY1305_IMPL, SHARING, TARGET_MHZ and START_LATENCIES.
+   POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING, TARGET_MHZ and START_LATENCIES.
 
 The profile tables and output-directory names below are plain Python, shared
 with build.py and measure.py. Those import this module without PipelineC on
 sys.path; every parameter is then its default.
 """
 
+import math
 import os
 import sys
 
@@ -44,8 +47,9 @@ IMPLEMENTATIONS = ("pipelined", "legacy")
 DESIGNS = ("encrypt", "decrypt", "shared")
 SHARE_CHOICES = ("auto", "none", "chacha20", "poly1305", "both")
 
-TARGETS_MHZ = (30, 40, 50, 60, 70, 80)
-DEFAULT_TARGET_MHZ = 60  # Confirmed sharing-both fixed-vector and QoR point.
+MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square")
+DEFAULT_MULT_IMPL = "hybrid_square"
+DEFAULT_TARGET_MHZ = 85  # Highest passing shared hardware and six-size QoR point.
 BASE_TARGET_MHZ = 30  # Other pipelined selections and uncharacterized hints.
 LEGACY_TARGET_MHZ = 80
 
@@ -116,7 +120,7 @@ def resolve_sharing(design, implementation, share):
 
 
 def default_target_mhz(implementation=None, sharing=None):
-    """Sharing-both 60 MHz, other pipelined 30 MHz, or legacy 80 MHz."""
+    """Sharing-both 85 MHz, other pipelined 30 MHz, or legacy 80 MHz."""
     implementation = selected_implementation(implementation)
     if implementation == "legacy":
         return LEGACY_TARGET_MHZ
@@ -130,12 +134,28 @@ def selected_target(value):
         target = float(value)
     except (TypeError, ValueError):
         target = None
-    if target not in TARGETS_MHZ:
-        raise ValueError(f"TARGET_MHZ must be one of {TARGETS_MHZ}, got {value!r}")
+    if (target is None or isinstance(value, bool) or not math.isfinite(target)
+            or target <= 0 or not target.is_integer()):
+        raise ValueError(f"TARGET_MHZ must be a positive integer MHz value, got {value!r}")
     return int(target)
 
 
-def resolve_profile(design="shared", implementation="pipelined", share="auto", target_mhz=None):
+def selected_mult(value=None, implementation="pipelined"):
+    choice = ("inferred" if implementation == "legacy" else DEFAULT_MULT_IMPL) if value is None else value
+    if choice not in MULT_IMPLEMENTATIONS:
+        raise ValueError(f"POLY1305_MULT_IMPL must be one of {MULT_IMPLEMENTATIONS}, got {choice!r}")
+    if implementation == "legacy" and choice != "inferred":
+        raise ValueError("Legacy Poly1305 supports only --poly1305-mult inferred")
+    return choice
+
+
+def mult_out_dir(base, multiplier):
+    # None is reserved for pre-selector measurement records.
+    return base if multiplier is None else f"{base}-mult-{multiplier}"
+
+
+def resolve_profile(design="shared", implementation="pipelined", share="auto", target_mhz=None,
+                    multiplier=None):
     """The one place a build profile's defaults are decided: the design itself,
     build.py and measure.py all call this, so a direct pypelinec run builds
     exactly what build.py would."""
@@ -148,6 +168,7 @@ def resolve_profile(design="shared", implementation="pipelined", share="auto", t
     return {
         "design": design,
         "implementation": implementation,
+        "multiplier": selected_mult(multiplier, implementation),
         "sharing": sharing,
         "target_mhz": selected_target(target_mhz),
     }
@@ -236,16 +257,19 @@ POLY1305_IMPL = param("POLY1305_IMPL", "pipelined", choices=IMPLEMENTATIONS,
 SHARE = param("SHARE", "auto", choices=SHARE_CHOICES,
               help="resources both directions share (DESIGN=shared only); "
                    "auto: both for the shared design, none for one direction")
-_TARGET_MHZ = param("TARGET_MHZ", type=int, choices=TARGETS_MHZ,
+_MULT_IMPL = param("POLY1305_MULT_IMPL", choices=MULT_IMPLEMENTATIONS,
+                   help="130-bit multiply implementation (pipelined MAC only)")
+_TARGET_MHZ = param("TARGET_MHZ", type=int,
                     help="clock goal in MHz (default: the profile's)")
 try:
-    _PROFILE = resolve_profile(DESIGN, POLY1305_IMPL, SHARE, _TARGET_MHZ)
+    _PROFILE = resolve_profile(DESIGN, POLY1305_IMPL, SHARE, _TARGET_MHZ, _MULT_IMPL)
 except ValueError as e:
     raise DesignParamError(str(e)) from None
 
 ENCRYPT = DESIGN in ("encrypt", "shared")
 DECRYPT = DESIGN in ("decrypt", "shared")
 SHARING = _PROFILE["sharing"]
+POLY1305_MULT_IMPL = _PROFILE["multiplier"]
 TARGET_MHZ = float(_PROFILE["target_mhz"])
 START_LATENCIES = starting_latencies(_PROFILE["target_mhz"])
 

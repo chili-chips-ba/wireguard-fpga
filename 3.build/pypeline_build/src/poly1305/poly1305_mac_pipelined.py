@@ -20,7 +20,7 @@ from aead_types import (
 )
 from poly1305_math import (
     u8_16_t, uint128_t, uint130_t, clamp,
-    residue_add_mod, residue_mul_mod, residue_mul_add_mod,
+    residue_add_mod, residue_mul_mod, residue_mul_add_mod, residue_square_mod,
 )
 from stream import stream_perf_probe as perf_taps
 
@@ -122,9 +122,12 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         o: powers_t
         o.values[0] = r
         for k in range(2, lanes + 1):
-            o.values[k - 1] = residue_mul_mod(
-                o.values[k // 2 - 1], o.values[(k + 1) // 2 - 1]
-            )
+            if wireguard_env.POLY1305_MULT_IMPL == "hybrid_square" and k % 2 == 0:
+                o.values[k - 1] = residue_square_mod(o.values[k // 2 - 1])
+            else:
+                o.values[k - 1] = residue_mul_mod(
+                    o.values[k // 2 - 1], o.values[(k + 1) // 2 - 1]
+                )
         return o
 
     @struct

@@ -9,7 +9,7 @@ import wireguard_env
 from pypeline import MAIN, NamedTuple, Reg, Feedback, Wire, struct, hw_func, uint1_t, uint2_t, make_uint_t
 from stream.stream import make_stream_interface
 from stream.stream_multi_cycle import make_stream_auto_multi_cycle
-from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod
+from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod, residue_square_mod
 from poly1305_mac_pipelined import get_body_auto_pipeline
 from stream import stream_perf_probe as perf_taps
 
@@ -40,9 +40,12 @@ def make_shared_compute(capacity):
         o: powers_t
         o.values[0] = r
         for k in range(2, capacity + 1):
-            o.values[k - 1] = residue_mul_mod(
-                o.values[k // 2 - 1], o.values[(k + 1) // 2 - 1]
-            )
+            if wireguard_env.POLY1305_MULT_IMPL == "hybrid_square" and k % 2 == 0:
+                o.values[k - 1] = residue_square_mod(o.values[k // 2 - 1])
+            else:
+                o.values[k - 1] = residue_mul_mod(
+                    o.values[k // 2 - 1], o.values[(k + 1) // 2 - 1]
+                )
         return o
 
     @hw_func

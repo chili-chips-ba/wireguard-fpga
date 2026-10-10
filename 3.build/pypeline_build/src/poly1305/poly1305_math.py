@@ -8,7 +8,7 @@ import wireguard_env  # noqa: F401
 
 from pypeline import (
     NamedTuple, struct, hw_func, uint8_t, uint64_t, make_uint_t,
-    array_to_uint_le, make_type_from_bytes,
+    array_to_uint_le, make_type_from_bytes, register_operator,
 )
 from stream.stream import make_stream_interface
 
@@ -170,6 +170,15 @@ uint260_t = make_uint_t(260)
 uint3_t = make_uint_t(3)
 POLY1305_P = (1 << 130) - 5
 
+# Exact-type registration reaches both modular multiply helpers while leaving
+# legacy 64-bit limbs and the reducer's constant products unchanged. Ordinary
+# module-level hw_func scope= does not currently affect HDL elaboration.
+# The library's pinned inferred leaves prevent recursive operator dispatch.
+if wireguard_env.POLY1305_MULT_IMPL in ("hybrid", "hybrid_square"):
+    from operators.soft_mult import make_mult_karatsuba_inferred_leaves
+    register_operator("INFERRED_MULT", uint130_t, uint130_t,
+                      make_mult_karatsuba_inferred_leaves(uint130_t, uint130_t, threshold=34))
+
 
 @hw_func
 def uint260_mod_prime(value: uint260_t) -> uint130_t:
@@ -191,6 +200,73 @@ def uint260_mod_prime(value: uint260_t) -> uint130_t:
 @hw_func
 def residue_mul_mod(a: uint130_t, b: uint130_t) -> uint130_t:
     product: uint260_t = a * b
+    return uint260_mod_prime(product)
+
+
+def make_hybrid_square(width):
+    """Unsigned full square: Karatsuba above 34 bits, three DSP-sized products below.
+
+    This is a local experiment, independent of the library's multiplier defaults.
+    Every shift acts on an already widened value. Only the final recombination
+    is narrowed to the exact 2*width-bit result.
+    """
+    from operators.soft_mult import make_inferred_mult
+    if not isinstance(width, int) or width < 1:
+        raise ValueError("square width must be a positive integer")
+    input_t = make_uint_t(width)
+    result_t = make_uint_t(2 * width)
+    if width <= 17:
+        multiply = make_inferred_mult(input_t, input_t)
+
+        @hw_func
+        def inferred_square(x: input_t) -> result_t:
+            return multiply(x, x)
+        return inferred_square
+
+    half = width // 2
+    lo_t = make_uint_t(half)
+    hi_t = make_uint_t(width - half)
+    if width <= 34:
+        multiply_lo = make_inferred_mult(lo_t, lo_t)
+        multiply_hi = make_inferred_mult(hi_t, hi_t)
+        multiply_cross = make_inferred_mult(lo_t, hi_t)
+
+        @hw_func
+        def three_product_square(x: input_t) -> result_t:
+            lo: lo_t = x
+            hi: hi_t = x >> half
+            z0: result_t = multiply_lo(lo, lo)
+            z2: result_t = multiply_hi(hi, hi)
+            cross: result_t = multiply_cross(lo, hi)
+            result: result_t = z0 + (cross << (half + 1)) + (z2 << (2 * half))
+            return result
+        return three_product_square
+
+    sum_t = make_uint_t(width - half + 1)
+    square_lo = make_hybrid_square(half)
+    square_hi = make_hybrid_square(width - half)
+    square_sum = make_hybrid_square(width - half + 1)
+
+    @hw_func
+    def karatsuba_square(x: input_t) -> result_t:
+        lo: lo_t = x
+        hi: hi_t = x >> half
+        total: sum_t = lo + hi
+        z0: result_t = square_lo(lo)
+        z2: result_t = square_hi(hi)
+        zs: result_t = square_sum(total)
+        cross: result_t = zs - z0 - z2
+        result: result_t = z0 + (cross << half) + (z2 << (2 * half))
+        return result
+    return karatsuba_square
+
+
+square130 = make_hybrid_square(130)
+
+
+@hw_func
+def residue_square_mod(a: uint130_t) -> uint130_t:
+    product: uint260_t = square130(a)
     return uint260_mod_prime(product)
 
 

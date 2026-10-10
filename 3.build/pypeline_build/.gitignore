@@ -1,6 +1,11 @@
 # Local synthesis/simulation caches and disposable investigation workspace.
 /generated-files*/
 /validation/
+/evaluation/
+/HYBRID_INTEGRATION.md
+/KARATSUBA_EVALUATION.md
+/PYPELINE_MULTIPLIER_HANDOFF.md
+/FPGA-House-AG-Compare.md
 /tests/
 __pycache__/
 *.pyc

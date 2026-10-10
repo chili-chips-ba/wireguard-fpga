@@ -6,8 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Pypeline (Python front-end for PipelineC) port of the C ChaCha20-Poly1305 AEAD
 designs in `../pipelinec_build/`. Three design variants target Artix-7
-xc7a200tffg1156-2: pipelined Poly1305 with both resources shared at **60 MHz**
-by default; other pipelined selections default to 30 MHz, legacy to 80 MHz.
+xc7a200tffg1156-2: pipelined Poly1305 with both resources shared at **85 MHz**
+by default, using `hybrid_square` (Karatsuba with inferred leaves and explicit
+prologue squares); other pipelined selections default to 30 MHz, legacy to
+80 MHz with inferred multiplication.
 The C originals' Poly1305 math and
 ciphertext-length bugs fixed — this port is RFC 8439-conformant and its
 tags/ciphertext lengths **deliberately differ** from the still-unfixed C
@@ -27,7 +29,7 @@ files import each other with flat names like `import chacha20`). It's
 separate from `pypelinec`'s own bootstrapping of the PipelineC repo's
 `src/`/`include/pypeline/` onto `sys.path`. It also declares the build
 parameters (`param()`, set with `pypelinec -D NAME=VALUE`): `DESIGN`
-(encrypt|decrypt|shared), `POLY1305_IMPL`, `SHARE` and `TARGET_MHZ`, resolved
+(encrypt|decrypt|shared), `POLY1305_IMPL`, `POLY1305_MULT_IMPL`, `SHARE` and `TARGET_MHZ`, resolved
 by `resolve_profile` into `DESIGN`/`ENCRYPT`/`DECRYPT`/`SHARING`/`TARGET_MHZ`/
 `START_LATENCIES`. build.py and measure.py import the same module for the
 profile tables and output-directory names. Design configuration never comes
@@ -46,12 +48,16 @@ Run from `pypeline_build/` (not `src/`):
   `--share-chacha20` / `--share-poly1305` select the complete sharing set;
   both selects both; `--share-none` keeps both private. These cannot be
   combined with `--enc`/`--dec`. build.py passes the profile to pypelinec as
-  `-D DESIGN/POLY1305_IMPL/SHARE/TARGET_MHZ`; `-D NAME=VALUE` on build.py
+  `-D DESIGN/POLY1305_IMPL/POLY1305_MULT_IMPL/SHARE/TARGET_MHZ`; `-D NAME=VALUE` on build.py
   passes anything else through (`-D TB_STRESS=1`, `-D PERF_*`).
 - `--poly1305 legacy` requires `--share-chacha20` for combined builds.
-  `--target-mhz {30,40,50,60,70,80}` overrides the default clock.
+  `--poly1305-mult inferred|hybrid|hybrid_square` selects the pipelined arithmetic.
+  `--target-mhz N` accepts any positive integer MHz clock goal.
   Automatic compute blocks use clock-profile starting hints, not fixed or
-  maximum latencies. Cache identities include architecture, sharing and clock.
+  maximum latencies. Cache identities include architecture, sharing, multiplier
+  and clock. The measured 85 MHz default has eight body core stages, ten lanes
+  per direction and shared MCP setup cycles 12/8. See `src/poly1305/throughput.md`
+  for the source manifests and current final-validation state.
 - No `--sim`: generate final Verilog from `src/chacha20poly1305.py`
   (`--enc`/`--dec`/`--shared` select `-D DESIGN`; the Verilog top keeps its
   `chacha20poly1305_{encrypt,decrypt,encrypt_decrypt_shared}` name via `--top`).
@@ -141,13 +147,13 @@ a local copy. `aead_types.py`'s FIFO/slice factories use the library's probed
 buffers, which report simulation-only occupancy and conservation.
 `measure.py --out-dir ... --reuse-syn` can retain an isolated cache.
 
-The current buffered 60 MHz QoR and compact native evidence are in
-`measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/`.
-Use its actual automatic depths and retained signatures, not a guessed
-latency or a stale earlier top. Area is performance-testbench area and timing
-is synthesis evidence, not new DUT-only area or routed sign-off. Critical
-results belong in `measurements/` or component docs; `validation/` is a
-disposable local workspace and is not committed. No separate `tests/` runner
+The current 85 MHz QoR, full-design resource counts and multiplier findings
+are documented in `README.md` and `src/poly1305/throughput.md`.
+Use the actual automatic depths and retained signatures, not a guessed
+latency or a stale earlier top. Keep performance-testbench and external-port
+area scopes distinct; timing is synthesis evidence, with routed sign-off
+still pending. Critical results belong in maintained component docs;
+scratch workspaces and investigation reports are local. No separate `tests/` runner
 directory or diagnostic build modes are needed; compiler regressions belong
 in PipelineC's own suite.
 

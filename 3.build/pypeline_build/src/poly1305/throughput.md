@@ -1,21 +1,224 @@
 # Pipelined Poly1305: design and measured checkpoints
 
 Combined builds share ChaCha20 and the Poly1305 prologue/epilogue MCPs by
-default, targeting the verified **60 MHz** point. Other pipelined sharing sets
-and standalone directions retain 30 MHz defaults. Passing external-port
-hardware evidence is at the earlier **30 MHz** checkpoint; the sharing-both
-**60 MHz** fixed-vector checkpoint and latest buffered performance testbench
-pass synthesis timing, capacity and native functional checks. This is synthesis evidence, not routed sign-off; an
-external-port hardware build at 60 MHz remains deferred.
+default, targeting **85 MHz** with `hybrid_square` arithmetic. Other pipelined
+sharing sets and standalone directions retain 30 MHz defaults. External-port
+hardware and the six-size concurrent native QoR measurement pass synthesis
+timing, capacity, II=1, packet results and retained-evidence integrity. At
+1920 bytes the default delivers **8.093/8.126 Gb/s encrypt/decrypt**, with
+**711 DSPs, 99,381 LUTs and 85.543 MHz** hardware synthesis timing.
+Final pipelined fixed-vector HDL sign-off is pending; routed timing is untested.
+See [verification and reproduction](#verification-and-reproduction).
 
-The latest [packet summary](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/summary.md),
-[block report](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/blocks.md),
-[validation notes](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/validation.md),
-and [workflow record](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/workflow-evidence.json)
-are durable. The original [buffering comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
+The [current README results](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
+document every size/direction, packet period and latency. The arithmetic
+measurements, candidate selection and verification scope are recorded below.
+The original [buffering comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
 earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
 and legacy 80 MHz archives are unchanged; no historical QoR was rerun.
-Scratch `validation/` and generated caches are not needed to read results.
+Generated caches and scratch work files are not needed to read these results.
+
+## Hybrid Karatsuba and explicit squares
+
+`--poly1305-mult inferred|hybrid|hybrid_square` selects arithmetic at elaboration;
+the default is `hybrid_square`. It is independent of the pipelined/legacy MAC
+architecture selector. Legacy retains its five-limb schoolbook routine and
+supports only `inferred`.
+
+The pipelined helpers multiply full unsigned 130-bit canonical residues before
+the existing `2^130 - 5` reducer. An exact-type registration selects the
+reusable PyPeline factory `make_mult_karatsuba_inferred_leaves`, threshold 34,
+for both `residue_mul_mod` and `residue_mul_add_mod`. Two sum-form Karatsuba
+levels yield nine inferred 32–34-bit products. Vivado measured **36 DSPs per
+130-bit multiply**, versus 64 for the original inferred wide product.
+Pinned inferred leaves prevent recursive dispatch through the enclosing
+operator override. The reducer's constant products are unaffected.
+
+For even prologue exponents, `hybrid_square` uses `residue_square_mod`.
+Above 34 bits the square uses sum-form Karatsuba; at 18–34 bits it computes
+the two half-squares and one cross product, then doubles the cross term.
+Every shift operates on a widened full-product value. A 130-bit square uses
+**27 DSPs**. This shares the equal operands' cross term within a square;
+it does not time-share products or change the controller/MCP architecture.
+
+The FPGA decomposition was inspired by FPGA-House-AG's
+[136-bit multiplier](https://github.com/FPGA-House-AG/ChaCha20Poly1305/blob/7e75c097af32429ff2c7979b976fe876efbdb9f3/src_dsp_opt/mul_136_kar.vhd)
+and [68-bit level](https://github.com/FPGA-House-AG/ChaCha20Poly1305/blob/7e75c097af32429ff2c7979b976fe876efbdb9f3/src_dsp_opt/mul_68_kar.vhd).
+WireGuard reuses independently implemented PyPeline arithmetic; no external
+VHDL was copied. PyPeline's general soft/ASIC defaults remain threshold 16
+with shift/add leaves. WireGuard explicitly opts into DSP-mappable leaves.
+
+With shared MCP capacity `C`, equal local lane counts and both body products
+present, the measured DSP model is `36*(2*C+1) - 9*floor(C/2)`.
+At 60 MHz, automatic sizing gives seven lanes and **513 DSPs**, down from
+704 for the original five-lane design. At 85 MHz, eight body core registers
+give ten lanes, with shared MCP setup cycles **12/8** and **711 DSPs**.
+The default authentication FIFO grows to **256 memory beats plus one output
+beat** for a computed 135-beat requirement. The automatic 90 MHz configuration
+selected thirteen lanes, requesting 918 DSPs and exceeding device capacity.
+
+Focused generated-HDL multiplier, square and prologue checks passed. Native
+`*` simulation computes Python products without exercising the registered
+decomposition, so HDL verification is tracked separately. All six packet sizes
+remain in the QoR evidence; the highest sustained rates occur at 1920 bytes.
+
+### Operator selection and arithmetic bounds
+
+The production registration in `poly1305_math.py` is:
+
+```python
+from operators.soft_mult import make_mult_karatsuba_inferred_leaves
+
+register_operator("INFERRED_MULT", uint130_t, uint130_t,
+                  make_mult_karatsuba_inferred_leaves(uint130_t, uint130_t,
+                                                    threshold=34))
+```
+
+This is a reusable unsigned multiplier, with a WireGuard-specific exact-type
+selection. It is not a key-clamp-specific product: body stride and epilogue
+powers are general residues whose bits are not constrained by the original
+key clamp. Both `a*b` and `a*b+c` retain a full 260-bit intermediate before
+canonical modular reduction. The existing reducer folds using `2^130 ≡ 5`
+and conditionally subtracts `2^130 - 5`; no general division is introduced.
+The legacy schoolbook helper multiplies five 64-bit limbs, truncating to
+320 bits. It remains separate; rewriting the pipelined recurrence in limbs
+was not needed to obtain the measured DSP savings.
+
+For `a=a0+2^h*a1` and `b=b0+2^h*b1`, sum-form Karatsuba computes
+`z0=a0*b0`, `z2=a1*b1`, `zs=(a0+a1)*(b0+b1)`, then
+`z0 + ((zs-z0-z2)<<h) + (z2<<(2*h))`. Carry growth gives two 32-bit,
+four 33-bit and three 34-bit leaf products at width 130 and threshold 34.
+Choosing a smaller threshold alone in the old all-soft factory would still
+produce shift/add leaves. The new library's leaf policy supplies pinned
+inferred multiplication while retaining the same recursion.
+
+The measured compiler snapshot did not apply `scope=` to ordinary
+module-level `@hw_func` registrations reliably. The exact-type global
+registration avoids relying on that scope behavior. Its smaller inferred
+leaves bypass other multiplier overrides. Configuration identity includes
+the threshold and leaf policy, preventing incompatible cached elaborations.
+
+### Arithmetic probes and candidate selection
+
+The original isolated multiplier probes used Vivado 2019.2 on
+`xc7a200tffg1156-2`, with identical explicit boundary registers and no internal
+pipeline cuts. These are synthesis area comparisons, not standalone fmax
+measurements: external I/O timing was unconstrained and DSP register absorption
+can change the measured register-to-register span.
+
+| Full product | Implementation | DSP48E1 | Slice LUTs |
+| --- | --- | ---: | ---: |
+| 130 × 130 | Inferred | 64 | 1,163 |
+| 130 × 130 | Sum-form hybrid, threshold 34 | **36** | **2,081** |
+| 130 × 130 | Difference-form experiment, 27 arithmetic leaves | 45 | 5,503 |
+| 130 × 130 | All-soft Karatsuba, threshold 16 | 0 | 11,444 |
+| 64 × 64 | Inferred | 16 | 161 |
+| 64 × 64 | Sum-form hybrid, threshold 34 | 12 | 464 |
+
+Each of these six cases passed 381 generated-HDL product checks: structured
+boundaries plus deterministic random inputs, seed 8439. The difference form's
+lower arithmetic leaf count did not translate to fewer DSPs. The all-soft
+option trades substantial LUT cost for zero DSPs; these measurements did not
+justify replacing all of the design's wide multipliers with it.
+
+Subsequent square probes used the production reducer and a seven-lane
+prologue power graph, with the same boundary-register policy for each
+comparison. They also establish area, not full-design timing.
+
+| Probe | Inferred DSP / LUT | Hybrid DSP / LUT | Hybrid square DSP / LUT |
+| --- | ---: | ---: | ---: |
+| Raw 130-bit square | 64 / 1,163 | 36 / 2,085 | **27 / 1,783** |
+| Modular square, existing reducer | 64 / 1,545 | 36 / 2,450 | **27 / 2,148** |
+| Seven-lane prologue | Not synthesized | 216 / 14,923 | **189 / 14,018** |
+
+The explicit modular square saves nine DSPs and 302 LUTs versus a tied-input
+hybrid multiply. The prologue saves 27 DSPs and 905 LUTs, with both versions
+using 1,040 slice registers. This qualified squaring for the full-design trial.
+
+All three arithmetic candidates then passed the same six-size QoR workload
+and independent external-port hardware synthesis at **60 MHz**. The selection
+criterion was minimum full-design DSPs, subject to correctness, timing and fit.
+
+| 60 MHz external-port hardware | Inferred | Hybrid | Hybrid square |
+| --- | ---: | ---: | ---: |
+| DSP48E1 | 704 | 540 | **513** |
+| Slice LUTs | 54,226 | 76,686 | 75,773 |
+| Registers | 23,200 | 26,382 | 26,382 |
+| BRAM tiles | 13.5 | 13.5 | 13.5 |
+| Body core registers / lanes per direction | 3 / 5 | 5 / 7 | 5 / 7 |
+| Prologue / epilogue MCP setup cycles | 6 / 5 | 7 / 5 | 7 / 5 |
+| Slowest reported synthesis MHz | 62.889 | 62.162 | 62.162 |
+
+Hybrid-square wins with **191 DSPs saved (27.1%)**. The initial 396-DSP
+projection assumed five lanes stayed sufficient; actual automatic sizing
+requires seven lanes. Both hybrid variants have identical measured goodput
+at 60 MHz: 5.696/5.712 Gb/s at 1420 bytes and 6.130/6.158 Gb/s at 1920 bytes.
+The DSP saving enables the higher-clock results in the README, culminating
+in 85 MHz with 711 DSPs and 8.093/8.126 Gb/s at 1920 bytes.
+
+There are `2*C+1` full-width product sites when both body pipelines are
+present: two bodies, `C-1` prologue powers and `C` epilogue terms. Of these,
+`floor(C/2)` are even-exponent squares. Thus `hybrid_square` uses the model
+`36*(2*C+1) - 9*floor(C/2)`, matching 513 DSPs at seven lanes and 711 at ten.
+At ten lanes, ordinary hybrid would project to 756 DSPs, beyond the 740-DSP
+device; explicit squaring saves 45 DSPs in that configuration.
+
+The automatic 90 MHz trial chose eleven body core registers and thirteen
+lanes, projecting 918 DSPs. Vivado reported 918 requested against 740 available;
+its final mapping still needed 174,122 LUTs against 134,600 available, with
+737 DSPs mapped. The compiler stopped before timing feedback and packet
+simulation. The measured automatic sweep therefore passes at 85 MHz and
+fails capacity at 90 MHz. This does not prove every possible pipeline placement
+at 90 MHz fails, or establish a routed timing limit.
+
+### Verification and reproduction
+
+The measured toolchain was Vivado 2019.2, with an isolated PipelineC snapshot
+based on `2be7c274c8388905296a0afc143e1cfd6ea6ef2b`. Sources were frozen with
+working-tree changes; a revision alone is not an exact source identity.
+The compiler provides `make_mult_karatsuba_inferred_leaves` and pinned inferred
+leaves. WireGuard integration did not modify the original compiler checkout.
+
+Completed checks include:
+
+- Seven CLI/profile/provenance checks, including the no-flag 85 MHz
+  hybrid-square selection and historical cache naming.
+- `measure.py --selftest`: report/model guards, historical parse-only behavior,
+  saved provenance and archive integrity.
+- 211 generated-HDL modular multiplication vectors.
+- 572 native full-product and 38 modular square cases; 75 generated-HDL
+  vectors per variant for raw squares, modular squares and prologue powers.
+- All six packet sizes at each accepted 60/70/80/85 MHz QoR point, four packets
+  per size and direction, with concurrent encrypt/decrypt, seed 8439 and all
+  taps. Acceptance checks include timing, device fit, II=1 and MCP sharing.
+
+As of October 10, 2026, final shared pipelined fixed-vector HDL sign-off is
+running at 85 MHz, followed by the 60 MHz resource-saving checkpoint. It uses
+the existing ten encrypt and eleven decrypt vectors, including tampered-tag
+rejection. This sign-off is pending; routed timing is also untested. Two older
+synthetic native latency-cache tests reproduce failures on untouched sources
+with this compiler (expecting three lanes, receiving two); they do not establish
+a production arithmetic regression.
+
+From the build directory, use a PipelineC checkout providing the API above.
+These public commands select the measured profiles without investigation scripts:
+
+```sh
+# Highest measured throughput profile; same as the current defaults.
+./build.py --shared --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
+# Lowest-DSP checkpoint and original arithmetic baseline.
+./build.py --shared --target-mhz 60 --poly1305-mult hybrid_square -j 1
+./build.py --shared --target-mhz 60 --poly1305-mult inferred -j 1
+# Generated-HDL packet sign-off; use --target-mhz 60 for the lower-clock profile.
+./build.py --shared --sim --syn_tb --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
+```
+
+For the full QoR workload, use the command in the
+[README measurement section](../../README.md#measuring-qor-fmax-area-throughput-latency).
+Use `--area-from-dir` only with a separately completed external-port hardware
+build of the same profile. `--continue` retains one output directory;
+`--syn-cache` reuses matching HDL/XDC/device/tool inputs across directories.
+Separate source copies must use the same absolute synthesis-store location.
 
 ## Independent MCP sharing
 
@@ -50,7 +253,7 @@ Rotation uses **local L, not C**. One product per capacity slot and a balanced
 modular sum remain inside the epilogue MCP; inactive slots contribute zero.
 There are no inverse powers, fixed production depths or automatic maximums.
 
-### Confirmed checkpoints
+### Historical inferred checkpoints
 
 | Top / goal | ChaCha core | Body cores enc/dec | Local L enc/dec | C | Prologue / epilogue setup cycles | DSP48 | Outcome |
 | --- | ---: | --- | --- | ---: | --- | ---: | --- |
@@ -58,6 +261,11 @@ There are no inverse powers, fixed production depths or automatic maximums.
 | Fixed-vector native syn_tb / 60 MHz | 17 | 3 / 3 | 5 / 5 | 5 | 6 / 5 | 704 | PASS, 21 checks, 688 cycles |
 | Earlier perf/native QoR / 60 MHz, unbuffered | 17 | 3 / 0 | 5 / 2 | 5 | 6 / 5 | 640 | PASS, 48 packets, 3012 cycles, synthesis 63.032 MHz |
 | Latest perf/native QoR / 60 MHz, buffered | 17 | 3 / 3 | 5 / 5 | 5 | 6 / 5 | 704 | PASS, 48 packets, 2459 cycles, synthesis 63.032 MHz |
+
+The following discussion records the inferred arithmetic before the hybrid
+integration. Current 60/70/80/85 MHz external-port results and the 90 MHz
+capacity stop are documented in [the arithmetic comparison above](#arithmetic-probes-and-candidate-selection)
+and the [README frequency comparison](../../README.md#resource-and-throughput-comparison).
 
 MCP setup cycles exclude the one response handshake cycle: the latest
 prologue/epilogue responses take seven/six cycles before arbitration wait.
@@ -125,9 +333,9 @@ finalization, tag stalls, arbitration waits and physical MCP service time.
 Prologue and epilogue each handled eight requests per size, taking six
 and five compute cycles respectively, without response stalls.
 
-### Starting hints and higher-clock limitations
+### Historical inferred starting hints and higher-clock limitations
 
-The 30 MHz profile is unchanged. A new 60 MHz starting profile uses the
+The 30 MHz starting hints are unchanged. The 60 MHz starting entry uses the
 confirmed fixed-vector ChaCha=17, bodies=3/3, shared MCPs=6/5 result;
 private ChaCha/MCP hints remain their 30 MHz fallback. The perf-only
 decrypt depth of zero is not used as a hardware hint. Profiles remain
@@ -137,7 +345,7 @@ all consumed depths matched the built pipelines, avoiding another
 pin-and-confirm pass. This is not a controlled synthesis wall-time comparison.
 The older QoR archive still records its pre-hint discovery source.
 
-There is no accepted 80 MHz result: private encrypt's confirmation exceeded
+That earlier inferred campaign had no accepted 80 MHz result: private encrypt's confirmation exceeded
 the 740-DSP device budget (896 DSPs) and also suffered an OOM kill.
 Private enc/dec 70 MHz native syn_tb passed, each with 640 DSPs and body
 core=3/L=5. Sharing-both 70 MHz instead confirmed C=7 at **960/740 DSPs**.
@@ -178,8 +386,8 @@ ChaCha stream wrapper's `.max_in_flight` and `.auto_pipeline.latency`, plus
 the selected MAC's `.prologue_mcp.mcp.latency`. PipelineC's normal
 pin-and-confirm re-elaboration regenerates the depth and native metadata from
 the final latencies. Starting hints are never used as final storage limits.
-The upstream metadata prerequisite is recorded in
-[PIPELINEC_PLAN.md](../../PIPELINEC_PLAN.md).
+The selected latency/credit values are recorded in the measurement's
+configuration and checked by acceptance guards.
 
 Let `R = CHACHA20_BLOCK_SIZE / AXIS128_BEAT_BYTES = 4`,
 `C = ChaCha max_in_flight = core_latency + 5`,
@@ -234,9 +442,8 @@ The fresh record's high water is 56/129 slots; all phases conserve transfers
 and drain to zero. Explicit target rates on every WireGuard MAIN also remove
 the unused finish checker's `clk_None` port: HDL/XDC contains only `clk_60p0`,
 and Vivado reports no unclocked register or unconstrained internal pins.
-The [validation notes](../../measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/validation.md)
-retain the functional/stress/AAD checks and explain recovery with an isolated
-original compiler after the live checkout changed during synthesis.
+The [current README results](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
+document the selected toolchain, depths and automatic FIFO metadata.
 
 ### Original 64-beat recovery qualification
 
@@ -270,7 +477,8 @@ large-packet completion periods. The earlier 1420-byte baseline has only seven
 decrypt intervals in the common contention window, below the planned eight;
 the user accepted final QoR without requesting its 32-packet extension.
 No stronger steady-contention before/after acceptance is claimed. Relevant
-numbers, hashes and completion timelines are retained outside `validation/`.
+numbers and completion timelines are documented in the historical measurement
+records linked above.
 
 Backpressure qualification additionally found the tag packer advertising a
 partial ciphertext tail before it could be merged, then withdrawing valid on

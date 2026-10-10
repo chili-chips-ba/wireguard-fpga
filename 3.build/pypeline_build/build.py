@@ -15,12 +15,13 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 from wireguard_env import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
-    TARGETS_MHZ, default_target_mhz, target_out_dir, starting_latencies, GENERATED_FILES,
+    selected_target, default_target_mhz, target_out_dir, starting_latencies, GENERATED_FILES,
+    MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir, share_name_for,
 )
 
 # Design parameters this script sets from its own flags (see src/wireguard_env.py)
-PROFILE_PARAMS = ("DESIGN", "POLY1305_IMPL", "SHARE", "TARGET_MHZ")
+PROFILE_PARAMS = ("DESIGN", "POLY1305_IMPL", "POLY1305_MULT_IMPL", "SHARE", "TARGET_MHZ")
 
 
 def main():
@@ -32,8 +33,10 @@ def main():
     add_sharing_arguments(parser)
     parser.add_argument("--poly1305", choices=IMPLEMENTATIONS,
                         help="MAC architecture (default pipelined)")
-    parser.add_argument("--target-mhz", type=int, choices=TARGETS_MHZ,
-                        help="Clock goal (default: sharing-both 60 MHz, other pipelined 30 MHz, legacy 80 MHz)")
+    parser.add_argument("--poly1305-mult", choices=MULT_IMPLEMENTATIONS,
+                        help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
+    parser.add_argument("--target-mhz", type=selected_target,
+                        help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     parser.add_argument("--sim", action="store_true", help="Run simulation instead of producing Verilog")
     parser.add_argument("--comb", action="store_true", help="Simulate without automatic slicing")
     parser.add_argument("--syn_tb", action="store_true", help="Use the fixed-vector synthesizable testbench")
@@ -67,9 +70,10 @@ def main():
         name = define.partition("=")[0].strip()
         if name in PROFILE_PARAMS:
             parser.error(f"-D {name}: set the profile with this script's flags "
-                         "(--enc/--dec/--shared, --share-*, --poly1305, --target-mhz)")
+                         "(--enc/--dec/--shared, --share-*, --poly1305, --poly1305-mult, --target-mhz)")
     try:
         args.poly1305 = selected_implementation(args.poly1305)
+        args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
         sharing = sharing_from_args(args, standalone=args.enc or args.dec)
     except ValueError as exc:
         parser.error(str(exc))
@@ -85,6 +89,7 @@ def main():
     defines = [
         f"DESIGN={design_param}",
         f"POLY1305_IMPL={args.poly1305}",
+        f"POLY1305_MULT_IMPL={args.poly1305_mult}",
         f"SHARE={share_name_for(sharing)}",
         f"TARGET_MHZ={args.target_mhz}",
     ] + args.define
@@ -111,7 +116,8 @@ def main():
         # The Verilog module keeps the name each design always had
         options = ["--top", f"chacha20poly1305_{design_name}", "--verilog"]
 
-    out_dir = target_out_dir(sharing_out_dir(implementation_out_dir(out_dir, args.poly1305), sharing), args.target_mhz)
+    out_dir = target_out_dir(mult_out_dir(sharing_out_dir(
+        implementation_out_dir(out_dir, args.poly1305), sharing), args.poly1305_mult), args.target_mhz)
     if args.out_dir:
         out_dir = args.out_dir
     cmd = [pipelinec_bin, src_file, "--out_dir", out_dir] + options
@@ -125,6 +131,7 @@ def main():
         cmd.extend(["--syn_cache", args.syn_cache])
 
     print(f"--> {design_short}: Poly1305 {args.poly1305}, clock target {args.target_mhz} MHz")
+    print(f"--> Poly1305 multiplier: {args.poly1305_mult}")
     print(f"--> Shared resources: {sharing_name(sharing)}")
     print(f"--> Automatic starting latencies: {starting_latencies(args.target_mhz)}")
     print(f"--- Preparing output directory: {out_dir} ---")
