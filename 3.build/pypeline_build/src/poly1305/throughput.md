@@ -7,7 +7,7 @@ hardware and the six-size concurrent native QoR measurement pass synthesis
 timing, capacity, II=1, packet results and retained-evidence integrity. At
 1920 bytes the default delivers **8.093/8.126 Gb/s encrypt/decrypt**, with
 **711 DSPs, 99,381 LUTs and 85.543 MHz** hardware synthesis timing.
-Final pipelined fixed-vector HDL sign-off is pending; routed timing is untested.
+Passing native simulation is accepted for this profile; routed timing is untested.
 See [verification and reproduction](#verification-and-reproduction).
 
 The [current README results](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
@@ -192,10 +192,14 @@ Completed checks include:
   per size and direction, with concurrent encrypt/decrypt, seed 8439 and all
   taps. Acceptance checks include timing, device fit, II=1 and MCP sharing.
 
-As of October 10, 2026, final shared pipelined fixed-vector HDL sign-off is
-running at 85 MHz, followed by the 60 MHz resource-saving checkpoint. It uses
-the existing ten encrypt and eleven decrypt vectors, including tampered-tag
-rejection. This sign-off is pending; routed timing is also untested. Two older
+As of October 10, 2026, passing native simulation is accepted for this work.
+The additional shared pipelined generated-HDL checks were stopped before
+completion; they are not a remaining development acceptance requirement.
+Development relies on native simulation as the hardware model. Run one
+generated-HDL/GHDL check immediately before an explicitly requested final
+Verilog export. Routine WireGuard development does not export final Verilog
+or repeat compiler-rendering checks; compiler regressions belong in PipelineC's
+suite. Routed timing is untested. Two older
 synthetic native latency-cache tests reproduce failures on untouched sources
 with this compiler (expecting three lanes, receiving two); they do not establish
 a production arithmetic regression.
@@ -204,12 +208,12 @@ From the build directory, use a PipelineC checkout providing the API above.
 These public commands select the measured profiles without investigation scripts:
 
 ```sh
-# Highest measured throughput profile; same as the current defaults.
-./build.py --shared --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
+# Development native simulation at the highest measured throughput profile.
+./build.py --shared --sim --syn_tb --native --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
 # Lowest-DSP checkpoint and original arithmetic baseline.
-./build.py --shared --target-mhz 60 --poly1305-mult hybrid_square -j 1
-./build.py --shared --target-mhz 60 --poly1305-mult inferred -j 1
-# Generated-HDL packet sign-off; use --target-mhz 60 for the lower-clock profile.
+./build.py --shared --sim --syn_tb --native --target-mhz 60 --poly1305-mult hybrid_square -j 1
+./build.py --shared --sim --syn_tb --native --target-mhz 60 --poly1305-mult inferred -j 1
+# Only immediately before an explicitly requested final Verilog export.
 ./build.py --shared --sim --syn_tb --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
 ```
 

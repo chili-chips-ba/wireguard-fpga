@@ -27,8 +27,9 @@ timing, capacity and archive-integrity checks passed. At 1920 bytes it sustains
 at 1420 bytes, **7.390 / 7.409 Gb/s**. Independent external-port hardware
 synthesis uses **711 of 740 DSPs, 99,381 LUTs, 32,836 FFs and 13.5 BRAM tiles**,
 with reported timing of **85.543 MHz**. Both authentication bodies accept one
-block per cycle. Final pipelined fixed-vector HDL sign-off is tracked in the
-[Poly1305 verification notes](src/poly1305/throughput.md#verification-and-reproduction); routed timing is untested.
+block per cycle. Passing native simulation is accepted for this profile;
+see the [Poly1305 verification notes](src/poly1305/throughput.md#verification-and-reproduction).
+Routed timing is untested.
 
 At 60 MHz the new arithmetic saves **191 DSPs (27.1%)**, reducing the full
 design from 704 to 513. That headroom permits ten accumulator lanes per
@@ -61,6 +62,12 @@ explains the scope of the remedy for
 </p>
 
 ## Build Commands
+
+Development simulation uses `--native`. Native simulation and synthesized QoR
+are sufficient for development acceptance; do not routinely run generated-HDL
+simulation or export final Verilog. Run one generated-HDL/GHDL check for the
+selected design immediately before an explicitly requested final Verilog export.
+Compiler rendering regressions belong in PipelineC's own test suite.
 
 Run from `3.build/pypeline_build` in the primary WireGuard checkout. Set
 `PYPELINEC` to `<PipelineC checkout>/src/pypelinec`, or put it on PATH.
@@ -118,16 +125,16 @@ cocotb/GHDL, Pypeline's own Python simulator):**
 ./build.py --shared --sim --syn_tb --native         # Pipelined sim, shared TB (slow!)
 ```
 The `--comb` forms are the quickest correctness check for the
-synthesizable-style testbench while iterating on the `.py` sources — run
-these before the slower cocotb/GHDL variants below. Dropping `--comb` here
+synthesizable-style testbench while iterating on the `.py` sources. Dropping `--comb` here
 runs the same real-autopipelining-first, cycle-accurate native simulation as
 the non-synthesizable testbench above, without needing cocotb/GHDL at all —
 useful for a cycle-accurate pipelined check that's still faster to iterate
 on than the full pipelined cocotb/GHDL build. Pass criteria: the build exits
 zero — every check is a `sim_assert(...)`, so a failure raises immediately.
 
-**Simulate with cocotb + GHDL (the designs' acceptance tests — synthesizable-style
-testbench only, see "Testbench Styles" below):**
+**Final export check with cocotb + GHDL — synthesizable-style testbench only,
+see "Testbench Styles" below. Run the selected design's pipelined check once
+immediately before final Verilog export, rather than during development:**
 ```bash
 ./build.py --enc --sim --syn_tb --comb     # Combinational sim, encrypt TB
 ./build.py --dec --sim --syn_tb --comb     # Combinational sim, decrypt TB
@@ -145,7 +152,7 @@ and the process exits non-zero. The pipelined (not `--comb`) variants run
 real autopipelining through the synthesis tool first, which is what takes
 hours.
 
-**Generate Verilog (for FPGA synthesis):**
+**Final Verilog export — only when explicitly requested, after the HDL check:**
 ```bash
 ./build.py --enc      # Standalone encrypt
 ./build.py --dec      # Standalone decrypt
@@ -479,7 +486,7 @@ stimulus is generated and outputs checked:
   `Reg[uint8_t[N]]` hardware register arrays (`tb_common.py`). Because this
   testbench is itself synthesizable Pypeline, it can run through cocotb+GHDL
   against real generated VHDL, or through real autopipelining (pipelined,
-  not `--comb`, builds) — these are the designs' acceptance tests.
+  not `--comb`, builds) for the check immediately before final Verilog export.
 - **Non-synthesizable** (`encrypt_tb.py`/`decrypt_tb.py`, driven by the plain
   `_tb.py` tops): uses Pypeline's `@sim_input`/`@sim_output` decorators to
   generate stimulus and check outputs as arbitrary Python, live,
@@ -507,9 +514,13 @@ stimulus is generated and outputs checked:
   real autopipelining through the synthesis tool followed by native
   latency-emulated simulation (see "Build Commands" above) — no cocotb/GHDL
   needed. Use this style for fast iteration and broader random coverage; use
-  the synthesizable style for the cocotb/GHDL acceptance tests.
+  the synthesizable style for the GHDL check before final Verilog export.
 
 ## Native vs VHDL Cycle-Accuracy Check (`pypeline_sim_debug.py`)
+
+This is a compiler diagnostic, not a routine WireGuard development check.
+Development relies on the native simulator's hardware model; compiler
+native-versus-HDL regressions should be checked in PipelineC's own suite.
 
 `encrypt_syn_tb.py`/`decrypt_syn_tb.py` tag their per-word data prints —
 each 16-byte chunk of input plaintext/ciphertext and output
@@ -716,7 +727,9 @@ The current default is `hybrid_square` at 85 MHz. The complete measurement
 finished on 2026-10-10: **four packets per size**, encrypt/decrypt concurrently,
 all six sizes, seed 8439, all taps, 2883 cycles. Timing, device fit, packet
 results, II=1, shared MCP arithmetic and archive-integrity checks passed.
-Final pipelined fixed-vector HDL sign-off is pending; see the
+Passing native simulation is accepted; the additional integrated HDL checks
+were stopped. Generated-HDL checking is reserved for the step immediately
+before explicit final Verilog export. See the
 [verification scope and reproduction commands](src/poly1305/throughput.md#verification-and-reproduction).
 Routed timing remains untested. All six sizes and both directions are
 documented below; arithmetic probe results and the three-candidate 60 MHz

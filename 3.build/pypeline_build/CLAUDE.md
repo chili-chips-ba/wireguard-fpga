@@ -57,8 +57,9 @@ Run from `pypeline_build/` (not `src/`):
   maximum latencies. Cache identities include architecture, sharing, multiplier
   and clock. The measured 85 MHz default has eight body core stages, ten lanes
   per direction and shared MCP setup cycles 12/8. See `src/poly1305/throughput.md`
-  for the source manifests and current final-validation state.
-- No `--sim`: generate final Verilog from `src/chacha20poly1305.py`
+  for the measured toolchain and current verification scope.
+- No `--sim`: final Verilog export from `src/chacha20poly1305.py`, only when
+  explicitly requested and after the one pre-export HDL check
   (`--enc`/`--dec`/`--shared` select `-D DESIGN`; the Verilog top keeps its
   `chacha20poly1305_{encrypt,decrypt,encrypt_decrypt_shared}` name via `--top`).
 - `--sim --native`: Pypeline's own Python simulator, no cocotb/GHDL needed.
@@ -66,8 +67,13 @@ Run from `pypeline_build/` (not `src/`):
   random-vector non-synthesizable TB (that style is native-only — see below).
   `--comb` = fast combinational sim; omit for a slow but cycle-accurate
   pipelined native sim (runs real autopipelining first to discover latencies).
-- `--sim --syn_tb` (no `--native`): the real acceptance test — cocotb + GHDL
-  against generated VHDL. `--comb` is quick; the pipelined form takes hours.
+- `--sim --syn_tb` (no `--native`): cocotb + GHDL against generated VHDL.
+  Run the selected design's pipelined check once immediately before an
+  explicitly requested final Verilog export. Development uses `--native`
+  and synthesized QoR; passing native simulation is sufficient acceptance.
+  Do not generate final Verilog or automatically run generated-HDL/compiler
+  rendering checks during development. Compiler regressions belong in
+  PipelineC's suite. `--comb` is quick; the pipelined form takes hours.
 - `--continue`: skip clearing the output dir (`./generated-files/<variant>`;
   every build/measure cache lives under `generated-files/`, named from
   `wireguard_env.GENERATED_FILES` — old `generated-files-<name>` paths in
@@ -112,7 +118,7 @@ section for the full per-file breakdown.
   10 fixed plaintext strings (chosen to hit partial-word/block-boundary corner
   cases), vectors computed once at elaboration by `aead_ref_model.py` and
   baked into `Reg[uint8_t[N]]` arrays (`tb_common.py`). Synthesizable, so it
-  runs through cocotb+GHDL — this is the acceptance test.
+  runs through cocotb+GHDL for the check immediately before final Verilog export.
 - **Non-synthesizable** (`*_tb.py`): uses `@sim_input`/`@sim_output` to
   generate/check 12 random-length (1-1024B) packets live during simulation
   (`tb_common_sim.py`, calling `aead_ref_model.py` lazily per packet), plus a
@@ -151,8 +157,8 @@ The current 85 MHz QoR, full-design resource counts and multiplier findings
 are documented in `README.md` and `src/poly1305/throughput.md`.
 Use the actual automatic depths and retained signatures, not a guessed
 latency or a stale earlier top. Keep performance-testbench and external-port
-area scopes distinct; timing is synthesis evidence, with routed sign-off
-still pending. Critical results belong in maintained component docs;
+area scopes distinct; timing is synthesis evidence and routed timing is
+untested. Critical results belong in maintained component docs;
 scratch workspaces and investigation reports are local. No separate `tests/` runner
 directory or diagnostic build modes are needed; compiler regressions belong
 in PipelineC's own suite.
