@@ -103,7 +103,7 @@ def make_mcp_arbiter(func, input_t, output_t, phase):
         return o
 
     mcp, mcp_result_t = make_stream_auto_multi_cycle(
-        tagged_compute, start_latency=wireguard_env.START_LATENCIES[f"poly1305_{phase}_shared"]
+        tagged_compute, name=f"poly1305_{phase}_shared"
     )
 
     @struct

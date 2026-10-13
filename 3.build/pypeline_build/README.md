@@ -83,8 +83,9 @@ revision alone implies a clean tree.
 
 Every build and measurement writes its own output directory under
 `generated-files/` (ignored by git). Names include the build kind,
-implementation, sharing selection and clock, so switching profiles never
-reuses another profile's cache.
+implementation, sharing selection and clock, so each profile keeps its own
+output files. The shared synthesis store and latency memory reuse matching
+results across profiles.
 
 **Native Pypeline sim — non-synthesizable testbench (fastest to iterate on;
 `@sim_input`/`@sim_output`, on-the-fly random vectors — see "Testbench
@@ -265,35 +266,58 @@ in the [Poly1305 design](src/poly1305/throughput.md#standalone-testbenches).
 `build.py` only selects the encrypt, decrypt, or shared top, with the existing
 hardware, correctness-testbench and shared-performance modes.
 
-### Automatic starting guesses
+### Automatic latency memory
 
-All automatic compute blocks take `start_latency` hints from the
-clock-indexed table in [src/wireguard_env.py](src/wireguard_env.py), selected
-alongside the clock. The shared-design hints come from
-the confirmed 30 MHz hardware builds; the shared Poly1305 services use the
-same one/two-cycle seeds as their private two-lane counterparts. The 60 MHz
-entry records the earlier inferred fixed-vector build (ChaCha core 17,
-body cores 3, shared MCP setup cycles 6/5). The new hybrid-square runs resolve
-their own depths: 5/7 body stages/lanes at 60 MHz and 8/10 at 85 MHz.
-The 85 MHz default retains the same fallback hints used for its measurement;
-no new starting-depth table entry is introduced. Private-resource hints and other
-uncharacterized clocks fall back to the 30 MHz values. These are neither
-fixed latencies nor maximum limits: the sweep still checks timing and can
-change them, and latency-dependent storage is sized from the actual pipeline
-depth. To add a characterized clock, add a complete entry to
-`START_LATENCIES_BY_MHZ`: pipeline values count core registers, excluding I/O
-registers, and MCP values count setup cycles, excluding the handshake cycle.
+All automatic compute blocks have named latency groups. The small
+`poly1305_body_encrypt` / `poly1305_body_decrypt` wrappers keep `poly1305_body`
+inside each region, where the sweep can attribute its critical paths and
+mini-sweep it. Direct imported-function tagging currently has weaker
+attribution, and region roots are not mini-swept; see PipelineC's
+[known issue and wrapper workaround](../../../PipelineC/docs/issues_inventory.md#35-not-yet-filed-auto_pipelinef-on-an-imported-function-sweeps-worse-than-a-wrapper).
+
+PipelineC discovers, remembers and restores the automatic depths. A build
+with no usable memory runs the normal sweep and records its results.
+Latency-dependent storage follows the actual discovered depth.
+Pipeline values count core registers, excluding I/O registers; MCP values
+count setup cycles, excluding the handshake cycle.
+
+All profiles and latency memory are tool-generated outputs under
+`generated-files/`:
+
+| Output | Purpose |
+| --- | --- |
+| `<build directory>/latency_profile.json` | Reports the built depths/counts and whether their owning MAINs met timing. |
+| `<build directory>/latency_memory.json` | Remembers verified depths, MCP counts, mini-sweep locks and MAIN implementations. |
+| `syn_cache/latency/v2/<tool>/<part>/<kind>/` | Shared verified pieces, reused across build directories. |
+
+The shared store is a sibling of the per-build output directories, so
+`build.py` can clear one build directory without deleting its store copy.
+`--continue` also retains the build-local memory. Use the same absolute
+`--syn-cache` path to share results between separate working directories.
+Unchanged hardware at the same goal restores its matching results; a higher
+goal can start from the highest lower-goal result. Higher-goal results never
+seed a lower goal, and stale hardware pieces
+are ignored before synthesis. Replayed implementations receive a confirmation
+synthesis; when consumed and built latencies agree, the pin-and-confirm
+second pass is skipped.
+
+PipelineC writes and loads memory automatically.
+Remembered values seed the sweep, with the compiler's lower-goal floors;
+every reused implementation is confirmed by synthesis. They never change tag
+identities or entity names.
+The compiler must support named AUTO tags and schema-2 latency memory; see
+its [latency-memory guide](../../../PipelineC/docs/pypeline_guide.md#starting-latencies-the-latency-memory-and---latency_hints).
 
 Use `--out-dir` to compare a fresh build without disturbing the previous cache:
 
 ```sh
 ./build.py --shared --target-mhz 30 -j 1 \
-  --out-dir generated-files/verilog-shared-poly1305-pipelined-share-chacha20-poly1305-30mhz-seeded
+  --out-dir generated-files/shared-30mhz-check
 ```
 
 An explicitly selected output directory must be empty for a fresh build;
 `--continue --out-dir ...` resumes it without clearing files. Keep separate caches
-when comparing clocks, architectures or starting-guess profiles.
+when comparing clock and hardware profiles.
 
 ### Clock declarations
 
@@ -379,6 +403,11 @@ nohup ./build.py --shared --continue -j 1 \
   > /tmp/wireguard-shared-build.log 2>&1 < /dev/null &
 ```
 
+Keep retained local regression records under `generated-files/` alongside
+their build outputs. `measure.py --label "$(pwd)/generated-files/<record>"`
+places its JSON, CSVs, summaries and logs there. Durable published measurement
+archives remain under `measurements/`.
+
 After an interruption, inspect the precise failing vendor log. Rename only an
 identified incomplete/error cache log before using `--continue`; preserve good
 synthesis caches and do not restart the long sweep unnecessarily. A source or
@@ -388,6 +417,129 @@ match the design; continuation is not permission to ignore source drift.
 Changing the clock uses the ordinary `--target-mhz` option; there are no
 special diagnostic builds or hidden shared-clock overrides. Generic compiler
 regressions belong in PipelineC's own suite, not a WireGuard test-runner directory.
+
+### Primitive cache troubleshooting and compiler follow-up
+
+The compiler's scalar operator-delay cache and the synthesis-log store serve
+different purposes. A valid exact `.delay` in the selected PipelineC checkout's
+`cache/delay/<backend>/<part>/<syn-or-pnr>/` namespace bypasses zero-clock
+characterization entirely. A backend attempt after a scalar miss can still
+reuse an exact output-directory or synthesis-store observation. A queued
+"Synthesizing function" message does not establish that Vivado was launched;
+the backend's `Running:` message does.
+
+The October 12 investigation, audited against PipelineC
+`4687e2749b682a8c80e24f5d7f2cd21843e1f507`, established:
+
+- `BIN_OP_PLUS_uint32_t_uint33_t.delay` was absent from the selected cache.
+  Its reversed-operand key existed at 2.342 ns, but the two keys are distinct.
+  There were 23 binary-operator cache hits and 16 scheduled operators; none
+  of those 16 had an exact entry in the initial cache inventory.
+- The exact adder had an earlier synthesis-store observation. Reuse missed
+  because the unused `pipelinec_fifo_fwft.vhd` changed. Adder HDL, registered
+  wrapper, scoped type package, async FIFO, fixed-point package, constraints,
+  part and Vivado version all matched.
+- Recomputing both `VIVADO.INPUT_MANIFEST` records reproduced their signatures.
+  Substituting only the earlier sync FIFO input reproduced the entire earlier
+  manifest. The scalar-cache scheduling branch also passed exact-hit,
+  scalar-only and zero-delay fixtures; removing the file reached the guarded
+  scheduling branch. No vendor tool was needed for those checks.
+
+**The compiler dependency fix is still separate work.** Work within one
+PipelineC checkout. Preserve the existing exact-cache fast path, narrow unused
+built-in HDL dependencies, and make misses understandable. Operand-order
+aliases are optional. Retaining warm caches across frozen checkouts is outside
+this fix's scope; no WireGuard datapath change is needed.
+
+Relevant PipelineC entry points:
+
+| Entry point | Responsibility |
+| --- | --- |
+| `SYN.GET_CACHE_ROOT_DIR` / `GET_PATH_DELAY_CACHE_DIR` | Cache root override and backend/device/recipe/planner namespace. |
+| `SYN.GET_CACHED_LOGIC_FILE_KEY` | Exact operator key, special MUX handling and filename-length cap. |
+| `SYN.GET_CACHED_PATH_DELAY` / `GET_CACHED_PATH_DELAY_COMPONENTS` | Scalar measurement and optional timing-component sidecar. |
+| `SYN.ADD_PATH_DELAY_TO_LOOKUP` | Cache lookup before deciding to schedule characterization. |
+| `SYN.SET_MEASURED_DELAY_FROM_REPORT` | Persists actual measured delays. |
+| `SYN.GET_VHDL_FILES_TCL_TEXT_AND_TOP` | Actual HDL read set shared by synthesis and export. |
+| `VIVADO.INPUT_MANIFEST` / `SYN.SYNTHESIS_INPUT_MANIFEST` | Input and recipe identity. |
+| `SYN.CHECK_VHDL_FILES_CONSISTENCY` | Referential consistency of emitted HDL files. |
+
+The required implementation is:
+
+1. Replace the unconditional sync/async FIFO inclusion in
+   `GET_VHDL_FILES_TCL_TEXT_AND_TOP` with one shared dependency helper. Inspect
+   rendered reachable HDL, including nested raw-VHDL bodies and generated
+   clock-crossing entities. A map for the two built-in FIFO units is sufficient.
+   Match names case-insensitively, preserve direct entity/architecture and
+   supported component/binding forms, and strip comments and string literals.
+   Follow transitive built-in references, deduplicate, and use deterministic
+   dependency order. Then run the existing scoped type-package step.
+   Change the actual backend/export read set and hash every actual input;
+   removing hashes while still reading an unused file would hide a dependency.
+   Keep required standard-library, fixed-point, global-wire and type-package
+   inputs, real FIFO dependencies, and consistent final `vhdl_files.txt` output.
+2. Add scheduler-level tests around the real cache lookup and scheduling
+   decision. Stub only unrelated hierarchy/HDL/report setup and use an
+   `apply_async` guard that fails if characterization is scheduled. Test exact
+   valid `.delay`, scalar-only legacy entries and `0.0` as hits; missing entries
+   as a negative control; wrong part/backend/`pnr` namespaces; explicit
+   `PYPELINEC_CACHE_DIR`; and the existing user-overload exclusion. Vivado must
+   not require a timing sidecar or area cache for a valid scalar hit. Preserve
+   DEVICE_MODELS' existing timing-component/area completeness rules and mutable
+   soft-operator policy. Estimated delays must not become measured entries.
+3. Print the selected delay-cache directory once and report exact keys and
+   miss reasons. Distinguish backend attempts from actual vendor launches.
+   Store misses should identify the signature and differing inputs when an
+   earlier manifest is already available, without scanning the full store
+   on every lookup. Preserve old observations; do not manufacture signatures
+   or rewrite manifests to make mismatching logs appear reusable.
+
+Add `primitive_delay_cache_test.py` and `builtin_vhdl_dependencies_test.py`
+under `src/tests/pypeline_tests/inst/`, registering them in `unit_tests.py`.
+The dependency tests must cover a scalar adder with neither FIFO, unchanged
+adder identity after an unused FIFO edit, real sync/async and nested raw-HDL
+dependencies, mixed-case names and architecture/component forms, comment or
+string-only mentions, transitive closure, deterministic ordering across hash
+seeds/output paths, and invalidation after a used input/constraint/device/tool
+change. The tests should run in process without invoking Vivado or its version
+command. Retain relevant `device_models_sta_test.py` and `area_model_test.py`
+coverage. Existing `generated_vhdl_stability_test.py` provides helper coverage;
+`syn_cache_test.py` also invokes backend builds when run directly, so select
+its in-process checks separately for the initial focused verification.
+
+After focused tests pass, one minimal 85 MHz QoR check is sufficient if hardware
+verification is needed (see [verification and reproduction](src/poly1305/throughput.md#verification-and-reproduction)).
+Require timing, fit and native packet acceptance, and verify that exact valid
+operator-cache entries schedule no characterization. Final design timing/area
+and newly sliced implementations still require their real synthesis inputs.
+Update PipelineC's `docs/SYN_DESIGN.md` with the dependency policy and diagnostics.
+No additional clock/design matrix or Verilog export is required.
+
+The retained observations are in
+`generated-files/syn_cache/v1/vivado/<signature prefix>/<signature>/`
+as `manifest.json` and `log`. Their signatures are:
+
+| Observation | Signature |
+| --- | --- |
+| Earlier | `be9a5862a15d6dcaaeac465d5bb754d6863dc3a16a65b9f5253bed4eba0f9797` |
+| October 12 | `5c6db1d0a03fd199175e37e0635c87f46bedb67d90927d04d042f18b2dfa3387` |
+
+The manifest summary and normalized recipe/FIFO diffs are retained under
+`generated-files/primitive-cache-investigation/`. The unchanged adder/wrapper
+hashes and sole changed input are recorded here so the finding remains readable
+without local build outputs:
+
+| Input | SHA-256 |
+| --- | --- |
+| Adder, both observations | `1dda5bc0aa2c2850b239cbf55a0b8c79a941046801a018922cde989a7d05a681` |
+| Registered wrapper, both | `a87f382e5c2a7f63e2c40d9b4e241599d8d6a508eb6d3dfbcc6d8c19d361e21f` |
+| Sync FIFO, earlier | `2dec640ba6051c83feb062f81ab7479c52cdccb0bc946c1a582b3601ee1edf5f` |
+| Sync FIFO, October 12 | `1e30cb3d4429bd947931d3290ca003690579d7f2c2ee55a6280678f29991a097` |
+
+An optional later operand-alias optimization must preserve exact-key precedence
+and legacy entries, validate unsigned arithmetic/result widths, keep HDL entity
+identities independent of aliases, and test signedness, noncommutative operators,
+sidecar provenance and conflicting exact measurements separately.
 
 ## Source Layout (mirrors ../pipelinec_build/src/)
 
@@ -736,8 +888,8 @@ documented below; arithmetic probe results and the three-candidate 60 MHz
 comparison are in the [Poly1305 design notes](src/poly1305/throughput.md#arithmetic-probes-and-candidate-selection).
 
 The measured sources explicitly selected 85 MHz and `hybrid_square`. The
-promotion changes those defaults without adding starting-depth hints or
-changing the measured arithmetic. Compiler base revision is
+promotion changes those defaults without changing the measured arithmetic.
+Compiler base revision is
 `2be7c274c8388905296a0afc143e1cfd6ea6ef2b`, using Vivado 2019.2 and
 `xc7a200tffg1156-2`. The measurements used frozen source/compiler copies
 with working-tree changes; the revision alone is not an exact source identity.

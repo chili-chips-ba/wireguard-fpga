@@ -224,6 +224,47 @@ build of the same profile. `--continue` retains one output directory;
 `--syn-cache` reuses matching HDL/XDC/device/tool inputs across directories.
 Separate source copies must use the same absolute synthesis-store location.
 
+### Latency-memory verification
+
+Automatic memory reuse passed the minimal 85 MHz QoR check on October 13,
+using Vivado 2019.2, `xc7a200tffg1156-2`, and the current PipelineC checkout
+(base revision `75a27b9f`). The compiler restored ChaCha depth 19, body depths
+8/8 and shared MCP counts 12/8, replayed all five MAIN implementations, and
+confirmed them with one cached whole-design synthesis. There were no new
+synthesis runs.
+
+The check sends one 64-byte packet per direction concurrently, with seed 8439,
+all taps and no peak phase. It exits zero, measuring 85.543 MHz, 93,561 perf-top
+LUTs, 30,161 FFs, 711 DSPs and 13.5 BRAM tiles. The six-size README reference
+has 93,566 LUTs, 30,168 FFs and the same DSP/BRAM use. Packet checks, timing and
+device fit pass; native simulation finishes after 96 cycles. Both directions
+have 10 accumulator lanes, all consumed latencies match the built pipelines,
+and the compiler records 13 verified memory pieces.
+
+The local record is retained in
+`generated-files/latency-hints-85mhz-qor-20261013/memory-replay/`, including
+`results.json`, `run-status.json`, `pypelinec.log`, `perf_raw.json`, CSVs and
+summaries. The preceding measurement is retained in the sibling `measurement/`
+directory. Generated profiles and memory remain at the build directory's root
+and in the shared synthesis store. These local outputs are ignored by git.
+The existing six-size README measurement remains the full throughput reference.
+
+For a minimal check of automatic memory reuse, run from the build directory
+using a current PipelineC checkout:
+
+```sh
+./measure.py --shared --poly1305 pipelined --poly1305-mult hybrid_square \
+  --target-mhz 85 --sizes 64 --packets 1 --peak-bytes 0 \
+  --dirs both --taps all --seed 8439 --no-per-module-area -j 1 \
+  --reuse-syn \
+  --label "$(pwd)/generated-files/latency-hints-85mhz-qor-20261013/memory-replay" \
+  --out-dir generated-files/latency-hints-85mhz-qor-20261013
+```
+
+Use a fresh build directory and omit `--reuse-syn` for a cold check. An absolute
+label puts the measurement outputs under `generated-files/` as well. The
+memory-replay record contains the follow-up build's status and results.
+
 ## Independent MCP sharing
 
 Current combined builds select sharing independently: no flags or `--shared`
@@ -337,17 +378,7 @@ finalization, tag stalls, arbitration waits and physical MCP service time.
 Prologue and epilogue each handled eight requests per size, taking six
 and five compute cycles respectively, without response stalls.
 
-### Historical inferred starting hints and higher-clock limitations
-
-The 30 MHz starting hints are unchanged. The 60 MHz starting entry uses the
-confirmed fixed-vector ChaCha=17, bodies=3/3, shared MCPs=6/5 result;
-private ChaCha/MCP hints remain their 30 MHz fallback. The perf-only
-decrypt depth of zero is not used as a hardware hint. Profiles remain
-unrestricted starting guesses; subsequent sweeps may change them.
-The latest recovery QoR confirms those seeds unchanged in two sweep iterations;
-all consumed depths matched the built pipelines, avoiding another
-pin-and-confirm pass. This is not a controlled synthesis wall-time comparison.
-The older QoR archive still records its pre-hint discovery source.
+### Inferred higher-clock limits
 
 That earlier inferred campaign had no accepted 80 MHz result: private encrypt's confirmation exceeded
 the 740-DSP device budget (896 DSPs) and also suffered an OOM kill.
@@ -389,7 +420,7 @@ latency limits. Legacy dataflow wiring is unchanged.
 ChaCha stream wrapper's `.max_in_flight` and `.auto_pipeline.latency`, plus
 the selected MAC's `.prologue_mcp.mcp.latency`. PipelineC's normal
 pin-and-confirm re-elaboration regenerates the depth and native metadata from
-the final latencies. Starting hints are never used as final storage limits.
+the final latencies.
 The selected latency/credit values are recorded in the measurement's
 configuration and checked by acceptance guards.
 
@@ -427,7 +458,7 @@ prologue response. Prolonged external stalls still propagate backpressure.
 
 For retained 60 MHz depths, `C=22`, `P=6`, `S=1`: the terms total **115
 beats**, rounded to **128 memory beats / 129 total slots**. The confirmed
-30 MHz shared hints (`C=9`, `P=1`) give 53 beats, rounded to 64 memory beats.
+30 MHz shared depths (`C=9`, `P=1`) give 53 beats, rounded to 64 memory beats.
 This is conservative automatic sizing, not a claim that the smallest FIFO
 meeting a particular throughput target is 128 beats.
 
@@ -587,10 +618,19 @@ packet, with one packet context active at a time.
 
 Let P be the discovered body `AUTO_PIPELINE.latency`. Including its explicit
 input and output registers, D = P + 2; use L = D accumulators with same-cycle
-writeback forwarding. The recorded characterization was unseeded. Current
-source supplies clock-profile `start_latency` hints (at 30 MHz, body P=0,
-prologue=1, epilogue=2 in each direction), with no fixed depths or maximum
-latencies. L still follows the actual discovered body latency, not the hint.
+writeback forwarding. Builds use named AUTO tags and PipelineC's built-in
+latency memory. Tool-generated profiles and memory live in each build output
+directory; matching verified pieces also
+live in `generated-files/syn_cache/latency/v2/`. They survive clearing the build
+directory and can seed other directories at the same or a higher goal. Changed
+hardware pieces are ignored before synthesis. A build with no matching memory
+runs the normal sweep. L follows the actual discovered body latency.
+
+The encrypt/decrypt body wrappers remain so `poly1305_body` is an interior
+mini-sweep target. Direct imported-function tagging has a known PipelineC
+attribution issue, and region roots are not mini-swept; see PipelineC's
+`docs/issues_inventory.md`, issue 35. Stable tag names still provide independent
+latency groups and readable profiles for the two directions.
 
 ### Arithmetic representation and initial synthesis finding
 
@@ -824,38 +864,6 @@ legacy 1.620/1.181 Gb/s at 80 MHz (2.02×/2.47×). At 1420 bytes they are
 lower cycle counts. Arithmetic, compiler revision and shared ChaCha depth also
 differ; the comparison is not an isolated MAC-only A/B.
 
-### Starting-guess validation (2026-10-02)
-
-A fresh external-port shared build using the clock-profile hints converged to
-the same configuration in the table above: each body core P=0, D=L=2, and
-prologue/epilogue constrained counts 1/2. Shared ChaCha retained four core
-registers. The final 30.05/33.519/33.519 MHz synthesis results and DUT area
-matched the unseeded hardware exactly. All four MCP arithmetic audits passed;
-prologue setup/hold counts were 1/0 and epilogue counts 2/1 in both directions.
-The final 246 HDL input hashes and clock-constraint hash matched the retained
-passing synthesis manifest, including after restoration from the failed trim.
-
-There were two whole-design synthesis runs rather than three. The sweep
-passed at four ChaCha core registers, failed its attempted trim to three,
-and restored the passing implementation. Every consumed pipeline/MCP latency
-matched the built result, so no second pin-and-confirm pass was needed.
-Aggregate whole-design synthesis elapsed time was 2,069.3 seconds, compared
-with 5,586.7 seconds for the reference; machine-load differences also affect
-the observed runtime. The shared fixed-vector native combinational preflight
-passed in 348 cycles. Packet throughput measurements above remain the original
-unseeded QoR record; this run validated hardware/build convergence.
-
-The generated output directory is
-`generated-files/verilog-shared-poly1305-pipelined-30mhz-seeded-20261002-1939Z`.
-This validation used Vivado 2019.2 and PipelineC `1c32492-dirty`, including
-the stream-wrapper latency-option forwarding fix.
-Its retained report is `chacha20poly1305_encrypt_decrypt_shared/`
-`vivado_68754b09_bb94084203cc6c2b.log`, with input signature
-`bb94084203cc6c2bc8ffdcab8dd4b1b9b87ed9c076549900d2f4fac70816e795`.
-Build profile values remain hints. Since then 60 MHz has its own entry;
-clocks without one (40/50/70/80 MHz) reuse the 30 MHz profile until
-characterized.
-
 ## Area/latency alternatives, not implemented
 
 The dedicated parallel epilogue is intentionally the implemented choice:
@@ -875,11 +883,9 @@ does not implement.
 
 The final 128-bit addition of s is included in the whole epilogue MCP. It is
 not assumed to cost zero constrained cycles; the auto characterization measures
-the whole function. Current source seeds the known-good starting counts from
-`src/wireguard_env.py`; these are setup counts, not the MCP's count+1 stream
-response cycles. This is a build-time optimization, not part of the unseeded
-design that produced the recorded results. The fresh shared 30 MHz build
-above confirmed timing and convergence with these hints.
+the whole function. PipelineC remembers verified counts in its output/store
+latency memory; these are setup counts, not the MCP's count+1 stream response
+cycles. This reuse is a build-time optimization.
 
 
 ## Standalone testbenches
@@ -892,7 +898,7 @@ prints them); no special runner is needed:
 | Parameter | Choices / default | Coverage |
 | --- | --- | --- |
 | POLY1305_TB_MODE | mac (default), body, arithmetic, components, sharing | Reference tags; body latency/bubbles; integer-oracle arithmetic; power graph/rotation; independent shared MCP arbitration and response ownership. |
-| POLY1305_TB_DIRECTION | encrypt (default), decrypt | Select the direction's stable body callable identity. |
+| POLY1305_TB_DIRECTION | encrypt (default), decrypt | Select the direction's named body latency group. |
 | POLY1305_TB_BODY_DEPTH | unset (automatic), or 0,1,3,6 | Testbench-only fixed stages, giving L=2,3,5,8; not valid in arithmetic or sharing mode. |
 
 MAC cases cross each length 1..2L+1 and 4L+1 with zero/unit/maximal/random
@@ -971,8 +977,8 @@ products with a carry chain, mask 0x3 in limb 2, and three folds
 This change extracts those helpers into `poly1305_math.py`, shared by both
 architectures, and fixes another reducer error: the final subtraction must
 also subtract the top limb 3 of p=2^130-5. Without it, reducing p produced
-3*2^128 rather than zero. The legacy FSM is unchanged; its historical MCP
-starting guess of five is now selected from the clock-profile table.
+3*2^128 rather than zero. The legacy FSM is unchanged; its automatic MCP uses
+the compiler's verified latency memory and normal sweep.
 
 The complete-block MAC and full AEAD testbenches use independent integer or
 cryptography references, including the RFC 8439 known-answer vector.

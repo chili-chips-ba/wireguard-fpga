@@ -231,7 +231,7 @@ def poly1305_mac_fsm(
     #
     # `poly1305.data_in` is THE bottleneck measurement for this design:
     # o.data_in_if.ready is asserted only in START_ITER, and the compute MCP
-    # (make_stream_auto_multi_cycle(..., start_latency=5), settled at 5) re-arms
+    # (named poly1305_legacy, historically settled at 5) re-arms
     # every latency+1 = 6 cycles, so this
     # tap's service_period_cycles reads ~6.0 -- 16 B per 6 cycles = 2.667
     # B/cycle, against ChaCha20's II=1 stream pipeline at up to 16 B/cycle.
@@ -261,10 +261,10 @@ def poly1305_mac_fsm(
 # its own independent compute + FSM hardware state.
 #
 # The multi-cycle count is automatic: the sweep raises it if the launch->capture
-# path fails timing. The clock profile retains the historical starting guess
-# of 5 at 80 MHz (4 failed); compute_mcp.mcp.latency reads the actual built count.
+# path fails timing. PipelineC remembers verified counts automatically;
+# compute_mcp.mcp.latency reads the actual built count (historically 5 at 80 MHz).
 compute_mcp, _compute_mcp_t = make_stream_auto_multi_cycle(
-    poly1305_mac_loop_body, start_latency=wireguard_env.START_LATENCIES["poly1305_legacy"]
+    poly1305_mac_loop_body, name="poly1305_legacy"
 )
 
 

@@ -90,7 +90,7 @@ def chacha_shared_pipeline(
 
 
 pipeline_func, _pipeline_result_t = make_stream_auto_pipeline(
-    chacha_shared_pipeline, start_latency=wireguard_env.START_LATENCIES["chacha20_shared"]
+    chacha_shared_pipeline, name="chacha20_shared"
 )
 
 

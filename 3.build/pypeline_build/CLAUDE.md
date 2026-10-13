@@ -30,10 +30,23 @@ separate from `pypelinec`'s own bootstrapping of the PipelineC repo's
 `src/`/`include/pypeline/` onto `sys.path`. It also declares the build
 parameters (`param()`, set with `pypelinec -D NAME=VALUE`): `DESIGN`
 (encrypt|decrypt|shared), `POLY1305_IMPL`, `POLY1305_MULT_IMPL`, `SHARE` and `TARGET_MHZ`, resolved
-by `resolve_profile` into `DESIGN`/`ENCRYPT`/`DECRYPT`/`SHARING`/`TARGET_MHZ`/
-`START_LATENCIES`. build.py and measure.py import the same module for the
-profile tables and output-directory names. Design configuration never comes
-from environment variables.
+by `resolve_profile` into `DESIGN`/`ENCRYPT`/`DECRYPT`/`SHARING`/`TARGET_MHZ`.
+Named AUTO tags identify independent latency groups. PipelineC discovers,
+remembers and restores their depths automatically. Tool-generated
+`latency_profile.json` and `latency_memory.json` live in the build output
+directory. Matching verified
+pieces also live in `generated-files/syn_cache/latency/v2/`, survive clearing
+one build directory, and can seed other directories at the same or a higher
+clock goal. Changed hardware pieces are ignored before synthesis.
+build.py and measure.py import the same module for the profile tables and
+output-directory names.
+Design configuration never comes from environment variables.
+
+Keep the `poly1305_body_encrypt` / `poly1305_body_decrypt` wrappers: they keep
+the arithmetic body inside its named AUTO region so the sweep can attribute
+and mini-sweep it. Directly tagging the imported body currently loses useful
+attribution, and the sweep does not mini-sweep region roots (PipelineC's
+`docs/issues_inventory.md`, issue 35).
 
 ## Build Commands
 
@@ -53,8 +66,9 @@ Run from `pypeline_build/` (not `src/`):
 - `--poly1305 legacy` requires `--share-chacha20` for combined builds.
   `--poly1305-mult inferred|hybrid|hybrid_square` selects the pipelined arithmetic.
   `--target-mhz N` accepts any positive integer MHz clock goal.
-  Automatic compute blocks use clock-profile starting hints, not fixed or
-  maximum latencies. Cache identities include architecture, sharing, multiplier
+  Automatic compute blocks use PipelineC's verified latency memory and normal
+  sweep, without fixed or maximum latencies. Cache identities include
+  architecture, sharing, multiplier
   and clock. The measured 85 MHz default has eight body core stages, ten lanes
   per direction and shared MCP setup cycles 12/8. See `src/poly1305/throughput.md`
   for the measured toolchain and current verification scope.
@@ -80,6 +94,8 @@ Run from `pypeline_build/` (not `src/`):
   records resolve there via `generated_out_dir`). Every build also shares the
   synthesis store `generated-files/syn_cache` (`--syn-cache DIR|none`):
   identical synthesis inputs are reused across profiles and output dirs.
+  Keep retained local measurement records and diagnostic outputs under
+  `generated-files/` too; use an absolute path there for `measure.py --label`.
   `--out-dir` selects an isolated cache; after interruption preserve good
   synthesis logs and rename only an identified incomplete/error vendor log.
 
@@ -237,7 +253,7 @@ Pipelined decrypt has an automatically sized ciphertext FIFO after its fork,
 before framing. The selected ChaCha credits and prologue latency drive the
 conservative budget in `aead_types.decrypt_auth_fifo_sizing`; the retained
 60 MHz profile needs 115 beats, rounded to 128 memory beats plus the FWFT
-output register. Read actual pipeline metadata, never starting hints. The
+output register. Read actual pipeline metadata for storage sizing. The
 private/shared ChaCha callables expose their selected `.pipeline_func`;
 `make_stream_auto_pipeline` documents `.auto_pipeline` and `.max_in_flight` on
 that wrapper as its sizing contract.

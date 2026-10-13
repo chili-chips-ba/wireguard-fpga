@@ -415,7 +415,7 @@ def chacha20_fsm(
 # direction's dataflow core; each call site gets its own independent pipeline
 # + FSM hardware state, same as any other function call in pypeline.
 pipeline_func, _pipeline_result_t = make_stream_auto_pipeline(
-    chacha20_loop_body, start_latency=wireguard_env.START_LATENCIES["chacha20"]
+    chacha20_loop_body, name="chacha20"
 )
 
 

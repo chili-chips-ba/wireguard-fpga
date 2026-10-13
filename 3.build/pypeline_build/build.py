@@ -15,7 +15,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 from wireguard_env import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
-    selected_target, default_target_mhz, target_out_dir, starting_latencies, GENERATED_FILES,
+    selected_target, default_target_mhz, target_out_dir, GENERATED_FILES,
     MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir, share_name_for,
 )
@@ -129,11 +129,9 @@ def main():
         cmd.extend(["-j", str(args.jobs)])
     if args.syn_cache != "none":
         cmd.extend(["--syn_cache", args.syn_cache])
-
     print(f"--> {design_short}: Poly1305 {args.poly1305}, clock target {args.target_mhz} MHz")
     print(f"--> Poly1305 multiplier: {args.poly1305_mult}")
     print(f"--> Shared resources: {sharing_name(sharing)}")
-    print(f"--> Automatic starting latencies: {starting_latencies(args.target_mhz)}")
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)
     if args.out_dir and not args.continue_build and os.listdir(out_dir):

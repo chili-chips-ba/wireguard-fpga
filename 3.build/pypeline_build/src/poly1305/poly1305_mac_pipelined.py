@@ -46,8 +46,9 @@ def poly1305_body(x: body_in_stream_t) -> body_out_stream_t:
     return o
 
 
-# Separate canonical identities allow independently discovered depths in the
-# encrypt/decrypt MAINs. Neither identity captures the derived lane count.
+# Keep the arithmetic body inside each latency region so the sweep can
+# attribute its critical paths and mini-sweep it. Region roots are not
+# mini-swept. Neither wrapper captures the derived lane count.
 @hw_func
 def poly1305_body_encrypt(x: body_in_stream_t) -> body_out_stream_t:
     return poly1305_body(x)
@@ -82,17 +83,16 @@ class mac_result_t(NamedTuple):
 
 @functools.lru_cache(maxsize=None)
 def get_body_auto_pipeline(direction, body_latency=None):
-    """One stable tag per direction, also used to size shared MCP arrays.
+    """One named latency group per direction, also used to size shared MCP arrays.
     body_latency: a fixed body depth instead of the automatic one -- only the
     standalone testbench (poly1305_pipelined_syn_tb.py) sets it."""
     if direction not in ("encrypt", "decrypt"):
         raise ValueError("Poly1305 direction must be encrypt or decrypt")
     body_func = poly1305_body_encrypt if direction == "encrypt" else poly1305_body_decrypt
+    name = f"poly1305_body_{direction}"
     if body_latency is not None:
-        return AUTO_PIPELINE(body_func, latency=body_latency)
-    return AUTO_PIPELINE(
-        body_func, start_latency=wireguard_env.START_LATENCIES[f"poly1305_body_{direction}"]
-    )
+        return AUTO_PIPELINE(body_func, latency=body_latency, name=name)
+    return AUTO_PIPELINE(body_func, name=name)
 
 
 def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None):
@@ -162,10 +162,10 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         )
     else:
         prologue_mcp, prologue_result_t = make_stream_auto_multi_cycle(
-            prologue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_prologue_{direction}"]
+            prologue, name=f"poly1305_prologue_{direction}"
         )
         epilogue_mcp, epilogue_result_t = make_stream_auto_multi_cycle(
-            epilogue, start_latency=wireguard_env.START_LATENCIES[f"poly1305_epilogue_{direction}"]
+            epilogue, name=f"poly1305_epilogue_{direction}"
         )
 
     @hw_func

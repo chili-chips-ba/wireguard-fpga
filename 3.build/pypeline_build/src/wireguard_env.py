@@ -22,7 +22,7 @@ It does three things:
                        legacy uses inferred)
      TARGET_MHZ     positive integer MHz (default: the profile's clock)
 3. Resolves them into this build's profile: DESIGN, ENCRYPT, DECRYPT,
-   POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING, TARGET_MHZ and START_LATENCIES.
+   POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING and TARGET_MHZ.
 
 The profile tables and output-directory names below are plain Python, shared
 with build.py and measure.py. Those import this module without PipelineC on
@@ -50,47 +50,8 @@ SHARE_CHOICES = ("auto", "none", "chacha20", "poly1305", "both")
 MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square")
 DEFAULT_MULT_IMPL = "hybrid_square"
 DEFAULT_TARGET_MHZ = 85  # Highest passing shared hardware and six-size QoR point.
-BASE_TARGET_MHZ = 30  # Other pipelined selections and uncharacterized hints.
+BASE_TARGET_MHZ = 30  # Other pipelined selections.
 LEGACY_TARGET_MHZ = 80
-
-# Core register counts for AUTO_PIPELINE; setup counts for AUTO_MULTI_CYCLE.
-# Source: the retained shared hardware observation in measurements/
-# shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/.
-# The private ChaCha core reuses the shared core's hint (not an independent
-# timing result). Legacy Poly1305 retains its historical 80 MHz starting 5.
-# Add measured clock profiles here; uncharacterized clocks use the 30 MHz
-# hints, not fixed depths or limits. Boundary registers are NOT included.
-START_LATENCIES_BY_MHZ = {
-    30: {
-        "chacha20": 4,
-        "chacha20_shared": 4,
-        "poly1305_body_encrypt": 0,
-        "poly1305_body_decrypt": 0,
-        "poly1305_prologue_encrypt": 1,
-        "poly1305_prologue_decrypt": 1,
-        "poly1305_epilogue_encrypt": 2,
-        "poly1305_epilogue_decrypt": 2,
-        # Also confirmed by the sharing-both, two-lane 30 MHz hardware run.
-        "poly1305_prologue_shared": 1,
-        "poly1305_epilogue_shared": 2,
-        "poly1305_legacy": 5,
-    },
-}
-
-# Confirmed sharing-both 60 MHz fixed-vector syn_tb: ChaCha=17, both
-# body cores=3 (L=5), shared prologue/epilogue=6/5. The perf wrapper retained
-# decrypt core=0 after constant folding; do not use that as a hardware hint.
-# Private ChaCha/MCP hints remain the 30 MHz fallback, not measured at 60 MHz.
-# These are starting guesses only; all automatic blocks remain unrestricted.
-START_LATENCIES_BY_MHZ[60] = dict(
-    START_LATENCIES_BY_MHZ[30],
-    chacha20_shared=17,
-    poly1305_body_encrypt=3,
-    poly1305_body_decrypt=3,
-    poly1305_prologue_shared=6,
-    poly1305_epilogue_shared=5,
-)
-
 
 def selected_implementation(value=None):
     choice = "pipelined" if value is None else value
@@ -183,12 +144,6 @@ def share_name_for(sharing):
     return "poly1305" if sharing["poly1305"] else "none"
 
 
-def starting_latencies(target_mhz):
-    """Independent copy of the clock's hints; fall back to the measured 30 MHz profile."""
-    target = selected_target(target_mhz)
-    return dict(START_LATENCIES_BY_MHZ.get(target, START_LATENCIES_BY_MHZ[BASE_TARGET_MHZ]))
-
-
 def implementation_out_dir(base, implementation):
     return f"{base}-poly1305-{selected_implementation(implementation)}"
 
@@ -271,7 +226,6 @@ DECRYPT = DESIGN in ("decrypt", "shared")
 SHARING = _PROFILE["sharing"]
 POLY1305_MULT_IMPL = _PROFILE["multiplier"]
 TARGET_MHZ = float(_PROFILE["target_mhz"])
-START_LATENCIES = starting_latencies(_PROFILE["target_mhz"])
 
 
 # ─── sys.path bootstrap ─────────────────────────────────────────────────────

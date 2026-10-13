@@ -31,7 +31,7 @@ PART("xc7a200tffg1156-2")
 MODE = param("POLY1305_TB_MODE", "mac", choices=("mac", "body", "arithmetic", "components", "sharing"),
              help="which standalone Poly1305 check to build")
 DIRECTION = param("POLY1305_TB_DIRECTION", "encrypt", choices=("encrypt", "decrypt"),
-                  help="the direction's stable body callable identity")
+                  help="the direction's named body latency group")
 DEPTH = param("POLY1305_TB_BODY_DEPTH", type=int, choices=(0, 1, 3, 6),
               help="testbench-only fixed body stages (L = DEPTH + 2); default: automatic")
 if DEPTH is not None and MODE in ("arithmetic", "sharing"):
