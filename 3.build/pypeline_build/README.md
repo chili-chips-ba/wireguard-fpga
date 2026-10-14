@@ -20,14 +20,15 @@ encrypt/decrypt builds keep their compute resources private. Sharing-both
 defaults to the measured **85 MHz** point; other pipelined selections retain
 their **30 MHz** defaults. The default multiplier is `hybrid_square`.
 
-The latest six-size QoR run completed on **2026-10-10**, using **four packets
-per size with encrypt/decrypt concurrent**. All packet results, synthesis
-timing, capacity and archive-integrity checks passed. At 1920 bytes it sustains
+The latest focused QoR run completed on **2026-10-13**, using **four
+1920-byte packets per direction with encrypt/decrypt concurrent**. All packet
+results, synthesis timing, capacity and archive-integrity checks passed. It sustains
 **8.093 Gb/s encrypt / 8.126 Gb/s decrypt at 85 MHz** (**16.22 Gb/s combined**);
-at 1420 bytes, **7.390 / 7.409 Gb/s**. Independent external-port hardware
-synthesis uses **711 of 740 DSPs, 99,381 LUTs, 32,836 FFs and 13.5 BRAM tiles**,
-with reported timing of **85.543 MHz**. Both authentication bodies accept one
-block per cycle. Passing native simulation is accepted for this profile;
+the [Poly1305 packet lifecycle](#interpretation-packet-lifecycle-at-1920-bytes)
+adds at least **37 non-body cycles per packet**, while both authentication
+bodies accept one block per cycle. The perf-testbench top fits with **711 of
+740 DSPs** and reported timing of **85.543 MHz**. Passing native simulation is
+accepted for this profile;
 see the [Poly1305 verification notes](src/poly1305/throughput.md#verification-and-reproduction).
 Routed timing is untested.
 
@@ -73,11 +74,11 @@ Run from `3.build/pypeline_build` in the primary WireGuard checkout. Set
 `PYPELINEC` to `<PipelineC checkout>/src/pypelinec`, or put it on PATH.
 `measure.py` and `bottleneck.py` also discover a sibling PipelineC
 checkout (`../../../PipelineC`). Both repositories' revisions and
-design-source hashes are preserved with each measurement. The latest QoR used
-Vivado 2019.2 and an isolated PipelineC snapshot based on
-`2be7c274c8388905296a0afc143e1cfd6ea6ef2b`, which includes the reusable
-`make_mult_karatsuba_inferred_leaves` API. Exact frozen design/compiler hashes
-and working-tree provenance are retained with the evidence. Use the
+design-source hashes are preserved with each measurement. The current focused
+85 MHz QoR used Vivado 2019.2 and an isolated PipelineC checkout at
+`75a27b9fab2628d925e91b4b1bacab667917c976`, with matched latency memory.
+The [accepted record and reproduction commands](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/README.md)
+retain the design/compiler hashes, confirmed depths and synthesis evidence. Use the
 archived source hashes for the exact tested code rather than assuming a
 revision alone implies a clean tree.
 
@@ -214,6 +215,11 @@ selection for legacy Poly1305. To reproduce the lower-resource checkpoint,
 use `--target-mhz 60`; for the original arithmetic baseline, add
 `--poly1305-mult inferred`. See the
 [Poly1305 implementation and verification notes](src/poly1305/throughput.md#hybrid-karatsuba-and-explicit-squares).
+
+At 1920 bytes, the dominant throughput cost is the Poly1305 packet lifecycle:
+setup, body streaming, pipeline drain and finalization run sequentially for
+each direction's packet context. The MAC also holds the next packet's key
+until it returns to IDLE. See the [measured cycle breakdown](#interpretation-packet-lifecycle-at-1920-bytes).
 
 ### Karatsuba arithmetic and attribution
 
@@ -718,22 +724,45 @@ PipelineC's stream performance library; its
 defines every metric and probe rule. This repo adds the AEAD block graph, the
 Poly1305 cost model, Vivado fmax/area parsing, acceptance checks and evidence.
 
-The full sharing-both measurement matching the latest profile:
+The focused sharing-both measurement for the current profile:
 
 ```bash
 ./measure.py --shared --poly1305 pipelined --target-mhz 85 \
   --poly1305-mult hybrid_square -j 1 \
-  --label shared-85mhz-hybrid-square-new-run --reuse-syn \
-  --sizes 16,64,256,1024,1420,1920 --packets 4 --peak-bytes 0 \
+  --label shared-85mhz-bottleneck-new-run --reuse-syn \
+  --sizes 1920 --packets 4 --peak-bytes 0 \
   --dirs both --taps all --seed 8439 --save-evidence
 ```
+
+For a focused bottleneck investigation near the maximum packet size, use
+`--sizes 1920 --packets 4 --peak-bytes 0`. This selects one back-to-back phase
+with four packets per direction; `--peak-bytes 0` disables the extra peak
+phase. Keep `--dirs both --taps all` for concurrent traffic and the internal
+FSM, stall and arbitration counters. Four packets provide three completion
+intervals and enough lifecycle samples to identify packet overhead. Use
+`--packets 16` when a longer sustained-rate/contention window is needed.
+Use a pipelined run (omit `--comb`) so the cycle budget includes the automatic
+pipeline and MCP depths of the selected clock profile.
+
+Read `summary.md` for payload goodput and packet-completion periods, and
+`blocks.md` for the bottleneck verdict and Poly1305 lifecycle breakdown.
+The MAC input's service period includes packet-boundary backpressure;
+`poly1305.to_compute` measures body service while work is offered. The
+lifecycle table separates setup, body, drain, finalization and tag output.
+Its IDLE count includes key waits and phase-settle time, and tag stalls are
+already included in tag-output time. These MAC-local costs are separate from
+whole-datapath latency.
+The automatic block verdict follows payload edges. Also inspect the
+`chacha20.key_out` / `poly1305.key_in` taps: the MAC accepts a new packet key
+only in IDLE, and a stalled key holds ChaCha's next-packet output. This key
+dependency is outside the payload-only block rollup.
 
 This reports perf-top area/timing only. Add `--area-from-dir <hardware out_dir>`
 only after the external-port hardware top has independently passed at the
 same goal. Other forms:
 
 ```bash
-./measure.py --label X --reuse-syn         # sim only, reusing the cached synthesis
+./measure.py --label X --reuse-syn         # remeasure, reusing valid synthesis inputs
 ./measure.py --label smoke --comb          # rig check in minutes (no Vivado, no area/fmax)
 ./measure.py --label X --parse-only        # re-merge an existing run's outputs
 ./measure.py --label X --sizes 64,1420 --packets 8 --peak-bytes 1920
@@ -831,9 +860,12 @@ WireGuard-specific readings of the guide's metrics:
   are accepted in one burst, and the **decrypt** output reads the full
   16 B/cycle because `wait_to_verify` releases the buffered plaintext at line
   rate once Poly1305 returns its verdict.
-- `service_period_cycles` on `poly1305.data_in` reads 1.0 for the pipelined
-  body (the legacy body read ≈6.0); packet-boundary stalls remain visible at
-  the public ports.
+- `service_period_cycles` on `poly1305.to_compute` measures body service:
+  **1.0 cycle/block** for the current pipelined MAC. `poly1305.data_in` also
+  counts offered input blocked by the packet controller; the focused 1920-byte
+  run reads **1.01 encrypt / 1.32 decrypt cycles/beat** there. Read its stalls
+  together with the lifecycle and key-channel counters when identifying the
+  source of packet-boundary backpressure.
 - `throughput_comparison` also reports a common contention window when there
   are enough samples: after both directions' second completion and before
   either's last ChaCha admission. Only completion intervals wholly inside it
@@ -873,38 +905,43 @@ testbenches, where it cannot perturb a timing window.
 | `pypelinec.log` | the build/sim log, with the per-cycle `Clock: N` spam filtered out (counted, not kept) |
 | `perf-*.json` / `perf-vivado.log` / `perf-clocks.xdc`, `artifact-manifest.json` | with `--save-evidence`: input manifests, sweep history, source provenance, the timing log, constraints and a checksum inventory (`--check-record` verifies them) |
 
+In a one-phase run, `perf_raw.json` first appears when that phase completes.
+The build log can be quiet during native simulation because `measure.py`
+filters the per-cycle `Clock: N` lines; absence of JSON before the first burst
+finishes does not indicate a failed measurement.
+
 ### Current results: hybrid Karatsuba and squaring, sharing both, 85 MHz
 
-The current default is `hybrid_square` at 85 MHz. The complete measurement
-finished on 2026-10-10: **four packets per size**, encrypt/decrypt concurrently,
-all six sizes, seed 8439, all taps, 2883 cycles. Timing, device fit, packet
-results, II=1, shared MCP arithmetic and archive-integrity checks passed.
-Passing native simulation is accepted; the additional integrated HDL checks
-were stopped. Generated-HDL checking is reserved for the step immediately
-before explicit final Verilog export. See the
+The current default is `hybrid_square` at 85 MHz. The focused synthesis-backed
+measurement completed on **2026-10-13 at 21:09 America/New_York**: four
+1920-byte packets per direction, encrypt/decrypt concurrently, seed 8439,
+all taps, **810 cycles and eight reference checks**. The process exited zero;
+timing, device fit, packet results, II=1, shared MCP arithmetic, buffer
+accounting and archive-integrity checks passed. The
+[accepted record](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/README.md)
+contains the complete result and retained evidence.
+Generated-HDL checking is reserved for the step immediately before explicit
+final Verilog export. See the
 [verification scope and reproduction commands](src/poly1305/throughput.md#verification-and-reproduction).
-Routed timing remains untested. All six sizes and both directions are
-documented below; arithmetic probe results and the three-candidate 60 MHz
-comparison are in the [Poly1305 design notes](src/poly1305/throughput.md#arithmetic-probes-and-candidate-selection).
+Routed timing and on-board traffic remain untested. This run reports the
+perf-testbench top; external-port hardware area was not re-measured.
+The earlier six-size curve, external-port area and multiplier comparison
+are preserved in the
+[prior documentation snapshot](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/prior-readme-record.md)
+and [Poly1305 design notes](src/poly1305/throughput.md#arithmetic-probes-and-candidate-selection).
 
-The measured sources explicitly selected 85 MHz and `hybrid_square`. The
-promotion changes those defaults without changing the measured arithmetic.
-Compiler base revision is
-`2be7c274c8388905296a0afc143e1cfd6ea6ef2b`, using Vivado 2019.2 and
-`xc7a200tffg1156-2`. The measurements used frozen source/compiler copies
-with working-tree changes; the revision alone is not an exact source identity.
+The measured compiler revision is
+`75a27b9fab2628d925e91b4b1bacab667917c976`, with Vivado 2019.2 and
+`xc7a200tffg1156-2`. WireGuard revision is `27af6d4c85aee94364aed90ac106b041de08a2f2`
+with documentation changes; exact design/compiler hashes are archived.
 
 <!-- MEASURED-RESULTS:BEGIN -->
 
-_Measured by `measure.py` with `--target-mhz 85 --poly1305-mult hybrid_square`
-on 2026-10-10. Numbers below come from that run's `results.json`;
-Gb/s at target uses the confirmed 85 MHz clock._
+_Measured by `measure.py` on 2026-10-13 at 21:09 America/New_York, sharing both at 85 MHz, four 1920-byte packets per direction. Numbers come from the [accepted record](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/results.json); Gb/s at target uses the confirmed 85 MHz clock._
 
 Design `shared` | target 85.0 MHz | measured fmax **85.54 MHz** | limiting MAIN `poly1305_mcp_shared_poly1305_prologue_shared`
 Poly1305 multiplier: `hybrid_square`.
-Area (perf_tb_top): **93566 LUT** (92432 logic + 1134 mem), **30168 FF**, **711 DSP48**, **13.5 BRAM tiles**, 19731 CARRY4
-DUT-only area (external key/data ports): **99381 LUT**, **32836 FF**, **711 DSP48**, **13.5 BRAM tiles**.
-Hardware-top timing: PASS, 85.54 MHz against 85.0 MHz.
+Area (perf_tb_top): **93561 LUT** (92427 logic + 1134 mem), **30161 FF**, **711 DSP48**, **13.5 BRAM tiles**, 19730 CARRY4
 Shared resources: `chacha20-poly1305`.
 Buffer `decrypt/auth_fifo`: 256 memory beats + 1 output beat; 257 total capacity.
 Automatic sizing: 135 required beats; ChaCha core=19, credits=24 blocks, prologue MCP=12 cycles.
@@ -916,62 +953,98 @@ encrypt: body II=1, accumulators=10, body response=10 cycles, prologue response=
 
 | phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | % line rate | Gb/s @fmax | Gb/s @target | in stall | cold head (clk) | total lat med (clk) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| b2b-16 | 16 | 4 | encrypt | 0.384 | 41.7 | 2.4% | 0.263 | 0.261 | 0.026 | 40 | 125.0 |
-| b2b-16 | 16 | 4 | decrypt | 0.289 | 55.3 | 1.8% | 0.198 | 0.197 | 0.470 | 80 | 121.0 |
-| b2b-64 | 64 | 4 | encrypt | 1.433 | 44.7 | 9.0% | 0.981 | 0.974 | 0.025 | 40 | 127.0 |
-| b2b-64 | 64 | 4 | decrypt | 1.079 | 59.3 | 6.7% | 0.738 | 0.733 | 0.426 | 83 | 130.0 |
-| b2b-256 | 256 | 4 | encrypt | 4.518 | 56.7 | 28.2% | 3.092 | 3.072 | 0.020 | 40 | 139.0 |
-| b2b-256 | 256 | 4 | decrypt | 3.187 | 80.3 | 19.9% | 2.181 | 2.167 | 0.287 | 95 | 173.5 |
-| b2b-1024 | 1024 | 4 | encrypt | 9.722 | 105.3 | 60.8% | 6.653 | 6.611 | 0.248 | 40 | 174.5 |
-| b2b-1024 | 1024 | 4 | decrypt | 9.783 | 104.7 | 61.1% | 6.695 | 6.653 | 0.207 | 143 | 250.5 |
-| b2b-1420 | 1420 | 4 | encrypt | 10.867 | 130.7 | 67.9% | 7.437 | 7.390 | 0.204 | 40 | 201.0 |
-| b2b-1420 | 1420 | 4 | decrypt | 10.895 | 130.3 | 68.1% | 7.456 | 7.409 | 0.168 | 168 | 301.5 |
-| b2b-1920 | 1920 | 4 | encrypt | 11.901 | 161.3 | 74.4% | 8.144 | 8.093 | 0.165 | 40 | 230.5 |
+| b2b-1920 | 1920 | 4 | encrypt | 11.901 | 161.3 | 74.4% | 8.144 | 8.093 | 0.166 | 40 | 230.5 |
 | b2b-1920 | 1920 | 4 | decrypt | 11.950 | 160.7 | 74.7% | 8.178 | 8.126 | 0.135 | 199 | 362.5 |
 
 <!-- MEASURED-RESULTS:END -->
 
 <!-- BLOCK-RESULTS:BEGIN -->
 
-Both authentication bodies retain II=1. The shared prologue and epilogue
-serve both directions with 12/8 setup cycles plus one response handshake cycle.
-At 1920 bytes, sustained packet periods are 161.3/160.7 cycles for
-encrypt/decrypt; at 1420 bytes, 130.7/130.3. Packet setup, drain and finalization
-therefore remain visible in the measured goodput despite the II=1 body.
+Detailed per-block service/stall, shared arbitration and lifecycle measurements
+are in the [block report](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/blocks.md).
 
 <!-- BLOCK-RESULTS:END -->
 
-#### Resource and throughput comparison
+#### Interpretation: packet lifecycle at 1920 bytes
 
-These are concurrent encrypt/decrypt measurements at each confirmed target,
-with full-design resource counts from independent external-port hardware.
-All candidates use the same six-size, four-packet-per-size QoR workload.
+The dominant throughput cost is the **sequential Poly1305 packet lifecycle**.
+Each direction has one private packet context: the MAC accepts body data only
+in `STREAM_BODY` and accepts the next packet's key only in `IDLE`.
+Prologue/setup, body drain and epilogue/finalization therefore leave gaps
+between packet bodies. ChaCha20 and buffering can advance independently until
+their handshakes encounter this dependency.
 
-| Arithmetic / target | DSP48 | Slice LUTs | Body stages / lanes per direction | 1420 B Gb/s enc / dec | 1920 B Gb/s enc / dec |
-| --- | ---: | ---: | --- | --- | --- |
-| Original inferred / 60 MHz | 704 | 54,226 | 3 / 5 | 5.842 / 5.859 | 6.255 / 6.269 |
-| Hybrid square / 60 MHz | 513 | 75,773 | 5 / 7 | 5.696 / 5.712 | 6.130 / 6.158 |
-| Hybrid square / 70 MHz | 576 | 82,979 | 6 / 8 | 6.483 / 6.500 | 7.012 / 7.043 |
-| Hybrid square / 80 MHz | 711 | 99,381 | 8 / 10 | 6.955 / 6.973 | 7.617 / 7.648 |
-| **Hybrid square / 85 MHz (default)** | **711** | **99,381** | **8 / 10** | **7.390 / 7.409** | **8.093 / 8.126** |
+The [completed synthesis-backed record](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/README.md)
+confirms the verified 85 MHz profile:
+ChaCha20 core depth 19, Poly1305 body core depth 8 plus two I/O registers,
+ten accumulator lanes per direction, and shared prologue/epilogue MCP depths
+12/8. Four 1920-byte packets per direction ran concurrently, seed 8439, all
+taps enabled. All **eight reference checks passed**, with 810 simulation
+cycles and consistent counters across the 809-cycle tap window. The independent
+[retained-profile native replay](measurements/shared-85mhz-bottleneck-1920-retained-profile-20261013/README.md)
+produced identical raw phase data, including packet timestamps and all
+handshake, FSM, shared-service and buffer counters. Both runs are complete.
 
-At 60 MHz the selected arithmetic saves **27.1% of DSPs**, while the additional
-pipeline lanes slightly increase per-packet overhead. Spending that headroom
-on deeper pipelining raises slower-direction throughput by **26.5% at 1420 B**
-and **29.4% at 1920 B**, relative to the original inferred 60 MHz design.
-The 85 MHz configuration uses the same area and cycle-domain packet periods
-as 80 MHz; its throughput increases by 6.25%. The 1920-byte packets have the
-highest goodput of the tested sizes, **16.22 Gb/s combined** at 85 MHz.
-Short packets still pay setup/framing costs; the table retains their lower
-rates rather than treating maximum-size traffic as representative of all traffic.
+Payload goodput is **8.093 Gb/s encrypt / 8.126 Gb/s decrypt** at 85 MHz,
+matching the current QoR table. The three completion intervals are
+**162, 160, 162 cycles** for encrypt and **160, 162, 160** for decrypt;
+their means are 161.3/160.7 cycles. Four packets expose the repeating packet
+overhead, while a longer run would be needed for a sustained contention window.
 
-The hardware prologue is the limiting synthesis main at **85.543 MHz**;
-body dataflow reports **87.642 MHz**. The automatic 90 MHz sweep chose eleven
-body register stages and thirteen lanes per direction. Vivado reported
-**918 DSPs requested versus 740 available**, and the final mapping still used
-**174,122 LUTs versus 134,600 available**. That run stopped before packet
-simulation. This bounds the measured automatic sweep at 85 MHz; it is not an
-exhaustive search of every pipeline placement or routed clock limit.
+The testbench's 29-byte AAD adds two padded authentication blocks; the length
+field adds one. Each packet therefore launches **123 body blocks**: 120
+payload blocks + 2 AAD blocks + 1 length block. Both directions launch and
+retire 492 blocks over the burst, with measured body service of **one
+block/cycle**. The measured MAC-local phase costs are:
+
+- **Setup: 14 cycles** without sharing waits, including the launch and
+  13-cycle response. Encrypt averages 14; decrypt averages 17.5 because it
+  incurs 14 shared-prologue request-wait cycles across the four packets.
+- **Body: 123 transfers per packet.** Encrypt spends 124 cycles per packet
+  in `STREAM_BODY` on average, including four input-gap cycles over the burst;
+  decrypt spends 123 with no input gaps.
+- **Drain: 11 cycles**, including the ten-cycle body response latency and
+  the phase boundary that commits the final accumulator writeback.
+- **Finalization: 10 cycles**, including launch and the nine-cycle epilogue
+  response.
+- **Tag output: 1 cycle**, with zero tag-output stalls in either direction.
+
+Twelve of decrypt's 14 prologue request-wait cycles occur at its initial
+launch: the first key transfers at cycle 25, the request starts at 26 and
+is accepted at 38. Two wait cycles occur on later requests. The initial
+setup wait is outside the three packet-completion intervals used for goodput.
+
+Setup + drain + finalization + tag output cost 36 cycles. At least one IDLE
+cycle to accept the next key makes the minimum **37 non-body cycles per
+packet**, giving a **123 + 37 = 160-cycle baseline**. Across the three
+completion intervals, four encrypt input-gap cycles raise its mean to
+**160 + 4/3 = 161.3**; the two later decrypt prologue-wait cycles raise its
+mean to **160 + 2/3 = 160.7**. This closes the observed cycle budget and
+accounts for approximately 75% of the 16-byte/cycle payload line rate.
+IDLE totals also include startup, waiting for keys and phase-tail/settle time;
+they must not be added wholesale to this packet budget. Request waits and
+key stalls overlap the reported phases and are not additional independent costs.
+
+The `chacha20.key_out` / `poly1305.key_in` pair records **81 encrypt / 34
+decrypt stalled cycles** across the burst. The automatic payload-edge verdict
+names ChaCha20 for encrypt and Poly1305 for decrypt; its graph omits this
+key dependency. The key stalls and lifecycle counters identify the packet
+controller's contribution to the upstream encryption stalls.
+Shared prologue/epilogue compute occupies only **96/64 of the 809 cycles**,
+with eight requests and responses each and no response stalls. Overlapping
+packet contexts across setup, body, drain and finalization is therefore the
+architectural target suggested by these measurements; an overlap optimization
+has not been measured. The confirmed prologue critical path at 85.543 MHz
+limits the reported synthesis fmax; the packet lifecycle sets the cycle budget.
+
+#### Resource scope and earlier comparisons
+
+The current perf-testbench top fits with **711 of 740 DSPs**, 93,561 LUTs,
+30,161 FFs and 13.5 BRAM tiles. Shared-prologue timing is **85.543 MHz**;
+body dataflow reports **87.642 MHz**. The external-port area comparison and
+earlier 60/70/80/85 MHz curves are preserved in the
+[prior documentation snapshot](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/prior-readme-record.md)
+and [arithmetic notes](src/poly1305/throughput.md#hybrid-karatsuba-and-explicit-squares).
 
 At 85 MHz the shared MCP setup cycles are 12/8 and the decrypt authentication
 FIFO has **256 memory beats plus one output beat**, covering a computed
@@ -979,9 +1052,9 @@ FIFO has **256 memory beats plus one output beat**, covering a computed
 direction. The existing recurrence, sharing, arbitration and packet controller
 architecture were retained.
 
-Earlier inferred-60 MHz, FIFO-recovery, 30 MHz and legacy measurements remain
-historical records. See the [Poly1305 arithmetic notes](src/poly1305/throughput.md#hybrid-karatsuba-and-explicit-squares) and
-[original buffering comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md).
+The earlier 90 MHz sweep exceeded DSP and LUT capacity, as documented in that
+snapshot. These accepted and failed sweep points do not establish an
+exhaustive pipeline-placement or routed-clock limit.
 
 ### Re-measuring without re-synthesizing
 
@@ -994,6 +1067,27 @@ re-running the 1–3 hour autopipelining sweep: `./measure.py --reuse-syn --size
 in sim time alone. Sweeping more curve points is cheap; changing the *design* is
 what costs a fresh sweep — and so, once, does adding or moving an internal probe,
 because generated VHDL names embed source line numbers.
+
+`--reuse-syn` keeps the selected output directory; it does not choose an
+existing directory for you or skip validation of current synthesis inputs.
+If your 85 MHz build used a custom output directory, pass that same directory
+with `--out-dir`. Check its `latency_profile.json` for the actual built depths.
+Compiler rendering changes can cause cache misses and fresh synthesis even
+when the hardware sources and clock selection are unchanged. To reproduce the
+current result, use PipelineC `75a27b9fab2628d925e91b4b1bacab667917c976`
+and the [archived latency-memory instructions](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/README.md).
+The trial with compiler `1c79f9d7f7d83da0dc7354f1a227abfcd22545a4` selected
+nine body stages / eleven lanes and exceeded device capacity at 783 DSPs;
+it was stopped before simulation and supplies no throughput result. Native
+simulation also takes time after synthesis: several hundred or thousand cycles can take
+minutes or longer, independently of cache hits. Follow the measurement's
+`pypelinec.log` for synthesis progress and phase completion.
+
+Early standalone "as-written" timing checks are informational. In a cold
+sweep an automatic MCP can fail that check at its bootstrap count before the
+normal flow tunes its constrained cycles. Judge acceptance by the final
+whole-design sweep, the measurement's `validation` / packet checks and the
+process exit status; the final retained observation is in `sweep_history.json`.
 
 ### Probing inside the design (narrowing in on a bottleneck)
 
@@ -1083,9 +1177,10 @@ result at the real pipelined timing with fmax and area attached.
   tuple seed whose hash varied per process, so their payload bytes are not
   reproducible. Cycle results are unaffected either way: the datapath is
   constant-time in payload content, and every packet is reference-checked.
-- **Native sim cost depends on compiler and machine load.** The latest sweep
-  simulated 2459 cycles in 4039.6 seconds (about 1.6 s/cycle), which is why
-  packet counts are modest rather than a full MTU sweep. A phase that sees no beat for 1000 cycles is declared
+- **Native sim cost depends on compiler and machine load.** The focused
+  1920-byte run simulated 810 cycles in 2338.3 seconds (about 39 minutes or
+  2.9 s/cycle), so even a four-packet burst takes time after synthesis.
+  A phase that sees no beat for 1000 cycles is declared
   deadlocked and reported, rather than running to the cycle cap.
 - **Shared-pipeline arbitration.** `chacha20_pipeline_shared` serves a lone
   requester immediately and uses round-robin priority when both request.
