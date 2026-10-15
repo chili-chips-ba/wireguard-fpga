@@ -20,12 +20,22 @@ encrypt/decrypt builds keep their compute resources private. Sharing-both
 defaults to the measured **85 MHz** point; other pipelined selections retain
 their **30 MHz** defaults. The default multiplier is `hybrid_square`.
 
-The latest focused QoR run completed on **2026-10-13**, using **four
+**Work in progress, 2026-10-14:** the pipelined Poly1305 MAC now has independent
+prologue, two-bank body and epilogue stages, with latency-derived ciphertext
+buffers on both encrypt fork branches and revised decrypt authentication
+buffer sizing. Encrypt, decrypt and shared **combinational native benches
+passed 50 packet checks**. The shared 85 MHz synthesis-backed measurement is
+still running; pipelined correctness at the resolved latencies, device fit,
+fmax, body II=1 and throughput improvement remain pending. This is a
+simulation-checked checkpoint, not an accepted replacement for the results
+below. See the [checkpoint details and remaining checks](src/poly1305/throughput.md#overlap-checkpoint-2026-10-14).
+
+The latest accepted focused QoR run, **before packet overlap**, completed on **2026-10-13**, using **four
 1920-byte packets per direction with encrypt/decrypt concurrent**. All packet
 results, synthesis timing, capacity and archive-integrity checks passed. It sustains
 **8.093 Gb/s encrypt / 8.126 Gb/s decrypt at 85 MHz** (**16.22 Gb/s combined**);
-the [Poly1305 packet lifecycle](#interpretation-packet-lifecycle-at-1920-bytes)
-adds at least **37 non-body cycles per packet**, while both authentication
+the [pre-overlap Poly1305 packet lifecycle](#interpretation-packet-lifecycle-at-1920-bytes)
+added at least **37 non-body cycles per packet**, while both authentication
 bodies accept one block per cycle. The perf-testbench top fits with **711 of
 740 DSPs** and reported timing of **85.543 MHz**. Passing native simulation is
 accepted for this profile;
@@ -40,16 +50,20 @@ direction. The automatic 90 MHz configuration exceeded DSP and LUT capacity.
 
 See the [component design and validation](src/poly1305/throughput.md#independent-mcp-sharing)
 for arithmetic, arbitration, latency sizing, every confirmed checkpoint and
-deferred higher-clock issues. The latest packet results are below.
+deferred higher-clock issues. The latest accepted packet results are below;
+they do not yet qualify the overlapped controller.
 
 Pipelined decrypt buffers ciphertext on its authentication fork, before
 framing. Its memory depth is derived from the selected ChaCha pipeline's
-credits and bounded authentication setup, then rounded to a power of two;
-the retained 85 MHz depths require 135 beats, giving 256 memory beats plus
-one FIFO output beat.
-ChaCha can advance while authentication waits for its key/setup. See the
-[sizing derivation](src/poly1305/throughput.md#automatic-authentication-fifo-sizing).
-Pipelined encrypt has a two-slot,
+credits, bounded setup and completion, then rounded to a power of two.
+Pipelined encrypt also buffers ciphertext before authentication framing and
+before tag append, so setup and completion can overlap adjacent packets.
+At the restored starting depths, the required budgets are 41/134/170 beats
+for encrypt authentication/append and decrypt authentication, respectively:
+64/256/256 memory beats plus one output beat each. These are derived storage
+budgets; final resolved metadata and occupancy checks remain pending. See the
+[sizing derivation](src/poly1305/throughput.md#latency-derived-overlap-fifo-budgets).
+Pipelined encrypt retains a two-slot,
 II=1 output register slice (one unstalled output cycle) to hold external AXIS
 words stable under backpressure. Legacy has neither buffer. The
 [recovery comparison](measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md)
@@ -74,7 +88,7 @@ Run from `3.build/pypeline_build` in the primary WireGuard checkout. Set
 `PYPELINEC` to `<PipelineC checkout>/src/pypelinec`, or put it on PATH.
 `measure.py` and `bottleneck.py` also discover a sibling PipelineC
 checkout (`../../../PipelineC`). Both repositories' revisions and
-design-source hashes are preserved with each measurement. The current focused
+design-source hashes are preserved with each measurement. The accepted pre-overlap focused
 85 MHz QoR used Vivado 2019.2 and an isolated PipelineC checkout at
 `75a27b9fab2628d925e91b4b1bacab667917c976`, with matched latency memory.
 The [accepted record and reproduction commands](measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/README.md)
@@ -216,10 +230,11 @@ use `--target-mhz 60`; for the original arithmetic baseline, add
 `--poly1305-mult inferred`. See the
 [Poly1305 implementation and verification notes](src/poly1305/throughput.md#hybrid-karatsuba-and-explicit-squares).
 
-At 1920 bytes, the dominant throughput cost is the Poly1305 packet lifecycle:
-setup, body streaming, pipeline drain and finalization run sequentially for
-each direction's packet context. The MAC also holds the next packet's key
-until it returns to IDLE. See the [measured cycle breakdown](#interpretation-packet-lifecycle-at-1920-bytes).
+At 1920 bytes, the dominant measured throughput cost before this change was
+the sequential Poly1305 packet lifecycle: setup, body streaming, drain and
+finalization occupied one context, holding the next key until IDLE.
+The overlapped implementation addresses that dependency; its throughput gain
+has not yet been measured. See the [baseline cycle breakdown](#interpretation-packet-lifecycle-at-1920-bytes).
 
 ### Karatsuba arithmetic and attribution
 
@@ -339,7 +354,15 @@ warning, zero unclocked register pins, and zero unconstrained internal pins.
 
 ### Acceptance testing
 
-The integration/fallback matrix, using ordinary builds (stop on the first
+For the current overlap checkpoint, only the three basic combinational native
+benches have passed. One shared pipelined QoR run at 85 MHz, with four packets
+per size/direction at 1420 and 1920 bytes, is pending. Its native packet results,
+ownership assertions, buffer conservation, II=1, timing and fit must all pass
+before accepting a new throughput result. See the
+[checkpoint record](src/poly1305/throughput.md#overlap-checkpoint-2026-10-14).
+
+The following integration/fallback matrix documents earlier qualification;
+it is not the test scope for the overlap checkpoint (stop on the first
 failure):
 
 ```sh
@@ -555,7 +578,7 @@ src/
                                  POLY1305_IMPL, SHARE, TARGET_MHZ) and the profile they
                                  select; starting latencies; output-directory naming
                                  (plain Python, also imported by build.py/measure.py)
-  aead_types.py                 shared sizes/types, probed auth FIFO and output-slice factories
+  aead_types.py                 shared sizes/types, latency-derived fork FIFOs and output slices
   chacha20/
     chacha20.py                 ChaCha20 math + pipeline-control FSM + chacha20_instance
                                  (FSM and stream pipeline merged into one function; chacha20.h)
@@ -566,7 +589,7 @@ src/
   poly1305/
     poly1305.py                 selectable legacy MAC FSM + MCP (poly1305.h)
     poly1305_math.py            shared corrected limb and 130-bit-residue arithmetic
-    poly1305_mac_pipelined.py   interleaved II=1 MAC, private body/packet context
+    poly1305_mac_pipelined.py   prologue, two-bank II=1 body and epilogue stages
     poly1305_mcp_shared.py      independent tagged prologue/epilogue round-robin services
     poly1305_select.py          conditional import and per-direction metadata
     poly1305_verify_decrypt.py  tag comparison FSM
@@ -724,14 +747,14 @@ PipelineC's stream performance library; its
 defines every metric and probe rule. This repo adds the AEAD block graph, the
 Poly1305 cost model, Vivado fmax/area parsing, acceptance checks and evidence.
 
-The focused sharing-both measurement for the current profile:
+The pending overlap measurement uses only the shared pipelined design:
 
 ```bash
 ./measure.py --shared --poly1305 pipelined --target-mhz 85 \
   --poly1305-mult hybrid_square -j 1 \
-  --label shared-85mhz-bottleneck-new-run --reuse-syn \
-  --sizes 1920 --packets 4 --peak-bytes 0 \
-  --dirs both --taps all --seed 8439 --save-evidence
+  --label shared-85mhz-poly1305-overlap --reuse-syn \
+  --sizes 1420,1920 --packets 4 --peak-bytes 0 \
+  --dirs both --taps all --seed 8439 --no-per-module-area --save-evidence
 ```
 
 For a focused bottleneck investigation near the maximum packet size, use
@@ -912,6 +935,11 @@ finishes does not indicate a failed measurement.
 
 ### Current results: hybrid Karatsuba and squaring, sharing both, 85 MHz
 
+**Accepted pre-overlap baseline.** The numbers in this section describe the
+single-context controller. The current overlapped source has passed basic
+combinational native simulation; its synthesis-backed packet results and QoR
+remain pending. No new fmax, area or throughput result is claimed here.
+
 The current default is `hybrid_square` at 85 MHz. The focused synthesis-backed
 measurement completed on **2026-10-13 at 21:09 America/New_York**: four
 1920-byte packets per direction, encrypt/decrypt concurrently, seed 8439,
@@ -967,9 +995,9 @@ are in the [block report](measurements/shared-85mhz-bottleneck-1920-4pkt-2026101
 
 #### Interpretation: packet lifecycle at 1920 bytes
 
-The dominant throughput cost is the **sequential Poly1305 packet lifecycle**.
-Each direction has one private packet context: the MAC accepts body data only
-in `STREAM_BODY` and accepts the next packet's key only in `IDLE`.
+In this baseline, the dominant throughput cost was the **sequential Poly1305
+packet lifecycle**. Each direction had one private packet context: the MAC
+accepted body data only in `STREAM_BODY` and the next packet's key only in `IDLE`.
 Prologue/setup, body drain and epilogue/finalization therefore leave gaps
 between packet bodies. ChaCha20 and buffering can advance independently until
 their handshakes encounter this dependency.
@@ -986,7 +1014,7 @@ produced identical raw phase data, including packet timestamps and all
 handshake, FSM, shared-service and buffer counters. Both runs are complete.
 
 Payload goodput is **8.093 Gb/s encrypt / 8.126 Gb/s decrypt** at 85 MHz,
-matching the current QoR table. The three completion intervals are
+matching the accepted baseline QoR table. The three completion intervals are
 **162, 160, 162 cycles** for encrypt and **160, 162, 160** for decrypt;
 their means are 161.3/160.7 cycles. Four packets expose the repeating packet
 overhead, while a longer run would be needed for a sustained contention window.
@@ -1033,13 +1061,14 @@ controller's contribution to the upstream encryption stalls.
 Shared prologue/epilogue compute occupies only **96/64 of the 809 cycles**,
 with eight requests and responses each and no response stalls. Overlapping
 packet contexts across setup, body, drain and finalization is therefore the
-architectural target suggested by these measurements; an overlap optimization
-has not been measured. The confirmed prologue critical path at 85.543 MHz
+architectural target suggested by these measurements. That change is now
+implemented and checked in basic native simulation, with synthesis-backed
+validation still pending. The baseline prologue critical path at 85.543 MHz
 limits the reported synthesis fmax; the packet lifecycle sets the cycle budget.
 
 #### Resource scope and earlier comparisons
 
-The current perf-testbench top fits with **711 of 740 DSPs**, 93,561 LUTs,
+The accepted pre-overlap shared performance-testbench top fits with **711 of 740 DSPs**, 93,561 LUTs,
 30,161 FFs and 13.5 BRAM tiles. Shared-prologue timing is **85.543 MHz**;
 body dataflow reports **87.642 MHz**. The external-port area comparison and
 earlier 60/70/80/85 MHz curves are preserved in the
@@ -1050,7 +1079,8 @@ At 85 MHz the shared MCP setup cycles are 12/8 and the decrypt authentication
 FIFO has **256 memory beats plus one output beat**, covering a computed
 135-beat requirement. The body remains II=1, with ten accumulator lanes per
 direction. The existing recurrence, sharing, arbitration and packet controller
-architecture were retained.
+architecture were retained in that baseline measurement. The overlap change
+has not yet established its area, timing or final buffer depths.
 
 The earlier 90 MHz sweep exceeded DSP and LUT capacity, as documented in that
 snapshot. These accepted and failed sweep points do not establish an
@@ -1469,6 +1499,12 @@ def decrypt_dataflow_core(axis_in_if: axis128_intrf, key, nonce, aad, aad_len
     return decrypt_dataflow_core_ports(axis_out_if=wtv.axis_out,
                                        is_verified_out=wtv.is_verified_out)
 ```
+
+The encrypt graph likewise places a FIFO on each ciphertext fork branch in
+the pipelined selection: one before authentication framing and one before
+tag append. Their depths come from resolved setup/completion latency budgets;
+the append budget includes the authentication FIFO's actual capacity. The
+external output register slice remains after tag append.
 
 The required `Feedback` declarations are generated from the selected graph.
 Three things beyond plain chaining show up here:

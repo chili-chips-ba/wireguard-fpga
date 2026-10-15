@@ -94,6 +94,8 @@ def decrypt_auth_fifo_sizing(chacha_func, mac_func):
     hints. Shared prologues allow one preceding peer transaction; both MACs
     consume prologue responses promptly. External stalls use backpressure.
     """
+    if getattr(mac_func, "packet_architecture", None) == "overlapped":
+        return overlap_fifo_sizing("decrypt/auth_fifo", chacha_func, mac_func)
     pipeline = getattr(chacha_func, "pipeline_func", None)
     if pipeline is None:
         raise ValueError("Automatic decrypt FIFO sizing requires chacha_func.pipeline_func")
@@ -124,6 +126,83 @@ def decrypt_auth_fifo_sizing(chacha_func, mac_func):
         "prologue_mcp_latency": prologue_latency,
         "shared_mcps": shared_mcps,
         "max_aad_beats": aad_beats,
+        "terms_beats": terms,
+        "required_beats": required,
+        "memory_depth_beats": 1 << (max(2, required) - 1).bit_length(),
+    }
+
+
+def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None):
+    """Bound cut-through fork storage by service clocks, not packet bytes.
+
+    One ingress beat can arrive per clock. Each single-flight shared MCP can
+    serve one preceding peer request; clients reserve response storage before
+    launching, so a peer's downstream consumer cannot prolong that service.
+    External stalls use ordinary backpressure rather than an unbounded budget.
+
+    The authentication FIFO provides setup lookahead. The append FIFO also
+    covers the entire authentication queue plus setup and completion, allowing
+    both fork copies to advance while the old tag is pending. Decrypt retains
+    the ChaCha credit floor needed to reach a key response without deadlock,
+    adding the two-bank controller's bounded completion interval.
+    """
+    pipeline = getattr(chacha_func, "pipeline_func", None)
+    if pipeline is None:
+        raise ValueError("Overlap FIFO sizing requires chacha_func.pipeline_func")
+    if name not in ("encrypt/auth_fifo", "encrypt/append_fifo", "decrypt/auth_fifo"):
+        raise ValueError("Unknown overlap FIFO")
+    ratio = CHACHA20_BLOCK_SIZE // AXIS128_BEAT_BYTES
+    aad_beats = (AAD_MAX_LEN + AXIS128_BEAT_BYTES - 1) // AXIS128_BEAT_BYTES
+    shared = bool(mac_func.shared_mcps)
+    peer_requests = int(shared)
+    prologue_latency = mac_func.prologue_mcp.mcp.latency
+    epilogue_latency = mac_func.epilogue_mcp.mcp.latency
+    setup = (1 + peer_requests) * (prologue_latency + 1) + mac_func.prologue_handoff_cycles
+    # The append FSM emits at most ceil((partial ciphertext + tag) / beat)
+    # words after capturing the final ciphertext word.
+    tag_words = (AXIS128_BEAT_BYTES - 1 + POLY1305_AUTH_TAG_SIZE
+                 + AXIS128_BEAT_BYTES - 1) // AXIS128_BEAT_BYTES
+    completion = (mac_func.body_auto_pipeline.latency + 2
+                  + mac_func.body_commit_cycles
+                  + (1 + peer_requests) * (epilogue_latency + 1)
+                  + mac_func.epilogue_handoff_cycles + tag_words)
+    terms = {
+        "setup_service_and_handoffs": setup,
+        "aad_framing": aad_beats,
+        "framing_idle": 1,  # prep_auth_data's registered IDLE transition
+        "length_framing": 1,  # its single 128-bit lengths block
+        "fifo_startup": 2,  # memory read plus FWFT output register
+        "fork_copy_lead": 1,
+    }
+    if name == "encrypt/auth_fifo":
+        terms["narrowing_storage"] = ratio + 1
+    elif name == "encrypt/append_fifo":
+        if type(auth_capacity_beats) is not int or auth_capacity_beats < 1:
+            raise ValueError("Append sizing requires actual authentication FIFO capacity")
+        terms["authentication_queue"] = auth_capacity_beats
+        terms["completion_service_and_handoffs"] = completion
+    else:
+        terms["pipeline_credits"] = ratio * pipeline.max_in_flight
+        terms["widening_storage"] = ratio + 1
+        terms["completion_service_and_handoffs"] = completion
+    required = sum(terms.values())
+    return {
+        "method": "poly1305-overlap-fork-v2",
+        "buffer": name,
+        "chacha20_core_latency": pipeline.auto_pipeline.latency,
+        "chacha20_max_in_flight_blocks": pipeline.max_in_flight,
+        "chacha20_block_beats": ratio,
+        "prologue_mcp_latency": prologue_latency,
+        "epilogue_mcp_latency": epilogue_latency,
+        "body_latency": mac_func.body_auto_pipeline.latency + 2,
+        "prologue_handoff_cycles": mac_func.prologue_handoff_cycles,
+        "body_commit_cycles": mac_func.body_commit_cycles,
+        "epilogue_handoff_cycles": mac_func.epilogue_handoff_cycles,
+        "shared_mcps": shared,
+        "preceding_peer_requests": peer_requests,
+        "max_aad_beats": aad_beats,
+        "max_packed_tag_beats": tag_words,
+        "authentication_capacity_beats": auth_capacity_beats,
         "terms_beats": terms,
         "required_beats": required,
         "memory_depth_beats": 1 << (max(2, required) - 1).bit_length(),

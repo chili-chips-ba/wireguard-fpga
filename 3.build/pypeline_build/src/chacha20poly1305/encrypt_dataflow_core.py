@@ -32,8 +32,11 @@ from aead_types import (
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
     axis128_intrf,
+    axis128_frag_t,
     axis128_2broadcast,
     make_aead_output_slice,
+    make_aead_fifo,
+    overlap_fifo_sizing,
 )
 
 
@@ -52,15 +55,45 @@ def make_encrypt_dataflow_core(chacha_func, mac_func=None):
     if mac_func is None:
         mac_func = make_poly1305_mac("encrypt")
     append_func = append_auth_tag.append_auth_tag
+    prep_func = prep_auth_data.prep_auth_data_fsm
     if IMPLEMENTATION == "pipelined":
+        auth_sizing = overlap_fifo_sizing("encrypt/auth_fifo", chacha_func, mac_func)
+        auth_fifo = make_aead_fifo(axis128_frag_t, auth_sizing["memory_depth_beats"],
+                                  "auth_fifo", "encrypt", sizing=auth_sizing)
+        append_sizing = overlap_fifo_sizing(
+            "encrypt/append_fifo", chacha_func, mac_func,
+            auth_capacity_beats=auth_fifo.capacity_beats,
+        )
+        append_fifo = make_aead_fifo(axis128_frag_t, append_sizing["memory_depth_beats"],
+                                    "append_fifo", "encrypt", sizing=append_sizing)
         output_slice = make_aead_output_slice(axis128_intrf, "output_slice", "encrypt")
+
+        # This interface function returns just the framing output. Its reverse
+        # input is generated from the FIFO call, not the plain FSM result type.
+        @interface
+        class buffered_prep_ports(NamedTuple):
+            axis_if: axis128_intrf
+
+        def buffered_prep_interface(
+            aad: uint8_t[AAD_MAX_LEN],
+            aad_len: uint8_t,
+            axis_in_if: axis128_intrf,
+        ) -> buffered_prep_ports:
+            queued = auth_fifo(in_stream_if=axis_in_if)
+            framed = prep_auth_data.prep_auth_data_fsm(
+                aad=aad, aad_len=aad_len, axis_in_if=queued.out_stream_if
+            )
+            return buffered_prep_ports(axis_if=framed.axis_if)
+
+        prep_func, _prep_t = make_hw_func_from_interface_func(buffered_prep_interface)
 
         def buffered_append(
             axis_in_if: axis128_intrf,
             auth_tag_in_if: append_auth_tag.poly1305_auth_tag_stream_intrf,
         ) -> encrypt_dataflow_core_ports:
+            queued = append_fifo(in_stream_if=axis_in_if)
             packed = append_auth_tag.append_auth_tag(
-                axis_in_if=axis_in_if, auth_tag_in_if=auth_tag_in_if
+                axis_in_if=queued.out_stream_if, auth_tag_in_if=auth_tag_in_if
             )
             # The comb ciphertext interlock may suppress valid when the other
             # fork stalls. Do not expose that directly as external AXIS valid;
@@ -82,7 +115,7 @@ def make_encrypt_dataflow_core(chacha_func, mac_func=None):
         chacha = chacha_func(key=key, nonce=nonce, axis_in_if=axis_in_if)
         bcast = axis128_2broadcast(axis_in_if=chacha.axis_out_if)
         # prep_auth_data frames AAD+ciphertext+lengths for the MAC
-        prep = prep_auth_data.prep_auth_data_fsm(
+        prep = prep_func(
             aad=aad, aad_len=aad_len, axis_in_if=bcast.axis_out_if[0]
         )
         # poly1305_mac computes the tag from the poly key + the framed data

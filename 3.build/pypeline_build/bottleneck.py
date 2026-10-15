@@ -94,7 +94,7 @@ BLOCKS = {
     "chacha20": {
         "consumes": "chacha20.axis_in",
         "produces": "chacha20.axis_out",
-        "downstream": ("prep_auth_data", "append_auth_tag", "wait_to_verify"),
+        "downstream": ("auth_buffer", "append_buffer", "prep_auth_data", "append_auth_tag", "wait_to_verify"),
         "state": "chacha20.in_state",
         "what": "ChaCha20 keystream XOR (shared II=1 pipeline)",
     },
@@ -110,7 +110,7 @@ BLOCKS = {
         "produces": "auth_fifo.out",
         "downstream": ("prep_auth_data",),
         "state": None,
-        "what": "ciphertext FIFO decoupling decrypt key/setup waits",
+        "what": "ciphertext FIFO decoupling authentication setup waits",
     },
     "poly1305": {
         "consumes": "poly1305.data_in",
@@ -125,6 +125,13 @@ BLOCKS = {
         "downstream": ("output_slice",),
         "state": "append.fsm",
         "what": "tag merge into the ciphertext tail (encrypt out)",
+    },
+    "append_buffer": {
+        "consumes": "append_fifo.in",
+        "produces": "append_fifo.out",
+        "downstream": ("append_auth_tag",),
+        "state": None,
+        "what": "ciphertext FIFO decoupling tag append from authentication",
     },
     "output_slice": {
         "consumes": "output_slice.in",
@@ -224,7 +231,8 @@ def poly1305_lifecycle(taps, direction):
     Per-packet values average over completed tags in this measurement window;
     IDLE includes both upstream key wait and measurement settle cycles.
     """
-    state = get_tap(taps, direction, "poly1305.fsm") or {}
+    overlapped = get_tap(taps, direction, "poly1305.body.fsm")
+    state = overlapped or get_tap(taps, direction, "poly1305.fsm") or {}
     states = state.get("states") or {}
     if "STREAM_BODY" not in states:
         return None
@@ -242,7 +250,24 @@ def poly1305_lifecycle(taps, direction):
     }
     cycles = {name: sum(states.get(s, {}).get("cycles", 0) for s in names)
               for name, names in groups.items()}
-    return {
+    if overlapped:
+        def state_cycles(tap_name, names):
+            histogram = (get_tap(taps, direction, tap_name) or {}).get("states", {})
+            return sum(histogram.get(name, {}).get("cycles", 0) for name in names)
+
+        epi_request = get_tap(taps, direction, "poly1305.epilogue_in") or {}
+        cycles.update({
+            "idle": state_cycles("poly1305.body.fsm", ("WAIT_CONTEXT",)),
+            "setup": state_cycles("poly1305.prologue.fsm", ("PROLOGUE_LAUNCH", "PROLOGUE_WAIT")),
+            "drain": sum(state_cycles("poly1305.body.bank" + str(bank), ("DRAIN",))
+                         for bank in range(2)),
+            "finalization": (state_cycles("poly1305.epilogue.fsm", ("EPILOGUE_WAIT",))
+                             + epi_request.get("xfer_cycles", 0)
+                             + epi_request.get("stall_cycles", 0)),
+            "tag_output": state_cycles("poly1305.epilogue.fsm", ("OUTPUT_TAG",)),
+        })
+    result = {
+        "architecture": "overlapped" if overlapped else "sequential",
         "completed_packets": packets,
         "phase_cycles": cycles,
         "cycles_per_packet": {k: v / packets for k, v in cycles.items()} if packets else {},
@@ -257,6 +282,14 @@ def poly1305_lifecycle(taps, direction):
         "prologue_request_wait_cycles": (get_tap(taps, direction, "poly1305.prologue_in") or {}).get("stall_cycles"),
         "epilogue_request_wait_cycles": (get_tap(taps, direction, "poly1305.epilogue_in") or {}).get("stall_cycles"),
     }
+    if overlapped:
+        result["body_overlap_cycles"] = {
+            name: (get_tap(taps, direction, tap) or {}).get("xfer_cycles", 0)
+            for name, tap in (("setup", "poly1305.setup_body_overlap"),
+                              ("drain", "poly1305.body_drain_overlap"),
+                              ("finalization", "poly1305.epilogue_body_overlap"))
+        }
+    return result
 
 def analyze_phase(phase, aad_len=0, mac_config=None):
     """Add the library's `taps_check`/`blocks`/`bottleneck`/`arbitration`, plus
@@ -522,6 +555,7 @@ def markdown_summary(phases, detail_path=None):
 
 def markdown_poly1305_lifecycle(phases):
     rows = []
+    overlap_rows = []
     for phase in phases:
         for direction, lifecycle in (phase.get("poly1305_lifecycle") or {}).items():
             per = lifecycle["cycles_per_packet"]
@@ -534,9 +568,14 @@ def markdown_poly1305_lifecycle(phases):
                 + f"| {num(lifecycle.get('prologue_request_wait_cycles'))} "
                 + f"| {num(lifecycle.get('epilogue_request_wait_cycles'))} |"
             )
+            overlap = lifecycle.get("body_overlap_cycles")
+            if overlap is not None:
+                overlap_rows.append(
+                    f"| {phase['name']} | {direction} | {overlap['setup']} "
+                    f"| {overlap['drain']} | {overlap['finalization']} |")
     if not rows:
         return []
-    return [
+    lines = [
         "**Poly1305 lifecycle** — measured body service cycles per offered block "
         "are separate from FSM cycles per completed packet. Body time includes "
         "input gaps; setup includes the prologue handshake; finalization includes "
@@ -551,6 +590,17 @@ def markdown_poly1305_lifecycle(phases):
         "| prologue request wait (clk) | epilogue request wait (clk) |",
         "|---|---|---|---|---|---|---|---|---|---|---|",
     ] + rows
+    if overlap_rows:
+        lines += [
+            "",
+            "Overlapped MAC stage costs run concurrently and must not be summed "
+            "into a packet period. Drain counts bank clocks; the following "
+            "counts clocks actually issuing body work during other stages:",
+            "",
+            "| phase | dir | body + setup | body + drain | body + finalization |",
+            "|---|---|---|---|---|",
+        ] + overlap_rows
+    return lines
 
 
 def markdown_poly1305_services(phases):

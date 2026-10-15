@@ -1026,6 +1026,10 @@ def markdown_table(results, include_mac_details=True):
                 f"credits={sizing['chacha20_max_in_flight_blocks']} blocks, "
                 f"prologue MCP={sizing['prologue_mcp_latency']} cycles."
             )
+        elif sizing.get("method") == "poly1305-overlap-fork-v2":
+            terms = ", ".join(f"{key}={value}" for key, value in sizing["terms_beats"].items())
+            lines.append(f"Automatic overlap sizing: {sizing['required_beats']} required beats "
+                         f"({terms}); memory rounded to a power of two.")
     for name, stream_slice in sorted(results.get("config", {}).get("stream_slices", {}).items()):
         lines.append(f"Register slice `{name}`: mode `{stream_slice['mode']}`, "
                      f"{stream_slice['capacity_beats']} slots, "
@@ -1050,6 +1054,11 @@ def markdown_table(results, include_mac_details=True):
                     f", epilogue response={timing['epilogue_response_cycles']} cycles"
                 )
             lines.append(details + ".")
+            if timing.get("packet_architecture") == "overlapped":
+                capacities = ", ".join(f"{name.rsplit('.', 1)[-1]}={capacity}"
+                                       for name, capacity in timing["packet_buffers"].items())
+                lines.append(f"{direction}: independent packet stages ({capacities}); "
+                             "stage costs overlap.")
     lines.append("")
     lines.extend(perf_report.markdown_boundary_table(
         results["phases"], DIRECTIONS, fmax, results["fmax"].get("target_mhz"), label_header="dir"))
@@ -1265,6 +1274,64 @@ def auth_fifo_sizing_errors(config):
     return errors
 
 
+def overlap_fifo_sizing_errors(config):
+    """Validate the latency ledger and allocated fork storage."""
+    errors = []
+    buffers = config.get("buffering", {})
+    for name, buffer in buffers.items():
+        sizing = buffer.get("sizing", {})
+        if sizing.get("method") != "poly1305-overlap-fork-v2":
+            continue
+        direction = name.split("/")[0]
+        mac = config.get("poly1305", {}).get("directions", {}).get(direction, {})
+        label = name + ": "
+        try:
+            shared = sizing["shared_mcps"]
+            if type(shared) is not bool or shared != mac["shared_mcps"]:
+                raise ValueError("sharing selection")
+            for key in ("prologue_mcp_latency", "epilogue_mcp_latency", "body_latency",
+                        "prologue_handoff_cycles", "body_commit_cycles", "epilogue_handoff_cycles"):
+                if type(sizing[key]) is not int or sizing[key] < 1 or sizing[key] != mac[key]:
+                    raise ValueError(key)
+            core = sizing["chacha20_core_latency"]
+            credits = sizing["chacha20_max_in_flight_blocks"]
+            ratio = sizing["chacha20_block_beats"]
+            if credits != core + 5 or ratio != 4 or sizing["max_aad_beats"] != 2:
+                raise ValueError("ChaCha/framing storage")
+            if sizing["preceding_peer_requests"] != int(shared) or sizing["max_packed_tag_beats"] != 2:
+                raise ValueError("peer/tag bound")
+            setup = ((1 + int(shared)) * (sizing["prologue_mcp_latency"] + 1)
+                     + sizing["prologue_handoff_cycles"])
+            completion = (sizing["body_latency"] + sizing["body_commit_cycles"]
+                          + (1 + int(shared)) * (sizing["epilogue_mcp_latency"] + 1)
+                          + sizing["epilogue_handoff_cycles"] + sizing["max_packed_tag_beats"])
+            terms = {"setup_service_and_handoffs": setup, "aad_framing": sizing["max_aad_beats"],
+                     "framing_idle": 1, "length_framing": 1, "fifo_startup": 2, "fork_copy_lead": 1}
+            if name == "encrypt/auth_fifo":
+                terms["narrowing_storage"] = ratio + 1
+            elif name == "encrypt/append_fifo":
+                capacity = buffers["encrypt/auth_fifo"]["capacity_beats"]
+                if sizing["authentication_capacity_beats"] != capacity:
+                    raise ValueError("authentication queue capacity")
+                terms["authentication_queue"] = capacity
+                terms["completion_service_and_handoffs"] = completion
+            elif name == "decrypt/auth_fifo":
+                terms["pipeline_credits"] = ratio * credits
+                terms["widening_storage"] = ratio + 1
+                terms["completion_service_and_handoffs"] = completion
+            else:
+                raise ValueError("unknown buffer")
+            required = sum(terms.values())
+            depth = 1 << (max(2, required) - 1).bit_length()
+            if sizing["buffer"] != name or sizing["terms_beats"] != terms or sizing["required_beats"] != required:
+                raise ValueError("budget terms")
+            if sizing["memory_depth_beats"] != depth or buffer["memory_depth_beats"] != depth:
+                raise ValueError("allocated depth")
+        except (KeyError, TypeError, ValueError) as exc:
+            errors.append(label + "overlap sizing metadata disagree: " + str(exc))
+    return errors
+
+
 def measurement_errors(results):
     """Acceptance checks; failed runs still retain all diagnostic artifacts."""
     errors = []
@@ -1277,6 +1344,7 @@ def measurement_errors(results):
             if actual != requested_mult:
                 errors.append(scope + ": emitted multiplier selection differs from the request or is unknown")
     errors.extend(auth_fifo_sizing_errors(results.get("config", {})))
+    errors.extend(overlap_fifo_sizing_errors(config))
     returncode = results.get("provenance", {}).get("build_returncode")
     if returncode:
         errors.append(f"Build/simulation exited {returncode}")
@@ -1323,6 +1391,13 @@ def measurement_errors(results):
             if stream_slice.get("mode") != "full" or stream_slice.get("capacity_beats") != 2 or stream_slice.get("latency_cycles") != 1:
                 errors.append(f"Phase {phase.get('name')}/{name}: output slice metadata disagree with its implementation")
             buffers[name] = 2  # a full-mode skid buffer always holds two beats
+        for direction, metadata in config.get("poly1305", {}).get("directions", {}).items():
+            if metadata.get("packet_architecture") == "overlapped":
+                expected = {"poly1305.prepared": 1, "poly1305.contexts": 2,
+                            "poly1305.completion": 1, "poly1305.tags": 1}
+                if metadata.get("packet_buffers") != expected:
+                    errors.append(direction + ": packet stage capacities disagree")
+                buffers.update({direction + "/" + name: capacity for name, capacity in expected.items()})
         errors.extend(buffer_tap_errors(
             phase, buffers, taps_required="all" in results.get("config", {}).get("taps", []),
             settled=True))

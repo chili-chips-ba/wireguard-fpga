@@ -2,21 +2,202 @@
 
 Combined builds share ChaCha20 and the Poly1305 prologue/epilogue MCPs by
 default, targeting **85 MHz** with `hybrid_square` arithmetic. Other pipelined
-sharing sets and standalone directions retain 30 MHz defaults. External-port
-hardware and the six-size concurrent native QoR measurement pass synthesis
-timing, capacity, II=1, packet results and retained-evidence integrity. At
-1920 bytes the default delivers **8.093/8.126 Gb/s encrypt/decrypt**, with
-**711 DSPs, 99,381 LUTs and 85.543 MHz** hardware synthesis timing.
-Passing native simulation is accepted for this profile; routed timing is untested.
-See [verification and reproduction](#verification-and-reproduction).
+sharing sets and standalone directions retain 30 MHz defaults. The current
+source implements packet overlap and has passed three basic combinational
+native benches; **synthesis-backed validation and throughput are pending**.
+See the [overlap checkpoint](#overlap-checkpoint-2026-10-14).
 
-The [current README results](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
-document every size/direction, packet period and latency. The arithmetic
+The accepted **pre-overlap** profile passed synthesis timing, capacity, II=1,
+packet results and retained-evidence integrity. Its highest 1920-byte rates
+are **8.093/8.126 Gb/s encrypt/decrypt**, with **711 DSPs and 85.543 MHz**
+synthesis timing. The focused shared performance-testbench top used 93,561
+LUTs; the earlier external-port hardware top used 99,381 LUTs. These results
+do not qualify the changed controller. Routed timing is untested.
+See the historical [verification and reproduction](#verification-and-reproduction).
+
+The [accepted README baseline](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
+documents every size/direction, packet period and latency. The arithmetic
 measurements, candidate selection and verification scope are recorded below.
 The original [buffering comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
 earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
 and legacy 80 MHz archives are unchanged; no historical QoR was rerun.
 Generated caches and scratch work files are not needed to read these results.
+
+## Overlapped packet stages
+
+### Overlap checkpoint, 2026-10-14
+
+This checkpoint implements the independent stages, two accumulator banks per
+direction, context/lane ownership delay, one completion snapshot, one held tag,
+and latency-derived fork buffering described below. The existing arithmetic
+engines and external packet ordering are retained. Measurement now records
+independent stage activity, body/drain overlap and stage-register occupancy.
+Stage costs overlap and must not be summed as a sequential packet budget;
+historical single-context reports remain supported.
+
+The three requested basic native checks exited zero with retained compiler
+revision `75a27b9fab2628d925e91b4b1bacab667917c976`, `hybrid_square` arithmetic
+and seed 8439:
+
+| Command | Packet checks | Simulation cycles | Result |
+| --- | ---: | ---: | --- |
+| `./build.py --enc --sim --comb --native --target-mhz 85` | 12 | 295 | Pass |
+| `./build.py --dec --sim --comb --native --target-mhz 85` | 13 | 417 | Pass |
+| `./build.py --shared --sim --comb --native --target-mhz 85` | 25 | 426 | Pass |
+
+These 50 reference checks cover packet ordering, partial-word framing,
+repeated context reuse and decrypt's tampered-tag case. A subsequent
+compiler-compatibility edit names the retiring context/lane in local scalars
+before indexing the banks, preserving the intended writeback behavior.
+The final source and its longer ownership delay still require the pending
+pipelined native measurement. Combinational simulation does not establish
+correctness at the synthesis-resolved pipeline/MCP latencies, body II=1,
+device fit, achievable clock rate or the throughput gain.
+
+Local basic-bench logs and their result summary are under
+`generated-files/poly1305-overlap-validation/` (`*-comb-native.log` and
+`basic-native-results.json`). These are ignored build outputs. The ongoing
+shared measurement writes
+`measurements/shared-85mhz-poly1305-overlap/pypelinec.log`; no completed
+throughput result is available at this checkpoint.
+
+The active measurement uses Vivado 2019.2 and a private copy of the retained
+compiler at `generated-files/compiler-75a27b9f-overlap/src/pypelinec`.
+Its only source overlay is in `src/SYN.py`, at the return from
+`GET_VHDL_FILES_TCL_TEXT_AND_TOP`:
+
+```diff
+-    return files_txt, top_entity_name
++    return files_txt, VHDL.EMITTED_NAME(top_entity_name, parser_state)
+```
+
+This makes the vendor synthesis top match the identifier emitted in the VHDL
+wrapper while preserving the generated filename. Without it, characterization
+of a long bank helper failed with a missing-top error. The snapshot's
+`snapshot-overlay.json` records both source hashes. Neither the original
+compiler used by the basic benches nor the live sibling compiler was edited.
+Only specifically rejected vendor logs were quarantined; valid synthesis
+caches were preserved.
+
+An intervening run with a snapshot of the newer compiler did not restore the
+accepted profile, selected body depth 9 (11 lanes), and stopped on a
+783-DSP request against 740 available before packet simulation. It supplies
+no accepted timing or throughput result. The active retained-compiler retry
+has restored starting values **ChaCha core 19, body cores 8/8, shared MCP
+counts 12/8**. Restored values seed the sweep; synthesis must confirm the
+changed design.
+
+The remaining design check is one shared pipelined measurement, from the
+build directory with that compiler selected:
+
+```sh
+PYPELINEC="$PWD/generated-files/compiler-75a27b9f-overlap/src/pypelinec" \
+./measure.py --shared --poly1305 pipelined \
+  --poly1305-mult hybrid_square --target-mhz 85 \
+  --sizes 1420,1920 --packets 4 --peak-bytes 0 \
+  --dirs both --taps all --seed 8439 \
+  --no-per-module-area -j 1 --reuse-syn --save-evidence \
+  --out-dir generated-files/qor-shared-85mhz-poly1305-overlap \
+  --label shared-85mhz-poly1305-overlap
+```
+
+Do not start a duplicate while the current run is active. Acceptance requires
+all 16 packet results, ownership/outstanding assertions, drained and conserved
+buffers, body II=1, synthesis timing of at least 85 MHz and device fit.
+Compare both directions at 1420 bytes against **7.390/7.409 Gb/s** and at
+1920 bytes against **8.093/8.126 Gb/s**; investigate remaining packet-boundary
+stalls if the 1920-byte gain is below the **20% target**. Report final area
+as the **shared performance-testbench top**. Archive final source/compiler
+identities, resolved latencies, sizing ledger and synthesis/packet evidence,
+then update this document and the build README with measured gains and the
+remaining bottleneck. Until then, the previous accepted results remain the
+highest confirmed throughput.
+
+Legacy changes, additional clock sweeps, standalone synthesis, generated-HDL
+simulation and final Verilog export are outside this checkpoint's scope.
+
+### Stage ownership and buffering
+
+The pipelined MAC composes three independent hardware submodules:
+
+```text
+key -> prologue MCP -> prepared descriptor -> two-bank body
+                                            | one arithmetic pipeline
+                                            | context/lane delay = body latency
+                                            v
+                     completion snapshot -> epilogue MCP -> held tag
+```
+
+Each direction owns two accumulator/power banks. Dispatch switches banks at
+the final authentication block, while the previous bank drains. Every body
+launch carries its bank and lane through a clocked metadata line, including
+bubbles. Writeback checks ownership and outstanding counts; forwarding matches
+both identities. A bank is released only after all results have committed and
+its full epilogue input has been copied into the completion register.
+Epilogue therefore reads an immutable snapshot even after the bank is reused.
+
+Prepared descriptors, completion snapshots and tags each have one holding
+slot. Prologue and epilogue reserve their response storage before requesting
+the shared single-flight MCP, then consume its response promptly. A blocked
+tag consumer stops subsequent local epilogues through bounded backpressure.
+There is no additional tag FIFO and no packet-data FIFO inside Poly1305.
+The physical arithmetic remains one body per direction and one shared MCP
+per setup/finalization phase.
+
+Encrypt buffers both ciphertext fork copies: authentication before framing,
+and ciphertext before tag append. This allows the next key to reach prologue
+before the current authentication body ends, and prevents tag append's packet
+tail wait from stopping the next body. Decrypt retains its authentication
+fork FIFO and its existing whole-packet plaintext verification storage.
+
+### Latency-derived overlap FIFO budgets
+
+`aead_types.overlap_fifo_sizing` uses the selected, resolved wrapper depths,
+credits and MAC handoff metadata. At most one input beat arrives per clock;
+both shared MCPs allow one preceding peer transaction. External output stalls
+use backpressure rather than an unbounded time allowance.
+
+Let `R = CHACHA20_BLOCK_SIZE / AXIS128_BEAT_BYTES`,
+`C = ChaCha max_in_flight`, `A = ceil(AAD_MAX_LEN / AXIS128_BEAT_BYTES)`,
+`P/E = prologue/epilogue MCP constraints`, `D = body_core_latency + 2`,
+and `S = 1` for shared MCPs, otherwise zero. Let `Hp` and `He` count the
+explicit prologue and epilogue register handoffs, `B` the final writeback
+commit boundary, and `T` the maximum packed ciphertext-tail/tag beats.
+
+```text
+setup      = (1+S)*(P+1) + Hp
+completion = D + B + (1+S)*(E+1) + He + T
+framing    = A + IDLE_transition + lengths_block
+transport  = FIFO_startup + fork_copy_lead
+
+encrypt_auth_required   = setup + framing + transport + (R+1)
+encrypt_append_required = setup + framing + transport
+                          + actual_auth_FIFO_capacity + completion
+decrypt_auth_required   = setup + framing + transport
+                          + R*C + (R+1) + completion
+
+memory_depth   = ceil_pow2(max(2, required))
+total_capacity = memory_depth + FWFT_output_register
+```
+
+The register handoffs are architectural boundaries declared by the MAC,
+not guessed arithmetic depths. Framing has one registered IDLE transition
+and one lengths beat; FIFO startup spans memory read and output-register
+loading; the fork can lead by one copy. Converter storage is `R+1`.
+`T` follows the beat and tag widths. Every input and summand is retained
+under each buffer's `sizing` metadata and checked by measurement acceptance.
+Depths are regenerated during normal pin-and-confirm re-elaboration.
+
+At the restored starting profile (ChaCha core 19 with 24 block credits,
+body response 10, shared prologue/epilogue counts 12/8), setup and completion
+budgets are 29 and 33 cycles. Encrypt authentication requires 41 beats,
+encrypt append 134 and decrypt authentication 170, allocating 64/256/256
+memory beats plus one output register each. The append calculation includes
+the authentication FIFO's actual 65-beat capacity. These are elaborated
+budgets, not measured peak occupancies or final QoR results.
+
+The older single-context credit-only derivation below remains a historical
+record; overlapped designs use this versioned budget.
 
 ## Hybrid Karatsuba and explicit squares
 
@@ -53,9 +234,10 @@ present, the measured DSP model is `36*(2*C+1) - 9*floor(C/2)`.
 At 60 MHz, automatic sizing gives seven lanes and **513 DSPs**, down from
 704 for the original five-lane design. At 85 MHz, eight body core registers
 give ten lanes, with shared MCP setup cycles **12/8** and **711 DSPs**.
-The default authentication FIFO grows to **256 memory beats plus one output
-beat** for a computed 135-beat requirement. The automatic 90 MHz configuration
-selected thirteen lanes, requesting 918 DSPs and exceeding device capacity.
+In that pre-overlap profile, the decrypt authentication FIFO used **256 memory
+beats plus one output beat** for a computed 135-beat requirement. The automatic
+90 MHz configuration selected thirteen lanes, requesting 918 DSPs and exceeding
+device capacity.
 
 Focused generated-HDL multiplier, square and prologue checks passed. Native
 `*` simulation computes Python products without exercising the registered
@@ -414,7 +596,7 @@ automatic derivation below, covering all ChaCha credits rather than only the
 observed concurrent occupancy. These are storage budgets, not automatic compute
 latency limits. Legacy dataflow wiring is unchanged.
 
-### Automatic authentication FIFO sizing
+### Historical single-context authentication FIFO sizing
 
 `aead_types.decrypt_auth_fifo_sizing` reads the **selected** private/shared
 ChaCha stream wrapper's `.max_in_flight` and `.auto_pipeline.latency`, plus
@@ -614,7 +796,9 @@ The implementation uses separate, whole-function automatic MCPs for the
 prologue and epilogue, with a free-running valid-only automatic body pipeline.
 There is no body ready signal, skid buffer, or output FIFO. The public MAC
 ports retain their valid/ready contracts. Powers are recomputed for every
-packet, with one packet context active at a time.
+packet. Two private accumulator banks allow dispatch for the next packet while
+the previous bank drains; the independent stages and their compact holding
+registers are described in [overlapped packet stages](#overlapped-packet-stages).
 
 Let P be the discovered body `AUTO_PIPELINE.latency`. Including its explicit
 input and output registers, D = P + 2; use L = D accumulators with same-cycle
@@ -671,7 +855,10 @@ The historical option comparisons below are architectural discussion, not
 measured claims for this implementation. In particular, dedicated MCPs alone
 do not enable packet overlap or guarantee zero inter-packet bubbles.
 
-Schematic-style dataflow between blocks: The FSM orchestrates use of the prologue MCP, body pipeline, and epilogue MCP.
+Historical single-context controller schematic: one FSM orchestrates the
+prologue MCP, body pipeline and epilogue MCP. The current controller instead
+uses the independent [overlapped stages](#overlapped-packet-stages); the
+arithmetic convention and per-packet algorithm illustrated below are retained.
 
 ```text
                                                  key_if (r, s)
@@ -878,8 +1065,8 @@ Reusing the body for epilogue products, or adding one time-multiplexed epilogue
 multiplier, could save area at the expense of finalization latency and more
 control. Both would require the same rotated weights for incomplete lane
 rotations. Neither automatically allows the next packet to overlap: that
-would require additional key/accumulator contexts, which this controller
-does not implement.
+requires additional key/accumulator contexts. The current controller supplies
+two body banks without changing the dedicated epilogue arithmetic.
 
 The final 128-bit addition of s is included in the whole epilogue MCP. It is
 not assumed to cost zero constrained cycles; the auto characterization measures
