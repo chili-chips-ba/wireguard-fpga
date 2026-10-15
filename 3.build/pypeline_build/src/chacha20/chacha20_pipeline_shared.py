@@ -7,7 +7,7 @@ into: one merged MAIN owning the arbitrated pipeline (a genuinely shared
 resource crossing the otherwise-independent encrypt and decrypt dataflow
 graphs, so it stays a separate always-running process rather than being
 inlined into either), plus two plain per-direction functions matching
-chacha20's ordinary chacha20_stream_out_t interface so they can be passed to
+chacha20's ordinary chacha20_instance.return_t interface so they can be passed to
 make_encrypt_dataflow_core/make_decrypt_dataflow_core exactly like
 chacha20.chacha20_instance is for the standalone (non-shared) builds.
 
@@ -89,7 +89,7 @@ def chacha_shared_pipeline(
     return outputs
 
 
-pipeline_func, _pipeline_result_t = make_stream_auto_pipeline(
+pipeline_func = make_stream_auto_pipeline(
     chacha_shared_pipeline, name="chacha20_shared"
 )
 
@@ -227,7 +227,7 @@ def chacha20_pipeline_shared():
 # Per-direction FSM wrappers: same chacha20.chacha20_fsm as
 # chacha20.chacha20_instance uses, but talking to the shared pipeline's
 # exposed wires above instead of owning a private pipeline. Same external
-# signature/struct (chacha20.chacha20_stream_out_t) as chacha20_instance, so
+# signature/struct (chacha20.chacha20_instance.return_t) as chacha20_instance, so
 # either can be passed to make_encrypt_dataflow_core/make_decrypt_dataflow_core.
 @hw_func
 def chacha20_encrypt_shared(
@@ -236,8 +236,8 @@ def chacha20_encrypt_shared(
     axis_in_if: axis128_intrf.fwd_t,
     key_if: poly1305_key_stream_intrf.fb_t,
     axis_out_if: axis128_intrf.fb_t,
-) -> chacha20.chacha20_stream_out_t:
-    o: chacha20.chacha20_stream_out_t
+) -> chacha20.chacha20_instance.return_t:
+    o: chacha20.chacha20_instance.return_t
     from_pipe_fwd: axis512_intrf.stream_t = encrypt_pipeline_out_if.stream
     fsm_out = chacha20.chacha20_fsm(
         key=key,
@@ -265,8 +265,8 @@ def chacha20_decrypt_shared(
     axis_in_if: axis128_intrf.fwd_t,
     key_if: poly1305_key_stream_intrf.fb_t,
     axis_out_if: axis128_intrf.fb_t,
-) -> chacha20.chacha20_stream_out_t:
-    o: chacha20.chacha20_stream_out_t
+) -> chacha20.chacha20_instance.return_t:
+    o: chacha20.chacha20_instance.return_t
     from_pipe_fwd: axis512_intrf.stream_t = decrypt_pipeline_out_if.stream
     fsm_out = chacha20.chacha20_fsm(
         key=key,

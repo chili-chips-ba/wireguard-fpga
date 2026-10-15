@@ -249,6 +249,18 @@ elaboration. `chacha20_pipeline_shared.py` and `poly1305_mcp_shared.py` own
 the deliberately explicit shared-resource `Wire`/`@MAIN` boundaries. Poly1305
 prologue and epilogue arbitration are independent, not a packet ownership lock.
 
+HDL factories return a single primary object. Function factories return the
+callable with `.return_t` for its complete hardware result (including input
+feedback), not just the output payload. `.in_intrf` / `.out_intrf` describe
+stream interfaces; their `.stream_t.typeof("data")` gives the payload type.
+Use `.in_fwd_t` / `.out_fb_t` for call arguments.
+The shared ChaCha result contract is `chacha20.chacha20_instance.return_t`.
+`make_shared_compute` returns a named bundle of `.prologue`, `.epilogue`,
+`.powers_t` and `.epilogue_in_t`; its module-level production instance is
+`poly1305_mcp_shared.compute`. `make_shared_adapters` returns `.prologue` /
+`.epilogue` callables, each with `.return_t`, interface attributes and `.mcp`.
+Keep named AUTO groups and function identities when changing this wiring.
+
 Pipelined decrypt has an automatically sized ciphertext FIFO after its fork,
 before framing. The selected ChaCha credits and prologue latency drive the
 conservative budget in `aead_types.decrypt_auth_fifo_sizing`; the retained

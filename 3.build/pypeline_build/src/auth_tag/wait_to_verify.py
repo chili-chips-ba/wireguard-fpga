@@ -31,7 +31,7 @@ from aead_types import (
 )
 
 # C GLOBAL_STREAM_FIFO(axis128_intrf.fwd_t, verify_fifo, 128)
-verify_fifo_func, _verify_fifo_t = make_stream_fifo(axis128_frag_t, 128)
+verify_fifo_func = make_stream_fifo(axis128_frag_t, 128)
 
 
 @enum

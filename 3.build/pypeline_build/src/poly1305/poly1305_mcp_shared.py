@@ -6,6 +6,7 @@ resource or packet state. Capacity follows both actual body AUTO_PIPELINE
 depths; a request's local lane count determines its epilogue rotation.
 """
 import wireguard_env
+from types import SimpleNamespace
 from pypeline import MAIN, NamedTuple, Reg, Feedback, Wire, struct, hw_func, uint1_t, uint2_t, make_uint_t
 from stream.stream import make_stream_interface
 from stream.stream_multi_cycle import make_stream_auto_multi_cycle
@@ -17,7 +18,11 @@ CAPACITY = max(get_body_auto_pipeline(d).latency + 2 for d in ("encrypt", "decry
 
 
 def make_shared_compute(capacity):
-    """Pure arithmetic, also exercised directly by the standalone testbench."""
+    """Return named prologue/epilogue kernels and their payload types.
+
+    powers_t is the prologue result payload; epilogue_in_t is the epilogue
+    request payload. Each kernel also exposes its complete return_t.
+    """
     lane_t = make_uint_t(max(1, (capacity - 1).bit_length()))
     count_t = make_uint_t(capacity.bit_length())
     index_t = make_uint_t((2 * capacity).bit_length())
@@ -70,13 +75,19 @@ def make_shared_compute(capacity):
         tag: uint128_t = low + x.s
         return tag
 
-    return prologue, epilogue, powers_t, epilogue_in_t
+    return SimpleNamespace(
+        prologue=prologue,
+        epilogue=epilogue,
+        powers_t=powers_t,
+        epilogue_in_t=epilogue_in_t,
+    )
 
 
-prologue, epilogue, powers_t, epilogue_in_t = make_shared_compute(CAPACITY)
+# Arithmetic kernels and payload types for the shared capacity.
+compute = make_shared_compute(CAPACITY)
 prologue_in_intrf = make_stream_interface(uint130_t)
-prologue_out_intrf = make_stream_interface(powers_t)
-epilogue_in_intrf = make_stream_interface(epilogue_in_t)
+prologue_out_intrf = make_stream_interface(compute.powers_t)
+epilogue_in_intrf = make_stream_interface(compute.epilogue_in_t)
 epilogue_out_intrf = make_stream_interface(uint128_t)
 
 
@@ -102,7 +113,7 @@ def make_mcp_arbiter(func, input_t, output_t, phase):
         o.is_encrypt = x.is_encrypt
         return o
 
-    mcp, mcp_result_t = make_stream_auto_multi_cycle(
+    mcp = make_stream_auto_multi_cycle(
         tagged_compute, name=f"poly1305_{phase}_shared"
     )
 
@@ -124,7 +135,7 @@ def make_mcp_arbiter(func, input_t, output_t, phase):
         encrypt_in_if: in_intrf.fwd_t, decrypt_in_if: in_intrf.fwd_t,
         encrypt_out_if: out_intrf.fb_t, decrypt_out_if: out_intrf.fb_t,
     ) -> result_t:
-        result: Feedback[mcp_result_t]
+        result: Feedback[mcp.return_t]
         priority_encrypt: Reg[uint1_t]  # Decrypt wins the first tie.
         grant_stalled: Reg[uint1_t]
         stalled_is_encrypt: Reg[uint1_t]
@@ -203,8 +214,12 @@ def make_mcp_arbiter(func, input_t, output_t, phase):
     return arbiter
 
 
-prologue_arbiter = make_mcp_arbiter(prologue, uint130_t, powers_t, "prologue")
-epilogue_arbiter = make_mcp_arbiter(epilogue, epilogue_in_t, uint128_t, "epilogue")
+prologue_arbiter = make_mcp_arbiter(
+    compute.prologue, uint130_t, compute.powers_t, "prologue"
+)
+epilogue_arbiter = make_mcp_arbiter(
+    compute.epilogue, compute.epilogue_in_t, uint128_t, "epilogue"
+)
 
 # Each compound Wire has exactly one forward and one reverse writer.
 encrypt_prologue_in_if: Wire[prologue_in_intrf]
@@ -300,7 +315,11 @@ def _stream_attrs(func, in_intrf, out_intrf, mcp):
 
 
 def make_shared_adapters(direction, lanes, local_powers_t, local_epilogue_in_t):
-    """Present private-sized MCP interfaces to the unchanged MAC controller."""
+    """Return named prologue/epilogue adapters with private-sized interfaces.
+
+    Each callable exposes return_t, in_intrf, out_intrf, in_fwd_t, out_fb_t
+    and mcp, just like the private stream MCP it replaces.
+    """
     if lanes > CAPACITY:
         raise ValueError("Shared MCP capacity differs from consumed body latency")
     pro_client = encrypt_prologue_client if direction == "encrypt" else decrypt_prologue_client
@@ -351,4 +370,4 @@ def make_shared_adapters(direction, lanes, local_powers_t, local_epilogue_in_t):
 
     _stream_attrs(prologue_adapter, prologue_in_intrf, pro_out, prologue_arbiter.mcp)
     _stream_attrs(epilogue_adapter, epi_in, epilogue_out_intrf, epilogue_arbiter.mcp)
-    return prologue_adapter, local_prologue_result_t, epilogue_adapter, local_epilogue_result_t
+    return SimpleNamespace(prologue=prologue_adapter, epilogue=epilogue_adapter)

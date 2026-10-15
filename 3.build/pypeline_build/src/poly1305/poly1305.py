@@ -263,7 +263,7 @@ def poly1305_mac_fsm(
 # The multi-cycle count is automatic: the sweep raises it if the launch->capture
 # path fails timing. PipelineC remembers verified counts automatically;
 # compute_mcp.mcp.latency reads the actual built count (historically 5 at 80 MHz).
-compute_mcp, _compute_mcp_t = make_stream_auto_multi_cycle(
+compute_mcp = make_stream_auto_multi_cycle(
     poly1305_mac_loop_body, name="poly1305_legacy"
 )
 
@@ -293,6 +293,6 @@ def poly1305_mac_instance_wiring(
 
 # Fields: .key_if / .data_in_if (reverse halves of the input ports), .auth_tag_if
 # (feedforward half of the output port).
-poly1305_mac_instance, poly1305_mac_stream_out_t = make_hw_func_from_interface_func(
+poly1305_mac_instance = make_hw_func_from_interface_func(
     poly1305_mac_instance_wiring
 )

@@ -1432,6 +1432,46 @@ independent state — no global wires required.
   They bridge otherwise-independent encrypt/decrypt graphs; packet contexts
   remain private.
 
+### Factory results and type names
+
+HDL factories return one object. A factory for a hardware function returns the
+callable itself; its `.return_t` is the complete hardware return type. For
+example, the private ChaCha pipeline is created as:
+
+```python
+pipeline_func = make_stream_auto_pipeline(chacha20_loop_body, name="chacha20")
+```
+
+Use `Feedback[pipeline_func.return_t]` when hand-wiring its result. That type
+contains both `stream_in_if` (input feedback, including `ready`) and
+`stream_out_if` (output data and `valid`). It is not the output data payload.
+For stream pipelines and MCPs, `.in_intrf` / `.out_intrf` describe the input /
+output interfaces. Their `.stream_t` types carry data and `valid`; use
+`.stream_t.typeof("data")` for the payload type. `.in_fwd_t` / `.out_fb_t`
+describe the caller-supplied halves.
+Read `.auto_pipeline.latency` / `.max_in_flight` for pipeline sizing and
+`.mcp.latency` for the MCP cycle count.
+
+The interface-function factories, including
+`make_encrypt_dataflow_core` / `make_decrypt_dataflow_core`, also return a
+callable with `.return_t`. Shared ChaCha wrappers use
+`chacha20.chacha20_instance.return_t` as their common result contract.
+The AXIS width converters expose their directional interfaces as
+`.narrow_in_intrf` / `.wide_out_intrf` or `.wide_in_intrf` / `.narrow_out_intrf`;
+their `.return_t` still describes the full call result. Broadcast, FIFO,
+output-slice and fixed-vector byte source/sink factories follow the same
+single-callable convention. The AEAD FIFO and slice helpers retain their
+capacity and measurement metadata on that callable.
+
+Factories that create peer functions return a named bundle.
+`poly1305_mcp_shared.make_shared_compute(capacity)` exposes `.prologue`,
+`.epilogue`, `.powers_t` (the prologue's output payload), and `.epilogue_in_t`
+(the epilogue's input payload). `make_shared_adapters(...)` exposes `.prologue`
+and `.epilogue`; each adapter has `.return_t`, `.in_intrf`, `.out_intrf`,
+`.in_fwd_t`, `.out_fb_t`, and `.mcp`, so the MAC uses the same contract for
+private and shared services. The [component guide](src/poly1305/throughput.md#independent-mcp-sharing)
+describes how those services share hardware.
+
 ### Interface ports and generated reverse wiring
 
 Handshake ports are declared as the two halves of a Pypeline `@interface`
@@ -1473,7 +1513,7 @@ caller-suppliable (the reverse half of an output port, e.g. `pipeline_func`'s
 The FSMs themselves are hand-written: their reverse signals are computed from
 state, which is not forwardable wiring. Only the merge layer is generated.
 `chacha20_{encrypt,decrypt}_shared` keep the same
-`chacha20.chacha20_stream_out_t` contract as `chacha20_instance`, so a
+`chacha20.chacha20_instance.return_t` contract as `chacha20_instance`, so a
 dataflow core can be handed either.
 
 ### The dataflow cores

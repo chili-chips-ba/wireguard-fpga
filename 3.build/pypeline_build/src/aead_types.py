@@ -72,7 +72,7 @@ axis128_count_to_keep = make_count_to_keep(16)
 # Combinational 2-way broadcast/fork of an axis128 stream (shared by the
 # encrypt/decrypt dataflows' ciphertext-stream forks). `axis_out` is an array
 # interface port: two independently back-pressured copies of the input.
-axis128_2broadcast, axis128_2broadcast_t = make_axis_broadcast_interlock(axis128_intrf, 2)
+axis128_2broadcast = make_axis_broadcast_interlock(axis128_intrf, 2)
 
 
 # Plain elaboration metadata, populated only for FIFOs actually instantiated.
@@ -211,7 +211,7 @@ def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None
 
 def make_aead_fifo(data_t, depth, tap_name, direction, *, sizing=None):
     """Stream FIFO with simulation-only handshake/occupancy probes."""
-    fifo, _ = make_probed_stream_fifo(data_t, depth, tap_name)
+    fifo = make_probed_stream_fifo(data_t, depth, tap_name)
     _buffering[direction + "/" + tap_name] = {
         "requested_memory_depth_beats": depth,
         "memory_depth_beats": fifo.capacity_beats - 1,
@@ -229,7 +229,7 @@ def buffering_metadata():
 
 def make_aead_output_slice(intrf, tap_name, direction):
     """Two-slot output register slice; II=1 and stable valid under stalls."""
-    skid, _ = make_probed_skid_buffer(intrf, tap_name, mode="full")
+    skid = make_probed_skid_buffer(intrf, tap_name, mode="full")
     _stream_slices[direction + "/" + tap_name] = {
         "mode": skid.mode, "capacity_beats": skid.capacity_beats,
         "latency_cycles": skid.latency,

@@ -240,8 +240,8 @@ CHACHA20_STATE_NAMES = tuple(chacha20_state_t.__members__)
 
 # Data width converters to-from 512b wide blocks and the 128b bus
 _block_beats = CHACHA20_BLOCK_SIZE // AXIS128_BEAT_BYTES
-axis128_to_axis512, _, _ = make_dwidth_widen(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
-axis512_to_axis128, _, _ = make_dwidth_narrow(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
+axis128_to_axis512 = make_dwidth_widen(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
+axis512_to_axis128 = make_dwidth_narrow(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
 
 
 @struct
@@ -414,7 +414,7 @@ def chacha20_fsm(
 # wires). Meant to be called once per direction (encrypt, decrypt) from that
 # direction's dataflow core; each call site gets its own independent pipeline
 # + FSM hardware state, same as any other function call in pypeline.
-pipeline_func, _pipeline_result_t = make_stream_auto_pipeline(
+pipeline_func = make_stream_auto_pipeline(
     chacha20_loop_body, name="chacha20"
 )
 
@@ -444,11 +444,11 @@ def chacha20_instance_wiring(
     return chacha20_ports(key_if=fsm_out.key_if, axis_out_if=fsm_out.axis_out_if)
 
 
-# chacha20_stream_out_t stays the one contract shared with the
+# chacha20_instance.return_t is the result contract shared with the
 # chacha20_{encrypt,decrypt}_shared variants, so a dataflow core can call
 # either. Fields: .axis_in_if (reverse half of the input port), .key_if,
 # .axis_out_if (feedforward halves of the output ports).
-chacha20_instance, chacha20_stream_out_t = make_hw_func_from_interface_func(
+chacha20_instance = make_hw_func_from_interface_func(
     chacha20_instance_wiring
 )
 chacha20_instance.pipeline_func = pipeline_func

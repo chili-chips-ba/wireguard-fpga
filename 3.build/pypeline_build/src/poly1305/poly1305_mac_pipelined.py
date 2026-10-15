@@ -194,14 +194,15 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
 
     if share_mcp:
         from poly1305_mcp_shared import make_shared_adapters
-        prologue_mcp, prologue_result_t, epilogue_mcp, epilogue_result_t = (
-            make_shared_adapters(direction, lanes, powers_t, epilogue_in_t)
-        )
+
+        adapters = make_shared_adapters(direction, lanes, powers_t, epilogue_in_t)
+        prologue_mcp = adapters.prologue
+        epilogue_mcp = adapters.epilogue
     else:
-        prologue_mcp, prologue_result_t = make_stream_auto_multi_cycle(
+        prologue_mcp = make_stream_auto_multi_cycle(
             prologue, name=f"poly1305_prologue_{direction}"
         )
-        epilogue_mcp, epilogue_result_t = make_stream_auto_multi_cycle(
+        epilogue_mcp = make_stream_auto_multi_cycle(
             epilogue, name=f"poly1305_epilogue_{direction}"
         )
 
@@ -234,7 +235,7 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         r: Reg[uint130_t]
         descriptor: Reg[prepared_t]
         next_context: Reg[uint1_t]
-        result: Feedback[prologue_result_t]
+        result: Feedback[prologue_mcp.return_t]
         o: prologue_stage_result_t
         o.key_if.ready = state == prologue_state_t.IDLE
         o.prepared_if.stream.data = descriptor
@@ -445,7 +446,7 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         owner_context: Reg[uint1_t]
         tag_context: Reg[uint1_t]
         tag: Reg[uint128_t]
-        result: Feedback[epilogue_result_t]
+        result: Feedback[epilogue_mcp.return_t]
         o: epilogue_stage_result_t
         o.completed_if.ready = (state == epilogue_state_t.IDLE) & result.stream_in_if.ready
         o.auth_tag_if.stream.data = tag

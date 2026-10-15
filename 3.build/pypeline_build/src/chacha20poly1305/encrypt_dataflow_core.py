@@ -46,11 +46,12 @@ class encrypt_dataflow_core_ports(NamedTuple):
 
 
 def make_encrypt_dataflow_core(chacha_func, mac_func=None):
-    """chacha_func(key, nonce, axis_in_if, key_if, axis_out_if) ->
-    chacha20.chacha20_ports -- either chacha20.chacha20_instance (owns its own
-    private pipeline) or a shared-pipeline instance such as
-    chacha20_pipeline_shared.chacha20_encrypt_shared (uses the arbitrated
-    shared pipeline)."""
+    """Return the encrypt graph callable with its complete return_t.
+
+    chacha_func is a private or shared ChaCha20 callable with the
+    chacha20.chacha20_instance.return_t result contract. mac_func selects
+    the Poly1305 callable; omitting it keeps the standalone default.
+    """
 
     if mac_func is None:
         mac_func = make_poly1305_mac("encrypt")
@@ -85,7 +86,7 @@ def make_encrypt_dataflow_core(chacha_func, mac_func=None):
             )
             return buffered_prep_ports(axis_if=framed.axis_if)
 
-        prep_func, _prep_t = make_hw_func_from_interface_func(buffered_prep_interface)
+        prep_func = make_hw_func_from_interface_func(buffered_prep_interface)
 
         def buffered_append(
             axis_in_if: axis128_intrf,
@@ -101,7 +102,7 @@ def make_encrypt_dataflow_core(chacha_func, mac_func=None):
             sliced = output_slice(stream_in_if=packed.axis_out_if)
             return encrypt_dataflow_core_ports(axis_out_if=sliced.stream_out_if)
 
-        append_func, _append_t = make_hw_func_from_interface_func(buffered_append)
+        append_func = make_hw_func_from_interface_func(buffered_append)
 
     def encrypt_dataflow_core(
         axis_in_if: axis128_intrf,

@@ -54,11 +54,12 @@ class buffered_prep_ports(NamedTuple):
 
 
 def make_decrypt_dataflow_core(chacha_func, mac_func=None, auth_fifo_depth=None):
-    """chacha_func(key, nonce, axis_in_if, key_if, axis_out_if) ->
-    chacha20.chacha20_ports -- either chacha20.chacha20_instance (owns its own
-    private pipeline) or a shared-pipeline instance such as
-    chacha20_pipeline_shared.chacha20_decrypt_shared (uses the arbitrated
-    shared pipeline)."""
+    """Return the decrypt graph callable with its complete return_t.
+
+    chacha_func is a private or shared ChaCha20 callable with the
+    chacha20.chacha20_instance.return_t result contract. mac_func selects
+    the Poly1305 callable; omitting it keeps the standalone default.
+    """
 
     if mac_func is None:
         mac_func = make_poly1305_mac("decrypt")
@@ -92,7 +93,7 @@ def make_decrypt_dataflow_core(chacha_func, mac_func=None, auth_fifo_depth=None)
             )
             return buffered_prep_ports(axis_if=framed.axis_if)
 
-        prep_func, _prep_t = make_hw_func_from_interface_func(buffered_prep)
+        prep_func = make_hw_func_from_interface_func(buffered_prep)
 
     def decrypt_dataflow_core(
         axis_in_if: axis128_intrf,

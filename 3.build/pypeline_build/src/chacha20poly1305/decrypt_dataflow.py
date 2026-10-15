@@ -28,7 +28,7 @@ if wireguard_env.SHARING["poly1305"]:
 from aead_types import axis128_intrf
 from decrypt_dataflow_core import make_decrypt_dataflow_core
 
-decrypt_dataflow_core, decrypt_dataflow_core_t = make_decrypt_dataflow_core(
+decrypt_dataflow_core = make_decrypt_dataflow_core(
     chacha_func, make_poly1305_mac("decrypt", share_mcp=wireguard_env.SHARING["poly1305"])
 )
 

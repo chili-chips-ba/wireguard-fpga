@@ -79,7 +79,7 @@ if MODE == "sharing":
 
     # A pure five-slot kernel checks the important unequal-lane case without
     # inserting guessed/fixed stages into either production body pipeline.
-    pro5, epi5, powers5_t, epi5_in_t = shared.make_shared_compute(5)
+    compute5 = shared.make_shared_compute(5)
     PURE_CASES = [(lanes, q, r) for lanes in (2, 3, 5) for q in range(lanes)
                   for r in (0, 1, CLAMP_MASK, P - 1)]
     PURE_N = len(PURE_CASES)
@@ -143,8 +143,8 @@ if MODE == "sharing":
             epi_dec.data.powers.values[j] = epi_powers[dec_index * C + j]
         # Check the actual production-capacity request arithmetic separately
         # from arbitration/capture, including nonzero inactive slots.
-        enc_direct = shared.epilogue(epi_enc.data)
-        dec_direct = shared.epilogue(epi_dec.data)
+        enc_direct = shared.compute.epilogue(epi_enc.data)
+        dec_direct = shared.compute.epilogue(epi_dec.data)
         sim_assert(enc_direct == expected_tags[enc_index], "direct encrypt epilogue mismatch")
         sim_assert(dec_direct == expected_tags[dec_index],
                    f"direct decrypt epilogue mismatch: cycle={cycle}, got={dec_direct}, expected={expected_tags[dec_index]}")
@@ -221,15 +221,15 @@ if MODE == "sharing":
         pure_pow: uint130_t[PURE_ARRAY_SIZE] = PURE_POW
         pure_tag: uint128_t[PURE_N] = PURE_TAG
         idx: uint32_t = cycle % PURE_N
-        x: epi5_in_t
+        x: compute5.epilogue_in_t
         x.lane_count = pure_counts[idx]
         x.next_lane = pure_next[idx]
         x.s = pure_s[idx]
         for j in range(5):
             x.accumulators[j] = pure_a[idx * 5 + j]
             x.powers.values[j] = pure_pow[idx * 5 + j]
-        tag = epi5(x)
-        power = pro5(pure_r[idx])
+        tag = compute5.epilogue(x)
+        power = compute5.prologue(pure_r[idx])
         sim_assert(tag == pure_tag[idx], "unequal-lane shared epilogue mismatch")
         for j in range(5):
             sim_assert(power.values[j] == pure_pow[idx * 5 + j], "shared power graph mismatch")

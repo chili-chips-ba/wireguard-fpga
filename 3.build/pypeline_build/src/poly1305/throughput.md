@@ -466,6 +466,24 @@ its response independently of current priority. Responses remain valid and
 stable until accepted. There is **no packet-wide ownership lock**: encrypt's
 prologue and decrypt's epilogue can execute concurrently.
 
+The arithmetic factory `make_shared_compute(capacity)` returns a named bundle:
+`.prologue` and `.epilogue` are callable kernels, `.powers_t` is the prologue
+result payload type, and `.epilogue_in_t` is the epilogue request payload type.
+The module's production bundle is `compute`. For example,
+`compute.prologue.return_t` is `compute.powers_t`, while
+`compute.epilogue.return_t` is the 128-bit tag type. Calls through these named
+attributes are valid inside hardware functions too.
+
+`make_shared_adapters(direction, lanes, local_powers_t, local_epilogue_in_t)`
+returns a bundle with `.prologue` and `.epilogue` adapters. Each callable
+exposes `.return_t` for the complete result: input feedback in `stream_in_if`
+and output feedforward in `stream_out_if`. The MAC declares
+`Feedback[prologue_mcp.return_t]` / `Feedback[epilogue_mcp.return_t]` for both
+private and shared selections. `.in_intrf` / `.out_intrf` describe stream
+interfaces; their `.stream_t.typeof("data")` gives the payload type.
+`.in_fwd_t` and `.out_fb_t` name the caller-supplied halves. `.mcp` refers to the corresponding physical shared MCP tag, preserving
+latency sizing through `.mcp.latency`.
+
 Each MAC retains its private free-running, valid-only body pipeline and
 key/powers/accumulator context. For each direction,
 `L_direction = body_core_latency + 2`, including the two actual body boundary

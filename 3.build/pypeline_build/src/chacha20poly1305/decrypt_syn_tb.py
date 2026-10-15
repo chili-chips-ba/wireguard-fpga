@@ -85,8 +85,8 @@ EXPECTED_PLAINTEXTS = PLAINTEXTS + [PLAINTEXTS[0]]
 EXPECTED_PLAINTEXT_LENS = PLAINTEXT_LENS + [PLAINTEXT_LENS[0]]
 EXPECTED_VERIFIED = [1] * NUM_PLAINTEXT_TEST_STRS + [0]
 
-byte_source, byte_source_t = make_axis_byte_source(axis128_intrf, LANE_WIDTH, IN_FRAME_MAX_SIZE)
-byte_sink, byte_sink_t = make_axis_byte_sink(axis128_intrf, 16, PLAINTEXT_MAX_SIZE)
+byte_source = make_axis_byte_source(axis128_intrf, LANE_WIDTH, IN_FRAME_MAX_SIZE)
+byte_sink = make_axis_byte_sink(axis128_intrf, 16, PLAINTEXT_MAX_SIZE)
 
 
 # Sticky and one clock cycle delayed relative to the completing "Test N DONE!" print

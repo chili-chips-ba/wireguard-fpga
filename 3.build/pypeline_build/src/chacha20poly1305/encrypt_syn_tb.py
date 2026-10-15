@@ -63,10 +63,10 @@ EXPECTED_OUT_FRAMES = [
 ]
 EXPECTED_OUT_FRAME_LENS = [n + POLY1305_AUTH_TAG_SIZE for n in CIPHERTEXT_LENS]
 
-byte_source, byte_source_t = make_axis_byte_source(
+byte_source = make_axis_byte_source(
     axis128_intrf, 16, PLAINTEXT_TEST_STR_MAX_SIZE
 )
-byte_sink, byte_sink_t = make_axis_byte_sink(axis128_intrf, 16, OUT_FRAME_MAX_SIZE)
+byte_sink = make_axis_byte_sink(axis128_intrf, 16, OUT_FRAME_MAX_SIZE)
 
 
 # Sticky (stays 1 forever once set) and one clock cycle delayed relative to the
