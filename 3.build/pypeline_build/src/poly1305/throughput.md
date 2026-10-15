@@ -3,9 +3,10 @@
 Combined builds share ChaCha20 and the Poly1305 prologue/epilogue MCPs by
 default, targeting **85 MHz** with `hybrid_square` arithmetic. Other pipelined
 sharing sets and standalone directions retain 30 MHz defaults. The current
-source implements packet overlap and has passed three basic combinational
-native benches; **synthesis-backed validation and throughput are pending**.
-See the [overlap checkpoint](#overlap-checkpoint-2026-10-14).
+source implements packet overlap and has passed the full shared pipelined
+native performance measurement, with all 16 packet checks, II=1, queue
+conservation and retained synthesis timing/fit accepted. See the
+[measured overlap result](#measured-packet-overlap-2026-10-15).
 
 The accepted **pre-overlap** profile passed synthesis timing, capacity, II=1,
 packet results and retained-evidence integrity. Its highest 1920-byte rates
@@ -15,13 +16,58 @@ LUTs; the earlier external-port hardware top used 99,381 LUTs. These results
 do not qualify the changed controller. Routed timing is untested.
 See the historical [verification and reproduction](#verification-and-reproduction).
 
-The [accepted README baseline](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
-documents every size/direction, packet period and latency. The arithmetic
+The [current README results](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
+document the overlap measurement's packet sizes, periods and latencies. Historical arithmetic
 measurements, candidate selection and verification scope are recorded below.
 The original [buffering comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
 earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
 and legacy 80 MHz archives are unchanged; no historical QoR was rerun.
 Generated caches and scratch work files are not needed to read these results.
+
+## Measured packet overlap, 2026-10-15
+
+Payload goodput at a common 85 MHz, calculated from measured packet periods.
+The original target was 80 MHz; its reported effective fmax is 85.543 MHz.
+
+| Bytes | Direction | Before Gb/s | After Gb/s | Gain | Packet period (cycles) |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 1420 | encrypt | 7.390 | 10.024 | 35.6% | 96.3 |
+| 1420 | decrypt | 7.409 | 10.024 | 35.3% | 96.3 |
+| 1920 | encrypt | 8.093 | 9.130 | 12.8% | 143.0 |
+| 1920 | decrypt | 8.126 | 9.695 | 19.3% | 134.7 |
+
+At 1920 bytes each packet has 123 authentication blocks (120 payload,
+two padded AAD blocks and one length block). The remaining packet-period
+cost beyond those transfers is:
+
+- encrypt: 20.0 cycles beyond body transfers; body overlaps setup/drain/finalization for 35/23/26 clocks over the four-packet burst; 0 tag-output stall clocks.
+- decrypt: 11.7 cycles beyond body transfers; body overlaps setup/drain/finalization for 50/20/20 clocks over the four-packet burst; 0 tag-output stall clocks.
+
+The previous controller spent at least 37 sequential non-body cycles per
+packet. Independent stage costs now overlap and must not be summed.
+The payload-edge diagnoses below describe remaining observed backpressure;
+the full state, FIFO and shared-service counters are in the block report:
+
+- encrypt: `append_auth_tag`, dominant state `CIPHERTEXT`.
+- decrypt: `prep_auth_data`, dominant state `CIPHERTEXT`.
+
+Four packets provide three completion intervals; these figures describe
+that concurrent workload rather than a long contention-window benchmark.
+
+The 20% gain target at 1920 bytes was missed. The existing decrypt plaintext
+verification FIFO backpressures the shared ChaCha path; encrypt's MAC
+then has 50 body-input gap clocks across the four-packet burst. Neither
+tag acceptance nor the new encrypt fork FIFOs block admissions at this
+size. See the [stall investigation](../../measurements/shared-poly1305-overlap-resume-20261015/investigation.md).
+
+Synthesis used an 80 MHz constraint and reported 85.543 MHz effective fmax.
+The 85 MHz rates above scale the measured cycle counts; no additional
+85 MHz synthesis was performed. Area is the shared performance-testbench
+top: 108,066 LUTs, 43,952 FFs, 711 DSPs and 18.5 BRAM tiles. The replay
+used the latest local compiler snapshot and the synthesis-confirmed
+19/8/8 and 12/8 latency maps. Historical checkpoint notes below describe
+the earlier intermediate state. Full evidence and reproduction are in
+[the measurement record](../../measurements/shared-poly1305-overlap-resume-20261015/README.md).
 
 ## Overlapped packet stages
 
@@ -242,7 +288,8 @@ device capacity.
 Focused generated-HDL multiplier, square and prologue checks passed. Native
 `*` simulation computes Python products without exercising the registered
 decomposition, so HDL verification is tracked separately. All six packet sizes
-remain in the QoR evidence; the highest sustained rates occur at 1920 bytes.
+remain in the pre-overlap QoR evidence, whose highest sustained rates occur
+at 1920 bytes. In the two-size overlap measurement, 1420 bytes is fastest.
 
 ### Operator selection and arithmetic bounds
 

@@ -1,25 +1,10 @@
 # Local synthesis/simulation caches and disposable investigation workspace.
-/generated-files*/
+/generated-files/
 /validation/
 /evaluation/
-/HYBRID_INTEGRATION.md
-/KARATSUBA_EVALUATION.md
-/PYPELINE_MULTIPLIER_HANDOFF.md
-/FPGA-House-AG-Compare.md
+/measurements/
 /tests/
 __pycache__/
 *.pyc
 /lextab.py
 /yacctab.py
-
-# Standalone development smoke measurements remain local.
-/measurements/poly1305-pipelined-comb-smoke/
-/measurements/poly1305-pipelined-residue130-comb-smoke/
-
-# These selected evidence logs are intentionally durable (root ignores *.log).
-!/measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/*.log
-!/measurements/shared-30mhz-poly1305-pipelined-share-chacha20-poly1305-20261003/*.log
-!/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-20261003-converged-source-20261004/*.log
-!/measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/*.log
-!/measurements/shared-60mhz-auto-auth-fifo-explicit-clocks-20261006/*.log
-!/measurements/shared-85mhz-bottleneck-1920-4pkt-20261013/*.log
