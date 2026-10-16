@@ -1,0 +1,88 @@
+Design parameters:
+  DESIGN                    = 'shared' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:208
+  PERF_DIRS                 = 'both' (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:83
+  PERF_JSON                 = '/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/candidate_raw.json' (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:73
+  PERF_MAX_CYCLES_PER_PHASE = 20000 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:79
+  PERF_PACKETS              = 4 (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:75
+  PERF_PEAK_BYTES           = 0 (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:76
+  PERF_PEAK_PACKETS         = 4 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:77
+  PERF_SEED                 = 8439 (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:78
+  PERF_SETTLE               = 8 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:82
+  PERF_SIZES                = (1420, 1920) (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:74
+  PERF_STALL_TIMEOUT        = 1000 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:80
+  PERF_TAPS                 = ('all',) (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:85
+  POLY1305_IMPL             = 'pipelined' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:210
+  POLY1305_MULT_IMPL        = 'hybrid_square' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:215
+  SHARE                     = 'both' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:212
+  TARGET_MHZ                = 80 (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:217
+  TB_STRESS                 = False (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/tb_common_sim.py:29
+=== ChaCha20-Poly1305 PERFORMANCE measurement (encrypt side) ===
+Encrypt: phases = ['b2b-1420', 'b2b-1920']
+Encrypt: seed = 8439, json = /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/candidate_raw.json
+=== ChaCha20-Poly1305 PERFORMANCE measurement (decrypt side) ===
+Decrypt: phases = ['b2b-1420', 'b2b-1920']
+Decrypt: seed = 8439, json = /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/candidate_raw.json
+encrypt: phase 0 'b2b-1420': 4 x 1420 B queued
+decrypt: phase 0 'b2b-1420': 4 x 1420 B queued
+Progress: 25 cycles, 50.4 s
+Progress: 50 cycles, 120.7 s
+Progress: 75 cycles, 211.9 s
+Progress: 100 cycles, 339.6 s
+Progress: 125 cycles, 476.1 s
+Progress: 150 cycles, 631.8 s
+Progress: 175 cycles, 792.6 s
+Progress: 200 cycles, 944.4 s
+Progress: 225 cycles, 1108.5 s
+Progress: 250 cycles, 1250.2 s
+Progress: 275 cycles, 1414.5 s
+Progress: 300 cycles, 1565.7 s
+Progress: 325 cycles, 1712.3 s
+Progress: 350 cycles, 1861.0 s
+Progress: 375 cycles, 2030.3 s
+Progress: 400 cycles, 2107.9 s
+Progress: 425 cycles, 2168.8 s
+encrypt: phase 0 'b2b-1420' DONE
+Progress: 450 cycles, 2213.2 s
+Progress: 475 cycles, 2252.4 s
+Progress: 500 cycles, 2287.8 s
+Progress: 525 cycles, 2315.8 s
+decrypt: phase 0 'b2b-1420' DONE
+decrypt: phase 1 'b2b-1920': 4 x 1920 B queued
+Progress: 550 cycles, 2340.1 s
+encrypt: phase 1 'b2b-1920': 4 x 1920 B queued
+Progress: 575 cycles, 2388.6 s
+Progress: 600 cycles, 2454.2 s
+Progress: 625 cycles, 2542.8 s
+Progress: 650 cycles, 2639.8 s
+Progress: 675 cycles, 2743.2 s
+Progress: 700 cycles, 2853.3 s
+Progress: 725 cycles, 2979.5 s
+Progress: 750 cycles, 3129.2 s
+Progress: 775 cycles, 3284.8 s
+Progress: 800 cycles, 3445.0 s
+Progress: 825 cycles, 3605.7 s
+Progress: 850 cycles, 3757.8 s
+Progress: 875 cycles, 3923.2 s
+Progress: 900 cycles, 4089.6 s
+Progress: 925 cycles, 4254.8 s
+Progress: 950 cycles, 4406.9 s
+Progress: 975 cycles, 4557.6 s
+Progress: 1000 cycles, 4713.3 s
+Progress: 1025 cycles, 4873.5 s
+Progress: 1050 cycles, 5005.4 s
+Progress: 1075 cycles, 5086.6 s
+Progress: 1100 cycles, 5145.6 s
+encrypt: phase 1 'b2b-1920' DONE
+Progress: 1125 cycles, 5193.0 s
+Progress: 1150 cycles, 5235.3 s
+Progress: 1175 cycles, 5272.4 s
+Progress: 1200 cycles, 5305.1 s
+Progress: 1225 cycles, 5333.4 s
+decrypt: phase 1 'b2b-1920' DONE
+sim_finish() called — stopping early at cycle 1248
+1249 cycles in 5353.830s  (4286.49 ms/cycle, 0.2 cycles/s)
+PERF:     b2b-1420 encrypt  13.028 B/cyc window=436 cold_head=33
+PERF:     b2b-1420 decrypt  10.519 B/cyc window=540 cold_head=169
+PERF:     b2b-1920 encrypt  13.813 B/cyc window=556 cold_head=33
+PERF:     b2b-1920 decrypt  11.098 B/cyc window=692 cold_head=200
+PERF: wrote /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/candidate_raw.json

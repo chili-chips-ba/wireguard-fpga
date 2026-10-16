@@ -1,0 +1,27 @@
+{
+  "common_clock_mhz": 85,
+  "target_gain_percent": 20,
+  "targets_met": true,
+  "rows": [
+    {
+      "direction": "encrypt",
+      "packet_bytes": 1920,
+      "packet_period_cycles": 124.0,
+      "pre_overlap_gbps": 8.092561983471075,
+      "accepted_overlap_gbps": 9.130069930069931,
+      "new_gbps": 10.529032258064516,
+      "gain_from_pre_overlap_percent": 30.107526881720425,
+      "gain_from_accepted_overlap_percent": 15.322580645161278
+    },
+    {
+      "direction": "decrypt",
+      "packet_bytes": 1920,
+      "packet_period_cycles": 124.0,
+      "pre_overlap_gbps": 8.126141078838176,
+      "accepted_overlap_gbps": 9.695049504950497,
+      "new_gbps": 10.529032258064516,
+      "gain_from_pre_overlap_percent": 29.56989247311825,
+      "gain_from_accepted_overlap_percent": 8.602150537634401
+    }
+  ]
+}

@@ -28,7 +28,7 @@ from pypeline import param
 from stream import stream_perf_probe
 from stream.stream_perf import PerfRecorder, PhaseBarrier, PhaseRunner, packet_size_phases
 from poly1305_select import implementation_metadata
-from aead_types import buffering_metadata, stream_slice_metadata
+from aead_types import AEAD_MAX_PLAINTEXT_BYTES, buffering_metadata, stream_slice_metadata
 import tb_common_sim as common
 from aead_ref_model import generate_encrypt_vector
 
@@ -43,13 +43,10 @@ stream_perf_probe.MAIN_LABELS.update({
 })
 
 # ---------------------------------------------------------------------------
-# Hard design limit: wait_to_verify buffers the decrypt-side ciphertext in a
-# 128-deep x 16 B stream FIFO (make_stream_fifo(axis128_frag_t, 128), see
-# src/auth_tag/wait_to_verify.py) while Poly1305 decides the verdict, so a
-# packet whose ciphertext exceeds 128 * 16 = 2048 B deadlocks rather than
-# measuring anything. The 16 B auth tag shares that budget, hence 2032 B of
-# plaintext. Revisit this constant if that FIFO depth changes.
-MAX_PACKET_BYTES = 2032
+# Supported payload limit. Extra verification storage absorbs admitted work
+# while a verdict is pending; FIFO rounding does not enlarge this envelope.
+# The authentication tag is stripped before plaintext enters that FIFO.
+MAX_PACKET_BYTES = AEAD_MAX_PLAINTEXT_BYTES
 BUS_BYTES = 16  # axis128_intrf: 16 byte lanes per beat
 
 # Default plan sized against MEASURED native-sim speed: the 60 MHz shared

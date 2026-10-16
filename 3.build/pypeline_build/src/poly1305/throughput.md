@@ -2,27 +2,20 @@
 
 Combined builds share ChaCha20 and the Poly1305 prologue/epilogue MCPs by
 default, targeting **85 MHz** with `hybrid_square` arithmetic. Other pipelined
-sharing sets and standalone directions retain 30 MHz defaults. The current
-source implements packet overlap and has passed the full shared pipelined
-native performance measurement, with all 16 packet checks, II=1, queue
-conservation and retained synthesis timing/fit accepted. See the
-[measured overlap result](#measured-packet-overlap-2026-10-15).
-
-The accepted **pre-overlap** profile passed synthesis timing, capacity, II=1,
-packet results and retained-evidence integrity. Its highest 1920-byte rates
-are **8.093/8.126 Gb/s encrypt/decrypt**, with **711 DSPs and 85.543 MHz**
-synthesis timing. The focused shared performance-testbench top used 93,561
-LUTs; the earlier external-port hardware top used 99,381 LUTs. These results
-do not qualify the changed controller. Routed timing is untested.
-See the historical [verification and reproduction](#verification-and-reproduction).
-
-The [current README results](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
-document the overlap measurement's packet sizes, periods and latencies. Historical arithmetic
-measurements, candidate selection and verification scope are recorded below.
-The original [buffering comparison](../../measurements/shared-60mhz-poly1305-pipelined-share-chacha20-poly1305-decrypt-recovery-20261005/comparison.md),
-earlier [ChaCha-only 30 MHz record](../../measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/summary.md)
-and legacy 80 MHz archives are unchanged; no historical QoR was rerun.
-Generated caches and scratch work files are not needed to read these results.
+sharing sets and standalone directions retain 30 MHz defaults. The current source combines packet overlap with automatically sized
+plaintext verification storage. All 48 concurrent reference checks at
+16, 64, 256, 1024, 1420 and 1920 bytes, body II=1, buffer conservation and
+final synthesis timing/fit passed. At 1920 bytes and a common 85 MHz,
+payload goodput is **10.529 Gb/s encrypt / 10.529 Gb/s decrypt**, gaining
+**30.1% encrypt / 29.6% decrypt** over the pre-overlap controller.
+The shared performance-testbench top uses 108,078 LUTs,
+43,955 FFs, 711 DSPs and 18.5 BRAM tiles,
+with 85.543 MHz limiting synthesis fmax under an 80 MHz constraint.
+Routed timing and external-port area remain untested. See the
+[full measurement](../../measurements/shared-verify-fifo-qor-20261015/README.md),
+[current README table](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
+and [storage derivation](#plaintext-verification-storage). The accepted
+packet-overlap and pre-overlap checkpoints below remain historical records.
 
 ## Measured packet overlap, 2026-10-15
 
@@ -195,6 +188,40 @@ and ciphertext before tag append. This allows the next key to reach prologue
 before the current authentication body ends, and prevents tag append's packet
 tail wait from stopping the next body. Decrypt retains its authentication
 fork FIFO and its existing whole-packet plaintext verification storage.
+
+### Plaintext verification storage
+
+Pipelined decrypt sizes `wait_to_verify` separately from the authentication
+fork. This FIFO holds plaintext until the tag verdict; blocking it also
+blocks the ordered shared ChaCha result stream and can starve encrypt's MAC.
+`aead_types.decrypt_verify_fifo_sizing` adds the following to the resolved
+decrypt authentication admission/service bound:
+
+- `ceil(AEAD_MAX_PLAINTEXT_BYTES / AXIS128_BEAT_BYTES)` for the held packet;
+- `R + 1` beats for ChaCha's narrowing converter and output register;
+- the tag comparator's four state handoffs and one plaintext-release handoff.
+
+The inherited bound covers ChaCha's selected in-flight credits, widening
+storage, fork lead, FIFO/framing startup, shared prologue service and body
+drain/commit/shared epilogue service. It conservatively adds phases that can
+overlap. It does not use the benchmark's packet size, measured occupancy or
+requested clock as a proxy for selected latency. External sink stalls still
+propagate once the finite storage fills.
+
+At the accepted 19-cycle ChaCha / 8-cycle body / 12- and 8-cycle MCP depths,
+the authentication bound is 170 beats. The plaintext bound is
+`170 + 127 + 5 + 4 + 1 = 307`, rounded to **512 memory beats plus one FWFT
+output beat**. The supported payload envelope remains **2032 bytes**;
+the tag is stripped before this FIFO and consumes no plaintext storage.
+Legacy retains its original 128 memory beats. The decrypt factory accepts
+`verify_fifo_depth` for explicit sizing experiments; automatic production
+sizing is the default. The probed FIFO reports occupancy, transfers and
+conservation under `decrypt/verify_fifo`.
+
+The accepted [packet-overlap measurement](../../measurements/shared-poly1305-overlap-resume-20261015/README.md)
+remains the comparison checkpoint. The changed storage passed the full six-size
+native run, independent full-capacity stress and new synthesis timing/fit
+checks in the [verification FIFO record](../../measurements/shared-verify-fifo-qor-20261015/README.md).
 
 ### Latency-derived overlap FIFO budgets
 

@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "archived_utc": "2026-10-16T14:14:56.837614+00:00",
+  "artifacts": {
+    "README.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/README.md",
+      "bytes": 6123,
+      "sha256": "55b0eebaaaa971687ae94b35ff7f4550920972fee3217f1df2c00c98624e4123"
+    },
+    "accepted-record-check.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/accepted-record-check.json",
+      "bytes": 142,
+      "sha256": "ab1d895a717a38ab4b0f8df56333339171689451c3601b54d89dea60975e78ea"
+    },
+    "blocks.csv": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/blocks.csv",
+      "bytes": 14683,
+      "sha256": "0f77243b6b5cf71422b21e04a831db709633053df222acdbfb9947aeadeb4ab4"
+    },
+    "blocks.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/blocks.md",
+      "bytes": 26952,
+      "sha256": "6873d1290059bc18aeb36c77cd1aa6185ac2e8dbcd86bc93c4e9a2a1f7a8a1c1"
+    },
+    "check_verification.py": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/check_verification.py",
+      "bytes": 4469,
+      "sha256": "d1d19431a1fb1dae9acb4deb0a78f1d573a0ccd6e4e848bb53fe73c4dd37845c"
+    },
+    "commit-message.txt": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/commit-message.txt",
+      "bytes": 357,
+      "sha256": "054f773528a2f66f68dac8570103be6ab784ea6cde773522aef3eae14e39bd3d"
+    },
+    "comparison.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/comparison.json",
+      "bytes": 821,
+      "sha256": "d120c39e0a13f9ac4826c0bdfb0e1ef292cb0beb985151c9a2717169898b7f86"
+    },
+    "comparison.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/comparison.md",
+      "bytes": 347,
+      "sha256": "de9787dde736526b6b9ba87bedc2eb9cbfe7edc9f283e220729135f40a485759"
+    },
+    "compiler-snapshot.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/compiler-snapshot.json",
+      "bytes": 693415,
+      "sha256": "1554a35c6ce3be9e8d1c542716d49f661448ac4411c5a37161c0a3dedef93022"
+    },
+    "design-source.tar.gz": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/design-source.tar.gz",
+      "bytes": 65407,
+      "sha256": "0801c282a62f6dde99a54ac87f1e08dd24c9012f16c73475e2bd92f17bbcf945"
+    },
+    "finalize.py": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/finalize.py",
+      "bytes": 21809,
+      "sha256": "598c55a112754420f41bc5737f2c09e21541c222f9e568024981b6100e681eb2"
+    },
+    "focused-native.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/focused-native.log",
+      "bytes": 5021,
+      "sha256": "ff0653050e0cd230b26ca9cd8826803cfb783177d7a129998ff18785de6199ae"
+    },
+    "focused-status.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/focused-status.json",
+      "bytes": 1024,
+      "sha256": "7ee00eb74ac3a9c3a11bcb8e30b6e5d09dade65deeaa966855956a95aba47eee"
+    },
+    "focused_raw.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/focused_raw.json",
+      "bytes": 165290,
+      "sha256": "1de2fb6dcc87e5485de52d9bbd85a60f023790ed823547f6f08ed48371bc3811"
+    },
+    "git-add.txt": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/git-add.txt",
+      "bytes": 525,
+      "sha256": "f41d64c33737828f8348d2da716841f9b3142711040b8a85649dcd9c18793641"
+    },
+    "investigation.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/investigation.md",
+      "bytes": 836,
+      "sha256": "e8cc9697d288fae5efdb70c243419c9580c2b7a0dcf0ec48332415bad66ea44c"
+    },
+    "measurement-selftest.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/measurement-selftest.log",
+      "bytes": 387,
+      "sha256": "0e8da152314f937c1c78bf26fffde630211f9b8bafe752c0af1495db25d6d078"
+    },
+    "native-replay.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/native-replay.log",
+      "bytes": 7576,
+      "sha256": "194fa6f8327cf4e59b8abcc056749ad9c995263919b8f373714ce99f8aa7b4ef"
+    },
+    "native-status.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/native-status.json",
+      "bytes": 1037,
+      "sha256": "a275536197b869f1919efdc1a60c38823a1dfe4acec13e62346e38078742380d"
+    },
+    "perf-clocks.xdc": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/synthesis-build/clocks.xdc",
+      "bytes": 2606,
+      "sha256": "26905e55865683f5e65d6a442b25736985957a582bb1ad9fd916278614839f57"
+    },
+    "perf-inputs.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/synthesis-build/top/vivado_515ed9ab_0c266327d2056a93.inputs.json",
+      "bytes": 108450,
+      "sha256": "3026f5e28b7b8aada54e07c485e3775eb47547ae9f5d548e2d47c9d6c7976fc4"
+    },
+    "perf-source-provenance.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/synthesis-build/source_provenance.json",
+      "bytes": 20829,
+      "sha256": "028ffcf555bbee4de82c5cbcd3ecf4fb44ef2a12826e78942db7a5d15f364522"
+    },
+    "perf-sweep-history.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/synthesis-build/top/sweep_history.json",
+      "bytes": 225040,
+      "sha256": "ee5044177257e757cdfa5cc89644076798b588763fbc7d20e641238551da9742"
+    },
+    "perf-vivado.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/synthesis-build/top/vivado_515ed9ab_0c266327d2056a93.log",
+      "bytes": 7816245,
+      "sha256": "b276583962d95e66e62bc2a72b4dfbbbd810ee075a5a3a982d1e159fd3c4856f"
+    },
+    "perf_raw.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/perf_raw.json",
+      "bytes": 471266,
+      "sha256": "4c09d7bf9c552f9f2f8fa145baa44ffc9b3a2504f62f0520da3e28c1ba7e8608"
+    },
+    "publication-inputs.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/publication-inputs.json",
+      "bytes": 186,
+      "sha256": "3a926a287586ee94889d0f3010fabc038defa5feab96b8cc214db25a9cb3498a"
+    },
+    "publication-preflight.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/publication-preflight.json",
+      "bytes": 1532,
+      "sha256": "149c846ee0acf3aaba3c79044fd9457b67572350f2c46a88ba1f876e9bbf8539"
+    },
+    "pypelinec.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/pypelinec.log",
+      "bytes": 324385,
+      "sha256": "be38d51fa118d973a3410cd3b56ebbfdb8f87b5cdefa630fac53568bc87f51d5"
+    },
+    "replay-config.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/replay-config.json",
+      "bytes": 6650,
+      "sha256": "ce12738ea9a644f2758cc27cd00daef71e6571e5c15b4ca5009846997241e17a"
+    },
+    "replay_native.py": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/replay_native.py",
+      "bytes": 5230,
+      "sha256": "b4532a64a628d3ce464b33df3d516558966b0d7242a6114262c6ca73f59c02d4"
+    },
+    "results.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/results.json",
+      "bytes": 589688,
+      "sha256": "88512365368079f9ad54562d1027a4f5eec0654595e6050a44deec1b86275789"
+    },
+    "sizing-validation.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/sizing-validation.json",
+      "bytes": 2539,
+      "sha256": "ac610cd720d068cfb46191d9df85da30c4f64c6022edf803b584a714bdee8d16"
+    },
+    "summary.csv": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/summary.csv",
+      "bytes": 3778,
+      "sha256": "d4a38af2e17e122049bae55587faeaa457492cdad8791cfb34f23c4952f8b169"
+    },
+    "summary.md": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/summary.md",
+      "bytes": 3848,
+      "sha256": "b602792aab0eabceab132f2e6bb3afe02feee255dcd045ded7f7108cdda94108"
+    },
+    "taps.csv": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/taps.csv",
+      "bytes": 123180,
+      "sha256": "dc3d9762d24c8d2f097fda0ce762cd586df5c91506de9473529d04a2e56f8de3"
+    },
+    "verification-component.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/verification-component.json",
+      "bytes": 3981,
+      "sha256": "3d60da0a469bfbc3d269f6626db66f7f153d3ab769a7842e885a659f2f282f2a"
+    },
+    "verification-component.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/verification-component.log",
+      "bytes": 144,
+      "sha256": "ffc54f9195fa0db12d6f1324605931438952978b92bd1b203fd3888c0e706e06"
+    }
+  },
+  "note": "Packaging retained evidence, not a new synthesis or simulation."
+}

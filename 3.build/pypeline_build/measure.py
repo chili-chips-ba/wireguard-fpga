@@ -1030,6 +1030,10 @@ def markdown_table(results, include_mac_details=True):
             terms = ", ".join(f"{key}={value}" for key, value in sizing["terms_beats"].items())
             lines.append(f"Automatic overlap sizing: {sizing['required_beats']} required beats "
                          f"({terms}); memory rounded to a power of two.")
+        elif sizing.get("method") == "plaintext-verdict-credit-bound-v1":
+            terms = ", ".join(f"{key}={value}" for key, value in sizing["terms_beats"].items())
+            lines.append(f"Automatic verification sizing: {sizing['required_beats']} required beats "
+                         f"({terms}); memory rounded to a power of two.")
     for name, stream_slice in sorted(results.get("config", {}).get("stream_slices", {}).items()):
         lines.append(f"Register slice `{name}`: mode `{stream_slice['mode']}`, "
                      f"{stream_slice['capacity_beats']} slots, "
@@ -1332,6 +1336,56 @@ def overlap_fifo_sizing_errors(config):
     return errors
 
 
+def verify_fifo_sizing_errors(config):
+    """Reject stale credit, packet-limit, handoff or allocation metadata."""
+    buffer = config.get("buffering", {}).get("decrypt/verify_fifo", {})
+    sizing = buffer.get("sizing", {})
+    if sizing.get("method") != "plaintext-verdict-credit-bound-v1":
+        return []  # Historical records and explicit sizing experiments.
+    label = "decrypt/verify_fifo: "
+    try:
+        packet_bytes = sizing["max_plaintext_bytes"]
+        beat_bytes = sizing["axis_beat_bytes"]
+        if type(packet_bytes) is not int or packet_bytes < 1 or packet_bytes != config["max_packet_bytes"]:
+            raise ValueError("supported plaintext limit")
+        if beat_bytes != BUS_BYTES or sizing["verify_handoff_cycles"] != 4:
+            raise ValueError("converter/verdict handoffs")
+        terms = dict(sizing["terms_beats"])
+        expected_extra = {
+            "held_maximum_packet": (packet_bytes + beat_bytes - 1) // beat_bytes,
+            "narrowing_storage": sizing["chacha20_block_beats"] + 1,
+            "verification_handoffs": sizing["verify_handoff_cycles"],
+            "release_handoff": 1,
+        }
+        for key, value in expected_extra.items():
+            if terms.pop(key) != value:
+                raise ValueError(key)
+        # Revalidate the inherited admission/service bound against the actual
+        # selected MAC, independently of the verification FIFO's allocation.
+        inherited = copy.deepcopy(sizing)
+        method = inherited["authentication_sizing_method"]
+        if method not in ("chacha-credit-bound-v1", "poly1305-overlap-fork-v2"):
+            raise ValueError("authentication sizing method")
+        inherited.update(method=method, buffer="decrypt/auth_fifo", terms_beats=terms,
+                         required_beats=sum(terms.values()),
+                         memory_depth_beats=1 << (max(2, sum(terms.values())) - 1).bit_length())
+        derived_config = copy.deepcopy(config)
+        derived_config["buffering"] = {"decrypt/auth_fifo": {
+            "sizing": inherited, "memory_depth_beats": inherited["memory_depth_beats"]}}
+        errors = auth_fifo_sizing_errors(derived_config) + overlap_fifo_sizing_errors(derived_config)
+        if errors:
+            raise ValueError("; ".join(errors))
+        required = sum(sizing["terms_beats"].values())
+        depth = 1 << (max(2, required) - 1).bit_length()
+        if sizing["buffer"] != "decrypt/verify_fifo" or sizing["required_beats"] != required:
+            raise ValueError("required budget")
+        if sizing["memory_depth_beats"] != depth or buffer["memory_depth_beats"] != depth:
+            raise ValueError("allocated depth")
+        return []
+    except (KeyError, TypeError, ValueError) as exc:
+        return [label + "verification sizing metadata disagree: " + str(exc)]
+
+
 def measurement_errors(results):
     """Acceptance checks; failed runs still retain all diagnostic artifacts."""
     errors = []
@@ -1345,6 +1399,7 @@ def measurement_errors(results):
                 errors.append(scope + ": emitted multiplier selection differs from the request or is unknown")
     errors.extend(auth_fifo_sizing_errors(results.get("config", {})))
     errors.extend(overlap_fifo_sizing_errors(config))
+    errors.extend(verify_fifo_sizing_errors(config))
     returncode = results.get("provenance", {}).get("build_returncode")
     if returncode:
         errors.append(f"Build/simulation exited {returncode}")
@@ -1686,6 +1741,38 @@ def measurement_selftest():
         target[key] = value
         if not auth_fifo_sizing_errors(changed):
             raise ValueError("Sizing guard accepted stale " + key)
+    verify_config = copy.deepcopy(sizing_config)
+    verify_config["max_packet_bytes"] = 2032
+    verify = copy.deepcopy(verify_config["buffering"]["decrypt/auth_fifo"])
+    verify["memory_depth_beats"] = 256
+    verify["sizing"].update(
+        method="plaintext-verdict-credit-bound-v1", buffer="decrypt/verify_fifo",
+        authentication_sizing_method="chacha-credit-bound-v1", max_plaintext_bytes=2032,
+        axis_beat_bytes=16, verify_handoff_cycles=4, required_beats=252, memory_depth_beats=256,
+    )
+    verify["sizing"]["terms_beats"].update(
+        held_maximum_packet=127, narrowing_storage=5, verification_handoffs=4, release_handoff=1)
+    verify_config["buffering"] = {"decrypt/verify_fifo": verify}
+    if verify_fifo_sizing_errors(verify_config):
+        raise ValueError("Valid verification FIFO sizing rejected")
+    for section, key, value in (
+        ("buffer", "memory_depth_beats", 128),
+        ("sizing", "chacha20_max_in_flight_blocks", 9),
+        ("sizing", "max_plaintext_bytes", 1920),
+        ("sizing", "verify_handoff_cycles", 1),
+        ("sizing", "required_beats", 128),
+        ("sizing", "memory_depth_beats", 128),
+        ("terms", "held_maximum_packet", 120),
+        ("terms", "narrowing_storage", 0),
+        ("terms", "release_handoff", 0),
+    ):
+        changed = copy.deepcopy(verify_config)
+        buffer = changed["buffering"]["decrypt/verify_fifo"]
+        target = {"buffer": buffer, "sizing": buffer["sizing"],
+                  "terms": buffer["sizing"]["terms_beats"]}[section]
+        target[key] = value
+        if not verify_fifo_sizing_errors(changed):
+            raise ValueError("Verification sizing guard accepted stale " + key)
     directory = Path(HERE) / Path(_SELFTEST_CASES[0][0]).parent
     report = check_record(directory)
     if not report["passed"]:

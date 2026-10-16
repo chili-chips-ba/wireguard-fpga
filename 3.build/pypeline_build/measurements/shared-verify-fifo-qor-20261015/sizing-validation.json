@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "config": {
+    "max_packet_bytes": 2032,
+    "poly1305": {
+      "implementation": "pipelined",
+      "directions": {
+        "decrypt": {
+          "body_core_latency": 8,
+          "body_latency": 10,
+          "accumulator_count": 10,
+          "body_ii": 1,
+          "shared_mcps": true,
+          "packet_architecture": "overlapped",
+          "packet_buffers": {
+            "poly1305.prepared": 1,
+            "poly1305.contexts": 2,
+            "poly1305.completion": 1,
+            "poly1305.tags": 1
+          },
+          "prologue_handoff_cycles": 3,
+          "body_commit_cycles": 1,
+          "epilogue_handoff_cycles": 2,
+          "prologue_mcp_latency": 12,
+          "epilogue_mcp_latency": 8,
+          "prologue_response_cycles": 13,
+          "epilogue_response_cycles": 9
+        }
+      },
+      "arithmetic": "residue130",
+      "shared_mcps": {
+        "capacity_lanes": 10,
+        "prologue_mcp_latency": 12,
+        "epilogue_mcp_latency": 8
+      }
+    },
+    "buffering": {
+      "decrypt/verify_fifo": {
+        "sizing": {
+          "method": "plaintext-verdict-credit-bound-v1",
+          "buffer": "decrypt/verify_fifo",
+          "chacha20_core_latency": 19,
+          "chacha20_max_in_flight_blocks": 24,
+          "chacha20_block_beats": 4,
+          "prologue_mcp_latency": 12,
+          "epilogue_mcp_latency": 8,
+          "body_latency": 10,
+          "prologue_handoff_cycles": 3,
+          "body_commit_cycles": 1,
+          "epilogue_handoff_cycles": 2,
+          "shared_mcps": true,
+          "preceding_peer_requests": 1,
+          "max_aad_beats": 2,
+          "max_packed_tag_beats": 2,
+          "authentication_capacity_beats": null,
+          "terms_beats": {
+            "setup_service_and_handoffs": 29,
+            "aad_framing": 2,
+            "framing_idle": 1,
+            "length_framing": 1,
+            "fifo_startup": 2,
+            "fork_copy_lead": 1,
+            "pipeline_credits": 96,
+            "widening_storage": 5,
+            "completion_service_and_handoffs": 33,
+            "held_maximum_packet": 127,
+            "narrowing_storage": 5,
+            "verification_handoffs": 4,
+            "release_handoff": 1
+          },
+          "required_beats": 307,
+          "memory_depth_beats": 512,
+          "authentication_sizing_method": "poly1305-overlap-fork-v2",
+          "max_plaintext_bytes": 2032,
+          "axis_beat_bytes": 16,
+          "verify_handoff_cycles": 4
+        },
+        "memory_depth_beats": 512
+      }
+    }
+  }
+}

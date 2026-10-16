@@ -1,0 +1,467 @@
+{
+  "source_policy": "design-frozen-at-first-read",
+  "sources": {
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/axi/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/axi/axis.py": {
+      "sha256": "02487929a55f365a961bb089aaa98cfde0b9a2ea9637ca13096331af8eb76f31",
+      "bytes": 24696,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/axi/axis_sim.py": {
+      "sha256": "1c1299fdfc176d4728292f7a666e4403087dd825c804c3a4776ca62da18a7608",
+      "bytes": 14454,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/fifo.py": {
+      "sha256": "e8d84bcd78ffe0b55b452f0dc529312c9bd93b8ff1a37ab3dc3d1ea8a0acc956",
+      "bytes": 4346,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/interface/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/interface/interface.py": {
+      "sha256": "f13a4fab0b9317f2999473de511a58e0c01edfe92b8909e8059bfed53b81151f",
+      "bytes": 12385,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/interface/interface_func.py": {
+      "sha256": "7100b2d400b4f04fbf8a6cb2c65f83a98aa1b7778a5555074d46c09151ac3785",
+      "bytes": 39165,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/kept_data_bus.py": {
+      "sha256": "57867cc8a4f695ba89325d8b5c0c515d4624fcb49620b6da86db7df287c558ba",
+      "bytes": 387,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/ndarray.py": {
+      "sha256": "32f40b71f0a7ea01336d218f973225d5b945059893580d54a78d45c52c521103",
+      "bytes": 515,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/soft.py": {
+      "sha256": "a02d2fd9427f26a5a3684019afcee8da9b8d44adbd6d942cf4aa9b5615ff0418",
+      "bytes": 19693,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/soft_add.py": {
+      "sha256": "0d1924576935b0fa43b39950b59b26a1d3d399259bb3dab184eb5e8ea2027a0e",
+      "bytes": 5124,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/soft_cmp.py": {
+      "sha256": "33933403cd814c6673a32a3ae7ab797abf996c754ca8a1de6612c535faaac482",
+      "bytes": 27400,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/soft_div.py": {
+      "sha256": "d3a76528cbdda19bea6ff412ee7b87c4804b7b463fab679dfb7c1cd40b8acac4",
+      "bytes": 13997,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/soft_misc.py": {
+      "sha256": "773a06ffe78827e2b9c7ca49b267a0a84678aa4a3000a9135caaa403aaf457dc",
+      "bytes": 2359,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/soft_mult.py": {
+      "sha256": "1e16b6d28dd09ab5d2c04056fb8264bc637ef13390a8ff343f6b5165ed7fbfa1",
+      "bytes": 44076,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/operators/soft_shift.py": {
+      "sha256": "6c7955d7033fd84b8265a893932e938cea4eb83ef27b099938442fc182a1ac08",
+      "bytes": 6603,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/serdes_common.py": {
+      "sha256": "0f0bcfe73b93f6c7d81d55c76671fac0d64d8a53b2d5d68988983d3dc10775a0",
+      "bytes": 4135,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/skid_buffer.py": {
+      "sha256": "d0e067ba3cc4d8487af3c0c59dbf446c45a53dfe26768f16137f88430c2cd5d2",
+      "bytes": 9345,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/stream.py": {
+      "sha256": "22e84587b15b368fc605a37c5eef500b60eaeb4f3d7b3f8baa2819e9cc1f8b9e",
+      "bytes": 7225,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/stream_auto_pipeline.py": {
+      "sha256": "50f453cf592d2a148faa597847186f1659e6b4694fedd108bf18df7487a9cb8c",
+      "bytes": 8358,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/stream_fifo.py": {
+      "sha256": "4cea5298287b77a32cfb1bb903c601481130c196351b19f5e90c19d7cb57dac8",
+      "bytes": 2099,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/stream_multi_cycle.py": {
+      "sha256": "e376de45728ae20763626d85419b6a66248a60f8945e9de004e4db76041a6465",
+      "bytes": 7682,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/stream_perf.py": {
+      "sha256": "35be361801628c752e5c286e0dae54636ef3a14ba6c260cd7e6021c645efed16",
+      "bytes": 39483,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest/include/pypeline/stream/stream_perf_probe.py": {
+      "sha256": "5b0719c8301598332c89d119fce96ba686e28acd4c7796b89693f53aeabae95b",
+      "bytes": 11515,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/aead_types.py": {
+      "sha256": "7f6450f965102db12a7a728a19e18143eb6809fe1804bba7ac80432ee79528fa",
+      "bytes": 13659,
+      "disk_drift": true
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/append_auth_tag.py": {
+      "sha256": "c1b5530cfa0d75efd8f27b9cb0e66bf338d3b2997a0f70358b4b0fd1f44b9ee7",
+      "bytes": 6791,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/strip_auth_tag.py": {
+      "sha256": "9aad744532f497a5bbe041b26a348b63c831a0ed3b0c5615897ee7f34fee6187",
+      "bytes": 6309,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/auth_tag/wait_to_verify.py": {
+      "sha256": "de92a3fae75a1b1f56d495cd6e244f3689315078dd189cd1702b4bf1bb562d56",
+      "bytes": 5903,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20/chacha20.py": {
+      "sha256": "e883c214e3b5ea993f53467be6fddf37b1e186639130d1d4ed94f615a0dcb685",
+      "bytes": 17132,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20/chacha20_pipeline_shared.py": {
+      "sha256": "b49d3ab6964399ee9ab04dc400e3ca35f5da18a49678e06532036265fee7f694",
+      "bytes": 10820,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/aead_ref_model.py": {
+      "sha256": "dbe38076f4fe28264230f61fccc07402251c9a0931a83765e7e6fa7dcb134921",
+      "bytes": 2244,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_decrypt_ports.py": {
+      "sha256": "a2acac9429e41df35a50c2e38d745694b198b19c07d244e431a172b2eaeca608",
+      "bytes": 1053,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/chacha20poly1305_encrypt_ports.py": {
+      "sha256": "746765a5c9e115e0bcd0790d155cb9e1427963d7d8316188b803cd317bdef99f",
+      "bytes": 971,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow.py": {
+      "sha256": "2d2feb912cb7f594facdb5604bbcfc7f4915c6172b34164ae959d9a1ea23c5ca",
+      "bytes": 2256,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow_core.py": {
+      "sha256": "0ea11e91edee0341da4286259152467a6726953f2526730492af5ad13d896e78",
+      "bytes": 6059,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/decrypt_perf_tb.py": {
+      "sha256": "82b326bfa34457fdc97d1fe501201e28b01a426a4a1a2c724874f667c75889b0",
+      "bytes": 5188,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow.py": {
+      "sha256": "771a0268a4630582adda65050446443e5cccb072db2853ccd565570baa60d509",
+      "bytes": 2328,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_dataflow_core.py": {
+      "sha256": "0a1cff31514fafd6d284dc150dd5682a5cce920a3ac30c83bc4a288b9d47226f",
+      "bytes": 5620,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/encrypt_perf_tb.py": {
+      "sha256": "63636507b73cd8d342e610f1a15619c4cd6249dc172cb43bfc4a6840d7be1c53",
+      "bytes": 4586,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py": {
+      "sha256": "de5d9d9aa203fd5b15c175cdb1b2303a78f5a1a31f2bd63bcf6ede0dcf665393",
+      "bytes": 9567,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/tb_common_sim.py": {
+      "sha256": "577c24d1640f3b60c88d927a10e9e616aaaf84752416173de900c24a3cf8c64e",
+      "bytes": 3262,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305_perf_tb.py": {
+      "sha256": "e36bbbb87e7b3093323d95da710c2e9687a67d2fd7c60972e2f41dfd62f1749e",
+      "bytes": 2686,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_mac_pipelined.py": {
+      "sha256": "36f221d19c9371a77318f5726bdb3cd88e402c9e49a2a320735cfa08ff1ca01f",
+      "bytes": 22056,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_math.py": {
+      "sha256": "1754f352702d12ca86e2927dbf162596097c15b2288e090770a434cf21d33908",
+      "bytes": 9615,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_mcp_shared.py": {
+      "sha256": "ad988f9375fb25174db0a1f5a02552e95535824751adcaa274a51ca3f4bc7d0d",
+      "bytes": 15293,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_select.py": {
+      "sha256": "553035091d6f91e2856c2a1b7be55c866414eb254d5ce5f9642e97a932192435",
+      "bytes": 2983,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/poly1305/poly1305_verify_decrypt.py": {
+      "sha256": "d8d457474c515a6082fdf223f6d636e7b6cb66b30333e3032e110bd5f864a275",
+      "bytes": 4142,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/prep_auth_data/prep_auth_data.py": {
+      "sha256": "8c23ae03c39e4e0e64f3eac461f5134cf6c66a3dda86059b1f9790bd64bac6c3",
+      "bytes": 6241,
+      "disk_drift": false
+    },
+    "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py": {
+      "sha256": "e9c84915ce20789d41ef2adcbe2cca34549d3814e6f4017f2a8269cf717249c5",
+      "bytes": 10459,
+      "disk_drift": false
+    }
+  },
+  "design_params": [
+    {
+      "name": "DESIGN",
+      "value": "shared",
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py:208",
+      "type": "str",
+      "default": "shared",
+      "choices": [
+        "encrypt",
+        "decrypt",
+        "shared"
+      ],
+      "help": "encrypt or decrypt alone, or both directions (shared)"
+    },
+    {
+      "name": "PERF_DIRS",
+      "value": "both",
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:83",
+      "type": "str",
+      "default": "both",
+      "choices": [
+        "both",
+        "all",
+        "enc",
+        "encrypt",
+        "dec",
+        "decrypt"
+      ],
+      "help": "measured directions"
+    },
+    {
+      "name": "PERF_JSON",
+      "value": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/qor/perf_raw.json",
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:73",
+      "type": "str",
+      "default": "",
+      "choices": null,
+      "help": "results JSON path (measure.py sets it)"
+    },
+    {
+      "name": "PERF_MAX_CYCLES_PER_PHASE",
+      "value": 20000,
+      "source": "default",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:79",
+      "type": "int",
+      "default": 20000,
+      "choices": null,
+      "help": null
+    },
+    {
+      "name": "PERF_PACKETS",
+      "value": 4,
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:75",
+      "type": "int",
+      "default": 4,
+      "choices": null,
+      "help": "back-to-back packets per size"
+    },
+    {
+      "name": "PERF_PEAK_BYTES",
+      "value": 0,
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:76",
+      "type": "int",
+      "default": 1920,
+      "choices": null,
+      "help": "long-packet peak phase size"
+    },
+    {
+      "name": "PERF_PEAK_PACKETS",
+      "value": 4,
+      "source": "default",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:77",
+      "type": "int",
+      "default": 4,
+      "choices": null,
+      "help": "packets in the peak phase"
+    },
+    {
+      "name": "PERF_SEED",
+      "value": 8439,
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:78",
+      "type": "int",
+      "default": 8439,
+      "choices": null,
+      "help": "payload seed"
+    },
+    {
+      "name": "PERF_SETTLE",
+      "value": 8,
+      "source": "default",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:82",
+      "type": "int",
+      "default": 8,
+      "choices": null,
+      "help": null
+    },
+    {
+      "name": "PERF_SIZES",
+      "value": [
+        1420,
+        1920
+      ],
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:74",
+      "type": "tuple",
+      "default": [
+        16,
+        64,
+        256,
+        1024,
+        1420
+      ],
+      "choices": null,
+      "help": "packet sizes in bytes, comma-separated"
+    },
+    {
+      "name": "PERF_STALL_TIMEOUT",
+      "value": 1000,
+      "source": "default",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:80",
+      "type": "int",
+      "default": 1000,
+      "choices": null,
+      "help": "cycles with no beat in or out that count as a deadlock"
+    },
+    {
+      "name": "PERF_TAPS",
+      "value": [
+        "all"
+      ],
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py:85",
+      "type": "_tap_names",
+      "default": [],
+      "choices": null,
+      "help": "extra probe taps, comma-separated"
+    },
+    {
+      "name": "POLY1305_IMPL",
+      "value": "pipelined",
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py:210",
+      "type": "str",
+      "default": "pipelined",
+      "choices": [
+        "pipelined",
+        "legacy"
+      ],
+      "help": "Poly1305 MAC architecture"
+    },
+    {
+      "name": "POLY1305_MULT_IMPL",
+      "value": "hybrid_square",
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py:215",
+      "type": null,
+      "default": null,
+      "choices": [
+        "inferred",
+        "hybrid",
+        "hybrid_square"
+      ],
+      "help": "130-bit multiply implementation (pipelined MAC only)"
+    },
+    {
+      "name": "SHARE",
+      "value": "both",
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py:212",
+      "type": "str",
+      "default": "auto",
+      "choices": [
+        "auto",
+        "none",
+        "chacha20",
+        "poly1305",
+        "both"
+      ],
+      "help": "resources both directions share (DESIGN=shared only); auto: both for the shared design, none for one direction"
+    },
+    {
+      "name": "TARGET_MHZ",
+      "value": 80,
+      "source": "-D",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/wireguard_env.py:217",
+      "type": "int",
+      "default": null,
+      "choices": null,
+      "help": "clock goal in MHz (default: the profile's)"
+    },
+    {
+      "name": "TB_STRESS",
+      "value": false,
+      "source": "default",
+      "declared_at": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/src/chacha20poly1305/tb_common_sim.py:29",
+      "type": "bool",
+      "default": false,
+      "choices": null,
+      "help": "random testbenches: 16 directed packets, input gaps and output backpressure"
+    }
+  ]
+}

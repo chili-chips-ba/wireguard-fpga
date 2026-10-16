@@ -39,6 +39,10 @@ class poly1305_verify_state_t:
 # Declaration order = value order, for the perf_taps state histogram.
 POLY1305_VERIFY_STATE_NAMES = tuple(poly1305_verify_state_t.__members__)
 
+# One registered transition per state, without upstream/downstream stalls.
+# Consumed by plaintext FIFO sizing as well as the state probe above.
+VERIFY_HANDOFF_CYCLES = len(POLY1305_VERIFY_STATE_NAMES)
+
 
 @struct
 class poly1305_verify_decrypt_out_t(NamedTuple):

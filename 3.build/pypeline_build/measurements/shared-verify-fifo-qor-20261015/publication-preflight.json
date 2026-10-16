@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "focused_measurement_guards": true,
+  "shared_mcp_hdl_audit": {
+    "perf": {
+      "out_dir": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/synthesis-build",
+      "top_vhdl": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/synthesis-build/top/top.vhd",
+      "scope": "emitted MCP arithmetic only; not timing/constraint sign-off",
+      "shared": true,
+      "mcps": {
+        "shared/prologue": {
+          "entity": "prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_10_0clk_ed46e130",
+          "file": "prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_10/prologue_from_poly1305_mcp_shared_make_shared_compute_capacity_10_0CLK_ed46e130.vhd",
+          "physical_instances": 1,
+          "entities_checked": 83,
+          "registered_entities": []
+        },
+        "shared/epilogue": {
+          "entity": "epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_10_0clk_4acc4e08",
+          "file": "epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_10/epilogue_from_poly1305_mcp_shared_make_shared_compute_capacity_10_0CLK_4acc4e08.vhd",
+          "physical_instances": 1,
+          "entities_checked": 80,
+          "registered_entities": []
+        }
+      },
+      "passed": true,
+      "errors": []
+    }
+  },
+  "archive_verified": true,
+  "document_preview_passed": true,
+  "checked_utc": "2026-10-16T02:48:44.485586+00:00"
+}

@@ -1,0 +1,10 @@
+git add -f -- \
+  3.build/pypeline_build/README.md \
+  3.build/pypeline_build/measure.py \
+  3.build/pypeline_build/src/aead_types.py \
+  3.build/pypeline_build/src/auth_tag/wait_to_verify.py \
+  3.build/pypeline_build/src/chacha20poly1305/decrypt_dataflow_core.py \
+  3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py \
+  3.build/pypeline_build/src/poly1305/poly1305_verify_decrypt.py \
+  3.build/pypeline_build/src/poly1305/throughput.md \
+  3.build/pypeline_build/measurements/shared-verify-fifo-qor-20261015/

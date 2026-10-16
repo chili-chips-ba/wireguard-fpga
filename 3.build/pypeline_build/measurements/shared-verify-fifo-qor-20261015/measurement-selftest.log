@@ -1,0 +1,4 @@
+OK: measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/hardware-vivado.log -> LUT 42617 FF 12934 DSP 512 BRAM 11 CARRY4 5603
+OK: measurements/shared-30mhz-poly1305-pipelined-30mhz-primary-20261001-1559Z/perf-vivado.log -> LUT 33778 FF 9877 DSP 448 BRAM 11 CARRY4 5193
+selftest: PASS
+measurement selftest: PASS (guards, models, saved provenance, archive integrity)

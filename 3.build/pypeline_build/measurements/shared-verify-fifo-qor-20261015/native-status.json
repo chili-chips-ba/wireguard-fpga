@@ -1,0 +1,27 @@
+{
+  "running": false,
+  "started_utc": "2026-10-16T02:36:51.723535+00:00",
+  "source": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/src",
+  "compiler": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/compiler-overlap-20261015-latest",
+  "params": {
+    "DESIGN": "shared",
+    "PERF_DIRS": "both",
+    "PERF_JSON": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/full-qor_raw.json",
+    "PERF_PACKETS": "4",
+    "PERF_PEAK_BYTES": 0,
+    "PERF_SEED": 8439,
+    "PERF_SIZES": "16,64,256,1024,1420,1920",
+    "PERF_TAPS": "all",
+    "POLY1305_IMPL": "pipelined",
+    "POLY1305_MULT_IMPL": "hybrid_square",
+    "SHARE": "both",
+    "TARGET_MHZ": 80,
+    "TB_STRESS": 0
+  },
+  "kind": "perf",
+  "compute_latencies_replayed": true,
+  "synthesis_performed": false,
+  "exit_code": 0,
+  "elapsed_seconds": 6807.306164292968,
+  "finished_utc": "2026-10-16T04:30:19.041480+00:00"
+}

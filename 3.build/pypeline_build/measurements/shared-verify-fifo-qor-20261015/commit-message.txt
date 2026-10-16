@@ -1,0 +1,6 @@
+Relieve shared ChaCha stalls with derived verification storage
+
+Derive decrypt plaintext verification capacity from the supported packet size,
+resolved pipeline credits, converters and authentication/verdict handoffs.
+Record FIFO occupancy and conservation, preserve the accepted comparison,
+and publish concurrent QoR across all six standard packet sizes.

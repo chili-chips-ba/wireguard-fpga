@@ -38,6 +38,7 @@ from aead_types import (
     axis128_frag_t,
     axis128_2broadcast,
     decrypt_auth_fifo_sizing,
+    decrypt_verify_fifo_sizing,
     make_aead_fifo,
 )
 
@@ -53,7 +54,9 @@ class buffered_prep_ports(NamedTuple):
     axis_if: axis128_intrf
 
 
-def make_decrypt_dataflow_core(chacha_func, mac_func=None, auth_fifo_depth=None):
+def make_decrypt_dataflow_core(
+    chacha_func, mac_func=None, auth_fifo_depth=None, verify_fifo_depth=None
+):
     """Return the decrypt graph callable with its complete return_t.
 
     chacha_func is a private or shared ChaCha20 callable with the
@@ -63,6 +66,19 @@ def make_decrypt_dataflow_core(chacha_func, mac_func=None, auth_fifo_depth=None)
 
     if mac_func is None:
         mac_func = make_poly1305_mac("decrypt")
+    verify_sizing = None
+    if verify_fifo_depth is None:
+        if IMPLEMENTATION == "pipelined":
+            verify_sizing = decrypt_verify_fifo_sizing(
+                chacha_func, mac_func,
+                verify_handoff_cycles=poly1305_verify_decrypt.VERIFY_HANDOFF_CYCLES,
+            )
+            verify_fifo_depth = verify_sizing["memory_depth_beats"]
+        else:
+            verify_fifo_depth = 128
+    else:
+        verify_sizing = {"method": "explicit"}
+    verify_func = wait_to_verify.make_wait_to_verify(verify_fifo_depth, sizing=verify_sizing)
     sizing = None
     if IMPLEMENTATION == "pipelined":
         if auth_fifo_depth is None:
@@ -120,7 +136,7 @@ def make_decrypt_dataflow_core(chacha_func, mac_func=None, auth_fifo_depth=None)
             auth_tag_if=strip.auth_tag_out_if, calc_tag_if=mac.auth_tag_if
         )
         # wait_to_verify buffers the plaintext until the match bit arrives
-        wtv = wait_to_verify.wait_to_verify(
+        wtv = verify_func(
             axis_in_if=chacha.axis_out_if, verify_bit_if=verify.tags_match_if
         )
         return decrypt_dataflow_core_ports(

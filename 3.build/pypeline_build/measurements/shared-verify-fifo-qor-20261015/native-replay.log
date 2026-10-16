@@ -1,0 +1,154 @@
+Design parameters:
+  DESIGN                    = 'shared' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:208
+  PERF_DIRS                 = 'both' (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:83
+  PERF_JSON                 = '/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/full-qor_raw.json' (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:73
+  PERF_MAX_CYCLES_PER_PHASE = 20000 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:79
+  PERF_PACKETS              = 4 (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:75
+  PERF_PEAK_BYTES           = 0 (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:76
+  PERF_PEAK_PACKETS         = 4 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:77
+  PERF_SEED                 = 8439 (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:78
+  PERF_SETTLE               = 8 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:82
+  PERF_SIZES                = (16, 64, 256, 1024, 1420, 1920) (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:74
+  PERF_STALL_TIMEOUT        = 1000 (default)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:80
+  PERF_TAPS                 = ('all',) (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/perf_tb_common.py:85
+  POLY1305_IMPL             = 'pipelined' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:210
+  POLY1305_MULT_IMPL        = 'hybrid_square' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:215
+  SHARE                     = 'both' (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:212
+  TARGET_MHZ                = 80 (-D)  generated-files/verify-fifo-20261015/src/wireguard_env.py:217
+  TB_STRESS                 = False (-D)  generated-files/verify-fifo-20261015/src/chacha20poly1305/tb_common_sim.py:29
+=== ChaCha20-Poly1305 PERFORMANCE measurement (encrypt side) ===
+Encrypt: phases = ['b2b-16', 'b2b-64', 'b2b-256', 'b2b-1024', 'b2b-1420', 'b2b-1920']
+Encrypt: seed = 8439, json = /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/full-qor_raw.json
+=== ChaCha20-Poly1305 PERFORMANCE measurement (decrypt side) ===
+Decrypt: phases = ['b2b-16', 'b2b-64', 'b2b-256', 'b2b-1024', 'b2b-1420', 'b2b-1920']
+Decrypt: seed = 8439, json = /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/full-qor_raw.json
+encrypt: phase 0 'b2b-16': 4 x 16 B queued
+decrypt: phase 0 'b2b-16': 4 x 16 B queued
+Progress: 25 cycles, 30.2 s
+Progress: 50 cycles, 54.3 s
+Progress: 75 cycles, 79.4 s
+Progress: 100 cycles, 105.3 s
+Progress: 125 cycles, 130.6 s
+encrypt: phase 0 'b2b-16' DONE
+Progress: 150 cycles, 154.2 s
+Progress: 175 cycles, 178.0 s
+decrypt: phase 0 'b2b-16' DONE
+decrypt: phase 1 'b2b-64': 4 x 64 B queued
+encrypt: phase 1 'b2b-64': 4 x 64 B queued
+Progress: 200 cycles, 214.6 s
+Progress: 225 cycles, 245.7 s
+Progress: 250 cycles, 274.0 s
+Progress: 275 cycles, 304.4 s
+Progress: 300 cycles, 337.5 s
+Progress: 325 cycles, 365.4 s
+encrypt: phase 1 'b2b-64' DONE
+Progress: 350 cycles, 390.2 s
+Progress: 375 cycles, 413.8 s
+decrypt: phase 1 'b2b-64' DONE
+decrypt: phase 2 'b2b-256': 4 x 256 B queued
+encrypt: phase 2 'b2b-256': 4 x 256 B queued
+Progress: 400 cycles, 456.7 s
+Progress: 425 cycles, 507.4 s
+Progress: 450 cycles, 556.6 s
+Progress: 475 cycles, 598.7 s
+Progress: 500 cycles, 650.1 s
+Progress: 525 cycles, 696.5 s
+encrypt: phase 2 'b2b-256' DONE
+Progress: 550 cycles, 727.4 s
+Progress: 575 cycles, 755.5 s
+Progress: 600 cycles, 779.8 s
+decrypt: phase 2 'b2b-256' DONE
+decrypt: phase 3 'b2b-1024': 4 x 1024 B queued
+encrypt: phase 3 'b2b-1024': 4 x 1024 B queued
+Progress: 625 cycles, 817.9 s
+Progress: 650 cycles, 874.4 s
+Progress: 675 cycles, 953.1 s
+Progress: 700 cycles, 1037.1 s
+Progress: 725 cycles, 1134.9 s
+Progress: 750 cycles, 1251.0 s
+Progress: 775 cycles, 1374.6 s
+Progress: 800 cycles, 1500.6 s
+Progress: 825 cycles, 1625.0 s
+Progress: 850 cycles, 1749.8 s
+Progress: 875 cycles, 1874.6 s
+Progress: 900 cycles, 1961.9 s
+Progress: 925 cycles, 2017.5 s
+encrypt: phase 3 'b2b-1024' DONE
+Progress: 950 cycles, 2059.4 s
+Progress: 975 cycles, 2092.0 s
+Progress: 1000 cycles, 2121.3 s
+Progress: 1025 cycles, 2147.6 s
+decrypt: phase 3 'b2b-1024' DONE
+decrypt: phase 4 'b2b-1420': 4 x 1420 B queued
+encrypt: phase 4 'b2b-1420': 4 x 1420 B queued
+Progress: 1050 cycles, 2195.5 s
+Progress: 1075 cycles, 2257.9 s
+Progress: 1100 cycles, 2344.2 s
+Progress: 1125 cycles, 2441.8 s
+Progress: 1150 cycles, 2549.4 s
+Progress: 1175 cycles, 2666.6 s
+Progress: 1200 cycles, 2804.1 s
+Progress: 1225 cycles, 2942.4 s
+Progress: 1250 cycles, 3086.3 s
+Progress: 1275 cycles, 3225.5 s
+Progress: 1300 cycles, 3370.6 s
+Progress: 1325 cycles, 3511.6 s
+Progress: 1350 cycles, 3645.5 s
+Progress: 1375 cycles, 3779.5 s
+Progress: 1400 cycles, 3910.0 s
+Progress: 1425 cycles, 3980.1 s
+Progress: 1450 cycles, 4034.7 s
+encrypt: phase 4 'b2b-1420' DONE
+Progress: 1475 cycles, 4075.8 s
+Progress: 1500 cycles, 4111.4 s
+Progress: 1525 cycles, 4142.9 s
+Progress: 1550 cycles, 4168.7 s
+Progress: 1575 cycles, 4191.2 s
+decrypt: phase 4 'b2b-1420' DONE
+decrypt: phase 5 'b2b-1920': 4 x 1920 B queued
+encrypt: phase 5 'b2b-1920': 4 x 1920 B queued
+Progress: 1600 cycles, 4233.5 s
+Progress: 1625 cycles, 4290.2 s
+Progress: 1650 cycles, 4366.2 s
+Progress: 1675 cycles, 4451.5 s
+Progress: 1700 cycles, 4548.3 s
+Progress: 1725 cycles, 4650.6 s
+Progress: 1750 cycles, 4768.5 s
+Progress: 1775 cycles, 4905.7 s
+Progress: 1800 cycles, 5050.7 s
+Progress: 1825 cycles, 5192.5 s
+Progress: 1850 cycles, 5338.2 s
+Progress: 1875 cycles, 5480.0 s
+Progress: 1900 cycles, 5613.4 s
+Progress: 1925 cycles, 5747.1 s
+Progress: 1950 cycles, 5876.2 s
+Progress: 1975 cycles, 6006.5 s
+Progress: 2000 cycles, 6135.2 s
+Progress: 2025 cycles, 6266.5 s
+Progress: 2050 cycles, 6400.6 s
+Progress: 2075 cycles, 6510.7 s
+Progress: 2100 cycles, 6576.2 s
+Progress: 2125 cycles, 6626.5 s
+encrypt: phase 5 'b2b-1920' DONE
+Progress: 2150 cycles, 6666.1 s
+Progress: 2175 cycles, 6702.0 s
+Progress: 2200 cycles, 6733.9 s
+Progress: 2225 cycles, 6761.8 s
+Progress: 2250 cycles, 6785.9 s
+Progress: 2275 cycles, 6806.4 s
+decrypt: phase 5 'b2b-1920' DONE
+sim_finish() called — stopping early at cycle 2274
+2275 cycles in 6804.089s  (2990.81 ms/cycle, 0.3 cycles/s)
+PERF:       b2b-16 encrypt   0.481 B/cyc window=133 cold_head=30
+PERF:       b2b-16 decrypt   0.364 B/cyc window=176 cold_head=81
+PERF:       b2b-64 encrypt   1.882 B/cyc window=136 cold_head=33
+PERF:       b2b-64 decrypt   1.384 B/cyc window=185 cold_head=84
+PERF:      b2b-256 encrypt   6.737 B/cyc window=152 cold_head=33
+PERF:      b2b-256 decrypt   4.633 B/cyc window=221 cold_head=96
+PERF:     b2b-1024 encrypt  12.337 B/cyc window=332 cold_head=33
+PERF:     b2b-1024 decrypt   9.942 B/cyc window=412 cold_head=144
+PERF:     b2b-1420 encrypt  13.028 B/cyc window=436 cold_head=33
+PERF:     b2b-1420 decrypt  10.519 B/cyc window=540 cold_head=169
+PERF:     b2b-1920 encrypt  13.813 B/cyc window=556 cold_head=33
+PERF:     b2b-1920 decrypt  11.098 B/cyc window=692 cold_head=200
+PERF: wrote /media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/verify-fifo-20261015/full-qor_raw.json

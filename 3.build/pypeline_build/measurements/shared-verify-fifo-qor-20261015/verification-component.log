@@ -1,0 +1,1 @@
+{"passed": true, "cycles": 2215, "packets": 8, "words": 768, "peak_occupancy": 513, "stalled_input_cycles": 770, "rejected_verdict_packets": 3}

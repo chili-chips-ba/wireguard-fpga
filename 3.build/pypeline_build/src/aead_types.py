@@ -34,6 +34,10 @@ AAD_MAX_LEN = 32
 # Axis beat size used by the fork, FIFO and ChaCha width converters.
 AXIS128_BEAT_BYTES = 16
 
+# Supported plaintext payload limit, independent of verification FIFO rounding.
+# Keep the established 2032-byte measurement envelope when adding headroom.
+AEAD_MAX_PLAINTEXT_BYTES = 2032
+
 # Wide scalar types
 uint96_t = make_uint_t(96)
 uint128_t = make_uint_t(128)
@@ -207,6 +211,42 @@ def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None
         "required_beats": required,
         "memory_depth_beats": 1 << (max(2, required) - 1).bit_length(),
     }
+
+
+def decrypt_verify_fifo_sizing(chacha_func, mac_func, *, verify_handoff_cycles):
+    """Hold a maximum plaintext packet without choking shared ChaCha results.
+
+    Reuse the authentication-fork bound for work admitted ahead of MAC
+    service: selected ChaCha credits, input conversion, framing, setup and
+    completion (including one preceding shared MCP peer). Add the held
+    packet, ChaCha's output converter and the comparator/release handoffs.
+    At most one narrow beat arrives per service clock. This deliberately
+    overcounts overlapping phases and key blocks, rather than depending on
+    the measured packet length or occupancy. External sink stalls still
+    propagate by ordinary ready/valid backpressure.
+    """
+    if type(verify_handoff_cycles) is not int or verify_handoff_cycles < 1:
+        raise ValueError("Verification sizing requires a positive handoff bound")
+    sizing = deepcopy(decrypt_auth_fifo_sizing(chacha_func, mac_func))
+    terms = sizing["terms_beats"]
+    terms["held_maximum_packet"] = (
+        AEAD_MAX_PLAINTEXT_BYTES + AXIS128_BEAT_BYTES - 1
+    ) // AXIS128_BEAT_BYTES
+    terms["narrowing_storage"] = sizing["chacha20_block_beats"] + 1
+    terms["verification_handoffs"] = verify_handoff_cycles
+    terms["release_handoff"] = 1  # wait-to-verdict -> output-plaintext
+    required = sum(terms.values())
+    sizing.update(
+        method="plaintext-verdict-credit-bound-v1",
+        buffer="decrypt/verify_fifo",
+        authentication_sizing_method=decrypt_auth_fifo_sizing(chacha_func, mac_func)["method"],
+        max_plaintext_bytes=AEAD_MAX_PLAINTEXT_BYTES,
+        axis_beat_bytes=AXIS128_BEAT_BYTES,
+        verify_handoff_cycles=verify_handoff_cycles,
+        required_beats=required,
+        memory_depth_beats=1 << (max(2, required) - 1).bit_length(),
+    )
+    return sizing
 
 
 def make_aead_fifo(data_t, depth, tap_name, direction, *, sizing=None):
