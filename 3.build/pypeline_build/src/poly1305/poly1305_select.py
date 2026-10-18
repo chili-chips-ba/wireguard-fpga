@@ -28,12 +28,16 @@ def make_poly1305_mac(direction, share_mcp=False):
 def implementation_metadata():
     result = {"implementation": IMPLEMENTATION, "directions": {},
               "arithmetic": "residue130" if IMPLEMENTATION == "pipelined" else "limb320-corrected"}
+    if IMPLEMENTATION == "pipelined":
+        result["compute_impl"] = wireguard_env.POLY1305_COMPUTE_IMPL
+    # Historical *_mcp_latency/shared_mcps keys also describe FSM services;
+    # counts exclude the wrapper's one result/handshake cycle in both modes.
     if any(getattr(mac, "shared_mcps", False) for mac in _instances.values()):
         from poly1305_mcp_shared import CAPACITY, prologue_arbiter, epilogue_arbiter
         result["shared_mcps"] = {
             "capacity_lanes": CAPACITY,
-            "prologue_mcp_latency": prologue_arbiter.mcp.latency,
-            "epilogue_mcp_latency": epilogue_arbiter.mcp.latency,
+            "prologue_mcp_latency": prologue_arbiter.compute_tag.latency,
+            "epilogue_mcp_latency": epilogue_arbiter.compute_tag.latency,
         }
     for direction, mac in _instances.items():
         if IMPLEMENTATION == "pipelined":
@@ -48,10 +52,10 @@ def implementation_metadata():
                 "prologue_handoff_cycles": mac.prologue_handoff_cycles,
                 "body_commit_cycles": mac.body_commit_cycles,
                 "epilogue_handoff_cycles": mac.epilogue_handoff_cycles,
-                "prologue_mcp_latency": mac.prologue_mcp.mcp.latency,
-                "epilogue_mcp_latency": mac.epilogue_mcp.mcp.latency,
-                "prologue_response_cycles": mac.prologue_mcp.mcp.latency + 1,
-                "epilogue_response_cycles": mac.epilogue_mcp.mcp.latency + 1,
+                "prologue_mcp_latency": mac.prologue_mcp.compute_tag.latency,
+                "epilogue_mcp_latency": mac.epilogue_mcp.compute_tag.latency,
+                "prologue_response_cycles": mac.prologue_mcp.compute_tag.latency + 1,
+                "epilogue_response_cycles": mac.epilogue_mcp.compute_tag.latency + 1,
             }
         else:
             result["directions"][direction] = {

@@ -107,7 +107,7 @@ def decrypt_auth_fifo_sizing(chacha_func, mac_func):
     # pypeline_guide.md, "Passing a bottom-up value to the rest of the design")
     core_latency = pipeline.auto_pipeline.latency
     credits = pipeline.max_in_flight
-    prologue_latency = mac_func.prologue_mcp.mcp.latency
+    prologue_latency = mac_func.prologue_mcp.compute_tag.latency
     shared_mcps = bool(mac_func.shared_mcps)
     block_beats = CHACHA20_BLOCK_SIZE // AXIS128_BEAT_BYTES
     aad_beats = (AAD_MAX_LEN + AXIS128_BEAT_BYTES - 1) // AXIS128_BEAT_BYTES
@@ -139,7 +139,7 @@ def decrypt_auth_fifo_sizing(chacha_func, mac_func):
 def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None):
     """Bound cut-through fork storage by service clocks, not packet bytes.
 
-    One ingress beat can arrive per clock. Each single-flight shared MCP can
+    One ingress beat can arrive per clock. Each single-flight shared service can
     serve one preceding peer request; clients reserve response storage before
     launching, so a peer's downstream consumer cannot prolong that service.
     External stalls use ordinary backpressure rather than an unbounded budget.
@@ -159,8 +159,8 @@ def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None
     aad_beats = (AAD_MAX_LEN + AXIS128_BEAT_BYTES - 1) // AXIS128_BEAT_BYTES
     shared = bool(mac_func.shared_mcps)
     peer_requests = int(shared)
-    prologue_latency = mac_func.prologue_mcp.mcp.latency
-    epilogue_latency = mac_func.epilogue_mcp.mcp.latency
+    prologue_latency = mac_func.prologue_mcp.compute_tag.latency
+    epilogue_latency = mac_func.epilogue_mcp.compute_tag.latency
     setup = (1 + peer_requests) * (prologue_latency + 1) + mac_func.prologue_handoff_cycles
     # The append FSM emits at most ceil((partial ciphertext + tag) / beat)
     # words after capturing the final ciphertext word.

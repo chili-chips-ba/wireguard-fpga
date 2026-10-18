@@ -1,7 +1,7 @@
 # pyright: reportInvalidTypeForm=none
 """Independent round-robin prologue and epilogue services for two MACs.
 
-Only this module owns the two MCPs. Per-direction adapters own no compute
+Only this module owns the two compute services. Per-direction adapters own no compute
 resource or packet state. Capacity follows both actual body AUTO_PIPELINE
 depths; a request's local lane count determines its epilogue rotation.
 """
@@ -9,7 +9,7 @@ import wireguard_env
 from types import SimpleNamespace
 from pypeline import MAIN, NamedTuple, Reg, Feedback, Wire, struct, hw_func, uint1_t, uint2_t, make_uint_t
 from stream.stream import make_stream_interface
-from stream.stream_multi_cycle import make_stream_auto_multi_cycle
+from poly1305_service import make_compute_service
 from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod, residue_square_mod
 from poly1305_mac_pipelined import get_body_auto_pipeline
 from stream import stream_perf_probe as perf_taps
@@ -66,7 +66,10 @@ def make_shared_compute(capacity):
                 power_index -= 1 + j
                 if x.next_lane > j:
                     power_index = x.next_lane - 1 - j
-                weight = x.powers.values[power_index]
+                # AUTO_FSM cannot regenerate a read at a hardware index.
+                for k in range(capacity):
+                    if power_index == k:
+                        weight = x.powers.values[k]
             # Exactly one product per capacity slot, not one set per direction.
             tree[tree_size + j] = residue_mul_mod(x.accumulators[j], weight)
         for k in range(tree_size - 1, 0, -1):
@@ -92,7 +95,7 @@ epilogue_out_intrf = make_stream_interface(uint128_t)
 
 
 def make_mcp_arbiter(func, input_t, output_t, phase):
-    """Two requesters, one single-flight MCP; no coupling to the other phase."""
+    """Two requesters, one single-flight service; independent of the other phase."""
     in_intrf = make_stream_interface(input_t)
     out_intrf = make_stream_interface(output_t)
 
@@ -113,7 +116,7 @@ def make_mcp_arbiter(func, input_t, output_t, phase):
         o.is_encrypt = x.is_encrypt
         return o
 
-    mcp = make_stream_auto_multi_cycle(
+    mcp = make_compute_service(
         tagged_compute, name=f"poly1305_{phase}_shared"
     )
 
@@ -210,7 +213,7 @@ def make_mcp_arbiter(func, input_t, output_t, phase):
         perf_taps.hs(service_out_tap, result.stream_out_if.stream.valid, response_ready)
         return o
 
-    arbiter.mcp = mcp.mcp
+    arbiter.compute_tag = mcp.compute_tag
     return arbiter
 
 
@@ -308,17 +311,17 @@ def decrypt_epilogue_client(stream_in_if: epilogue_in_intrf.fwd_t,
                              epilogue_out_intrf.fwd_t(decrypt_epilogue_out_if.stream))
 
 
-def _stream_attrs(func, in_intrf, out_intrf, mcp):
+def _stream_attrs(func, in_intrf, out_intrf, compute_tag):
     func.in_intrf, func.out_intrf = in_intrf, out_intrf
     func.in_fwd_t, func.out_fb_t = in_intrf.fwd_t, out_intrf.fb_t
-    func.mcp = mcp
+    func.compute_tag = compute_tag
 
 
 def make_shared_adapters(direction, lanes, local_powers_t, local_epilogue_in_t):
     """Return named prologue/epilogue adapters with private-sized interfaces.
 
     Each callable exposes return_t, in_intrf, out_intrf, in_fwd_t, out_fb_t
-    and mcp, just like the private stream MCP it replaces.
+    and compute_tag, just like the private stream service it replaces.
     """
     if lanes > CAPACITY:
         raise ValueError("Shared MCP capacity differs from consumed body latency")
@@ -368,6 +371,6 @@ def make_shared_adapters(direction, lanes, local_powers_t, local_epilogue_in_t):
         o.stream_out_if = response.stream_out_if
         return o
 
-    _stream_attrs(prologue_adapter, prologue_in_intrf, pro_out, prologue_arbiter.mcp)
-    _stream_attrs(epilogue_adapter, epi_in, epilogue_out_intrf, epilogue_arbiter.mcp)
+    _stream_attrs(prologue_adapter, prologue_in_intrf, pro_out, prologue_arbiter.compute_tag)
+    _stream_attrs(epilogue_adapter, epi_in, epilogue_out_intrf, epilogue_arbiter.compute_tag)
     return SimpleNamespace(prologue=prologue_adapter, epilogue=epilogue_adapter)

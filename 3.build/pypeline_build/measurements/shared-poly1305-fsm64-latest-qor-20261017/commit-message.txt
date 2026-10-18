@@ -1,0 +1,16 @@
+pypeline: default Poly1305 setup and finalization to AUTO_FSM
+
+Add one --poly1305-compute fsm|mcp selector for both services, defaulting
+FSM cores to max_latency=64. Preserve MCP fallback and propagate resolved
+compute latencies into FIFO sizing and measurement metadata. Use constant
+index power selection so AUTO_FSM can split both epilogue variants.
+
+Record accepted shared 80 MHz QoR: 81.037 MHz synthesis fmax, 48/48 reference
+checks, 413 DSPs and 104668 LUTs. At a common 80 MHz, 1920-byte payload
+goodput is 9.125 Gbit/s per direction. Against MCP, DSPs drop 41.9% and LUTs
+3.2%; FFs increase 112.4% and goodput decreases 7.9%. Include exact source
+provenance, retained synthesis evidence and the complete throughput curve.
+
+Validation: native encrypt/decrypt and shared arbitration/backpressure in
+FSM/MCP modes; full concurrent six-size native performance run; measurement
+self-tests; archived evidence integrity; git diff --check.

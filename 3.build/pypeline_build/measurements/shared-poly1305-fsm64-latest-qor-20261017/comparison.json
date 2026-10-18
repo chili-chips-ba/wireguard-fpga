@@ -1,0 +1,112 @@
+{
+  "clock_mhz": 80,
+  "baseline": "shared-verify-fifo-qor-20261015",
+  "candidate": "shared-poly1305-fsm64-latest-qor-20261017",
+  "resources": [
+    {
+      "name": "LUTs",
+      "mcp": 108078,
+      "fsm": 104668,
+      "change_pct": -3.155128703343879
+    },
+    {
+      "name": "Flip-flops",
+      "mcp": 43955,
+      "fsm": 93372,
+      "change_pct": 112.42634512569674
+    },
+    {
+      "name": "DSP48s",
+      "mcp": 711,
+      "fsm": 413,
+      "change_pct": -41.91279887482418
+    },
+    {
+      "name": "BRAM tiles",
+      "mcp": 18.5,
+      "fsm": 18.5,
+      "change_pct": 0.0
+    }
+  ],
+  "throughput": [
+    {
+      "bytes": 16,
+      "encrypt": {
+        "mcp_gbps": 0.4517647058823529,
+        "fsm_gbps": 0.09365853658536587,
+        "change_pct": -79.26829268292683
+      },
+      "decrypt": {
+        "mcp_gbps": 0.3268085106382979,
+        "fsm_gbps": 0.07757575757575758,
+        "change_pct": -76.26262626262627
+      }
+    },
+    {
+      "bytes": 64,
+      "encrypt": {
+        "mcp_gbps": 1.8070588235294116,
+        "fsm_gbps": 0.37463414634146347,
+        "change_pct": -79.26829268292683
+      },
+      "decrypt": {
+        "mcp_gbps": 1.26680412371134,
+        "fsm_gbps": 0.3103030303030303,
+        "change_pct": -75.50505050505049
+      }
+    },
+    {
+      "bytes": 256,
+      "encrypt": {
+        "mcp_gbps": 6.826666666666666,
+        "fsm_gbps": 1.4985365853658539,
+        "change_pct": -78.04878048780488
+      },
+      "decrypt": {
+        "mcp_gbps": 4.509357798165137,
+        "fsm_gbps": 1.2412121212121212,
+        "change_pct": -72.47474747474747
+      }
+    },
+    {
+      "bytes": 1024,
+      "encrypt": {
+        "mcp_gbps": 9.63764705882353,
+        "fsm_gbps": 5.9941463414634155,
+        "change_pct": -37.80487804878049
+      },
+      "decrypt": {
+        "mcp_gbps": 9.63764705882353,
+        "fsm_gbps": 4.964848484848485,
+        "change_pct": -48.484848484848484
+      }
+    },
+    {
+      "bytes": 1420,
+      "encrypt": {
+        "mcp_gbps": 9.668085106382978,
+        "fsm_gbps": 7.723512747875355,
+        "change_pct": -20.113314447592057
+      },
+      "decrypt": {
+        "mcp_gbps": 9.668085106382978,
+        "fsm_gbps": 6.476009501187648,
+        "change_pct": -33.0166270783848
+      }
+    },
+    {
+      "bytes": 1920,
+      "encrypt": {
+        "mcp_gbps": 9.90967741935484,
+        "fsm_gbps": 9.124752475247526,
+        "change_pct": -7.920792079207917
+      },
+      "decrypt": {
+        "mcp_gbps": 9.90967741935484,
+        "fsm_gbps": 9.124752475247526,
+        "change_pct": -7.920792079207917
+      }
+    }
+  ],
+  "note": "Measured perf-top area; concurrent four-packet bursts. Both compared at 80 MHz, within both measured synthesis fmax values. Compiler revisions differ; this is a design-level comparison, not an isolated same-compiler A/B."
+}

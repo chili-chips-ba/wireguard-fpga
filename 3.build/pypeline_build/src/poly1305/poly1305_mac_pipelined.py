@@ -14,7 +14,7 @@ from pypeline import (
     uint1_t, uint8_t, make_uint_t, uint_to_array_le, array_to_uint_le, sim_assert,
 )
 from stream.stream import make_stream_t, make_stream_interface
-from stream.stream_multi_cycle import make_stream_auto_multi_cycle
+from poly1305_service import make_compute_service
 from aead_types import (
     axis128_intrf, poly1305_key_stream_intrf, poly1305_auth_tag_stream_intrf,
 )
@@ -183,8 +183,13 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
             power_index: index_t = x.next_lane + lanes - 1 - j
             if x.next_lane > j:
                 power_index = x.next_lane - 1 - j
+            # Constant-index reads let AUTO_FSM split the epilogue across states.
+            weight: uint130_t = 0
+            for k in range(lanes):
+                if power_index == k:
+                    weight = x.powers.values[k]
             tree[tree_size + j] = residue_mul_mod(
-                x.accumulators[j], x.powers.values[power_index]
+                x.accumulators[j], weight
             )
         for k in range(tree_size - 1, 0, -1):
             tree[k] = residue_add_mod(tree[2 * k], tree[2 * k + 1])
@@ -199,10 +204,10 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         prologue_mcp = adapters.prologue
         epilogue_mcp = adapters.epilogue
     else:
-        prologue_mcp = make_stream_auto_multi_cycle(
+        prologue_mcp = make_compute_service(
             prologue, name=f"poly1305_prologue_{direction}"
         )
-        epilogue_mcp = make_stream_auto_multi_cycle(
+        epilogue_mcp = make_compute_service(
             epilogue, name=f"poly1305_epilogue_{direction}"
         )
 

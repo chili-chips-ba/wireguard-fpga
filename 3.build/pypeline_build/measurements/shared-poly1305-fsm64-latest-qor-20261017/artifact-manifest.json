@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "archived_utc": "2026-10-18T15:11:00.645828+00:00",
+  "artifacts": {
+    "README.md": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/README.md",
+      "bytes": 5779,
+      "sha256": "431b92eb04049a376d5d2f27d3f52a27f9bd7b0613ba68b713d4776de426e9a8"
+    },
+    "blocks.csv": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/blocks.csv",
+      "bytes": 15498,
+      "sha256": "65cc9881548f9ab955024cd49c08981807a27f16acc4b1321cf078c3811e37e8"
+    },
+    "blocks.md": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/blocks.md",
+      "bytes": 27034,
+      "sha256": "14230ea513dc58e99f716746377d7c20ee7e27abd936fa317293724aaaadaeda"
+    },
+    "commit-message.txt": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/commit-message.txt",
+      "bytes": 941,
+      "sha256": "e2f2bbd4cafe458dfbdf4c137dbb3d5d9715f955f4f36dfab239a9708f4bf624"
+    },
+    "comparison.json": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/comparison.json",
+      "bytes": 2825,
+      "sha256": "48806c3186ec07a3aa1bda71849a9239a4b2f0025c505266956aa54947b3ae0a"
+    },
+    "comparison.md": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/comparison.md",
+      "bytes": 2461,
+      "sha256": "9ffeee9c152b49d924487d158f8b6af580d0f466de37f8028418927e2dfd18a9"
+    },
+    "compiler-snapshot.json": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/compiler-snapshot.json",
+      "bytes": 84378,
+      "sha256": "d92a0c60b6d90936311cfe22c06ecbb3f839962d1f6487c9952f04fb1801526a"
+    },
+    "compiler.patch": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/compiler.patch",
+      "bytes": 32579,
+      "sha256": "73ced007ae81a7bc9ca185a52d72e86407956ae0cbe6e9b7939605c0124fb6d8"
+    },
+    "design-source.tar.gz": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/design-source.tar.gz",
+      "bytes": 114454,
+      "sha256": "2c0989d316e83abd7c68e9126b541bd0537ec38266f4eb500ab4c17a17971cea"
+    },
+    "git-add.txt": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/git-add.txt",
+      "bytes": 716,
+      "sha256": "0da31282890af28421f9aa479bd4214ec049d1b62f44b7a9b6e0146fad0d8f01"
+    },
+    "launcher.sh": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/launcher.sh",
+      "bytes": 843,
+      "sha256": "0e4499ba868e5f295349ef5ce8e032bf85bdc715e61f121132466ed5a6ae5e12"
+    },
+    "perf-clocks.xdc": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/shared-poly1305-fsm-qor-20261016/clocks.xdc",
+      "bytes": 88,
+      "sha256": "4c16e0def841cc80ec23e4eda92b3d9f00d20681cd7e114db168fea4026b7d49"
+    },
+    "perf-inputs.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/shared-poly1305-fsm-qor-20261016/top/vivado_5580423b_64042954df2dd165.inputs.json",
+      "bytes": 174402,
+      "sha256": "d4ce6009f45dd053f151345561f60f27c8da6e94a3f06770262d7bd0da319a99"
+    },
+    "perf-source-provenance.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/shared-poly1305-fsm-qor-20261016/source_provenance.json",
+      "bytes": 22549,
+      "sha256": "8d5d8dff6fb9d5d5caf2b606b5a076eab22d824834cc5bd7fe200ac386c0fd3a"
+    },
+    "perf-sweep-history.json": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/shared-poly1305-fsm-qor-20261016/top/sweep_history.json",
+      "bytes": 241994,
+      "sha256": "33f10cd2e9f4c604b61006ac20324325ab32128c73740b026917df321888e8da"
+    },
+    "perf-vivado.log": {
+      "original_path": "/media/1TB/Dropbox/PipelineC/git/wireguard-fpga/3.build/pypeline_build/generated-files/shared-poly1305-fsm-qor-20261016/top/vivado_5580423b_64042954df2dd165.log",
+      "bytes": 19624529,
+      "sha256": "64aac488722bc88b34e6d1584e70e1fff7d075275ee5efbe6d07b6cb67deb76f"
+    },
+    "perf_raw.json": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/perf_raw.json",
+      "bytes": 474701,
+      "sha256": "ced517daad8d2d5f15c590a542a340984e8e2bef37c6097156f13c026cdace49"
+    },
+    "pypelinec.log": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/pypelinec.log",
+      "bytes": 1357504,
+      "sha256": "41425b81cd6ef6de469e7c37b023021aa5dfb8b3895b82a88f5a81d75873aea7"
+    },
+    "results.json": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/results.json",
+      "bytes": 588915,
+      "sha256": "ad42f87d02556eb7a1ef7911ef8a247292dd96df2321f058ed7ffbad6619d5e6"
+    },
+    "summary.csv": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/summary.csv",
+      "bytes": 3965,
+      "sha256": "0088cf285695888c221f8d9eee3e730c56fa1d8a85fcdfca9b6ec3d7bbc89c0e"
+    },
+    "summary.md": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/summary.md",
+      "bytes": 3898,
+      "sha256": "8a71a4cfec66f262019542ca296ce29efdfa0f30e55fe4a8ce76f40e6f5546af"
+    },
+    "taps.csv": {
+      "original_path": "measurements/shared-poly1305-fsm64-latest-qor-20261017/taps.csv",
+      "bytes": 132831,
+      "sha256": "17234f6966816a15e1e428043fed8df3163aded25f97707ee79ca90bbdab3ff3"
+    }
+  },
+  "note": "Packaging retained evidence, not a new synthesis or simulation."
+}

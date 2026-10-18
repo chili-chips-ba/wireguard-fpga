@@ -396,7 +396,7 @@ TEXT = {
     ),
     "arbitration_intro": (
         "**Shared-pipeline arbitration** — includes ChaCha20 and each shared "
-        "Poly1305 MCP separately. *Resource not ready* means the selected "
+        "Poly1305 compute separately. *Resource not ready* means the selected "
         "request cannot launch (compute busy or output backpressure); "
         "*contention* means the other side holds the slot and wants it; "
         "*wasted slot* means the other side holds an empty slot. Current "
@@ -581,7 +581,7 @@ def markdown_poly1305_lifecycle(phases):
         "input gaps; setup includes the prologue handshake; finalization includes "
         "the epilogue handshake. Tag stalls are a subset of tag-output cycles, "
         "not an additional cost. IDLE/key wait and settle cycles remain in JSON. "
-        "MCP request waits (total clocks in the window) are subsets of "
+        "Compute request waits (total clocks in the window) are subsets of "
         "setup/finalization, including sharing contention. These are MAC-local "
         "costs, not additive whole-datapath latency:",
         "",
@@ -619,7 +619,7 @@ def markdown_poly1305_services(phases):
     if not rows:
         return []
     return [
-        "**Shared Poly1305 MCP service** — physical-service occupancy, separate "
+        "**Shared Poly1305 compute service** — physical-service occupancy, separate "
         "from each requester's arbitration wait and private body II. Compute "
         "cycles run from accepted launch until a valid response; output stalls "
         "are a subset of response-valid cycles, not additional compute time:",

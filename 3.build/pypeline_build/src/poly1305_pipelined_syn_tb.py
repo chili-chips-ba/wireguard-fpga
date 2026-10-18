@@ -262,8 +262,8 @@ elif MODE == "mac":
                         for block in range(count) for byte in range(16))
         EXPECTED.append(int.from_bytes(Poly1305.generate_tag(key, message), "little"))
     NUM_CASES = len(cases)
-    MAX_CYCLES = 4 * sum(n + LANES + mac.prologue_mcp.mcp.latency
-                         + mac.epilogue_mcp.mcp.latency + stall + 32
+    MAX_CYCLES = 4 * sum(n + LANES + mac.prologue_mcp.compute_tag.latency
+                         + mac.epilogue_mcp.compute_tag.latency + stall + 32
                          for n, _, _, stall in cases)
 
     @hw_func

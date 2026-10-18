@@ -101,6 +101,7 @@ CONFIG = {
     "design": wireguard_env.DESIGN,
     "target_mhz": wireguard_env.TARGET_MHZ,
     "poly1305_mult_impl": wireguard_env.POLY1305_MULT_IMPL,
+    "poly1305_compute_impl": wireguard_env.POLY1305_COMPUTE_IMPL,
     "poly1305": implementation_metadata(),
     "sharing": wireguard_env.SHARING,
     "buffering": buffering_metadata(),

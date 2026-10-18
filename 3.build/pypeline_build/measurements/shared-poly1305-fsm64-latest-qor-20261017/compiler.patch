@@ -1,0 +1,746 @@
+diff --git a/docs/AUTO_FSM_DESIGN.md b/docs/AUTO_FSM_DESIGN.md
+index b8834d03..26f45006 100644
+--- a/docs/AUTO_FSM_DESIGN.md
++++ b/docs/AUTO_FSM_DESIGN.md
+@@ -371,6 +371,12 @@ after every placement is quadratic per state — invisible when a DAG held a few
+ dozen operations, and fatal now the area search routinely scores candidates
+ holding thousands.
+ 
++The ordering check (rule 3) runs for every placement attempt, millions of times
++in one area search on the WireGuard Poly1305 kernels. The unit-edge graph is
++acyclic before each check, so any cycle the new edges close runs through one of
++their targets. `_edges_stay_acyclic` therefore searches only from those targets,
++over the existing edges plus the new ones, without copying the graph.
++
+ If nothing at all fits an empty state, the cheapest ready operation is forced in
+ alone and the schedule is flagged **`at_floor`**: one indivisible operation that
+ no number of extra states can speed up. The driver stops tightening when it sees
+@@ -715,7 +721,14 @@ state instead of `log2(states)`, and with a binary encoder per shared unit,
+ since the operand mux is a measured balanced tree that needs a binary select.
+ Measured results are in §4. `auto` independently performs the area search for
+ v3 and onehot, rejects either encoding if it violates the timing budget or
+-`max_latency`, and selects the smaller estimate. The resolved encoding is
++`max_latency`, and selects the smaller estimate. The encoding reaches packing
++and binding only through the select-table delay `CTL_LUT_DU`, which is 0. So
++`HARVEST_AUTO_FSM_SCHEDULES` gives both searches one memo per call site
++(`BUILD_SCHEDULE`'s `build_memo`). A point the v3 search already scheduled is
++reused by the onehot search with only `ctl` and the entity name restamped, and
++only its area is estimated again. The two searches still rank and walk
++independently. On the WireGuard prologue they visited the same 291 points.
++The resolved encoding is
+ stored in the schedule and printed with both candidate costs. `v2` remains an
+ explicit regression/A-B mode rather than an automatic candidate.
+ 
+@@ -829,6 +842,11 @@ multiplies and 260-bit adds, and forced descent into all of them at once.
+ On `auto_fsm_timing_iter_test` (120 MHz, sky130), the measured step met timing
+ on the third schedule pass with 2 states (122.8 MHz). The fixed step needed a
+ fourth pass and 3 states (128.6 MHz).
++Each tightening trial reschedules only the blamed FSMs, whose budgets moved;
++the others keep their schedule, so "changed" means a blamed FSM changed. Each
++trial is a full area search, so an unblamed FSM rescheduled there would cost
++as much as a blamed one. The next pass reschedules every FSM from its newly
++measured delays as before.
+ The loop stops when:
+ 
+ - timing is met;
+diff --git a/docs/SYN_DESIGN.md b/docs/SYN_DESIGN.md
+index 77a0dbcf..dd57ed79 100644
+--- a/docs/SYN_DESIGN.md
++++ b/docs/SYN_DESIGN.md
+@@ -516,7 +516,12 @@ what the first parse read
+ ([PY_TO_LOGIC_DESIGN.md](PY_TO_LOGIC_DESIGN.md#repeated-parse_file-support-the-pin-and-confirm-loops-foundation)).
+ Neither design source nor design parameters (`-D`) are part of any identity; only the
+ HDL they produce is. A parameter only simulation code reads therefore reuses every
+-result.
++result. That HDL does carry source positions: each entity's header comment names its
++Python file and line, and instance and signal names embed `<file>_py_l<line>_c<col>`
++([PY_TO_LOGIC_DESIGN.md](PY_TO_LOGIC_DESIGN.md#submodule-instance-names)). So any
++edit that shifts lines in a Python file, even one added comment line in a library file
++under `include/pypeline/`, re-synthesizes every entity defined below it in that file
++once, with unchanged names and usually unchanged delays.
+ 
+ ### Shared synthesis store (`--syn_cache DIR`)
+ 
+diff --git a/src/AUTO_FSM.py b/src/AUTO_FSM.py
+index 717a9128..3473eaf1 100644
+--- a/src/AUTO_FSM.py
++++ b/src/AUTO_FSM.py
+@@ -66,10 +66,13 @@ shared machinery, docs/SYN_DESIGN.md for the delay model, and
+ docs/SWEEP_DESIGN.md for the sweep this rides on.
+ """
+ 
++import copy
+ import hashlib
+ import json
+ import math
+ import os
++import pickle
++import zlib
+ 
+ import LOGIC
+ import AUTO
+@@ -166,6 +169,9 @@ AREA_PER_STATE_CTL = 0.2
+ # 21% faster than v2's (48.3 vs 39.9 MHz) at an identical schedule.
+ # Kept as a named tunable in case a design ever shows the select path on the
+ # critical path; the honest fix is a max() chain fit, noted in AUTO_FSM_DESIGN.
++# This is the only way the encoding reaches packing, so BUILD_SCHEDULE's
++# cross-encoding memo keys on it: while it is 0, v3, onehot and v2 schedule
++# identically. Any new ctl-dependent packing input must join that memo key.
+ CTL_LUT_DU = 0
+ 
+ # ── Area sweep ────────────────────────────────────────────────────────────
+@@ -243,8 +249,8 @@ MAX_SWEEP_DAG_NODES = 20000
+ # Advisory threshold (never a cap -- see _warn_large_schedule): folds onto one
+ # shared unit past which BUILD_SCHEDULE prints a one-time notice before
+ # calling SCHEDULE_DAG. AUTO_FSM's own scheduling cost is superlinear in
+-# folds-per-unit (SCHEDULE_DAG's placement search deep-copies and re-walks
+-# the whole FU-edge graph per attempt; ALLOCATE_REGISTERS and the
++# folds-per-unit (SCHEDULE_DAG retries placements state by state, each
++# attempt walking the FU-edge graph reachable from it; ALLOCATE_REGISTERS and the
+ # operand-mux plan both scale with live cross-state values), and a single
+ # schedule at a few hundred folds can run for a long time with nothing
+ # printed -- exactly what happened when register_soft_mult()'s default
+@@ -1024,19 +1030,19 @@ def ALLOCATE_REGISTERS(nodes, output_ref, n_states, cross_fu_types=()):
+     cross_fu_types = set(cross_fu_types)
+     # per register: (c type, producing units, first state free)
+     free_at = []
++    # c type -> its registers' indices, ascending: only these can hold a value
++    # of that type, so the search below never scans the others.
++    regs_of_type = {}
+     assignment = {}
+     reg_types = {}
+     for nid in order:
+         ctype, lo, hi = ranges[nid]
+         fu = nodes[nid].get("fu")
+         candidates = []
+-        for idx, (reg_type, reg_fus, busy_until) in enumerate(free_at):
++        for idx in regs_of_type.get(ctype, ()):
++            _reg_type, reg_fus, busy_until = free_at[idx]
+             same_source = fu in reg_fus
+-            if (
+-                reg_type == ctype
+-                and (same_source or ctype in cross_fu_types)
+-                and busy_until < lo
+-            ):
++            if (same_source or ctype in cross_fu_types) and busy_until < lo:
+                 # Preserve a single-source register whenever possible; after
+                 # that, prefer the register with the fewest existing sources.
+                 # Merely taking the first free interval can introduce a mux
+@@ -1047,6 +1053,7 @@ def ALLOCATE_REGISTERS(nodes, output_ref, n_states, cross_fu_types=()):
+         if chosen is None:
+             chosen = len(free_at)
+             free_at.append((ctype, frozenset((fu,)), hi))
++            regs_of_type.setdefault(ctype, []).append(chosen)
+             reg_types[chosen] = ctype
+         else:
+             reg_fus = free_at[chosen][1] | frozenset((fu,))
+@@ -1069,12 +1076,16 @@ def _stable_op_key(op):
+     return json.dumps(op, sort_keys=True, default=str, separators=(",", ":"))
+ 
+ 
+-def _rolling_replacements(schedule):
+-    """(glue node, use state) -> structural rolling-register bit identity."""
++def _rolling_replacements(schedule, output_packs=None):
++    """(glue node, use state) -> structural rolling-register bit identity.
++    `output_packs` is the schedule's _OUTPUT_SHIFT_PACKS when the caller has
++    already computed it."""
++    if output_packs is None:
++        output_packs = _OUTPUT_SHIFT_PACKS(
++            schedule["nodes"], schedule["output"], schedule["n_states"]
++        )
+     out = {}
+-    for pack in _OUTPUT_SHIFT_PACKS(
+-        schedule["nodes"], schedule["output"], schedule["n_states"]
+-    ):
++    for pack in output_packs:
+         fusion = pack.get("source_fusion")
+         if fusion is None:
+             continue
+@@ -1372,30 +1383,35 @@ def _factor_plan_muxes(plan):
+             yield from _factor_plan_muxes(child)
+ 
+ 
+-def _fu_nodes_in_emit_order(schedule, fu):
++def _fu_nodes_in_emit_order(schedule, fu, users=None):
+     nodes = schedule["nodes"]
++    if users is not None:
++        fu_nids = users.get(fu, ())
++    else:
++        fu_nids = (nid for nid in schedule["node_order"] if nodes[nid].get("fu") == fu)
+     return sorted(
+-        (
+-            (nid, nodes[nid])
+-            for nid in schedule["node_order"]
+-            if nodes[nid].get("fu") == fu
+-        ),
++        ((nid, nodes[nid]) for nid in fu_nids),
+         key=lambda pair: (pair[1]["state"], pair[0]),
+     )
+ 
+ 
+-def _operand_mux_plan(schedule, fu, reg_of):
++def _operand_mux_plan(schedule, fu, reg_of, replacements=None, users=None):
+     """Per-port distinct operand rows and state-to-row mappings for one FU.
+ 
+     Returns `(fu_nodes, ports)`, where each port is a dict containing the
+     representative node ids and one class index per FU user.  Class numbering
+     is first-use order, which is deterministic and keeps generated tables easy
+-    to audit.
++    to audit. A caller planning every FU of one schedule passes what is the
++    same for all of them, so it is computed once: `replacements` (the
++    schedule's _rolling_replacements) and `users` (FU -> its node ids in
++    node_order, which _fu_nodes_in_emit_order would otherwise rescan the
++    whole schedule for).
+     """
+-    fu_nodes = _fu_nodes_in_emit_order(schedule, fu)
++    fu_nodes = _fu_nodes_in_emit_order(schedule, fu, users)
+     if not fu_nodes:
+         return fu_nodes, []
+-    replacements = _rolling_replacements(schedule)
++    if replacements is None:
++        replacements = _rolling_replacements(schedule)
+     # Shared only within this immutable plan computation; never carried across
+     # schedule mutations or rebindings. All ports/users see the same register
+     # map and rolling replacements.
+@@ -1536,13 +1552,19 @@ def SCHEDULE_DAG(dag, budget_du, mux_du_of=None, max_states=None, copies=None):
+     worst_state_du = 0
+     state = 0
+ 
++    # entity -> its units' ids, lowest copy first; built once, not per attempt.
++    fu_ids = {}
++
+     def free_fu(entity, fus_used):
+         """Lowest-numbered copy of `entity` not yet busy this state. Lowest
+         first (rather than round-robin) deliberately: it keeps the extra copies
+         lightly loaded, so their operand muxes stay small and any copy that
+         ends up unused disappears entirely."""
+-        for i in range(max(1, copies.get(entity, 1))):
+-            fu = _fu_id(entity, i)
++        ids = fu_ids.get(entity)
++        if ids is None:
++            ids = [_fu_id(entity, i) for i in range(max(1, copies.get(entity, 1)))]
++            fu_ids[entity] = ids
++        for fu in ids:
+             if fu not in fus_used:
+                 return fu
+         return None
+@@ -1647,17 +1669,20 @@ def _fu_entity(fu_id):
+ 
+ 
+ def _edges_stay_acyclic(fu_edges, new_edges):
+-    trial = {k: set(v) for k, v in fu_edges.items()}
++    """Would adding `new_edges` to the (acyclic) `fu_edges` keep it acyclic?
++
++    SCHEDULE_DAG asks this for every placement attempt, so it neither copies
++    the graph nor walks all of it: since `fu_edges` has no cycle, any cycle
++    the union has runs through a new edge, and so through that edge's target.
++    A depth-first search of the union from the new targets alone therefore
++    finds a cycle exactly when one exists."""
++    added = {}
+     for a, b in new_edges:
+         if a == b:
+             # A unit feeding itself within one state would need two copies of
+             # it live at once -- exactly what sharing forbids.
+             return False
+-        trial.setdefault(a, set()).add(b)
+-    return _is_acyclic(trial)
+-
+-
+-def _is_acyclic(edges):
++        added.setdefault(a, set()).add(b)
+     color = {}
+ 
+     def visit(n):
+@@ -1667,13 +1692,16 @@ def _is_acyclic(edges):
+         if state == 2:
+             return True
+         color[n] = 1
+-        for m in edges.get(n, ()):
++        for m in fu_edges.get(n, ()):
++            if not visit(m):
++                return False
++        for m in added.get(n, ()):
+             if not visit(m):
+                 return False
+         color[n] = 2
+         return True
+ 
+-    return all(visit(n) for n in list(edges))
++    return all(visit(b) for targets in added.values() for b in targets)
+ 
+ 
+ def _topological_fu_order(fus, fu_edges):
+@@ -1780,6 +1808,7 @@ def BUILD_SCHEDULE(
+     unshared=(),
+     ctl=DEFAULT_CTL,
+     func_entity_override=None,
++    build_memo=None,
+ ):
+     """Schedule + bind one AUTO_FSM'd function into a plain (picklable,
+     comparable) schedule dict.
+@@ -1802,15 +1831,90 @@ def BUILD_SCHEDULE(
+     to cross one. For a CHEAP operation (a one-bit OR costs less than the
+     two-bit multiplexer selecting its operands) sharing is a straight loss, and
+     v1 had no way to decline it.
+-    """
+-    import pypeline
+ 
++    `build_memo`, when given, is a dict shared by every call for ONE
++    (parser_state, key, tag, prev_schedule) -- HARVEST_AUTO_FSM_SCHEDULES
++    keeps one per call site when it searches more than one encoding. Packing
++    and binding see the control encoding only through the select-table delay
++    CTL_LUT_DU, so a point already scheduled under one encoding is reused for
++    another with the same delay term, with only `ctl` and the entity name
++    restamped (_restamp_ctl). A refusal (AutoError) is remembered and raised
++    again the same way.
++    """
+     # `auto` is a driver-level request because each encoding needs its own full
+     # area sweep. Keep the low-level builder useful to direct callers/tests by
+     # giving it the historical binary-table rendering when asked in isolation;
+     # HARVEST_AUTO_FSM_SCHEDULES expands auto into both candidates below.
+     if ctl == "auto":
+         ctl = "v3"
++    args = (
++        parser_state, key, tag, budget_scale, prev_schedule, opened, max_nodes,
++        unshared, ctl, func_entity_override,
++    )
++    if build_memo is None:
++        return _BUILD_SCHEDULE(*args)
++    memo_key = (
++        func_entity_override,
++        budget_scale,
++        tuple(sorted(set(opened))),
++        max_nodes,
++        tuple(tuple(pair) for pair in unshared),
++        0 if ctl == "v2" else CTL_LUT_DU,
++    )
++    hit = build_memo.get(memo_key)
++    if hit is None:
++        try:
++            schedule = _BUILD_SCHEDULE(*args)
++        except AutoFsmInternalError:
++            raise
++        except AUTO.AutoError as e:
++            # A copy: the raised exception's traceback holds every frame
++            # under it, including the refused DAG (up to MAX_SWEEP_DAG_NODES
++            # operations) and the search's candidate schedules.
++            build_memo[memo_key] = copy.copy(e)
++            raise
++        # Kept compressed, and taken before callers add their scoring fields.
++        # A search visits hundreds of points, and a live schedule of a
++        # thousand-operation function is ~10 MB of Python objects against
++        # ~80 KB here (WireGuard's Poly1305 epilogue).
++        build_memo[memo_key] = zlib.compress(
++            pickle.dumps(schedule, pickle.HIGHEST_PROTOCOL), 1
++        )
++        return schedule
++    if isinstance(hit, AUTO.AutoError):
++        raise copy.copy(hit)
++    return _restamp_ctl(pickle.loads(zlib.decompress(hit)), ctl)
++
++
++# Fields BUILD_SCHEDULE adds after hashing the schedule core into the entity
++# name: the name itself and the diagnostic-only descent reports.
++_SCHEDULE_UNHASHED_KEYS = ("entity", "descend_truncated", "descend_blocked")
++
++
++def _restamp_ctl(schedule, ctl):
++    """A memoized schedule (see BUILD_SCHEDULE's `build_memo`), set in place
++    to control encoding `ctl`, with the entity name rehashed to match."""
++    schedule["ctl"] = ctl
++    core = {k: v for k, v in schedule.items() if k not in _SCHEDULE_UNHASHED_KEYS}
++    schedule["entity"] = _schedule_entity_name(schedule["func_entity"], core)
++    return schedule
++
++
++def _BUILD_SCHEDULE(
++    parser_state,
++    key,
++    tag,
++    budget_scale,
++    prev_schedule,
++    opened,
++    max_nodes,
++    unshared,
++    ctl,
++    func_entity_override,
++):
++    """BUILD_SCHEDULE without the memo; `ctl` is already resolved from auto."""
++    import pypeline
++
+     func_entity = func_entity_override or AUTO._entity_key_for_callable(parser_state, tag.func)
+     if func_entity is None:
+         raise AUTO.AutoError(
+@@ -2012,6 +2116,7 @@ def BUILD_SCHEDULE(
+         "unshared": [list(pair) for pair in unshared],
+     }
+     _check_nonempty_schedule(parser_state, key, func_entity, nodes)
++    # Everything added below is listed in _SCHEDULE_UNHASHED_KEYS.
+     schedule = dict(schedule_core)
+     schedule["entity"] = _schedule_entity_name(func_entity, schedule_core)
+     # NOT part of schedule_core: it must never affect _schedule_entity_name's
+@@ -2093,6 +2198,9 @@ def _replicate_to_cap(dag, budget_du, mux_du_of, max_states, folds, copies):
+     by bisection (a handful of reschedules; still no synthesis).
+     """
+     base = dict(copies)
++    # Different k often give every entity the same unit count; SCHEDULE_DAG
++    # is a pure function of the counts, so such a k reuses the plan.
++    plans = {}
+ 
+     def trial(k):
+         copies.clear()
+@@ -2101,7 +2209,10 @@ def _replicate_to_cap(dag, budget_du, mux_du_of, max_states, folds, copies):
+             need = min(n_ops, -(-n_ops // k))
+             if need > copies.get(entity, 1):
+                 copies[entity] = need
+-        return SCHEDULE_DAG(dag, budget_du, mux_du_of, max_states, copies)
++        counts = tuple(sorted(copies.items()))
++        if counts not in plans:
++            plans[counts] = SCHEDULE_DAG(dag, budget_du, mux_du_of, max_states, copies)
++        return plans[counts]
+ 
+     best = trial(1)
+     best_copies = dict(copies)
+@@ -2238,8 +2349,9 @@ def ESTIMATE_SCHEDULE_AREA(parser_state, schedule, memo=None, tally=None):
+             # register (shift, transformed source, raw input field).
+             total += AUTO._mux_bank_area_um2(parser_state, pack["ctype"], tally)
+     mux_plans = {}
++    replacements = _rolling_replacements(schedule, output_packs)
+     for fu in sorted(users):
+-        fu_nodes, ports = _operand_mux_plan(schedule, fu, reg_of)
++        fu_nodes, ports = _operand_mux_plan(schedule, fu, reg_of, replacements, users)
+         mux_plans[fu] = (fu_nodes, ports)
+         if not fu_nodes:
+             continue
+@@ -2393,6 +2505,7 @@ def FORCE_SCHEDULE(
+     ctl=DEFAULT_CTL,
+     open_patterns=(),
+     unshare_patterns=(),
++    build_memo=None,
+ ):
+     """Build one explicitly-chosen point of the search space instead of
+     searching: open these entities, give those entities that many units.
+@@ -2408,7 +2521,8 @@ def FORCE_SCHEDULE(
+     never reuse measured delays belonging to a different one.
+     """
+     anchor = BUILD_SCHEDULE(
+-        parser_state, key, tag, budget_scale, prev_schedule, ctl=ctl
++        parser_state, key, tag, budget_scale, prev_schedule, ctl=ctl,
++        build_memo=build_memo,
+     )
+     opened = sorted({_resolve_entity_pattern(anchor, p) for p in open_patterns})
+     unshared = {}
+@@ -2424,6 +2538,7 @@ def FORCE_SCHEDULE(
+         None,
+         tuple(sorted(unshared.items())),
+         ctl=ctl,
++        build_memo=build_memo,
+     )
+     schedule["forced"] = True
+     return schedule
+@@ -2471,6 +2586,7 @@ def _SWEEP_MIN_AREA_SCHEDULE(
+     ctl=DEFAULT_CTL,
+     debug=False,
+     func_entity_override=None,
++    build_memo=None,
+ ):
+     """Search for the SMALLEST schedule that still meets the clock goal and the
+     latency cap, by opening operations up one entity at a time.
+@@ -2512,7 +2628,7 @@ def _SWEEP_MIN_AREA_SCHEDULE(
+     memo = {}
+     anchor = BUILD_SCHEDULE(
+         parser_state, key, tag, budget_scale, prev_schedule, ctl=ctl,
+-        func_entity_override=func_entity_override,
++        func_entity_override=func_entity_override, build_memo=build_memo,
+     )
+     anchor_cost = ESTIMATE_SCHEDULE_AREA(parser_state, anchor, memo)
+     anchor_excess = _state_excess(anchor)
+@@ -2568,6 +2684,7 @@ def _SWEEP_MIN_AREA_SCHEDULE(
+                 tuple(sorted(trial_unshared.items())),
+                 ctl=ctl,
+                 func_entity_override=func_entity_override,
++                build_memo=build_memo,
+             )
+         except AutoFsmInternalError:
+             raise
+@@ -2716,6 +2833,7 @@ def _SWEEP_MIN_AREA_SCHEDULE(
+ 
+ def SWEEP_MIN_AREA_SCHEDULE(
+     parser_state, key, tag, budget_scale, prev_schedule=None, ctl=DEFAULT_CTL, debug=False,
++    build_memo=None,
+ ):
+     """Search original and combinationally rewritten graphs by total FSM area.
+ 
+@@ -2724,6 +2842,7 @@ def SWEEP_MIN_AREA_SCHEDULE(
+     """
+     best = _SWEEP_MIN_AREA_SCHEDULE(
+         parser_state, key, tag, budget_scale, prev_schedule, ctl=ctl, debug=debug,
++        build_memo=build_memo,
+     )
+     entity = AUTO._entity_key_for_callable(parser_state, tag.func)
+     choices = list(getattr(parser_state, "pypeline_comb_area_opt_candidates", {}).get(entity, []))
+@@ -2742,7 +2861,7 @@ def SWEEP_MIN_AREA_SCHEDULE(
+         try:
+             candidate = _SWEEP_MIN_AREA_SCHEDULE(
+                 parser_state, key, tag, budget_scale, prev_schedule, ctl=ctl, debug=debug,
+-                func_entity_override=candidate_entity,
++                func_entity_override=candidate_entity, build_memo=build_memo,
+             )
+         except AutoFsmInternalError:
+             raise
+@@ -2825,8 +2944,10 @@ def HARVEST_AUTO_FSM_SCHEDULES(
+     sweep_debug=False,
+     force_open=(),
+     force_unshare=(),
++    keys=None,
+ ):
+-    """Schedule every AUTO_FSM call site in the design.
++    """Schedule every AUTO_FSM call site in the design, or only those in
++    `keys` when given.
+ 
+     Returns canonical_key -> schedule dict, ready to hand to
+     pypeline.SET_AUTO_FSM_SCHEDULE_CACHE before re-executing the design file.
+@@ -2839,6 +2960,8 @@ def HARVEST_AUTO_FSM_SCHEDULES(
+     tags = GET_TAGS(parser_state)
+     schedules = {}
+     for key in sorted(COLLECT_AUTO_FSM_KEYS(parser_state)):
++        if keys is not None and key not in keys:
++            continue
+         tag = tags.get(key)
+         if tag is None:
+             raise AUTO.AutoError(
+@@ -2847,6 +2970,10 @@ def HARVEST_AUTO_FSM_SCHEDULES(
+             )
+         budget_scale = budget_scales.get(key, DEFAULT_BUDGET_SCALE)
+         prev = prev_schedules.get(key)
++        modes = ("v3", "onehot") if ctl == "auto" else (ctl,)
++        # Shared by the encodings below: under `auto` the onehot search
++        # reuses every point the v3 search already scheduled.
++        build_memo = {} if len(modes) > 1 else None
+ 
+         def build_mode(mode):
+             if force_open or force_unshare:
+@@ -2862,6 +2989,7 @@ def HARVEST_AUTO_FSM_SCHEDULES(
+                     ctl=mode,
+                     open_patterns=force_open,
+                     unshare_patterns=force_unshare,
++                    build_memo=build_memo,
+                 )
+             if area_sweep:
+                 return SWEEP_MIN_AREA_SCHEDULE(
+@@ -2872,10 +3000,13 @@ def HARVEST_AUTO_FSM_SCHEDULES(
+                     prev,
+                     ctl=mode,
+                     debug=sweep_debug,
++                    build_memo=build_memo,
+                 )
+-            return BUILD_SCHEDULE(parser_state, key, tag, budget_scale, prev, ctl=mode)
++            return BUILD_SCHEDULE(
++                parser_state, key, tag, budget_scale, prev, ctl=mode,
++                build_memo=build_memo,
++            )
+ 
+-        modes = ("v3", "onehot") if ctl == "auto" else (ctl,)
+         variants = []
+         for mode in modes:
+             candidate = build_mode(mode)
+@@ -3412,15 +3543,22 @@ def DO_SCHEDULE_PASSES(parser_state, args, src_file):
+                     f"for {sorted(blamed)}",
+                     flush=True,
+                 )
+-            trial = HARVEST_AUTO_FSM_SCHEDULES(
+-                parser_state,
+-                budget_scales,
+-                schedules,
+-                area_sweep=not args.auto_fsm_no_area_sweep,
+-                ctl=args.auto_fsm_ctl,
+-                sweep_debug=args.auto_fsm_sweep_debug,
+-                force_open=force_open,
+-                force_unshare=force_unshare,
++            # Only the blamed FSMs' budgets moved, so only they are
++            # rescheduled; the others keep this pass's schedule. The next
++            # pass reschedules every FSM from its newly measured delays.
++            trial = dict(schedules)
++            trial.update(
++                HARVEST_AUTO_FSM_SCHEDULES(
++                    parser_state,
++                    budget_scales,
++                    schedules,
++                    area_sweep=not args.auto_fsm_no_area_sweep,
++                    ctl=args.auto_fsm_ctl,
++                    sweep_debug=args.auto_fsm_sweep_debug,
++                    force_open=force_open,
++                    force_unshare=force_unshare,
++                    keys=blamed,
++                )
+             )
+             if not SCHEDULES_EQUAL(trial, schedules):
+                 changed = True
+diff --git a/src/tests/pypeline_tests/inst/auto_fsm_unit_test.py b/src/tests/pypeline_tests/inst/auto_fsm_unit_test.py
+index f4865cc1..ab3aca49 100644
+--- a/src/tests/pypeline_tests/inst/auto_fsm_unit_test.py
++++ b/src/tests/pypeline_tests/inst/auto_fsm_unit_test.py
+@@ -493,6 +493,57 @@ def main():
+                      "op": {"kind": "call"}, "operands": [["node", last]]}
+     plan = AUTO_FSM._INPUT_STORAGE_PLAN(diamond, ["node", "op"], 1)
+     check(plan["stored_fields"][0]["field"] == "a", "linear input-storage walk preserves field storage")
++
++    # SCHEDULE_DAG's unit-order check searches only from the new edges'
++    # targets. It must answer exactly what checking the whole graph with the
++    # new edges added answers, on graphs that are acyclic before the check.
++    def acyclic_whole_graph(edges, new_edges):
++        trial = {k: set(v) for k, v in edges.items()}
++        for a, b in new_edges:
++            if a == b:
++                return False
++            trial.setdefault(a, set()).add(b)
++        indegree = {n: 0 for n in trial}
++        for targets in trial.values():
++            for m in targets:
++                indegree[m] = indegree.get(m, 0) + 1
++        ready = [n for n, d in indegree.items() if d == 0]
++        seen = 0
++        while ready:
++            n = ready.pop()
++            seen += 1
++            for m in trial.get(n, ()):
++                indegree[m] -= 1
++                if indegree[m] == 0:
++                    ready.append(m)
++        return seen == len(indegree)
++
++    import random
++
++    rng = random.Random(1)
++    mismatches = 0
++    n_cyclic = 0
++    for _trial in range(3000):
++        n = rng.randint(2, 9)
++        order = list(range(n))
++        rng.shuffle(order)
++        edges = {}
++        for i in range(n):
++            for j in range(i + 1, n):
++                if rng.random() < 0.3:
++                    edges.setdefault(order[i], set()).add(order[j])
++        new_edges = {
++            (rng.randrange(n), rng.randrange(n)) for _e in range(rng.randint(1, 3))
++        }
++        expected = acyclic_whole_graph(edges, new_edges)
++        n_cyclic += not expected
++        if AUTO_FSM._edges_stay_acyclic(edges, new_edges) != expected:
++            mismatches += 1
++    check(
++        mismatches == 0 and 0 < n_cyclic < 3000,
++        f"the unit-order cycle check matches a whole-graph check on 3000 random "
++        f"graphs ({n_cyclic} of them closing a cycle, {mismatches} mismatches)",
++    )
+     with tempfile.TemporaryDirectory() as tmp:
+         print("[binding and scheduling]")
+         ps, key, tag = parse_design(tmp, mhz=25.0, name="d1")
+@@ -677,6 +728,14 @@ def main():
+             < 0.01,
+             "auto returns the lowest-area feasible encoding",
+         )
++        # The tighten loop reschedules only the FSMs blamed for a miss.
++        check(
++            AUTO_FSM.HARVEST_AUTO_FSM_SCHEDULES(ps, area_sweep=False, keys=set()) == {}
++            and set(
++                AUTO_FSM.HARVEST_AUTO_FSM_SCHEDULES(ps, area_sweep=False, keys={key})
++            ) == {key},
++            "keys= limits a harvest to the named call sites",
++        )
+ 
+         print("[budget controls state count]")
+         ps2, key2, tag2 = parse_design(tmp, mhz=25.0, name="d2")
+@@ -1305,6 +1364,90 @@ def main():
+             "names the generated entity, so it has to be)",
+         )
+ 
++        print("[control encodings share one packing memo]")
++        # Under ctl auto the v3 and onehot searches visit mostly the same
++        # points; packing does not depend on the encoding (CTL_LUT_DU == 0),
++        # so the second search reuses the first's schedules. The reused ones
++        # must be byte-identical to building fresh, entity name included.
++        def dumps(schedule):
++            return json.dumps(schedule, sort_keys=True, default=str)
++
++        built = []
++        real_build = AUTO_FSM._BUILD_SCHEDULE
++
++        def counting_build(*args):
++            built.append(args[8])
++            return real_build(*args)
++
++        AUTO_FSM._BUILD_SCHEDULE = counting_build
++        try:
++            fresh_oh = AUTO_FSM.SWEEP_MIN_AREA_SCHEDULE(ps6, key6, tag6, 0.9, ctl="onehot")
++            n_fresh = len(built)
++            memo = {}
++            memo_v3 = AUTO_FSM.SWEEP_MIN_AREA_SCHEDULE(
++                ps6, key6, tag6, 0.9, ctl="v3", build_memo=memo
++            )
++            del built[:]
++            memo_oh = AUTO_FSM.SWEEP_MIN_AREA_SCHEDULE(
++                ps6, key6, tag6, 0.9, ctl="onehot", build_memo=memo
++            )
++            n_memo = len(built)
++            plain_oh = AUTO_FSM.BUILD_SCHEDULE(ps6, key6, tag6, 0.9, ctl="onehot")
++            restamped_oh = AUTO_FSM.BUILD_SCHEDULE(
++                ps6, key6, tag6, 0.9, ctl="onehot", build_memo=memo
++            )
++            del built[:]
++            refusals = []
++            for _attempt in range(2):
++                try:
++                    AUTO_FSM.BUILD_SCHEDULE(
++                        ps6, key6, tag6, 0.9, None, (adder,), 1, ctl="onehot",
++                        build_memo=memo,
++                    )
++                except AUTO.AutoError as e:
++                    refusals.append(str(e))
++            n_refused = len(built)
++        finally:
++            AUTO_FSM._BUILD_SCHEDULE = real_build
++        check(
++            dumps(memo_oh) == dumps(fresh_oh),
++            "an onehot search through the v3 search's memo returns the same "
++            "schedule, byte for byte, as an onehot search on its own",
++        )
++        check(
++            dumps(restamped_oh) == dumps(plain_oh) and restamped_oh["ctl"] == "onehot",
++            "a memoized point restamped to onehot equals building it as onehot",
++        )
++        check(
++            all(isinstance(v, (bytes, AUTO.AutoError)) for v in memo.values()),
++            "the memo holds serialized schedules, not live ones (a live "
++            "schedule of a large function is megabytes, and a search keeps "
++            "hundreds)",
++        )
++        check(
++            memo_oh["entity"] != memo_v3["entity"],
++            "restamping renames the entity: the encoding stays part of its identity",
++        )
++        check(
++            n_memo < n_fresh,
++            f"the onehot search reuses the v3 search's schedules "
++            f"({n_memo} built through the memo vs {n_fresh} on its own)",
++        )
++        check(
++            len(refusals) == 2 and refusals[0] == refusals[1] and n_refused == 1,
++            "a refused point (past max_nodes) is built once and refused again "
++            "from the memo",
++        )
++        check(
++            all(
++                v.__traceback__ is None
++                for v in memo.values()
++                if isinstance(v, AUTO.AutoError)
++            ),
++            "a remembered refusal keeps no traceback (one would keep the "
++            "refused DAG and the search's frames alive)",
++        )
++
+         print("[scheduled re-parse prepares the soft equivalents it binds]")
+         # The driver schedules on the bootstrap parse, then parses the design
+         # again with the schedule installed; the code generator calls every

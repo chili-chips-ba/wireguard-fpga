@@ -20,6 +20,7 @@ It does three things:
                     resources for the shared design, none for one direction
      POLY1305_MULT_IMPL inferred | hybrid | hybrid_square (default hybrid_square;
                        legacy uses inferred)
+     POLY1305_COMPUTE_IMPL fsm | mcp (default fsm; pipelined setup/finalization)
      TARGET_MHZ     positive integer MHz (default: the profile's clock)
 3. Resolves them into this build's profile: DESIGN, ENCRYPT, DECRYPT,
    POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING and TARGET_MHZ.
@@ -49,6 +50,8 @@ SHARE_CHOICES = ("auto", "none", "chacha20", "poly1305", "both")
 
 MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square")
 DEFAULT_MULT_IMPL = "hybrid_square"
+COMPUTE_IMPLEMENTATIONS = ("fsm", "mcp")
+DEFAULT_COMPUTE_IMPL = "fsm"
 DEFAULT_TARGET_MHZ = 85  # Highest passing shared hardware and six-size QoR point.
 BASE_TARGET_MHZ = 30  # Other pipelined selections.
 LEGACY_TARGET_MHZ = 80
@@ -115,6 +118,18 @@ def mult_out_dir(base, multiplier):
     return base if multiplier is None else f"{base}-mult-{multiplier}"
 
 
+def selected_compute(value=None):
+    choice = DEFAULT_COMPUTE_IMPL if value is None else value
+    if choice not in COMPUTE_IMPLEMENTATIONS:
+        raise ValueError(f"POLY1305_COMPUTE_IMPL must be one of {COMPUTE_IMPLEMENTATIONS}, got {choice!r}")
+    return choice
+
+
+def compute_out_dir(base, compute):
+    # None identifies historical records, before this selector existed.
+    return base if compute is None else f"{base}-compute-{selected_compute(compute)}"
+
+
 def resolve_profile(design="shared", implementation="pipelined", share="auto", target_mhz=None,
                     multiplier=None):
     """The one place a build profile's defaults are decided: the design itself,
@@ -159,7 +174,7 @@ def add_sharing_arguments(parser):
     parser.add_argument("--share-chacha20", action="store_true",
                         help="Share ChaCha20 (alone unless --share-poly1305 is also supplied)")
     parser.add_argument("--share-poly1305", action="store_true",
-                        help="Share Poly1305 prologue/epilogue MCPs (pipelined MAC only)")
+                        help="Share Poly1305 prologue/epilogue compute (pipelined MAC only)")
     parser.add_argument("--share-none", action="store_true",
                         help="Combined design with private ChaCha20 and Poly1305 for each direction")
 
@@ -214,6 +229,9 @@ SHARE = param("SHARE", "auto", choices=SHARE_CHOICES,
                    "auto: both for the shared design, none for one direction")
 _MULT_IMPL = param("POLY1305_MULT_IMPL", choices=MULT_IMPLEMENTATIONS,
                    help="130-bit multiply implementation (pipelined MAC only)")
+POLY1305_COMPUTE_IMPL = param("POLY1305_COMPUTE_IMPL", DEFAULT_COMPUTE_IMPL,
+                            choices=COMPUTE_IMPLEMENTATIONS,
+                            help="prologue and epilogue implementation (pipelined MAC only)")
 _TARGET_MHZ = param("TARGET_MHZ", type=int,
                     help="clock goal in MHz (default: the profile's)")
 try:

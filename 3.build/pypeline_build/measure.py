@@ -71,6 +71,7 @@ from wireguard_env import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
     selected_target, default_target_mhz, target_out_dir, GENERATED_FILES, generated_out_dir,
     MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
+    COMPUTE_IMPLEMENTATIONS, selected_compute, compute_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
@@ -483,7 +484,7 @@ def historical_target_mhz(implementation, sharing=None):
     return default_target_mhz(implementation, {"chacha20": True, "poly1305": False})
 
 
-def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=None):
+def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=None, compute=None):
     if target_mhz is None:
         # Records without sharing metadata predate the sharing-both default.
         target_mhz = (historical_target_mhz(implementation, sharing) if multiplier is None
@@ -495,7 +496,7 @@ def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=
     # None means a historical record, whose directory predates sharing flags.
     if sharing is not None:
         base = sharing_out_dir(base, sharing)
-    return target_out_dir(mult_out_dir(base, multiplier), target_mhz)
+    return target_out_dir(compute_out_dir(mult_out_dir(base, multiplier), compute), target_mhz)
 
 
 def build_mult_impl(out_dir):
@@ -506,6 +507,16 @@ def build_mult_impl(out_dir):
     provenance = json.loads(path.read_text())
     params = {entry["name"]: entry["value"] for entry in provenance.get("design_params", [])}
     return params.get("POLY1305_MULT_IMPL", "inferred")
+
+
+def build_compute_impl(out_dir):
+    """Read the emitted selection; records before this selector used MCPs."""
+    path = Path(out_dir) / "source_provenance.json"
+    if not path.is_file():
+        return None
+    params = {entry["name"]: entry["value"]
+              for entry in json.loads(path.read_text()).get("design_params", [])}
+    return params.get("POLY1305_COMPUTE_IMPL", "mcp")
 
 
 def run_build(args, json_path, log_path):
@@ -541,7 +552,8 @@ def run_build(args, json_path, log_path):
 
     cmd = [os.path.join(HERE, "build.py"), "--perf",
            "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz),
-           "--poly1305-mult", args.poly1305_mult]
+           "--poly1305-mult", args.poly1305_mult,
+           "--poly1305-compute", args.poly1305_compute]
     for name in ("chacha20", "poly1305"):
         if args.sharing[name]:
             cmd.append("--share-" + name)
@@ -986,6 +998,8 @@ def markdown_table(results, include_mac_details=True):
         f"**{_fmt(fmax, '.2f')} MHz** | limiting MAIN `{results['fmax'].get('limiting_main')}`"
     )
     lines.append("Poly1305 multiplier: `" + results["config"].get("poly1305_mult_impl", "inferred") + "`.")
+    if results["config"].get("poly1305_impl") == "pipelined":
+        lines.append("Poly1305 prologue/epilogue: `" + results["config"].get("poly1305_compute_impl", "mcp") + "`.")
     if area.get("available"):
         lines.append(
             f"Area ({area['scope']}): **{area.get('lut_total')} LUT** "
@@ -1043,9 +1057,9 @@ def markdown_table(results, include_mac_details=True):
         service = mac.get("shared_mcps")
         if service and include_mac_details:
             lines.append(
-                f"Shared MCP capacity={service['capacity_lanes']} lanes; "
-                f"prologue constraint={service['prologue_mcp_latency']} cycles, "
-                f"epilogue constraint={service['epilogue_mcp_latency']} cycles. "
+                f"Shared compute capacity={service['capacity_lanes']} lanes; "
+                f"prologue compute={service['prologue_mcp_latency']} cycles, "
+                f"epilogue compute={service['epilogue_mcp_latency']} cycles. "
                 "Each response adds one handshake cycle; arbitration waits are measured separately."
             )
         for direction, timing in (sorted(mac.get("directions", {}).items()) if include_mac_details else []):
@@ -1397,6 +1411,15 @@ def measurement_errors(results):
         for scope, actual in results.get("build_mult_impls", {}).items():
             if actual != requested_mult:
                 errors.append(scope + ": emitted multiplier selection differs from the request or is unknown")
+    requested_compute = config.get("requested_poly1305_compute_impl")
+    if requested_compute is not None and config.get("poly1305_impl") == "pipelined":
+        if config.get("poly1305_compute_impl") != requested_compute:
+            errors.append("Performance simulation compute differs from the requested implementation")
+        if config.get("poly1305", {}).get("compute_impl") != requested_compute:
+            errors.append("Resolved Poly1305 compute metadata differs from the request")
+        for scope, actual in results.get("build_compute_impls", {}).items():
+            if actual != requested_compute:
+                errors.append(scope + ": emitted compute selection differs from the request or is unknown")
     errors.extend(auth_fifo_sizing_errors(results.get("config", {})))
     errors.extend(overlap_fifo_sizing_errors(config))
     errors.extend(verify_fifo_sizing_errors(config))
@@ -1937,6 +1960,8 @@ def main():
                     help="MAC architecture (default pipelined)")
     ap.add_argument("--poly1305-mult", choices=MULT_IMPLEMENTATIONS,
                     help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
+    ap.add_argument("--poly1305-compute", choices=COMPUTE_IMPLEMENTATIONS,
+                    help="Prologue and epilogue implementation (default fsm; pipelined MAC only)")
     ap.add_argument("--target-mhz", type=selected_target, default=None,
                     help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     ap.add_argument("-j", "--jobs", type=int, default=None,
@@ -1995,6 +2020,7 @@ def main():
     try:
         args.poly1305 = selected_implementation(args.poly1305)
         args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
+        args.poly1305_compute = selected_compute(args.poly1305_compute)
         # A saved record supplies its own architecture; do not reject an old
         # legacy record using today's default sharing-both selection.
         args.sharing = None if args.parse_only else sharing_from_args(args)
@@ -2010,12 +2036,14 @@ def main():
                            if args.comb else f"shared-{args.target_mhz}mhz")
                            + "-poly1305-" + args.poly1305
                            + ("-share-" + sharing_name(args.sharing) if args.sharing is not None else "")
-                           + "-mult-" + args.poly1305_mult)
+                           + "-mult-" + args.poly1305_mult
+                           + ("-compute-" + args.poly1305_compute if args.poly1305 == "pipelined" else ""))
     meas_dir = os.path.join(HERE, "measurements", label)
     os.makedirs(meas_dir, exist_ok=True)
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
-    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing, args.poly1305_mult)
+    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing, args.poly1305_mult,
+                          args.poly1305_compute if args.poly1305 == "pipelined" else None)
     if args.out_dir:
         out_dir = os.path.abspath(args.out_dir)
 
@@ -2041,6 +2069,8 @@ def main():
     previous = {}
     if args.parse_only:
         recorded_multiplier = perf_raw.get("config", {}).get("poly1305_mult_impl")
+        recorded_compute = perf_raw.get("config", {}).get("poly1305_compute_impl")
+        args.poly1305_compute = recorded_compute or "mcp"
         args.poly1305_mult = recorded_multiplier or "inferred"
         previous_path = os.path.join(meas_dir, "results.json")
         if os.path.exists(previous_path):
@@ -2054,7 +2084,7 @@ def main():
                                or perf_raw.get("config", {}).get("target_mhz")
                                or historical_target_mhz(args.poly1305, recorded_sharing))
             out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, recorded_sharing,
-                                  recorded_multiplier)
+                                  recorded_multiplier, recorded_compute)
         else:
             args.poly1305 = "legacy"
             args.target_mhz = 80
@@ -2090,6 +2120,8 @@ def main():
             poly1305_impl=args.poly1305,
             poly1305_mult_impl=perf_raw.get("config", {}).get("poly1305_mult_impl", "inferred"),
             requested_poly1305_mult_impl=None if args.parse_only else args.poly1305_mult,
+            poly1305_compute_impl=perf_raw.get("config", {}).get("poly1305_compute_impl", "mcp"),
+            requested_poly1305_compute_impl=None if args.parse_only else args.poly1305_compute,
             sharing=args.sharing,
             out_dir=os.path.relpath(out_dir, HERE),
             target_mhz=target_mhz,
@@ -2138,13 +2170,19 @@ def main():
             results["fmax_hw_build"] = previous["fmax_hw_build"]
         if "build_mult_impls" in previous:
             results["build_mult_impls"] = previous["build_mult_impls"]
+        if "build_compute_impls" in previous:
+            results["build_compute_impls"] = previous["build_compute_impls"]
+        results["config"]["requested_poly1305_compute_impl"] = previous.get("config", {}).get(
+            "requested_poly1305_compute_impl")
         results["config"]["requested_poly1305_mult_impl"] = previous.get("config", {}).get(
             "requested_poly1305_mult_impl")
     elif not args.parse_only:
         results["build_mult_impls"] = {"perf": build_mult_impl(out_dir)}
+        results["build_compute_impls"] = {"perf": build_compute_impl(out_dir)}
     if args.area_from_dir:
         hardware_out_dir = generated_out_dir(os.path.join(HERE, args.area_from_dir))
         results.setdefault("build_mult_impls", {})["hardware"] = build_mult_impl(hardware_out_dir)
+        results.setdefault("build_compute_impls", {})["hardware"] = build_compute_impl(hardware_out_dir)
         results["area_hw_build"] = parse_area(
             hardware_out_dir,
             per_module=not args.no_per_module_area,
@@ -2158,7 +2196,8 @@ def main():
             hardware_out_dir, parse_stdout(os.path.join(hardware_out_dir, "pypelinec.log"))
         )
 
-    if not args.parse_only and not args.comb and args.poly1305 == "pipelined":
+    if (not args.parse_only and not args.comb and args.poly1305 == "pipelined"
+            and args.poly1305_compute == "mcp"):
         results["mcp_hdl_audits"] = {}
         for scope, directory in (("perf", out_dir), ("hardware", args.area_from_dir)):
             if directory is None:

@@ -1,0 +1,14 @@
+git add -f -- \
+  3.build/pypeline_build/README.md \
+  3.build/pypeline_build/bottleneck.py \
+  3.build/pypeline_build/build.py \
+  3.build/pypeline_build/measure.py \
+  3.build/pypeline_build/src/aead_types.py \
+  3.build/pypeline_build/src/chacha20poly1305/perf_tb_common.py \
+  3.build/pypeline_build/src/poly1305/poly1305_mac_pipelined.py \
+  3.build/pypeline_build/src/poly1305/poly1305_mcp_shared.py \
+  3.build/pypeline_build/src/poly1305/poly1305_select.py \
+  3.build/pypeline_build/src/poly1305/poly1305_service.py \
+  3.build/pypeline_build/src/poly1305_pipelined_syn_tb.py \
+  3.build/pypeline_build/src/wireguard_env.py \
+  3.build/pypeline_build/measurements/shared-poly1305-fsm64-latest-qor-20261017/
