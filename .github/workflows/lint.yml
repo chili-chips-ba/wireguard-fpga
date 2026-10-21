@@ -18,10 +18,10 @@ jobs:
   run-lint:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install OSS CAD Suite (Yosys + yosys-slang, Verilator)
-        uses: YosysHQ/setup-oss-cad-suite@v3
+        uses: YosysHQ/setup-oss-cad-suite@v4
 
       - name: Tool versions
         run: |
@@ -52,7 +52,7 @@ jobs:
 
       - name: Keep the lint reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lint-reports
           path: ${{ runner.temp }}/lint

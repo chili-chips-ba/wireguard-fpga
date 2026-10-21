@@ -18,7 +18,7 @@ jobs:
   verible:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Verible ${{ env.VERIBLE_VERSION }}
         run: |
@@ -35,7 +35,7 @@ jobs:
 
       - name: Keep the lint report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: verible-lint-report
           path: ${{ runner.temp }}/lint
