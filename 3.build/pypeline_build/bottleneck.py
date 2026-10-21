@@ -181,8 +181,8 @@ def model_for(packet_bytes, aad_len, measured_period, poly_tap=None, mac_config=
     """First-principles per-packet cycle cost, against the measured period.
 
     Poly1305 sees ceil(aad/16) AAD blocks + ceil(len/16) ciphertext blocks + 1
-    length block. Their count times the recorded body II is the body service
-    cost. Setup, drain, epilogue, framing, arbitration and tag stalls are
+    length block. ceil(count / blocks_per_cycle) times the recorded body II
+    is the input service cost. Setup, drain, epilogue, framing, arbitration and tag stalls are
     separate costs. Missing metadata denotes historical legacy measurements.
     """
     aad_blocks = math.ceil(aad_len / POLY1305_BLOCK_BYTES) if aad_len else 0
@@ -191,23 +191,29 @@ def model_for(packet_bytes, aad_len, measured_period, poly_tap=None, mac_config=
     measured_block_period = (poly_tap or {}).get("service_period_cycles")
     mac_config = mac_config or {}
     block_period = mac_config.get("body_ii", POLY1305_BLOCK_PERIOD_CYCLES)
+    rate = mac_config.get("blocks_per_cycle", 1)
+    beats = math.ceil(blocks / rate)
     model = {
         "poly1305_blocks": blocks,
-        "poly1305_block_period_cycles": block_period,
-        "poly1305_model_cycles": blocks * block_period,
+        "poly1305_input_beats": beats,
+        "poly1305_blocks_per_cycle": rate,
+        "poly1305_block_period_cycles": block_period / rate,
+        "poly1305_model_cycles": beats * block_period,
         "poly1305_body_ii": block_period,
         "poly1305_accumulator_count": mac_config.get("accumulator_count", 1),
         "poly1305_body_latency": mac_config.get("body_latency"),
+        "poly1305_coefficient_latency": mac_config.get("coefficient_latency", 0),
+        "poly1305_total_body_latency": mac_config.get("total_body_latency", mac_config.get("body_latency")),
         "poly1305_prologue_response_cycles": mac_config.get("prologue_response_cycles"),
         "poly1305_epilogue_response_cycles": mac_config.get("epilogue_response_cycles"),
         "poly1305_measured_block_period_cycles": measured_block_period,
         "chacha20_model_cycles": (
-            math.ceil(packet_bytes / CHACHA20_BLOCK_BYTES) * CHACHA20_BEATS_PER_BLOCK
+            math.ceil(packet_bytes / CHACHA20_BLOCK_BYTES) * CHACHA20_BEATS_PER_BLOCK / rate
         ),
         "measured_packet_period_cycles": measured_period,
     }
     if measured_block_period:
-        model["poly1305_measured_cycles"] = blocks * measured_block_period
+        model["poly1305_measured_cycles"] = beats * measured_block_period
     if measured_period:
         model["poly1305_frac_of_period"] = (
             model["poly1305_model_cycles"] / measured_period
@@ -215,10 +221,10 @@ def model_for(packet_bytes, aad_len, measured_period, poly_tap=None, mac_config=
         model["residual_cycles"] = measured_period - model["poly1305_model_cycles"]
     # Structural ceilings, for the headline block comparison.
     model["poly1305_ceiling_bytes_per_cycle"] = (
-        POLY1305_BLOCK_BYTES / block_period
+        POLY1305_BLOCK_BYTES * rate / block_period
     )
     model["chacha20_ceiling_bytes_per_cycle"] = (
-        CHACHA20_BLOCK_BYTES / CHACHA20_BEATS_PER_BLOCK
+        CHACHA20_BLOCK_BYTES / (CHACHA20_BEATS_PER_BLOCK / rate)
     )
     return model
 
@@ -282,6 +288,16 @@ def poly1305_lifecycle(taps, direction):
         "prologue_request_wait_cycles": (get_tap(taps, direction, "poly1305.prologue_in") or {}).get("stall_cycles"),
         "epilogue_request_wait_cycles": (get_tap(taps, direction, "poly1305.epilogue_in") or {}).get("stall_cycles"),
     }
+    coefficient_in = get_tap(taps, direction, "poly1305.coefficient_in")
+    if coefficient_in is not None:
+        data = get_tap(taps, direction, "poly1305.data_in") or {}
+        result["body_input_gap_cycles"] = cycles["body"] - data.get("xfer_cycles", 0)
+        result.update({
+            "coefficient_launches": coefficient_in.get("xfer_cycles", 0),
+            "coefficient_retirements": (get_tap(taps, direction, "poly1305.coefficient_out") or {}).get("xfer_cycles", 0),
+            "unmatched_tails": (get_tap(taps, direction, "poly1305.tail_in") or {}).get("xfer_cycles", 0),
+            "authentication_blocks": data.get("bytes", 0) // 16,
+        })
     if overlapped:
         result["body_overlap_cycles"] = {
             name: (get_tap(taps, direction, tap) or {}).get("xfer_cycles", 0)
@@ -303,7 +319,8 @@ def analyze_phase(phase, aad_len=0, mac_config=None):
         return phase
     # A direction disabled via PERF_DIRS (measure.py --dirs enc|dec) still
     # has probes firing; the library drops a label whose blocks moved nothing.
-    lib.analyze_phase(phase, BLOCKS, DIRECTIONS, BUS_BYTES)
+    rate = (mac_config or {}).get("blocks_per_cycle", 1)
+    lib.analyze_phase(phase, BLOCKS, DIRECTIONS, BUS_BYTES * rate)
     model = {}
     for label in phase.get("blocks", {}):
         direction = phase.get(label) or {}
@@ -536,12 +553,16 @@ def markdown_summary(phases, detail_path=None):
             f"{num(min(rs), '.0f')}–{num(max(rs), '.0f')} cycles per packet)"
         )
     if fits:
-        periods = sorted({m["poly1305_block_period_cycles"]
+        models = [m for p in analysed for m in (p.get("model") or {}).values()]
+        paired = any(m.get("poly1305_blocks_per_cycle", 1) == 2 for m in models)
+        periods = sorted({m["poly1305_body_ii"] if paired else m["poly1305_block_period_cycles"]
                           for p in analysed for m in (p.get("model") or {}).values()})
         period_text = "/".join(str(p) for p in periods)
+        service_count = ("ceil(authentication blocks / blocks per transfer)" if paired
+                         else "block count")
         lines.append(
-            f"- **Model cross-check:** Poly1305 block count × its "
-            f"{period_text}-cycle body block period accounts for "
+            f"- **Model cross-check:** Poly1305 {service_count} × its "
+            f"{period_text}-cycle body initiation interval accounts for "
             + "; ".join(fits) + " of the measured packet period."
         )
 
@@ -556,6 +577,7 @@ def markdown_summary(phases, detail_path=None):
 def markdown_poly1305_lifecycle(phases):
     rows = []
     overlap_rows = []
+    paired_rows = []
     for phase in phases:
         for direction, lifecycle in (phase.get("poly1305_lifecycle") or {}).items():
             per = lifecycle["cycles_per_packet"]
@@ -569,14 +591,21 @@ def markdown_poly1305_lifecycle(phases):
                 + f"| {num(lifecycle.get('epilogue_request_wait_cycles'))} |"
             )
             overlap = lifecycle.get("body_overlap_cycles")
+            if "coefficient_launches" in lifecycle:
+                paired_rows.append(
+                    f"| {phase['name']} | {direction} | {lifecycle['authentication_blocks']} "
+                    f"| {lifecycle['coefficient_launches']} | {lifecycle['unmatched_tails']} "
+                    f"| {lifecycle['coefficient_retirements']} | {lifecycle['body_launches']} "
+                    f"| {lifecycle['body_retirements']} | {lifecycle['completed_packets']} |")
             if overlap is not None:
                 overlap_rows.append(
                     f"| {phase['name']} | {direction} | {overlap['setup']} "
                     f"| {overlap['drain']} | {overlap['finalization']} |")
     if not rows:
         return []
+    unit = "pair" if paired_rows else "block"
     lines = [
-        "**Poly1305 lifecycle** — measured body service cycles per offered block "
+        f"**Poly1305 lifecycle** — measured body service cycles per offered {unit} "
         "are separate from FSM cycles per completed packet. Body time includes "
         "input gaps; setup includes the prologue handshake; finalization includes "
         "the epilogue handshake. Tag stalls are a subset of tag-output cycles, "
@@ -585,11 +614,20 @@ def markdown_poly1305_lifecycle(phases):
         "setup/finalization, including sharing contention. These are MAC-local "
         "costs, not additive whole-datapath latency:",
         "",
-        "| phase | dir | body service (clk/block) | setup (clk/pkt) | body (clk/pkt) "
+        f"| phase | dir | body service (clk/{unit}) | setup (clk/pkt) | body (clk/pkt) "
         "| drain (clk/pkt) | finalization (clk/pkt) | tag output (clk/pkt) | tag stalls (clk/pkt) "
         "| prologue request wait (clk) | epilogue request wait (clk) |",
         "|---|---|---|---|---|---|---|---|---|---|---|",
     ] + rows
+    if paired_rows:
+        lines += [
+            "", "Paired arithmetic conservation: blocks = 2 × pairs + tails; "
+            "coefficient and feedback launch/retirement counts must agree. "
+            "Tails bypass both pipelines. Tags count completed packets.", "",
+            "| phase | dir | auth blocks | pairs | tails | coefficient retirements "
+            "| feedback launches | feedback retirements | tags |",
+            "|---|---|---|---|---|---|---|---|---|",
+        ] + paired_rows
     if overlap_rows:
         lines += [
             "",
@@ -632,6 +670,8 @@ def markdown_poly1305_services(phases):
 
 def markdown_model(phases):
     rows = []
+    paired = any(m.get("poly1305_blocks_per_cycle", 1) == 2
+                 for p in phases for m in (p.get("model") or {}).values())
     for phase in phases:
         for direction in DIRECTIONS:
             m = (phase.get("model") or {}).get(direction)
@@ -639,7 +679,9 @@ def markdown_model(phases):
                 continue
             rows.append(
                 f"| {phase['name']} | {phase['packet_bytes']} | {direction} "
-                f"| {m['poly1305_blocks']} | {m['poly1305_model_cycles']} "
+                f"| {m['poly1305_blocks']} "
+                + (f"| {m['poly1305_input_beats']} " if paired else "")
+                + f"| {m['poly1305_model_cycles']} "
                 f"| {num(m.get('poly1305_measured_block_period_cycles'))} "
                 f"| {num(m['measured_packet_period_cycles'], '.1f')} "
                 f"| {pct(m.get('poly1305_frac_of_period'))} "
@@ -647,17 +689,20 @@ def markdown_model(phases):
             )
     if not rows:
         return []
+    service_count = ("ceil(authentication blocks / blocks per transfer)" if paired else "block count")
     head = [
-        "**Model cross-check** — Poly1305 block count x its recorded body "
+        f"**Model cross-check** — Poly1305 {service_count} x its recorded body "
         "initiation interval, against the "
         "measured packet period. The residual is everything that is not the MAC "
         "loop (prologue, body drain, epilogue, poly key round trip, framing, "
         "tag stalls, arbitration). This is a body-cost model, not a claim "
         "of one-cycle whole-packet service:",
         "",
-        "| phase | bytes | dir | poly blocks | model (clk) | measured blk period "
-        "| measured period (clk) | model / measured | residual (clk) |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| phase | bytes | dir | poly blocks "
+        + ("| input transfers " if paired else "")
+        + "| model (clk) | measured input period "
+          "| measured period (clk) | model / measured | residual (clk) |",
+        "|---|---|---|---|---|---|---|---|---|" + ("---|" if paired else ""),
     ]
     return head + rows
 

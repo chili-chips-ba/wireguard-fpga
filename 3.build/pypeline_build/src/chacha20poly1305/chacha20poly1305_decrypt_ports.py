@@ -16,15 +16,15 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_intrf,
+    aead_axis_intrf,
 )
 
-axis_in_if: Wire[axis128_intrf]  # .stream is input, .ready is output
+axis_in_if: Wire[aead_axis_intrf]  # .stream is input, .ready is output
 key: Wire[uint8_t[CHACHA20_KEY_SIZE]]  # input
 nonce: Wire[uint8_t[CHACHA20_NONCE_SIZE]]  # input
 aad: Wire[uint8_t[AAD_MAX_LEN]]  # input
 aad_len: Wire[uint8_t]  # input
-axis_out_if: Wire[axis128_intrf]  # .stream is output, .ready is input
+axis_out_if: Wire[aead_axis_intrf]  # .stream is output, .ready is input
 
 # Parallel output (verification result)
 is_verified_out: Wire[uint1_t]  # output

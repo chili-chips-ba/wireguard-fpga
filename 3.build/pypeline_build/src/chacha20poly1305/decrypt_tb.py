@@ -51,7 +51,8 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_intrf,
+    aead_axis_intrf,
+    AEAD_BEAT_BYTES,
 )
 from axi.axis_sim import Scoreboard
 from aead_ref_model import generate_encrypt_vector
@@ -73,8 +74,8 @@ _dec_state = {
 }
 
 _scoreboard = Scoreboard()
-_src = common.ConvergedAxisSource(axis128_intrf, 16)
-_snk = common.ConvergedAxisSink(axis128_intrf, 16, scoreboard=_scoreboard)
+_src = common.ConvergedAxisSource(aead_axis_intrf, AEAD_BEAT_BYTES)
+_snk = common.ConvergedAxisSink(aead_axis_intrf, AEAD_BEAT_BYTES, scoreboard=_scoreboard)
 
 
 def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
@@ -110,7 +111,7 @@ def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
 
 
 @sim_input
-def drive_in_word() -> axis128_intrf.stream_t:
+def drive_in_word() -> aead_axis_intrf.stream_t:
     if _dec_state["in_packet_idx"] < NUM_TOTAL_PACKETS and _src.idle():
         idx = _dec_state["in_packet_idx"]
         pkt = _generate_packet(_dec_state["rng"], idx)
@@ -162,7 +163,7 @@ def check_out():
     # its duration), so sampling it once when the frame completes below is
     # equivalent to checking every beat.
     got_verified = chacha20poly1305_decrypt_ports.is_verified_out
-    _snk.step(axis128_intrf.fwd_t(out),
+    _snk.step(aead_axis_intrf.fwd_t(out),
               ready=chacha20poly1305_decrypt_ports.axis_out_if.ready,
               sideband=got_verified)
     result = _snk.check_nowait()
@@ -207,7 +208,7 @@ def finish_checks():
 
 @MAIN(wireguard_env.TARGET_MHZ)
 @wires
-def decrypt_tb() -> axis128_intrf.fwd_t:
+def decrypt_tb() -> aead_axis_intrf.fwd_t:
     key: uint8_t[CHACHA20_KEY_SIZE] = common.KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = common.NONCE
     aad: uint8_t[AAD_MAX_LEN] = common.AAD
@@ -226,4 +227,4 @@ def decrypt_tb() -> axis128_intrf.fwd_t:
     check_out()
 
     # dummy return so nothing optimizes away
-    return axis128_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)
+    return aead_axis_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)

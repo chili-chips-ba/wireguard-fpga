@@ -26,7 +26,7 @@ from axi.axis_sim import (
 # Optional native functional stress (-D TB_STRESS=1). Performance testbenches
 # never use these pauses: their sinks remain always ready and their sources
 # always offer work.
-STRESS = param("TB_STRESS", False, help="random testbenches: 16 directed packets, input gaps and output backpressure")
+STRESS = param("TB_STRESS", False, help="random testbenches: 20 directed packets, input gaps and output backpressure")
 
 
 def input_paused(direction, cycle):
@@ -53,7 +53,7 @@ AAD_LEN = len(AAD_TEST_STR)  # 29
 AAD = list(AAD_TEST_STR.encode()) + [0] * (AAD_MAX_LEN - AAD_LEN)
 
 # Random packet generation
-NUM_RANDOM_PACKETS = 16 if STRESS else 12
+NUM_RANDOM_PACKETS = 20 if STRESS else 12
 PACKET_LEN_MIN = 1
 PACKET_LEN_MAX = 1024
 
@@ -65,8 +65,8 @@ PACKET_LEN_MAX = 1024
 # packets are uniform-random over [PACKET_LEN_MIN, PACKET_LEN_MAX].
 CORNER_CASE_LENS = [15, 16, 17, 31, 64, 128]
 if STRESS:
-    CORNER_CASE_LENS = [15, 16, 17, 31, 63, 64, 65, 128, 511, 512, 513,
-                        1024, 1420, 1920, 1920, 1920]
+    CORNER_CASE_LENS = [1, 15, 16, 17, 31, 32, 33, 63, 64, 65, 128, 511, 512, 513,
+                        1024, 1420, 1920, 2032, 1920, 1920]
 
 # Fixed default seed (nod to RFC 8439) so a failing run's exact vectors are
 # reproducible by re-seeding with the same value; the seed actually used is

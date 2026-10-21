@@ -50,7 +50,8 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_intrf,
+    aead_axis_intrf,
+    AEAD_BEAT_BYTES,
 )
 from axi.axis_sim import Scoreboard
 from aead_ref_model import generate_encrypt_vector
@@ -72,12 +73,12 @@ _enc_state = {
 }
 
 _scoreboard = Scoreboard()
-_src = common.ConvergedAxisSource(axis128_intrf, 16)
-_snk = common.ConvergedAxisSink(axis128_intrf, 16, scoreboard=_scoreboard)
+_src = common.ConvergedAxisSource(aead_axis_intrf, AEAD_BEAT_BYTES)
+_snk = common.ConvergedAxisSink(aead_axis_intrf, AEAD_BEAT_BYTES, scoreboard=_scoreboard)
 
 
 @sim_input
-def drive_in_word() -> axis128_intrf.stream_t:
+def drive_in_word() -> aead_axis_intrf.stream_t:
     if _enc_state["in_packet_idx"] < common.NUM_RANDOM_PACKETS and _src.idle():
         # Starting a new packet: pick its length (stratified corner cases
         # first, then uniform-random), generate random plaintext, and
@@ -126,7 +127,7 @@ def report_new_packets():
 def check_out():
     _enc_state["cycle"] += 1
     _src.commit(chacha20poly1305_encrypt_ports.axis_in_if.ready)
-    _snk.step(axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream),
+    _snk.step(aead_axis_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream),
               ready=chacha20poly1305_encrypt_ports.axis_out_if.ready)
     result = _snk.check_nowait()
     if result is None:
@@ -162,7 +163,7 @@ def finish_checks():
 
 @MAIN(wireguard_env.TARGET_MHZ)
 @wires
-def encrypt_tb() -> axis128_intrf.fwd_t:
+def encrypt_tb() -> aead_axis_intrf.fwd_t:
     key: uint8_t[CHACHA20_KEY_SIZE] = common.KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = common.NONCE
     aad: uint8_t[AAD_MAX_LEN] = common.AAD
@@ -181,4 +182,4 @@ def encrypt_tb() -> axis128_intrf.fwd_t:
     check_out()
 
     # dummy return so nothing optimizes away
-    return axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)
+    return aead_axis_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)

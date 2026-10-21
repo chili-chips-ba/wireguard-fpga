@@ -26,6 +26,8 @@ from interface.interface_func import make_hw_func_from_interface_func
 
 import strip_auth_tag
 import prep_auth_data
+import prep_auth_data_wide
+import auth_tag_wide
 from poly1305_select import IMPLEMENTATION, make_poly1305_mac
 import poly1305_verify_decrypt
 import wait_to_verify
@@ -34,9 +36,9 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_intrf,
-    axis128_frag_t,
-    axis128_2broadcast,
+    aead_axis_intrf,
+    aead_axis_frag_t,
+    aead_2broadcast,
     decrypt_auth_fifo_sizing,
     decrypt_verify_fifo_sizing,
     make_aead_fifo,
@@ -45,13 +47,13 @@ from aead_types import (
 
 @interface
 class decrypt_dataflow_core_ports(NamedTuple):
-    axis_out_if: axis128_intrf
+    axis_out_if: aead_axis_intrf
     is_verified_out: uint1_t  # plain sideband, no reverse companion
 
 
 @interface
 class buffered_prep_ports(NamedTuple):
-    axis_if: axis128_intrf
+    axis_if: aead_axis_intrf
 
 
 def make_decrypt_dataflow_core(
@@ -93,26 +95,31 @@ def make_decrypt_dataflow_core(
     # unbuffered graph. The depth parameter also permits isolated native sizing
     # experiments without adding diagnostic switches to build.py.
     prep_func = prep_auth_data.prep_auth_data_fsm
+    if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
+        prep_func = prep_auth_data_wide.prep_auth_data_wide
+    framing_func = prep_func
+    stripping_func = strip_auth_tag.strip_auth_tag
+    if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
+        stripping_func = auth_tag_wide.strip_auth_tag_wide
     if IMPLEMENTATION == "pipelined" and auth_fifo_depth:
         auth_fifo = make_aead_fifo(
-            axis128_frag_t, auth_fifo_depth, "auth_fifo", "decrypt", sizing=sizing
+            aead_axis_frag_t, auth_fifo_depth, "auth_fifo", "decrypt", sizing=sizing
         )
 
         def buffered_prep(
             aad: uint8_t[AAD_MAX_LEN],
             aad_len: uint8_t,
-            axis_in_if: axis128_intrf,
+            axis_in_if: aead_axis_intrf,
         ) -> buffered_prep_ports:
             queued = auth_fifo(in_stream_if=axis_in_if)
-            framed = prep_auth_data.prep_auth_data_fsm(
-                aad=aad, aad_len=aad_len, axis_in_if=queued.out_stream_if
-            )
+            framed = framing_func(
+                aad=aad, aad_len=aad_len, axis_in_if=queued.out_stream_if)
             return buffered_prep_ports(axis_if=framed.axis_if)
 
         prep_func = make_hw_func_from_interface_func(buffered_prep)
 
     def decrypt_dataflow_core(
-        axis_in_if: axis128_intrf,
+        axis_in_if: aead_axis_intrf,
         key: uint8_t[CHACHA20_KEY_SIZE],
         nonce: uint8_t[CHACHA20_NONCE_SIZE],
         aad: uint8_t[AAD_MAX_LEN],
@@ -120,8 +127,8 @@ def make_decrypt_dataflow_core(
     ) -> decrypt_dataflow_core_ports:
         # strip_auth_tag splits ciphertext+tag into stripped-ciphertext + tag,
         # and the stripped ciphertext forks to the MAC calculation and chacha20
-        strip = strip_auth_tag.strip_auth_tag(axis_in_if=axis_in_if)
-        bcast = axis128_2broadcast(axis_in_if=strip.axis_out_if)
+        strip = stripping_func(axis_in_if=axis_in_if)
+        bcast = aead_2broadcast(axis_in_if=strip.axis_out_if)
         # chacha20 decrypts (keystream XOR); its poly key seeds poly1305_mac
         chacha = chacha_func(key=key, nonce=nonce, axis_in_if=bcast.axis_out_if[1])
         # Pipelined MACs buffer the authentication fork, letting ChaCha consume

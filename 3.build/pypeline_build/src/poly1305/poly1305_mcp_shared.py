@@ -3,7 +3,8 @@
 
 Only this module owns the two compute services. Per-direction adapters own no compute
 resource or packet state. Capacity follows both actual body AUTO_PIPELINE
-depths; a request's local lane count determines its epilogue rotation.
+depths unless POLY1305_COMPUTE_CAPACITY fixes it; a request's local lane count
+determines its epilogue rotation, and unused capacity slots are zero.
 """
 import wireguard_env
 from types import SimpleNamespace
@@ -11,10 +12,14 @@ from pypeline import MAIN, NamedTuple, Reg, Feedback, Wire, struct, hw_func, uin
 from stream.stream import make_stream_interface
 from poly1305_service import make_compute_service
 from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod, residue_square_mod
-from poly1305_mac_pipelined import get_body_auto_pipeline
+if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
+    from poly1305_mac_paired import get_body_auto_pipeline
+else:
+    from poly1305_mac_pipelined import get_body_auto_pipeline
 from stream import stream_perf_probe as perf_taps
 
-CAPACITY = max(get_body_auto_pipeline(d).latency + 2 for d in ("encrypt", "decrypt"))
+CAPACITY = (wireguard_env.POLY1305_COMPUTE_CAPACITY
+            or max(get_body_auto_pipeline(d).latency + 2 for d in ("encrypt", "decrypt")))
 
 
 def make_shared_compute(capacity):
@@ -64,8 +69,10 @@ def make_shared_compute(capacity):
                 power_index: index_t = x.next_lane
                 power_index += x.lane_count
                 power_index -= 1 + j
-                if x.next_lane > j:
-                    power_index = x.next_lane - 1 - j
+                # next_lane < lanes <= capacity, so the last slot never wraps.
+                if j + 1 < capacity:
+                    if x.next_lane > j:
+                        power_index = x.next_lane - 1 - j
                 # AUTO_FSM cannot regenerate a read at a hardware index.
                 for k in range(capacity):
                     if power_index == k:
@@ -87,6 +94,8 @@ def make_shared_compute(capacity):
 
 
 # Arithmetic kernels and payload types for the shared capacity.
+if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
+    from poly1305_paired_compute import make_paired_compute as make_shared_compute
 compute = make_shared_compute(CAPACITY)
 prologue_in_intrf = make_stream_interface(uint130_t)
 prologue_out_intrf = make_stream_interface(compute.powers_t)
@@ -359,6 +368,10 @@ def make_shared_adapters(direction, lanes, local_powers_t, local_epilogue_in_t):
         request.data.lane_count = lanes
         request.data.next_lane = stream_in_if.stream.data.next_lane
         request.data.s = stream_in_if.stream.data.s
+        if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
+            request.data.r = stream_in_if.stream.data.r
+            request.data.tail = stream_in_if.stream.data.tail
+            request.data.has_tail = stream_in_if.stream.data.has_tail
         for j in range(CAPACITY):
             request.data.accumulators[j] = 0
             request.data.powers.values[j] = 0

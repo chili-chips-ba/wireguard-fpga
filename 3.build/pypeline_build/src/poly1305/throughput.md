@@ -1269,3 +1269,185 @@ are not this port's expected outputs.
 [1] Improve chacha poly per-packet overhead [Issue39](https://github.com/chili-chips-ba/wireguard-fpga/issues/39)
 
 [2] [Illustration](https://share.gemini.google/dCzLp7lhYqaR) of the algorithm
+
+
+## Paired-coefficient two-block mode
+
+Select `--data-bitwidth 256` in `build.py` or `measure.py`, or
+`-D DATA_BITWIDTH=256` with pypelinec. Selection is static; only the
+chosen MAC is instantiated. The default remains `--data-bitwidth 128`, with
+one authentication block per clock and its historical directory names.
+256-bit directories retain the existing `-blocks2` suffix.
+All packet streams and flattened data/keep ports become 256/32 bits; the
+explicit `axis128_*` types remain 128 bits. There is one clock domain.
+
+For p = 2^130 - 5 and complete padded authentication blocks
+c_i = LE(block_i) + 2^128, the coefficient pipeline computes
+
+```
+q = r*r mod p
+d_t = (c_(2t)*r + c_(2t+1)) mod p
+A_(t mod L) = (A_(t mod L)*q^L + d_t) mod p
+```
+
+The coefficient pipeline and the accumulator pipeline each accept one request
+per cycle. L is **only** the accumulator pipeline's latency, including its two
+boundary registers. Coefficient preprocessing happens before accumulator
+reads; ownership is delayed with the coefficients and same-cycle retirement
+forwarding is preserved. Both pipelines continue advancing through bubbles.
+Outstanding-pair accounting spans both pipelines; snapshots and context reuse
+wait for the final accumulator writeback. Two context banks permit the next
+packet to start while the previous one drains or finalizes.
+
+The prologue calculates q^1 through q^L, using specialized squares when
+selected. The finalization descriptor also holds r, s, and an optional unmatched
+last block. For M full pairs:
+
+```
+S = sum_j A_j * q^((M-1-j) mod L) mod p
+H = r*S mod p
+if unmatched block c_tail:
+    H = (H+c_tail)*r mod p
+tag = (H+s) mod 2^128
+```
+
+q^0 is explicitly one, including r=0. A singleton final beat has 16 valid
+bytes; it is captured as a tail without a fictitious second block or an
+accumulator-lane advance. A complete pair has 32 valid bytes. All operands
+remain canonical 130-bit residues. Powers of q are general residues, so the
+feedback multiplier cannot assume the clamped bit pattern of r.
+
+The finalization kernel uses the equivalent odd-tail expression
+`H = q*S + r*c_tail mod p`. It selects `q` or `r` before scaling `S` and
+computes the tail product independently. This avoids a third serial
+multiplication through the lane reduction while retaining the same recurrence
+and the existing 64-cycle FSM cap.
+
+The wide authentication formatter queues four 16-byte blocks and packs across
+AAD/ciphertext/length boundaries. AAD and ciphertext are padded independently
+to multiples of 16 bytes. Only the lengths block ends authentication. Tag
+append and strip preserve contiguous ciphertext||tag byte frames, including
+single-beat frames and tags split across beats. The ciphertext/tag consumers
+can stall independently. FIFO sizing uses the selected packet width, resolved
+coefficient-plus-feedback latency, formatter storage and service handoffs.
+
+Per-MAC metadata distinguishes `body_latency` (feedback latency, equal to accumulator
+count), `coefficient_latency`, and `total_body_latency` (their sum). `body_ii`
+remains one request per cycle; `blocks_per_cycle` identifies the two-block
+request. Performance conservation checks compare authentication blocks,
+coefficient launches/retirements, feedback launches/retirements, unmatched
+tails and packet tags. The ideal body input-service count is ceil(N/2), where
+N = ceil(AAD_bytes/16) + ceil(ciphertext_bytes/16) + 1.
+
+### 40 MHz AUTO_FSM hardware checkpoint
+
+Matched shared builds of both widths, 2026-10-21:
+- 40 MHz goal, hybrid_square, FSM setup/finalization at a fixed capacity of 12;
+- seed 8439, four concurrent packets per size;
+- the same frozen PipelineC compiler (base `701a5c45` plus the AUTO_FSM
+  working tree, `AUTO_FSM.py` sha256 `c52412ca…`).
+
+Both pass synthesis timing, device fit, all 48 reference checks, body II=1 and
+buffer conservation. 256-bit conservation also holds: per direction,
+1248 blocks = 2 × 616 pairs + 16 tails, and the four arithmetic counters agree.
+
+| | 128-bit | 256-bit |
+|---|---:|---:|
+| fmax (all MAINs pass) | 40.87 MHz | 40.87 MHz |
+| LUT / FF | 45,116 / 30,668 | 58,992 / 36,306 |
+| DSP / BRAM tiles | 138 / 18.5 | 210 / 26.5 |
+| Lanes; body response | 3; 3 cycles | 3; 3+3 cycles |
+| Prologue / epilogue FSM | 30 / 39 cycles | 35 / 45 cycles |
+| 1920 B goodput | 15.48 B/cycle | 20.79 B/cycle (1.34×) |
+| 1420 B goodput enc / dec | 15.11 / 14.84 | 15.44 / 15.44 |
+| 16–256 B packet period | 80 cycles | 92 cycles (0.87×) |
+
+Both FSM services are shared and accept one request at a time, so each
+direction gets a service every 2 × (latency + 1) cycles. The epilogue sets that
+floor: 2 × 40 = 80 cycles at 128 bits and 2 × 46 = 92 at 256 bits. At 1920
+bytes, 128 bits are body-limited (124 cycles for 123 blocks). 256 bits need only
+62 pair cycles but hold the 92-cycle epilogue period, so the gain is 1.34×, not 2×.
+Short packets are slower at 256 bits because the epilogue is longer.
+
+Records:
+- [128-bit](../../measurements/shared-autofsm-c52412ca-128-40mhz-20261020-r4/README.md)
+- [256-bit](../../measurements/shared-autofsm-c52412ca-256-40mhz-20261020-r4/README.md)
+
+Synthesis timing only; routed timing was not run. A higher 256-bit gain needs
+shorter or unshared setup/finalization.
+
+### Focused native checks
+
+The dedicated `src/poly1305_paired_tb.py` uses cryptography tags and independent
+byte-frame scoreboards. It includes arbitrary non-kept input bytes, every final
+32-byte-beat occupancy, AAD lengths 0/1/15/16/17/31/32, maximum payloads, input
+gaps, independently stalled tag/ciphertext outputs, changing and repeated keys,
+odd tails and lane-wrap boundaries. It asserts continuous pair admission.
+
+```sh
+for mode in mac prep tags; do
+  "${PYPELINEC:-../../../PipelineC/src/pypelinec}" src/poly1305_paired_tb.py \
+    --sim --comb --run all -D DATA_BITWIDTH=256 \
+    -D PAIRED_TB_MODE="$mode" --out_dir "generated-files/paired-$mode-comb"
+done
+```
+
+`PAIRED_TB_DIRECTION=encrypt|decrypt` selects the named arithmetic regions.
+`PAIRED_TB_BODY_DEPTH` and `PAIRED_TB_COEFFICIENT_DEPTH` independently select
+test-only fixed core depths 0/1/3/6/8/10. Production uses resolved automatic depths;
+these fixed configurations establish functional scheduling, not production
+80 MHz timing. Add `-D POLY1305_MULT_IMPL=inferred|hybrid|hybrid_square` and
+`-D POLY1305_COMPUTE_IMPL=fsm|mcp` to exercise the alternate implementations.
+MAC runs check authentication bytes, pair/tail counts, all four arithmetic
+launch/retirement counts and tag counts against the generated messages.
+They execute the original arithmetic by default. For a separate scheduling
+check at larger depths, `-D PAIRED_TB_ARITHMETIC_MODELS=1` explicitly enables
+the checked stateless arithmetic models; the result log identifies that mode.
+The existing sharing testbench also checks paired setup/finalization, including
+nonzero inactive slots, unequal local lane counts, odd tails and held responses:
+
+```sh
+"${PYPELINEC:-../../../PipelineC/src/pypelinec}" src/poly1305_pipelined_syn_tb.py \
+  --sim --comb --run all -D DATA_BITWIDTH=256 \
+  -D POLY1305_TB_MODE=sharing --out_dir generated-files/paired-sharing-comb
+```
+
+Native combinational checks establish functionality only. Acceptance also
+requires an automatically pipelined shared 80 MHz measurement, synthesis
+timing/device fit, resolved II=1 accounting, reference checks and FIFO
+conservation. End-to-end rates must be compared with one-block mode using the
+same compiler, target, payload seed, packet sizes and packet counts. Retained
+measurement records state their actual status; a body capacity is never a
+substitute for a measured packet-goodput result.
+
+The temporary shared MCP profile at 80 MHz does not fit xc7a200tffg1156-2:
+the performance top uses 232,173 LUTs (172.49%), 59,162 FFs, 740 DSPs and
+26.5 BRAM tiles. Its [development QoR record](../../measurements/shared-poly1305-paired-mcp-80mhz-20261019/README.md)
+is separate from the [passed native checkpoint](../../measurements/paired-poly1305-native-validation-20261019/README.md).
+The synthesis timing summary also misses 80 MHz (−1.013 ns worst setup slack).
+The FSM profile replaces those MCPs. Its 40 MHz hardware acceptance and matched
+goodput are in [the checkpoint above](#40-mhz-auto_fsm-hardware-checkpoint). An 80 MHz
+FSM-profile result and further setup/finalization optimization are still open.
+
+
+Performance testbenches install stateless native models for ChaCha20 block
+arithmetic and canonical Poly1305 operations. Pypeline's `sim_model` API leaves
+HDL elaboration unchanged; stream controllers, context ownership, FIFOs,
+backpressure and resolved pipeline/FSM delays still execute the design. The
+ordinary functional and paired testbenches execute the original arithmetic.
+Before performance runs, `python3 test_native_arithmetic_models.py -v` compares
+168 boundary/random inputs against those original functions, then checks model
+dispatch. Performance JSON records `native_arithmetic` so the simulation method
+is explicit. `python3 test_paired_profile.py -v` checks block/pair/tail accounting,
+latency separation, stale-profile rejection and cache/CLI compatibility.
+`python3 test_paired_arithmetic.py -v` checks 3,768 finalization cases and
+20 prologues against integer arithmetic, covering capacities 2/3/5/10/12, every
+local lane count and rotation, odd/even tails, zero/unit/maximal/random
+clamped keys, nonzero inactive slots and changes to `s`.
+
+For an original-arithmetic performance replay, pass
+`-D PERF_ARITHMETIC_MODELS=0` to `build.py --perf` (with the same `PERF_*`
+workload definitions). The small simultaneous encrypt/decrypt replay was
+checked to have identical complete phase records, every internal tap, reference
+checks and total cycle count with and without arithmetic models. The external
+`PYPELINE_SIM_SOFT_OPS` policy is also recorded explicitly in performance JSON.

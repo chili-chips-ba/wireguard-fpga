@@ -37,7 +37,8 @@ from aead_types import (
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
     uint128_t,
-    axis128_intrf,
+    aead_axis_intrf,
+    AEAD_BEAT_BYTES,
 )
 from axi.axis import make_axis_byte_source, make_axis_byte_sink
 from tb_common import (
@@ -67,7 +68,7 @@ PLAINTEXT_MAX_SIZE = PLAINTEXT_TEST_STR_MAX_SIZE
 # Input frame = ciphertext bytes immediately followed by the 16-byte tag --
 # Xilinx-style packed AXIS (issue #44), no padding gap; byte_source derives
 # keep as a plain trailing-only partial final beat.
-LANE_WIDTH = 16
+LANE_WIDTH = AEAD_BEAT_BYTES
 IN_FRAME_MAX_SIZE = CIPHERTEXT_MAX_SIZE + POLY1305_AUTH_TAG_SIZE
 _INPUT_CIPHERTEXTS = EXPECTED_CIPHERTEXTS + [EXPECTED_CIPHERTEXTS[0]]
 _INPUT_TAGS = EXPECTED_TAGS + [TAMPERED_TAG]
@@ -85,8 +86,8 @@ EXPECTED_PLAINTEXTS = PLAINTEXTS + [PLAINTEXTS[0]]
 EXPECTED_PLAINTEXT_LENS = PLAINTEXT_LENS + [PLAINTEXT_LENS[0]]
 EXPECTED_VERIFIED = [1] * NUM_PLAINTEXT_TEST_STRS + [0]
 
-byte_source = make_axis_byte_source(axis128_intrf, LANE_WIDTH, IN_FRAME_MAX_SIZE)
-byte_sink = make_axis_byte_sink(axis128_intrf, 16, PLAINTEXT_MAX_SIZE)
+byte_source = make_axis_byte_source(aead_axis_intrf, LANE_WIDTH, IN_FRAME_MAX_SIZE)
+byte_sink = make_axis_byte_sink(aead_axis_intrf, AEAD_BEAT_BYTES, PLAINTEXT_MAX_SIZE)
 
 
 # Sticky and one clock cycle delayed relative to the completing "Test N DONE!" print
@@ -108,7 +109,7 @@ def announce():
 # Counters, ROM selection and stream source/sink are real testbench hardware.
 # Time this MAIN normally rather than falsely declaring it wires-only.
 @MAIN(wireguard_env.TARGET_MHZ)
-def decrypt_syn_tb() -> axis128_intrf.fwd_t:
+def decrypt_syn_tb() -> aead_axis_intrf.fwd_t:
     # Test vectors
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = NONCE
@@ -142,7 +143,7 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
         load=~input_loaded,
         load_data=input_frames[input_packet_count],
         load_len=input_frame_lens[input_packet_count],
-        stream_out_if=axis128_intrf.fb_t(dut_in_ready),
+        stream_out_if=aead_axis_intrf.fb_t(dut_in_ready),
     )
     if ~input_loaded:
         sim_print(f"Decrypting test string {input_packet_count}...")
@@ -158,7 +159,7 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     chacha20poly1305_decrypt_ports.axis_out_if.ready = 1
     snk = byte_sink(
-        stream_in_if=axis128_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)
+        stream_in_if=aead_axis_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)
     )
 
     if snk.frame_valid:
@@ -189,4 +190,4 @@ def decrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     # dummy return for synthesis
     # so everything doesnt optimize away
-    return axis128_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)
+    return aead_axis_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)

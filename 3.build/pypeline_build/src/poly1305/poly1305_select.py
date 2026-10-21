@@ -5,7 +5,10 @@ IMPLEMENTATION = wireguard_env.POLY1305_IMPL
 _instances = {}
 
 if IMPLEMENTATION == "pipelined":
-    from poly1305_mac_pipelined import make_poly1305_mac_pipelined
+    if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
+        from poly1305_mac_paired import make_poly1305_mac_paired as make_poly1305_mac_pipelined
+    else:
+        from poly1305_mac_pipelined import make_poly1305_mac_pipelined
 else:
     import poly1305
 
@@ -30,6 +33,8 @@ def implementation_metadata():
               "arithmetic": "residue130" if IMPLEMENTATION == "pipelined" else "limb320-corrected"}
     if IMPLEMENTATION == "pipelined":
         result["compute_impl"] = wireguard_env.POLY1305_COMPUTE_IMPL
+        result["blocks_per_cycle"] = wireguard_env.POLY1305_BLOCKS_PER_CYCLE
+        result["body_architecture"] = "paired" if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2 else "interleaved"
     # Historical *_mcp_latency/shared_mcps keys also describe FSM services;
     # counts exclude the wrapper's one result/handshake cycle in both modes.
     if any(getattr(mac, "shared_mcps", False) for mac in _instances.values()):
@@ -46,6 +51,12 @@ def implementation_metadata():
                 "body_latency": mac.body_auto_pipeline.latency + 2,
                 "accumulator_count": mac.accumulator_count,
                 "body_ii": 1,
+                "blocks_per_cycle": wireguard_env.POLY1305_BLOCKS_PER_CYCLE,
+                "coefficient_latency": getattr(mac, "coefficient_latency", 0),
+                "coefficient_core_latency": (mac.coefficient_auto_pipeline.latency
+                                             if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2 else 0),
+                "axis_beat_bytes": wireguard_env.DATA_BITWIDTH // 8,
+                "total_body_latency": getattr(mac, "total_body_latency", mac.body_auto_pipeline.latency + 2),
                 "shared_mcps": mac.shared_mcps,
                 "packet_architecture": mac.packet_architecture,
                 "packet_buffers": dict(mac.packet_buffers),

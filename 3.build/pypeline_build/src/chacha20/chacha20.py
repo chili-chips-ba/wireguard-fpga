@@ -38,13 +38,13 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     CHACHA20_BLOCK_SIZE,
-    AXIS128_BEAT_BYTES,
+    AEAD_BEAT_BYTES,
     POLY1305_KEY_SIZE,
-    axis128_intrf,
+    aead_axis_intrf,
     axis512_frag_t,
     axis512_intrf,
     poly1305_key_stream_intrf,
-    axis128_stream_null,
+    aead_stream_null,
     axis512_stream_null,
     axis512_frag_null,
     poly1305_key_stream_null,
@@ -239,9 +239,9 @@ CHACHA20_STATE_NAMES = tuple(chacha20_state_t.__members__)
 
 
 # Data width converters to-from 512b wide blocks and the 128b bus
-_block_beats = CHACHA20_BLOCK_SIZE // AXIS128_BEAT_BYTES
-axis128_to_axis512 = make_dwidth_widen(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
-axis512_to_axis128 = make_dwidth_narrow(uint8_t, AXIS128_BEAT_BYTES, _block_beats)
+_block_beats = CHACHA20_BLOCK_SIZE // AEAD_BEAT_BYTES
+aead_to_axis512 = make_dwidth_widen(uint8_t, AEAD_BEAT_BYTES, _block_beats)
+axis512_to_aead = make_dwidth_narrow(uint8_t, AEAD_BEAT_BYTES, _block_beats)
 
 
 @struct
@@ -250,9 +250,9 @@ class chacha20_fsm_t(NamedTuple):
     # return their feedforward half (the other half is an arg of the same
     # name, suffixed `_if` to mark it as one bidirectional port, not two
     # same-named directional signals).
-    axis_in_if: axis128_intrf.fb_t
+    axis_in_if: aead_axis_intrf.fb_t
     key_if: poly1305_key_stream_intrf.fwd_t
-    axis_out_if: axis128_intrf.fwd_t
+    axis_out_if: aead_axis_intrf.fwd_t
     to_pipeline_if: chacha20_loop_body_stream_intrf.fwd_t
     from_pipeline_if: axis512_intrf.fb_t
 
@@ -262,9 +262,9 @@ def chacha20_fsm(
     # Inputs
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
-    axis_in_if: axis128_intrf.fwd_t,
+    axis_in_if: aead_axis_intrf.fwd_t,
     key_if: poly1305_key_stream_intrf.fb_t,
-    axis_out_if: axis128_intrf.fb_t,
+    axis_out_if: aead_axis_intrf.fb_t,
     to_pipeline_if: chacha20_loop_body_stream_intrf.fb_t,
     from_pipeline_if: axis512_intrf.fwd_t,
 ) -> chacha20_fsm_t:
@@ -281,7 +281,7 @@ def chacha20_fsm(
     # the state actually occupied this cycle rather than the next one.
     perf_taps.state("chacha20.in_state", input_side_state, CHACHA20_STATE_NAMES)
     # Default no input into width conversion
-    dwidth_conv_data_in: axis128_intrf.stream_t = axis128_stream_null()
+    dwidth_conv_data_in: aead_axis_intrf.stream_t = aead_stream_null()
     o.axis_in_if.ready = 0
     # Default no input into pipeline
     o.to_pipeline_if.stream = chacha20_loop_body_stream_null()
@@ -297,8 +297,8 @@ def chacha20_fsm(
     if input_side_state == chacha20_state_t.PLAINTEXT:
         dwidth_conv_data_in = axis_in_if.stream
     block_in_ready: Feedback[uint1_t]
-    in_to_block = axis128_to_axis512(
-        narrow_in_if=axis128_intrf.fwd_t(dwidth_conv_data_in),
+    in_to_block = aead_to_axis512(
+        narrow_in_if=aead_axis_intrf.fwd_t(dwidth_conv_data_in),
         wide_out_if=axis512_intrf.fb_t(block_in_ready),
     )
     block_in_stream: axis512_intrf.stream_t = in_to_block.wide_out_if.stream
@@ -367,7 +367,7 @@ def chacha20_fsm(
                 output_side_state = chacha20_state_t.POLY_KEY
 
     # Convert pipeline output 512b block stream to 128b
-    block_to_out = axis512_to_axis128(
+    block_to_out = axis512_to_aead(
         wide_in_if=axis512_intrf.fwd_t(block_to_out_axis_in),
         narrow_out_if=axis_out_if,
     )
@@ -424,7 +424,7 @@ class chacha20_ports(NamedTuple):
     """The two output ports of a chacha20 instance."""
 
     key_if: poly1305_key_stream_intrf
-    axis_out_if: axis128_intrf
+    axis_out_if: aead_axis_intrf
 
 
 # An interface function: only the feedforward direction is written. The FSM and
@@ -435,7 +435,7 @@ class chacha20_ports(NamedTuple):
 def chacha20_instance_wiring(
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
-    axis_in_if: axis128_intrf,
+    axis_in_if: aead_axis_intrf,
 ) -> chacha20_ports:
     fsm_out = chacha20_fsm(
         key=key, nonce=nonce, axis_in_if=axis_in_if, from_pipeline_if=pipe.stream_out_if

@@ -28,15 +28,15 @@ from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
-    axis128_intrf,
+    aead_axis_intrf,
 )
 from axi.axis_sim import AxisSimSink, Scoreboard
 import tb_common_sim as common
 import perf_tb_common as perf
 
 _scoreboard = Scoreboard()
-_src = common.ConvergedAxisSource(axis128_intrf, perf.BUS_BYTES)
-_snk = AxisSimSink(axis128_intrf, perf.BUS_BYTES, scoreboard=_scoreboard)
+_src = common.ConvergedAxisSource(aead_axis_intrf, perf.BUS_BYTES)
+_snk = AxisSimSink(aead_axis_intrf, perf.BUS_BYTES, scoreboard=_scoreboard)
 _runner = perf.make_runner(
     "decrypt", _src, _snk, _scoreboard, perf.decrypt_frame_builder
 )
@@ -51,7 +51,7 @@ def _keep_count(stream):
 
 
 @sim_input
-def drive_in_word() -> axis128_intrf.stream_t:
+def drive_in_word() -> aead_axis_intrf.stream_t:
     _runner.prepare_input()
     return _src.drive().stream
 
@@ -82,7 +82,7 @@ def measure_out():
         keep_count=_keep_count(stream) if valid else 0,
         eod=1 if stream.data.eod[0] else 0,
     )
-    _snk.step(axis128_intrf.fwd_t(stream))
+    _snk.step(aead_axis_intrf.fwd_t(stream))
     result = _snk.check_nowait()
     if result is not None:
         idx = result.get("idx", "?")
@@ -114,7 +114,7 @@ def measure_out():
 
 @MAIN(wireguard_env.TARGET_MHZ)
 @wires
-def decrypt_perf_tb() -> axis128_intrf.fwd_t:
+def decrypt_perf_tb() -> aead_axis_intrf.fwd_t:
     key: uint8_t[CHACHA20_KEY_SIZE] = common.KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = common.NONCE
     aad: uint8_t[AAD_MAX_LEN] = common.AAD
@@ -133,4 +133,4 @@ def decrypt_perf_tb() -> axis128_intrf.fwd_t:
     measure_out()
 
     # dummy return so nothing optimizes away
-    return axis128_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)
+    return aead_axis_intrf.fwd_t(chacha20poly1305_decrypt_ports.axis_out_if.stream)

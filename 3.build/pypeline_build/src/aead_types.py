@@ -53,6 +53,18 @@ axis128_bus_t = make_kept_data_bus_t(uint8_t, AXIS128_BEAT_BYTES)
 axis128_frag_t = make_ndarray_fragment_t(axis128_bus_t, 1)  # C axis128_t
 axis128_intrf = make_stream_interface(axis128_frag_t)  # C stream(axis128_t)
 
+# Selected packet width. Explicit axis128_* names stay genuinely 128 bits.
+AEAD_BEAT_BYTES = wireguard_env.DATA_BITWIDTH // 8
+aead_data_uint_t = make_uint_t(8 * AEAD_BEAT_BYTES)
+aead_keep_uint_t = make_uint_t(AEAD_BEAT_BYTES)
+aead_axis_bus_t = make_kept_data_bus_t(uint8_t, AEAD_BEAT_BYTES)
+aead_axis_frag_t = make_ndarray_fragment_t(aead_axis_bus_t, 1)
+aead_axis_intrf = make_stream_interface(aead_axis_frag_t)
+aead_keep_count = make_keep_count(aead_axis_bus_t, AEAD_BEAT_BYTES)
+aead_keep_count_t = make_uint_t(AEAD_BEAT_BYTES.bit_length())
+aead_count_to_keep = make_count_to_keep(AEAD_BEAT_BYTES)
+aead_2broadcast = make_axis_broadcast_interlock(aead_axis_intrf, 2)
+
 # 512b AXIS bus: 64 byte lanes (C axis512_t / stream(axis512_t))
 axis512_bus_t = make_kept_data_bus_t(uint8_t, 64)
 axis512_frag_t = make_ndarray_fragment_t(axis512_bus_t, 1)  # C axis512_t
@@ -109,8 +121,8 @@ def decrypt_auth_fifo_sizing(chacha_func, mac_func):
     credits = pipeline.max_in_flight
     prologue_latency = mac_func.prologue_mcp.compute_tag.latency
     shared_mcps = bool(mac_func.shared_mcps)
-    block_beats = CHACHA20_BLOCK_SIZE // AXIS128_BEAT_BYTES
-    aad_beats = (AAD_MAX_LEN + AXIS128_BEAT_BYTES - 1) // AXIS128_BEAT_BYTES
+    block_beats = CHACHA20_BLOCK_SIZE // AEAD_BEAT_BYTES
+    aad_beats = (AAD_MAX_LEN + AEAD_BEAT_BYTES - 1) // AEAD_BEAT_BYTES
     terms = {
         "pipeline_credits": block_beats * credits,
         "widening_storage": block_beats + 1,
@@ -155,8 +167,8 @@ def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None
         raise ValueError("Overlap FIFO sizing requires chacha_func.pipeline_func")
     if name not in ("encrypt/auth_fifo", "encrypt/append_fifo", "decrypt/auth_fifo"):
         raise ValueError("Unknown overlap FIFO")
-    ratio = CHACHA20_BLOCK_SIZE // AXIS128_BEAT_BYTES
-    aad_beats = (AAD_MAX_LEN + AXIS128_BEAT_BYTES - 1) // AXIS128_BEAT_BYTES
+    ratio = CHACHA20_BLOCK_SIZE // AEAD_BEAT_BYTES
+    aad_beats = (AAD_MAX_LEN + AEAD_BEAT_BYTES - 1) // AEAD_BEAT_BYTES
     shared = bool(mac_func.shared_mcps)
     peer_requests = int(shared)
     prologue_latency = mac_func.prologue_mcp.compute_tag.latency
@@ -164,9 +176,9 @@ def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None
     setup = (1 + peer_requests) * (prologue_latency + 1) + mac_func.prologue_handoff_cycles
     # The append FSM emits at most ceil((partial ciphertext + tag) / beat)
     # words after capturing the final ciphertext word.
-    tag_words = (AXIS128_BEAT_BYTES - 1 + POLY1305_AUTH_TAG_SIZE
-                 + AXIS128_BEAT_BYTES - 1) // AXIS128_BEAT_BYTES
-    completion = (mac_func.body_auto_pipeline.latency + 2
+    tag_words = (AEAD_BEAT_BYTES - 1 + POLY1305_AUTH_TAG_SIZE
+                 + AEAD_BEAT_BYTES - 1) // AEAD_BEAT_BYTES
+    completion = (getattr(mac_func, "total_body_latency", mac_func.body_auto_pipeline.latency + 2)
                   + mac_func.body_commit_cycles
                   + (1 + peer_requests) * (epilogue_latency + 1)
                   + mac_func.epilogue_handoff_cycles + tag_words)
@@ -189,16 +201,19 @@ def overlap_fifo_sizing(name, chacha_func, mac_func, *, auth_capacity_beats=None
         terms["pipeline_credits"] = ratio * pipeline.max_in_flight
         terms["widening_storage"] = ratio + 1
         terms["completion_service_and_handoffs"] = completion
+    if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
+        terms["formatter_storage"] = 2  # four complete authentication blocks
     required = sum(terms.values())
     return {
         "method": "poly1305-overlap-fork-v2",
+        "axis_beat_bytes": AEAD_BEAT_BYTES,
         "buffer": name,
         "chacha20_core_latency": pipeline.auto_pipeline.latency,
         "chacha20_max_in_flight_blocks": pipeline.max_in_flight,
         "chacha20_block_beats": ratio,
         "prologue_mcp_latency": prologue_latency,
         "epilogue_mcp_latency": epilogue_latency,
-        "body_latency": mac_func.body_auto_pipeline.latency + 2,
+        "body_latency": getattr(mac_func, "total_body_latency", mac_func.body_auto_pipeline.latency + 2),
         "prologue_handoff_cycles": mac_func.prologue_handoff_cycles,
         "body_commit_cycles": mac_func.body_commit_cycles,
         "epilogue_handoff_cycles": mac_func.epilogue_handoff_cycles,
@@ -230,8 +245,8 @@ def decrypt_verify_fifo_sizing(chacha_func, mac_func, *, verify_handoff_cycles):
     sizing = deepcopy(decrypt_auth_fifo_sizing(chacha_func, mac_func))
     terms = sizing["terms_beats"]
     terms["held_maximum_packet"] = (
-        AEAD_MAX_PLAINTEXT_BYTES + AXIS128_BEAT_BYTES - 1
-    ) // AXIS128_BEAT_BYTES
+        AEAD_MAX_PLAINTEXT_BYTES + AEAD_BEAT_BYTES - 1
+    ) // AEAD_BEAT_BYTES
     terms["narrowing_storage"] = sizing["chacha20_block_beats"] + 1
     terms["verification_handoffs"] = verify_handoff_cycles
     terms["release_handoff"] = 1  # wait-to-verdict -> output-plaintext
@@ -241,7 +256,7 @@ def decrypt_verify_fifo_sizing(chacha_func, mac_func, *, verify_handoff_cycles):
         buffer="decrypt/verify_fifo",
         authentication_sizing_method=decrypt_auth_fifo_sizing(chacha_func, mac_func)["method"],
         max_plaintext_bytes=AEAD_MAX_PLAINTEXT_BYTES,
-        axis_beat_bytes=AXIS128_BEAT_BYTES,
+        axis_beat_bytes=AEAD_BEAT_BYTES,
         verify_handoff_cycles=verify_handoff_cycles,
         required_beats=required,
         memory_depth_beats=1 << (max(2, required) - 1).bit_length(),
@@ -314,3 +329,13 @@ def poly1305_auth_tag_stream_null():
 
 def uint1_stream_null():
     return uint1_stream_intrf.stream_t(data=0, valid=0)
+
+
+def aead_frag_null():
+    return aead_axis_frag_t(
+        frag=aead_axis_bus_t(data=[0] * AEAD_BEAT_BYTES, keep=[0] * AEAD_BEAT_BYTES), eod=[0]
+    )
+
+
+def aead_stream_null():
+    return aead_axis_intrf.stream_t(data=aead_frag_null(), valid=0)

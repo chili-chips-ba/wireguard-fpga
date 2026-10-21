@@ -33,7 +33,8 @@ from aead_types import (
     CHACHA20_NONCE_SIZE,
     AAD_MAX_LEN,
     uint128_t,
-    axis128_intrf,
+    aead_axis_intrf,
+    AEAD_BEAT_BYTES,
 )
 from axi.axis import make_axis_byte_source, make_axis_byte_sink
 from tb_common import (
@@ -64,9 +65,12 @@ EXPECTED_OUT_FRAMES = [
 EXPECTED_OUT_FRAME_LENS = [n + POLY1305_AUTH_TAG_SIZE for n in CIPHERTEXT_LENS]
 
 byte_source = make_axis_byte_source(
-    axis128_intrf, 16, PLAINTEXT_TEST_STR_MAX_SIZE
+    aead_axis_intrf, AEAD_BEAT_BYTES, PLAINTEXT_TEST_STR_MAX_SIZE
 )
-byte_sink = make_axis_byte_sink(axis128_intrf, 16, OUT_FRAME_MAX_SIZE)
+# The byte sink writes every lane before applying keep, so its storage must
+# include the unused lanes of the final physical beat (144 bytes -> 160 at 256b).
+OUT_SINK_CAPACITY = ((OUT_FRAME_MAX_SIZE + AEAD_BEAT_BYTES - 1) // AEAD_BEAT_BYTES) * AEAD_BEAT_BYTES
+byte_sink = make_axis_byte_sink(aead_axis_intrf, AEAD_BEAT_BYTES, OUT_SINK_CAPACITY)
 
 
 # Sticky (stays 1 forever once set) and one clock cycle delayed relative to the
@@ -100,7 +104,7 @@ def announce():
 # Keep it a timed MAIN; @wires would falsely promise no logic or registers.
 # CSR constants do not change that requirement.
 @MAIN(wireguard_env.TARGET_MHZ)
-def encrypt_syn_tb() -> axis128_intrf.fwd_t:
+def encrypt_syn_tb() -> aead_axis_intrf.fwd_t:
     # Test vectors
     key: uint8_t[CHACHA20_KEY_SIZE] = KEY
     nonce: uint8_t[CHACHA20_NONCE_SIZE] = NONCE
@@ -139,7 +143,7 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
         load=~input_loaded,
         load_data=plaintexts[input_packet_count],
         load_len=plaintext_lens[input_packet_count],
-        stream_out_if=axis128_intrf.fb_t(dut_in_ready),
+        stream_out_if=aead_axis_intrf.fb_t(dut_in_ready),
     )
     if ~input_loaded:
         sim_print(f"Encrypting test string {input_packet_count}...")
@@ -155,7 +159,7 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     chacha20poly1305_encrypt_ports.axis_out_if.ready = 1
     snk = byte_sink(
-        stream_in_if=axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)
+        stream_in_if=aead_axis_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)
     )
 
     if snk.frame_valid:
@@ -181,4 +185,4 @@ def encrypt_syn_tb() -> axis128_intrf.fwd_t:
 
     # dummy return for synthesis
     # so everything doesnt optimize away
-    return axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)
+    return aead_axis_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_out_if.stream)

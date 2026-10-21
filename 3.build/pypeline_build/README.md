@@ -26,7 +26,7 @@ for both components. Both FSM cores use `max_latency=64`, with one additional
 stream-wrapper cycle; the compiler chooses their schedules within that cap.
 The measurements below identify their compute selection.
 
-**Accepted AUTO_FSM QoR, 2026-10-18:** all **48 concurrent reference checks**,
+**Accepted one-block AUTO_FSM QoR, 2026-10-18:** all **48 concurrent reference checks**,
 body II=1, buffer conservation, final synthesis timing/device fit and archived
 evidence checks passed. The design meets the **80 MHz** goal with
 **81.037 MHz** limiting synthesis fmax. At 1920 bytes, payload goodput is
@@ -198,6 +198,75 @@ a target is not a timing or capacity guarantee. Both
 sharing set; `build.py --enc`/`--dec` default to 30 MHz. Only the chosen MAC
 module is imported: the selector adds no hardware mux or unused legacy FSM.
 
+`--data-bitwidth {128,256}` selects the entire encrypt/decrypt packet datapath
+at elaboration (default `128`), including external data/keep ports, FIFOs,
+framing, tag handling, and ChaCha20 width converters. `128` preserves the
+existing 128-bit data / 16-bit keep ports and output-directory names. `256`
+selects **256-bit data / 32-bit keep** ports in both directions and
+paired-coefficient Poly1305, which consumes two 16-byte blocks per cycle.
+The existing `-blocks2` cache suffix is retained for 256-bit builds. Port names,
+keys, nonces, the 16-byte tag, and the shared 512-bit ChaCha20 arithmetic retain
+their current sizes and semantics. Legacy supports only `128`; an incompatible
+selection fails before a build or output-directory preparation. The direct
+compiler parameter is `-D DATA_BITWIDTH=256`; use the named flag with the
+build/measure scripts. Historical block-rate measurement fields and the old
+compiler parameter remain readable for archived runs.
+
+```bash
+./build.py --shared --sim --comb --native --data-bitwidth 256
+./build.py --shared --sim --comb --native --data-bitwidth 256 \
+  --poly1305-compute mcp
+./build.py --shared --sim --native --data-bitwidth 256 --target-mhz 80
+./measure.py --shared --data-bitwidth 256 --target-mhz 80 \
+  --label shared-poly1305-paired-80mhz --sizes 16,64,256,1024,1420,1920 \
+  --packets 4 --peak-bytes 0 --dirs both --taps all --seed 8439
+```
+
+Two-block mode supports the existing sharing, multiplier and FSM/MCP
+selections. Clock defaults are unchanged; request `--target-mhz 80` for the
+80 MHz comparison. Its arithmetic body can accept two complete 16-byte
+blocks per cycle (20.48 Gb/s per direction at 80 MHz). This is a body capacity,
+not an end-to-end packet-goodput guarantee: setup/finalization, packet tails
+and shared ChaCha20 key-generation blocks still consume time. Authentication
+padding remains on **16-byte boundaries**, including an unmatched final block.
+See [paired architecture and test commands](src/poly1305/throughput.md#paired-coefficient-two-block-mode).
+
+Use `--poly1305-compute mcp` for native development while compiler AUTO_FSM
+work is ongoing. Compare both block rates with the same compute selection and
+compiler snapshot. Functional validation and synthesis/packet-goodput acceptance
+are recorded separately; passing a combinational simulation does not establish
+80 MHz timing or device fit.
+
+**Paired native validation, 2026-10-19: PASS.** The
+[source, compiler and functional evidence checkpoint](measurements/paired-poly1305-native-validation-20261019/README.md)
+includes byte-exact framing, stalled tag/packet paths, arithmetic and integrated
+wide/narrow/legacy reference checks, including the 2032-byte maximum.
+
+**Paired AUTO_FSM hardware checkpoint, 40 MHz, 2026-10-21: PASS.** With shared
+FSM setup/finalization fixed at 12 lanes, the 256-bit performance top fits and
+meets a 40 MHz synthesis goal at 40.87 MHz. It uses 58,992 LUT, 36,306 FF,
+210 DSP and 26.5 BRAM tiles, against 45,116 / 30,668 / 138 / 18.5 for the
+matched 128-bit build. All 48 concurrent reference checks pass at both widths, and
+paired conservation holds.
+
+At 1920 bytes, 256 bits deliver **20.79 B/cycle** per direction against 15.48 for
+128 bits, 1.34× (6.65 against 4.96 Gb/s at 40 MHz). Below 1420 bytes, 256 bits
+are slower: one packet per 92 cycles against 80. The shared epilogue FSM takes
+45+1 cycles and serves both directions. 40 MHz is an interim goal; 80 MHz with small
+shared FSMs is still open. See the
+[256-bit record](measurements/shared-autofsm-c52412ca-256-40mhz-20261020-r4/README.md)
+and the [paired checkpoint notes](src/poly1305/throughput.md#40-mhz-auto_fsm-hardware-checkpoint).
+
+The temporary **paired MCP 80 MHz profile does not fit** the target device:
+232,173 LUTs (172.49%), 59,162 FFs, 740 DSPs and 26.5 BRAM tiles in the shared
+performance top. See the [failed-fit evidence](measurements/shared-poly1305-paired-mcp-80mhz-20261019/README.md)
+and [selected-depth native checks](measurements/paired-poly1305-native-validation-20261019/resolved-depths/README.md).
+Its synthesis timing also misses 80 MHz, with −1.013 ns worst setup slack.
+Its setup/finalization MCPs account for about 150k of those LUTs, including
+multipliers that did not fit in DSPs
+([fit analysis](measurements/shared-autofsm-c52412ca-256-40mhz-20261020-r4/fit-analysis/README.md)).
+The FSM profile above replaces them.
+
 `--poly1305-mult inferred|hybrid|hybrid_square` selects the pipelined MAC's 130-bit
 multiplier at elaboration. `hybrid` uses PyPeline's Karatsuba factory with
 threshold 34 and inferred leaves; the reducer and MAC architecture remain
@@ -254,18 +323,26 @@ epilogue services with one flag (default `fsm`). It applies to shared and
 private services in `build.py` and `measure.py`; direct `pypelinec` builds use
 `-D POLY1305_COMPUTE_IMPL=fsm|mcp`. FSM mode uses
 [`make_stream_auto_fsm`](../../../PipelineC/docs/pypeline_guide.md#stream-wrapper-for-auto_fsm-make_stream_auto_fsm-experimental)
-with automatic scheduling and no starting latency or latency limit. Both modes
+with automatic scheduling and a 64-cycle latency cap per service. Both modes
 keep the same valid/ready interface, round-robin sharing and body pipeline.
 FIFO budgets use the selected compute latency plus the wrapper's one result
 cycle. Historical metadata keys `*_mcp_latency` and `shared_mcps` are retained
 in measurement JSON for compatibility; `compute_impl` identifies their mode.
 Legacy Poly1305 is unaffected by this pipelined-only selection.
 
-Both epilogues select powers through loops of constant-index reads. This
-works around PipelineC's [AUTO_FSM variable-index read issue](../../../PipelineC/docs/issues_inventory.md#29-tbd-auto_fsm-cannot-regenerate-a-variable-index-array-read),
-which otherwise keeps the entire epilogue as one operation too slow for the
-clock goal. The loops preserve the lane rotation and allow automatic scheduling
-to split the epilogue across states; final timing still requires synthesis.
+Shared services size their kernels for the larger body lane count by default.
+`--poly1305-compute-capacity N` (`-D POLY1305_COMPUTE_CAPACITY=N`) fixes that
+capacity instead. Unused slots are zero, and each request's lane count still
+selects its rotation. Use it on a new clock goal without remembered body depths.
+There, the sweep can resize the body after AUTO_FSM has scheduled the services.
+The current compiler then stops with "re-elaboration did not apply a schedule";
+a fixed capacity keeps the scheduled services unchanged. The capacity must be at
+least the lane count of either direction. The 40 MHz checkpoints use 12.
+
+Both epilogues select powers through loops of constant-index reads, which allow
+automatic scheduling to split the epilogue across states. The final slot skips
+its wrap test: `next_lane` is always below the lane count. At small capacities
+that test would compare a one-bit value against a constant.
 
 `build.py` turns these flags into PipelineC design parameters on the
 `pypelinec` command line (`-D DESIGN=encrypt|decrypt|shared`, `-D
@@ -757,24 +834,32 @@ PipelineC's stream performance library; its
 defines every metric and probe rule. This repo adds the AEAD block graph, the
 Poly1305 cost model, Vivado fmax/area parsing, acceptance checks and evidence.
 
-The accepted AUTO_FSM measurement uses the shared pipelined design with
-64-cycle caps on both Poly1305 service cores and an 80 MHz goal. The compiler
-chose 64-cycle prologue and 41-cycle epilogue cores, each with one additional
-stream-wrapper cycle. It used a verified copy of the primary PipelineC working
-tree at `8ed96ba4` plus its uncommitted updates. The
-[measurement archive](measurements/shared-poly1305-fsm64-latest-qor-20261017/README.md)
-records the exact compiler patch and source hashes. Reproduce with that copy:
+The current measurement is an interim 40 MHz checkpoint of the 256-bit paired
+design. It uses the improved AUTO_FSM compiler, with shared FSM
+setup/finalization capped at 64 cycles and fixed at 12 lanes. The compiler chose
+35-cycle prologue and 45-cycle epilogue cores, each with one more stream-wrapper
+cycle. The run used a verified copy of the PipelineC working tree at `701a5c45`
+plus its uncommitted AUTO_FSM work. The
+[measurement archive](measurements/shared-autofsm-c52412ca-256-40mhz-20261020-r4/README.md)
+records the compiler patch, its 4,854-file manifest and the source hashes. The
+matched 128-bit run uses the same command with `--data-bitwidth 128`:
 
 ```bash
-export PYPELINEC="$PWD/generated-files/poly1305-fsm-compiler-attempt8-latest/compiler/src/pypelinec"
+export PYPELINEC="$PWD/generated-files/autofsm-c52412ca-compiler-20261020/compiler/src/pypelinec"
 export PYPELINEC_CACHE_DIR="$PWD/generated-files/pypelinec-cache"
-./measure.py --shared --poly1305 pipelined --target-mhz 80 \
-  --poly1305-mult hybrid_square --poly1305-compute fsm -j 2 \
-  --label shared-poly1305-fsm64-latest-qor-20261017 --reuse-syn \
-  --out-dir generated-files/shared-poly1305-fsm-qor-20261016 \
+./measure.py --shared --poly1305 pipelined --data-bitwidth 256 --target-mhz 40 \
+  --poly1305-mult hybrid_square --poly1305-compute fsm --poly1305-compute-capacity 12 -j 1 \
+  --label shared-autofsm-c52412ca-256-40mhz-20261020-r4 \
+  --out-dir generated-files/shared-autofsm-c52412ca-256-40mhz-20261020-r4 \
   --sizes 16,64,256,1024,1420,1920 --packets 4 --peak-bytes 0 \
   --dirs both --taps all --seed 8439 --no-per-module-area --save-evidence
 ```
+
+The highest-clock accepted record is still the 128-bit 80 MHz AUTO_FSM build on
+the earlier compiler: 81.04 MHz, 104,668 LUT, 413 DSP and 9.125 Gb/s per
+direction at 1920 bytes. Its
+[archive](measurements/shared-poly1305-fsm64-latest-qor-20261017/README.md)
+holds the reproduction steps.
 
 For a focused bottleneck investigation near the maximum packet size, use
 `--sizes 1920 --packets 4 --peak-bytes 0`. This selects one back-to-back phase
@@ -952,77 +1037,77 @@ The build log can be quiet during native simulation because `measure.py`
 filters the per-cycle `Clock: N` lines; absence of JSON before the first burst
 finishes does not indicate a failed measurement.
 
-### Current results: shared AUTO_FSM, 64-cycle caps, 80 MHz
+### Current results: 256-bit paired Poly1305, shared AUTO_FSM, 40 MHz checkpoint
 
-Both encrypt and decrypt share **one prologue FSM and one epilogue FSM**, with
-independent round-robin arbiters. The two directions retain separate II=1 body
-pipelines with ten accumulator lanes each. Core latencies are **64/41 cycles**
-for prologue/epilogue; wrapper response times are **65/42 cycles**, before
-arbitration waits. ChaCha20 is also shared. Legacy `mcp` names in module/JSON
-identifiers refer to these selected services; the recorded compute mode is `fsm`.
+This is an interim checkpoint at a 40 MHz goal. It shows that the double-wide paired
+MAC builds and measures with automatic FSM setup/finalization. Both directions share
+**one prologue FSM and one epilogue FSM**, each fixed at 12 lanes and capped at 64
+cycles, behind independent round-robin arbiters. Each direction keeps its own paired
+body: II=1 coefficient and feedback pipelines, 3 accumulator lanes, 3+3 response
+cycles. Core latencies are **35/45 cycles** for prologue/epilogue, plus one wrapper
+cycle each. ChaCha20 is also shared. Legacy `mcp` names in module and JSON
+identifiers refer to these services; the recorded compute mode is `fsm`.
 
-All 48 reference checks across six packet sizes passed in 4,348 simulation
-cycles. The perf top fits the device and meets the 80 MHz synthesis target.
-At a common 80 MHz, 1920-byte goodput is 9.125 Gb/s in each direction, versus
-9.910 Gb/s for MCP (-7.92%). At 1420 bytes the FSM design gives 7.724/6.476
-Gb/s encrypt/decrypt, versus 9.668/9.668 for MCP. Smaller packets have larger
-setup/finalization penalties. Four packets per direction provide three
-completion intervals; these are the measured burst rates.
+All 48 reference checks across six packet sizes pass, along with body II=1, buffer
+conservation and paired conservation (per direction 1248 blocks = 2 × 616 pairs +
+16 tails). The perf top fits at 58,992 LUT (43.8%), 36,306 FF, 210 DSP and
+26.5 BRAM tiles. It meets the 40 MHz synthesis goal at 40.87 MHz.
 
-| Resource | MCP baseline | Shared FSMs | Change |
-| --- | ---: | ---: | ---: |
-| LUTs | 108,078 | 104,668 | -3.16% |
-| Flip-flops | 43,955 | 93,372 | +112.43% |
-| DSP48s | 711 | 413 | -41.91% |
-| BRAM tiles | 18.5 | 18.5 | +0.00% |
+The matched 128-bit build uses the same compiler, clock, seed and workload
+([record](measurements/shared-autofsm-c52412ca-128-40mhz-20261020-r4/README.md)). It
+uses 45,116 LUT, 30,668 FF, 138 DSP and 18.5 BRAM tiles and delivers 15.48 B/cycle at
+1920 bytes. 256 bits deliver **20.79 B/cycle**, 1.34× more (6.65 against 4.96 Gb/s
+at 40 MHz), and `measure.compare_block_rates` passes.
 
-Both area reports are for the shared performance-testbench top. Compiler
-revisions differ, so this compares complete designs rather than an isolated
-same-compiler wrapper swap. Routed timing and external-port area were not
-measured. See the [accepted record](measurements/shared-poly1305-fsm64-latest-qor-20261017/README.md)
-and [full resource/rate comparison](measurements/shared-poly1305-fsm64-latest-qor-20261017/comparison.md).
+Below 1420 bytes, 256 bits are slower, at one packet per 92 cycles against 80. The
+shared epilogue serves one request at a time for both directions, so its period is
+2 × (45 + 1) cycles. That period, not the two-block body, sets the remaining limit.
+Four packets per direction provide three completion intervals; these are measured
+burst rates. Routed timing and external-port area were not measured. The 80 MHz goal
+with small shared FSMs is still open.
 
 <!-- MEASURED-RESULTS:BEGIN -->
 
-_Measured by `./measure.py --label shared-poly1305-fsm64-latest-qor-20261017` on 2026-10-18T14:33:18+00:00 — wireguard-fpga `8211d51ed52d`, PipelineC `8ed96ba4c4e1`, Vivado 2019.2, 4348 cycles. Regenerate with `./measure.py --label shared-poly1305-fsm64-latest-qor-20261017 --parse-only --update-readme`._
+_Measured by `./measure.py --label shared-autofsm-c52412ca-256-40mhz-20261020-r4` on 2026-10-21T06:48:41+00:00 — wireguard-fpga `a9eb0608e96e`, PipelineC `701a5c452f53`, Vivado 2019.2, 2956 cycles. Regenerate with `./measure.py --label shared-autofsm-c52412ca-256-40mhz-20261020-r4 --parse-only --update-readme`._
 
-Design `shared` | target 80.0 MHz | measured fmax **81.04 MHz** | limiting MAIN `poly1305_mcp_shared_poly1305_epilogue_shared`
+Design `shared` | target 40.0 MHz | measured fmax **40.87 MHz** | limiting MAIN `encrypt_dataflow`
+Packet datapath: `256` bits; Poly1305 blocks/cycle: `2`.
 Poly1305 multiplier: `hybrid_square`.
 Poly1305 prologue/epilogue: `fsm`.
-Area (perf_tb_top): **104668 LUT** (103524 logic + 1144 mem), **93372 FF**, **413 DSP48**, **18.5 BRAM tiles**, 11239 CARRY4
+Area (perf_tb_top): **58992 LUT** (58227 logic + 765 mem), **36306 FF**, **210 DSP48**, **26.5 BRAM tiles**, 7603 CARRY4
 Shared resources: `chacha20-poly1305`.
-Buffer `decrypt/auth_fifo`: 512 memory beats + 1 output beat; 513 total capacity.
-Automatic overlap sizing: 340 required beats (setup_service_and_handoffs=133, aad_framing=2, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, pipeline_credits=96, widening_storage=5, completion_service_and_handoffs=99); memory rounded to a power of two.
+Buffer `decrypt/auth_fifo`: 256 memory beats + 1 output beat; 257 total capacity.
+Automatic overlap sizing: 221 required beats (setup_service_and_handoffs=75, aad_framing=1, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, pipeline_credits=32, widening_storage=3, completion_service_and_handoffs=103, formatter_storage=2); memory rounded to a power of two.
 Buffer `decrypt/verify_fifo`: 512 memory beats + 1 output beat; 513 total capacity.
-Automatic verification sizing: 477 required beats (setup_service_and_handoffs=133, aad_framing=2, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, pipeline_credits=96, widening_storage=5, completion_service_and_handoffs=99, held_maximum_packet=127, narrowing_storage=5, verification_handoffs=4, release_handoff=1); memory rounded to a power of two.
+Automatic verification sizing: 293 required beats (setup_service_and_handoffs=75, aad_framing=1, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, pipeline_credits=32, widening_storage=3, completion_service_and_handoffs=103, formatter_storage=2, held_maximum_packet=64, narrowing_storage=3, verification_handoffs=4, release_handoff=1); memory rounded to a power of two.
 Buffer `encrypt/append_fifo`: 512 memory beats + 1 output beat; 513 total capacity.
-Automatic overlap sizing: 496 required beats (setup_service_and_handoffs=133, aad_framing=2, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, authentication_queue=257, completion_service_and_handoffs=99); memory rounded to a power of two.
-Buffer `encrypt/auth_fifo`: 256 memory beats + 1 output beat; 257 total capacity.
-Automatic overlap sizing: 145 required beats (setup_service_and_handoffs=133, aad_framing=2, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, narrowing_storage=5); memory rounded to a power of two.
+Automatic overlap sizing: 315 required beats (setup_service_and_handoffs=75, aad_framing=1, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, authentication_queue=129, completion_service_and_handoffs=103, formatter_storage=2); memory rounded to a power of two.
+Buffer `encrypt/auth_fifo`: 128 memory beats + 1 output beat; 129 total capacity.
+Automatic overlap sizing: 86 required beats (setup_service_and_handoffs=75, aad_framing=1, framing_idle=1, length_framing=1, fifo_startup=2, fork_copy_lead=1, narrowing_storage=3, formatter_storage=2); memory rounded to a power of two.
 Register slice `encrypt/output_slice`: mode `full`, 2 slots, 1 unstalled cycle(s), II=1.
 Poly1305 implementation: `pipelined`.
 
 | phase | bytes | pkts | dir | sustained B/cyc | pkt period (clk) | % line rate | Gb/s @fmax | Gb/s @target | in stall | cold head (clk) | total lat med (clk) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| b2b-16 | 16 | 4 | encrypt | 0.146 | 109.3 | 0.9% | 0.095 | 0.094 | 0.010 | 30 | 342.5 |
-| b2b-16 | 16 | 4 | decrypt | 0.121 | 132.0 | 0.8% | 0.079 | 0.078 | 0.558 | 218 | 297.0 |
-| b2b-64 | 64 | 4 | encrypt | 0.585 | 109.3 | 3.7% | 0.379 | 0.375 | 0.010 | 33 | 340.0 |
-| b2b-64 | 64 | 4 | decrypt | 0.485 | 132.0 | 3.0% | 0.314 | 0.310 | 0.543 | 221 | 300.0 |
-| b2b-256 | 256 | 4 | encrypt | 2.341 | 109.3 | 14.6% | 1.518 | 1.499 | 0.010 | 33 | 334.0 |
-| b2b-256 | 256 | 4 | decrypt | 1.939 | 132.0 | 12.1% | 1.257 | 1.241 | 0.485 | 233 | 312.0 |
-| b2b-1024 | 1024 | 4 | encrypt | 9.366 | 109.3 | 58.5% | 6.072 | 5.994 | 0.079 | 33 | 291.0 |
-| b2b-1024 | 1024 | 4 | decrypt | 7.758 | 132.0 | 48.5% | 5.029 | 4.965 | 0.293 | 281 | 367.5 |
-| b2b-1420 | 1420 | 4 | encrypt | 12.068 | 117.7 | 75.4% | 7.824 | 7.724 | 0.056 | 33 | 292.0 |
-| b2b-1420 | 1420 | 4 | decrypt | 10.119 | 140.3 | 63.2% | 6.560 | 6.476 | 0.205 | 306 | 406.0 |
-| b2b-1920 | 1920 | 4 | encrypt | 14.257 | 134.7 | 89.1% | 9.243 | 9.125 | 0.010 | 33 | 282.0 |
-| b2b-1920 | 1920 | 4 | decrypt | 14.257 | 134.7 | 89.1% | 9.243 | 9.125 | 0.122 | 337 | 424.5 |
+| b2b-16 | 16 | 4 | encrypt | 0.174 | 92.0 | 0.5% | 0.057 | 0.056 | 0.013 | 110 | 246.5 |
+| b2b-16 | 16 | 4 | decrypt | 0.174 | 92.0 | 0.5% | 0.057 | 0.056 | 0.572 | 160 | 183.0 |
+| b2b-64 | 64 | 4 | encrypt | 0.696 | 92.0 | 2.2% | 0.227 | 0.223 | 0.015 | 23 | 245.5 |
+| b2b-64 | 64 | 4 | decrypt | 0.696 | 92.0 | 2.2% | 0.227 | 0.223 | 0.560 | 161 | 184.0 |
+| b2b-256 | 256 | 4 | encrypt | 2.783 | 92.0 | 8.7% | 0.910 | 0.890 | 0.152 | 23 | 242.0 |
+| b2b-256 | 256 | 4 | decrypt | 2.783 | 92.0 | 8.7% | 0.910 | 0.890 | 0.519 | 167 | 190.0 |
+| b2b-1024 | 1024 | 4 | encrypt | 11.130 | 92.0 | 34.8% | 3.639 | 3.562 | 0.100 | 23 | 212.0 |
+| b2b-1024 | 1024 | 4 | decrypt | 11.130 | 92.0 | 34.8% | 3.639 | 3.562 | 0.373 | 191 | 218.0 |
+| b2b-1420 | 1420 | 4 | encrypt | 15.435 | 92.0 | 48.2% | 5.046 | 4.939 | 0.079 | 23 | 212.0 |
+| b2b-1420 | 1420 | 4 | decrypt | 15.435 | 92.0 | 48.2% | 5.046 | 4.939 | 0.310 | 204 | 237.5 |
+| b2b-1920 | 1920 | 4 | encrypt | 20.794 | 92.3 | 65.0% | 6.798 | 6.654 | 0.031 | 23 | 212.0 |
+| b2b-1920 | 1920 | 4 | decrypt | 20.794 | 92.3 | 65.0% | 6.798 | 6.654 | 0.234 | 219 | 260.5 |
 
 <!-- MEASURED-RESULTS:END -->
 
 <!-- BLOCK-RESULTS:BEGIN -->
 
 Detailed per-block service/stall, shared arbitration and lifecycle measurements
-are in the [block report](measurements/shared-poly1305-fsm64-latest-qor-20261017/blocks.md).
+are in the [block report](measurements/shared-autofsm-c52412ca-256-40mhz-20261020-r4/blocks.md).
 
 <!-- BLOCK-RESULTS:END -->
 

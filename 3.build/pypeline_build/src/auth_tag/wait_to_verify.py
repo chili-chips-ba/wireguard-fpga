@@ -23,8 +23,8 @@ from pypeline import (
 from stream import stream_perf_probe as perf_taps
 
 from aead_types import (
-    axis128_intrf,
-    axis128_frag_t,
+    aead_axis_intrf,
+    aead_axis_frag_t,
     uint1_stream_intrf,
     make_aead_fifo,
 )
@@ -43,9 +43,9 @@ WAIT_TO_VERIFY_STATE_NAMES = tuple(wait_to_verify_state_t.__members__)
 
 @struct
 class wait_to_verify_out_t(NamedTuple):
-    axis_in_if: axis128_intrf.fb_t
+    axis_in_if: aead_axis_intrf.fb_t
     verify_bit_if: uint1_stream_intrf.fb_t
-    axis_out_if: axis128_intrf.fwd_t
+    axis_out_if: aead_axis_intrf.fwd_t
     is_verified_out: uint1_t  # plain sideband, no reverse companion
 
 
@@ -54,14 +54,14 @@ def make_wait_to_verify(depth=128, *, sizing=None):
     if type(depth) is not int or depth < 2:
         raise ValueError("Verification FIFO memory depth must be an integer >= 2")
     verify_fifo_func = make_aead_fifo(
-        axis128_frag_t, depth, "verify_fifo", "decrypt", sizing=sizing
+        aead_axis_frag_t, depth, "verify_fifo", "decrypt", sizing=sizing
     )
 
     @hw_func
     def wait_to_verify(
-        axis_in_if: axis128_intrf.fwd_t,
+        axis_in_if: aead_axis_intrf.fwd_t,
         verify_bit_if: uint1_stream_intrf.fwd_t,
-        axis_out_if: axis128_intrf.fb_t,
+        axis_out_if: aead_axis_intrf.fb_t,
     ) -> wait_to_verify_out_t:
         o: wait_to_verify_out_t
         state: Reg[wait_to_verify_state_t]
@@ -75,11 +75,11 @@ def make_wait_to_verify(depth=128, *, sizing=None):
         # verify_fifo <-> this FSM's own mutual dependency (fifo's read data/ready
         # feed the FSM, which in turn drives the fifo's write data/read-enable)
         verify_fifo_in_ready: Feedback[uint1_t]
-        verify_fifo_out: Feedback[axis128_intrf.stream_t]
+        verify_fifo_out: Feedback[aead_axis_intrf.stream_t]
 
         # Write side of FIFO
         # the data+valid for input stream (aka fifo write data, write enable)
-        verify_fifo_in_s: axis128_intrf.stream_t = axis_in_if.stream
+        verify_fifo_in_s: aead_axis_intrf.stream_t = axis_in_if.stream
         # the ready signal for the input stream (aka fifo not full signal)
         o.axis_in_if.ready = verify_fifo_in_ready
 
@@ -134,8 +134,8 @@ def make_wait_to_verify(depth=128, *, sizing=None):
             o.verify_bit_if.ready = 0
 
         fifo_result = verify_fifo_func(
-            in_stream_if=axis128_intrf.fwd_t(verify_fifo_in_s),
-            out_stream_if=axis128_intrf.fb_t(verify_fifo_out_ready_s),
+            in_stream_if=aead_axis_intrf.fwd_t(verify_fifo_in_s),
+            out_stream_if=aead_axis_intrf.fb_t(verify_fifo_out_ready_s),
         )
         verify_fifo_out = fifo_result.out_stream_if.stream
         verify_fifo_in_ready = fifo_result.in_stream_if.ready

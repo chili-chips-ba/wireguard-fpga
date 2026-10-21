@@ -59,6 +59,7 @@ if MODE not in ("arithmetic", "sharing"):
 if MODE == "sharing":
     import poly1305_mcp_shared as shared
 
+    RATE = wireguard_env.POLY1305_BLOCKS_PER_CYCLE
     C = shared.CAPACITY
     REQUESTS = 12
     rng = random.Random(130513)
@@ -66,12 +67,12 @@ if MODE == "sharing":
     R = [0, 1, CLAMP_MASK] + [rng.getrandbits(128) & CLAMP_MASK for _ in range(7)]
     R += [R[-1], R[-1]]  # Repeated keys must still run the prologue.
     PRO_R = R + list(reversed(R))
-    PRO_EXPECTED = [pow(r, j + 1, P) for r in PRO_R for j in range(C)]
+    PRO_EXPECTED = [pow(r, RATE * (j + 1), P) for r in PRO_R for j in range(C)]
     COUNTS = [(i % C) + 1 for i in range(2 * REQUESTS)]
     NEXT = [i % COUNTS[i] for i in range(2 * REQUESTS)]
     SALTS = [rng.getrandbits(128) for _ in range(2 * REQUESTS)]
     ACCUM = [rng.randrange(P) for _ in range(2 * REQUESTS * C)]
-    EPI_POWERS = [pow(PRO_R[i], j + 1, P) for i in range(2 * REQUESTS) for j in range(C)]
+    EPI_POWERS = [pow(PRO_R[i], RATE * (j + 1), P) for i in range(2 * REQUESTS) for j in range(C)]
     EPI_EXPECTED = [((sum(ACCUM[i * C + j] * EPI_POWERS[i * C + (NEXT[i] - 1 - j) % COUNTS[i]]
                          for j in range(COUNTS[i])) % P) + SALTS[i]) & MASK128
                     for i in range(2 * REQUESTS)]
@@ -88,10 +89,25 @@ if MODE == "sharing":
     PURE_R = [x[2] for x in PURE_CASES]
     PURE_S = [rng.getrandbits(128) for _ in PURE_CASES]
     PURE_A = [rng.randrange(P) for _ in range(5 * PURE_N)]
-    PURE_POW = [pow(r, j + 1, P) for r in PURE_R for j in range(5)]
+    PURE_POW = [pow(r, RATE * (j + 1), P) for r in PURE_R for j in range(5)]
     PURE_TAG = [((sum(PURE_A[i * 5 + j] * PURE_POW[i * 5 + (PURE_NEXT[i] - 1 - j) % PURE_LANES[i]]
                          for j in range(PURE_LANES[i])) % P) + PURE_S[i]) & MASK128
                 for i in range(PURE_N)]
+    if RATE == 2:
+        EPI_EXPECTED = []
+        for i in range(2 * REQUESTS):
+            h = sum(ACCUM[i * C + j] * pow(PRO_R[i], 2 * ((NEXT[i] - 1 - j) % COUNTS[i]), P)
+                    for j in range(COUNTS[i])) * PRO_R[i] % P
+            if i % 2:
+                h = (h + (1 << 128) + i) * PRO_R[i] % P
+            EPI_EXPECTED.append((h + SALTS[i]) & MASK128)
+        PURE_TAG = []
+        for i in range(PURE_N):
+            h = sum(PURE_A[i * 5 + j] * pow(PURE_R[i], 2 * ((PURE_NEXT[i] - 1 - j) % PURE_LANES[i]), P)
+                    for j in range(PURE_LANES[i])) * PURE_R[i] % P
+            if i % 2:
+                h = (h + (1 << 129) - 1) * PURE_R[i] % P
+            PURE_TAG.append((h + PURE_S[i]) & MASK128)
     PURE_ARRAY_SIZE = 5 * PURE_N
 
     @hw_func
@@ -134,6 +150,13 @@ if MODE == "sharing":
         epi_dec.data.next_lane = next_lane[dec_index]
         epi_enc.data.s = salts[enc_index]
         epi_dec.data.s = salts[dec_index]
+        if RATE == 2:
+            epi_enc.data.r = r[enc_index]
+            epi_dec.data.r = r[dec_index]
+            epi_enc.data.tail = (1 << 128) + enc_index
+            epi_dec.data.tail = (1 << 128) + dec_index
+            epi_enc.data.has_tail = enc_index % 2
+            epi_dec.data.has_tail = dec_index % 2
         for j in range(C):
             # Inactive slots deliberately contain nonzero values. They must
             # contribute zero even when local lane count is less than capacity.
@@ -225,6 +248,10 @@ if MODE == "sharing":
         x.lane_count = pure_counts[idx]
         x.next_lane = pure_next[idx]
         x.s = pure_s[idx]
+        if RATE == 2:
+            x.r = pure_r[idx]
+            x.tail = (1 << 129) - 1
+            x.has_tail = idx % 2
         for j in range(5):
             x.accumulators[j] = pure_a[idx * 5 + j]
             x.powers.values[j] = pure_pow[idx * 5 + j]

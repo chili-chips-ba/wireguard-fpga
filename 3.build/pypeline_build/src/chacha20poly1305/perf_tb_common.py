@@ -22,6 +22,7 @@ only the simulation re-runs (see measure.py --reuse-syn).
 Key/nonce/AAD are reused from tb_common_sim.py rather than duplicated.
 """
 
+import os
 import wireguard_env
 from pypeline import param
 
@@ -31,6 +32,16 @@ from poly1305_select import implementation_metadata
 from aead_types import AEAD_MAX_PLAINTEXT_BYTES, buffering_metadata, stream_slice_metadata
 import tb_common_sim as common
 from aead_ref_model import generate_encrypt_vector
+
+# These stateless models replace only pure arithmetic during native sim.
+# Protocol/state/pipeline schedules still run the design; HDL is unaffected.
+# Differential checks against the original functions live in
+# test_native_arithmetic_models.py. Ordinary functional TBs use original bodies.
+from native_arithmetic_models import install as install_arithmetic_models
+ARITHMETIC_MODELS = param("PERF_ARITHMETIC_MODELS", True,
+                          help="native perf only: use differential-checked pure arithmetic models")
+if ARITHMETIC_MODELS:
+    install_arithmetic_models()
 
 # MAIN name -> short label that qualifies tap names (`encrypt/chacha20.in`).
 # Update in place: the probes read this exact dict object.
@@ -47,7 +58,7 @@ stream_perf_probe.MAIN_LABELS.update({
 # while a verdict is pending; FIFO rounding does not enlarge this envelope.
 # The authentication tag is stripped before plaintext enters that FIFO.
 MAX_PACKET_BYTES = AEAD_MAX_PLAINTEXT_BYTES
-BUS_BYTES = 16  # axis128_intrf: 16 byte lanes per beat
+BUS_BYTES = wireguard_env.DATA_BITWIDTH // 8
 
 # Default plan sized against MEASURED native-sim speed: the 60 MHz shared
 # perf top simulates at roughly 2 s per cycle, so the whole plan below is a few
@@ -102,11 +113,15 @@ CONFIG = {
     "target_mhz": wireguard_env.TARGET_MHZ,
     "poly1305_mult_impl": wireguard_env.POLY1305_MULT_IMPL,
     "poly1305_compute_impl": wireguard_env.POLY1305_COMPUTE_IMPL,
+    "poly1305_blocks_per_cycle": wireguard_env.POLY1305_BLOCKS_PER_CYCLE,
+    "data_bitwidth": wireguard_env.DATA_BITWIDTH,
     "poly1305": implementation_metadata(),
     "sharing": wireguard_env.SHARING,
     "buffering": buffering_metadata(),
     "stream_slices": stream_slice_metadata(),
     "source_handshake": "converged",
+    "native_arithmetic": "checked-stateless-models-v1" if ARITHMETIC_MODELS else "hw-functions",
+    "native_soft_ops": os.environ.get("PYPELINE_SIM_SOFT_OPS", "all"),
     "decrypt_verification_retained": True,
     "bus_bytes": BUS_BYTES,
     "dirs": ENABLED_DIRS,

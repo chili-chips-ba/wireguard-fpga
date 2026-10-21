@@ -16,6 +16,7 @@ It does three things:
    build.py sets them from its flags:
      DESIGN         encrypt | decrypt | shared (default shared)
      POLY1305_IMPL  pipelined | legacy (default pipelined)
+     DATA_BITWIDTH  128 | 256 packet datapath bits (default 128; ChaCha20 stays 512)
      SHARE          auto | none | chacha20 | poly1305 | both. auto means both
                     resources for the shared design, none for one direction
      POLY1305_MULT_IMPL inferred | hybrid | hybrid_square (default hybrid_square;
@@ -23,7 +24,7 @@ It does three things:
      POLY1305_COMPUTE_IMPL fsm | mcp (default fsm; pipelined setup/finalization)
      TARGET_MHZ     positive integer MHz (default: the profile's clock)
 3. Resolves them into this build's profile: DESIGN, ENCRYPT, DECRYPT,
-   POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING and TARGET_MHZ.
+   DATA_BITWIDTH, POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING and TARGET_MHZ.
 
 The profile tables and output-directory names below are plain Python, shared
 with build.py and measure.py. Those import this module without PipelineC on
@@ -50,6 +51,8 @@ SHARE_CHOICES = ("auto", "none", "chacha20", "poly1305", "both")
 
 MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square")
 DEFAULT_MULT_IMPL = "hybrid_square"
+BLOCK_RATES = (1, 2)
+DATA_BITWIDTHS = (128, 256)
 COMPUTE_IMPLEMENTATIONS = ("fsm", "mcp")
 DEFAULT_COMPUTE_IMPL = "fsm"
 DEFAULT_TARGET_MHZ = 85  # Highest passing shared hardware and six-size QoR point.
@@ -61,6 +64,27 @@ def selected_implementation(value=None):
     if choice not in IMPLEMENTATIONS:
         raise ValueError(f"POLY1305_IMPL must be one of {IMPLEMENTATIONS}, got {choice!r}")
     return choice
+
+
+def selected_data_bitwidth(value=None, implementation="pipelined"):
+    choice = 128 if value is None else value
+    if type(choice) is not int or choice not in DATA_BITWIDTHS:
+        raise ValueError("DATA_BITWIDTH must be 128 or 256 bits")
+    if implementation == "legacy" and choice != 128:
+        raise ValueError("Legacy Poly1305 supports only --data-bitwidth 128")
+    return choice
+
+
+def selected_blocks_per_cycle(value=None, implementation="pipelined"):
+    choice = 1 if value is None else value
+    if type(choice) is not int or choice not in BLOCK_RATES:
+        raise ValueError("POLY1305_BLOCKS_PER_CYCLE must be 1 or 2")
+    selected_data_bitwidth(128 * choice, implementation)
+    return choice
+
+
+def blocks_out_dir(base, blocks=1):
+    return base if blocks == 1 else f"{base}-blocks{selected_blocks_per_cycle(blocks)}"
 
 
 def selected_sharing(chacha20=True, poly1305=True, *, implementation=None):
@@ -131,13 +155,21 @@ def compute_out_dir(base, compute):
 
 
 def resolve_profile(design="shared", implementation="pipelined", share="auto", target_mhz=None,
-                    multiplier=None):
+                    multiplier=None, blocks_per_cycle=None, *, data_bitwidth=None):
     """The one place a build profile's defaults are decided: the design itself,
     build.py and measure.py all call this, so a direct pypelinec run builds
     exactly what build.py would."""
     if design not in DESIGNS:
         raise ValueError(f"DESIGN must be one of {DESIGNS}, got {design!r}")
     implementation = selected_implementation(implementation)
+    # Accept the old compiler parameter for archived build commands. Width is
+    # the public selection; the MAC block rate follows from 128-bit blocks.
+    if blocks_per_cycle is not None:
+        old_width = 128 * selected_blocks_per_cycle(blocks_per_cycle, implementation)
+        if data_bitwidth is not None and data_bitwidth != old_width:
+            raise ValueError("DATA_BITWIDTH conflicts with POLY1305_BLOCKS_PER_CYCLE")
+        data_bitwidth = old_width
+    data_bitwidth = selected_data_bitwidth(data_bitwidth, implementation)
     sharing = resolve_sharing(design, implementation, share)
     if target_mhz is None:
         target_mhz = default_target_mhz(implementation, sharing)
@@ -145,6 +177,8 @@ def resolve_profile(design="shared", implementation="pipelined", share="auto", t
         "design": design,
         "implementation": implementation,
         "multiplier": selected_mult(multiplier, implementation),
+        "data_bitwidth": data_bitwidth,
+        "blocks_per_cycle": data_bitwidth // 128,
         "sharing": sharing,
         "target_mhz": selected_target(target_mhz),
     }
@@ -224,6 +258,10 @@ DESIGN = param("DESIGN", "shared", choices=DESIGNS,
                help="encrypt or decrypt alone, or both directions (shared)")
 POLY1305_IMPL = param("POLY1305_IMPL", "pipelined", choices=IMPLEMENTATIONS,
                       help="Poly1305 MAC architecture")
+_DATA_BITWIDTH = param("DATA_BITWIDTH", type=int, choices=DATA_BITWIDTHS,
+                       help="packet datapath width in bits (default 128; ChaCha20 block stays 512)")
+_OLD_BLOCKS_PER_CYCLE = param("POLY1305_BLOCKS_PER_CYCLE", type=int, choices=BLOCK_RATES,
+                             help="deprecated: use DATA_BITWIDTH=128 or 256")
 SHARE = param("SHARE", "auto", choices=SHARE_CHOICES,
               help="resources both directions share (DESIGN=shared only); "
                    "auto: both for the shared design, none for one direction")
@@ -232,16 +270,23 @@ _MULT_IMPL = param("POLY1305_MULT_IMPL", choices=MULT_IMPLEMENTATIONS,
 POLY1305_COMPUTE_IMPL = param("POLY1305_COMPUTE_IMPL", DEFAULT_COMPUTE_IMPL,
                             choices=COMPUTE_IMPLEMENTATIONS,
                             help="prologue and epilogue implementation (pipelined MAC only)")
+POLY1305_COMPUTE_CAPACITY = param("POLY1305_COMPUTE_CAPACITY", type=int,
+                                  help="fixed lane capacity of the shared prologue/epilogue kernels "
+                                       "(default: the larger body lane count); keeps AUTO_FSM call "
+                                       "sites unchanged when a sweep resizes the body")
 _TARGET_MHZ = param("TARGET_MHZ", type=int,
                     help="clock goal in MHz (default: the profile's)")
 try:
-    _PROFILE = resolve_profile(DESIGN, POLY1305_IMPL, SHARE, _TARGET_MHZ, _MULT_IMPL)
+    _PROFILE = resolve_profile(DESIGN, POLY1305_IMPL, SHARE, _TARGET_MHZ, _MULT_IMPL,
+                               _OLD_BLOCKS_PER_CYCLE, data_bitwidth=_DATA_BITWIDTH)
 except ValueError as e:
     raise DesignParamError(str(e)) from None
 
 ENCRYPT = DESIGN in ("encrypt", "shared")
 DECRYPT = DESIGN in ("decrypt", "shared")
 SHARING = _PROFILE["sharing"]
+DATA_BITWIDTH = _PROFILE["data_bitwidth"]
+POLY1305_BLOCKS_PER_CYCLE = _PROFILE["blocks_per_cycle"]
 POLY1305_MULT_IMPL = _PROFILE["multiplier"]
 TARGET_MHZ = float(_PROFILE["target_mhz"])
 

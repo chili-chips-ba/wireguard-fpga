@@ -181,8 +181,10 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
             tree[tree_size + j] = 0
         for j in range(lanes):
             power_index: index_t = x.next_lane + lanes - 1 - j
-            if x.next_lane > j:
-                power_index = x.next_lane - 1 - j
+            # next_lane < lanes, so the last slot never wraps.
+            if j + 1 < lanes:
+                if x.next_lane > j:
+                    power_index = x.next_lane - 1 - j
             # Constant-index reads let AUTO_FSM split the epilogue across states.
             weight: uint130_t = 0
             for k in range(lanes):

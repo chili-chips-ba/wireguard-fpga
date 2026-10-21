@@ -42,7 +42,7 @@ from chacha20 import (
 from aead_types import (
     CHACHA20_KEY_SIZE,
     CHACHA20_NONCE_SIZE,
-    axis128_intrf,
+    aead_axis_intrf,
     axis512_frag_t,
     axis512_intrf,
     axis512_stream_null,
@@ -233,9 +233,9 @@ def chacha20_pipeline_shared():
 def chacha20_encrypt_shared(
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
-    axis_in_if: axis128_intrf.fwd_t,
+    axis_in_if: aead_axis_intrf.fwd_t,
     key_if: poly1305_key_stream_intrf.fb_t,
-    axis_out_if: axis128_intrf.fb_t,
+    axis_out_if: aead_axis_intrf.fb_t,
 ) -> chacha20.chacha20_instance.return_t:
     o: chacha20.chacha20_instance.return_t
     from_pipe_fwd: axis512_intrf.stream_t = encrypt_pipeline_out_if.stream
@@ -262,9 +262,9 @@ def chacha20_encrypt_shared(
 def chacha20_decrypt_shared(
     key: uint8_t[CHACHA20_KEY_SIZE],
     nonce: uint8_t[CHACHA20_NONCE_SIZE],
-    axis_in_if: axis128_intrf.fwd_t,
+    axis_in_if: aead_axis_intrf.fwd_t,
     key_if: poly1305_key_stream_intrf.fb_t,
-    axis_out_if: axis128_intrf.fb_t,
+    axis_out_if: aead_axis_intrf.fb_t,
 ) -> chacha20.chacha20_instance.return_t:
     o: chacha20.chacha20_instance.return_t
     from_pipe_fwd: axis512_intrf.stream_t = decrypt_pipeline_out_if.stream

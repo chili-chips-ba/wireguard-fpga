@@ -71,6 +71,7 @@ from wireguard_env import (
     IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
     selected_target, default_target_mhz, target_out_dir, GENERATED_FILES, generated_out_dir,
     MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
+    DATA_BITWIDTHS, selected_data_bitwidth, blocks_out_dir,
     COMPUTE_IMPLEMENTATIONS, selected_compute, compute_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
@@ -484,7 +485,7 @@ def historical_target_mhz(implementation, sharing=None):
     return default_target_mhz(implementation, {"chacha20": True, "poly1305": False})
 
 
-def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=None, compute=None):
+def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=None, compute=None, blocks=1):
     if target_mhz is None:
         # Records without sharing metadata predate the sharing-both default.
         target_mhz = (historical_target_mhz(implementation, sharing) if multiplier is None
@@ -496,7 +497,7 @@ def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=
     # None means a historical record, whose directory predates sharing flags.
     if sharing is not None:
         base = sharing_out_dir(base, sharing)
-    return target_out_dir(compute_out_dir(mult_out_dir(base, multiplier), compute), target_mhz)
+    return blocks_out_dir(target_out_dir(compute_out_dir(mult_out_dir(base, multiplier), compute), target_mhz), blocks)
 
 
 def build_mult_impl(out_dir):
@@ -517,6 +518,24 @@ def build_compute_impl(out_dir):
     params = {entry["name"]: entry["value"]
               for entry in json.loads(path.read_text()).get("design_params", [])}
     return params.get("POLY1305_COMPUTE_IMPL", "mcp")
+
+
+def build_blocks_per_cycle(out_dir):
+    path = Path(out_dir) / "source_provenance.json"
+    if not path.is_file():
+        return None
+    params = {entry["name"]: entry["value"]
+              for entry in json.loads(path.read_text()).get("design_params", [])}
+    return recorded_data_bitwidth({
+        "data_bitwidth": params.get("DATA_BITWIDTH"),
+        "poly1305_blocks_per_cycle": params.get("POLY1305_BLOCKS_PER_CYCLE") or 1,
+    }) // 128
+
+
+def recorded_data_bitwidth(config):
+    """Resolve both current width records and historical block-rate records."""
+    width = config.get("data_bitwidth")
+    return width if width is not None else 128 * config.get("poly1305_blocks_per_cycle", 1)
 
 
 def run_build(args, json_path, log_path):
@@ -549,11 +568,14 @@ def run_build(args, json_path, log_path):
         defines.append(f"PERF_TAPS={args.taps}")
     if args.seed is not None:
         defines.append(f"PERF_SEED={args.seed}")
+    if args.poly1305_compute_capacity is not None:
+        defines.append(f"POLY1305_COMPUTE_CAPACITY={args.poly1305_compute_capacity}")
 
     cmd = [os.path.join(HERE, "build.py"), "--perf",
            "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz),
            "--poly1305-mult", args.poly1305_mult,
-           "--poly1305-compute", args.poly1305_compute]
+           "--poly1305-compute", args.poly1305_compute,
+           "--data-bitwidth", str(args.data_bitwidth)]
     for name in ("chacha20", "poly1305"):
         if args.sharing[name]:
             cmd.append("--share-" + name)
@@ -955,7 +977,7 @@ DIRECTIONS = bottleneck.DIRECTIONS
 
 def derive_throughput(perf_raw, fmax_mhz, target_mhz):
     """Add MHz-dependent columns to the testbench's cycle-domain numbers."""
-    return perf_report.derive_throughput(perf_raw, fmax_mhz, target_mhz, BUS_BYTES, DIRECTIONS)
+    return perf_report.derive_throughput(perf_raw, fmax_mhz, target_mhz, perf_raw.get("config", {}).get("bus_bytes", BUS_BYTES), DIRECTIONS)
 
 
 def summarize(phases):
@@ -997,6 +1019,7 @@ def markdown_table(results, include_mac_details=True):
         f"{_fmt(results['fmax'].get('target_mhz'), '.1f')} MHz | measured fmax "
         f"**{_fmt(fmax, '.2f')} MHz** | limiting MAIN `{results['fmax'].get('limiting_main')}`"
     )
+    lines.append("Packet datapath: `" + str(recorded_data_bitwidth(results["config"])) + "` bits; Poly1305 blocks/cycle: `" + str(results["config"].get("poly1305_blocks_per_cycle", 1)) + "`.")
     lines.append("Poly1305 multiplier: `" + results["config"].get("poly1305_mult_impl", "inferred") + "`.")
     if results["config"].get("poly1305_impl") == "pipelined":
         lines.append("Poly1305 prologue/epilogue: `" + results["config"].get("poly1305_compute_impl", "mcp") + "`.")
@@ -1066,8 +1089,15 @@ def markdown_table(results, include_mac_details=True):
             details = (f"{direction}: body II={timing['body_ii']}, "
                        f"accumulators={timing['accumulator_count']}")
             if "body_latency" in timing:
+                if timing.get("blocks_per_cycle", 1) == 2:
+                    details += (
+                        f", coefficient response={timing['coefficient_latency']} cycles"
+                        f", feedback response={timing['body_latency']} cycles"
+                        f", total body response={timing['total_body_latency']} cycles"
+                    )
+                else:
+                    details += f", body response={timing['body_latency']} cycles"
                 details += (
-                    f", body response={timing['body_latency']} cycles"
                     f", prologue response={timing['prologue_response_cycles']} cycles"
                     f", epilogue response={timing['epilogue_response_cycles']} cycles"
                 )
@@ -1148,6 +1178,9 @@ LATENCY = re.compile(r"ADDED_PIPELINE_LATENCY\s*:\s*integer\s*:=\s*(\d+)", re.IG
 MCP_BODY = re.compile(
     r"^(prologue|epilogue)_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined"
     r"_direction_(encrypt|decrypt)(?:_share_mcp_false)?_\d+clk_", re.IGNORECASE)
+PAIRED_MCP_BODY = re.compile(
+    r"^(prologue|epilogue)_from_poly1305_paired_compute_make_paired_compute"
+    r"_capacity_\d+(?:_direction_(encrypt|decrypt|shared))?_\d+clk_", re.IGNORECASE)
 SHARED_MCP_BODY = re.compile(
     r"^(prologue|epilogue)_from_poly1305_mcp_shared_make_shared_compute"
     r"_capacity_\d+_\d+clk_", re.IGNORECASE)
@@ -1206,8 +1239,11 @@ def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None
             continue
         match = MCP_BODY.match(entity)
         shared_match = SHARED_MCP_BODY.match(entity)
+        paired_match = PAIRED_MCP_BODY.match(entity)
         label = None
-        if match:
+        if paired_match:
+            label = (paired_match.group(2) or "shared", paired_match.group(1))
+        elif match:
             label = (match.group(2).lower(), match.group(1).lower())
         elif shared_match:
             label = ("shared", shared_match.group(1).lower())
@@ -1264,7 +1300,8 @@ def auth_fifo_sizing_errors(config):
     if any(type(value) is not int or value < 0 for value in values):
         return [label + "automatic sizing inputs are missing/invalid"]
     core, credits, ratio, prologue, aad = values
-    if credits != core + 5 or ratio < 1 or prologue < 1:
+    minimum_service_latency = 0 if config.get("comb") else 1
+    if credits != core + 5 or ratio < 1 or prologue < minimum_service_latency:
         return [label + "automatic sizing inputs disagree with stream contracts"]
     shared = sizing.get("shared_mcps")
     if type(shared) is not bool:
@@ -1309,12 +1346,15 @@ def overlap_fifo_sizing_errors(config):
                 raise ValueError("sharing selection")
             for key in ("prologue_mcp_latency", "epilogue_mcp_latency", "body_latency",
                         "prologue_handoff_cycles", "body_commit_cycles", "epilogue_handoff_cycles"):
-                if type(sizing[key]) is not int or sizing[key] < 1 or sizing[key] != mac[key]:
+                expected_value = mac.get("total_body_latency", mac.get(key)) if key == "body_latency" else mac[key]
+                minimum = 0 if config.get("comb") and key in ("prologue_mcp_latency", "epilogue_mcp_latency") else 1
+                if type(sizing[key]) is not int or sizing[key] < minimum or sizing[key] != expected_value:
                     raise ValueError(key)
             core = sizing["chacha20_core_latency"]
             credits = sizing["chacha20_max_in_flight_blocks"]
             ratio = sizing["chacha20_block_beats"]
-            if credits != core + 5 or ratio != 4 or sizing["max_aad_beats"] != 2:
+            beat_bytes = config.get("bus_bytes", 16)
+            if credits != core + 5 or ratio != 64 // beat_bytes or sizing["max_aad_beats"] != (32 + beat_bytes - 1) // beat_bytes:
                 raise ValueError("ChaCha/framing storage")
             if sizing["preceding_peer_requests"] != int(shared) or sizing["max_packed_tag_beats"] != 2:
                 raise ValueError("peer/tag bound")
@@ -1339,6 +1379,8 @@ def overlap_fifo_sizing_errors(config):
                 terms["completion_service_and_handoffs"] = completion
             else:
                 raise ValueError("unknown buffer")
+            if beat_bytes == 32:
+                terms["formatter_storage"] = 2
             required = sum(terms.values())
             depth = 1 << (max(2, required) - 1).bit_length()
             if sizing["buffer"] != name or sizing["terms_beats"] != terms or sizing["required_beats"] != required:
@@ -1362,7 +1404,7 @@ def verify_fifo_sizing_errors(config):
         beat_bytes = sizing["axis_beat_bytes"]
         if type(packet_bytes) is not int or packet_bytes < 1 or packet_bytes != config["max_packet_bytes"]:
             raise ValueError("supported plaintext limit")
-        if beat_bytes != BUS_BYTES or sizing["verify_handoff_cycles"] != 4:
+        if beat_bytes != config.get("bus_bytes", BUS_BYTES) or sizing["verify_handoff_cycles"] != 4:
             raise ValueError("converter/verdict handoffs")
         terms = dict(sizing["terms_beats"])
         expected_extra = {
@@ -1404,11 +1446,35 @@ def measurement_errors(results):
     """Acceptance checks; failed runs still retain all diagnostic artifacts."""
     errors = []
     config = results.get("config", {})
+    width = recorded_data_bitwidth(config)
+    rate = config.get("poly1305_blocks_per_cycle", width // 128)
+    if width not in DATA_BITWIDTHS or width != 128 * rate or config.get("bus_bytes", 16) * 8 != width:
+        errors.append("Packet width disagrees with Poly1305 block rate")
+    requested_width = config.get("requested_data_bitwidth")
+    if requested_width is not None:
+        if requested_width != width:
+            errors.append("Performance simulation data bitwidth differs from the request")
+        for scope, actual in results.get("build_block_rates", {}).items():
+            if scope == "perf" and config.get("comb"):
+                continue
+            if actual is None or actual * 128 != requested_width:
+                errors.append(scope + ": emitted data bitwidth differs from the request or is unknown")
+    requested_rate = config.get("requested_poly1305_blocks_per_cycle")
+    if requested_rate is not None:
+        if requested_rate != rate:
+            errors.append("Performance simulation block rate differs from the request")
+        for scope, actual in results.get("build_block_rates", {}).items():
+            if scope == "perf" and config.get("comb"):
+                continue  # Native --comb does not emit hardware provenance.
+            if actual != requested_rate:
+                errors.append(scope + ": emitted block rate differs from the request or is unknown")
     requested_mult = config.get("requested_poly1305_mult_impl")
     if requested_mult is not None:
         if config.get("poly1305_mult_impl") != requested_mult:
             errors.append("Performance simulation multiplier differs from the requested implementation")
         for scope, actual in results.get("build_mult_impls", {}).items():
+            if scope == "perf" and config.get("comb"):
+                continue  # Native --comb does not emit hardware provenance.
             if actual != requested_mult:
                 errors.append(scope + ": emitted multiplier selection differs from the request or is unknown")
     requested_compute = config.get("requested_poly1305_compute_impl")
@@ -1418,6 +1484,8 @@ def measurement_errors(results):
         if config.get("poly1305", {}).get("compute_impl") != requested_compute:
             errors.append("Resolved Poly1305 compute metadata differs from the request")
         for scope, actual in results.get("build_compute_impls", {}).items():
+            if scope == "perf" and config.get("comb"):
+                continue  # Native --comb does not emit hardware provenance.
             if actual != requested_compute:
                 errors.append(scope + ": emitted compute selection differs from the request or is unknown")
     errors.extend(auth_fifo_sizing_errors(results.get("config", {})))
@@ -1515,6 +1583,28 @@ def measurement_errors(results):
                 errors.append(direction + ": body D=P+2 and L=D metadata disagree")
             if meta.get("body_ii") != 1:
                 errors.append(direction + ": pipelined body II is not 1")
+            if meta.get("blocks_per_cycle", 1) != rate:
+                errors.append(direction + ": resolved body block rate differs from the profile")
+            if meta.get("axis_beat_bytes", 16 if rate == 1 else None) != 16 * rate:
+                errors.append(direction + ": resolved packet width differs from the profile")
+            if rate == 2:
+                coefficient = meta.get("coefficient_latency")
+                coefficient_core = meta.get("coefficient_core_latency")
+                if (type(coefficient) is not int or type(coefficient_core) is not int
+                        or coefficient_core < 0 or coefficient != coefficient_core + 2
+                        or meta.get("total_body_latency") != coefficient + latency):
+                    errors.append(direction + ": coefficient/feedback latency metadata disagree")
+                for phase in results.get("phases", []):
+                    life = phase.get("poly1305_lifecycle", {}).get(direction, {})
+                    counts = [life.get(k) for k in ("coefficient_launches", "coefficient_retirements", "body_launches", "body_retirements")]
+                    if None in counts or len(set(counts)) != 1:
+                        errors.append(direction + ": paired arithmetic conservation failed")
+                    nblocks = life.get("authentication_blocks")
+                    tails = life.get("unmatched_tails")
+                    expected_blocks = (phase.get("model", {}).get(direction, {}).get("poly1305_blocks", 0)
+                                       * life.get("completed_packets", 0))
+                    if nblocks is None or tails is None or nblocks != 2 * (counts[0] or 0) + (tails or 0) or nblocks != expected_blocks:
+                        errors.append(direction + ": authentication block/pair/tail conservation failed")
         sharing = results.get("config", {}).get("sharing") or {}
         if sharing.get("poly1305"):
             if results.get("config", {}).get("source_handshake") != "converged":
@@ -1523,7 +1613,11 @@ def measurement_errors(results):
                 errors.append("Shared MCP measurement does not retain decrypt verification in HDL")
             service = mac.get("shared_mcps") or {}
             counts = [m.get("accumulator_count") for m in mac.get("directions", {}).values()]
-            if not counts or None in counts or service.get("capacity_lanes") != max(counts):
+            capacity = service.get("capacity_lanes")
+            # A requested fixed capacity may exceed the lanes; unused slots are zero.
+            fixed = results.get("config", {}).get("requested_poly1305_compute_capacity")
+            if (not counts or None in counts or type(capacity) is not int or capacity < max(counts)
+                    or capacity != (fixed if fixed is not None else max(counts))):
                 errors.append("Shared MCP capacity does not match the maximum local lane count")
             for direction, meta in mac.get("directions", {}).items():
                 if meta.get("shared_mcps") is not True:
@@ -1593,6 +1687,53 @@ def compare_throughput(before, after):
     return {"passed": not errors, "errors": errors, "phases": phases,
             "criteria": {"minimum_decrypt_to_encrypt_ratio": .95,
                          "minimum_encrypt_after_to_before_ratio": .98}}
+
+
+def compare_block_rates(before, after):
+    """Matched one-/two-block QoR: gate 1920-byte goodput in both directions.
+
+    Short-packet changes are reported. This is deliberately separate from the
+    older FIFO-recovery comparison, whose acceptance thresholds are different.
+    """
+    errors = []
+    for label, record in (("baseline", before), ("paired", after)):
+        errors.extend(label + ": " + error for error in measurement_errors(record))
+        if record.get("config", {}).get("comb"):
+            errors.append(label + ": requires synthesized timing and area")
+    old_config, new_config = before.get("config", {}), after.get("config", {})
+    if recorded_data_bitwidth(old_config) != 128 or recorded_data_bitwidth(new_config) != 256:
+        errors.append("Comparison requires 128-bit baseline and 256-bit result")
+    for key in ("target_mhz", "dirs", "seed", "sizes", "packets_per_size", "peak_bytes", "peak_packets", "sharing",
+                "poly1305_mult_impl", "poly1305_compute_impl", "native_arithmetic", "native_soft_ops"):
+        if old_config.get(key) != new_config.get(key):
+            errors.append("Comparison workload/config differs: " + key)
+    compiler = before.get("provenance", {}).get("pipelinec_git")
+    if not compiler or compiler != after.get("provenance", {}).get("pipelinec_git"):
+        errors.append("Comparison requires the same recorded compiler revision")
+    baseline = {(p["packet_bytes"], p["num_packets"]): p for p in before.get("phases", [])}
+    comparisons = []
+    for phase in after.get("phases", []):
+        key = (phase["packet_bytes"], phase["num_packets"])
+        old = baseline.get(key)
+        if old is None:
+            errors.append("Missing matched baseline phase: " + str(key))
+            continue
+        gains = {}
+        for direction in ("encrypt", "decrypt"):
+            old_rate = old.get(direction, {}).get("sustained_bytes_per_cycle", 0)
+            new_rate = phase.get(direction, {}).get("sustained_bytes_per_cycle", 0)
+            if not old_rate or not new_rate:
+                errors.append(str(key) + ": missing concurrent " + direction + " goodput")
+                continue
+            gains[direction] = new_rate / old_rate
+            if key[0] == 1920 and new_rate < old_rate:
+                errors.append("1920-byte " + direction + " goodput regressed")
+        comparisons.append({"packet_bytes": key[0], "num_packets": key[1],
+                            "after_to_before_goodput": gains})
+    if not any(p["packet_bytes"] == 1920 for p in comparisons):
+        errors.append("Comparison lacks a matched 1920-byte phase")
+    return {"passed": not errors, "errors": errors, "phases": comparisons,
+            "criteria": {"minimum_1920_encrypt_gain": 1.0, "minimum_1920_decrypt_gain": 1.0}}
 
 
 def check_record(measurement_dir):
@@ -1844,8 +1985,16 @@ def measurement_selftest():
         }
     if measurement_errors(shared):
         raise ValueError("Valid shared metadata rejected: " + repr(measurement_errors(shared)))
+    fixed = copy.deepcopy(shared)
+    fixed["config"]["requested_poly1305_compute_capacity"] = 99
+    fixed["config"]["poly1305"]["shared_mcps"]["capacity_lanes"] = 99
+    if measurement_errors(fixed):
+        raise ValueError("Valid fixed shared capacity rejected: " + repr(measurement_errors(fixed)))
     for label, mutate in (
         ("shared capacity", lambda r: r["config"]["poly1305"]["shared_mcps"].update(capacity_lanes=99)),
+        ("fixed capacity below lanes", lambda r: (
+            r["config"].update(requested_poly1305_compute_capacity=1),
+            r["config"]["poly1305"]["shared_mcps"].update(capacity_lanes=1))),
         ("shared latency", lambda r: r["config"]["poly1305"]["shared_mcps"].update(epilogue_mcp_latency=99)),
         ("shared owner", lambda r: r["config"]["poly1305"]["directions"]["decrypt"].update(shared_mcps=False)),
         ("shared accounting", lambda r: r["phases"][0]["poly1305_shared_services"]["epilogue"].update(responses=0)),
@@ -1958,10 +2107,14 @@ def main():
     add_sharing_arguments(ap)
     ap.add_argument("--poly1305", choices=IMPLEMENTATIONS, default=None,
                     help="MAC architecture (default pipelined)")
+    ap.add_argument("--data-bitwidth", type=int, choices=DATA_BITWIDTHS, default=128,
+                    help="Encrypt/decrypt packet datapath width in bits (default 128; ChaCha20 block stays 512)")
     ap.add_argument("--poly1305-mult", choices=MULT_IMPLEMENTATIONS,
                     help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
     ap.add_argument("--poly1305-compute", choices=COMPUTE_IMPLEMENTATIONS,
                     help="Prologue and epilogue implementation (default fsm; pipelined MAC only)")
+    ap.add_argument("--poly1305-compute-capacity", type=int, default=None,
+                    help="Fixed shared prologue/epilogue lane capacity (default: the body lane count)")
     ap.add_argument("--target-mhz", type=selected_target, default=None,
                     help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     ap.add_argument("-j", "--jobs", type=int, default=None,
@@ -2019,6 +2172,8 @@ def main():
         ap.error("--jobs must be at least 1")
     try:
         args.poly1305 = selected_implementation(args.poly1305)
+        args.data_bitwidth = selected_data_bitwidth(args.data_bitwidth, args.poly1305)
+        args.poly1305_blocks_per_cycle = args.data_bitwidth // 128
         args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
         args.poly1305_compute = selected_compute(args.poly1305_compute)
         # A saved record supplies its own architecture; do not reject an old
@@ -2038,12 +2193,14 @@ def main():
                            + ("-share-" + sharing_name(args.sharing) if args.sharing is not None else "")
                            + "-mult-" + args.poly1305_mult
                            + ("-compute-" + args.poly1305_compute if args.poly1305 == "pipelined" else ""))
+    if args.label is None:
+        label = blocks_out_dir(label, args.poly1305_blocks_per_cycle)
     meas_dir = os.path.join(HERE, "measurements", label)
     os.makedirs(meas_dir, exist_ok=True)
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
     out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing, args.poly1305_mult,
-                          args.poly1305_compute if args.poly1305 == "pipelined" else None)
+                          args.poly1305_compute if args.poly1305 == "pipelined" else None, args.poly1305_blocks_per_cycle)
     if args.out_dir:
         out_dir = os.path.abspath(args.out_dir)
 
@@ -2070,6 +2227,8 @@ def main():
     if args.parse_only:
         recorded_multiplier = perf_raw.get("config", {}).get("poly1305_mult_impl")
         recorded_compute = perf_raw.get("config", {}).get("poly1305_compute_impl")
+        args.data_bitwidth = recorded_data_bitwidth(perf_raw.get("config", {}))
+        args.poly1305_blocks_per_cycle = args.data_bitwidth // 128
         args.poly1305_compute = recorded_compute or "mcp"
         args.poly1305_mult = recorded_multiplier or "inferred"
         previous_path = os.path.join(meas_dir, "results.json")
@@ -2084,7 +2243,7 @@ def main():
                                or perf_raw.get("config", {}).get("target_mhz")
                                or historical_target_mhz(args.poly1305, recorded_sharing))
             out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, recorded_sharing,
-                                  recorded_multiplier, recorded_compute)
+                                  recorded_multiplier, recorded_compute, args.poly1305_blocks_per_cycle)
         else:
             args.poly1305 = "legacy"
             args.target_mhz = 80
@@ -2120,8 +2279,16 @@ def main():
             poly1305_impl=args.poly1305,
             poly1305_mult_impl=perf_raw.get("config", {}).get("poly1305_mult_impl", "inferred"),
             requested_poly1305_mult_impl=None if args.parse_only else args.poly1305_mult,
+            poly1305_blocks_per_cycle=perf_raw.get("config", {}).get("poly1305_blocks_per_cycle",
+                                                                   recorded_data_bitwidth(perf_raw.get("config", {})) // 128),
+            requested_poly1305_blocks_per_cycle=None if args.parse_only else args.poly1305_blocks_per_cycle,
+            data_bitwidth=recorded_data_bitwidth(perf_raw.get("config", {})),
+            requested_data_bitwidth=None if args.parse_only else args.data_bitwidth,
             poly1305_compute_impl=perf_raw.get("config", {}).get("poly1305_compute_impl", "mcp"),
             requested_poly1305_compute_impl=None if args.parse_only else args.poly1305_compute,
+            requested_poly1305_compute_capacity=(
+                args.poly1305_compute_capacity if args.poly1305_compute_capacity is not None
+                else previous.get("config", {}).get("requested_poly1305_compute_capacity")),
             sharing=args.sharing,
             out_dir=os.path.relpath(out_dir, HERE),
             target_mhz=target_mhz,
@@ -2172,6 +2339,12 @@ def main():
             results["build_mult_impls"] = previous["build_mult_impls"]
         if "build_compute_impls" in previous:
             results["build_compute_impls"] = previous["build_compute_impls"]
+        if "build_block_rates" in previous:
+            results["build_block_rates"] = previous["build_block_rates"]
+        results["config"]["requested_poly1305_blocks_per_cycle"] = previous.get("config", {}).get(
+            "requested_poly1305_blocks_per_cycle")
+        results["config"]["requested_data_bitwidth"] = previous.get("config", {}).get(
+            "requested_data_bitwidth")
         results["config"]["requested_poly1305_compute_impl"] = previous.get("config", {}).get(
             "requested_poly1305_compute_impl")
         results["config"]["requested_poly1305_mult_impl"] = previous.get("config", {}).get(
@@ -2179,10 +2352,12 @@ def main():
     elif not args.parse_only:
         results["build_mult_impls"] = {"perf": build_mult_impl(out_dir)}
         results["build_compute_impls"] = {"perf": build_compute_impl(out_dir)}
+        results["build_block_rates"] = {"perf": build_blocks_per_cycle(out_dir)}
     if args.area_from_dir:
         hardware_out_dir = generated_out_dir(os.path.join(HERE, args.area_from_dir))
         results.setdefault("build_mult_impls", {})["hardware"] = build_mult_impl(hardware_out_dir)
         results.setdefault("build_compute_impls", {})["hardware"] = build_compute_impl(hardware_out_dir)
+        results.setdefault("build_block_rates", {})["hardware"] = build_blocks_per_cycle(hardware_out_dir)
         results["area_hw_build"] = parse_area(
             hardware_out_dir,
             per_module=not args.no_per_module_area,

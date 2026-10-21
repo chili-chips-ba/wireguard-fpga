@@ -27,7 +27,7 @@ if wireguard_env.SHARING["poly1305"]:
     # invoking its adapters through the ordinary dataflow factory.
     import poly1305_mcp_shared  # noqa: F401
 
-from aead_types import axis128_intrf
+from aead_types import aead_axis_intrf
 from encrypt_dataflow_core import make_encrypt_dataflow_core
 
 encrypt_dataflow_core = make_encrypt_dataflow_core(
@@ -43,13 +43,13 @@ def encrypt_dataflow():
     # flat DUT-facing port wires.
     r = encrypt_dataflow_core(
         # forward half of the input port, constructed inline
-        axis_in_if=axis128_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_in_if.stream),
+        axis_in_if=aead_axis_intrf.fwd_t(chacha20poly1305_encrypt_ports.axis_in_if.stream),
         key=chacha20poly1305_encrypt_ports.key,
         nonce=chacha20poly1305_encrypt_ports.nonce,
         aad=chacha20poly1305_encrypt_ports.aad,
         aad_len=chacha20poly1305_encrypt_ports.aad_len,
         # reverse half of the output port, constructed inline
-        axis_out_if=axis128_intrf.fb_t(chacha20poly1305_encrypt_ports.axis_out_if.ready),
+        axis_out_if=aead_axis_intrf.fb_t(chacha20poly1305_encrypt_ports.axis_out_if.ready),
     )
     chacha20poly1305_encrypt_ports.axis_in_if.ready = r.axis_in_if.ready
     chacha20poly1305_encrypt_ports.axis_out_if.stream = r.axis_out_if.stream

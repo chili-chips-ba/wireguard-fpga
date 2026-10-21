@@ -30,8 +30,9 @@ from aead_types import (
     key_uint_t,
     nonce_uint_t,
     aad_uint_t,
-    uint128_t,
-    axis128_intrf,
+    aead_data_uint_t,
+    aead_keep_uint_t,
+    aead_axis_intrf,
 )
 
 # Top level input wires
@@ -40,14 +41,14 @@ decrypt_nonce: Input[nonce_uint_t]
 decrypt_aad: Input[aad_uint_t]
 decrypt_aad_len: Input[uint8_t]
 # Top level input stream of ciphertext w/ auth tag
-decrypt_s_axis_tdata: Input[uint128_t]
-decrypt_s_axis_tkeep: Input[uint16_t]
+decrypt_s_axis_tdata: Input[aead_data_uint_t]
+decrypt_s_axis_tkeep: Input[aead_keep_uint_t]
 decrypt_s_axis_tlast: Input[uint1_t]
 decrypt_s_axis_tvalid: Input[uint1_t]
 decrypt_s_axis_tready: Output[uint1_t]
 # Top level output stream of plaintext
-decrypt_m_axis_tdata: Output[uint128_t]
-decrypt_m_axis_tkeep: Output[uint16_t]
+decrypt_m_axis_tdata: Output[aead_data_uint_t]
+decrypt_m_axis_tkeep: Output[aead_keep_uint_t]
 decrypt_m_axis_tlast: Output[uint1_t]
 decrypt_m_axis_tvalid: Output[uint1_t]
 decrypt_m_axis_tready: Input[uint1_t]
@@ -61,7 +62,7 @@ decrypt_m_verified: Output[uint1_t]
 @wires
 def chacha20poly1305_decrypt_io_wires():
     # Convert flattened multiple input wires to the axis128 stream wire
-    axis_in_s: axis128_intrf.stream_t
+    axis_in_s: aead_axis_intrf.stream_t
     axis_in_s.data.frag.data = uint_to_array_le(decrypt_s_axis_tdata, 8)
     axis_in_s.data.frag.keep = uint_to_array_le(decrypt_s_axis_tkeep, 1)
     axis_in_s.data.eod[0] = decrypt_s_axis_tlast
