@@ -42,16 +42,6 @@ Thumbs.db
 # IP output products: only the .xci is the source
 /99.warmup/1.hw-eth-test/eth_test.srcs/sources_1/ip/*/*
 !/99.warmup/1.hw-eth-test/eth_test.srcs/sources_1/ip/*/*.xci
-# the one final bitstream of ethernet_4port
-!/99.warmup/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/impl_1/
-!/99.warmup/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/impl_1/ethernet_4port.bit
-
-# 0.doc: vendor example projects stay as delivered
-!/0.doc/**/*.ip_user_files/
-/0.doc/**/*.ip_user_files/mem_init_files/
-/0.doc/**/TempBreakPointFile.txt
-!/0.doc/**/*.jou
-!/0.doc/**/*.dcp
 
 # Gowin
 *.gprj.user
@@ -59,15 +49,12 @@ Thumbs.db
 **/impl/pnr/
 **/impl/temp/
 
-# openXC7: chip databases and build outputs (top.bit of the legacy flow stays)
+# openXC7: chip databases and build outputs
 /3.build/hw_build.openXC7/chipdb/
 /3.build/hw_build.openXC7/chipdb.new/
 /3.build/hw_build.openXC7/sv2v-build/
 /3.build/hw_build.openXC7/converted*/
 /3.build/hw_build.openXC7/build_artifacts*/
-!/3.build/hw_build.openXC7/build_artifacts/
-/3.build/hw_build.openXC7/build_artifacts/*
-!/3.build/hw_build.openXC7/build_artifacts/top.bit
 
 # Firmware build outputs (imem.INIT.vh and main.bin are read by synthesis/sim)
 /3.build/sw_build/*
@@ -97,3 +84,6 @@ Thumbs.db
 *.fst
 tb.xml
 tb.stems
+
+# Bitstreams: build them, never commit them
+*.bit
