@@ -1,1 +1,0 @@
-xil_defaultlib=xsim.dir/xil_defaultlib
