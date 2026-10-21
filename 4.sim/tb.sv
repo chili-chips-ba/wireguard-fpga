@@ -427,6 +427,10 @@ assign gmii[3].txd  = e4_txd;
     end
 */
 
+`ifdef UART_BUS_STRESS
+   chk_uart_bus chk_uart_bus ();
+`endif
+
 endmodule: tb
 
 /*

@@ -122,6 +122,40 @@ module bfm_uart (
    `endif
    endtask: send_string
 
+//- - - - - - - - - - - - - - - - - - -
+// UART bus master: write one DMEM/CSR word (protocol of 5.test/busw.UART.py)
+   task automatic bus_write (input logic [31:0] addr, input logic [31:0] data);
+      send_char (.char(8'h12)); // SOP
+      send_char (.char(8'h0E)); // BUSW
+      for (int i=0; i<4; i++) send_char (.char(addr[i*8 +: 8]));
+      for (int i=0; i<4; i++) send_char (.char(data[i*8 +: 8]));
+      send_char (.char(8'h0F)); // WE: all bytes
+      #(12 * BITIME_NS * 1ns);  // the checksum comes back
+      send_char (.char(8'h14)); // EOP
+   endtask: bus_write
+
+`ifdef UART_BUS_STRESS
+//- - - - - - - - - - - - - - - - - - -
+// #61: UART bus writes while the firmware runs (and stores); chk_uart_bus
+// checks the bus, this checks the data landed in DMEM
+   int stress_errors = 0;
+
+   task automatic bus_stress (input int n);
+      logic [31:0] addr, data;
+      for (int k=0; k<n; k++) begin
+         addr = 32'h1000_8000 + 32'(4*k);
+         data = 32'hC0DE_0000 | 32'(k);
+         bus_write (addr, data);
+         if (tb.dut.u_dmem.mem[(addr - 32'h1000_0000) >> 2] !== data) begin
+            stress_errors++;
+            $display("%t UART_BUS_STRESS: DMEM[%h] = %h, expected %h", $time, addr,
+                     tb.dut.u_dmem.mem[(addr - 32'h1000_0000) >> 2], data);
+         end
+      end
+      $display("%t UART_BUS_STRESS: %0d bus writes, %0d data errors", $time, n, stress_errors);
+   endtask: bus_stress
+`endif
+
 
 //--------------------------------------
 // Initial greeting
@@ -136,6 +170,12 @@ module bfm_uart (
 
      //__for UART test
      send_string ("FPGA raja\r\n");
+`ifdef UART_BUS_STRESS
+`ifndef UART_BUS_STRESS_N
+ `define UART_BUS_STRESS_N 16
+`endif
+     bus_stress (`UART_BUS_STRESS_N);
+`endif
      //send_string ("Mi nismo mehke koze\n");
 
      //__for Command parsing and dispatch test

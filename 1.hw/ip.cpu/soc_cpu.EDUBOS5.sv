@@ -76,28 +76,34 @@ module soc_cpu #(
   logic                          imem_load_rdy;
   logic                   [31:0] imem_load_rdat;
 
-  // BUS space: only the ready of a load goes to the core
+  // BUS space: a load's ready, and a store's (STORE_WAITS_RDY: a store holds
+  // its request until ready, e.g. while the UART has the bus)
   logic                          bus_load;
   logic                          bus_load_wait;
   logic                          bus_load_rdy;
+  logic                          bus_store_rdy;
+  logic                          imem_store;  // IMEM is written only by the UART: dropped
 
   assign NC_dmem_addr = dmem_addr[1:0];
 
   always_comb begin : _decode
-    is_imem      = dmem_addr[31:28] == '0;
-    imem_load    = dmem_vld & is_imem & (dmem_we == '0);
+    is_imem       = dmem_addr[31:28] == '0;
+    imem_load     = dmem_vld & is_imem & (dmem_we == '0);
 
-    bus.vld      = dmem_vld & ~is_imem;
-    bus.we       = dmem_we;
-    bus.addr     = dmem_addr[31:2];
-    bus.wdat     = dmem_wdat;
+    bus.vld       = dmem_vld & ~is_imem;
+    bus.we        = dmem_we;
+    bus.addr      = dmem_addr[31:2];
+    bus.wdat      = dmem_wdat;
 
-    bus_load     = bus.vld & (bus.we == '0);
+    bus_load      = bus.vld & (bus.we == '0);
     // a load gets its ready in the request cycle (comb) or later (flopped)
-    bus_load_rdy = bus.rdy & (bus_load | bus_load_wait);
+    bus_load_rdy  = bus.rdy & (bus_load | bus_load_wait);
+    // a store gets its ready in the request cycle, as long as it holds it
+    bus_store_rdy = bus.rdy & bus.vld & (bus.we != '0);
+    imem_store    = dmem_vld & is_imem & (dmem_we != '0);
 
-    dmem_rdy     = bus_load_rdy | imem_load_rdy;
-    dmem_rdat    = imem_load_rdy ? imem_load_rdat : bus.rdat;
+    dmem_rdy      = bus_load_rdy | imem_load_rdy | bus_store_rdy | imem_store;
+    dmem_rdat     = imem_load_rdy ? imem_load_rdat : bus.rdat;
   end : _decode
 
   always_ff @(negedge bus.arst_n or posedge bus.clk) begin : _load_wait
@@ -115,7 +121,8 @@ module soc_cpu #(
   // eduBOS5 itself
   //--------------------------------------------------------
   edubos5 #(
-      .EN_WAIT4REGS(EDUBOS5_WAIT4REGS)
+      .EN_WAIT4REGS   (EDUBOS5_WAIT4REGS),
+      .STORE_WAITS_RDY(1'b1)                // the UART can hold the bus (#61)
   ) u_cpu (
       .clk   (bus.clk),
       .arst_n(bus.arst_n & imem_cpu_rstn),

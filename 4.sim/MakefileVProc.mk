@@ -17,6 +17,9 @@ USRSIMOPTS       =
 USRCFLAGS        =
 WAVESAVEFILE     = wave.CSR_ETHERNET_TEST.gtkw
 BUILD            = DEFAULT
+# vproc: VProc is soc_cpu (BUILD=DEFAULT or ISS); rtl: the RTL soc_cpu that
+# 1.hw/top.filelist lists (PicoRV32 or eduBOS5), running 3.build/sw_build
+CPU              = vproc
 TIMEOUTUS        = 10000
 DISABLE_SIM_CTRL = 1
 # BUILD=ISS only. 1: bus credit and no fetch/load wait states (as openPCIE),
@@ -139,26 +142,26 @@ $(USROBJDIR) $(VPROCOBJDIR):
 	@mkdir -p $@
 
 # Rule to build user C sources
-$(USROBJDIR)/%.o: $(USRCODEDIR)/%.c | $(USROBJDIR)
+$(USROBJDIR)/%.o: $(USRCODEDIR)/%.c | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build user C++ sources
-$(USROBJDIR)/%.o: $(USRCODEDIR)/%.cpp | $(USROBJDIR)
+$(USROBJDIR)/%.o: $(USRCODEDIR)/%.cpp | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build UDP user C sources
-$(USROBJDIR)/%.o: $(UDPCODEDIR)/%.c | $(USROBJDIR)
+$(USROBJDIR)/%.o: $(UDPCODEDIR)/%.c | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build UDP user C++ sources
-$(USROBJDIR)/%.o: $(UDPCODEDIR)/%.cpp | $(USROBJDIR)
+$(USROBJDIR)/%.o: $(UDPCODEDIR)/%.cpp | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # The node 0 code differs per BUILD (native test code in libuser, or the ISS
 # in libvproc): a change of BUILD, of the model versions or of ISS_BUS_CREDIT
 # throws the objects and both libraries away, so the next build cannot mix
 # them. obj/.build holds the configuration of the last build.
-BUILD_CFG        = $(BUILD) $(VPROCVERSION) $(MEMVERSION) $(ISS_BUS_CREDIT)
+BUILD_CFG        = $(CPU) $(BUILD) $(VPROCVERSION) $(MEMVERSION) $(ISS_BUS_CREDIT)
 BUILD_STAMP      = $(VOBJDIR)/.build
 $(BUILD_STAMP): FORCE
 	@mkdir -p $(VOBJDIR)
@@ -305,10 +308,22 @@ compile: $(USERLIB) $(VLIB) $(RV32LIB)
 $(SIMEXE): compile
 	@+make --no-print-directory $(SIMMAKEFLAGS) -C$(WORKDIR) -f V$(TB_NAME).mk V$(TB_NAME)
 
-# Create local file list for top, with PicoRv32 files removed
-# So soc_cpu.VPROC can be used instead
-$(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST)
+# Create local file list for top, with the RTL soc_cpu files removed, so
+# soc_cpu.VPROC is used instead (CPU=vproc). CPU=rtl keeps them, and drops
+# soc_cpu.VPROC from the test bench list.
+ifeq ("$(CPU)", "rtl")
+  SOCCPUMATCH    = __rtl_soc_cpu_kept__
+  TBFILELIST     = $(VOBJDIR)/$(TB_NAME)_rtl.filelist
+compile: $(TBFILELIST)
+$(TBFILELIST): $(TB_NAME).filelist $(BUILD_STAMP)
+	@grep -v "soc_cpu.VPROC.sv" $< > $@
+endif
+$(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST) $(BUILD_STAMP)
 	@sed -e "/$(SOCCPUMATCH)/d" $< > $@
+
+# Clone the VIP models (VProc, mem_model) only
+.PHONY: vip
+vip: $(VPROCDIR) $(MEMMODELDIR)
 
 # Check out VProc repo if not at expected location
 $(VPROCDIR):
@@ -370,6 +385,7 @@ help:
 	@$(info $(SPC) $(SPC) USRSIMOPTS:       additional Verilator flags, such as setting generics (default blank))
 	@$(info $(SPC) $(SPC) WAVESAVEFILE:     name of .gtkw file to use when displaying waveforms (default wave.CSR_ETHERNET_TEST.gtkw))
 	@$(info $(SPC) $(SPC) BUILD:            Select build type from DEFAULT or ISS (default DEFAULT))
+	@$(info $(SPC) $(SPC) CPU:              vproc (VProc soc_cpu) or rtl (the RTL soc_cpu in 1.hw/top.filelist) (default vproc))
 	@$(info $(SPC) $(SPC) TIMEOUTUS:        Test bench timeout period in microseconds (default 10000))
 	@$(info $(SPC) $(SPC) DISABLE_SIM_CTRL: Disable/enable Verilator simulation control (default disabled))
 	@$(info $(SPC) $(SPC) ISS_BUS_CREDIT:   BUILD=ISS: 1 for bus credit and no fetch/load wait states (default 0))

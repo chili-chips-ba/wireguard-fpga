@@ -9,9 +9,12 @@
 module edubos5
   import edubos5_pkg::*;
 #(
-    parameter int EN_WAIT4REGS   = 0,     // 0 for 2-stage CPU pipeline
-    parameter bit GOWIN_FAST_OP  = 1'b0,
-    parameter bit TARGET_IS_ASIC = 1'b0   // 1: x0 forced to 0 by a read mux, not RAM init
+    parameter int EN_WAIT4REGS    = 0,     // 0 for 2-stage CPU pipeline
+    parameter bit GOWIN_FAST_OP   = 1'b0,
+    parameter bit TARGET_IS_ASIC  = 1'b0,  // 1: x0 forced to 0 by a read mux, not RAM init
+    // 1: a STORE holds its request until dmem_rdy, stalling the core; for a
+    // bus that can make a store wait. 0: a STORE is a one-cycle request
+    parameter bit STORE_WAITS_RDY = 1'b0
 ) (
     input logic clk,
     input logic arst_n, // reset button
@@ -67,7 +70,7 @@ module edubos5
   cpu_pc_t   pc;
   cpu_pc_t inc_pc, next_pc, pc_imm, pc_auipc;
 
-  // STOREs are always expected to execute, no waiting on dmem_rdy
+  // STOREs wait on dmem_rdy only with STORE_WAITS_RDY (store_stall below)
   typedef enum logic [2:0] {
     FETCH_INSTR = 3'd0,
     WAIT4REGS   = 3'd1,
@@ -79,6 +82,11 @@ module edubos5
   state_t       state;
 
   logic         go2exec;  // pipeline register load enable
+
+  // A STORE is on the bus in the cycle after its FETCH_INSTR, the next
+  // instruction's EXECUTE (2-stage) or WAIT4REGS (3-stage). Without ready, the
+  // request and that state are held.
+  logic         store_stall;
 
   // ALU input and outputs
   logic   [4:0] shamt;  // SHift AMounT from immediate or rs2
@@ -397,7 +405,7 @@ module edubos5
       state    <= EXECUTE;
       imem_vld <= '1;
     end
-    else begin
+    else if (!store_stall) begin
       case (state)
 
         FETCH_INSTR: begin
@@ -476,7 +484,7 @@ module edubos5
           go2exec <= 1'b1;
         end
         else begin
-          go2exec <= (state == WAIT4REGS);
+          go2exec <= (state == WAIT4REGS) & ~store_stall;
         end
       end
     end
@@ -534,19 +542,23 @@ module edubos5
                             & ~dmem_rdy
                           | instr_decode_reg.STORE & state == FETCH_INSTR);
 
+  assign store_stall = STORE_WAITS_RDY & dmem_vld & (dmem_we != NOWR) & ~dmem_rdy;
+
   always_ff @(posedge clk) begin : _dmem_connection
-    // data gating
-    dmem_addr <= dmem_addr_next;
-    if (state == FETCH_INSTR) begin
-      dmem_wdat <= dmem_wdat_next;
+    // data gating; a waiting STORE keeps its request
+    if (!store_stall) begin
+      dmem_addr <= dmem_addr_next;
+      if (state == FETCH_INSTR) begin
+        dmem_wdat <= dmem_wdat_next;
+      end
+      dmem_we  <= we_bs_t'(dmem_we_next & {4{state == FETCH_INSTR}});
+      dmem_vld <= dmem_vld_next;
     end
-    dmem_we <= we_bs_t'(dmem_we_next & {4{state == FETCH_INSTR}});
     if (state == WAIT_DATA) begin
       dmem_rdat_reg <= dmem_rdat;
     end
 
     dmem_rdy_reg <= dmem_rdy;
-    dmem_vld     <= dmem_vld_next;
 
   end : _dmem_connection
 
@@ -624,7 +636,7 @@ module edubos5
       assert (EN_WAIT4REGS == 1 || go2exec);
       assert (EN_WAIT4REGS == 0 || !go2exec || state == EXECUTE);
     end
-    if ($past(fv_on) && $past(state) == WAIT4REGS) begin
+    if ($past(fv_on) && $past(state) == WAIT4REGS && state == EXECUTE) begin
       assert (go2exec);
     end
     if ($past(fv_on, 2) && $past(state, 2) == FETCH_INSTR) begin

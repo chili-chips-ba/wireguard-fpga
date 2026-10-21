@@ -87,9 +87,11 @@ module soc_fabric (
   assign dmem_sel  = cpu_ack ? (cpu.addr[31:28] == 4'd1) : (uart.addr[31:28] == 4'd1);
   assign csr_sel   = cpu_ack ? (cpu.addr[31:29] == 3'd1) : (uart.addr[31:29] == 3'd1);
 
-  //peripheral access is when peripheral is SELected and UART/CPU VLD
-  assign dmem.vld  = (uart.vld | cpu.vld) & dmem_sel;
-  assign csr.vld   = (uart.vld | cpu.vld) & csr_sel;
+  //peripheral access is when peripheral is SELected and UART/CPU VLD; while
+  //the UART has the bus, a waiting CPU request must not reach it with the
+  //UART's address (#61)
+  assign dmem.vld  = (uart.vld | cpu.vld & ~uart_busy) & dmem_sel;
+  assign csr.vld   = (uart.vld | cpu.vld & ~uart_busy) & csr_sel;
 
   //return RDY+RDAT to UART from the selected peripheral
   assign uart.rdy  = dmem_sel ? dmem.rdy & uart_busy : csr_sel ? csr.rdy & uart_busy : 1'b0;

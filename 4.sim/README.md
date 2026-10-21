@@ -238,7 +238,7 @@ make -f MakefileVProc.mk USER_C="VUserMain0.cpp MyTest1Class.cpp"
 
 If many variants of software build are required then either scripts can be constructed with the various command line variable modification calls to `make` or other make files which set these varaiable and call the common make file. This is useful in managing source code for multiple tests located in different directories, compiling for ISS (perhaps also calling the RISC-V application build), or for compiling application code natively which will have a different set of source files.
 
-The user software is compiled into a local static library, <tt>libuser.a</tt>, which is linked to the simulation code within Verilator along with <tt>libvproc.a</tt>. The make file builds <tt>libvproc.a</tt> with *VProc*'s own Verilator make file: *VProc*, *mem_model*, the VerilatorSimCtrl node and, with <tt>BUILD=ISS</tt>, the ISS integration code. It clones *VProc* and *mem_model* next to the repository, one directory per version (<tt>../../vproc-VERSION_1_13_4</tt>, <tt>../../mem_model-c7b9c62</tt>), and takes their C headers from there. Neither library is tracked. A change of <tt>BUILD</tt>, of the model versions or of <tt>ISS_BUS_CREDIT</tt> deletes the objects and both libraries (stamp file <tt>obj/.build</tt>), so DEFAULT and ISS builds cannot mix. The HDL for these models is in <tt>4.sim/models/cosim</tt>, at the same versions. <tt>models/cosim/lib/libcosimlnx.a</tt> and <tt>models/cosim/include</tt> are only used by the [RTL-only make file](#rtl-only-simulation-makefile).
+The user software is compiled into a local static library, <tt>libuser.a</tt>, which is linked to the simulation code within Verilator along with <tt>libvproc.a</tt>. The make file builds <tt>libvproc.a</tt> with *VProc*'s own Verilator make file: *VProc*, *mem_model*, the VerilatorSimCtrl node and, with <tt>BUILD=ISS</tt>, the ISS integration code. It clones *VProc* and *mem_model* next to the repository, one directory per version (<tt>../../vproc-VERSION_1_13_4</tt>, <tt>../../mem_model-c7b9c62</tt>), and takes their C headers from there. Neither library is tracked. A change of <tt>CPU</tt>, <tt>BUILD</tt>, of the model versions or of <tt>ISS_BUS_CREDIT</tt> deletes the objects and both libraries (stamp file <tt>obj/.build</tt>), so DEFAULT and ISS builds cannot mix. The HDL for these models is in <tt>4.sim/models/cosim</tt>, at the same versions. <tt>models/cosim/lib/libcosimlnx.a</tt> and <tt>models/cosim/include</tt> are not used by the build.
 
 The <tt>MakefileVProc.mk</tt> make file has a target <tt>help</tt>, which produces the following output:
 
@@ -371,23 +371,30 @@ Note that the disassembled output is a mixture of 32-bit and compressed 16-bit i
 
 ### RTL-Only Simulation Makefile
 
-A standalone Makefile (located in `4.sim/`) for cycle-accurate Verilator simulation using the real CPU RTL that `1.hw/top.filelist` selects (PicoRV32 by default).
-It:
+`CPU=rtl` keeps the real `soc_cpu` RTL that `1.hw/top.filelist` selects (PicoRV32 or eduBOS5), running the firmware in `3.build/sw_build`. VProc then only drives the sim control and the UDP/IPv4 BFMs (nodes 1-4). `4.sim/Makefile` is a short wrapper for it:
 
-- Drives the UDP/IPv4 BFMs (nodes 1–4) via `usercode/VUserMainUdp.cpp`, using VProc’s DPI-C engine for the Ethernet VIP.
-- Generates C++ sources with:
-  - `--cc -sv --timing --trace-fst --trace-structs`
-  - `+define+SIM_ONLY` and `+define+VPROC_SV`
-  - File lists `1.hw/top.filelist` & `simple_tb.filelist` to pull in the CPU RTL.
-- Compiles into `output/` and links against:
-  - `libcosimlnx.a` (co-simulation)
-  - `libudplnx.a` (UDP/IP VIP)
-  - DPI headers in `models/cosim/include` and `models/udpIpPg/include`.
-- Provides standard targets:
-  - `compile` → generate & build
-  - `sim`     → run `./output/Vtb` (logs to `sim.log`)
-  - `wave`    → open `wave.fst` in GTKWave
-  - `clean`   → remove `output/`, `tb.xml`, `tb.stems`
+| Command | Does |
+|---|---|
+| `make sim` | `make -f MakefileVProc.mk CPU=rtl run` |
+| `make wave` | the same, then GTKWave |
+| `make clean` | clean |
+
+All `MakefileVProc.mk` variables apply, e.g. `make sim TIMEOUTUS=7000`.
+
+#### UART bus master test (`UART_BUS_STRESS`)
+
+The UART can master the bus (`busw`/`busr`, [5.test](../5.test)) while the CPU runs, so the two share `soc_fabric`. [#61](https://github.com/chili-chips-ba/wireguard-fpga/issues/61): eduBOS5 stores did not wait for ready and were lost, and a waiting CPU request reached DMEM/CSR with the UART's address. The test drives that collision:
+
+- `bfm_uart` sends `UART_BUS_STRESS_N` (default 16) bus writes to DMEM and checks each landed.
+- [`models/chk_uart_bus.sv`](models/chk_uart_bus.sv) flags a CPU store that leaves the bus before ready, and a CPU request reaching DMEM/CSR while the UART has the bus. It counts collisions: no collision fails the test, as it proves nothing.
+- The [`store_stress`](../2.sw/tests/store_stress) firmware stores to DMEM back to back (words and bytes) and checks them, so most UART writes collide with a store.
+
+```
+cd 3.build && make -f MakefileSW SW_MAIN='$(SW_TESTS)/store_stress' sw_all
+cd 4.sim   && make sim TIMEOUTUS=7000 USRSIMOPTS="+define+UART_BUS_STRESS +define+UART_BUS_STRESS_N=4"
+```
+
+It ends with `CHK_UART_BUS: PASS` or `FAIL`.
 
 ## Debugging Code
 
