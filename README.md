@@ -115,7 +115,7 @@ The Phase2 continuation project is therefore also in the plans, to maximize effi
     - Given that this is a complex, multi-disciplinary dev effort, the available funding may not be sufficient to bring it to completion. _Blackwire_, despite a larger allocated budget, ended up with funding crisis and abrupt cessation of dev activities.
 
 
-# Design Blueprint (WIP)
+# Design Blueprint
 ## HW/SW Partitioning
 Since the WireGuard node essentially functions as an IP router with WireGuard protocol support, we have decided to design the system according to a two-layer architecture: a control plane responsible for managing IP routing processes and executing the WireGuard protocol (managing remote peers, sessions, and keys), and a data plane that will perform IP routing and cryptography processes at wire speed. The control plane will be implemented as software running on a soft CPU, while the data plane will be fully implemented in RTL on an FPGA.
 
@@ -432,6 +432,12 @@ If it was not for **Julian Kemmerer's** unreserved support helping us move our t
 Feel like helping opensource VPN community grow better and larger?! See [Contributions](CONTRIBUTING.md).
 
 Don't feel shy to reach out and ask for help ===> [![issues](https://badgen.net/github/open-issues/chili-chips-ba/wireguard-fpga?label=issues)](https://github.com/chili-chips-ba/wireguard-fpga/issues).
+
+--------------------
+
+### RTL Coding Rules
+
+New RTL follows our [RTL coding rules](1.hw/README.md#rtl-coding-rules), as in [openPCIE](https://github.com/chili-chips-ba/openPCIE/blob/main/2.rtl/README.md#rtl-coding-rules) and [openCologne](https://github.com/chili-chips-ba/openCologne/blob/main/7.SerDes/3.iclink-sv/1.hw/README.md#rtl-coding-rules). [Contributions](CONTRIBUTING.md) lists the QA steps every change goes through: lint, format, simulation, build.
 
 --------------------
 
