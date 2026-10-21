@@ -2,68 +2,98 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-0.FPGA/0.doc/Gowin/IP/Filter-FD-Adaptive/Gowin_FD_Adaptive_Filter_RefDesign.zip
-0.FPGA/0.doc/Gowin/IP/Integer-Multiply-Divider/Gowin_Integer_Multiply_Divider_RefDesign.rar
-
+# Editor, backup and OS files
 *~
 *.bak
 *.bkp
-*.log
-
+\#*\#
+.\#*
 *xOLD*
-
-*output*
-/4.sim/obj/
-/4.sim/libvproc.a
-/4.sim/libuser.a
-*.fst
-
-#*impl*
-*gwsynthesis*
-*pnr*
-*temp*
-*.gprj.user
-
-*\#*\#
-*\#*
-0.doc/Gowin/IP/Integer-Multiply-Divider/Gowin_Integer_Multiply_Divider_RefDesign.rar
-0.doc/Gowin/IP/Filter-FD-Adaptive/Gowin_FD_Adaptive_Filter_RefDesign.zip
-tb.xml
-tb.stems
-
-# Vivado project directories and files
-*.jou
+Thumbs.db
 *.log
-.Xil
-*.cache
-*.data
-*.ipdefs
-*.ip_user_files
-*.runs
-*.gen
-0.doc/Alinx/AX7201_examples/08_HDMI/image--music-files/PICTURE/VGA/Thumbs.db
+**/.claude/settings.local.json
+
+# Vendor archives kept out of the repo
+/0.doc/Gowin/IP/Filter-FD-Adaptive/Gowin_FD_Adaptive_Filter_RefDesign.zip
+/0.doc/Gowin/IP/Integer-Multiply-Divider/Gowin_Integer_Multiply_Divider_RefDesign.rar
+
+# Windows binaries (vendor drivers, compiled objects)
 *.obj
 *.dll
 *.lib
 *.exe
+
+# Vivado: project outputs (the .xpr, .xci and sources stay tracked)
+.Xil/
+*.cache/
+*.data/
+*.gen/
+*.ip_user_files/
+*.ipdefs/
+**/*.runs/**
+*.jou
 *.str
-3.build/csr_build/generated-files/html/.launcher_data/*
+*.dcp
+/3.build/hw_build.Vivado/wireguard.hw/
+/3.build/hw_build.Vivado/ila/ila_0_ex/ila_0_ex.hw/
+/99.warmup/1.hw-eth-test/eth_test.hw/
+/99.warmup/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.hw/
+/99.warmup/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.srcs/utils_1/
+# IP output products: only the .xci is the source
+/99.warmup/1.hw-eth-test/eth_test.srcs/sources_1/ip/*/*
+!/99.warmup/1.hw-eth-test/eth_test.srcs/sources_1/ip/*/*.xci
+# the one final bitstream of ethernet_4port
+!/99.warmup/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/impl_1/
+!/99.warmup/3.hw-eth-test-axis/ethernet_4port/ethernet_4port.runs/impl_1/ethernet_4port.bit
 
-# PipelineC outputs
-3.build/pipelinec_build/generated-files-sim-comb/*
-3.build/pipelinec_build/generated-files-sim-pipe/*
-3.build/pipelinec_build/generated-files-verilog/*
-3.build/pipelinec_build/*.py
+# 0.doc: vendor example projects stay as delivered
+!/0.doc/**/*.ip_user_files/
+/0.doc/**/*.ip_user_files/mem_init_files/
+/0.doc/**/TempBreakPointFile.txt
+!/0.doc/**/*.jou
+!/0.doc/**/*.dcp
 
-3.build/pipelinec_build/generated-files-sim-comb-dec/*
-3.build/pipelinec_build/generated-files-sim-pipe-dec/*
-3.build/pipelinec_build/generated-files-verilog/*
+# Gowin
+*.gprj.user
+**/impl/gwsynthesis/
+**/impl/pnr/
+**/impl/temp/
 
+# openXC7: chip databases and build outputs (top.bit of the legacy flow stays)
+/3.build/hw_build.openXC7/chipdb/
+/3.build/hw_build.openXC7/chipdb.new/
+/3.build/hw_build.openXC7/sv2v-build/
+/3.build/hw_build.openXC7/converted*/
+/3.build/hw_build.openXC7/build_artifacts*/
+!/3.build/hw_build.openXC7/build_artifacts/
+/3.build/hw_build.openXC7/build_artifacts/*
+!/3.build/hw_build.openXC7/build_artifacts/top.bit
+
+# Firmware build outputs (imem.INIT.vh and main.bin are read by synthesis/sim)
+/3.build/sw_build/*
+!/3.build/sw_build/imem.INIT.vh
+!/3.build/sw_build/main.bin
+/99.warmup/*/2.sw/**/main.elf
+/99.warmup/*/2.sw/**/main.bin
+/99.warmup/*/2.sw/**/main.hex
+/99.warmup/*/2.sw/**/main.map
+
+# PeakRDL HTML launcher state
+/3.build/csr_build/generated-files/html/.launcher_data/
+
+# PipelineC / Pypeline outputs
+/3.build/pipelinec_build/generated-files-*/
+/3.build/pipelinec_build/*.py
+/3.build/pypeline_build/generated-files-*/
 3.build/wirevenv/
-/3.build/hw_build.openXC7/chipdb
-/3.build/hw_build.openXC7/chipdb.new
-/3.build/hw_build.openXC7/sv2v-build
-/3.build/hw_build.openXC7/build_artifacts.slang
-/3.build/hw_build.openXC7/build_artifacts.new
-/3.build/hw_build.openXC7/converted.slang
-/3.build/hw_build.openXC7/converted.new
+
+# Simulation
+/4.sim/obj/
+/4.sim/obj_dir/
+/4.sim/output/
+/4.sim/rtl/*/output/
+/4.sim/libvproc.a
+/4.sim/libuser.a
+*.fst
+tb.xml
+tb.stems
