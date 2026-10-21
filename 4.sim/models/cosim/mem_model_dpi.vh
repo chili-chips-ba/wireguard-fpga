@@ -25,10 +25,10 @@
 
 // Import DPI-C fuctions
 
-import "DPI-C" function void MemWrite  (input  int address,
-                                        input  int data,
-                                        input  int be);
+import "DPI-C" function void MemModelWrite  (input  int address,
+                                             input  int data,
+                                             input  int be);
 
-import "DPI-C" function void MemRead   (input  int address,
-                                        output int data,
-                                        input  int be);
+import "DPI-C" function void MemModelRead   (input  int address,
+                                             output int data,
+                                             input  int be);

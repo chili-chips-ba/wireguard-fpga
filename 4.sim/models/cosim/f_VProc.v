@@ -5,7 +5,7 @@
 // SystemVerilog side Virtual Processor, for running host
 // programs as control in simulation.
 //
-// Copyright (c) 2024 Simon Southwell.
+// Copyright (c) 2004-2025 Simon Southwell.
 //
 // This file is part of VProc.
 //
@@ -170,18 +170,6 @@ begin
     // before starting accesses
     if (Initialised == 1'b1)
     begin
-        // If an interrupt active, call VSched with interrupt value
-        if (IntSamp > 0)
-        begin
-            `VSched(NodeI, IntSamp, DataInSamp, VPDataOut, VPAddr, VPRW, VPTicks);
-
-            // If interrupt routine returns non-zero tick, then override
-            // current tick value. Otherwise, leave at present value.
-            if (VPTicks > 0)
-            begin
-                TickCount               = VPTicks;
-            end
-        end
 
         // If vector IRQ enabled, call VIirq when interrupt value changes, passing in
         // new value
@@ -214,13 +202,17 @@ begin
                     // the last data input sample.
                     if (BlkCount == 1)
                     begin
-                        AccIdx          = AccIdx + 1;
                         BlkCount        = 0;
-                        `vaccess(NodeI, AccIdx, DataInSamp, VPDataOut);
+                        
+                        if (RD)
+                        begin
+                            AccIdx          = AccIdx + 1;
+                            `vaccess(NodeI, AccIdx, DataInSamp, VPDataOut);
+                        end
                     end
 
                     // Get new access command
-                    `VSched(NodeI, IntSamp, DataInSamp, VPDataOut, VPAddr, VPRW, VPTicks);
+                    `VSched(NodeI, DataInSamp, VPDataOut, VPAddr, VPRW, VPTicks);
 
                     // Update the outputs
                     Burst               <= VPRW[`BLKBITS];

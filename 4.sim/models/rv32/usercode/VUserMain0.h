@@ -51,7 +51,9 @@ extern "C" {
 #include "VUser.h"
 }
 
+#ifndef CFGFILENAME
 #define CFGFILENAME                        "vusermain.cfg"
+#endif
 #define MAXARGS                            100
 #define MEM_SIZE                           (1024*1024)
 #define MEM_OFFSET                         0

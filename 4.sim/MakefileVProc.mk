@@ -19,6 +19,9 @@ WAVESAVEFILE     = wave.CSR_ETHERNET_TEST.gtkw
 BUILD            = DEFAULT
 TIMEOUTUS        = 10000
 DISABLE_SIM_CTRL = 1
+# BUILD=ISS only. 1: bus credit and no fetch/load wait states (as openPCIE),
+# 0: wireguard's original ISS timing (see models/rv32/usercode/VUserMain0.cpp)
+ISS_BUS_CREDIT   = 0
 
 # --------------------------------------------
 # Global exported environment variables
@@ -41,20 +44,22 @@ UDPDIR         = $(CURDIR)/models/udpIpPg
 UDP_C          = VUserMainUdp.cpp
 UDPCODEDIR     = $(CURDIR)/usercode
 
-# VProc external dependency (for VerilatorSimCtrl)
+# VProc external dependency (for VerilatorSimCtrl). Cloned next to the repo,
+# one directory per version, so that a version bump gets a fresh clone.
+# The HDL and headers in models/cosim are the same version (tools/vip-upgrade.sh).
 VPROC_REPO     = https://github.com/wyvernSemi/vproc.git
 VLIB           = $(CURDIR)/libvproc.a
-VPROCDIR       = $(CURDIR)/../../vproc
+VPROCVERSION   = VERSION_1_13_4
+VPROCDIR       = $(CURDIR)/../../vproc-$(VPROCVERSION)
 VPROCMKFILE    = makefile.verilator
-VPROCVERSION   = VERSION_1_12_2
 AUX_C          = VerilatorSimCtrl.cpp
 AUXDIR         = $(VPROCDIR)/verilator/src
 
-# Memory model (required by VProc build)
+# Memory model (required by VProc build), at a commit past its last tag
 MEMMODEL_REPO  = https://github.com/wyvernSemi/mem_model.git
-MEMMODELDIR    = $(CURDIR)/../../mem_model
+MEMVERSION     = c7b9c62
+MEMMODELDIR    = $(CURDIR)/../../mem_model-$(MEMVERSION)
 MEM_C          = mem.c mem_model.c
-MEMVERSION     = VERSION_1_0_0
 
 # VProc user code lives in models/rv32/usercode: the sim-control node (VSC,
 # node 15) always, the rv32 ISS for node 0 with BUILD=ISS. With BUILD=DEFAULT,
@@ -64,34 +69,35 @@ VPROC_USER_C   = VUserMainVSC.cpp
 ISS_USER_C     = VUserMain0.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp
 
 # --------------------------------------------
-# RV32 ISS variables
+# RV32 ISS variables (Linux/WSL only)
 # --------------------------------------------
-# Get OS type
-OSTYPE           = $(shell uname)
-
 #
 # If BUILD is ISS, then override user source code list and directory
 # and define extra flags
 #
+VOBJDIR          = $(CURDIR)/obj
+
 ifeq ("$(BUILD)", "ISS")
 
-  ifeq ("$(OSTYPE)", "Linux")
-    RV32LIB      = rv32lnx
-  else
-    RV32LIB      = rv32win
-    RV32WINOPTS  = -lWs2_32
-    RV32WINFILES = getopt.c
-  endif
-
   # VProc ISS build: rv32 user code for node0 + VSC (node15) built into libvproc
-  VPROC_USER_C   := $(VPROC_USER_C) $(ISS_USER_C) $(RV32WINFILES)
+  VPROC_USER_C   := $(VPROC_USER_C) $(ISS_USER_C)
 
   # UDP BFMs (nodes 1-4) stay in libuser from usercode/
   UDP_C          = VUserMainUdp.cpp
 
+  # The ISS library is built here from the rv32 sources (upstream iss/src,
+  # plus models/rv32/rv32-openpcie.patch), with upstream's flags
   RV32DIR        = $(CURDIR)/models/rv32
-  RV32INCLOPTS   = -I$(RV32DIR)/include
-  RV32LDOPTS     = -L$(RV32DIR)/lib -l$(RV32LIB) $(RV32WINOPTS)
+  RV32SRC        = $(RV32DIR)/src
+  RV32INCLOPTS   = -I$(RV32SRC)
+  RV32OBJDIR     = $(VOBJDIR)/rv32
+  RV32LIB        = $(RV32OBJDIR)/librv32.a
+  RV32LDOPTS     = $(RV32LIB)
+  RV32OPTFLAG    = -O3
+  RV32_CPP       = rv32i_cpu_elf rv32_cpu_gdb rv32i_cpu rv32csr_cpu rv32m_cpu rv32a_cpu \
+                   rv32f_cpu rv32d_cpu rv32c_cpu rv32zba_cpu rv32zbb_cpu rv32zbs_cpu rv32zbc_cpu
+  RV32OBJS       = $(addprefix $(RV32OBJDIR)/, $(RV32_CPP:=.o))
+  RV32DEFS       = -DRV32_BUS_CREDIT=$(ISS_BUS_CREDIT)
 else
   # native test code for node 0, in libuser
   USER_C        := VUserMain0.cpp $(USER_C)
@@ -106,56 +112,83 @@ CC               = gcc
 C++              = g++
 CPPSTD           = -std=c++20
 
-# C/C++ include paths for VProc, memory model and user code
-INCLPATHS        = -I$(USRCODEDIR) -I$(UDPCODEDIR) -I$(COSIMDIR)/include -I$(UDPDIR)/include -I$(VPROCDIR)/code -I$(VPROCDIR)/verilator/src -I$(MEMMODELDIR)/src -I$(VPROC_USRCDIR) $(RV32INCLOPTS)
+# C/C++ include paths for VProc, memory model and user code. The VProc and
+# mem_model headers come from the clones only (not models/cosim/include, which
+# is for the RTL-only Makefile), so one version is used.
+INCLPATHS        = -I$(USRCODEDIR) -I$(UDPCODEDIR) -I$(UDPDIR)/include -I$(VPROCDIR)/code -I$(VPROCDIR)/verilator/src -I$(MEMMODELDIR)/src -I$(VPROC_USRCDIR) $(RV32INCLOPTS)
 DEFS             = -DVERILATOR -DVPROC_SV -DVPROC
 
-VOBJDIR          = $(CURDIR)/obj
+# Object directories: libuser, libvproc (VProc's make file) and the ISS
+# library each have their own, so a file name in two of them cannot collide
+USROBJDIR        = $(VOBJDIR)/user
+VPROCOBJDIR      = $(VOBJDIR)/vproc
 
 # Separate C and C++ source files
 USER_CPP_BASE    = $(notdir $(filter %cpp, $(USER_C) $(UDP_C)))
 USER_C_BASE      = $(notdir $(filter %c,   $(USER_C) $(UDP_C)))
 
 # Create list of object files (excluding any veriuser object)
-VOBJS            = $(addprefix $(VOBJDIR)/,                   \
+VOBJS            = $(addprefix $(USROBJDIR)/,                 \
                     $(USER_C_BASE:%.c=%.o)                    \
                     $(USER_CPP_BASE:%.cpp=%.o))
 
 USERLIB          = libuser.a
 
-# Rule to build object file temporary directory
-$(VOBJDIR):
-	@mkdir $(VOBJDIR)
+# Rule to build object file temporary directories
+$(USROBJDIR) $(VPROCOBJDIR):
+	@mkdir -p $@
 
 # Rule to build user C sources
-$(VOBJDIR)/%.o: $(USRCODEDIR)/%.c
+$(USROBJDIR)/%.o: $(USRCODEDIR)/%.c | $(USROBJDIR)
 	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build user C++ sources
-$(VOBJDIR)/%.o: $(USRCODEDIR)/%.cpp
+$(USROBJDIR)/%.o: $(USRCODEDIR)/%.cpp | $(USROBJDIR)
 	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build UDP user C sources
-$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.c
+$(USROBJDIR)/%.o: $(UDPCODEDIR)/%.c | $(USROBJDIR)
 	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # Rule to build UDP user C++ sources
-$(VOBJDIR)/%.o: $(UDPCODEDIR)/%.cpp
+$(USROBJDIR)/%.o: $(UDPCODEDIR)/%.cpp | $(USROBJDIR)
 	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
+
+# The node 0 code differs per BUILD (native test code in libuser, or the ISS
+# in libvproc): a change of BUILD, of the model versions or of ISS_BUS_CREDIT
+# throws the objects and both libraries away, so the next build cannot mix
+# them. obj/.build holds the configuration of the last build.
+BUILD_CFG        = $(BUILD) $(VPROCVERSION) $(MEMVERSION) $(ISS_BUS_CREDIT)
+BUILD_STAMP      = $(VOBJDIR)/.build
+$(BUILD_STAMP): FORCE
+	@mkdir -p $(VOBJDIR)
+	@if [ "$$(cat $@ 2>/dev/null)" != "$(BUILD_CFG)" ]; then              \
+	    rm -rf $(USROBJDIR) $(VPROCOBJDIR) $(USERLIB) $(VLIB);            \
+	    echo "$(BUILD_CFG)" > $@;                                         \
+	fi
+
+FORCE:
 
 # Rule to build library of user code
 # Note: delete existing archive first to avoid stale objects (e.g. switching UDP_C)
-$(USERLIB): $(VOBJDIR) $(VOBJS)
+$(USERLIB): $(BUILD_STAMP) $(VOBJS)
 	@rm -f $(USERLIB)
 	@ar crs $(USERLIB) $(VOBJS)
 
-ifeq ("$(OSTYPE)", "Linux")
-  COSIMLDOPT     = -lcosimlnx
-  UDPLDOPT       = -ludplnx
-else
-  COSIMLDOPT     = -lcosimwin
-  UDPLDOPT       = -ludpwin
+# Rules to build the rv32 ISS library (BUILD=ISS)
+ifeq ("$(BUILD)", "ISS")
+$(RV32OBJDIR):
+	@mkdir -p $@
+
+$(RV32OBJDIR)/%.o: $(RV32SRC)/%.cpp $(wildcard $(RV32SRC)/*.h) | $(RV32OBJDIR)
+	@$(C++) -c -fPIC $(RV32OPTFLAG) -I$(RV32SRC) -D_REENTRANT $< -o $@
+
+$(RV32LIB): $(RV32OBJS)
+	@rm -f $@
+	@ar cr $@ $(RV32OBJS)
 endif
+
+UDPLDOPT         = -ludplnx
 
 WARNOPTS       = -Wall models/config.vlt
 USRCDEFS      = -DMEM_MODEL_DEFAULT_ENDIAN=1
@@ -220,7 +253,7 @@ SPC =
 # BUILD RULES
 #======================================================
 
-.PHONY: all, compile, run, rungui, gui, help, clean
+.PHONY: all compile run rungui gui help clean FORCE
 
 all: $(TOPFILELIST) $(SIMEXE)
 
@@ -228,10 +261,10 @@ all: $(TOPFILELIST) $(SIMEXE)
 # Call VProc's Verilator test makefile to compile library into
 # this directory, including the memory model code and user code.
 #
-$(VLIB): $(VPROCDIR) $(MEMMODELDIR) $(addprefix $(VPROC_USRCDIR)/,$(VPROC_USER_C))
+$(VLIB): $(BUILD_STAMP) $(VPROCDIR) $(MEMMODELDIR) $(addprefix $(VPROC_USRCDIR)/,$(VPROC_USER_C)) | $(VPROCOBJDIR)
 	@make --no-print-directory -C $(VPROCDIR)/test        \
               -f $(VPROCMKFILE) ARCHFLAG=$(OPTFLAG)           \
-              USRFLAGS="$(INCLPATHS) $(USRCDEFS) $(USRFLAGS)" \
+              USRFLAGS="$(INCLPATHS) $(USRCDEFS) $(RV32DEFS) $(USRFLAGS)" \
               USRCDIR=$(VPROC_USRCDIR)                        \
               USER_C="$(VPROC_USER_C)"                        \
               MEMMODELDIR=$(MEMMODELDIR)/src                  \
@@ -239,13 +272,17 @@ $(VLIB): $(VPROCDIR) $(MEMMODELDIR) $(addprefix $(VPROC_USRCDIR)/,$(VPROC_USER_C
               AUXDIR=$(AUXDIR)                                \
               AUX_C="$(AUX_C)"                                \
               TESTDIR=$(CURDIR)                               \
+              VOBJDIR=$(VPROCOBJDIR)                          \
               $(VLIB)
 
 #
-# Compile simulation C++ code
+# Compile simulation C++ code. The executable is always relinked: the
+# Verilator make file does not track the libraries, and the linker (mold)
+# fails to overwrite an existing executable on a network share.
 #
-compile: $(USERLIB) $(VLIB)
-	@verilator     $(WARNOPTS)                            \
+compile: $(USERLIB) $(VLIB) $(RV32LIB)
+	@rm -f $(SIMEXE)
+	@verilator    $(WARNOPTS)                            \
 	               -F $(TOPFILELIST)                      \
                    -F $(TBFILELIST)                       \
 	               $(SIMOPTS)                             \
@@ -277,9 +314,11 @@ $(TOPFILELIST): $(HW_SRC)/$(TOPFILELIST)
 $(VPROCDIR):
 	@git clone --depth 1 --branch $(VPROCVERSION) $(VPROC_REPO) $(VPROCDIR) --recursive
 
-# Check out memory model repo if not at expected location
+# Check out memory model repo if not at expected location. MEMVERSION is a
+# commit, which --branch cannot take: clone, then check it out.
 $(MEMMODELDIR):
-	@git clone --depth 1 --branch $(MEMVERSION) $(MEMMODEL_REPO) $(MEMMODELDIR) --recursive
+	@git clone -q $(MEMMODEL_REPO) $(MEMMODELDIR)
+	@git -C $(MEMMODELDIR) -c advice.detachedHead=false checkout -q $(MEMVERSION)
 
 xml2stems: $(TOPFILELIST)
 	@verilator                                            \
@@ -333,6 +372,7 @@ help:
 	@$(info $(SPC) $(SPC) BUILD:            Select build type from DEFAULT or ISS (default DEFAULT))
 	@$(info $(SPC) $(SPC) TIMEOUTUS:        Test bench timeout period in microseconds (default 10000))
 	@$(info $(SPC) $(SPC) DISABLE_SIM_CTRL: Disable/enable Verilator simulation control (default disabled))
+	@$(info $(SPC) $(SPC) ISS_BUS_CREDIT:   BUILD=ISS: 1 for bus credit and no fetch/load wait states (default 0))
 	@$(info )
 
 #======================================================

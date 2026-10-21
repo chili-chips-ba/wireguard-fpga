@@ -13,7 +13,9 @@
 *xOLD*
 
 *output*
-/4.sim/obj/*
+/4.sim/obj/
+/4.sim/libvproc.a
+/4.sim/libuser.a
 *.fst
 
 #*impl*

@@ -1,0 +1,35 @@
+--- rv32csr_cpu.cpp
++++ rv32csr_cpu.cpp
+@@ -178,8 +178,12 @@
+     if (!use_external_timer)
+     {
+         // Check timer compare
++        // openPCIE: read_mem() charges a memory cycle per read, i.e. 2 cycles
++        // on every instruction; this is a register check, not an access
++        rv32i_time_t cycles = cycle_count;
+         uint64_t mtimcmp = (uint64_t)read_mem(RV32I_RTCLOCK_CMP_ADDRESS, MEM_RD_ACCESS_WORD, fault) |
+                           ((uint64_t)read_mem(RV32I_RTCLOCK_CMP_ADDRESS + 4, MEM_RD_ACCESS_WORD, fault) << 32);
++        cycle_count = cycles;
+         
+         // If timer greater than compare register, set the pending bit, else clear it
+         if (real_time_us() >= mtimcmp)
+--- rv32i_cpu.cpp
++++ rv32i_cpu.cpp
+@@ -1172,7 +1172,7 @@
+     if (!access_fault)
+     {
+         increment_pc();
+-        cycle_count += RV32I_LOAD_EXTRA_CYCLES;
++        cycle_count += RV32I_STORE_EXTRA_CYCLES;  // openPCIE: was LOAD
+     }
+ }
+ 
+@@ -1192,7 +1192,7 @@
+     if (!access_fault)
+     {
+         increment_pc();
+-        cycle_count += RV32I_LOAD_EXTRA_CYCLES;
++        cycle_count += RV32I_STORE_EXTRA_CYCLES;  // openPCIE: was LOAD
+     }
+ }
+ 

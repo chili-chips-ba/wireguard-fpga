@@ -4,7 +4,7 @@
 //
 // VSched_pli.h                                       Date: 2004/12/13
 //
-// Copyright (c) 2004-2024 Simon Southwell.
+// Copyright (c) 2004-2025 Simon Southwell.
 //
 // This file is part of VProc.
 //
@@ -99,7 +99,7 @@
 #define VHALT_PARAMS       int, int
 
 #define VINIT_NUM_ARGS     1
-#define VSCHED_NUM_ARGS    7
+#define VSCHED_NUM_ARGS    6
 #define VPROCUSER_NUM_ARGS 2
 #define VIRQ_NUM_ARGS      2
 #define VACCESS_NUM_ARGS   4
@@ -119,7 +119,7 @@
 #   endif
 
 #define VINIT_PARAMS       int  node
-#define VSCHED_PARAMS      int  node, int Interrupt, int VPDataIn, int* VPDataOut, int* VPAddr, int* VPRw, int* VPTicks
+#define VSCHED_PARAMS      int  node, int VPDataIn, int* VPDataOut, int* VPAddr, int* VPRw, int* VPTicks
 #define VPROCUSER_PARAMS   int  node, int value
 #define VIRQ_PARAMS        int  node, int value
 #define VACCESS_PARAMS     int  node, int idx, int VPDataIn, int* VPDataOut
@@ -152,15 +152,16 @@
 
 #define VPROC_RTN_TYPE    int
 
-extern int getArgs    (vpiHandle taskHdl, int value[]);
-extern int updateArgs (vpiHandle taskHdl, int value[]);
+// Export VPI tak argument functions for use externally (pcievhost ises them)
+extern int            getArgs    (const vpiHandle taskHdl,       int value[]);
+extern int            updateArgs (const vpiHandle taskHdl, const int value[]);
 
 # endif
 
-extern VPROC_RTN_TYPE VInit     (VINIT_PARAMS);
-extern VPROC_RTN_TYPE VSched    (VSCHED_PARAMS);
-extern VPROC_RTN_TYPE VProcUser (VPROCUSER_PARAMS);
-extern VPROC_RTN_TYPE VIrq      (VIRQ_PARAMS);
-extern VPROC_RTN_TYPE VAccess   (VACCESS_PARAMS);
-extern int            VHalt     (VHALT_PARAMS);
+extern VPROC_RTN_TYPE VInit      (VINIT_PARAMS);
+extern VPROC_RTN_TYPE VSched     (VSCHED_PARAMS);
+extern VPROC_RTN_TYPE VProcUser  (VPROCUSER_PARAMS);
+extern VPROC_RTN_TYPE VIrq       (VIRQ_PARAMS);
+extern VPROC_RTN_TYPE VAccess    (VACCESS_PARAMS);
+extern int            VHalt      (VHALT_PARAMS);
 

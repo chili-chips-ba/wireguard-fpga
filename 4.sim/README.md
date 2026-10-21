@@ -169,7 +169,7 @@ As well as the native test code case seen in the previous section, the Wireguard
 
 #### RISC-V Compiled Application
 
-To execute RISC-V compiled application code, the <tt>rv32</tt> instruction set simulator is used as the code running on the virtual processor. The <tt>VUserMain0</tt> program now becomes software to creates an ISS object and integrate with VProc. This uses the ISS's external memory access callback function to direct loads and stores either towards the sparse memory model, the VProc API for simulation transactions, or back to the ISS itself to handle. This ISS integration <tt>VUserMain0</tt> program is located in <tt>4.sim/models/rv32/usercode</tt>. When built the code here is compiled and uses the pre-built library in <tt>4.sim/models/rv32/lib/librv32lnx.a</tt> containing the ISS, with the headers for it in <tt>4.sim/models/rv32/include</tt>. More details of the integration code and methods can be found [here](models/rv32/README.md).
+To execute RISC-V compiled application code, the <tt>rv32</tt> instruction set simulator is used as the code running on the virtual processor. The <tt>VUserMain0</tt> program now becomes software to creates an ISS object and integrate with VProc. This uses the ISS's external memory access callback function to direct loads and stores either towards the sparse memory model, the VProc API for simulation transactions, or back to the ISS itself to handle. This ISS integration <tt>VUserMain0</tt> program is located in <tt>4.sim/models/rv32/usercode</tt>. The make file builds the ISS library (<tt>obj/rv32/librv32.a</tt>) from its sources in <tt>4.sim/models/rv32/src</tt>, which also hold its headers. Linux/WSL only: the Windows (MSYS2/mingw64) prebuilt libraries are gone. More details of the integration code and methods can be found [here](models/rv32/README.md).
 
 The ISS supports interrupts, but these are not currently used on Wireguard. The integration software can read a configuration file, if present in the <tt>4.sim/</tt> directory, called <tt>vusermain.cfg</tt>. This allows the ISS and other features to be configured at run-time. The configuration file is in lieu of command line options and the entries in the file are formatted as if they were such, with a command matching the VUserMain program:
 
@@ -238,7 +238,7 @@ make -f MakefileVProc.mk USER_C="VUserMain0.cpp MyTest1Class.cpp"
 
 If many variants of software build are required then either scripts can be constructed with the various command line variable modification calls to `make` or other make files which set these varaiable and call the common make file. This is useful in managing source code for multiple tests located in different directories, compiling for ISS (perhaps also calling the RISC-V application build), or for compiling application code natively which will have a different set of source files.
 
-The user software is compiled into a local static library, <tt>libuser.a</tt> which is linked to the simulation code within Verilator along with the precompiled <tt>libcosimlnx.a</tt> (or <tt>libcosimwin.a</tt> for MSYS2/mingw64 on Windows) located in <tt>4.sim/models/cosim/lib</tt> and containing the precompiled code for *VProc* and *mem_model*. The headers for the *VProc* and *mem_model* API software are in <tt>4.sim/models/cosim/include</tt>. The HDL required for these models' use in the Wireguard trest bench can be found in <tt>4.sim/models/cosim</tt>, and the make file picks these up from there to compile with the rest of the test bench HDL.
+The user software is compiled into a local static library, <tt>libuser.a</tt>, which is linked to the simulation code within Verilator along with <tt>libvproc.a</tt>. The make file builds <tt>libvproc.a</tt> with *VProc*'s own Verilator make file: *VProc*, *mem_model*, the VerilatorSimCtrl node and, with <tt>BUILD=ISS</tt>, the ISS integration code. It clones *VProc* and *mem_model* next to the repository, one directory per version (<tt>../../vproc-VERSION_1_13_4</tt>, <tt>../../mem_model-c7b9c62</tt>), and takes their C headers from there. Neither library is tracked. A change of <tt>BUILD</tt>, of the model versions or of <tt>ISS_BUS_CREDIT</tt> deletes the objects and both libraries (stamp file <tt>obj/.build</tt>), so DEFAULT and ISS builds cannot mix. The HDL for these models is in <tt>4.sim/models/cosim</tt>, at the same versions. <tt>models/cosim/lib/libcosimlnx.a</tt> and <tt>models/cosim/include</tt> are only used by the [RTL-only make file](#rtl-only-simulation-makefile).
 
 The <tt>MakefileVProc.mk</tt> make file has a target <tt>help</tt>, which produces the following output:
 
@@ -262,6 +262,7 @@ Command line configurable variables:
   BUILD:            Select build type from DEFAULT or ISS (default DEFAULT)
   TIMEOUTUS:        Test bench timeout period in microseconds (default 10000)
   DISABLE_SIM_CTRL: Disable/enable Verilator simulation control (default disabled)
+  ISS_BUS_CREDIT:   BUILD=ISS: 1 for bus credit and no fetch/load wait states (default 0)
 ```
 
 By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed in batch mode. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files of previous compilations.
@@ -585,11 +586,31 @@ void WGMAIN (void)
 The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `3.build/sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to 18518 ps (54 MHz), not the 80 MHz (12500 ps) that `tb.sv` uses for the `soc_cpu` ([#64](https://github.com/chili-chips-ba/wireguard-fpga/issues/64)). A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `3.build/sysrdl_cosim.py`.
 
 ## Tool Versions
-* _Verilator_ **v5.024**
-* _VProc_ **v1.12.2**
-* _Mem Model_ **v1.0.0**
-* _rv32_ ISS **v1.1.4**
-* _udpIpPg_ **v1.0.3**
+
+| Component | In use | Source |
+|---|---|---|
+| Verilator | 5.052 | [verilator.org](https://verilator.org) |
+| VProc | 1.13.4 | [wyvernSemi/vproc](https://github.com/wyvernSemi/vproc) |
+| mem_model | `main` c7b9c62 (1.0.1 + one fix) | [wyvernSemi/mem_model](https://github.com/wyvernSemi/mem_model) |
+| rv32 ISS **(modified, see below)** | 1.3.3 (`774d84fa`) | [wyvernSemi/rv32](https://github.com/wyvernSemi/rv32) |
+| udpIpPg | 1.0.3 | [wyvernSemi/udpIpPg](https://github.com/wyvernSemi/udpIpPg) |
+
+Linux/WSL only. [`tools/vip-upgrade.sh`](tools/vip-upgrade.sh) refreshes VProc, mem_model and rv32 from upstream: the HDL, headers and `libcosimlnx.a` in `models/cosim`, the rv32 sources, and the versions `MakefileVProc.mk` clones. It re-applies the local changes below and stops if the rv32 patch no longer applies.
+
+### Local changes
+
+| File | Change | Why |
+|---|---|---|
+| `models/rv32/src/rv32csr_cpu.cpp` (in `models/rv32/rv32-openpcie.patch`) | the timer-compare check in `process_interrupts()` no longer charges cycles | it added 2 cycles to every instruction |
+| `models/rv32/src/rv32i_cpu.cpp` (same patch) | `sw`, `sh` add the store extra cycles | upstream adds the load ones |
+| `models/rv32/usercode/VUserMain0.cpp` | waits for reset release, restarts at the reset vector on a new reset | as the RTL cores do |
+| `models/rv32/usercode/VUserMain0.cpp` | `ISS_BUS_CREDIT=1`: bus credit, no fetch/load wait states | an access then costs only its timing-table cycles. Off by default until the tables are measured here |
+| `models/soc_cpu.VPROC.sv` | CPU reset (`bus.arst_n & imem_cpu_rstn`, as the RTL cores) on VProc interrupt bit 3 | for the ISS reset handling |
+| `models/rv32/usercode/rv32_timing_config.h` | none yet: wireguard's original tables | openPCIE's tables were measured on a different bus |
+
+The patch and the `VUserMain0.cpp` changes come from [openPCIE](https://github.com/chili-chips-ba/openpcie). Bus credit: a load or store to the simulation takes real clocks on the VProc bus. In `soc_cpu.VPROC.sv` VProc samples the ack at a rising edge, and the ack is `bus.rdy` sampled on the falling edge before it. Measured in `wave.fst`: a write takes 1 clock (DMEM and CSR), a CSR read 1, a DMEM read 2. With credit on, the ISS takes them off its next synchronisation.
+
+Two other fixes: `vusermain.cfg` halted the ISS at `0x6c`, the `jal main` in `2.sw/boot_crt.s`, so `main()` never ran (now `0x70`, `loop_forever`). And the file was CRLF, so `parseArgs()` (`vuserutils.cpp`) kept a CR on the last option and could not open `main.bin`. The file is LF now, and `parseArgs()` strips both.
 
 ## References:
 - [VProc](https://github.com/wyvernSemi/vproc)

@@ -4,7 +4,7 @@
 //
 // VProc.h                                            Date: 2004/12/13 
 //
-// Copyright (c) 2004-2024 Simon Southwell.
+// Copyright (c) 2004-2025 Simon Southwell.
 //
 // This file is part of VProc.
 //
@@ -37,7 +37,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define VERSION_STRING         "VProc version 1.12.2. Copyright (c) 2004-2024 Simon Southwell."
+#define VERSION_STRING         "VProc version 1.13.4. Copyright (c) 2004-2025 Simon Southwell."
 
 #ifndef VP_MAX_NODES
 #define VP_MAX_NODES            64
@@ -58,13 +58,16 @@
 // Indexes for PLI function arguments
 #define VPNODENUM_ARG           1
 #define VPINTERRUPT_ARG         2
+#define VPVALUE_ARG             2
+#define VPDATAIN_ARG            2
+#define VPDATAOUT_ARG           3
+#define VPADDR_ARG              4
+#define VPRW_ARG                5
+#define VPTICKS_ARG             6
+
 #define VPINDEX_ARG             2
-#define VPDATAIN_ARG            3
-#define VPDATAOUT_ARG           4
-#define VPADDR_ARG              5
-#define VPRW_ARG                6
-#define VPTICKS_ARG             7
-#define VPRESTORE_ARG           8
+#define VPACCESSIN_ARG          3   
+#define VACCESSOUT_ARG          4
 
 // A default string buffer size
 #define DEFAULT_STR_BUF_SIZE    32
@@ -101,14 +104,12 @@ typedef struct {
 // Simulation to user thread exchange structure
 typedef struct {
     unsigned int        data_in;
-    unsigned int        interrupt;
 } rcv_buf_t, *prcv_buf_t;
 
 // Shared object handle typedef
 typedef void * handle_t;
 
 // Callback pointer types
-typedef int  (*pVUserInt_t)      (void);
 typedef int  (*pVUserIrqCB_t)    (int);
 typedef int  (*pPyIrqCB_t)       (int, int);
 typedef int  (*pVUserCB_t)       (int);
@@ -125,7 +126,6 @@ typedef struct {
     sem_t               rcv;
     send_buf_t          send_buf;
     rcv_buf_t           rcv_buf;
-    pVUserInt_t         VInt_table[MAX_INTERRUPT_LEVEL+1];
     pVUserIrqCB_t       VUserIrqCB;
     pPyIrqCB_t          PyIrqCB;
     vecIrqState_t       irqState;

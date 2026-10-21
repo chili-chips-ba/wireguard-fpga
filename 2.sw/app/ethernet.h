@@ -32,8 +32,8 @@ typedef struct {
 #define DPE_ADDR_MCAST_24    6
 #define DPE_ADDR_BCAST       7
 
-uint32_t eth_send_packet     (volatile csr_vp_t* csr, eth_raw_packet_t* packet);
-uint32_t eth_receive_packet  (volatile csr_vp_t* csr, eth_raw_packet_t* packet);
+uint32_t eth_send_packet     (csr_vp_t* csr, eth_raw_packet_t* packet);
+uint32_t eth_receive_packet  (csr_vp_t* csr, eth_raw_packet_t* packet);
 
 #ifdef __cplusplus
 }

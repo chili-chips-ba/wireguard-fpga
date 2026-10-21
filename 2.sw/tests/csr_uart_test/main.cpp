@@ -49,7 +49,7 @@
 
 int main(void)
 {
-   volatile csr_vp_t* csr = new csr_vp_t();
+   csr_vp_t* csr = CSR_VP();
    char rx_data[UART_RXBUF_SIZE];
 
    uart_send(csr, "Hello world!\r\n");

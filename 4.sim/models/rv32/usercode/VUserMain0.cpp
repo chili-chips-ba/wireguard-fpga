@@ -26,12 +26,38 @@ const  uint32_t        uart0_base_addr = 0x80000000;
 const  uint32_t        sw_irq_addr     = 0xafffffff;
 const  uint32_t        max_sync_diff   = 1000;
 
+// Bus credit (from openPCIE), selected with RV32_BUS_CREDIT=1 (make
+// ISS_BUS_CREDIT=1). A load or store to the simulation takes real clocks on
+// the VProc bus. With credit on, these are taken off the following
+// synchronisations, so that an access costs only its timing-model cycles, and
+// fetches and loads get no wait states. With credit off (default), the
+// original wireguard timing is kept: 1 wait state per fetch and load, and the
+// bus clocks come on top.
+#ifndef RV32_BUS_CREDIT
+#define RV32_BUS_CREDIT 0
+#endif
+
+// Simulation clocks of one access over the VProc bus (soc_cpu.VPROC.sv:
+// VProc samples the ack at a rising edge, the ack is bus.rdy sampled on the
+// falling edge before it). Measured in wave.fst (WE/RD width): writes 1 clock
+// (DMEM and CSR), CSR reads 1 clock, DMEM reads 2 clocks. See 4.sim/README.md.
+const  uint32_t        sim_write_cycles     = 1;
+const  uint32_t        sim_read_cycles      = 1;
+const  uint32_t        sim_dmem_read_cycles = 2;
+const  uint32_t        dmem_base_addr       = 0x10000000;
+const  uint32_t        dmem_top_addr        = 0x20000000;
+
 // ---------------------------------------------
 // LOCAL STATICS
 // ---------------------------------------------
 
 static uint32_t        extirq          = 0;
 static uint32_t        swirq           = 0;
+
+// The CPU reset, VProc interrupt bit 3 (soc_cpu.VPROC.sv: bus.arst_n and
+// imem_cpu_rstn, as for the RTL cores). Assumed asserted until the first
+// interrupt callback says otherwise.
+static volatile bool   in_reset        = true;
 
 static rv32*           pCpu;
 
@@ -67,8 +93,8 @@ static void pre_run_setup(rv32* pCpu)
     // Register ISS interrupt callback
     pCpu->register_int_callback(iss_int_callback);
 
-    // Register the VProc IRQ callback, used to update irq status from HDL
-    VRegIrq(vproc_irq_callback, node);
+    // (The VProc IRQ callback is registered at the start of VUserMain0, so
+    // that no reset edge is missed.)
 
     // Set up ICACHE if enabled
     if (vcfg.enable_icache)
@@ -162,14 +188,38 @@ static void post_run_actions(rv32i_cfg_s cfg)
 
 int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const rv32i_time_t time)
 {
+#if RV32_BUS_CREDIT
+    // No wait states: the timing model already counts the fetch and the load
+    const int       write_wait_cycle      = 0;
+    const int       read_data_wait_cycle  = 0;
+    const int       read_instr_wait_cycle = 0;
+#else
     const int       write_wait_cycle      = 0;
     const int       read_data_wait_cycle  = 1;
     const int       read_instr_wait_cycle = 1;
+#endif
     bool            access_sim            = false;
     int             processed             = RV32I_EXT_MEM_NOT_PROCESSED;
     uint64_t        curr_cycles;
-    uint32_t        cycle_diff;
+    uint64_t        cycle_diff;
     static uint64_t last_cycles           = 0;
+    static uint64_t sim_ahead             = 0;  // bus clocks not yet taken off
+
+    // Reset asserted while running (seen at the latest sync, so up to
+    // max_sync_diff cycles late): hold until it is released, then restart at
+    // the reset vector, as the RTL core does
+    if ((type & MEM_NOT_DBG_MASK) == MEM_RD_ACCESS_INSTR && in_reset)
+    {
+        while (in_reset)
+        {
+            VTick(1, node);
+        }
+        pCpu->reset_cpu();
+        last_cycles = pCpu->clk_cycles();
+        sim_ahead   = 0;
+        data        = read_instr(pCpu->pc_val(), false);
+        return read_instr_wait_cycle;
+    }
 
     // Select whether making simulation or direct memory model access
     access_sim  = addr >= vcfg.ext_access_base_addr && addr < vcfg.ext_access_top_addr;
@@ -178,7 +228,24 @@ int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const r
     // Synchronise ISS time and simulation time
     // -------------------------------------------
     curr_cycles = pCpu->clk_cycles();
-    cycle_diff  = (uint32_t)(curr_cycles - last_cycles);
+    cycle_diff  = curr_cycles - last_cycles;
+
+    // Advance the simulation by the ISS cycles since the last synchronisation,
+    // less the bus clocks the simulation already spent (sim_ahead, always 0
+    // without bus credit)
+    auto sync = [&]()
+    {
+        if (cycle_diff > sim_ahead)
+        {
+            VTick((uint32_t)(cycle_diff - sim_ahead), node);
+            sim_ahead = 0;
+        }
+        else
+        {
+            sim_ahead -= cycle_diff;
+        }
+        last_cycles = curr_cycles;
+    };
 
     // Force synchronisation of simulation when reading instructions and the
     // ISS/sim skew reaches a limit to minimise simulation interaction when
@@ -187,15 +254,19 @@ int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const r
     {
         if ((type & MEM_NOT_DBG_MASK) == MEM_RD_ACCESS_INSTR && cycle_diff >= max_sync_diff)
         {
-            VTick(cycle_diff, node);
-            last_cycles = curr_cycles;
+            sync();
         }
     }
     // Synchronise CPU time with simulation at simulation access load or store
     else
     {
-        VTick(cycle_diff, node);
-        last_cycles = curr_cycles;
+        sync();
+#if RV32_BUS_CREDIT
+        if ((type & MEM_NOT_DBG_MASK) <= MEM_WR_ACCESS_INSTR)
+            sim_ahead += sim_write_cycles;
+        else
+            sim_ahead += (addr >= dmem_base_addr && addr < dmem_top_addr) ? sim_dmem_read_cycles : sim_read_cycles;
+#endif
     }
 
     // -------------------------------------------
@@ -278,7 +349,8 @@ int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const r
 // in the main program flow.
 int vproc_irq_callback(int val)
 {
-    extirq = val;
+    extirq   = val & 0x7;
+    in_reset = (val >> 3) & 1;
 
     return 0;
 }
@@ -362,6 +434,10 @@ extern "C" void VUserMain0()
     VPrint(  "  *     Copyright (c) 2025     *\n");
     VPrint(  "  ******************************\n\n");
 
+    // Register the VProc IRQ callback, used to update irq and reset status
+    // from HDL, before the first tick, so that the reset release is seen
+    VRegIrq(vproc_irq_callback, node);
+
     VTick(20, node);
 
     // Parse arguments. As no argc and argv, pass in these as null, and it will look for
@@ -438,6 +514,12 @@ extern "C" void VUserMain0()
 
             if (!error)
             {
+                // Start at reset release, as the RTL core does
+                while (in_reset)
+                {
+                    VTick(1, node);
+                }
+
                 // Run the processor
                 pCpu->run(cfg);
 

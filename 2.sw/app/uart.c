@@ -49,7 +49,7 @@
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_char(volatile csr_vp_t* csr, char c) {
+void uart_send_char(csr_vp_t* csr, char c) {
    // wait for HW "not busy", then send the byte/character
    while (csr->uart->tx->busy());
    csr->uart->tx->data(c);
@@ -63,7 +63,7 @@ void uart_send_char(volatile csr_vp_t* csr, char c) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex(volatile csr_vp_t* csr, unsigned int val, int digits) {
+void uart_send_hex(csr_vp_t* csr, unsigned int val, int digits) {
    for (int i = (4*digits) - 4; i >= 0; i -= 4)
       uart_send_char(csr, "0123456789ABCDEF"[(val >> i) % 16]);
 }
@@ -77,7 +77,7 @@ void uart_send_hex(volatile csr_vp_t* csr, unsigned int val, int digits) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex_bytes(volatile csr_vp_t* csr, const uint8_t *data, int len) {
+void uart_send_hex_bytes(csr_vp_t* csr, const uint8_t *data, int len) {
    const char hex[] = "0123456789ABCDEF";
    for (int i = 0; i < len; i++)
    {
@@ -95,7 +95,7 @@ void uart_send_hex_bytes(volatile csr_vp_t* csr, const uint8_t *data, int len) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_dec(volatile csr_vp_t* csr, uint32_t val) {
+void uart_send_dec(csr_vp_t* csr, uint32_t val) {
    if (val == 0) {
       uart_send_char(csr, '0');
       return;
@@ -122,7 +122,7 @@ void uart_send_dec(volatile csr_vp_t* csr, uint32_t val) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send(volatile csr_vp_t* csr, const char *s) {
+void uart_send(csr_vp_t* csr, const char *s) {
    while (*s) uart_send_char(csr, *(s++));
 }
 
@@ -133,7 +133,7 @@ void uart_send(volatile csr_vp_t* csr, const char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_ip(volatile csr_vp_t* csr, const uint8_t *ip) {
+void uart_send_ip(csr_vp_t* csr, const uint8_t *ip) {
    uart_send_dec(csr, ip[0]);
    uart_send_char(csr, '.');
    uart_send_dec(csr, ip[1]);
@@ -150,7 +150,7 @@ void uart_send_ip(volatile csr_vp_t* csr, const uint8_t *ip) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_mac(volatile csr_vp_t* csr, const uint8_t *mac) {
+void uart_send_mac(csr_vp_t* csr, const uint8_t *mac) {
    uart_send_hex(csr, mac[0], 2);
    uart_send_char(csr, ':');
    uart_send_hex(csr, mac[1], 2);
@@ -172,7 +172,7 @@ void uart_send_mac(volatile csr_vp_t* csr, const uint8_t *mac) {
  *
  * Returns:     None
  **********************************************************************/
-uint8_t uart_recv(volatile csr_vp_t* csr, char *s) {
+uint8_t uart_recv(csr_vp_t* csr, char *s) {
    uint32_t uart_rx;
 
    // Check for available data:
@@ -257,7 +257,7 @@ uint8_t uart_recv(volatile csr_vp_t* csr, char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_test(volatile csr_vp_t* csr) {
+void uart_test(csr_vp_t* csr) {
    const char *rx_expd = "Mi smo FPGA raja";
    char        rx_data[UART_RXBUF_SIZE];
    char       *rx_data_ptr;
@@ -306,7 +306,7 @@ void uart_test(volatile csr_vp_t* csr) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_tests_info(volatile csr_vp_t* csr, int cmd) {
+void uart_tests_info(csr_vp_t* csr, int cmd) {
 
    char *tests_list[] = {
     "OK!\r\n\r\n",

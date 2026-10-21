@@ -4,7 +4,7 @@
 //
 // VProcClass.h                                       Date: 2023/12/29
 //
-// Copyright (c) 2023-2024 Simon Southwell.
+// Copyright (c) 2023-2025 Simon Southwell.
 //
 // This file is part of VProc.
 //
@@ -66,7 +66,6 @@ public:
     int  burstRead       (const unsigned   addr,           void    *data, const unsigned wordlen)    {return VBurstRead      (addr,      data, wordlen, node);};
     int  tick            (const unsigned   ticks)                                                    {return VTick           (ticks,                    node);};
     void regIrq          (const pVUserIrqCB_t func)                                                  {       VRegIrq         (func,                     node);};
-    void regInterrupt    (const int        level,  const pVUserInt_t func)                           {       VRegInterrupt   (level,     func,          node);};
     void regUser         (const pVUserCB_t func)                                                     {       VRegUser        (func,                     node);};
 
 

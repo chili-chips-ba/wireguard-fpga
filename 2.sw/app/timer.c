@@ -48,9 +48,9 @@
 // error stops in main.cpp and wireguard_libs.cpp)
 uint32_t cycles(void)
 {
-    static volatile csr_vp_t* csr = 0;
+    static csr_vp_t* csr = 0;
     if (!csr)
-        csr = new csr_vp_t();
+        csr = CSR_VP();
     return csr->cycle->count();
 }
 

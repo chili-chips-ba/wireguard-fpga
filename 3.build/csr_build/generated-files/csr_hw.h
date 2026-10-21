@@ -17,1406 +17,1369 @@
 class imem_vp_t {
 public:
 
-    imem_vp_t(uint32_t* base_addr = (uint32_t*)0x0)
-    {
-    };
+    imem_vp_t* operator->() {return this;};
 
-} ;
+    uint8_t raw[32768];
+} __attribute__((packed));
+
+#define IMEM_VP_BASE_ADDR 0x0
 
 // -----------------------------------------------------
 class dmem_vp_t {
 public:
 
-    dmem_vp_t(uint32_t* base_addr = (uint32_t*)0x10000000)
-    {
-    };
+    dmem_vp_t* operator->() {return this;};
 
-} ;
+    uint8_t raw[32768];
+} __attribute__((packed));
+
+#define DMEM_VP_BASE_ADDR 0x10000000
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__data_31_0_vp_t {
 public:
-    csr__cpu_fifo__rx__data_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__rx__data_31_0_t*)reg_addr) {};
+    csr__cpu_fifo__rx__data_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__rx__data_31_0_t* reg;
-};
+    volatile csr__cpu_fifo__rx__data_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__data_63_32_vp_t {
 public:
-    csr__cpu_fifo__rx__data_63_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__rx__data_63_32_t*)reg_addr) {};
+    csr__cpu_fifo__rx__data_63_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__rx__data_63_32_t* reg;
-};
+    volatile csr__cpu_fifo__rx__data_63_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__data_95_64_vp_t {
 public:
-    csr__cpu_fifo__rx__data_95_64_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__rx__data_95_64_t*)reg_addr) {};
+    csr__cpu_fifo__rx__data_95_64_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__rx__data_95_64_t* reg;
-};
+    volatile csr__cpu_fifo__rx__data_95_64_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__data_127_96_vp_t {
 public:
-    csr__cpu_fifo__rx__data_127_96_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__rx__data_127_96_t*)reg_addr) {};
+    csr__cpu_fifo__rx__data_127_96_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__rx__data_127_96_t* reg;
-};
+    volatile csr__cpu_fifo__rx__data_127_96_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__control_vp_t {
 public:
-    csr__cpu_fifo__rx__control_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__rx__control_t*)reg_addr) {};
+    csr__cpu_fifo__rx__control_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tuser_dst(const uint32_t data) {reg->f.tuser_dst = data;};
-    inline uint32_t tuser_dst()                    {return reg->f.tuser_dst;};
-    inline void     tuser_src(const uint32_t data) {reg->f.tuser_src = data;};
-    inline uint32_t tuser_src()                    {return reg->f.tuser_src;};
-    inline void     tuser_bypass_stage(const uint32_t data) {reg->f.tuser_bypass_stage = data;};
-    inline uint32_t tuser_bypass_stage()                    {return reg->f.tuser_bypass_stage;};
-    inline void     tuser_bypass_all(const uint32_t data) {reg->f.tuser_bypass_all = data;};
-    inline uint32_t tuser_bypass_all()                    {return reg->f.tuser_bypass_all;};
-    inline void     tlast(const uint32_t data) {reg->f.tlast = data;};
-    inline uint32_t tlast()                    {return reg->f.tlast;};
-    inline void     tkeep(const uint32_t data) {reg->f.tkeep = data;};
-    inline uint32_t tkeep()                    {return reg->f.tkeep;};
+    inline void     tuser_dst(const uint32_t data) {raw.f.tuser_dst = data;};
+    inline uint32_t tuser_dst()                    {return raw.f.tuser_dst;};
+    inline void     tuser_src(const uint32_t data) {raw.f.tuser_src = data;};
+    inline uint32_t tuser_src()                    {return raw.f.tuser_src;};
+    inline void     tuser_bypass_stage(const uint32_t data) {raw.f.tuser_bypass_stage = data;};
+    inline uint32_t tuser_bypass_stage()                    {return raw.f.tuser_bypass_stage;};
+    inline void     tuser_bypass_all(const uint32_t data) {raw.f.tuser_bypass_all = data;};
+    inline uint32_t tuser_bypass_all()                    {return raw.f.tuser_bypass_all;};
+    inline void     tlast(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 1) = (uint8_t)((data & 0x1u) << 7);};
+    inline uint32_t tlast()                    {return raw.f.tlast;};
+    inline void     tkeep(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 2) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t tkeep()                    {return raw.f.tkeep;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+    inline void set(const uint32_t tuser_dst, const uint32_t tuser_src, const uint32_t tuser_bypass_stage, const uint32_t tuser_bypass_all, const uint32_t tlast, const uint32_t tkeep) {raw.w = (tuser_dst << 0) | (tuser_src << 3) | (tuser_bypass_stage << 6) | (tuser_bypass_all << 7) | (tlast << 15) | (tkeep << 16);};
+
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__rx__control_t* reg;
-};
+    volatile csr__cpu_fifo__rx__control_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__trigger_vp_t {
 public:
-    csr__cpu_fifo__rx__trigger_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__rx__trigger_t*)reg_addr) {};
+    csr__cpu_fifo__rx__trigger_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tvalid(const uint32_t data) {reg->f.tvalid = data;};
-    inline uint32_t tvalid()                    {return reg->f.tvalid;};
+    inline void     tvalid(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x1u));};
+    inline uint32_t tvalid()                    {return raw.f.tvalid;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__rx__trigger_t* reg;
-};
+    volatile csr__cpu_fifo__rx__trigger_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__rx__status_vp_t {
 public:
-    csr__cpu_fifo__rx__status_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__rx__status_t*)reg_addr) {};
+    csr__cpu_fifo__rx__status_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tready(const uint32_t data) {reg->f.tready = data;};
-    inline uint32_t tready()                    {return reg->f.tready;};
+    inline void     tready(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x1u));};
+    inline uint32_t tready()                    {return raw.f.tready;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__rx__status_t* reg;
-};
+    volatile csr__cpu_fifo__rx__status_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__cpu_fifo__rx_vp_t {
 public:
 
-    csr__cpu_fifo__rx_vp_t(uint32_t* base_addr)
-    {
-        data_31_0 = new csr__cpu_fifo__rx__data_31_0_vp_t (base_addr + 0x0/4);
-        data_63_32 = new csr__cpu_fifo__rx__data_63_32_vp_t (base_addr + 0x4/4);
-        data_95_64 = new csr__cpu_fifo__rx__data_95_64_vp_t (base_addr + 0x8/4);
-        data_127_96 = new csr__cpu_fifo__rx__data_127_96_vp_t (base_addr + 0xc/4);
-        control = new csr__cpu_fifo__rx__control_vp_t (base_addr + 0x10/4);
-        trigger = new csr__cpu_fifo__rx__trigger_vp_t (base_addr + 0x14/4);
-        status = new csr__cpu_fifo__rx__status_vp_t (base_addr + 0x18/4);
-    };
+    csr__cpu_fifo__rx_vp_t* operator->() {return this;};
 
-    csr__cpu_fifo__rx__data_31_0_vp_t* data_31_0;
-    csr__cpu_fifo__rx__data_63_32_vp_t* data_63_32;
-    csr__cpu_fifo__rx__data_95_64_vp_t* data_95_64;
-    csr__cpu_fifo__rx__data_127_96_vp_t* data_127_96;
-    csr__cpu_fifo__rx__control_vp_t* control;
-    csr__cpu_fifo__rx__trigger_vp_t* trigger;
-    csr__cpu_fifo__rx__status_vp_t* status;
-} ;
+    csr__cpu_fifo__rx__data_31_0_vp_t data_31_0;
+    csr__cpu_fifo__rx__data_63_32_vp_t data_63_32;
+    csr__cpu_fifo__rx__data_95_64_vp_t data_95_64;
+    csr__cpu_fifo__rx__data_127_96_vp_t data_127_96;
+    csr__cpu_fifo__rx__control_vp_t control;
+    csr__cpu_fifo__rx__trigger_vp_t trigger;
+    csr__cpu_fifo__rx__status_vp_t status;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__tx__data_31_0_vp_t {
 public:
-    csr__cpu_fifo__tx__data_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__tx__data_31_0_t*)reg_addr) {};
+    csr__cpu_fifo__tx__data_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__tx__data_31_0_t* reg;
-};
+    volatile csr__cpu_fifo__tx__data_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__tx__data_63_32_vp_t {
 public:
-    csr__cpu_fifo__tx__data_63_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__tx__data_63_32_t*)reg_addr) {};
+    csr__cpu_fifo__tx__data_63_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__tx__data_63_32_t* reg;
-};
+    volatile csr__cpu_fifo__tx__data_63_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__tx__data_95_64_vp_t {
 public:
-    csr__cpu_fifo__tx__data_95_64_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__tx__data_95_64_t*)reg_addr) {};
+    csr__cpu_fifo__tx__data_95_64_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__tx__data_95_64_t* reg;
-};
+    volatile csr__cpu_fifo__tx__data_95_64_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__tx__data_127_96_vp_t {
 public:
-    csr__cpu_fifo__tx__data_127_96_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__tx__data_127_96_t*)reg_addr) {};
+    csr__cpu_fifo__tx__data_127_96_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tdata(const uint32_t data) {reg->f.tdata = data;};
-    inline uint32_t tdata()                    {return reg->f.tdata;};
+    inline void     tdata(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t tdata()                    {return raw.f.tdata;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__tx__data_127_96_t* reg;
-};
+    volatile csr__cpu_fifo__tx__data_127_96_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__tx__control_vp_t {
 public:
-    csr__cpu_fifo__tx__control_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__tx__control_t*)reg_addr) {};
+    csr__cpu_fifo__tx__control_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tuser_dst(const uint32_t data) {reg->f.tuser_dst = data;};
-    inline uint32_t tuser_dst()                    {return reg->f.tuser_dst;};
-    inline void     tuser_src(const uint32_t data) {reg->f.tuser_src = data;};
-    inline uint32_t tuser_src()                    {return reg->f.tuser_src;};
-    inline void     tuser_bypass_stage(const uint32_t data) {reg->f.tuser_bypass_stage = data;};
-    inline uint32_t tuser_bypass_stage()                    {return reg->f.tuser_bypass_stage;};
-    inline void     tuser_bypass_all(const uint32_t data) {reg->f.tuser_bypass_all = data;};
-    inline uint32_t tuser_bypass_all()                    {return reg->f.tuser_bypass_all;};
-    inline void     tlast(const uint32_t data) {reg->f.tlast = data;};
-    inline uint32_t tlast()                    {return reg->f.tlast;};
-    inline void     tkeep(const uint32_t data) {reg->f.tkeep = data;};
-    inline uint32_t tkeep()                    {return reg->f.tkeep;};
+    inline void     tuser_dst(const uint32_t data) {raw.f.tuser_dst = data;};
+    inline uint32_t tuser_dst()                    {return raw.f.tuser_dst;};
+    inline void     tuser_src(const uint32_t data) {raw.f.tuser_src = data;};
+    inline uint32_t tuser_src()                    {return raw.f.tuser_src;};
+    inline void     tuser_bypass_stage(const uint32_t data) {raw.f.tuser_bypass_stage = data;};
+    inline uint32_t tuser_bypass_stage()                    {return raw.f.tuser_bypass_stage;};
+    inline void     tuser_bypass_all(const uint32_t data) {raw.f.tuser_bypass_all = data;};
+    inline uint32_t tuser_bypass_all()                    {return raw.f.tuser_bypass_all;};
+    inline void     tlast(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 1) = (uint8_t)((data & 0x1u) << 7);};
+    inline uint32_t tlast()                    {return raw.f.tlast;};
+    inline void     tkeep(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 2) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t tkeep()                    {return raw.f.tkeep;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__tx__control_t* reg;
-};
+    volatile csr__cpu_fifo__tx__control_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__tx__trigger_vp_t {
 public:
-    csr__cpu_fifo__tx__trigger_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__tx__trigger_t*)reg_addr) {};
+    csr__cpu_fifo__tx__trigger_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tready(const uint32_t data) {reg->f.tready = data;};
-    inline uint32_t tready()                    {return reg->f.tready;};
+    inline void     tready(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x1u));};
+    inline uint32_t tready()                    {return raw.f.tready;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__tx__trigger_t* reg;
-};
+    volatile csr__cpu_fifo__tx__trigger_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cpu_fifo__tx__status_vp_t {
 public:
-    csr__cpu_fifo__tx__status_vp_t (uint32_t* reg_addr = 0) : reg((csr__cpu_fifo__tx__status_t*)reg_addr) {};
+    csr__cpu_fifo__tx__status_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     tvalid(const uint32_t data) {reg->f.tvalid = data;};
-    inline uint32_t tvalid()                    {return reg->f.tvalid;};
+    inline void     tvalid(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x1u));};
+    inline uint32_t tvalid()                    {return raw.f.tvalid;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cpu_fifo__tx__status_t* reg;
-};
+    volatile csr__cpu_fifo__tx__status_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__cpu_fifo__tx_vp_t {
 public:
 
-    csr__cpu_fifo__tx_vp_t(uint32_t* base_addr)
-    {
-        data_31_0 = new csr__cpu_fifo__tx__data_31_0_vp_t (base_addr + 0x0/4);
-        data_63_32 = new csr__cpu_fifo__tx__data_63_32_vp_t (base_addr + 0x4/4);
-        data_95_64 = new csr__cpu_fifo__tx__data_95_64_vp_t (base_addr + 0x8/4);
-        data_127_96 = new csr__cpu_fifo__tx__data_127_96_vp_t (base_addr + 0xc/4);
-        control = new csr__cpu_fifo__tx__control_vp_t (base_addr + 0x10/4);
-        trigger = new csr__cpu_fifo__tx__trigger_vp_t (base_addr + 0x14/4);
-        status = new csr__cpu_fifo__tx__status_vp_t (base_addr + 0x18/4);
-    };
+    csr__cpu_fifo__tx_vp_t* operator->() {return this;};
 
-    csr__cpu_fifo__tx__data_31_0_vp_t* data_31_0;
-    csr__cpu_fifo__tx__data_63_32_vp_t* data_63_32;
-    csr__cpu_fifo__tx__data_95_64_vp_t* data_95_64;
-    csr__cpu_fifo__tx__data_127_96_vp_t* data_127_96;
-    csr__cpu_fifo__tx__control_vp_t* control;
-    csr__cpu_fifo__tx__trigger_vp_t* trigger;
-    csr__cpu_fifo__tx__status_vp_t* status;
-} ;
+    csr__cpu_fifo__tx__data_31_0_vp_t data_31_0;
+    csr__cpu_fifo__tx__data_63_32_vp_t data_63_32;
+    csr__cpu_fifo__tx__data_95_64_vp_t data_95_64;
+    csr__cpu_fifo__tx__data_127_96_vp_t data_127_96;
+    csr__cpu_fifo__tx__control_vp_t control;
+    csr__cpu_fifo__tx__trigger_vp_t trigger;
+    csr__cpu_fifo__tx__status_vp_t status;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__cpu_fifo_vp_t {
 public:
 
-    csr__cpu_fifo_vp_t(uint32_t* base_addr)
-    {
-        rx = new csr__cpu_fifo__rx_vp_t (base_addr + 0x0/4);
-        tx = new csr__cpu_fifo__tx_vp_t (base_addr + 0x1c/4);
-    };
+    csr__cpu_fifo_vp_t* operator->() {return this;};
 
-    csr__cpu_fifo__rx_vp_t* rx;
-    csr__cpu_fifo__tx_vp_t* tx;
-} ;
+    csr__cpu_fifo__rx_vp_t rx;
+    csr__cpu_fifo__tx_vp_t tx;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__uart__rx_vp_t {
 public:
-    csr__uart__rx_vp_t (uint32_t* reg_addr = 0) : reg((csr__uart__rx_t*)reg_addr) {};
+    csr__uart__rx_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     data(const uint32_t data) {reg->f.data = data;};
-    inline uint32_t data()                    {return reg->f.data;};
-    inline void     oflow(const uint32_t data) {reg->f.oflow = data;};
-    inline uint32_t oflow()                    {return reg->f.oflow;};
-    inline void     valid(const uint32_t data) {reg->f.valid = data;};
-    inline uint32_t valid()                    {return reg->f.valid;};
+    inline void     data(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0xffu));};
+    inline uint32_t data()                    {return raw.f.data;};
+    inline void     oflow(const uint32_t data) {raw.f.oflow = data;};
+    inline uint32_t oflow()                    {return raw.f.oflow;};
+    inline void     valid(const uint32_t data) {raw.f.valid = data;};
+    inline uint32_t valid()                    {return raw.f.valid;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__uart__rx_t* reg;
-};
+    volatile csr__uart__rx_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__uart__rx_trigger_read_2925067f_vp_t {
 public:
-    csr__uart__rx_trigger_read_2925067f_vp_t (uint32_t* reg_addr = 0) : reg((csr__uart__rx_trigger_read_2925067f_t*)reg_addr) {};
+    csr__uart__rx_trigger_read_2925067f_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     read(const uint32_t data) {reg->f.read = data;};
-    inline uint32_t read()                    {return reg->f.read;};
+    inline void     read(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x1u));};
+    inline uint32_t read()                    {return raw.f.read;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__uart__rx_trigger_read_2925067f_t* reg;
-};
+    volatile csr__uart__rx_trigger_read_2925067f_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__uart__tx_vp_t {
 public:
-    csr__uart__tx_vp_t (uint32_t* reg_addr = 0) : reg((csr__uart__tx_t*)reg_addr) {};
+    csr__uart__tx_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     data(const uint32_t data) {reg->f.data = data;};
-    inline uint32_t data()                    {return reg->f.data;};
-    inline void     busy(const uint32_t data) {reg->f.busy = data;};
-    inline uint32_t busy()                    {return reg->f.busy;};
+    inline void     data(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0xffu));};
+    inline uint32_t data()                    {return raw.f.data;};
+    inline void     busy(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 3) = (uint8_t)((data & 0x1u) << 7);};
+    inline uint32_t busy()                    {return raw.f.busy;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__uart__tx_t* reg;
-};
+    volatile csr__uart__tx_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__uart__tx_trigger_write_d2a2fe0e_vp_t {
 public:
-    csr__uart__tx_trigger_write_d2a2fe0e_vp_t (uint32_t* reg_addr = 0) : reg((csr__uart__tx_trigger_write_d2a2fe0e_t*)reg_addr) {};
+    csr__uart__tx_trigger_write_d2a2fe0e_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     write(const uint32_t data) {reg->f.write = data;};
-    inline uint32_t write()                    {return reg->f.write;};
+    inline void     write(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x1u));};
+    inline uint32_t write()                    {return raw.f.write;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__uart__tx_trigger_write_d2a2fe0e_t* reg;
-};
+    volatile csr__uart__tx_trigger_write_d2a2fe0e_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__uart_vp_t {
 public:
 
-    csr__uart_vp_t(uint32_t* base_addr)
-    {
-        rx = new csr__uart__rx_vp_t (base_addr + 0x0/4);
-        rx_trigger = new csr__uart__rx_trigger_read_2925067f_vp_t (base_addr + 0x4/4);
-        tx = new csr__uart__tx_vp_t (base_addr + 0x8/4);
-        tx_trigger = new csr__uart__tx_trigger_write_d2a2fe0e_vp_t (base_addr + 0xc/4);
-    };
+    csr__uart_vp_t* operator->() {return this;};
 
-    csr__uart__rx_vp_t* rx;
-    csr__uart__rx_trigger_read_2925067f_vp_t* rx_trigger;
-    csr__uart__tx_vp_t* tx;
-    csr__uart__tx_trigger_write_d2a2fe0e_vp_t* tx_trigger;
-} ;
+    csr__uart__rx_vp_t rx;
+    csr__uart__rx_trigger_read_2925067f_vp_t rx_trigger;
+    csr__uart__tx_vp_t tx;
+    csr__uart__tx_trigger_write_d2a2fe0e_vp_t tx_trigger;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__gpio_vp_t {
 public:
-    csr__gpio_vp_t (uint32_t* reg_addr = 0) : reg((csr__gpio_t*)reg_addr) {};
+    csr__gpio_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key1(const uint32_t data) {reg->f.key1 = data;};
-    inline uint32_t key1()                    {return reg->f.key1;};
-    inline void     key2(const uint32_t data) {reg->f.key2 = data;};
-    inline uint32_t key2()                    {return reg->f.key2;};
-    inline void     led1(const uint32_t data) {reg->f.led1 = data;};
-    inline uint32_t led1()                    {return reg->f.led1;};
-    inline void     led2(const uint32_t data) {reg->f.led2 = data;};
-    inline uint32_t led2()                    {return reg->f.led2;};
+    inline void     key1(const uint32_t data) {raw.f.key1 = data;};
+    inline uint32_t key1()                    {return raw.f.key1;};
+    inline void     key2(const uint32_t data) {raw.f.key2 = data;};
+    inline uint32_t key2()                    {return raw.f.key2;};
+    inline void     led1(const uint32_t data) {raw.f.led1 = data;};
+    inline uint32_t led1()                    {return raw.f.led1;};
+    inline void     led2(const uint32_t data) {raw.f.led2 = data;};
+    inline uint32_t led2()                    {return raw.f.led2;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+    inline void set(const uint32_t led1, const uint32_t led2) {raw.w = (led1 << 8) | (led2 << 9);};
+
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__gpio_t* reg;
-};
+    volatile csr__gpio_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__ethernet__status_vp_t {
 public:
-    csr__ethernet__status_vp_t (uint32_t* reg_addr = 0) : reg((csr__ethernet__status_t*)reg_addr) {};
+    csr__ethernet__status_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     speed(const uint32_t data) {reg->f.speed = data;};
-    inline uint32_t speed()                    {return reg->f.speed;};
+    inline void     speed(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x3u));};
+    inline uint32_t speed()                    {return raw.f.speed;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__ethernet__status_t* reg;
-};
+    volatile csr__ethernet__status_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__ethernet__mac_47_32_vp_t {
 public:
-    csr__ethernet__mac_47_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__ethernet__mac_47_32_t*)reg_addr) {};
+    csr__ethernet__mac_47_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     mac(const uint32_t data) {reg->f.mac = data;};
-    inline uint32_t mac()                    {return reg->f.mac;};
+    inline void     mac(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 0) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t mac()                    {return raw.f.mac;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__ethernet__mac_47_32_t* reg;
-};
+    volatile csr__ethernet__mac_47_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__ethernet__mac_31_0_vp_t {
 public:
-    csr__ethernet__mac_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__ethernet__mac_31_0_t*)reg_addr) {};
+    csr__ethernet__mac_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     mac(const uint32_t data) {reg->f.mac = data;};
-    inline uint32_t mac()                    {return reg->f.mac;};
+    inline void     mac(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t mac()                    {return raw.f.mac;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__ethernet__mac_31_0_t* reg;
-};
+    volatile csr__ethernet__mac_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__ethernet_vp_t {
 public:
 
-    csr__ethernet_vp_t(uint32_t* base_addr)
-    {
-        status = new csr__ethernet__status_vp_t (base_addr + 0x0/4);
-        mac_47_32 = new csr__ethernet__mac_47_32_vp_t (base_addr + 0x4/4);
-        mac_31_0 = new csr__ethernet__mac_31_0_vp_t (base_addr + 0x8/4);
-    };
+    csr__ethernet_vp_t* operator->() {return this;};
 
-    csr__ethernet__status_vp_t* status;
-    csr__ethernet__mac_47_32_vp_t* mac_47_32;
-    csr__ethernet__mac_31_0_vp_t* mac_31_0;
-} ;
+    csr__ethernet__status_vp_t status;
+    csr__ethernet__mac_47_32_vp_t mac_47_32;
+    csr__ethernet__mac_31_0_vp_t mac_31_0;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__hw_id_vp_t {
 public:
-    csr__hw_id_vp_t (uint32_t* reg_addr = 0) : reg((csr__hw_id_t*)reg_addr) {};
+    csr__hw_id_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     PRODUCT(const uint32_t data) {reg->f.PRODUCT = data;};
-    inline uint32_t PRODUCT()                    {return reg->f.PRODUCT;};
-    inline void     VENDOR(const uint32_t data) {reg->f.VENDOR = data;};
-    inline uint32_t VENDOR()                    {return reg->f.VENDOR;};
+    inline void     PRODUCT(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 0) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t PRODUCT()                    {return raw.f.PRODUCT;};
+    inline void     VENDOR(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 2) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t VENDOR()                    {return raw.f.VENDOR;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__hw_id_t* reg;
-};
+    volatile csr__hw_id_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__hw_version_vp_t {
 public:
-    csr__hw_version_vp_t (uint32_t* reg_addr = 0) : reg((csr__hw_version_t*)reg_addr) {};
+    csr__hw_version_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     PATCH(const uint32_t data) {reg->f.PATCH = data;};
-    inline uint32_t PATCH()                    {return reg->f.PATCH;};
-    inline void     MINOR(const uint32_t data) {reg->f.MINOR = data;};
-    inline uint32_t MINOR()                    {return reg->f.MINOR;};
-    inline void     MAJOR(const uint32_t data) {reg->f.MAJOR = data;};
-    inline uint32_t MAJOR()                    {return reg->f.MAJOR;};
+    inline void     PATCH(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 0) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t PATCH()                    {return raw.f.PATCH;};
+    inline void     MINOR(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 2) = (uint8_t)((data & 0xffu));};
+    inline uint32_t MINOR()                    {return raw.f.MINOR;};
+    inline void     MAJOR(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 3) = (uint8_t)((data & 0xffu));};
+    inline uint32_t MAJOR()                    {return raw.f.MAJOR;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__hw_version_t* reg;
-};
+    volatile csr__hw_version_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__dpe__fcr_vp_t {
 public:
-    csr__dpe__fcr_vp_t (uint32_t* reg_addr = 0) : reg((csr__dpe__fcr_t*)reg_addr) {};
+    csr__dpe__fcr_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     idle(const uint32_t data) {reg->f.idle = data;};
-    inline uint32_t idle()                    {return reg->f.idle;};
-    inline void     pause(const uint32_t data) {reg->f.pause = data;};
-    inline uint32_t pause()                    {return reg->f.pause;};
+    inline void     idle(const uint32_t data) {raw.f.idle = data;};
+    inline uint32_t idle()                    {return raw.f.idle;};
+    inline void     pause(const uint32_t data) {raw.f.pause = data;};
+    inline uint32_t pause()                    {return raw.f.pause;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__dpe__fcr_t* reg;
-};
+    volatile csr__dpe__fcr_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__dpe_vp_t {
 public:
 
-    csr__dpe_vp_t(uint32_t* base_addr)
-    {
-        fcr = new csr__dpe__fcr_vp_t (base_addr + 0x0/4);
-    };
+    csr__dpe_vp_t* operator->() {return this;};
 
-    csr__dpe__fcr_vp_t* fcr;
-} ;
+    csr__dpe__fcr_vp_t fcr;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cycle_vp_t {
 public:
-    csr__cycle_vp_t (uint32_t* reg_addr = 0) : reg((csr__cycle_t*)reg_addr) {};
+    csr__cycle_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     count(const uint32_t data) {reg->f.count = data;};
-    inline uint32_t count()                    {return reg->f.count;};
+    inline void     count(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t count()                    {return raw.f.count;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cycle_t* reg;
-};
+    volatile csr__cycle_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__routing_table__entry__ip_vp_t {
 public:
-    csr__routing_table__entry__ip_vp_t (uint32_t* reg_addr = 0) : reg((csr__routing_table__entry__ip_t*)reg_addr) {};
+    csr__routing_table__entry__ip_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     ip(const uint32_t data) {reg->f.ip = data;};
-    inline uint32_t ip()                    {return reg->f.ip;};
+    inline void     ip(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t ip()                    {return raw.f.ip;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__routing_table__entry__ip_t* reg;
-};
+    volatile csr__routing_table__entry__ip_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__routing_table__entry__mask_vp_t {
 public:
-    csr__routing_table__entry__mask_vp_t (uint32_t* reg_addr = 0) : reg((csr__routing_table__entry__mask_t*)reg_addr) {};
+    csr__routing_table__entry__mask_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     mask(const uint32_t data) {reg->f.mask = data;};
-    inline uint32_t mask()                    {return reg->f.mask;};
+    inline void     mask(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t mask()                    {return raw.f.mask;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__routing_table__entry__mask_t* reg;
-};
+    volatile csr__routing_table__entry__mask_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__routing_table__entry__peer_idx_vp_t {
 public:
-    csr__routing_table__entry__peer_idx_vp_t (uint32_t* reg_addr = 0) : reg((csr__routing_table__entry__peer_idx_t*)reg_addr) {};
+    csr__routing_table__entry__peer_idx_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     peer_idx(const uint32_t data) {reg->f.peer_idx = data;};
-    inline uint32_t peer_idx()                    {return reg->f.peer_idx;};
+    inline void     peer_idx(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x3fu));};
+    inline uint32_t peer_idx()                    {return raw.f.peer_idx;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__routing_table__entry__peer_idx_t* reg;
-};
+    volatile csr__routing_table__entry__peer_idx_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__routing_table__entry__dst_vp_t {
 public:
-    csr__routing_table__entry__dst_vp_t (uint32_t* reg_addr = 0) : reg((csr__routing_table__entry__dst_t*)reg_addr) {};
+    csr__routing_table__entry__dst_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     dst(const uint32_t data) {reg->f.dst = data;};
-    inline uint32_t dst()                    {return reg->f.dst;};
+    inline void     dst(const uint32_t data) {*(volatile uint8_t*)((volatile uint8_t*)&raw + 0) = (uint8_t)((data & 0x7u));};
+    inline uint32_t dst()                    {return raw.f.dst;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__routing_table__entry__dst_t* reg;
-};
+    volatile csr__routing_table__entry__dst_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__routing_table__entry_vp_t {
 public:
 
-    csr__routing_table__entry_vp_t(uint32_t* base_addr)
-    {
-        ip = new csr__routing_table__entry__ip_vp_t (base_addr + 0x0/4);
-        mask = new csr__routing_table__entry__mask_vp_t (base_addr + 0x4/4);
-        peer_idx = new csr__routing_table__entry__peer_idx_vp_t (base_addr + 0x8/4);
-        dst = new csr__routing_table__entry__dst_vp_t (base_addr + 0xc/4);
-    };
+    csr__routing_table__entry_vp_t* operator->() {return this;};
 
-    csr__routing_table__entry__ip_vp_t* ip;
-    csr__routing_table__entry__mask_vp_t* mask;
-    csr__routing_table__entry__peer_idx_vp_t* peer_idx;
-    csr__routing_table__entry__dst_vp_t* dst;
-} ;
+    csr__routing_table__entry__ip_vp_t ip;
+    csr__routing_table__entry__mask_vp_t mask;
+    csr__routing_table__entry__peer_idx_vp_t peer_idx;
+    csr__routing_table__entry__dst_vp_t dst;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__routing_table_vp_t {
 public:
 
-    csr__routing_table_vp_t(uint32_t* base_addr)
-    {
-        for(int idx = 0; idx < 64; idx++)
-        {
-            entry[idx] = new csr__routing_table__entry_vp_t (base_addr + 0x0/4 + 
-                                                                                   idx * sizeof(csr__routing_table__entry_t)/4);
-        };
+    csr__routing_table_vp_t* operator->() {return this;};
 
-    };
-
-    csr__routing_table__entry_vp_t* entry[64];
-} ;
+    csr__routing_table__entry_vp_t entry[64];
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__local_mac_47_32_vp_t {
 public:
-    csr__cryptokey_table__entry__local_mac_47_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__local_mac_47_32_t*)reg_addr) {};
+    csr__cryptokey_table__entry__local_mac_47_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     mac(const uint32_t data) {reg->f.mac = data;};
-    inline uint32_t mac()                    {return reg->f.mac;};
+    inline void     mac(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 0) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t mac()                    {return raw.f.mac;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__local_mac_47_32_t* reg;
-};
+    volatile csr__cryptokey_table__entry__local_mac_47_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__local_mac_31_0_vp_t {
 public:
-    csr__cryptokey_table__entry__local_mac_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__local_mac_31_0_t*)reg_addr) {};
+    csr__cryptokey_table__entry__local_mac_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     mac(const uint32_t data) {reg->f.mac = data;};
-    inline uint32_t mac()                    {return reg->f.mac;};
+    inline void     mac(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t mac()                    {return raw.f.mac;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__local_mac_31_0_t* reg;
-};
+    volatile csr__cryptokey_table__entry__local_mac_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__local_ip_vp_t {
 public:
-    csr__cryptokey_table__entry__local_ip_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__local_ip_t*)reg_addr) {};
+    csr__cryptokey_table__entry__local_ip_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     ip(const uint32_t data) {reg->f.ip = data;};
-    inline uint32_t ip()                    {return reg->f.ip;};
+    inline void     ip(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t ip()                    {return raw.f.ip;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__local_ip_t* reg;
-};
+    volatile csr__cryptokey_table__entry__local_ip_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__local_port_vp_t {
 public:
-    csr__cryptokey_table__entry__local_port_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__local_port_t*)reg_addr) {};
+    csr__cryptokey_table__entry__local_port_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     port(const uint32_t data) {reg->f.port = data;};
-    inline uint32_t port()                    {return reg->f.port;};
+    inline void     port(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 0) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t port()                    {return raw.f.port;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__local_port_t* reg;
-};
+    volatile csr__cryptokey_table__entry__local_port_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__local_id_vp_t {
 public:
-    csr__cryptokey_table__entry__local_id_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__local_id_t*)reg_addr) {};
+    csr__cryptokey_table__entry__local_id_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     id(const uint32_t data) {reg->f.id = data;};
-    inline uint32_t id()                    {return reg->f.id;};
+    inline void     id(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t id()                    {return raw.f.id;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__local_id_t* reg;
-};
+    volatile csr__cryptokey_table__entry__local_id_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__remote_mac_47_32_vp_t {
 public:
-    csr__cryptokey_table__entry__remote_mac_47_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__remote_mac_47_32_t*)reg_addr) {};
+    csr__cryptokey_table__entry__remote_mac_47_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     mac(const uint32_t data) {reg->f.mac = data;};
-    inline uint32_t mac()                    {return reg->f.mac;};
+    inline void     mac(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 0) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t mac()                    {return raw.f.mac;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__remote_mac_47_32_t* reg;
-};
+    volatile csr__cryptokey_table__entry__remote_mac_47_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__remote_mac_31_0_vp_t {
 public:
-    csr__cryptokey_table__entry__remote_mac_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__remote_mac_31_0_t*)reg_addr) {};
+    csr__cryptokey_table__entry__remote_mac_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     mac(const uint32_t data) {reg->f.mac = data;};
-    inline uint32_t mac()                    {return reg->f.mac;};
+    inline void     mac(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t mac()                    {return raw.f.mac;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__remote_mac_31_0_t* reg;
-};
+    volatile csr__cryptokey_table__entry__remote_mac_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__remote_ip_vp_t {
 public:
-    csr__cryptokey_table__entry__remote_ip_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__remote_ip_t*)reg_addr) {};
+    csr__cryptokey_table__entry__remote_ip_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     ip(const uint32_t data) {reg->f.ip = data;};
-    inline uint32_t ip()                    {return reg->f.ip;};
+    inline void     ip(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t ip()                    {return raw.f.ip;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__remote_ip_t* reg;
-};
+    volatile csr__cryptokey_table__entry__remote_ip_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__remote_port_vp_t {
 public:
-    csr__cryptokey_table__entry__remote_port_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__remote_port_t*)reg_addr) {};
+    csr__cryptokey_table__entry__remote_port_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     port(const uint32_t data) {reg->f.port = data;};
-    inline uint32_t port()                    {return reg->f.port;};
+    inline void     port(const uint32_t data) {*(volatile uint16_t*)((volatile uint8_t*)&raw + 0) = (uint16_t)((data & 0xffffu));};
+    inline uint32_t port()                    {return raw.f.port;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__remote_port_t* reg;
-};
+    volatile csr__cryptokey_table__entry__remote_port_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__remote_id_vp_t {
 public:
-    csr__cryptokey_table__entry__remote_id_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__remote_id_t*)reg_addr) {};
+    csr__cryptokey_table__entry__remote_id_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     id(const uint32_t data) {reg->f.id = data;};
-    inline uint32_t id()                    {return reg->f.id;};
+    inline void     id(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t id()                    {return raw.f.id;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__remote_id_t* reg;
-};
+    volatile csr__cryptokey_table__entry__remote_id_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_255_224_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_255_224_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_255_224_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_255_224_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_255_224_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_255_224_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_223_192_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_223_192_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_223_192_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_223_192_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_223_192_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_223_192_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_191_160_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_191_160_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_191_160_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_191_160_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_191_160_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_191_160_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_159_128_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_159_128_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_159_128_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_159_128_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_159_128_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_159_128_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_127_96_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_127_96_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_127_96_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_127_96_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_127_96_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_127_96_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_95_64_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_95_64_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_95_64_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_95_64_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_95_64_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_95_64_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_63_32_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_63_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_63_32_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_63_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_63_32_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_63_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__encrypt_key_31_0_vp_t {
 public:
-    csr__cryptokey_table__entry__encrypt_key_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__encrypt_key_31_0_t*)reg_addr) {};
+    csr__cryptokey_table__entry__encrypt_key_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__encrypt_key_31_0_t* reg;
-};
+    volatile csr__cryptokey_table__entry__encrypt_key_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_255_224_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_255_224_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_255_224_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_255_224_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_255_224_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_255_224_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_223_192_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_223_192_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_223_192_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_223_192_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_223_192_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_223_192_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_191_160_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_191_160_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_191_160_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_191_160_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_191_160_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_191_160_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_159_128_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_159_128_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_159_128_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_159_128_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_159_128_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_159_128_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_127_96_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_127_96_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_127_96_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_127_96_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_127_96_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_127_96_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_95_64_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_95_64_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_95_64_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_95_64_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_95_64_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_95_64_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_63_32_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_63_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_63_32_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_63_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_63_32_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_63_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__decrypt_key_31_0_vp_t {
 public:
-    csr__cryptokey_table__entry__decrypt_key_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__decrypt_key_31_0_t*)reg_addr) {};
+    csr__cryptokey_table__entry__decrypt_key_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     key(const uint32_t data) {reg->f.key = data;};
-    inline uint32_t key()                    {return reg->f.key;};
+    inline void     key(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t key()                    {return raw.f.key;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__decrypt_key_31_0_t* reg;
-};
+    volatile csr__cryptokey_table__entry__decrypt_key_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__send_cnt_63_32_vp_t {
 public:
-    csr__cryptokey_table__entry__send_cnt_63_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__send_cnt_63_32_t*)reg_addr) {};
+    csr__cryptokey_table__entry__send_cnt_63_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     cnt(const uint32_t data) {reg->f.cnt = data;};
-    inline uint32_t cnt()                    {return reg->f.cnt;};
+    inline void     cnt(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t cnt()                    {return raw.f.cnt;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__send_cnt_63_32_t* reg;
-};
+    volatile csr__cryptokey_table__entry__send_cnt_63_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__send_cnt_31_0_vp_t {
 public:
-    csr__cryptokey_table__entry__send_cnt_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__send_cnt_31_0_t*)reg_addr) {};
+    csr__cryptokey_table__entry__send_cnt_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     cnt(const uint32_t data) {reg->f.cnt = data;};
-    inline uint32_t cnt()                    {return reg->f.cnt;};
+    inline void     cnt(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t cnt()                    {return raw.f.cnt;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__send_cnt_31_0_t* reg;
-};
+    volatile csr__cryptokey_table__entry__send_cnt_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__recv_cnt_63_32_vp_t {
 public:
-    csr__cryptokey_table__entry__recv_cnt_63_32_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__recv_cnt_63_32_t*)reg_addr) {};
+    csr__cryptokey_table__entry__recv_cnt_63_32_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     cnt(const uint32_t data) {reg->f.cnt = data;};
-    inline uint32_t cnt()                    {return reg->f.cnt;};
+    inline void     cnt(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t cnt()                    {return raw.f.cnt;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__recv_cnt_63_32_t* reg;
-};
+    volatile csr__cryptokey_table__entry__recv_cnt_63_32_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 //
 class csr__cryptokey_table__entry__recv_cnt_31_0_vp_t {
 public:
-    csr__cryptokey_table__entry__recv_cnt_31_0_vp_t (uint32_t* reg_addr = 0) : reg((csr__cryptokey_table__entry__recv_cnt_31_0_t*)reg_addr) {};
+    csr__cryptokey_table__entry__recv_cnt_31_0_vp_t* operator->() {return this;};
 
-    inline void     full(const uint32_t data) {reg->w = data;};
-    inline uint32_t full()                    {return reg->w;};
+    inline void     full(const uint32_t data) {raw.w = data;};
+    inline uint32_t full()                    {return raw.w;};
 
-    inline void     cnt(const uint32_t data) {reg->f.cnt = data;};
-    inline uint32_t cnt()                    {return reg->f.cnt;};
+    inline void     cnt(const uint32_t data) {*(volatile uint32_t*)((volatile uint8_t*)&raw + 0) = (uint32_t)((data & 0xffffffffu));};
+    inline uint32_t cnt()                    {return raw.f.cnt;};
 
-    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}
+
+    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}
 
 private:
-    csr__cryptokey_table__entry__recv_cnt_31_0_t* reg;
-};
+    volatile csr__cryptokey_table__entry__recv_cnt_31_0_t raw;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__cryptokey_table__entry_vp_t {
 public:
 
-    csr__cryptokey_table__entry_vp_t(uint32_t* base_addr)
-    {
-        local_mac_47_32 = new csr__cryptokey_table__entry__local_mac_47_32_vp_t (base_addr + 0x0/4);
-        local_mac_31_0 = new csr__cryptokey_table__entry__local_mac_31_0_vp_t (base_addr + 0x4/4);
-        local_ip = new csr__cryptokey_table__entry__local_ip_vp_t (base_addr + 0x8/4);
-        local_port = new csr__cryptokey_table__entry__local_port_vp_t (base_addr + 0xc/4);
-        local_id = new csr__cryptokey_table__entry__local_id_vp_t (base_addr + 0x10/4);
-        remote_mac_47_32 = new csr__cryptokey_table__entry__remote_mac_47_32_vp_t (base_addr + 0x14/4);
-        remote_mac_31_0 = new csr__cryptokey_table__entry__remote_mac_31_0_vp_t (base_addr + 0x18/4);
-        remote_ip = new csr__cryptokey_table__entry__remote_ip_vp_t (base_addr + 0x1c/4);
-        remote_port = new csr__cryptokey_table__entry__remote_port_vp_t (base_addr + 0x20/4);
-        remote_id = new csr__cryptokey_table__entry__remote_id_vp_t (base_addr + 0x24/4);
-        encrypt_key_255_224 = new csr__cryptokey_table__entry__encrypt_key_255_224_vp_t (base_addr + 0x28/4);
-        encrypt_key_223_192 = new csr__cryptokey_table__entry__encrypt_key_223_192_vp_t (base_addr + 0x2c/4);
-        encrypt_key_191_160 = new csr__cryptokey_table__entry__encrypt_key_191_160_vp_t (base_addr + 0x30/4);
-        encrypt_key_159_128 = new csr__cryptokey_table__entry__encrypt_key_159_128_vp_t (base_addr + 0x34/4);
-        encrypt_key_127_96 = new csr__cryptokey_table__entry__encrypt_key_127_96_vp_t (base_addr + 0x38/4);
-        encrypt_key_95_64 = new csr__cryptokey_table__entry__encrypt_key_95_64_vp_t (base_addr + 0x3c/4);
-        encrypt_key_63_32 = new csr__cryptokey_table__entry__encrypt_key_63_32_vp_t (base_addr + 0x40/4);
-        encrypt_key_31_0 = new csr__cryptokey_table__entry__encrypt_key_31_0_vp_t (base_addr + 0x44/4);
-        decrypt_key_255_224 = new csr__cryptokey_table__entry__decrypt_key_255_224_vp_t (base_addr + 0x48/4);
-        decrypt_key_223_192 = new csr__cryptokey_table__entry__decrypt_key_223_192_vp_t (base_addr + 0x4c/4);
-        decrypt_key_191_160 = new csr__cryptokey_table__entry__decrypt_key_191_160_vp_t (base_addr + 0x50/4);
-        decrypt_key_159_128 = new csr__cryptokey_table__entry__decrypt_key_159_128_vp_t (base_addr + 0x54/4);
-        decrypt_key_127_96 = new csr__cryptokey_table__entry__decrypt_key_127_96_vp_t (base_addr + 0x58/4);
-        decrypt_key_95_64 = new csr__cryptokey_table__entry__decrypt_key_95_64_vp_t (base_addr + 0x5c/4);
-        decrypt_key_63_32 = new csr__cryptokey_table__entry__decrypt_key_63_32_vp_t (base_addr + 0x60/4);
-        decrypt_key_31_0 = new csr__cryptokey_table__entry__decrypt_key_31_0_vp_t (base_addr + 0x64/4);
-        send_cnt_63_32 = new csr__cryptokey_table__entry__send_cnt_63_32_vp_t (base_addr + 0x68/4);
-        send_cnt_31_0 = new csr__cryptokey_table__entry__send_cnt_31_0_vp_t (base_addr + 0x6c/4);
-        recv_cnt_63_32 = new csr__cryptokey_table__entry__recv_cnt_63_32_vp_t (base_addr + 0x70/4);
-        recv_cnt_31_0 = new csr__cryptokey_table__entry__recv_cnt_31_0_vp_t (base_addr + 0x74/4);
-    };
+    csr__cryptokey_table__entry_vp_t* operator->() {return this;};
 
-    csr__cryptokey_table__entry__local_mac_47_32_vp_t* local_mac_47_32;
-    csr__cryptokey_table__entry__local_mac_31_0_vp_t* local_mac_31_0;
-    csr__cryptokey_table__entry__local_ip_vp_t* local_ip;
-    csr__cryptokey_table__entry__local_port_vp_t* local_port;
-    csr__cryptokey_table__entry__local_id_vp_t* local_id;
-    csr__cryptokey_table__entry__remote_mac_47_32_vp_t* remote_mac_47_32;
-    csr__cryptokey_table__entry__remote_mac_31_0_vp_t* remote_mac_31_0;
-    csr__cryptokey_table__entry__remote_ip_vp_t* remote_ip;
-    csr__cryptokey_table__entry__remote_port_vp_t* remote_port;
-    csr__cryptokey_table__entry__remote_id_vp_t* remote_id;
-    csr__cryptokey_table__entry__encrypt_key_255_224_vp_t* encrypt_key_255_224;
-    csr__cryptokey_table__entry__encrypt_key_223_192_vp_t* encrypt_key_223_192;
-    csr__cryptokey_table__entry__encrypt_key_191_160_vp_t* encrypt_key_191_160;
-    csr__cryptokey_table__entry__encrypt_key_159_128_vp_t* encrypt_key_159_128;
-    csr__cryptokey_table__entry__encrypt_key_127_96_vp_t* encrypt_key_127_96;
-    csr__cryptokey_table__entry__encrypt_key_95_64_vp_t* encrypt_key_95_64;
-    csr__cryptokey_table__entry__encrypt_key_63_32_vp_t* encrypt_key_63_32;
-    csr__cryptokey_table__entry__encrypt_key_31_0_vp_t* encrypt_key_31_0;
-    csr__cryptokey_table__entry__decrypt_key_255_224_vp_t* decrypt_key_255_224;
-    csr__cryptokey_table__entry__decrypt_key_223_192_vp_t* decrypt_key_223_192;
-    csr__cryptokey_table__entry__decrypt_key_191_160_vp_t* decrypt_key_191_160;
-    csr__cryptokey_table__entry__decrypt_key_159_128_vp_t* decrypt_key_159_128;
-    csr__cryptokey_table__entry__decrypt_key_127_96_vp_t* decrypt_key_127_96;
-    csr__cryptokey_table__entry__decrypt_key_95_64_vp_t* decrypt_key_95_64;
-    csr__cryptokey_table__entry__decrypt_key_63_32_vp_t* decrypt_key_63_32;
-    csr__cryptokey_table__entry__decrypt_key_31_0_vp_t* decrypt_key_31_0;
-    csr__cryptokey_table__entry__send_cnt_63_32_vp_t* send_cnt_63_32;
-    csr__cryptokey_table__entry__send_cnt_31_0_vp_t* send_cnt_31_0;
-    csr__cryptokey_table__entry__recv_cnt_63_32_vp_t* recv_cnt_63_32;
-    csr__cryptokey_table__entry__recv_cnt_31_0_vp_t* recv_cnt_31_0;
-} ;
+    csr__cryptokey_table__entry__local_mac_47_32_vp_t local_mac_47_32;
+    csr__cryptokey_table__entry__local_mac_31_0_vp_t local_mac_31_0;
+    csr__cryptokey_table__entry__local_ip_vp_t local_ip;
+    csr__cryptokey_table__entry__local_port_vp_t local_port;
+    csr__cryptokey_table__entry__local_id_vp_t local_id;
+    csr__cryptokey_table__entry__remote_mac_47_32_vp_t remote_mac_47_32;
+    csr__cryptokey_table__entry__remote_mac_31_0_vp_t remote_mac_31_0;
+    csr__cryptokey_table__entry__remote_ip_vp_t remote_ip;
+    csr__cryptokey_table__entry__remote_port_vp_t remote_port;
+    csr__cryptokey_table__entry__remote_id_vp_t remote_id;
+    csr__cryptokey_table__entry__encrypt_key_255_224_vp_t encrypt_key_255_224;
+    csr__cryptokey_table__entry__encrypt_key_223_192_vp_t encrypt_key_223_192;
+    csr__cryptokey_table__entry__encrypt_key_191_160_vp_t encrypt_key_191_160;
+    csr__cryptokey_table__entry__encrypt_key_159_128_vp_t encrypt_key_159_128;
+    csr__cryptokey_table__entry__encrypt_key_127_96_vp_t encrypt_key_127_96;
+    csr__cryptokey_table__entry__encrypt_key_95_64_vp_t encrypt_key_95_64;
+    csr__cryptokey_table__entry__encrypt_key_63_32_vp_t encrypt_key_63_32;
+    csr__cryptokey_table__entry__encrypt_key_31_0_vp_t encrypt_key_31_0;
+    csr__cryptokey_table__entry__decrypt_key_255_224_vp_t decrypt_key_255_224;
+    csr__cryptokey_table__entry__decrypt_key_223_192_vp_t decrypt_key_223_192;
+    csr__cryptokey_table__entry__decrypt_key_191_160_vp_t decrypt_key_191_160;
+    csr__cryptokey_table__entry__decrypt_key_159_128_vp_t decrypt_key_159_128;
+    csr__cryptokey_table__entry__decrypt_key_127_96_vp_t decrypt_key_127_96;
+    csr__cryptokey_table__entry__decrypt_key_95_64_vp_t decrypt_key_95_64;
+    csr__cryptokey_table__entry__decrypt_key_63_32_vp_t decrypt_key_63_32;
+    csr__cryptokey_table__entry__decrypt_key_31_0_vp_t decrypt_key_31_0;
+    csr__cryptokey_table__entry__send_cnt_63_32_vp_t send_cnt_63_32;
+    csr__cryptokey_table__entry__send_cnt_31_0_vp_t send_cnt_31_0;
+    csr__cryptokey_table__entry__recv_cnt_63_32_vp_t recv_cnt_63_32;
+    csr__cryptokey_table__entry__recv_cnt_31_0_vp_t recv_cnt_31_0;
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr__cryptokey_table_vp_t {
 public:
 
-    csr__cryptokey_table_vp_t(uint32_t* base_addr)
-    {
-        for(int idx = 0; idx < 64; idx++)
-        {
-            entry[idx] = new csr__cryptokey_table__entry_vp_t (base_addr + 0x0/4 + 
-                                                                                   idx * sizeof(csr__cryptokey_table__entry_t)/4);
-        };
+    csr__cryptokey_table_vp_t* operator->() {return this;};
 
-    };
-
-    csr__cryptokey_table__entry_vp_t* entry[64];
-} ;
+    csr__cryptokey_table__entry_vp_t entry[64];
+} __attribute__((packed));
 
 // -----------------------------------------------------
 class csr_vp_t {
 public:
 
-    csr_vp_t(uint32_t* base_addr = (uint32_t*)0x20000000)
-    {
-        cpu_fifo = new csr__cpu_fifo_vp_t (base_addr + 0x0/4);
-        uart = new csr__uart_vp_t (base_addr + 0x38/4);
-        gpio = new csr__gpio_vp_t (base_addr + 0x48/4);
-        for(int idx = 0; idx < 4; idx++)
-        {
-            ethernet[idx] = new csr__ethernet_vp_t (base_addr + 0x4c/4 + 
-                                                                                   idx * sizeof(csr__ethernet_t)/4);
-        };
+    csr_vp_t* operator->() {return this;};
 
-        hw_id = new csr__hw_id_vp_t (base_addr + 0x7c/4);
-        hw_version = new csr__hw_version_vp_t (base_addr + 0x80/4);
-        dpe = new csr__dpe_vp_t (base_addr + 0x84/4);
-        cycle = new csr__cycle_vp_t (base_addr + 0x88/4);
-        routing_table = new csr__routing_table_vp_t (base_addr + 0x400/4);
-        cryptokey_table = new csr__cryptokey_table_vp_t (base_addr + 0x2000/4);
-    };
+    csr__cpu_fifo_vp_t cpu_fifo;
+    csr__uart_vp_t uart;
+    csr__gpio_vp_t gpio;
+    csr__ethernet_vp_t ethernet[4];
+    csr__hw_id_vp_t hw_id;
+    csr__hw_version_vp_t hw_version;
+    csr__dpe_vp_t dpe;
+    csr__cycle_vp_t cycle;
+    uint8_t _reserved_0[884];
+    csr__routing_table_vp_t routing_table;
+    uint8_t _reserved_1[6144];
+    csr__cryptokey_table_vp_t cryptokey_table;
+} __attribute__((packed));
 
-    csr__cpu_fifo_vp_t* cpu_fifo;
-    csr__uart_vp_t* uart;
-    csr__gpio_vp_t* gpio;
-    csr__ethernet_vp_t* ethernet[4];
-    csr__hw_id_vp_t* hw_id;
-    csr__hw_version_vp_t* hw_version;
-    csr__dpe_vp_t* dpe;
-    csr__cycle_vp_t* cycle;
-    csr__routing_table_vp_t* routing_table;
-    csr__cryptokey_table_vp_t* cryptokey_table;
-} ;
+#define CSR_VP_BASE_ADDR 0x20000000
 
 
 #endif

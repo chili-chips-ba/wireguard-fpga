@@ -52,7 +52,7 @@ eth_raw_packet_t packet;
 
 int main(void)
 {
-   volatile csr_vp_t* csr = new csr_vp_t();
+   csr_vp_t* csr = CSR_VP();
    char rx_data[UART_RXBUF_SIZE];
 
    // Turn on LED2

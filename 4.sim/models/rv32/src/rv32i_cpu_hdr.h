@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-
 //=============================================================
 // 
 // Copyright (c) 2021 Simon Southwell. All rights reserved.
@@ -254,7 +252,7 @@ public:
     static const uint32_t RV32I_NUM_TERTIARY_OPCODES                   = 128;
     static const uint32_t RV32I_NUM_QUARTERNARY_OPCODES                = 32;
     static const uint32_t RV32I_NUM_SYSTEM_OPCODES                     = 32;
-    static const uint32_t RV32I_INT_MEM_BYTES                          = (1024*1024);
+    static const uint32_t RV32I_INT_MEM_BYTES                          = (2*1024*1024);
 
     // The RV32I base class has a hardwired MTVEC location since
     // since CSR accesses are not supported. Set to riscv-test-env
@@ -263,6 +261,9 @@ public:
 
     // Reset vector (implementation dependent)
     static const uint32_t RV32I_RESET_VECTOR                           = 0x00000000;
+
+    // Stack pointer (implementation dependent)
+    static const uint32_t RV32I_STACK_POINTER                          = 0x00000000;
 
     // Memory mapped mtime and mtimecmp register offsets
     static const uint32_t RV32I_RTCLOCK_ADDRESS                        = 0xafffffe0;
@@ -284,9 +285,9 @@ public:
     static const uint32_t RV32I_NV                                     = 0x10;
 
     static const uint64_t RV32I_QNANF                                  = 0xffffffff7fc00000UL;
-    static const uint64_t RV32I_SNANF                                  = 0xffffffff7fbfffffUL;
+    static const uint64_t RV32I_SNANF                                  = 0xffffffff7f800001UL;
     static const uint64_t RV32I_QNAND                                  = 0x7ff8000000000000UL;
-    static const uint64_t RV32I_SNAND                                  = 0x7ff7ffffffffffffUL;
+    static const uint64_t RV32I_SNAND                                  = 0x7ff0000000000001UL;
 
     static const uint32_t RV32I_OPCODE_LOAD                            = (0x00 << 2) | 0x03;
     static const uint32_t RV32I_OPCODE_LOAD_FP                         = (0x01 << 2) | 0x03;
@@ -612,6 +613,8 @@ typedef struct rv32i_decode_table_t
 // Model configuration structure
 struct  rv32i_cfg_s {
     const char*    exec_fname;
+    bool           load_binary;
+    uint32_t       load_bin_addr;
     bool           user_fname;
     unsigned       num_instr;
     bool           rt_dis;
@@ -632,12 +635,16 @@ struct  rv32i_cfg_s {
     uint32_t       brk_addr;
     bool           update_rst_vec;
     uint32_t       new_rst_vec;
+    bool           update_sp;
+    uint32_t       new_sp;
     FILE*          dbg_fp;
 
     rv32i_cfg_s()
     {
         exec_fname             = "test.exe";
         user_fname             = false;
+        load_binary            = false;
+        load_bin_addr          = 0x00000000;
         num_instr              = 0;
         rt_dis                 = false;
         dis_en                 = false;
@@ -657,6 +664,8 @@ struct  rv32i_cfg_s {
         brk_addr               = rv32i_consts::RISCV_TEST_ENV_TERMINATE_ADDR;
         update_rst_vec         = false;
         new_rst_vec            = rv32i_consts::RV32I_RESET_VECTOR;
+        update_sp              = false;
+        new_sp                 = rv32i_consts::RV32I_STACK_POINTER;
         dbg_fp                 = stdout;
     }
 };

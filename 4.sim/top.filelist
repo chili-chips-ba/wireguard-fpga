@@ -60,10 +60,10 @@ ${HW_SRC}/ip.infra/tdp_ram.sv
 #---CPU
 +incdir+${BLD_DIR}/sw_build
 
-# eduBOS5 (default). For PicoRV32: comment out these 5 lines, uncomment the
-# picorv32.CHILI.sv and soc_cpu.PICORV32.sv lines below
+# eduBOS5: until #61 / openPCIE#40 are fixed, PicoRV32 is the default. To
+# switch, uncomment these 5 lines and comment out the PicoRV32 ones below
 
-# PicoRV32
+# PicoRV32 (default)
 
 #---DPE
 ${HW_SRC}/ip.dpe/dpe.sv

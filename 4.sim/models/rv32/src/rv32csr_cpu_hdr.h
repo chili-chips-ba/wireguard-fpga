@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-
 //=============================================================
 // 
 // Copyright (c) 2021 Simon Southwell. All rights reserved.
@@ -231,6 +229,14 @@ public:
     static const uint32_t RV32CSR_ADDR_MHPMEVENT30                     = 0x33E;
     static const uint32_t RV32CSR_ADDR_MHPMEVENT31                     = 0x33F;
 
+// user cycle counts
+    static const uint32_t RV32CSR_ADDR_CYCLE                           = 0xC00 ;
+    static const uint32_t RV32CSR_ADDR_TIME                            = 0xC01 ;
+    static const uint32_t RV32CSR_ADDR_INSTRET                         = 0xC02 ;
+    static const uint32_t RV32CSR_ADDR_CYCLEH                          = 0xC80 ;
+    static const uint32_t RV32CSR_ADDR_TIMEH                           = 0xC81 ;
+    static const uint32_t RV32CSR_ADDR_INSTRETH                        = 0xC82 ;
+
 // Debug/Trace registers
     static const uint32_t RV32CSR_ADDR_TSELECT                         = 0x7A0;
     static const uint32_t RV32CSR_ADDR_TDATA1                          = 0x7A1;
@@ -261,6 +267,9 @@ public:
     static const uint32_t RV32CSR_FFLAGS_WR_MASK                       = 0x0000001f;
     static const uint32_t RV32CSR_FRM_WR_MASK                          = 0x00000007;
     static const uint32_t RV32CSR_FCSR_WR_MASK                         = 0x000000ff;
+
+    static const uint32_t RV32CSR_CYCLE_WR_MASK                        = 0x00000000; /* Read only in user space */
+    static const uint32_t RV32CSR_INSTRET_WR_MASK                      = 0x00000000; /* Read only in user space */
 
     static const uint32_t RV32CSR_MSTATUS_FS_MASK                      = 0x00006000;
     static const uint32_t RV32CSR_MSTATUS_FS_OFF                       = 0x00000000;

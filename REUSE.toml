@@ -24,3 +24,17 @@ path = ["CLAUDE.md"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Chili.CHIPS"
 SPDX-License-Identifier = "BSD-3-Clause"
+
+# rv32 RISC-V ISS sources (wyvernSemi/rv32, iss/src), with openPCIE's fixes
+# applied from 4.sim/models/rv32/rv32-openpcie.patch
+[[annotations]]
+path = ["4.sim/models/rv32/src/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2021-2025 Simon Southwell"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
+[[annotations]]
+path = ["4.sim/models/rv32/rv32-openpcie.patch"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Chili.CHIPS"
+SPDX-License-Identifier = "GPL-3.0-or-later"

@@ -21,7 +21,7 @@ See the root `README.md` for the full architecture writeup (HW/SW partitioning d
 2.sw/          Bare-metal C/C++ firmware for the RISC-V control plane (app/), CSR register tests (tests/)
 3.build/       Build orchestration — see "Build Commands" below
 4.sim/         VProc/Verilator co-simulation testbench (RTL soc_cpu or virtual-processor RISC-V models)
-6.test/        UART-based hardware bring-up/test scripts + lab test topology instructions (README.md)
+5.test/        UART-based hardware bring-up/test scripts + lab test topology instructions (README.md)
 99.warmup/     Standalone bring-up exercises (blinky, Ethernet, crypto primitives, PicoRV32) — early
                learning/prototyping, not part of the production build
 0.doc/         Architecture docs, datasheets, diagrams — not code

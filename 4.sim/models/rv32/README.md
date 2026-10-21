@@ -7,7 +7,7 @@ SPDX-License-Identifier: BSD-3-Clause
 
 # RV32 ISS Model Integration for WireGuard
 
-This directory contains the integration code for the [rv32](https://github.com/wyvernSemi/riscV/tree/main/iss) RISC-V instruction set simulator (ISS) into the WireGuard simulation test bench as a program running on the [VProc virtual processor](https://github.com/wyvernSemi/vproc). The ISS is provided as a pre-compiled static library in the `lib` directory (either `librv32lnx.a` for Linux or `librv32win.a` for Windows with MSYS2/mingw-w64). The `include` directory has all the required headers for the ISS, but only `rv32.h` needs to be included in the VProc code to access all the model's features.
+This directory contains the integration code for the [rv32](https://github.com/wyvernSemi/riscV/tree/main/iss) RISC-V instruction set simulator (ISS) into the WireGuard simulation test bench as a program running on the [VProc virtual processor](https://github.com/wyvernSemi/vproc). The ISS sources are in the `src` directory: upstream [wyvernSemi/rv32](https://github.com/wyvernSemi/rv32) `774d84fa` (1.3.3) with `rv32-openpcie.patch` applied. `4.sim/MakefileVProc.mk` builds them into `obj/rv32/librv32.a` (Linux/WSL only). Only `rv32.h` needs to be included in the VProc code to access all the model's features.
 
 ## File Organisation
 

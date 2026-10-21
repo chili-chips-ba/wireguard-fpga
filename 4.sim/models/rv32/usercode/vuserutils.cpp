@@ -78,12 +78,11 @@ int parseArgs(int argcIn, char** argvIn, rv32i_cfg_s &cfg, vusermain_cfg_t &vcfg
 
         while((argvBuf[argc] = strtok(NULL, " ")) != NULL && argc < MAXARGS)
         {
-            unsigned lastchar = argvBuf[argc][strlen(argvBuf[argc])-1];
-
-            // If last character is CR or LF, delete it
-            if (lastchar == '\r' || lastchar == '\n')
+            // Delete any trailing CR and LF (a CRLF file leaves both)
+            size_t len = strlen(argvBuf[argc]);
+            while (len > 0 && (argvBuf[argc][len-1] == '\r' || argvBuf[argc][len-1] == '\n'))
             {
-                argvBuf[argc][strlen(argvBuf[argc])-1] = 0;
+                argvBuf[argc][--len] = 0;
             }
 
             argc++;

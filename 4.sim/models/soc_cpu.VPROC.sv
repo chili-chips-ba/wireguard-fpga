@@ -177,7 +177,15 @@ end
 // VProc virtual processor
 //-----------------------------------------------------
 
+// CPU reset, as the RTL cores take it (soc_cpu.PICORV32/EDUBOS5): the bus
+// reset, or imem_cpu_rstn while the UART reprograms IMEM. It drives VProc
+// interrupt bit 3; the ISS (models/rv32/usercode) waits for its release and
+// restarts at the reset vector on a new reset. Native code ignores it.
+logic                 cpu_rst;
+assign cpu_rst        = ~(bus.arst_n & imem_cpu_rstn);
+
    VProc #(
+      .INT_WIDTH             (4),
       .DISABLE_DELTA         (1)
    )
    u_cpu (
@@ -196,7 +204,7 @@ end
       .RD                    (vp_rd),                  // o
       .RDAck                 (vp_rack),                // i
 
-      .Interrupt             ('0),                     // i (unused)
+      .Interrupt             ({cpu_rst, 3'b000}),      // i: bit 3 reset, 2:0 unused
 
       .Update                (),                       // o (unused)
       .UpdateResponse        ('0),                     // i (unused)
@@ -250,4 +258,5 @@ endmodule: soc_cpu
 Version History:
 -----------------------------------------------------------------------------
  2024/10/30 SS: initial creation
+ 2026/10/21   : CPU reset on VProc interrupt bit 3
 */

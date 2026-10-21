@@ -39,13 +39,20 @@ class Listener(RDLListener) :
   # Constructor
   # -----------------------------------------
   def __init__(self, outfile, cosim = False, delay = 32, clkperiod = 12500, vpnode = 0):
-    self.level      = 0
-    self.hier_list = []
-    self.new_reg   = True
-    self.cosim     = cosim
-    self.vpnode    = vpnode
-    self.delay     = delay # cosim only
-    self.clkperiod = clkperiod
+    self.level        = 0
+    self.hier_list     = []
+    self.new_reg       = True
+    self.cosim         = cosim
+    self.vpnode        = vpnode
+    self.delay         = delay # cosim only
+    self.clkperiod     = clkperiod
+    self.field_buffer  = [] # hw branch only: current register's fields,
+                             # collected here and flushed in
+                             # __gen_class_type_tail once complete -- needed
+                             # to safely decide narrow-store optimization
+                             # and the combined set() method, both of which
+                             # require knowing every field of a register,
+                             # not just the one currently being visited.
 
     if outfile == None :
       self.out_file = "_CSR_COSIM_H_"
@@ -93,15 +100,23 @@ class Listener(RDLListener) :
     type_prefix = name[:-1].lower()
     vp_type     = type_prefix + "vp_t";
     field       = node.get_path_segment();
-    
-    if self.cosim :
-      cast_type   = "uint64_t"
-    else :
-      cast_type   = type_prefix + "t*"
 
     print("// -----------------------------------------------------\n//");
     print("class " + vp_type + " {\npublic:")
-    print("    " + vp_type + " (uint32_t* reg_addr = 0) : reg((" + cast_type + ")reg_addr) {};\n")
+
+    if self.cosim :
+      # Cosim: 'reg' is an opaque VProc handle passed to VRead/VWrite,
+      # not a real pointer -- needs an explicit constructor as before.
+      cast_type = "uint64_t"
+      print("    " + vp_type + " (uint32_t* reg_addr = 0) : reg((" + cast_type + ")reg_addr) {};\n")
+    else :
+      # Hardware: no constructor at all -- this class wraps exactly one
+      # value member (the raw PeakRDL layout type, added in
+      # __gen_class_type_tail), so it has no state of its own to
+      # initialize. operator->() lets a by-value composite member keep
+      # being chased with '->' exactly like the old heap-pointer tree
+      # did; trivially inlined.
+      print("    " + vp_type + "* operator->() {return this;};\n")
 
   # -----------------------------------------
   # Generate register class tail end
@@ -113,15 +128,27 @@ class Listener(RDLListener) :
     for h in self.hier_list :
       hier_str += h + "__"
     type_prefix = hier_str[:-1].lower()
-    
+
     if self.cosim :
-      cast_type   = "uint32_t"
+      cast_type = "uint32_t"
+      print("\n    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}")
+      print("\nprivate:\n    " + cast_type + " reg;\n};\n")
     else :
-      cast_type   = type_prefix + "t*"
+      # 'raw' is the ONLY data member -- a standard-layout class with a
+      # single non-static data member and no virtuals has that member's
+      # exact size and address, so this wrapper can be embedded directly
+      # into a natural-layout composite and still land at the correct
+      # hardware offset. volatile lives here, and only here: it protects
+      # the real MMIO access without forcing volatile-qualified overloads
+      # anywhere up the composite hierarchy above it. get_addr() casts
+      # 'this' rather than taking '&raw' directly -- identical address
+      # (raw is the sole member, at offset 0), but avoids GCC's
+      # -Waddress-of-packed-member warning on every one of these classes.
+      self.__emit_hw_field_accessors()
+      print("\n    inline uint32_t* get_addr() {return (uint32_t*)(uintptr_t)this;}")
+      print("\nprivate:\n    volatile " + type_prefix + "t raw;\n} __attribute__((packed));\n")
 
-    print("\n    inline uint32_t* get_addr() {return (uint32_t*)((uint64_t)reg);}")
-
-    print("\nprivate:\n    " + cast_type + " reg;\n};\n")
+      self.field_buffer = []
 
   # -----------------------------------------
   # Process field for target
@@ -144,20 +171,112 @@ class Listener(RDLListener) :
     # Generate class head only at first field of register
     if self.new_reg :
       self.__gen_class_type_head(node, hier_str)
-      reg_name = self.hier_list[-2].lower()
 
-      # Add write and read methods for whole register
-      print("    inline void     full(const " + base_type + " data) {reg->w = data;};")
-      print("    inline " + base_type + " full()                    {return reg->w;};\n")
-
-    # Add write and read methods for each field
-    field_name = node.get_path_segment()
-    print("    inline void     " + field_name + "(const " + base_type + " data) {reg->f." + field_name + " = data;};")
-    print("    inline "+ base_type + " " + field_name + "()                    {return reg->f." + field_name + ";};")
+    # Buffer this field's info -- actual accessor code is emitted later,
+    # in __gen_class_type_tail, once every field of this register is
+    # known (see field_buffer's comment in __init__ for why).
+    self.field_buffer.append({
+        'name'      : node.get_path_segment(),
+        'lsb'       : int(node.low),
+        'msb'       : int(node.high),
+        'base_type' : base_type,
+        'sw'        : node.get_property('sw').name,
+    })
 
     self.new_reg = False
 
     self.hier_list.pop()
+
+  # -----------------------------------------
+  # Decide whether a field can be written with a single narrow
+  # (byte/halfword/word) store instead of the compiler's conservative
+  # read-modify-write bitfield codegen. Safe only when the field fits
+  # entirely within one unit AND no OTHER field in the same register
+  # overlaps that same unit -- PeakRDL only synthesizes storage for
+  # fields that actually exist, so any other bits in that unit have no
+  # underlying hardware storage and are safe to write as don't-cares.
+  # The word (32-bit) case matters even though full() already writes the
+  # whole register: it catches sole-field registers narrower than 32 bits
+  # (e.g. a lone 24-bit field) that GCC does NOT narrow on its own --
+  # still a full read-modify-write otherwise, unlike
+  # the byte/halfword cases GCC handles for free when a field exactly
+  # fills its unit.
+  # Returns (byte_offset, bit_shift, c_type) or None if unsafe/not worth it.
+  # -----------------------------------------
+
+  def __narrow_store_info(self, field, all_fields):
+
+    lsb, msb = field['lsb'], field['msb']
+
+    for unit_bits, ctype in ((8, "uint8_t"), (16, "uint16_t"), (32, "uint32_t")) :
+      # The aligned unit that CONTAINS this field -- not one starting at
+      # the field's own lsb, which only covers fields at the low end of
+      # their unit (e.g. lsb=31 needs the byte starting at 24, not 31).
+      unit_lo = (lsb // unit_bits) * unit_bits
+      unit_hi = unit_lo + unit_bits - 1
+
+      if msb > unit_hi :
+        continue # field doesn't fit entirely within this unit size
+
+      overlap = False
+      for other in all_fields :
+        if other is field :
+          continue
+        if not (other['msb'] < unit_lo or other['lsb'] > unit_hi) :
+          overlap = True
+          break
+
+      if not overlap :
+        return (unit_lo // 8, lsb - unit_lo, ctype)
+
+    return None
+
+  # -----------------------------------------
+  # Emit full()/per-field accessors/set() for the hw branch, now that
+  # every field of the current register is known (field_buffer). Called
+  # from __gen_class_type_tail.
+  # -----------------------------------------
+
+  def __emit_hw_field_accessors(self) :
+
+    fields = self.field_buffer
+    if not fields :
+      return
+
+    base_type = fields[0]['base_type']
+
+    print("    inline void     full(const " + base_type + " data) {raw.w = data;};")
+    print("    inline " + base_type + " full()                    {return raw.w;};\n")
+
+    for f in fields :
+      name  = f['name']
+      width = f['msb'] - f['lsb'] + 1
+      mask  = hex((1 << width) - 1)
+
+      narrow = self.__narrow_store_info(f, fields)
+
+      if narrow is not None :
+        byte_off, shift, ctype = narrow
+        addr_expr = "(volatile " + ctype + "*)((volatile uint8_t*)&raw + " + str(byte_off) + ")"
+        shift_expr = "" if shift == 0 else " << " + str(shift)
+        print("    inline void     " + name + "(const " + base_type + " data) {*" + addr_expr + " = (" + ctype + ")((data & " + mask + "u)" + shift_expr + ");};")
+      else :
+        print("    inline void     " + name + "(const " + base_type + " data) {raw.f." + name + " = data;};")
+
+      print("    inline " + base_type + " " + name + "()                    {return raw.f." + name + ";};")
+
+    # Combined setter: builds the whole register in registers-only
+    # (shift + OR), then a single plain word store -- for call sites
+    # that already know several fields at once, this beats writing each
+    # field separately regardless of
+    # what byte layout the individual fields ended up with.
+    writable = [f for f in fields if f['sw'] in ('rw', 'w')]
+    if len(writable) >= 2 :
+      params = ", ".join("const " + f['base_type'] + " " + f['name'] for f in writable)
+      terms  = " | ".join("(" + f['name'] + " << " + str(f['lsb']) + ")" for f in writable)
+      print("\n    inline void set(" + params + ") {raw.w = " + terms + ";};")
+
+    print("")
 
   # -----------------------------------------
   # Process register for co-simulation
@@ -334,73 +453,150 @@ class Listener(RDLListener) :
         print ("// -----------------------------------------------------")
         print("class " + type + " {\npublic:\n")
 
-        # Initialise a list for the size of elements so far processed
-        size_list = []
+        if self.cosim :
 
-        # Initialise a list for the member pointer definitions
-        ptr_list  = []
+          # ---- Cosim (VPROC) build: unchanged -- real host, real heap,
+          # heap-'new'd pointer children exactly as before ----
 
-        # Generate the constructor
-        print("    " + type + "(uint32_t* base_addr" + default_addr + ")\n    {")
+          # Initialise a list for the size of elements so far processed
+          size_list = []
 
-        # Go through the child nodes one at a time
-        for child in node.children() :
+          # Initialise a list for the member pointer definitions
+          ptr_list  = []
 
-          child_name      = child.get_path_segment()
-          child_type      = child.type_name
-          type_prefix     = type[:-4]
-          child_addr = hex(child.raw_address_offset)
+          # Generate the constructor
+          print("    " + type + "(uint32_t* base_addr" + default_addr + ")\n    {")
 
-          if child.is_array :
+          # Go through the child nodes one at a time
+          for child in node.children() :
 
-            # Check array dimensions
-            if len(child.array_dimensions) != 1 :
-              sys.exit("***ERROR: encountered array dimension > 1. Not supported")
+            child_name      = child.get_path_segment()
+            child_type      = child.type_name
+            type_prefix     = type[:-4]
+            child_addr = hex(child.raw_address_offset)
 
-            child_name      = child_name[:-2]
-            array_dimension = str(child.array_dimensions[0])
+            if child.is_array :
 
-            print("        for(int idx = 0; idx < " + array_dimension + "; idx++)\n        {")
-            print("            " + child_name + "[idx] = new " + type_prefix + "_" + child_type + "_vp_t (base_addr + " + child_addr + "/4 + ")
-            """
-            if size_list :
-              for element in size_list :                
-                print("                                                                                   " + element + " +");
-            """
-            print("                                                                                   idx * sizeof(" + type_prefix + "_" + child_type + "_t)/4);")
-            print("        };\n")
+              # Check array dimensions
+              if len(child.array_dimensions) != 1 :
+                sys.exit("***ERROR: encountered array dimension > 1. Not supported")
 
-            size_list.append(array_dimension + "*sizeof(" + type_prefix + "_" + child_type + "_t)/4")
-            ptr_list.append("    " + type_prefix + "_" + child_type + "_vp_t* " + child_name + "[" + array_dimension + "];")
+              child_name      = child_name[:-2]
+              array_dimension = str(child.array_dimensions[0])
 
-          else :
-            #print("        " + child_name +" = new " + type_prefix + "_" + child_type + "_vp_t (base_addr", end='')
-            print("        " + child_name +" = new " + type_prefix + "_" + child_type + "_vp_t (base_addr + " + child_addr + "/4", end='')
-            """
-            if size_list :
-              print(" +")
-              for element in size_list :
-                print("                                                                                   " + element, end='');
-                if element == size_list[-1] :
-                  print('')
-                else :
-                  print(" + ")
-              print("                                                                                    );")
-            else:
-            """
-            print(");")
+              print("        for(int idx = 0; idx < " + array_dimension + "; idx++)\n        {")
+              print("            " + child_name + "[idx] = new " + type_prefix + "_" + child_type + "_vp_t (base_addr + " + child_addr + "/4 + ")
+              print("                                                                                   idx * sizeof(" + type_prefix + "_" + child_type + "_t)/4);")
+              print("        };\n")
 
-            size_list.append("sizeof(" + type_prefix + "_" + child_type + "_t)/4")
-            ptr_list.append("    " + type_prefix + "_" + child_type + "_vp_t* " + child_name + ";")
+              size_list.append(array_dimension + "*sizeof(" + type_prefix + "_" + child_type + "_t)/4")
+              ptr_list.append("    " + type_prefix + "_" + child_type + "_vp_t* " + child_name + "[" + array_dimension + "];")
 
-        print("    };\n")
+            else :
+              print("        " + child_name +" = new " + type_prefix + "_" + child_type + "_vp_t (base_addr + " + child_addr + "/4", end='')
+              print(");")
 
-        # Generate the pointer declarations
-        if ptr_list :
-          for ptr in ptr_list :
-            print(ptr)
+              size_list.append("sizeof(" + type_prefix + "_" + child_type + "_t)/4")
+              ptr_list.append("    " + type_prefix + "_" + child_type + "_vp_t* " + child_name + ";")
 
-        print("} ;\n")
+          print("    };\n")
+
+          # Generate the pointer declarations
+          if ptr_list :
+            for ptr in ptr_list :
+              print(ptr)
+
+        else :
+
+          # ---- Hardware build: zero-overhead natural-layout composition ----
+          # Children are declared as plain value members in RDL order,
+          # with no constructor and no stored base address at all --
+          # natural C++ struct layout (declaration order plus
+          # __attribute__((packed))) reproduces the RDL's own address map
+          # for free, and lets sibling accesses within one function share
+          # a single lui/addi base -- something a runtime-computed table of
+          # pointers cannot do. Root objects (level 2, e.g. csr_vp_t) are
+          # reached from firmware via a single compile-time-constant
+          # pointer cast, using the
+          # *_VP_BASE_ADDR macro emitted below -- nothing to construct at
+          # boot at all.
+
+          member_list     = []
+          expected_offset = 0
+          pad_idx         = 0
+
+          for child in node.children() :
+
+            child_name  = child.get_path_segment()
+            child_type  = child.type_name
+            type_prefix = type[:-4]
+            child_addr  = child.raw_address_offset
+            child_vp_t  = type_prefix + "_" + child_type + "_vp_t"
+
+            # Gap safety: natural layout only reproduces the RDL's address
+            # map if there are no reserved/skipped regions between
+            # children. Insert explicit padding if there are, so a future
+            # reserved range in the RDL can't silently misalign everything
+            # declared after it -- rather than a design that's only safe
+            # because today's RDL happens to have no gaps.
+            if child_addr > expected_offset :
+              gap = child_addr - expected_offset
+              member_list.append("    uint8_t _reserved_" + str(pad_idx) + "[" + str(gap) + "];")
+              pad_idx += 1
+            elif child_addr < expected_offset :
+              sys.exit("***ERROR: overlapping child offset for " + child_name + " -- natural layout unsafe for this RDL")
+
+            if child.is_array :
+
+              # Check array dimensions
+              if len(child.array_dimensions) != 1 :
+                sys.exit("***ERROR: encountered array dimension > 1. Not supported")
+
+              child_name      = child_name[:-2]
+              array_dimension = int(child.array_dimensions[0])
+
+              member_list.append("    " + child_vp_t + " " + child_name + "[" + str(array_dimension) + "];")
+
+              # child.size is the size of ONE element for an array node,
+              # not the array's total footprint -- confirmed empirically
+              # (systemrdl doesn't multiply it out). Must scale by the
+              # dimension here, or the next sibling's expected offset
+              # undercounts by (N-1) elements, triggering bogus padding
+              # that actually misaligns everything after it.
+              expected_offset = child_addr + child.size * array_dimension
+
+            else :
+              member_list.append("    " + child_vp_t + " " + child_name + ";")
+
+              expected_offset = child_addr + child.size
+
+          # Nodes with no register-style children (MemNode, e.g. a RAM
+          # window) would otherwise generate an empty class --
+          # sizeof 1, not their real byte size -- silently corrupting the
+          # natural-layout offset of whatever sibling comes after them in
+          # the enclosing composite. Give them a size-preserving
+          # placeholder instead.
+          if not member_list and node.size > 0 :
+            member_list.append("    uint8_t raw[" + str(node.size) + "];")
+
+          print("    " + type + "* operator->() {return this;};\n")
+
+          # Generate the value-member declarations (and any gap padding)
+          if member_list :
+            for member in member_list :
+              print(member)
+
+        if self.cosim :
+          print("} ;\n")
+        else :
+          print("} __attribute__((packed));\n")
+
+          # Root objects only: emit the fixed hardware base address as a
+          # macro, so a firmware call site can do
+          # '(csr_vp_t*)CSR_VP_BASE_ADDR' -- a compile-time-constant cast,
+          # nothing to construct.
+          if self.level == 2 :
+            print("#define " + name.upper() + "_VP_BASE_ADDR " + hex(node.absolute_address) + "\n")
 
       if self.hier_list:
         self.hier_list.pop()

@@ -28,8 +28,12 @@ public:
 
 private:
 
-    // Core Timing models
-    const rv32_iss_timing_t riscV         = {1, 4, 3, 3, 4, 34, 4};
+    // Core Timing models. These are wireguard's original tables, to be
+    // re-measured on this SOC. openPCIE has measured PicoRV32 and eduBOS5
+    // tables ({4,4,8,7}, {2,2,5,2}, {3,3,6,3} for linear, jump, load, store),
+    // but on a different bus (picorv32 native, RAM ready one cycle after
+    // valid), so they are not used here.
+    const rv32_iss_timing_t riscV        = {1, 4, 3, 3, 4, 34, 4};
     const rv32_iss_timing_t picorv32      = {4, 4, 5, 5, 4,  4, 4};
     const rv32_iss_timing_t edubos5_2stg  = {2, 2, 3, 3, 2,  2, 2};
     const rv32_iss_timing_t edubos5_3stg  = {3, 3, 4, 4, 3,  3, 3};

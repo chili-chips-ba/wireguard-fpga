@@ -56,7 +56,7 @@
 
 // TEST CODE
 
-static int test_chacha20poly1305(volatile csr_vp_t* csr) {
+static int test_chacha20poly1305(csr_vp_t* csr) {
    // Test vectors
    uint8_t key[32] = {
       0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
@@ -107,7 +107,7 @@ static int test_chacha20poly1305(volatile csr_vp_t* csr) {
    return 0;
 }
 
-static int test_blake2s(volatile csr_vp_t* csr) {
+static int test_blake2s(csr_vp_t* csr) {
    uint8_t out[32];
    int pass = 1;
 
@@ -163,7 +163,7 @@ static int test_blake2s(volatile csr_vp_t* csr) {
    return 0;
 }
 
-static void test_curve25519(volatile csr_vp_t* csr) {
+static void test_curve25519(csr_vp_t* csr) {
    /* Simulate Alice and Bob doing a complete key exchange */
    uint8_t alice_private[32], bob_private[32];
    uint8_t alice_public[32], bob_public[32];
@@ -191,7 +191,7 @@ static void test_curve25519(volatile csr_vp_t* csr) {
    }
 }
 
-static int test_rng(volatile csr_vp_t* csr)
+static int test_rng(csr_vp_t* csr)
 {
    uint8_t random_bytes[32];
    uint32_t rand_num;
@@ -211,7 +211,7 @@ static int test_rng(volatile csr_vp_t* csr)
    return 0;
 }
 
-static int test_timer(volatile csr_vp_t* csr)
+static int test_timer(csr_vp_t* csr)
 {
    for (uint8_t i = 0; i < 10; i++) {
       delay_ms(1000u); // 1 second pause
@@ -229,7 +229,7 @@ eth_raw_packet_t  eth_packet_tx;
 net_config_t      net_config;
 net_arp_cache_t   net_arp_cache = {0};
 
-void init_network(volatile csr_vp_t* csr, net_config_t* config) {
+void init_network(csr_vp_t* csr, net_config_t* config) {
    if (config->ip[0] == 0 && config->ip[1] == 0 && config->ip[2] == 0 && config->ip[3] == 0) {
       config->ip[0] = 192;
       config->ip[1] = 168;
@@ -257,7 +257,7 @@ void init_network(volatile csr_vp_t* csr, net_config_t* config) {
    }
 }
 
-void show_network(volatile csr_vp_t* csr, net_config_t* config) {
+void show_network(csr_vp_t* csr, net_config_t* config) {
    uart_send(csr, "Network configuration:\r\n");
    uart_send(csr, "  IP address:        ");
    uart_send_ip(csr, config->ip);
@@ -298,7 +298,7 @@ void show_network(volatile csr_vp_t* csr, net_config_t* config) {
    uart_send(csr, "\r\n");
 }
 
-void config_network(volatile csr_vp_t* csr, net_config_t* config) {
+void config_network(csr_vp_t* csr, net_config_t* config) {
    char uart_rx_data[UART_RXBUF_SIZE];
 
    uart_send(csr, "Enter new network configuration:\r\n");
@@ -340,7 +340,7 @@ void config_network(volatile csr_vp_t* csr, net_config_t* config) {
    show_network(csr, config);
 }
 
-void show_routes_entry(volatile csr_vp_t* csr, int i) {
+void show_routes_entry(csr_vp_t* csr, int i) {
    uart_send(csr, "  (");
    uart_send_dec(csr, i);
 
@@ -391,7 +391,7 @@ void show_routes_entry(volatile csr_vp_t* csr, int i) {
    uart_send(csr, "\r\n");
 }
 
-void show_routes(volatile csr_vp_t* csr) {
+void show_routes(csr_vp_t* csr) {
    csr->dpe->fcr->pause(1);
    while (!csr->dpe->fcr->idle());
 
@@ -403,7 +403,7 @@ void show_routes(volatile csr_vp_t* csr) {
    csr->dpe->fcr->pause(0);
 }
 
-void config_routes(volatile csr_vp_t* csr) {
+void config_routes(csr_vp_t* csr) {
    char uart_rx_data[UART_RXBUF_SIZE];
 
    csr->dpe->fcr->pause(1);
@@ -460,7 +460,7 @@ void config_routes(volatile csr_vp_t* csr) {
    csr->dpe->fcr->pause(0);
 }
 
-void show_cryptokeys_entry(volatile csr_vp_t* csr, int i) {
+void show_cryptokeys_entry(csr_vp_t* csr, int i) {
    uart_send(csr, "  (");
    uart_send_dec(csr, i);
 
@@ -525,7 +525,7 @@ void show_cryptokeys_entry(volatile csr_vp_t* csr, int i) {
    uart_send(csr, "\r\n");
 }
 
-void show_cryptokeys(volatile csr_vp_t* csr) {
+void show_cryptokeys(csr_vp_t* csr) {
    csr->dpe->fcr->pause(1);
    while (!csr->dpe->fcr->idle());
 
@@ -537,7 +537,7 @@ void show_cryptokeys(volatile csr_vp_t* csr) {
    csr->dpe->fcr->pause(0);
 }
 
-void config_cryptokeys(volatile csr_vp_t* csr) {
+void config_cryptokeys(csr_vp_t* csr) {
    char uart_rx_data[UART_RXBUF_SIZE];
 
    csr->dpe->fcr->pause(1);
@@ -782,7 +782,7 @@ void reboot() {
 }
 
 int main(void) {
-   volatile csr_vp_t* csr = new csr_vp_t();
+   csr_vp_t* csr = CSR_VP();
    char uart_rx_data[UART_RXBUF_SIZE];
    uint8_t uart_rx_len;
    uint8_t debug_enabled = 0;

@@ -5,7 +5,7 @@
 // Verilog side Virtual Processor, for running host
 // programs as control in simulation.
 //
-// Copyright (c) 2024 Simon Southwell.
+// Copyright (c) 2024-2025 Simon Southwell.
 //
 // This file is part of VProc.
 //
@@ -28,8 +28,7 @@
 
 import "DPI-C" function void VInit     (input  int node);
 
-import "DPI-C" function void VSched    (input  int node, 
-                                        input  int Interrupt,
+import "DPI-C" function void VSched    (input  int node,
                                         input  int VPDataIn, 
                                         output int VPDataOut,
                                         output int VPAddr, 
