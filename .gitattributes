@@ -2,6 +2,62 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
+# LF-only line endings; git detects binaries, the common ones are listed
+* text=auto eol=lf
+*.bit binary
+*.bin binary
+*.elf binary
+*.a binary
+*.o binary
+*.so binary
+*.obj binary
+*.lib binary
+*.dll binary
+*.exe binary
+*.sys binary
+*.cat binary
+*.dcp binary
+*.pb binary
+*.rpx binary
+*.wdb binary
+*.ila binary
+*.sdb binary
+*.zip binary
+*.rar binary
+*.7z binary
+*.gz binary
+*.tgz binary
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+*.odt binary
+*.ods binary
+*.odp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.ico binary
+*.webp binary
+*.wav binary
+*.mp3 binary
+*.mp4 binary
+*.pcap binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.brd binary
+*.olb binary
+*.OLB binary
+*.PcbDoc binary
+*.SchDoc binary
+
 0.doc/** linguist-vendored=true
 0.doc/**/*.vho linguist-detectable=false
 0.doc/**/*.vhd linguist-detectable=false
