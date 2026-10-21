@@ -61,7 +61,15 @@ ${HW_SRC}/ip.infra/tdp_ram.sv
 +incdir+${BLD_DIR}/sw_build
 ${HW_SRC}/ip.cpu/imem.sv
 
-# PicoRV32
+# eduBOS5: until #61 / openPCIE#40 are fixed, PicoRV32 is the default. To
+# switch, uncomment these 5 lines and comment out the PicoRV32 ones below
+#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_pkg.sv
+#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_rf.sv
+#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_alu.sv
+#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5.sv
+#${HW_SRC}/ip.cpu/soc_cpu.EDUBOS5.sv
+
+# PicoRV32 (default)
 ${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv
 #${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.ORIG.sv
 ${HW_SRC}/ip.cpu/soc_cpu.PICORV32.sv

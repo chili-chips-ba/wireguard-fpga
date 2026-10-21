@@ -7,6 +7,9 @@ and ciphertext-length bugs fixed, so this port is RFC 8439-conformant and its
 tags/ciphertext lengths deliberately differ from the (still-unfixed) C
 designs (see "Test Vectors" below).
 
+Note: all area/timing figures here are for the ffg1156 package; the AX7201
+board has an xc7a200tfbg484-2.
+
 Each of the three design variants has **two testbench styles**: a
 synthesizable-style testbench (fixed vectors, compiles through cocotb/GHDL or
 real hardware) and a non-synthesizable testbench (`@sim_input`/`@sim_output`,
@@ -21,7 +24,7 @@ on-the-fly random vectors, native sim only) — see "Testbench Styles" below.
 
 The `$PYPELINEC` environment variable must point to the PipelineC executable
 (`<PipelineC repo>/src/pypelinec`) before running any build script — both the
-scripts and the design files' `sys.path` bootstrap (`src/pypeline_env.py`)
+scripts and the design files' `sys.path` bootstrap (`src/wireguard_env.py`)
 use it to locate the repo (with a fallback to the sibling `../../../PipelineC`
 checkout).
 
@@ -111,7 +114,7 @@ what takes hours.
 
 ```
 src/
-  pypeline_env.py               sys.path bootstrap (import first in every file)
+  wireguard_env.py              sys.path bootstrap (import first in every file)
   aead_types.py                 shared sizes/types (axis128/axis512, streams, null helpers)
   chacha20/
     chacha20.py                 ChaCha20 math + pipeline-control FSM + chacha20_instance

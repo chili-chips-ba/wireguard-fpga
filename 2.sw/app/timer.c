@@ -41,20 +41,25 @@
 //==========================================================================
 
 #include "timer.h"
+#include "wireguard_regs.h"
 
-static uint32_t rdcycle(void)
+// System clock cycles from the csr.cycle counter, not rdcycle: eduBOS5 has
+// no CSR instructions (any SYSTEM instruction halts it, e.g. the ebreak
+// error stops in main.cpp and wireguard_libs.cpp)
+uint32_t cycles(void)
 {
-    uint32_t cycles;
-    __asm__ __volatile__("rdcycle %0" : "=r"(cycles));
-    return cycles;
+    static volatile csr_vp_t* csr = 0;
+    if (!csr)
+        csr = new csr_vp_t();
+    return csr->cycle->count();
 }
 
 void delay_us(uint32_t us)
 {
-    uint32_t start = rdcycle();
+    uint32_t start = cycles();
     uint32_t wait_cycles = us * CYCLES_PER_US;
 
-    while ((rdcycle() - start) < wait_cycles)
+    while ((cycles() - start) < wait_cycles)
     {
         __asm__ __volatile__("" ::: "memory");
     }

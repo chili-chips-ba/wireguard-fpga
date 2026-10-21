@@ -15,6 +15,7 @@ extern "C" {
 #define CYCLES_PER_US (CPU_FREQ_HZ / 1000000UL)
 #define CYCLES_PER_MS (CPU_FREQ_HZ / 1000UL)
 
+uint32_t cycles(void);  // system clock cycles since reset (csr.cycle), wraps
 void delay_us(uint32_t us);
 void delay_ms(uint32_t ms);
 

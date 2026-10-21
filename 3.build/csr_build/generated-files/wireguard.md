@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
-
-SPDX-License-Identifier: BSD-3-Clause
--->
-
 <!---
 Markdown description for SystemRDL register map.
 
@@ -65,6 +59,7 @@ No supported members.
 |0x007C|     hw_id     |     csr.hw_id     |
 |0x0080|   hw_version  |   csr.hw_version  |
 |0x0084|      dpe      |      csr.dpe      |
+|0x0088|     cycle     |     csr.cycle     |
 |0x0400| routing_table | csr.routing_table |
 |0x2000|cryptokey_table|csr.cryptokey_table|
 
@@ -855,6 +850,22 @@ No supported members.
 #### pause field
 
 <p>Pauses DPE</p>
+
+### cycle register
+
+- Absolute Address: 0x20000088
+- Base Offset: 0x88
+- Size: 0x4
+
+<p>Free-running clock cycle counter: counts system clock cycles since reset and wraps at 2^32. The firmware reads it instead of rdcycle, which eduBOS5 does not have</p>
+
+|Bits|Identifier|Access|Reset|      Name     |
+|----|----------|------|-----|---------------|
+|31:0|   count  |   r  | 0x0 |csr.cycle.count|
+
+#### count field
+
+<p>System clock cycles since reset</p>
 
 ## routing_table register file
 

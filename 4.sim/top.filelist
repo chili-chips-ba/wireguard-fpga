@@ -60,6 +60,9 @@ ${HW_SRC}/ip.infra/tdp_ram.sv
 #---CPU
 +incdir+${BLD_DIR}/sw_build
 
+# eduBOS5 (default). For PicoRV32: comment out these 5 lines, uncomment the
+# picorv32.CHILI.sv and soc_cpu.PICORV32.sv lines below
+
 # PicoRV32
 
 #---DPE

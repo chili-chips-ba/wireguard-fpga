@@ -73,7 +73,6 @@ module tb #(
 
    initial begin
       clk_p      = 1'b0;
-      clk_n      = 1'b0;
       rst_n      = 1'b0;
       gmiiclk    = 1'b0;
       gmiiclkx2  = 1'b0;

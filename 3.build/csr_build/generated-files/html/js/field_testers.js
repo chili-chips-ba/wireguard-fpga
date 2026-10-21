@@ -1,5 +1,5 @@
 // This file is part of PeakRDL-html <https://github.com/SystemRDL/PeakRDL-html>.
-// and can be redistributed under the terms of GNU GPL v3 <https://www.gnu.org/licenses/>.
+// and can be redistributed under the terms of GNU LGPLv3 <https://www.gnu.org/licenses/>.
 
 // registry of register values by address string in hex
 var RegValueRegistery = {};

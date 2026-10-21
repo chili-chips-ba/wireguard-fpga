@@ -1,13 +1,13 @@
 Archive member included to satisfy reference by file (symbol)
 
-/usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
-                              /tmp/ccgJMxs4.ltrans0.ltrans.o (__ashldi3)
-/usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
-                              /tmp/ccgJMxs4.ltrans0.ltrans.o (__mulsi3)
-/usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
-                              /tmp/ccgJMxs4.ltrans0.ltrans.o (__muldi3)
-/usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-                              /tmp/ccgJMxs4.ltrans0.ltrans.o (__udivsi3)
+<gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+                              /tmp/ccDTkit4.ltrans0.ltrans.o (__ashldi3)
+<gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+                              /tmp/ccDTkit4.ltrans0.ltrans.o (__mulsi3)
+<gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+                              /tmp/ccDTkit4.ltrans0.ltrans.o (__muldi3)
+<gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(div.o)
+                              /tmp/ccDTkit4.ltrans0.ltrans.o (__udivsi3)
 
 There are no discarded input sections
 
@@ -24,79 +24,83 @@ Linker script and memory map
                 0x00000200                        _STACK_SIZE = 0x200
                 0x00000000                        . = ORIGIN (IMEM)
 
-.text           0x00000000     0x69cc
+.text           0x00000000     0x6e94
                 0x00000000                        _text_start = .
  *(.text .text.*)
- .text          0x00000000       0x74 /tmp/cctnGYPg.o
+ .text          0x00000000       0x74 /tmp/cc3niaox.o
                 0x00000000                _boot_crt
- .text          0x00000074     0x3008 /tmp/ccgJMxs4.ltrans0.ltrans.o
-                0x00002520                memset
-                0x00002704                memcpy
- .text.startup  0x0000307c     0x2660 /tmp/ccgJMxs4.ltrans0.ltrans.o
-                0x0000307c                main
- .text          0x000056dc       0x38 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
-                0x000056dc                __ashldi3
- .text          0x00005714       0x24 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
-                0x00005714                __mulsi3
- .text          0x00005738       0x8c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
-                0x00005738                __muldi3
- .text          0x000057c4       0xb4 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-                0x000057c4                __divsi3
-                0x000057cc                __hidden___udivsi3
-                0x000057cc                __udivsi3
-                0x00005814                __umodsi3
-                0x00005848                __modsi3
+ .text          0x00000074     0x38fc /tmp/ccDTkit4.ltrans0.ltrans.o
+                0x00002b20                memset
+                0x00002bd4                memcpy
+ .text.startup  0x00003970     0x2234 /tmp/ccDTkit4.ltrans0.ltrans.o
+                0x00003970                main
+ .text          0x00005ba4        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+ .text.__ashldi3
+                0x00005ba4       0x38 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+                0x00005ba4                __ashldi3
+ .text          0x00005bdc       0x24 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+                0x00005bdc                __mulsi3
+ .text          0x00005c00        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+ .text.__muldi3
+                0x00005c00       0x90 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+                0x00005c00                __muldi3
+ .text          0x00005c90       0xb4 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(div.o)
+                0x00005c90                __divsi3
+                0x00005c98                __hidden___udivsi3
+                0x00005c98                __udivsi3
+                0x00005ce0                __umodsi3
+                0x00005d14                __modsi3
  *(.rodata .rodata.*)
  .rodata.str1.4
-                0x00005878      0xf5a /tmp/ccgJMxs4.ltrans0.ltrans.o
-                                0xf66 (size before relaxing)
- *fill*         0x000067d2        0x6 
- .rodata        0x000067d8      0x1f4 /tmp/ccgJMxs4.ltrans0.ltrans.o
+                0x00005d44      0xf5c /tmp/ccDTkit4.ltrans0.ltrans.o
+                                0xf68 (size before relaxing)
+ *fill*         0x00006ca0        0x0 
+ .rodata        0x00006ca0      0x1f4 /tmp/ccDTkit4.ltrans0.ltrans.o
  *(.srodata .srodata.*)
-                0x000069cc                        . = ALIGN (0x4)
-                0x000069cc                        _text_end = .
-                0x000069cc                        _idata_start = _text_end
+                0x00006e94                        . = ALIGN (0x4)
+                0x00006e94                        _text_end = .
+                0x00006e94                        _idata_start = _text_end
 
 .rela.dyn       0x00000000        0x0
- .rela.text     0x00000000        0x0 /tmp/cctnGYPg.o
+ .rela.text     0x00000000        0x0 /tmp/cc3niaox.o
 
-.data           0x10000000        0x0 load address 0x000069cc
+.data           0x10000000        0x0 load address 0x00006e94
                 0x10000000                        _data_start = .
  *(.data .data.*)
- .data          0x10000000        0x0 /tmp/cctnGYPg.o
- .data          0x10000000        0x0 /tmp/ccgJMxs4.ltrans0.ltrans.o
- .data          0x10000000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .data          0x10000000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .data          0x10000000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .data          0x10000000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+ .data          0x10000000        0x0 /tmp/cc3niaox.o
+ .data          0x10000000        0x0 /tmp/ccDTkit4.ltrans0.ltrans.o
+ .data          0x10000000        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+ .data          0x10000000        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .data          0x10000000        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+ .data          0x10000000        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(div.o)
                 0x10000000                        . = ALIGN (0x8)
                 0x10000800                        PROVIDE (__global_pointer$ = (. + 0x800))
  *(.sdata .sdata.*)
                 0x10000000                        . = ALIGN (0x4)
                 0x10000000                        _data_end = .
 
-.bss            0x10000000     0x8c28 load address 0x000069cc
+.bss            0x10000000     0x8c2c load address 0x00006e94
                 0x10000000                        _bss_start = .
  *(.bss .bss.*)
- .bss           0x10000000        0x0 /tmp/cctnGYPg.o
- .bss           0x10000000     0x8c24 /tmp/ccgJMxs4.ltrans0.ltrans.o
- .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .bss           0x10008c24        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+ .bss           0x10000000        0x0 /tmp/cc3niaox.o
+ .bss           0x10000000     0x8c24 /tmp/ccDTkit4.ltrans0.ltrans.o
+ .bss           0x10008c24        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+ .bss           0x10008c24        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .bss           0x10008c24        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+ .bss           0x10008c24        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(div.o)
  *(.sbss .sbss.*)
- .sbss          0x10008c24        0x4 /tmp/ccgJMxs4.ltrans0.ltrans.o
+ .sbss          0x10008c24        0x8 /tmp/ccDTkit4.ltrans0.ltrans.o
  *(COMMON)
-                0x10008c28                        . = ALIGN (0x4)
-                0x10008c28                        _bss_end = .
+                0x10008c2c                        . = ALIGN (0x4)
+                0x10008c2c                        _bss_end = .
                 0x10008c30                        . = ALIGN (0x10)
 
-.heap           0x10008c28      0x408 load address 0x0000f5f4
-                0x10008c28                        _heap_start = .
-                0x10009028                        . = (. + _HEAP_SIZE)
- *fill*         0x10008c28      0x400 
+.heap           0x10008c2c      0x404 load address 0x0000fac0
+                0x10008c2c                        _heap_start = .
+                0x1000902c                        . = (. + _HEAP_SIZE)
+ *fill*         0x10008c2c      0x400 
                 0x10009030                        . = ALIGN (0x10)
- *fill*         0x10009028        0x8 
+ *fill*         0x1000902c        0x4 
                 0x10009030                        _heap_end = .
                 0x10009030                        . = ALIGN (0x8)
                 [!provide]                        PROVIDE (_end = .)
@@ -107,101 +111,54 @@ Linker script and memory map
                 0x10010000                        . = (. + _STACK_SIZE)
  *fill*         0x1000fe00      0x200 
                 0x1000fe00                        _stack_end = (_stack_start - SIZEOF (.stack))
-LOAD /tmp/cctnGYPg.o
-LOAD /tmp/ccC2XhWD.o
-LOAD /tmp/ccgJMxs4.ltrans0.ltrans.o
-LOAD /tmp/ccq1TRA6.o
-LOAD /tmp/ccpc5bp0.o
-LOAD /tmp/ccOf5HQs.o
-LOAD /tmp/ccNpFzBu.o
-LOAD /tmp/ccrqmlxl.o
-LOAD /tmp/cczjlwvP.o
-LOAD /tmp/ccQfxERA.o
-LOAD /tmp/ccIQuE8c.o
-LOAD /tmp/cc2gluyP.o
-LOAD /tmp/ccQmXYP9.o
-LOAD /tmp/ccl3MqFe.o
-LOAD /tmp/cccWOlBT.o
-LOAD /tmp/cc4r1ZSc.o
-LOAD /tmp/ccUVk3PB.o
-LOAD /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a
-OUTPUT(/home/enio/Projects/ChiliChips/wireguard-fpga/3.build/sw_build/main.elf elf32-littleriscv)
+LOAD /tmp/cc3niaox.o
+LOAD /tmp/ccL64nda.o
+LOAD /tmp/ccDTkit4.ltrans0.ltrans.o
+LOAD /tmp/ccxEM8hk.o
+LOAD /tmp/cckVvIoW.o
+LOAD /tmp/cckoVDHo.o
+LOAD /tmp/ccJYr5M9.o
+LOAD /tmp/cc5UWJX2.o
+LOAD /tmp/ccJpHb5D.o
+LOAD /tmp/cce9jFSX.o
+LOAD /tmp/ccQsevJc.o
+LOAD /tmp/cc2oIbtu.o
+LOAD /tmp/cckbkx67.o
+LOAD /tmp/ccheg5Hj.o
+LOAD /tmp/ccN5PnJm.o
+LOAD /tmp/ccfgMr1p.o
+LOAD /tmp/ccoGf3Ta.o
+LOAD <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a
+OUTPUT(main.elf elf32-littleriscv)
 
 .riscv.attributes
                 0x00000000       0x1c
  .riscv.attributes
-                0x00000000       0x1a /tmp/cctnGYPg.o
+                0x00000000       0x1a /tmp/cc3niaox.o
  .riscv.attributes
-                0x0000001a       0x1c /tmp/ccgJMxs4.ltrans0.ltrans.o
+                0x0000001a       0x1c /tmp/ccDTkit4.ltrans0.ltrans.o
  .riscv.attributes
-                0x00000036       0x1c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+                0x00000036       0x1c <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
  .riscv.attributes
-                0x00000052       0x1a /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+                0x00000052       0x1a <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
  .riscv.attributes
-                0x0000006c       0x1c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+                0x0000006c       0x1c <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)
  .riscv.attributes
-                0x00000088       0x1a /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+                0x00000088       0x1a <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(div.o)
 
-.comment        0x00000000       0x22
- .comment       0x00000000       0x22 /tmp/ccgJMxs4.ltrans0.ltrans.o
-                                 0x23 (size before relaxing)
- .comment       0x00000022       0x23 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .comment       0x00000022       0x23 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+.comment        0x00000000       0x33
+ .comment       0x00000000       0x33 /tmp/ccDTkit4.ltrans0.ltrans.o
+                                 0x34 (size before relaxing)
+ .comment       0x00000033        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+                                 0x34 (size before relaxing)
+ .comment       0x00000033        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+                                 0x34 (size before relaxing)
 
-.debug_info     0x00000000      0x462
- .debug_info    0x00000000      0x1a1 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .debug_info    0x000001a1       0x31 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .debug_info    0x000001d2      0x231 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .debug_info    0x00000403       0x5f /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-
-.debug_abbrev   0x00000000      0x275
- .debug_abbrev  0x00000000      0x10c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .debug_abbrev  0x0000010c       0x28 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .debug_abbrev  0x00000134      0x119 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .debug_abbrev  0x0000024d       0x28 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-
-.debug_loclists
-                0x00000000      0x12b
- .debug_loclists
-                0x00000000       0x6b /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .debug_loclists
-                0x0000006b       0xc0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
-
-.debug_aranges  0x00000000       0x80
- .debug_aranges
-                0x00000000       0x20 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .debug_aranges
-                0x00000020       0x20 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .debug_aranges
-                0x00000040       0x20 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .debug_aranges
-                0x00000060       0x20 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-
-.debug_line     0x00000000      0x4f4
- .debug_line    0x00000000      0x107 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .debug_line    0x00000107       0x7a /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .debug_line    0x00000181      0x220 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .debug_line    0x000003a1      0x153 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-
-.debug_str      0x00000000      0x2f2
- .debug_str     0x00000000      0x2f2 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
-                                0x1c7 (size before relaxing)
- .debug_str     0x000002f2       0xba /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .debug_str     0x000002f2      0x204 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .debug_str     0x000002f2       0xe7 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-
-.debug_line_str
-                0x00000000      0x138
- .debug_line_str
-                0x00000000      0x138 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
-                                0x146 (size before relaxing)
- .debug_line_str
-                0x00000138       0xa5 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
- .debug_line_str
-                0x00000138      0x17e /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
- .debug_line_str
-                0x00000138       0xa2 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
-
-.debug_frame    0x00000000       0x4c
- .debug_frame   0x00000000       0x20 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
- .debug_frame   0x00000020       0x2c /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(multi3.o)
+.note.GNU-stack
+                0x00000000        0x0
+ .note.GNU-stack
+                0x00000000        0x0 /tmp/ccDTkit4.ltrans0.ltrans.o
+ .note.GNU-stack
+                0x00000000        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(_ashldi3.o)
+ .note.GNU-stack
+                0x00000000        0x0 <gcc>/lib/gcc/riscv-none-elf/15.2.0/rv32i/ilp32/libgcc.a(multi3.o)

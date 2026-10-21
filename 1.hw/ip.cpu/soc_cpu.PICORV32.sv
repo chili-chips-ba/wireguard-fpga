@@ -2,36 +2,36 @@
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
-//========================================================================== 
-// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation   
+//==========================================================================
+// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation
 //--------------------------------------------------------------------------
 //                   Copyright (C) 2026 Chili.CHIPS*ba
-// 
-// Redistribution and use in source and binary forms, with or without 
-// modification, are permitted provided that the following conditions 
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
 // are met:
 //
-// 1. Redistributions of source code must retain the above copyright 
+// 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
 //
-// 2. Redistributions in binary form must reproduce the above copyright 
-// notice, this list of conditions and the following disclaimer in the 
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
 //
-// 3. Neither the name of the copyright holder nor the names of its 
+// 3. Neither the name of the copyright holder nor the names of its
 // contributors may be used to endorse or promote products derived
 // from this software without specific prior written permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS 
-// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
-// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
-// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
-// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //              https://opensource.org/license/bsd-3-clause
@@ -84,166 +84,163 @@
 //==========================================================================
 
 module soc_cpu #(
-   parameter [31:0]   ADDR_RESET     = 32'h 0000_0000,
-   parameter int      NUM_WORDS_IMEM = 8192
-)(
-   soc_if.MST         bus,
+    parameter logic [31:0] ADDR_RESET     = 32'h0000_0000,
+    parameter int          NUM_WORDS_IMEM = 8192
+) (
+    soc_if.MST bus,
 
-// access point for reloading CPU program memory
-   input logic        imem_cpu_rstn,
-   input logic        imem_we,
-   input logic [31:2] imem_waddr,
-   input logic [31:0] imem_wdat
+    // access point for reloading CPU program memory
+    input logic        imem_cpu_rstn,
+    input logic        imem_we,
+    input logic [31:2] imem_waddr,
+    input logic [31:0] imem_wdat
 );
 
-   logic        cpu_valid; //-\
-   logic        cpu_instr; // |
-   logic        cpu_ready; // | CPU
-   logic [31:0] cpu_addr;  // | memory
-   logic [31:0] cpu_wdata; // | interface
-   logic [3:0]  cpu_wstrb; // |
-   logic [31:0] cpu_rdata; //-/
+  logic        cpu_valid;  //-\
+  logic        cpu_instr;  // |
+  logic        cpu_ready;  // | CPU
+  logic [31:2] cpu_addr;  // | memory
+  logic [ 1:0] NC_cpu_addr;  // | (byte offset: wstrb has it)
+  logic [31:0] cpu_wdata;  // | interface
+  logic [ 3:0] cpu_wstrb;  // |
+  logic [31:0] cpu_rdata;  //-/
 
-   logic        imem_vld, imem_rdy;
-   logic [31:0] imem_rdat;
+  logic imem_vld, imem_rdy;
+  logic [31:0] imem_rdat;
 
-   always_comb begin: _decode
+  always_comb begin : _decode
 
-   // IMEM: 0x0000_0000 - 0xFFFF_FFFF - Instruction Space
-   // BUS : 0x1000_0000 - 0xFFFF_FFFF - Data Space
-   //
-   // However, rather than using CPU-generated 'cpu_instr' for IMEM
-   // selection, we generate it localy from address. In that way, the
-   // CPU program can read from what is nominally instruction space
-      cpu_instr =  cpu_addr[31:28] == '0;
-      imem_vld  =  cpu_valid &  cpu_instr;
-      bus.vld   =  cpu_valid & ~cpu_instr;
+    // IMEM: 0x0000_0000 - 0xFFFF_FFFF - Instruction Space
+    // BUS : 0x1000_0000 - 0xFFFF_FFFF - Data Space
+    //
+    // However, rather than using CPU-generated 'cpu_instr' for IMEM
+    // selection, we generate it localy from address. In that way, the
+    // CPU program can read from what is nominally instruction space
+    cpu_instr = cpu_addr[31:28] == '0;
+    imem_vld  = cpu_valid & cpu_instr;
+    bus.vld   = cpu_valid & ~cpu_instr;
 
-      bus.we    =  cpu_wstrb;
-      bus.addr  =  cpu_addr[31:2];
-      bus.wdat  =  cpu_wdata;
+    bus.we    = cpu_wstrb;
+    bus.addr  = cpu_addr;
+    bus.wdat  = cpu_wdata;
 
-     if (cpu_instr == 1'b1) begin
-         cpu_ready = imem_rdy;
-         cpu_rdata = imem_rdat;
-      end
-      else begin
-         cpu_ready =  bus.rdy;
-         cpu_rdata =  bus.rdat;
-      end
-   end: _decode
+    if (cpu_instr == 1'b1) begin
+      cpu_ready = imem_rdy;
+      cpu_rdata = imem_rdat;
+    end
+    else begin
+      cpu_ready = bus.rdy;
+      cpu_rdata = bus.rdat;
+    end
+  end : _decode
 
 
-//--------------------------------------------------------
-// PicoRV32 itself
-// RISC-V convention for the StackPointer is to point to the last word in
-// use, i.e. free memory is at the addresses below the current SP value.
-//--------------------------------------------------------
-   logic        trace_valid;
-   logic [35:0] trace_data;
+  //--------------------------------------------------------
+  // PicoRV32 itself
+  // RISC-V convention for the StackPointer is to point to the last word in
+  // use, i.e. free memory is at the addresses below the current SP value.
+  //--------------------------------------------------------
+  picorv32 #(
+      .PROGADDR_RESET(ADDR_RESET),
+      .STACKADDR     (32'h1000_8000), // 32KB
 
-   picorv32 #(
-      .PROGADDR_RESET       (ADDR_RESET),
-      .STACKADDR            (32'h 1000_8000), // 32KB
+      .COMPRESSED_ISA(0),  // C:1200B; UN=1600B
 
-      .COMPRESSED_ISA       (0), // C:1200B; UN=1600B
+      .TWO_STAGE_SHIFT  (1),
+      .TWO_CYCLE_COMPARE(0),
+      .TWO_CYCLE_ALU    (0),
 
-      .TWO_STAGE_SHIFT      (1),
-      .TWO_CYCLE_COMPARE    (0),
-      .TWO_CYCLE_ALU        (0),
+      .LATCHED_MEM_RDATA(0),
+      .BARREL_SHIFTER   (0),
+      .ENABLE_MUL       (0),
+      .ENABLE_FAST_MUL  (0),
+      .ENABLE_DIV       (0),
 
-      .LATCHED_MEM_RDATA    (0),
-      .BARREL_SHIFTER       (0),
-      .ENABLE_MUL           (0),
-      .ENABLE_FAST_MUL      (0),
-      .ENABLE_DIV           (0),
-
-      .ENABLE_REGS_DUALPORT (1),
-      .ENABLE_REGS_16_31    (1),
-      .ENABLE_PCPI          (0),
-      .ENABLE_COUNTERS      (1),
-      .ENABLE_COUNTERS64    (0),
+      .ENABLE_REGS_DUALPORT(1),
+      .ENABLE_REGS_16_31   (1),
+      .ENABLE_PCPI         (0),
+      .ENABLE_COUNTERS     (0),  // the firmware reads csr.cycle, not rdcycle
+      .ENABLE_COUNTERS64   (0),
 `ifdef DEBUGTRACE
-      .ENABLE_TRACE         (1),
+      .ENABLE_TRACE        (1),
 `else
-      .ENABLE_TRACE         (0),
+      .ENABLE_TRACE        (0),
 `endif
 
-      .ENABLE_IRQ           (0),
-      .ENABLE_IRQ_QREGS     (0),
-      .ENABLE_IRQ_TIMER     (0),
-      .MASKED_IRQ           (32'h0000_0000),
-      .LATCHED_IRQ          (32'hffff_ffff),
-      .PROGADDR_IRQ         (32'h 0000_0010),
+      .ENABLE_IRQ      (0),
+      .ENABLE_IRQ_QREGS(0),
+      .ENABLE_IRQ_TIMER(0),
+      .MASKED_IRQ      (32'h0000_0000),
+      .LATCHED_IRQ     (32'hffff_ffff),
+      .PROGADDR_IRQ    (32'h0000_0010),
 
-      .CATCH_MISALIGN       (1),
-      .CATCH_ILLINSN        (1),
-      .REGS_INIT_ZERO       (0)
-   ) u_cpu (
-      .clk          (bus.clk),     //i
-      .resetn       (bus.arst_n & imem_cpu_rstn),  //i
+      .CATCH_MISALIGN(1),
+      .CATCH_ILLINSN (1)
+  ) u_cpu (
+      .clk   (bus.clk),                    //i
+      .resetn(bus.arst_n & imem_cpu_rstn), //i
 
-      .trap         (), //o
+      .trap(  /*LINT:OK*/),  // not monitored
 
-      .mem_valid    (cpu_valid),   //o
-      .mem_instr    (), //o
-      .mem_ready    (cpu_ready),   //i
+      .mem_valid(cpu_valid),      //o
+      .mem_instr(  /*LINT:OK*/),  // IMEM is selected by address, not by mem_instr
+      .mem_ready(cpu_ready),      //i
 
-      .mem_addr     (cpu_addr),    //o[31:0]
-      .mem_wdata    (cpu_wdata),   //o[31:0]
-      .mem_wstrb    (cpu_wstrb),   //o[3:0]
-      .mem_rdata    (cpu_rdata),   //i[31:0]
+      .mem_addr ({cpu_addr, NC_cpu_addr}),  //o[31:0]
+      .mem_wdata(cpu_wdata),                //o[31:0]
+      .mem_wstrb(cpu_wstrb),                //o[3:0]
+      .mem_rdata(cpu_rdata),                //i[31:0]
 
       // NOT-USED: Look-Ahead Interface
-      .mem_la_read  (),            //o
-      .mem_la_write (),            //o
-      .mem_la_addr  (),            //o[31:0]
-      .mem_la_wdata (),            //o[31:0]
-      .mem_la_wstrb (),            //o[3:0]
+      .mem_la_read (  /*LINT:OK*/),  // look-ahead bus, the mem_* bus is used
+      .mem_la_write(  /*LINT:OK*/),  // look-ahead bus, the mem_* bus is used
+      .mem_la_addr (  /*LINT:OK*/),  // look-ahead bus, the mem_* bus is used
+      .mem_la_wdata(  /*LINT:OK*/),  // look-ahead bus, the mem_* bus is used
+      .mem_la_wstrb(  /*LINT:OK*/),  // look-ahead bus, the mem_* bus is used
 
       // NOT-USED: Pico Co-Processor Interface (PCPI)
-      .pcpi_valid   (),            //o
-      .pcpi_insn    (),            //o[31:0]
-      .pcpi_rsrc1   (),            //o[31:0]
-      .pcpi_rsrc2   (),            //o[31:0]
+      .pcpi_valid(  /*LINT:OK*/),  // ENABLE_PCPI is 0
+      .pcpi_insn (  /*LINT:OK*/),  // ENABLE_PCPI is 0
+      .pcpi_rsrc1(  /*LINT:OK*/),  // ENABLE_PCPI is 0
+      .pcpi_rsrc2(  /*LINT:OK*/),  // ENABLE_PCPI is 0
 
-      .pcpi_wr      ('0),          //i
-      .pcpi_rdst    ('0),          //i[31:0]
-      .pcpi_wait    ('0),          //i
-      .pcpi_ready   ('0),          //i
+      .pcpi_wr   ('0),  //i
+      .pcpi_rdst ('0),  //i[31:0]
+      .pcpi_wait ('0),  //i
+      .pcpi_ready('0),  //i
 
       // NOT-USED: IRQ Interface
-      .irq          ('0),          //i[31:0]
-      .eoi          (),            //o[31:0]
+      .irq('0),            //i[31:0]
+      .eoi(  /*LINT:OK*/), // ENABLE_IRQ is 0
 
       // NOT-USED: Trace Interface
-      .trace_valid  (trace_valid), //o
-      .trace_data   (trace_data)   //o[35:0]
-   );
+      .trace_valid(  /*LINT:OK*/),  // ENABLE_TRACE is 0 (1 with `define DEBUGTRACE)
+      .trace_data (  /*LINT:OK*/)   // ENABLE_TRACE is 0 (1 with `define DEBUGTRACE)
+  );
 
-//----------------------------------------------------
-// Instruction (aka Program) memory for the CPU
-//----------------------------------------------------
-   imem #(
-      .NUM_WORDS (NUM_WORDS_IMEM)
-   )
-   u_imem (
-      .clk    (bus.clk),
-      .arst_n (bus.arst_n),
+  //----------------------------------------------------
+  // Instruction (aka Program) memory for the CPU
+  //----------------------------------------------------
+  imem #(
+      .NUM_WORDS(NUM_WORDS_IMEM)
+  ) u_imem (
+      .clk   (bus.clk),
+      .arst_n(bus.arst_n),
 
-   // CPU Read-Only port
-      .rvld   (imem_vld),
-      .rrdy   (imem_rdy),
-      .raddr  (cpu_addr [31:2]),
-      .rdat   (imem_rdat),
+      // CPU Read-Only port
+      .rvld (imem_vld),
+      .rrdy (imem_rdy),
+      .raddr(cpu_addr),
+      .rdat (imem_rdat),
 
-   // Write port for reloading new CPU program
-      .we     (imem_we),
-      .waddr  (imem_waddr),
-      .wdat   (imem_wdat)
-   );
+      // Write port for reloading new CPU program
+      .we   (imem_we),
+      .waddr(imem_waddr),
+      .wdat (imem_wdat),
+      .wrdat(  /*LINT:OK*/)  // port B reads: eduBOS5 data loads only
+  );
 
-endmodule: soc_cpu
+endmodule : soc_cpu
 
 /*
 -----------------------------------------------------------------------------

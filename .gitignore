@@ -59,3 +59,9 @@ tb.stems
 
 3.build/wirevenv/
 /3.build/hw_build.openXC7/chipdb
+/3.build/hw_build.openXC7/chipdb.new
+/3.build/hw_build.openXC7/sv2v-build
+/3.build/hw_build.openXC7/build_artifacts.slang
+/3.build/hw_build.openXC7/build_artifacts.new
+/3.build/hw_build.openXC7/converted.slang
+/3.build/hw_build.openXC7/converted.new

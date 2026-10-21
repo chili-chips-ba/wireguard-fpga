@@ -109,7 +109,10 @@ $(SW_MAIN)/main.cpp
 sw_out: sw_elf
 	$(CROSS)objcopy -O verilog $(SW_BLD)/main.elf   $(SW_BLD)/main.hex
 	$(CROSS)objcopy -O binary  $(SW_BLD)/main.elf   $(SW_BLD)/main.bin
-	$(CROSS)objdump -drwC -S   $(SW_BLD)/main.elf > $(SW_BLD)/main.dump
+	cd $(SW_BLD) && $(CROSS)objdump -drwC -S main.elf > main.dump
+	@# no local paths in the tracked outputs: the build folder and the
+	@# toolchain's install prefix (libgcc) come out of the map file
+	sed -i -E -e 's#$(SW_BLD)/##g' -e 's#[^ ()]*/lib/gcc/#<gcc>/lib/gcc/#g' $(SW_BLD)/main.map
 	python3 imem.INIT.py
 
 #------------------------

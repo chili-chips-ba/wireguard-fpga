@@ -42,14 +42,7 @@
 
 #include "random.h"
 #include "uart.h"
-
-// Inline function to read cycle counter from RISC-V CPU
-static uint32_t rdcycle(void)
-{
-    uint32_t cycles;
-    asm volatile("rdcycle %0" : "=r"(cycles));
-    return cycles;
-}
+#include "timer.h"  // cycles(): the csr.cycle counter
 
 // Inline function to cause a small delay
 static void small_delay(void)
@@ -68,27 +61,27 @@ static void small_delay(void)
  */
 void random_32bytes(uint8_t *out)
 {
-    uint32_t cycles[16];
+    uint32_t samples[16];
     for (uint8_t i = 0; i < 16; i++)
     {
-        uint32_t temp = rdcycle();
+        uint32_t temp = cycles();
         temp ^= temp >> 7;
         temp *= 0x6C078965; // randomizing constant
         temp ^= temp >> 11;
         temp += 0x5D588B65; // randomizing constant
-        cycles[i] = temp;
+        samples[i] = temp;
         small_delay();
     }
 
     uintptr_t sp = (uintptr_t)&sp;
 
-    uint8_t input[sizeof(cycles) + sizeof(sp)];
-    memcpy(input, cycles, sizeof(cycles));
-    memcpy(input + sizeof(cycles), &sp, sizeof(sp));
+    uint8_t input[sizeof(samples) + sizeof(sp)];
+    memcpy(input, samples, sizeof(samples));
+    memcpy(input + sizeof(samples), &sp, sizeof(sp));
 
     hash(out, 32, NULL, 0, input, sizeof(input));
 
-    memset(cycles, 0, sizeof(cycles));
+    memset(samples, 0, sizeof(samples));
     memset(input, 0, sizeof(input));
 }
 

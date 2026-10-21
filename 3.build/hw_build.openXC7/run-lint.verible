@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# Verible rules for run-lint.sh (--rules_config). Our case rule: signals and
+# ports in lower case, constants (parameters, localparams, macros) in UPPER
+# case. Pins of vendor primitives are connections, not declarations, so they
+# are not checked. NC_ (no-connect) is the one upper-case prefix allowed.
++signal-name-style=style_regex:(NC_)?[a-z][a-z0-9_]*
+parameter-name-style=parameter_style:ALL_CAPS;localparam_style:ALL_CAPS

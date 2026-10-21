@@ -277,8 +277,8 @@ module dpe_wg_disassembler (
       .m_axis_tkeep(piped.tkeep),
       .m_axis_tlast(piped.tlast),
       .m_axis_tuser(piped.tuser),
-      .m_axis_tid(),
-      .m_axis_tdest()
+      .m_axis_tid  (  /*LINT:OK*/),  // no TID: s_axis_tid is tied to 0
+      .m_axis_tdest(  /*LINT:OK*/)   // no TDEST: s_axis_tdest is tied to 0
    );
 
 // Skid buffers
@@ -302,7 +302,7 @@ module dpe_wg_disassembler (
       .m_axis_tkeep(outp.tkeep),
       .m_axis_tlast(outp.tlast),
       .m_axis_tuser(outp.tuser),
-      .m_axis_tid(),
-      .m_axis_tdest()
+      .m_axis_tid  (  /*LINT:OK*/),  // no TID: s_axis_tid is tied to 0
+      .m_axis_tdest(  /*LINT:OK*/)   // no TDEST: s_axis_tdest is tied to 0
    );
 endmodule

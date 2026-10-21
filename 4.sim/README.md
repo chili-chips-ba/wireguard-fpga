@@ -18,7 +18,7 @@ SPDX-License-Identifier: BSD-3-Clause
 * [Building and Running Code](#building-and-running-code)
   * [Configuring ISS timing model](#configuring-iss-timing-model)
   * [Running ISS code](#running-iss-code)
-* [PicoRV32 RTL-Only Simulation Makefile](#picorv32-rtl-only-simulation-makefile)
+* [RTL-Only Simulation Makefile](#rtl-only-simulation-makefile)
 * [Debugging Code](#debugging-code)
   * [Natively Compiled Code](#natively-compiled-code)
   * [ISS Software](#iss-software)
@@ -32,15 +32,15 @@ SPDX-License-Identifier: BSD-3-Clause
 
 ## Introduction
 
-The Wireguard FPGA test bench aims to have a flexible approach to simulation which allows a common test envoironment to be used whilst selecting between alternative CPU components, one of which uses the [_VProc_ virtual processor](https://github.com/wyvernSemi/vproc) co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32, IBEX, or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times.
+The Wireguard FPGA test bench aims to have a flexible approach to simulation which allows a common test envoironment to be used whilst selecting between alternative CPU components, one of which uses the [_VProc_ virtual processor](https://github.com/wyvernSemi/vproc) co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation (eduBOS5 or PicoRV32), or to co-simulate software using the virtual processor, with a significant speed up in simulation times.
 
-The _VProc_ component is wrapped up into an [`soc_cpu.VPROC`](4.sim/models/README.md#soc-cpu-vproc) component with identical interfaces to the RTL. Some conversion logic is added to this BFM to convert between _VProc_'s generic memory mapped interface and the <tt>soc_if</tt> defined interface. This is very lightweight logic, with less than ten combinatorial gates to match the control signals. In addition, the <tt>soc_cpu.VPROC</tt> component has a [<tt>mem_model</tt>](4.sim/models/cosim/README.md) component instantiated. This is a 'memory port' to the [<tt>mem_model</tt>](https://github.com/wyvernSemi/mem_model) C software implementation of a sparse memory model, allowing updates to the RISC-V program, if using the rv32 RISC-V ISS model ([see below](#risc-v-compiled-application)). The diagram below shows a block diagram of the test bench HDL.
+The _VProc_ component is wrapped up into an [`soc_cpu.VPROC`](models/README.md#soc_cpuvproc) component with identical interfaces to the RTL. Some conversion logic is added to this BFM to convert between _VProc_'s generic memory mapped interface and the <tt>soc_if</tt> defined interface. This is very lightweight logic, with less than ten combinatorial gates to match the control signals. In addition, the <tt>soc_cpu.VPROC</tt> component has a [<tt>mem_model</tt>](models/cosim/README.md) component instantiated. This is a 'memory port' to the [<tt>mem_model</tt>](https://github.com/wyvernSemi/mem_model) C software implementation of a sparse memory model, allowing updates to the RISC-V program, if using the rv32 RISC-V ISS model ([see below](#risc-v-compiled-application)). The diagram below shows a block diagram of the test bench HDL.
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/98cb3a19-11c7-4470-a4e1-41c503429e14" width=800>
 </p>
 
-Shown in the diagram is the Wireguard FPGA top level component (<tt>top</tt>) with the <tt>soc_cpu.VPROC</tt> component instantiated in it as one of three possible selected devices for the soc_cpu. The IMEM write port is connected to the UART for program updates and the <tt>soc_if</tt> from  <tt>soc_cpu.VPROC</tt> is connected to the interconnect fabric (<tt>soc_fabric</tt>), just as for the two RTL components. The test bench around the top level Wireguard component has a driver for the UART (<tt>bfm_uart</tt>) and the four GMII/RGMII interfaces (including MDIO signals) coming from the Wireguard core to some verification IP (`bfm_ethernet`) to drive this signalling. This BFM implementation is based around the [_udpIpPg_](https://github.com/wyvernSemi/udpIpPg) GMII/RGMII VProc based VIP. In addtion there are MDIO slave models for reading and writing over the PHY MDIO signals from Wireguard, and these also read and write to allocated _VProc_ memory for access by _VProc_ `soc_cpu` code. MDIO registers access are displayed to the console as well, for logging purpose, displaying the name of the clause 22 register accessed. Finally the test bench generates clocks and key press resets that go to the top level's <tt>clk_rst_gen</tt> and <tt>debounce</tt> components.
+Shown in the diagram is the Wireguard FPGA top level component (<tt>top</tt>) with the <tt>soc_cpu.VPROC</tt> component instantiated in it as one of three possible selected devices for the soc_cpu. The IMEM write port is connected to the UART for program updates and the <tt>soc_if</tt> from  <tt>soc_cpu.VPROC</tt> is connected to the interconnect fabric (<tt>soc_fabric</tt>), just as for the two RTL components. The test bench around the top level Wireguard component has a driver for the UART (<tt>bfm_uart</tt>) and the four GMII/RGMII interfaces (including MDIO signals) coming from the Wireguard core to some verification IP (`bfm_ethernet`) to drive this signalling. This BFM implementation is based around the [_udpIpPg_](https://github.com/wyvernSemi/udpIpPg) GMII/RGMII VProc based VIP. In addtion there are MDIO slave models for reading and writing over the PHY MDIO signals from Wireguard, and these also read and write to allocated _VProc_ memory for access by _VProc_ `soc_cpu` code. MDIO registers access are displayed to the console as well, for logging purpose, displaying the name of the clause 22 register accessed. Finally the test bench generates clocks and the key press reset that go to the top level's <tt>clk_rst_gen</tt> component (<tt>debounce</tt> is commented out of <tt>top.filelist</tt>).
 
 ## VerilatorSimCtrl (interactive run control)
 
@@ -250,18 +250,18 @@ make -f MakefileVProc.mk rungui/gui    Build and run GUI simulation
 make -f MakefileVProc.mk clean         clean previous build artefacts
 
 Command line configurable variables:
-  USER_C:       list of user source code files (default VUserMain0.cpp)
-  UDP_C:        list of user source code files (default VUserMainUdp.cpp)
-  USRCODEDIR:   directory containing user source code (default $(CURDIR)/usercode)
-  OPTFLAG:      Optimisation flag for user VProc code (default -g)
-  TIMINGOPT:    Verilator timing flags (default --timing)
-  TRACEOPTS:    Verilator trace flags (default --trace-fst --trace-structs)
-  TOPFILELIST:  RTL file list name (default top.filelist)
-  SOCCPUMATCH:  string to match for soc_cpu filtering in h/w file list (default ip.cpu)
-  USRSIMOPTS:   additional Verilator flags, such as setting generics (default blank)
-  WAVESAVEFILE: name of .gtkw file to use when displaying waveforms (default waves.gtkw)
-  BUILD:        Select build type from DEFAULT or ISS (default DEFAULT)
-  TIMEOUTUS:    Test bench timeout period in microseconds (default 15000)
+  USER_C:           list of user source code files (default VUserMain0.cpp)
+  USRCODEDIR:       directory containing user source code (default $(CURDIR)/usercode)
+  OPTFLAG:          Optimisation flag for VProc code (default -g)
+  TIMINGOPT:        Verilator timing flags (default --timing)
+  TRACEOPTS:        Verilator trace flags (default --trace-fst --trace-structs)
+  TOPFILELIST:      RTL file list name (default top.filelist)
+  SOCCPUMATCH:      string to match for soc_cpu filtering in h/w file list (default ip.cpu)
+  USRSIMOPTS:       additional Verilator flags, such as setting generics (default blank)
+  WAVESAVEFILE:     name of .gtkw file to use when displaying waveforms (default wave.CSR_ETHERNET_TEST.gtkw)
+  BUILD:            Select build type from DEFAULT or ISS (default DEFAULT)
+  TIMEOUTUS:        Test bench timeout period in microseconds (default 10000)
+  DISABLE_SIM_CTRL: Disable/enable Verilator simulation control (default disabled)
 ```
 
 By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed in batch mode. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files of previous compilations.
@@ -296,7 +296,7 @@ As detailed in the _RISC-V Compiled Application_ section above, the ISS can be c
 
 ### Running ISS code
 
-When the test bench is built for the rv32 ISS, the actual 'user' application code is run on the RISC-V ISS model itself, and is compiled using the normal RISC-V GNU toochain to produce a binary file that the ISS can load and run. As described above, the code that is run is slected with the </tt>vusermain.cfg</tt> file and the </tt>-t</tt> option. The various flags configure the ISS and determines when the ISS is halted (if at all). An example assembly file is provided in <tt>4.sw/models/rv32/riscvtest/main.s</tt> (as well as a recompiled <tt>main.bin</tt>). This assembly code reproduces the functionality of the example <tt>VuserMain0.cpp</tt> program discussed previously, writing to memory, reading back and comparing for a mismatch. The example assembly code is compiled with:
+When the test bench is built for the rv32 ISS, the actual 'user' application code is run on the RISC-V ISS model itself, and is compiled using the normal RISC-V GNU toochain to produce a binary file that the ISS can load and run. As described above, the code that is run is slected with the </tt>vusermain.cfg</tt> file and the </tt>-t</tt> option. The various flags configure the ISS and determines when the ISS is halted (if at all). An example assembly file is provided in <tt>4.sim/models/rv32/riscvtest/main.s</tt> (as well as a recompiled <tt>main.bin</tt>). This assembly code reproduces the functionality of the example <tt>VuserMain0.cpp</tt> program discussed previously, writing to memory, reading back and comparing for a mismatch. The example assembly code is compiled with:
 
 ```
 $riscv64-unknown-elf-as.exe -fpic -march=rv32imafdc -aghlms=main.list -o main.o main.s
@@ -368,16 +368,16 @@ Exited running ./models/rv32/riscvtest/main.bin
 ```
 Note that the disassembled output is a mixture of 32-bit and compressed 16-bit instructions, with the compressed instruction hexadecimal values shown followed by a <tt>'</tt> character and the instruction heximadecimal value in the lower 16-bits. Unlike for the native compiled code use cases, unless the HDL has changed, the test bench does not need to be re-built when the RISC-V source code is changed or a different binary is to be run, just the RISC-V code is re-compiled or the <tt>vusermain.cfg</tt> updated to point to a different binary file.
 
-### PicoRV32 RTL-Only Simulation Makefile
+### RTL-Only Simulation Makefile
 
-A standalone Makefile (located in `4.sim/`) for cycle-accurate Verilator simulation using the real picoRV32 RTL core.
+A standalone Makefile (located in `4.sim/`) for cycle-accurate Verilator simulation using the real CPU RTL that `1.hw/top.filelist` selects (PicoRV32 by default).
 It:
 
 - Drives the UDP/IPv4 BFMs (nodes 1–4) via `usercode/VUserMainUdp.cpp`, using VProc’s DPI-C engine for the Ethernet VIP.
 - Generates C++ sources with:
   - `--cc -sv --timing --trace-fst --trace-structs`
   - `+define+SIM_ONLY` and `+define+VPROC_SV`
-  - File lists `top.filelist` & `simple_tb.filelist` to pull in picoRV32 RTL.
+  - File lists `1.hw/top.filelist` & `simple_tb.filelist` to pull in the CPU RTL.
 - Compiles into `output/` and links against:
   - `libcosimlnx.a` (co-simulation)
   - `libudplnx.a` (UDP/IP VIP)
@@ -427,7 +427,7 @@ The Wireguard FPGA logic has interfaces for four Ethernet ports, transferring UD
 
 <p align="center"><img width= "500" src="https://github.com/user-attachments/assets/5d441c97-9d9f-43d7-99da-d5156b7d106d"></p>
 
-More details on the ethernet driver and udpIpPg can be found in the  [README.md](models/udpIpPg/README.md) file in 4.sim/models/udPgIp.
+More details on the ethernet driver and udpIpPg can be found in the  [README.md](models/udpIpPg/README.md) file in 4.sim/models/udpIpPg.
 
 ### _udpIpPg_ Software
 
@@ -540,7 +540,7 @@ Payload (64 bytes):
 
 ### Using the HAL
 
-The HAL provides a hierarchical access to the registers via a set of pointer dereferencing and a final access method (for reads and writes of registers and their bit fields) that reflects the hierarchy of the RDL specification. The following shows some example accesses, based on the `3.build/csr_build/csr.rdl` (as at its first revision on 10/11/2024):
+The HAL provides a hierarchical access to the registers via a set of pointer dereferencing and a final access method (for reads and writes of registers and their bit fields) that reflects the hierarchy of the RDL specification. The following shows some example accesses, based on the `3.build/csr_build/csr.rdl` (`routing_table.entry[64]`, `cryptokey_table.entry[64]`):
 
 ```
     #include "wireguard_regs.h"
@@ -549,18 +549,18 @@ The HAL provides a hierarchical access to the registers via a set of pointer der
     // but defaults to the address specified in the RDL
     csr_vp_t* csr = new csr_vp_t();
 
-    // Write to address field and read back.
-    csr->ip_lookup_engine->table[0]->allowed_ip[0]->address(0x12345678);
-    printf("address = 0x%08lx\n\n", csr->ip_lookup_engine->table[0]->allowed_ip[0]->address());
+    // Write to ip field and read back.
+    csr->routing_table->entry[0]->ip->ip(0x12345678);
+    printf("ip = 0x%08x\n\n", csr->routing_table->entry[0]->ip->ip());
 
-    // Write to whole endpoint register
-    csr->ip_lookup_engine->table[3]->endpoint->full(0x5555555555555555ULL);
+    // Write to whole local_ip register
+    csr->cryptokey_table->entry[3]->local_ip->full(0x0a090001);
 
-    // Write to bit field in endpoint register
-    csr->ip_lookup_engine->table[3]->endpoint->interface(0x7);
+    // Write to bit field in dst register
+    csr->routing_table->entry[3]->dst->dst(0x2);
 
-    // Read back bit field in endpoint register
-    printf("interface = 0x%1lx\n\n", csr->ip_lookup_engine->table[3]->endpoint->interface());
+    // Read back bit field in dst register
+    printf("dst = 0x%1x\n\n", csr->routing_table->entry[3]->dst->dst());
 ```
 The above code will compile either natively for *VProc* or for the RISC-V hardware, with the appropriate header, as decribed above. Write accesses use a method with the final register bit field name with an appropriate argument (this is either a `uint64_t` or `uint32_t` as appropriate to the register's definition). A read access is done in the same manner bit without an argument and returns a value (either a `uint64_t` or `uint32_t` as appropriate).
 
@@ -582,7 +582,7 @@ void WGMAIN (void)
 }
 ```
 
-The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `3.build/sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to the equivalent of 80MHz that the test bench uses for the `soc_cpu`. A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `3.build/sysrdl_cosim.py`.
+The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `3.build/sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to 18518 ps (54 MHz), not the 80 MHz (12500 ps) that `tb.sv` uses for the `soc_cpu` ([#64](https://github.com/chili-chips-ba/wireguard-fpga/issues/64)). A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `3.build/sysrdl_cosim.py`.
 
 ## Tool Versions
 * _Verilator_ **v5.024**
@@ -590,8 +590,6 @@ The second consideration is the use of delay functions. This can be in the form 
 * _Mem Model_ **v1.0.0**
 * _rv32_ ISS **v1.1.4**
 * _udpIpPg_ **v1.0.3**
-
-Finally, the
 
 ## References:
 - [VProc](https://github.com/wyvernSemi/vproc)

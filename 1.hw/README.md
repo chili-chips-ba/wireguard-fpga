@@ -23,7 +23,7 @@ The data plane consists of several IP cores, including data plane engine (DPE) a
 - _Per-Packet Demultiplexer_ - forwarding packets to Tx FIFOs based on packet type and destination
 - _Tx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
 
-_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
+_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC 8439's](https://datatracker.ietf.org/doc/html/rfc8439) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
 
 ## Hardware Data Flow
 The hardware architecture features three clock signal domains:
@@ -35,7 +35,7 @@ The blue domain is defined based on the SDR GMII interface, which operates at 12
 
 The red domain encompasses the entire CSR with all peripherals. The clock signal frequency and bus width are defined based on the assumption that WireGuard peers exchange handshake messages sporadically—during connection initialization and periodically, typically every few minutes, for key rotation. Since handshake signaling does not significantly impact network traffic, we decided to implement the connection between the data and control planes without DMA, utilizing direct CPU interaction with Tx/Rx FIFOs through a CSR interface.
 
-Although the DPE (green domain) transfers packets at approximately 10 Gbps, the cores in the DPE pipeline are not expected to process packets at such a rate. Given that we have 4 x 1Gbps Ethernet interfaces, the cryptographic cores must process packets at a rate of at least 4 Gbps to ensure the system works at wire speed. For some components, such as the _IP Lookup Engine_, packet rate is more critical than data rate because their processing focuses on the packet headers rather than the payload. Assuming that, in the worst-case scenario, the smallest packets (64 bytes) arrive via the 1 Gbps Ethernet interface, the packet rate for each Ethernet interface would be 1,488,096 packets per second (pps). Therefore, in the worst-case scenario, such components must process packets at approximately 6 Mpps rate (e.g. 6 million IP table lookups per second).
+Although the DPE (green domain) transfers packets at approximately 10 Gbps, the cores in the DPE pipeline are not expected to process packets at such a rate. Given that we have 4 x 1Gbps Ethernet interfaces, the cryptographic cores must process packets at a rate of at least 4 Gbps to ensure the system works at wire speed. For some components, such as the _IP Lookup Engine_, packet rate is more critical than data rate because their processing focuses on the packet headers rather than the payload. Assuming that, in the worst-case scenario, the smallest packets (64 bytes) arrive via the 1 Gbps Ethernet interface, the packet rate for each Ethernet interface would be 1,488,095 packets per second (pps). Therefore, in the worst-case scenario, such components must process packets at approximately 6 Mpps rate (e.g. 6 million IP table lookups per second).
 
 ### DPE Data Flow
 ![DPEInterfaces](../0.doc/Wireguard/wireguard-fpga-muxed-Interfaces.webp)
@@ -83,11 +83,11 @@ In addition to programming the entire IMEM, it is also possible to modify a sing
 CHECKSUM = ADDR[7:0] + ADDR[15:8] + DATA[7:0] + DATA[15:8] + DATA[23:16] + DATA[31:24]
 ```
 
-In this process, the CPU is not reset, which enables real-time modifications of the running program. This can be useful for inserting breakpoints for debugging purposes.
+In this process, the CPU is not reset. With PicoRV32 this allows real-time modifications of the running program, e.g. for inserting breakpoints. With eduBOS5, `C_IMWR` is safe only while the CPU is stopped or in reset: the IMEM write port is also the port the CPU uses for data loads from IMEM ([`soc_cpu.EDUBOS5.sv`](ip.cpu/soc_cpu.EDUBOS5.sv)).
 
 ![UARTIMWR](../0.doc/Wireguard/uart_imwr.png)
 
-When the special communication mode is initiated, the UART FSM activates the `bus.vld` signal, thereby taking control of the bus and effectively pausing the CPU operation. This allows observation or modification of entire memory blocks in DMEM/CSR without the risk of the CPU making changes during that period. Therefore, we can safely say that accesses to DMEM/CSR are atomic.
+When the special communication mode is initiated, the UART FSM activates the `bus.vld` signal, thereby taking control of the bus and effectively pausing the CPU operation. This allows observation or modification of entire memory blocks in DMEM/CSR without the risk of the CPU making changes during that period. Therefore, we can safely say that accesses to DMEM/CSR are atomic. Exception: eduBOS5 stores do not wait for the bus, so a CPU store issued during a UART transaction is lost ([#61](https://github.com/chili-chips-ba/wireguard-fpga/issues/61)).
 
 The C_BUSR command is used for reading from the bus, after which the UART FSM expects a 4-byte address from which it will read the data. This data can originate from either the DMEM or CSR address space. After reading the data from the bus, it is sent to the PC host byte by byte. The data is then followed by a checksum, which is calculated based over all received and transmitted bytes, starting from the address up to the read data:
 
@@ -101,7 +101,7 @@ The `C_BUSW` command is used for writing data to the bus. Upon receiving `C_BUSW
 
 ![UARTBUSW](../0.doc/Wireguard/uart_busw.png)
 
-It is important to note that immediately upon entering the special mode, the UART FSM takes control of the bus and effectively halts the CPU for the duration of the special communication mode. This allows multiple read/write transactions on the bus, which can be useful for implementing software-in-the-loop (SIL) co-emulation techniques.
+It is important to note that immediately upon entering the special mode, the UART FSM takes control of the bus and effectively halts the CPU for the duration of the special communication mode. This allows multiple read/write transactions on the bus, which can be useful for implementing software-in-the-loop (SIL) co-emulation techniques. With eduBOS5, CPU stores in that window are lost (#61).
 
 ## HW/SW Working Together as a Coherent System
 The example is based on a capture of real Wireguard traffic, recorded and decoded using the Wireshark tool ([encrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp.pcap) and [decrypted](https://gitlab.com/wireshark/wireshark/-/blob/master/test/captures/wireguard-ping-tcp-dsb.pcapng)). The experimental topology consists of four nodes:
@@ -188,3 +188,35 @@ To illustrate the operation of the system as a whole, we will follow the step-by
 53. Based on the accompanying metadata, the Demultiplexer directs the packet to the corresponding Tx FIFO (toward _if2_).
 54. Once the entire packet is stored in the Tx FIFO, it is sent to the MAC core of the outgoing interface _if2_, provided that the corresponding 1 Gbps link is active and ready.
 55. The 1G MAC writes its MAC address as the source, calculates the FCS on the fly, which it ultimately appends to the end of the Ethernet frame, and then sends it to the end-user host of peer B.
+
+### RTL coding rules
+
+IEEE 1800-2009 SystemVerilog, the same rules as on [openPCIE](https://github.com/chili-chips-ba/openPCIE/blob/main/2.rtl/README.md#rtl-coding-rules). For our RTL in `1.hw` (the files [`top.filelist`](top.filelist) builds) and the models that stand in for it. Known exceptions: `wire` in `fpga_pll_80M.sv`, `fpga_pll_125M.sv` and `clk_rst_gen.sv` (which also has untyped ports); `` `timescale `` and plain `always` inside `SIM_ONLY` blocks; the unbuilt `dpe_*` stages (untyped parameters, `` `timescale ``). Third-party code (`external_lib`: Alex Forencich's verilog-ethernet and verilog-axis; PicoRV32) and the PeakRDL-generated CSR keep their own style. [`run-lint`](../3.build/hw_build.openXC7/run-lint.sh), [`run-format`](../3.build/hw_build.openXC7/run-format.sh) and [`run-leq`](../3.build/hw_build.openXC7/run-leq.sh) are in `3.build/hw_build.openXC7`.
+
+- **Declare and size once:** widths, constants and types live in a `_pkg` (`soc_pkg.sv`, `dpe_pkg.sv`, the generated `csr_pkg.sv`); no module redeclares them. Every parameter has a type (`int`, `logic [N:0]`).
+- **Fewer, richer ports:** interfaces (`soc_if`, `dpe_if`, `gmii_if`) and struct-typed ports, not many scalars. Each CSR client drives only its own sub-struct of `csr__in_t`, never the whole struct.
+- **Packages:** `import` right after the module name, no package prefix on every use.
+- **Case:** signals and ports lower case, constants UPPER CASE (parameters, localparams, enum values, macros). Only vendor primitive pins (`PLLE2_BASE`, `BUFG`, ...) keep vendor names.
+- **Procedural blocks:** `always_ff` for flip-flops, `always_comb` for combinational logic, never plain `always`. `unique case` for parallel muxes whose items cover every value, `unique0 case` where no item may match, `priority case` for priority encoders. A `unique case` has no `default`; older FSMs use a plain `case` with a `default`.
+
+  | Keyword | Several items match | No item matches | Synthesis meaning |
+  |---|---|---|---|
+  | `unique` | violation | violation, unless there is a `default` | `parallel_case` + `full_case` |
+  | `unique0` | violation | allowed, nothing happens | `parallel_case` only |
+  | `priority` | first one wins | violation, unless there is a `default` | ordered (priority) logic |
+
+- **`logic`, not `wire`:** every signal and port is `logic`, every `input`/`output` typed (`input logic ...`). Declare a signal before its first use.
+- **`initial` blocks:** not in RTL, except the IMEM program load (`imem.INIT.vh`). Models and test benches may use them freely.
+- **No `` `timescale `` in RTL:** the test bench sets it. RTL has no `#` delays; only the `SIM_ONLY` PLL models (`fpgatech_lib`) have them.
+- **No initial values on registers:** a register gets its value from the reset branch of its `always_ff`.
+- **Arrays, not flat buses:** arrays of lanes or structs, no index arithmetic on flat buses.
+- **Open outputs:** an unused output pin of a primitive or third-party core is written `.PIN (  /*LINT:OK*/),  // why it is open`, the reason always given. Never on an input (`run-lint.sh` flags it); unused inputs are tied off.
+- **No-connects:** unused bits of a bus output go to `NC_` signals: `.PIN ({NC_x, used})`. `NC_` signals are never read.
+- **Lint:** fix findings at the root; waive only as a last resort, as described in [`run-lint-waivers.txt`](../3.build/hw_build.openXC7/run-lint-waivers.txt). Don't mold legal, intended code around one tool's quirk: waive it with a reason instead.
+- **Variants in one file:** a parameter selects the variant inside one module, never a copy of the module. The differences go in `generate` with named branches, `if (PARAM == ...) begin : g_x` / `else begin : g_y`. Exception: the CPU, picked by which `soc_cpu.*.sv` `top.filelist` lists.
+- **One signal per function:** no `x` plus `x_q` pairs. When a control is registered, the flop is the signal.
+- **Minimal logic:** leave out terms that do not change behaviour, and say why in a comment.
+- **Assertions:** only under an `ifdef`, and the RTL is never changed for them.
+- **Clean diffs:** no blank-line or alignment changes beyond what `run-format.sh` makes; check `git diff` before a commit. Prove a cleanup with `run-leq.sh`.
+- **Models follow the RTL:** a model keeps the ports, interfaces, structs and names of the RTL it replaces.
+- **Formatting:** [`run-format.sh`](../3.build/hw_build.openXC7/run-format.sh) puts every `if`, `else`, `always`, `for` and `initial` body in `begin` ... `end`, even a single statement, then runs Verible (`verible-verilog-format`) at its defaults plus all alignment options set to `align`, `end` and `else` on separate lines, LF line endings: the same flags as openPCIE. Lines are at most 100 columns; wrap longer ones by hand. Run it last, after lint, before a commit. `run-format.sh --check` only lists unformatted files.

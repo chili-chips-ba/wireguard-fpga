@@ -10,13 +10,13 @@ SPDX-License-Identifier: BSD-3-Clause
 The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the WireGuard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
 - [Curve25519](http://cr.yp.to/ecdh.html) - an ECDH algorithm implementation for establishing a shared secret using a public-private key pair between two remote parties connected via an insecure channel, such as the Internet
 - ChaCha20-Poly1305 - an AEAD algorithm implementation for encryption and authentication of static keys and nonce values to prevent replay attacks
-- XChaCha20-Poly1305 - a XAEAD algorithm implementation for encrypting and authenticating nonce values in Cookie Replay messages to mitigate potential DoS attacks
+- XChaCha20-Poly1305 (planned) - a XAEAD algorithm implementation for encrypting and authenticating nonce values in Cookie Replay messages to mitigate potential DoS attacks
 - [BLAKE2s](https://www.blake2.net) - an implementation of the BLAKE2s hash function for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
 - RNG - a random number generator used to initialize the DH key generator and generate peer identifiers
-- Timer - timers for rekey, retry, and keepalive procedures
+- Timer - cycle-counter timer; rekey, retry, and keepalive timers are planned
 - [HKDF](https://eprint.iacr.org/2010/264) - an implementation of the algorithm for expanding the ECDH result
-- RTC - a real-time clock used to generate the TAI64N timestamp
-- [SipHash](https://en.wikipedia.org/wiki/SipHash) - a simple non-cryptographic function used for implementing a hashtable for fast lookup of decrypted static public keys of remote peers
+- RTC (planned) - a real-time clock used to generate the TAI64N timestamp
+- [SipHash](https://en.wikipedia.org/wiki/SipHash) (planned) - a simple non-cryptographic function used for implementing a hashtable for fast lookup of decrypted static public keys of remote peers
 - Routing DB Updater - a subsystem for maintaining the cryptokey routing table content and deploying it to the data plane via the HAL/CSR interface
 - ICMP - implementing basic ICMP protocol functions (echo request/reply, TTL exceeded, etc.)
 - CLI - a USB/UART-based command-line interface for configuring the WireGuard node (setting the local IP address, remote peer IP addresses, network addresses, keys, etc.)
@@ -131,13 +131,13 @@ implementation for WireGuard, including hashing, key derivation, and HMAC constr
 - No dynamic memory allocation.
 - Suitable for bare-metal and hosted environments.
 - Compatible with x86 and RV32 architectures.
-- [**Successfully tested on real hardware.**](https://github.com/chili-chips-ba/wireguard-fpga/edit/main/99.warmup/8.BLAKE2s)
+- [**Successfully tested on real hardware.**](https://github.com/chili-chips-ba/wireguard-fpga/tree/main/99.warmup/8.BLAKE2s)
 
 ## Random number generator lib
 This component implements a lightweight random number generator suitable for bare-metal
 RISC-V systems without access to a hardware RNG.
 
-Entropy is gathered from the RISC-V cycle counter (`rdcycle`) and execution timing jitter,
+Entropy is gathered from the `csr.cycle` counter and execution timing jitter,
 and the collected data is mixed using BLAKE2s to produce uniformly distributed output.
 Additional bit manipulation and arithmetic mixing are applied to the raw cycle counter
 values to further decorrelate consecutive samples.  
@@ -155,16 +155,16 @@ within the Noise protocol used by WireGuard.
   Uses arithmetic reduction to limit modulo bias.
 
 ### Implementation Notes
-- Uses the `rdcycle` instruction as a primary entropy source.
+- Uses the `csr.cycle` counter (`cycles()` in `timer.c`) as a primary entropy source.
 - Applies bit manipulation (shifts, XORs) and arithmetic scrambling to raw samples.
 - Introduces small execution delays to increase timing variability.
 - Mixes entropy using the BLAKE2s hash function.
 - Designed for bare-metal, single-core RISC-V environments.
 - Blocking implementation.
-- [**Successfully tested on real hardware.**](https://github.com/chili-chips-ba/wireguard-fpga/edit/main/99.warmup/9.rng)
+- [**Successfully tested on real hardware.**](https://github.com/chili-chips-ba/wireguard-fpga/tree/main/99.warmup/9.rng)
 
 ## Timer lib
-This component provides simple delay utilities based on the RISC-V cycle counter (`rdcycle`).  
+This component provides simple delay utilities based on the `csr.cycle` counter.  
 It implements millisecond and microsecond delays without relying on interrupts or external timers.
 
 The functions are intended for low-level embedded use and are primarily used within the
@@ -173,17 +173,17 @@ during cryptographic operations and protocol handling.
 
 ### Provided Functions
 - `delay_us(uint32_t us)`  
-  Busy-wait delay based on the current RISC-V cycle count.
+  Busy-wait delay based on the current `csr.cycle` count.
 
 - `delay_ms(uint32_t ms)`  
   Millisecond delay implemented as a wrapper around the microsecond delay.
 
 ### Implementation Notes
-- Uses the `rdcycle` instruction to read the CPU cycle counter.
+- Reads the `csr.cycle` counter, not `rdcycle` (eduBOS5 has no CSR instructions).
 - Delay accuracy depends on the configured CPU clock frequency.
 - Designed for bare-metal environments without an operating system.
 - Blocking implementation (busy-wait).
-- [**Successfully tested on the hardware.**](https://github.com/chili-chips-ba/wireguard-fpga/edit/main/99.warmup/10.timer)
+- [**Successfully tested on the hardware.**](https://github.com/chili-chips-ba/wireguard-fpga/tree/main/99.warmup/10.timer)
 
 ## HKDF (Noise KDF) lib
 This component implements the HKDF-style key derivation function used by the
@@ -211,10 +211,9 @@ adapted to use the local BLAKE2s component.
 - Build passes successfully on all target platforms.
 
 ### Testing and Validation
-- This component has [**not been tested in isolation**](https://github.com/chili-chips-ba/wireguard-fpga/edit/main/99.warmup/11.hkdf) using dedicated HKDF test vectors.
+- This component has [**not been tested in isolation**](https://github.com/chili-chips-ba/wireguard-fpga/tree/main/99.warmup/11.hkdf) using dedicated HKDF test vectors.
 - No official Noise KDF test vectors were available at the time of implementation.
-- Correctness of this component is therefore validated indirectly through
-  successful testing of the complete Noise protocol.
+- The firmware has no Noise handshake yet, so it is not validated end-to-end either.
 - The underlying BLAKE2s implementation has been **successfully tested on real hardware**.
 - Since HMAC and KDF logic is taken directly from WireGuard, and BLAKE2s is verified,
   the implementation is assumed to be functionally correct for current use.
@@ -225,32 +224,30 @@ The DPE and CPU are connected through Rx and Tx FIFOs. Here, the Tx and Rx label
 
 It is important to note that triggering a data transfer cycle on the AXIS interface is achieved using [single-pulse](https://peakrdl-regblock.readthedocs.io/en/latest/props/field.html#singlepulse) TVALID/TREADY signals. This frees the CPU from the requirement to synchronize the AXIS clock cycle with its instruction cycle. 
 
-Here is the process of sending a packet from the CPU to the ETH interface. The packet is divided into 16-byte segments, and for each segment:
-1. The CPU reads `csr.cpu_fifo.rx.status.tready`; if it equals 1, it proceeds (since the FIFO is set to _drop-on-full_ mode, tready will always be 1).
-2. The CPU writes `csr.cpu_fifo.rx.data_31_0.tdata`.
-3. The CPU writes `csr.cpu_fifo.rx.data_63_32.tdata`.
-4. The CPU writes `csr.cpu_fifo.rx.data_95_64.tdata`.
-5. The CPU writes `csr.cpu_fifo.rx.data_127_96.tdata`.
-6. The CPU writes `csr.cpu_fifo.rx.control.tkeep` (all ones, except in the last transfer).
-7. The CPU writes `csr.cpu_fifo.rx.control.tlast` (0, except in the last transfer).
-8. The CPU writes `csr.cpu_fifo.rx.control.tuser_bypass_all = 1`.
-9. The CPU writes `csr.cpu_fifo.rx.control.tuser_dst` (1 - _eth1_, 2 - _eth2_, 3 - _eth3_, 4 - _eth4_, 7 - _broadcast_).
-10. The CPU writes `csr.cpu_fifo.rx.trigger.tvalid = 1`.
-11. If `tlast == 0`, return to step (1).
+Here is the process of sending a packet from the CPU to the ETH interface (`eth_send_packet()` in `ethernet.c`). Once per packet, the CPU:
+1. Reads `csr.cpu_fifo.rx.status.tready`; if it equals 1, it proceeds (since the FIFO is set to _drop-on-full_ mode, tready will always be 1).
+2. Writes `csr.cpu_fifo.rx.control.tuser_dst` (1 - _eth1_, 2 - _eth2_, 3 - _eth3_, 4 - _eth4_, 7 - _broadcast_), `tuser_src`, `tuser_bypass_stage` and `tuser_bypass_all`.
 
-A similar process applies to receiving packets from the ETH interface. The CPU prepares a buffer and starts reading 16-byte segments from the Tx FIFO:
-1. The CPU reads `csr.cpu_fifo.tx.status.tvalid`; if it equals 1, it proceeds (if it is 0, it stops since the FIFO is set to _store-and-forward_ mode).
-2. The CPU reads `csr.cpu_fifo.tx.data_31_0.tdata`.
-3. The CPU reads `csr.cpu_fifo.tx.data_63_32.tdata`.
-4. The CPU reads `csr.cpu_fifo.tx.data_95_64.tdata`.
-5. The CPU reads `csr.cpu_fifo.tx.data_127_96.tdata`.
-6. The CPU reads `csr.cpu_fifo.tx.control.tlast`; if it is 1, proceed to step (7), otherwise go to step (9).
-7. The CPU reads `csr.cpu_fifo.tx.control.tkeep`.
-8. The CPU reads `csr.cpu_fifo.tx.control.tuser_src`.
-9. The CPU writes `csr.cpu_fifo.tx.trigger.tready = 1`.
-10. If `tlast == 0`, return to step (1).
+Then it divides the packet into 16-byte segments, and for each segment:
+1. The CPU writes `csr.cpu_fifo.rx.data_31_0.tdata`.
+2. The CPU writes `csr.cpu_fifo.rx.data_63_32.tdata`.
+3. The CPU writes `csr.cpu_fifo.rx.data_95_64.tdata`.
+4. The CPU writes `csr.cpu_fifo.rx.data_127_96.tdata`.
+5. The CPU writes `csr.cpu_fifo.rx.control.tkeep` (all ones, except in the last transfer).
+6. The CPU writes `csr.cpu_fifo.rx.control.tlast` (0, except in the last transfer).
+7. The CPU writes `csr.cpu_fifo.rx.trigger.tvalid = 1`.
+8. If `tlast == 0`, return to step (1).
 
-If we assume that each step takes 1-2 instructions on average (1.5 on average) and that each instruction requires 4 clock cycles, we can estimate the throughput: 80 MHz × 128 bits ÷ (10 steps × 1.5 instructions × 4 cycles per instruction) = 170 Mbps. Clearly, this CSR-based FIFO interface cannot be used to implement a 1G datapath through the CPU, but since the CPU will only process WireGuard handshake messages, this will be more than sufficient.
+A similar process applies to receiving packets from the ETH interface (`eth_receive_packet()`). The CPU reads `csr.cpu_fifo.tx.status.tvalid`; if it is 0, it stops (the FIFO is set to _store-and-forward_ mode). Otherwise it reads `csr.cpu_fifo.tx.control.tuser_src` once and then reads 16-byte segments from the Tx FIFO:
+1. The CPU reads `csr.cpu_fifo.tx.data_31_0.tdata`.
+2. The CPU reads `csr.cpu_fifo.tx.data_63_32.tdata`.
+3. The CPU reads `csr.cpu_fifo.tx.data_95_64.tdata`.
+4. The CPU reads `csr.cpu_fifo.tx.data_127_96.tdata`.
+5. The CPU reads `csr.cpu_fifo.tx.control.tlast`; if it is 1, it also reads `csr.cpu_fifo.tx.control.tkeep`.
+6. The CPU writes `csr.cpu_fifo.tx.trigger.tready = 1`.
+7. If `tlast == 0`, return to step (1).
+
+If we assume that each step takes 1-2 instructions (1.5 on average) and that each instruction requires 4 clock cycles, we can estimate the throughput per 16-byte segment, leaving out the once-per-packet steps: sending, 80 MHz × 128 bits ÷ (8 steps × 1.5 instructions × 4 cycles per instruction) ≈ 213 Mbps; receiving, 80 MHz × 128 bits ÷ (7 × 1.5 × 4) ≈ 244 Mbps. Clearly, this CSR-based FIFO interface cannot be used to implement a 1G datapath through the CPU, but since the CPU will only process WireGuard handshake messages, this will be more than sufficient.
 
 ## Updating DPE registers and tables
 During the initial WireGuard handshake and subsequent periodic key rotations,  the control plane must update the cryptokey routing table implemented in register memory within the CSR. Since the CSR manages the operation of the DPE, such changes must be made atomically to prevent unpredictable behavior in the DPE. One way to achieve this is by using [Write-Buffered Registers](https://peakrdl-regblock.readthedocs.io/en/latest/udps/write_buffering.html) (WBR). However, implementing 1 bit of WBR  memory requires three flip-flops: one to store the current value, one to hold the future value, and one for the write-enable signal. Therefore, we consider an alternative mechanism for atomic CSR updates based on flow control between the CPU and the DPE. Suppose the CPU needs to update the contents of a routing table implemented using many registers. Before starting the update, the CPU must pause packet processing within the DPE. However, such a pause cannot be implemented using the inherent stall mechanism supported by the AXI protocol (by deactivating the TREADY signal at the end of the pipeline), as a packet that has already entered the DPE must be processed according to the rules in effect at the time of its entry. We introduce a graceful flow control mechanism coordinated through a dedicated Flow Control Register (FCR) to address this.

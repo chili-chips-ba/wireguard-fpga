@@ -286,14 +286,14 @@ module uart (
       .re        (csr.uart_rx_read), // FIFO internal logic prevents underflow
 
      // Outputs
-      .dcount    (),
+      .dcount    (  /*LINT:OK*/),  // fill level not needed: empty and full suffice
       .empty     (rx_fifo_empty),
       .full      (rx_fifo_full),
 
       .dout_comb (csr.uart_rx.data),
                   // fall-through: Data is available w/o read
 
-      .dout      ()
+      .dout      (  /*LINT:OK*/)   // registered read data not used: dout_comb is
     );
 
 
@@ -459,14 +459,14 @@ module uart (
       .re        (tx_fifo_re),
 
      // Outputs
-      .dcount    (),
+      .dcount    (  /*LINT:OK*/),  // fill level not needed: empty and full suffice
       .empty     (tx_fifo_empty),
       .full      (csr.uart_tx_busy), // SW write is ignored when FIFO is full
 
       .dout_comb (tx_data),
                   // fall-through: Data is available w/o read
 
-      .dout      ()
+      .dout      (  /*LINT:OK*/)   // registered read data not used: dout_comb is
     );
 
 

@@ -134,7 +134,7 @@ Enter new routing table entry:
   Peer index (0-63) [0]: 1
   Destination interface (0-7) [0]: 2
 Routing table entry updated.
-  (0) IP: 192.168.0.0, Mask: 255.255.255.0, Peer index: 1, Destination interface: 6 [..2..]
+  (0) IP: 192.168.0.0, Mask: 255.255.255.0, Peer index: 1, Destination interface: 2 [..2..]
 (wireguard-fpga)#
 ```
 
@@ -185,17 +185,19 @@ Now we can test the communication between hosts A and B, for example by pinging 
 ping 192.168.0.2
 ```
 
+> **Blueprint, work in progress.** The image below is the target this test is heading for, not a result of the current build. Today the DPE has no crypto stages, and the firmware forwards packets between eth1 and eth2 with `bypass_all` set ([`main.cpp`](../2.sw/app/main.cpp)).
+
 The image shows the first encrypted packet (ICMP Echo Request) captured on the node 192.168.1.1.
 
 <p align="center">
-  <img width="70%" src="../0.doc/Wireguard/wireguard_test_wireshark.png">
+  <img width="70%" alt="Blueprint (WIP): the first encrypted packet, an ICMP Echo Request, captured on node 192.168.1.1" src="../0.doc/Wireguard/wireguard_test_wireshark.png">
 </p>
 
 ## WireGuard Test Scripts
 
 Here are the scripts for testing certain functionalities of the complete build (HW + SW) and for debugging:
 - `loopback.UART.py` - For loopback testing of the UART controller and peripheral hardware (CP2102), the script generates data blocks consisting of repeating characters A–Z and sends them over the serial port to the FPGA. Once the data is received back from the FPGA, it is compared with the originally sent data to verify correctness.
-- `imwr.UART.py` - For replacing a single instruction in IMEM (as described in the [UART Data Flow](/1.hw/README.md#uart-data-flow)), the script sends the C_IMWR command followed by a 4-byte address and a 4-byte instruction. This allows precise modification of the program in real time without resetting the CPU.
+- `imwr.UART.py` - For replacing a single instruction in IMEM (as described in the [UART Data Flow](/1.hw/README.md#uart-data-flow)), the script sends the C_IMWR command followed by a 2-byte address and a 4-byte instruction. With PicoRV32 this modifies the program in real time without resetting the CPU; with eduBOS5 use it only while the CPU is stopped or in reset.
 - `busr.UART.py` - Used for reading data from the DMEM/CSR address space (as described in the [UART Data Flow](/1.hw/README.md#uart-data-flow)). Includes an example of reading the GPIO register.
 - `busw.UART.py` - Used for writing data to the DMEM/CSR address space (as described in the [UART Data Flow](/1.hw/README.md#uart-data-flow)). Includes an example of writing to the GPIO register.
 - `dump_packet.UART.py` - For reading an entire Ethernet packet (structure `eth_raw_packet_t`) from DMEM, including both hexadecimal and textual display of the payload.

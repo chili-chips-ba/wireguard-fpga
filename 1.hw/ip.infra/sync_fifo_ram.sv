@@ -2,36 +2,36 @@
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
-//========================================================================== 
-// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation   
+//==========================================================================
+// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation
 //--------------------------------------------------------------------------
 //                   Copyright (C) 2026 Chili.CHIPS*ba
-// 
-// Redistribution and use in source and binary forms, with or without 
-// modification, are permitted provided that the following conditions 
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
 // are met:
 //
-// 1. Redistributions of source code must retain the above copyright 
+// 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
 //
-// 2. Redistributions in binary form must reproduce the above copyright 
-// notice, this list of conditions and the following disclaimer in the 
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
 //
-// 3. Neither the name of the copyright holder nor the names of its 
+// 3. Neither the name of the copyright holder nor the names of its
 // contributors may be used to endorse or promote products derived
 // from this software without specific prior written permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS 
-// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
-// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
-// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
-// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //              https://opensource.org/license/bsd-3-clause
@@ -64,122 +64,130 @@
 //==========================================================================
 
 module sync_fifo_ram #(
-   parameter                 DWIDTH = 16,
-   parameter                 AWIDTH =  4
-)(
-   input  logic              arst_n,
-   input  logic              clk,
+    parameter int DWIDTH = 16,
+    parameter int AWIDTH = 4
+) (
+    input logic arst_n,
+    input logic clk,
 
-                                        //-------------------------------------------------
-   input  logic [DWIDTH-1:0] din,       // input data into FIFO
-   input  logic              we,        // FIFO write enable
-   input  logic              re,        // FIFO read enable
+    //-------------------------------------------------
+    input logic [DWIDTH-1:0] din,  // input data into FIFO
+    input logic              we,   // FIFO write enable
+    input logic              re,   // FIFO read enable
 
-                                        //----------------------------------------------
-   output logic [AWIDTH:0]   dcount,    // fullness (occupancy) of FIFO in DWIDTH words
-   output logic              empty,     // 1 when FIFO is empty
-   output logic              full,      // 1 when FIFO is full
-                                        //
-   output logic [DWIDTH-1:0] dout_comb, // "look-ahead" output data from FIFO
-   output logic [DWIDTH-1:0] dout       // standard, one clock latency output from FIFO
+                                   //----------------------------------------------
+    output logic [  AWIDTH:0] dcount,     // fullness (occupancy) of FIFO in DWIDTH words
+    output logic              empty,      // 1 when FIFO is empty
+    output logic              full,       // 1 when FIFO is full
+                                          //
+    output logic [DWIDTH-1:0] dout_comb,  // "look-ahead" output data from FIFO
+    output logic [DWIDTH-1:0] dout        // standard, one clock latency output from FIFO
 );
 
-   logic we_protected, re_protected;
+  logic we_protected, re_protected;
 
-   typedef logic [AWIDTH-1:0] addr_t;
-   typedef logic [AWIDTH  :0] dcount_t;
+  typedef logic [AWIDTH-1:0] addr_t;
+  typedef logic [AWIDTH : 0] dcount_t;
 
-   addr_t   wr_addr, rd_addr;
+  addr_t wr_addr, rd_addr;
 
-   assign full = dcount[AWIDTH];
+  assign full         = dcount[AWIDTH];
 
-   // this is a bit more gate-efficient, but results in combo 'empty' output
-   // assign {empty, dcount_dec} = dcount - dcount_t'(1);
+  // this is a bit more gate-efficient, but results in combo 'empty' output
+  // assign {empty, dcount_dec} = dcount - dcount_t'(1);
 
-   assign we_protected = we & ~full;  //-\ logic for prevention of overflow
-   assign re_protected = re & ~empty; //-/  and underflow
-
-
-   always_ff @(negedge arst_n or posedge clk) begin: _fifo_ctrl
-
-      if (arst_n == 1'b0) begin
-         dcount  <= '0;
-         wr_addr <= '0;
-         rd_addr <= '0;
-
-         empty   <= 1'b1;
-      end
-      else begin
-
-         if (we_protected == 1'b1) wr_addr <= addr_t'(wr_addr + addr_t'(1));
-         if (re_protected == 1'b1) rd_addr <= addr_t'(rd_addr + addr_t'(1));
-
-         unique case ({we_protected, re_protected})
-
-            // reading without writing: Decrement data occupancy count
-            //  (*) we can to this only when 'empty=0'
-            2'b01: begin
-               dcount <= dcount_t'(dcount - dcount_t'(1));
-               //dcount <= dcount_dec;
-               empty  <= ~|dcount[AWIDTH:1]; // dcount less than of equal 1
-            end
-
-            // writing without reading: Increment data occupancy count
-            //  (*) we can to this only when 'full=0'
-            2'b10: begin
-               dcount <= dcount_t'(dcount + dcount_t'(1));
-               empty  <= 1'b0;
-            end
-
-            // leave alone if (neither reading nor writing)
-            //  or (simultaneously reading and writing)
-            default: begin end
-         endcase
-
-      end
-   end: _fifo_ctrl
+  assign we_protected = we & ~full;  //-\ logic for prevention of overflow
+  assign re_protected = re & ~empty;  //-/  and underflow
 
 
-//------------------------------------------------------------
-// storage element
-//------------------------------------------------------------
-//`ifdef YOSYS
-//  generate if (AWIDTH < 8) begin: _dist_ram
-//    (* ram_style = "block" *) logic [DWIDTH-1:0] mem [2**AWIDTH];
-//  end
-//  else begin: _bram
-//    (* ram_style = "block" *) logic [DWIDTH-1:0] mem [2**AWIDTH];
-//  end
-//  endgenerate
-//
-//`else // Gowin
-//  generate if (AWIDTH < 8) begin: _dist_ram
-//    logic [DWIDTH-1:0] mem [2**AWIDTH] /* synthesis syn_ramstyle = "distributed_ram" */;
-//  end
-//  else begin: _bram
-//    logic [DWIDTH-1:0] mem [2**AWIDTH] /* synthesis syn_ramstyle = "block_ram" */;
-//  end
-//  endgenerate
-//`endif
+  always_ff @(negedge arst_n or posedge clk) begin : _fifo_ctrl
 
-   (* ram_style = "block" *)
-   logic [DWIDTH-1:0] mem [2**AWIDTH];
+    if (arst_n == 1'b0) begin
+      dcount  <= '0;
+      wr_addr <= '0;
+      rd_addr <= '0;
 
-   always_comb begin
-      dout_comb = mem[rd_addr];
-   end
-
-   always_ff @(posedge clk) begin
-      if (re_protected == 1'b1) begin
-         dout <= dout_comb;
-      end
+      empty   <= 1'b1;
+    end
+    else begin
 
       if (we_protected == 1'b1) begin
-         mem[wr_addr] <= din;
+        wr_addr <= wr_addr + addr_t'(1);
       end
-   end
+      if (re_protected == 1'b1) begin
+        rd_addr <= rd_addr + addr_t'(1);
+      end
 
-endmodule: sync_fifo_ram
+      case ({
+        we_protected, re_protected
+      })
+
+        // reading without writing: Decrement data occupancy count
+        //  (*) we can to this only when 'empty=0'
+        2'b01: begin
+          dcount <= dcount_t'(dcount - dcount_t'(1));
+          //dcount <= dcount_dec;
+          empty  <= ~|dcount[AWIDTH:1];  // dcount less than of equal 1
+        end
+
+        // writing without reading: Increment data occupancy count
+        //  (*) we can to this only when 'full=0'
+        2'b10: begin
+          dcount <= dcount_t'(dcount + dcount_t'(1));
+          empty  <= 1'b0;
+        end
+
+        // leave alone if (neither reading nor writing)
+        //  or (simultaneously reading and writing)
+        default: begin
+        end
+      endcase
+
+    end
+  end : _fifo_ctrl
+
+
+  //------------------------------------------------------------
+  // storage element
+  //------------------------------------------------------------
+  //`ifdef YOSYS
+  //  generate if (AWIDTH < 8) begin: _dist_ram
+  //    (* ram_style = "block" *) logic [DWIDTH-1:0] mem [2**AWIDTH];
+  //  end
+  //  else begin: _bram
+  //    (* ram_style = "block" *) logic [DWIDTH-1:0] mem [2**AWIDTH];
+  //  end
+  //  endgenerate
+  //
+  //`else // Gowin
+  //  generate if (AWIDTH < 8) begin: _dist_ram
+  //    logic [DWIDTH-1:0] mem [2**AWIDTH] /* synthesis syn_ramstyle = "distributed_ram" */;
+  //  end
+  //  else begin: _bram
+  //    logic [DWIDTH-1:0] mem [2**AWIDTH] /* synthesis syn_ramstyle = "block_ram" */;
+  //  end
+  //  endgenerate
+  //`endif
+
+  // distributed: dout_comb reads it asynchronously, which a block RAM cannot
+  (* ram_style = "distributed" *)
+  logic [DWIDTH-1:0] mem[2**AWIDTH];
+
+  always_comb begin
+    dout_comb = mem[rd_addr];
+  end
+
+  always_ff @(posedge clk) begin
+    if (re_protected == 1'b1) begin
+      dout <= dout_comb;
+    end
+
+    if (we_protected == 1'b1) begin
+      mem[wr_addr] <= din;
+    end
+  end
+
+endmodule : sync_fifo_ram
 
 /*
 -----------------------------------------------------------------------------

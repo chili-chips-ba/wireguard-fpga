@@ -2,36 +2,36 @@
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
-//========================================================================== 
-// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation   
+//==========================================================================
+// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation
 //--------------------------------------------------------------------------
 //                   Copyright (C) 2026 Chili.CHIPS*ba
-// 
-// Redistribution and use in source and binary forms, with or without 
-// modification, are permitted provided that the following conditions 
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
 // are met:
 //
-// 1. Redistributions of source code must retain the above copyright 
+// 1. Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
 //
-// 2. Redistributions in binary form must reproduce the above copyright 
-// notice, this list of conditions and the following disclaimer in the 
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
 // documentation and/or other materials provided with the distribution.
 //
-// 3. Neither the name of the copyright holder nor the names of its 
+// 3. Neither the name of the copyright holder nor the names of its
 // contributors may be used to endorse or promote products derived
 // from this software without specific prior written permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS 
-// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED 
-// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
-// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
-// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //              https://opensource.org/license/bsd-3-clause
@@ -70,54 +70,58 @@
 //==========================================================================
 
 module dpe_dummy_switch (
-   dpe_if.s_axis inp,
-   dpe_if.m_axis outp
+    dpe_if.s_axis inp,
+    dpe_if.m_axis outp
 );
-   import dpe_pkg::*;
+  import dpe_pkg::*;
 
-   dpe_if outp_sbuff (.clk(inp.clk), .rst(inp.rst));
+  dpe_if outp_sbuff (
+      .clk(inp.clk),
+      .rst(inp.rst)
+  );
 
-// Backpressure
-   assign inp.tready = outp_sbuff.tready;
+  // Backpressure
+  assign inp.tready = outp_sbuff.tready;
 
-// Switch
-   always_comb begin
-      outp_sbuff.tvalid = inp.tvalid;
-      outp_sbuff.tdata = inp.tdata;
-      outp_sbuff.tkeep = inp.tkeep;
-      outp_sbuff.tlast = inp.tlast;
-      outp_sbuff.tuser_bypass_all = inp.tuser_bypass_all;
-      outp_sbuff.tuser_bypass_stage = 1'b0;
-      outp_sbuff.tuser_src = inp.tuser_src;
-      if (inp.tuser_bypass_all == 1'b0 && inp.tuser_bypass_stage == 1'b0) begin
-         unique case (inp.tuser_src)
-            DPE_ADDR_CPU: begin
-               outp_sbuff.tuser_dst = DPE_ADDR_ETH_1;
-            end
-            DPE_ADDR_ETH_1: begin
-               outp_sbuff.tuser_dst = DPE_ADDR_CPU;
-            end
-            DPE_ADDR_ETH_2: begin
-               outp_sbuff.tuser_dst = DPE_ADDR_CPU;
-            end
-            DPE_ADDR_ETH_3: begin
-               outp_sbuff.tuser_dst = DPE_ADDR_ETH_4;
-            end
-            DPE_ADDR_ETH_4: begin
-               outp_sbuff.tuser_dst = DPE_ADDR_ETH_3;
-            end
-            default: begin
-               outp_sbuff.tuser_dst = inp.tuser_dst;
-            end
-         endcase
-      end else begin
-         outp_sbuff.tuser_dst = inp.tuser_dst;
-      end
-   end
+  // Switch
+  always_comb begin
+    outp_sbuff.tvalid             = inp.tvalid;
+    outp_sbuff.tdata              = inp.tdata;
+    outp_sbuff.tkeep              = inp.tkeep;
+    outp_sbuff.tlast              = inp.tlast;
+    outp_sbuff.tuser_bypass_all   = inp.tuser_bypass_all;
+    outp_sbuff.tuser_bypass_stage = 1'b0;
+    outp_sbuff.tuser_src          = inp.tuser_src;
+    if (inp.tuser_bypass_all == 1'b0 && inp.tuser_bypass_stage == 1'b0) begin
+      case (inp.tuser_src)
+        DPE_ADDR_CPU: begin
+          outp_sbuff.tuser_dst = DPE_ADDR_ETH_1;
+        end
+        DPE_ADDR_ETH_1: begin
+          outp_sbuff.tuser_dst = DPE_ADDR_CPU;
+        end
+        DPE_ADDR_ETH_2: begin
+          outp_sbuff.tuser_dst = DPE_ADDR_CPU;
+        end
+        DPE_ADDR_ETH_3: begin
+          outp_sbuff.tuser_dst = DPE_ADDR_ETH_4;
+        end
+        DPE_ADDR_ETH_4: begin
+          outp_sbuff.tuser_dst = DPE_ADDR_ETH_3;
+        end
+        default: begin
+          outp_sbuff.tuser_dst = inp.tuser_dst;
+        end
+      endcase
+    end
+    else begin
+      outp_sbuff.tuser_dst = inp.tuser_dst;
+    end
+  end
 
-// Skid buffers
-   dpe_if_skid_buffer skid_buffer_outp (
-      .inp(outp_sbuff),
+  // Skid buffers
+  dpe_if_skid_buffer skid_buffer_outp (
+      .inp (outp_sbuff),
       .outp(outp)
-   );
+  );
 endmodule

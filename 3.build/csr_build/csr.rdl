@@ -524,6 +524,19 @@ addrmap csr {
       } fcr;
    } dpe;
 
+   reg {
+      name = "csr.cycle";
+      desc = "Free-running clock cycle counter: counts system clock cycles since reset and wraps at 2^32. The firmware reads it instead of rdcycle, which eduBOS5 does not have";
+
+      field {
+         name = "csr.cycle.count";
+         desc = "System clock cycles since reset";
+         sw = r;
+         hw = na;
+         counter;
+      } count[31:0] = 0;
+   } cycle;
+
    external regfile routing_table {
       name = "csr.routing_table";
       desc = "Routing Table";

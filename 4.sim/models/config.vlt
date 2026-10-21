@@ -26,3 +26,5 @@ lint_off -rule WIDTHEXPAND
 lint_off -rule WIDTHTRUNC
 lint_off -rule PROCASSINIT
 lint_off -rule DEFOVERRIDE
+// Xilinx unisim simulation models: timing (specify) is not simulated
+lint_off -rule SPECIFYIGN -file "*/models/no-change/*"

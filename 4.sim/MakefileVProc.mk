@@ -56,9 +56,12 @@ MEMMODELDIR    = $(CURDIR)/../../mem_model
 MEM_C          = mem.c mem_model.c
 MEMVERSION     = VERSION_1_0_0
 
-# VProc user code (rv32 ISS + VSC) lives in models/rv32/usercode
+# VProc user code lives in models/rv32/usercode: the sim-control node (VSC,
+# node 15) always, the rv32 ISS for node 0 with BUILD=ISS. With BUILD=DEFAULT,
+# node 0 runs the native test code, usercode/VUserMain0.cpp, from libuser.
 VPROC_USRCDIR  = $(CURDIR)/models/rv32/usercode
-VPROC_USER_C   = VUserMain0.cpp VUserMainVSC.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp
+VPROC_USER_C   = VUserMainVSC.cpp
+ISS_USER_C     = VUserMain0.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp
 
 # --------------------------------------------
 # RV32 ISS variables
@@ -81,7 +84,7 @@ ifeq ("$(BUILD)", "ISS")
   endif
 
   # VProc ISS build: rv32 user code for node0 + VSC (node15) built into libvproc
-  VPROC_USER_C   := $(VPROC_USER_C) $(RV32WINFILES)
+  VPROC_USER_C   := $(VPROC_USER_C) $(ISS_USER_C) $(RV32WINFILES)
 
   # UDP BFMs (nodes 1-4) stay in libuser from usercode/
   UDP_C          = VUserMainUdp.cpp
@@ -89,6 +92,9 @@ ifeq ("$(BUILD)", "ISS")
   RV32DIR        = $(CURDIR)/models/rv32
   RV32INCLOPTS   = -I$(RV32DIR)/include
   RV32LDOPTS     = -L$(RV32DIR)/lib -l$(RV32LIB) $(RV32WINOPTS)
+else
+  # native test code for node 0, in libuser
+  USER_C        := VUserMain0.cpp $(USER_C)
 endif
 
 # --------------------------------------------
@@ -323,9 +329,9 @@ help:
 	@$(info $(SPC) $(SPC) TOPFILELIST:      RTL file list name (default top.filelist))
 	@$(info $(SPC) $(SPC) SOCCPUMATCH:      string to match for soc_cpu filtering in h/w file list (default ip.cpu))
 	@$(info $(SPC) $(SPC) USRSIMOPTS:       additional Verilator flags, such as setting generics (default blank))
-	@$(info $(SPC) $(SPC) WAVESAVEFILE:     name of .gtkw file to use when displaying waveforms (default waves.gtkw))
+	@$(info $(SPC) $(SPC) WAVESAVEFILE:     name of .gtkw file to use when displaying waveforms (default wave.CSR_ETHERNET_TEST.gtkw))
 	@$(info $(SPC) $(SPC) BUILD:            Select build type from DEFAULT or ISS (default DEFAULT))
-	@$(info $(SPC) $(SPC) TIMEOUTUS:        Test bench timeout period in microseconds (default 15000))
+	@$(info $(SPC) $(SPC) TIMEOUTUS:        Test bench timeout period in microseconds (default 10000))
 	@$(info $(SPC) $(SPC) DISABLE_SIM_CTRL: Disable/enable Verilator simulation control (default disabled))
 	@$(info )
 
@@ -334,4 +340,4 @@ help:
 #======================================================
 
 clean:
-	@rm -rf $(WORKDIR) $(WAVEFILE) $(TOPFILELIST) $(VOBJDIR) $(USERLIB) obj_dir
+	@rm -rf $(WORKDIR) $(WAVEFILE) $(TOPFILELIST) $(VOBJDIR) $(USERLIB) $(VLIB) obj_dir

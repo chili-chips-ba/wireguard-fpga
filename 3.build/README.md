@@ -19,7 +19,7 @@ The WireGuard CSR HAL is auto-generated, as is the CSR RTL, using `peakrdl`. For
     peakrdl c-header csr_cosim.rdl -b ltoh -o csr.h
 ```
 
-The `csr_cosim.hdl` is a filtered version of `3.build/csr_build/csr.rdl` that removes buffer write commands that are not understood by `systemrdl-compiler` and are not used for `c-header` generation. Other than that, the RDL is identical.
+The `csr_cosim.rdl` is a filtered version of `3.build/csr_build/csr.rdl` that removes buffer write commands that are not understood by `systemrdl-compiler` and are not used for `c-header` generation. Other than that, the RDL is identical.
 
 The wrapper HAL headers are generated with a Python script `sysrdl_cosim.py` which has some command line options:
 
@@ -43,7 +43,7 @@ options:
                         Specify the VProc soc_cpu clock period in ps (cosim only)
 ```
 
-The main options used are to specify the RDL file (`-r` or `--rd_file`) and to specify the output file (`-o` or `-output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used. Finally the *VProc* test bench `soc_cpu` module's clock period in picoseconds can be specified for use in co-simulation abstraction of delay and timing functions. It defaults to 12500 to match the `tb.sv` `HALF_PERIOD_PS` definition for the base 80MHz clock used by internal logic.
+The main options used are to specify the RDL file (`-r` or `--rdl_file`) and to specify the output file (`-o` or `--output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used. Finally the *VProc* test bench `soc_cpu` module's clock period in picoseconds can be specified for use in co-simulation abstraction of delay and timing functions. It defaults to 18518 (54 MHz), not the 12500 of the 80 MHz system clock (`4.sim/tb.sv`, `HALF_PERIOD_OTHER_BFMS_PS` = 6250); see [#64](https://github.com/chili-chips-ba/wireguard-fpga/issues/64).
 
 To generate all the required HAL headers and RTL a make file is provided as `3.build/MakefileCSR` to wrap app the script calls. Running this make file (`make -f MakefileCSR`) produces the following files in `3.build/csr_build/generated-files`:
 
@@ -57,7 +57,7 @@ To generate all the required HAL headers and RTL a make file is provided as `3.b
 The `csr_hw.h` and `csr_cosim.h` files present the same API to the application and can be appropriately selected at compile time using something like the following:
 
 ```
-ifdef VPROC
+#ifdef VPROC
 #include "csr_cosim.h"
 #else
 #include "csr_hw.h"
@@ -100,7 +100,44 @@ make -f MakefileHW program
 ```
 
 ## HW Compilation - openXC7
-### openXC7 Installation
+
+Ported to openXC7 v1.0.0 (Yosys 0.69 + nextpnr-himbaechel) on 2026-10-21. The older nextpnr-xilinx flow follows below as the [legacy flow](#legacy-flow-pre-v100-nextpnr-xilinx-toolchainold).
+
+### openXC7 v1.0.0 (default)
+
+**Toolchain:** openXC7 v1.0.0, built with [`toolchain-installer`](https://github.com/openXC7/toolchain-installer): Yosys 0.69 with `read_slang`, nextpnr-himbaechel (called through openXC7's `nextpnr-xilinx` shim), prjxray-db and `fpga-as`. Point `NEXTPNR_XILINX_DIR` at its install prefix, or put its `bin` on `PATH`.
+
+**Build:**
+```bash
+cd wireguard-fpga/3.build
+make -f MakefileSW               # firmware first: hw_build needs sw_build/imem.INIT.vh
+cd hw_build.openXC7
+make check-env check-sources     # tools and sources present
+make                             # -> build_artifacts.slang/top.bit
+```
+
+- The frontend is `read_slang`: Yosys reads the SystemVerilog directly. `make FRONTEND=sv2v` converts it with sv2v first.
+- The sources come from `1.hw/top.filelist`, the list Vivado, `4.sim` and `run-lint.sh` use. The CPU is the one it lists: PicoRV32 by default, eduBOS5 as the alternative.
+- The chipdb (`chipdb.new/xc7a200tfbg484-2.bin`) is generated on the first run. It is per die, so a chipdb built for another `xc7a200t` part can be copied under this name.
+- nextpnr reads only the port constraints of `1.hw/constraints/top.xdc` (#51), plus `top.openxc7.xdc` with the `clk_n` pin (#52). A Yosys techmap, `bufgmux_map.v`, builds each `BUFGMUX` from a `BUFGCTRL` (#50).
+- Place and route uses `--tmg-ripup --placer-heap-timingweight 30` (`NEXTPNR_OPTS`). With nextpnr's defaults the Ethernet RX clocks land at 102-128 MHz, depending on the seed.
+
+**Result (2026-10-21, seed 1, eduBOS5):** about 9.5 minutes, 3 GB RAM; every clock meets its constraint. With PicoRV32, the default CPU, seed 1 misses one Ethernet RX clock (108.7 MHz), see [#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48):
+
+| Clock | Max frequency | Constraint |
+|---|---|---|
+| `sys_clk` (CPU, SoC) | 82.6 MHz | 80 MHz |
+| Ethernet RX, 4 ports | 127.2-136.5 MHz | 125 MHz |
+| Ethernet TX, 4 ports | 171.8-201.2 MHz | 125 MHz |
+| `eth_gtx_clk` | 158.3 MHz | 125 MHz |
+
+Use: 17,700 LUTs (6%), 9,347 FFs (3%), 34 RAMB36 + 1 RAMB18, 10 of 32 BUFGCTRL, 2 PLLs. The RX margins are thin, and nextpnr's timing analysis is simpler than Vivado's ([openXC7/nextpnr#42](https://github.com/openXC7/nextpnr/issues/42)): not yet tried on the board.
+
+### Legacy flow: pre-v1.0.0 nextpnr-xilinx (`TOOLCHAIN=old`)
+
+The instructions below are for the earlier flow (2025-12): the nextpnr-xilinx toolchain, sv2v and `build_artifacts/top.bit`. With the current Makefile run it as `make TOOLCHAIN=old PREFIX=<that installation>`.
+
+#### openXC7 Installation
 
 Complete installation instructions for the openXC7 toolchain are available here:
 https://github.com/chili-chips-ba/openeye-CamSI/blob/main/3.build/openXC7/README.md
@@ -115,7 +152,7 @@ Make sure to source the environment setup script before building:
 source /opt/openxc7/setup_env.sh
 ```
 
-### sv2v Installation
+#### sv2v Installation
 
 The SystemVerilog to Verilog converter (`sv2v`) is required to convert the project's SystemVerilog files to pure Verilog.
 
@@ -145,13 +182,13 @@ make check-sv2v
 
 ---
 
-### Build Process
+#### Build Process
 
-#### Step 1: Build Software (Firmware)
+##### Step 1: Build Software (Firmware)
 
 **IMPORTANT:** The software must be built first to generate the `imem.INIT.vh` file required by the hardware build.
 
-#### Step 2: Convert SystemVerilog to Verilog
+##### Step 2: Convert SystemVerilog to Verilog
 
 Navigate to the hardware build directory:
 ```bash
@@ -178,7 +215,7 @@ make show-converted
 
 ---
 
-#### Step 3: Build Bitstream
+##### Step 3: Build Bitstream
 
 **Full build (synthesis → place & route → bitstream):**
 ```bash
@@ -198,7 +235,7 @@ build_artifacts/top.bit
 
 ---
 
-#### Additional Commands
+##### Additional Commands
 
 The Makefile provides many utility targets. View all available options:
 
@@ -208,27 +245,27 @@ make help
 
 ---
 
-#### Troubleshooting
+##### Troubleshooting
 
-#### Environment not set up
+##### Environment not set up
 ```
 ERROR: Please run: source /opt/openxc7/setup_env.sh
 ```
 **Solution:** Source the environment script before running make.
 
-### sv2v not found
+##### sv2v not found
 ```
 ERROR: sv2v not found!
 ```
 **Solution:** Run `make install-sv2v` or install manually.
 
-#### Missing imem.INIT.vh
+##### Missing imem.INIT.vh
 ```
 ERROR: imem.INIT.vh not found
 ```
 **Solution:** Build the software first (`make -f MakefileSW` from `3.build/`).
 
-#### Quick Start Summary
+##### Quick Start Summary
 
 ```bash
 # 1. Install openXC7 toolchain
@@ -253,7 +290,7 @@ make all
 
 ---
 
-#### Notes
+##### Notes
 
 - **First build** will take longer due to chipdb generation for the xc7a200tfbg484-2 device
 - **Chipdb is cached** and reused for subsequent builds
@@ -266,7 +303,23 @@ make all
 For openXC7 toolchain issues, refer to the main installation guide:
 https://github.com/chili-chips-ba/openeye-CamSI/blob/main/3.build/openXC7/README.md
 
+### openXC7 issues
+
+Each issue is filed with us and upstream, each pointing to the other.
+
+| Issue | Toolchain | Status | Ours | Upstream | Workaround |
+|---|---|---|---|---|---|
+| No mapping for `BUFGMUX` | v1.0.0 | open | [#50](https://github.com/chili-chips-ba/wireguard-fpga/issues/50) | [nextpnr#125](https://github.com/openXC7/nextpnr/issues/125) | `hw_build.openXC7/bufgmux_map.v`: a `BUFGCTRL` after synthesis |
+| XDC targets other than `get_ports`/`get_cells` abort | v1.0.0 | open | [#51](https://github.com/chili-chips-ba/wireguard-fpga/issues/51) | [nextpnr#126](https://github.com/openXC7/nextpnr/issues/126) | the Makefile passes nextpnr only the `get_ports` lines of `top.xdc` |
+| Differential input needs its N pin constrained | v1.0.0 | open | [#52](https://github.com/chili-chips-ba/wireguard-fpga/issues/52) | [nextpnr#127](https://github.com/openXC7/nextpnr/issues/127) | `hw_build.openXC7/top.openxc7.xdc`: `clk_n` on T4 |
+| Port to v1.0.0; sv2v fails on `picorv32_pcpi_*.sv` | v1.0.0 | open | [#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48) | - | `read_slang` frontend; unused PCPI files out of the build |
+| `BUFGMUX` not supported | legacy | closed | [#35](https://github.com/chili-chips-ba/wireguard-fpga/issues/35) | [nextpnr-xilinx#75](https://github.com/openXC7/nextpnr-xilinx/issues/75) | fixed upstream (nextpnr-xilinx#81) |
+| `IBUFGDS` not supported | legacy | closed | [#36](https://github.com/chili-chips-ba/wireguard-fpga/issues/36) | [nextpnr-xilinx#74](https://github.com/openXC7/nextpnr-xilinx/issues/74) | `IBUFDS` + `BUFG` |
+| `IOBUFGDS`, `PLLE2_BASE` not supported | legacy | closed | [#34](https://github.com/chili-chips-ba/wireguard-fpga/issues/34) | [nextpnr-xilinx#73](https://github.com/openXC7/nextpnr-xilinx/issues/73) | Yosys 0.38 -> 0.60 |
+
 ### Test example
+
+Results with the legacy toolchain (nextpnr-xilinx, 2025-12). With v1.0.0, `BUFGMUX` stays in the design, mapped to `BUFGCTRL` (#50).
 
 In this section, we present a simple test example to illustrate the differences between two FPGA toolchains. First, the design is synthesized and routed using Vivado, serving as a reference implementation. The same example is then processed using the openXC7 toolchain, allowing a direct comparison of synthesis and place-and-route results, as well as highlighting key differences in workflow and outputs.
 

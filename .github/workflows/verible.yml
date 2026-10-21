@@ -1,0 +1,41 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# Verible gate for our RTL: formatting in the project style
+# (run-format.sh --check) and the Verible style lint (run-lint.sh verible).
+
+name: Verible
+
+on:
+  push:
+  pull_request:
+
+env:
+  VERIBLE_VERSION: v0.0-4296-g0f262651
+
+jobs:
+  verible:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Verible ${{ env.VERIBLE_VERSION }}
+        run: |
+          curl -sSfL "https://github.com/chipsalliance/verible/releases/download/${VERIBLE_VERSION}/verible-${VERIBLE_VERSION}-linux-static-x86_64.tar.gz" | tar -xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/verible-${VERIBLE_VERSION}/bin" >> "$GITHUB_PATH"
+
+      - name: run-format --check
+        run: bash 3.build/hw_build.openXC7/run-format.sh --check
+
+      - name: run-lint verible
+        env:
+          LINT_WORK: ${{ runner.temp }}/lint
+        run: bash 3.build/hw_build.openXC7/run-lint.sh verible
+
+      - name: Keep the lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verible-lint-report
+          path: ${{ runner.temp }}/lint

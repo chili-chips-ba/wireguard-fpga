@@ -2,584 +2,294 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Makefile for wireguard-fpga openXC7 build
-# Using sv2v batch conversion with post-extraction
+#==========================================================================
+# wireguard-fpga openXC7 build, as on openPCIE (4.build/hw_build.openXC7)
 #
-# This Makefile implements a two-stage conversion process:
-# 1. Batch sv2v conversion (all files together for dependency resolution)
-# 2. Module extraction (split all_converted.v into individual files)
+#   TOOLCHAIN=new (default): openXC7 v1.0.0 -- Yosys 0.69 + nextpnr-himbaechel
+#     (through the nextpnr-xilinx shim), chipdb from xilinx_gen.py, bitstream
+#     with fpga-as. FRONTEND=slang (default) reads the SystemVerilog with
+#     read_slang; FRONTEND=sv2v converts it with sv2v first.
+#   TOOLCHAIN=old: the pre-v1.0.0 flow -- nextpnr-xilinx, chipdb from
+#     bbaexport.py, fasm2frames + xc7frames2bit; sv2v only. PREFIX points to
+#     that installation.
+#
+# Sources: 1.hw/top.filelist (sources.sh), the list Vivado, 4.sim and
+# run-lint.sh use. The CPU is the one top.filelist lists (PicoRV32 by default).
+# The firmware (3.build/sw_build/imem.INIT.vh) must be built first.
+#
+#   make                  full build -> build_artifacts.<sfx>/top.bit
+#   make check-env        verify the tools are present
+#   make FRONTEND=sv2v    sv2v instead of read_slang
+#   make TOOLCHAIN=old    legacy flow
+#==========================================================================
 
-# =============================================================================
-# CONFIGURATION - Adjust these values for your installation
-# =============================================================================
+TOOLCHAIN ?= new
+FRONTEND  ?= $(if $(filter old,$(TOOLCHAIN)),sv2v,slang)
 
-# Local openXC7 installation path
-PREFIX ?= /opt/openxc7
-
-# Check if environment is setup
-ifndef PRJXRAY_DB_DIR
-$(error Please run: source $(PREFIX)/setup_env.sh)
+ifeq ($(TOOLCHAIN),new)
+    # openXC7 v1.0.0 prefix: NEXTPNR_XILINX_DIR (set-env), else where yosys is
+    OPENXC7_ROOT   ?= $(or $(NEXTPNR_XILINX_DIR),$(abspath $(dir $(shell command -v yosys))..))
+    PRJXRAY_DB_DIR ?= $(OPENXC7_ROOT)/share/nextpnr/prjxray-db
+    XILINX_GEN      = $(OPENXC7_ROOT)/share/nextpnr/himbaechel/uarch/xilinx/gen/xilinx_gen.py
+    TC_SFX          = $(if $(filter sv2v,$(FRONTEND)),.new,.slang)
+    ifeq ($(filter sv2v slang,$(FRONTEND)),)
+        $(error FRONTEND must be "sv2v" or "slang", got "$(FRONTEND)")
+    endif
+else ifeq ($(TOOLCHAIN),old)
+    ifneq ($(FRONTEND),sv2v)
+        $(error FRONTEND=$(FRONTEND) needs TOOLCHAIN=new -- the old Yosys has no read_slang)
+    endif
+    PREFIX         ?= /opt/openxc7
+    PRJXRAY_DB_DIR ?= $(PREFIX)/share/prjxray-db
+    BBAEXPORT       = $(PREFIX)/share/nextpnr-xilinx/python/bbaexport.py
+    TC_SFX          =
+else
+    $(error TOOLCHAIN must be "old" or "new", got "$(TOOLCHAIN)")
 endif
 
-# Paths to databases and tools
-DB_DIR = $(PREFIX)/share/prjxray-db
-CHIPDB = chipdb
+SV2V               ?= sv2v
+YOSYS              ?= yosys
+YOSYS_CONFIG       ?= yosys-config
+NEXTPNR_XILINX     ?= nextpnr-xilinx
+NEXTPNR_HIMBAECHEL ?= nextpnr-himbaechel
+BBASM              ?= bbasm
+FPGA_AS            ?= fpga-as
+FASM2FRAMES        ?= fasm2frames
+XC7FRAMES2BIT      ?= xc7frames2bit
+OPENXC7_PYTHON     ?= python3
 
-# FPGA Part specification (from .xpr: xc7a200tfbg484-2)
+# the nextpnr-xilinx shim calls this nextpnr-himbaechel
+export NEXTPNR_HIMBAECHEL_BIN := $(NEXTPNR_HIMBAECHEL)
+
+DB_DIR = $(PRJXRAY_DB_DIR)
+CHIPDB = chipdb$(if $(filter new,$(TOOLCHAIN)),.new)
+
+# ALINX AX7201: Artix-7 200T, FBG484, speed grade -2
 PART = xc7a200tfbg484-2
+TOP  = top
 
-# Project directories (Makefile is in 3.build/hw_build.openXC7/)
-CURR_DIR := $(CURDIR)
-HW_DIR = ../../1.hw
+HW_DIR         = ../../1.hw
 BUILD_DIR_ROOT = ..
+XDC_FILE       = $(HW_DIR)/constraints/top.xdc
+IMEM_INIT      = $(BUILD_DIR_ROOT)/sw_build/imem.INIT.vh
 
-# Conversion output directories
-CONV_DIR = converted
-EXTRACTED_DIR = $(CONV_DIR)/extracted
-BUILD_ARTIFACTS = build_artifacts
-
-# =============================================================================
-# SOURCE FILES (extracted from wireguard.xpr)
-# =============================================================================
-
-# External libraries - Ethernet (Pure Verilog - no conversion needed)
-ETHERNET_SRC = \
-    $(HW_DIR)/external_lib/ethernet/axis_gmii_rx.v \
-    $(HW_DIR)/external_lib/ethernet/axis_gmii_tx.v \
-    $(HW_DIR)/external_lib/ethernet/mac_ctrl_rx.v \
-    $(HW_DIR)/external_lib/ethernet/mac_ctrl_tx.v \
-    $(HW_DIR)/external_lib/ethernet/mac_pause_ctrl_rx.v \
-    $(HW_DIR)/external_lib/ethernet/mac_pause_ctrl_tx.v \
-    $(HW_DIR)/external_lib/ethernet/eth_mac_1g.v \
-    $(HW_DIR)/external_lib/ethernet/eth_mac_1g_gmii.v \
-    $(HW_DIR)/external_lib/ethernet/eth_mac_1g_gmii_fifo.v \
-    $(HW_DIR)/external_lib/ethernet/gmii_phy_if.v \
-    $(HW_DIR)/external_lib/ethernet/lfsr.v \
-    $(HW_DIR)/external_lib/ethernet/oddr.v \
-    $(HW_DIR)/external_lib/ethernet/ssio_sdr_in.v \
-    $(HW_DIR)/external_lib/ethernet/ssio_sdr_out.v
-
-# External libraries - AXIS (Pure Verilog - no conversion needed)
-AXIS_SRC = \
-    $(HW_DIR)/external_lib/axis/axis_adapter.v \
-    $(HW_DIR)/external_lib/axis/axis_async_fifo.v \
-    $(HW_DIR)/external_lib/axis/axis_async_fifo_adapter.v \
-    $(HW_DIR)/external_lib/axis/axis_fifo.v \
-    $(HW_DIR)/external_lib/axis/axis_register.v \
-    $(HW_DIR)/external_lib/axis/sync_reset.v
-
-PURE_V_FILES = $(ETHERNET_SRC) $(AXIS_SRC)
-
-# =============================================================================
-# SYSTEMVERILOG FILES - DEPENDENCY ORDERED
-# =============================================================================
-# CRITICAL: Files must be in dependency order for sv2v to resolve references
-# Order: packages -> interfaces -> modules that use them -> top
-
-SV_ORDERED = \
-    $(BUILD_DIR_ROOT)/csr_build/generated-files/csr_pkg.sv \
-    $(HW_DIR)/ip.infra/dpe_pkg.sv \
-    $(HW_DIR)/ip.infra/soc_pkg.sv \
-    $(HW_DIR)/ip.infra/dpe_if.sv \
-    $(HW_DIR)/ip.infra/soc_if.sv \
-    $(HW_DIR)/ip.infra/dpe_if_skid_buffer.sv \
-    $(HW_DIR)/ip.infra/ethernet_mac.sv \
-    $(HW_DIR)/ip.infra/ethernet_phy.sv \
-    $(HW_DIR)/ip.infra/cpu_fifo.sv \
-    $(HW_DIR)/ip.infra/soc_fabric.sv \
-    $(HW_DIR)/ip.infra/soc_ram.sv \
-    $(HW_DIR)/ip.infra/soc_csr.sv \
-    $(HW_DIR)/ip.infra/uart.sv \
-    $(HW_DIR)/ip.infra/sync_fifo_ram.sv \
-    $(HW_DIR)/ip.infra/clk_rst_gen.sv \
-    $(HW_DIR)/ip.dpe/dpe_demultiplexer.sv \
-    $(HW_DIR)/ip.dpe/dpe_multiplexer.sv \
-    $(HW_DIR)/ip.dpe/dpe_dummy_switch.sv \
-    $(HW_DIR)/ip.dpe/dpe.sv \
-    $(HW_DIR)/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv \
-    $(HW_DIR)/ip.cpu/cpu.PICORV32/picorv32_pcpi_mul.sv \
-    $(HW_DIR)/ip.cpu/cpu.PICORV32/picorv32_pcpi_fast_mul.sv \
-    $(HW_DIR)/ip.cpu/cpu.PICORV32/picorv32_pcpi_div.sv \
-    $(HW_DIR)/ip.cpu/imem.sv \
-    $(HW_DIR)/ip.cpu/soc_cpu.PICORV32.sv \
-    $(HW_DIR)/fpgatech_lib/XILINX/fpga_pll_125M.sv \
-    $(HW_DIR)/fpgatech_lib/XILINX/fpga_pll_80M.sv \
-    $(BUILD_DIR_ROOT)/csr_build/generated-files/csr.sv \
-    $(HW_DIR)/top.sv
-
-# Software initialization file (required for imem module)
-IMEM_INIT = $(BUILD_DIR_ROOT)/sw_build/imem.INIT.vh
-
-# Constraint file
-XDC_FILE = $(HW_DIR)/constraints/top.xdc
-
-# Timestamps for incremental builds
-CONV_TIMESTAMP = $(CONV_DIR)/.conversion_timestamp
+CONV_DIR          = converted$(TC_SFX)
+EXTRACTED_DIR     = $(CONV_DIR)/extracted
+BUILD_ARTIFACTS   = build_artifacts$(TC_SFX)
+CONV_TIMESTAMP    = $(CONV_DIR)/.conversion_timestamp
 EXTRACT_TIMESTAMP = $(EXTRACTED_DIR)/.extraction_timestamp
 
 # =============================================================================
-# SV2V INSTALLATION CHECK AND GUIDANCE
+# SOURCE FILES: 1.hw/top.filelist, the list Vivado, 4.sim and run-lint.sh use
+# (sources.sh). The CPU is the one top.filelist lists (PicoRV32 by default).
 # =============================================================================
 
-# Check if sv2v is available
-SV2V := $(shell which sv2v 2>/dev/null)
-STACK := $(shell which stack 2>/dev/null)
+DESIGN_RTL := $(shell bash -c '. ./sources.sh && design_rtl $(HW_DIR) $(BUILD_DIR_ROOT)')
 
-# =============================================================================
-# PHONY TARGETS
-# =============================================================================
+# eth_mac_1g instantiates the MAC control blocks in a generate branch
+# (MAC_CTRL_ENABLE = 0): not in top.filelist, but Yosys reads every module
+MAC_CTRL_SRC = \
+    $(HW_DIR)/external_lib/ethernet/mac_ctrl_rx.v \
+    $(HW_DIR)/external_lib/ethernet/mac_ctrl_tx.v \
+    $(HW_DIR)/external_lib/ethernet/mac_pause_ctrl_rx.v \
+    $(HW_DIR)/external_lib/ethernet/mac_pause_ctrl_tx.v
 
-.PHONY: all convert extract check-env check-sv2v install-sv2v check-sources \
-        clean clean-converted clean-all info help show-converted show-expected
+# Pure Verilog (external_lib): read by Yosys as is, no conversion needed
+PURE_V_FILES = $(filter %.v,$(DESIGN_RTL)) $(MAC_CTRL_SRC)
 
-# =============================================================================
-# MAIN TARGETS
-# =============================================================================
+# SystemVerilog, in top.filelist order
+SV_ORDERED = $(filter %.sv,$(DESIGN_RTL))
 
-all: top.bit
+# Xilinx primitives the RTL instantiates (stubs for read_slang)
+XILINX_PRIMS = PLLE2_BASE BUFG IBUFGDS BUFGMUX BUFIO BUFIO2 BUFR ODDR ODDR2
 
-# Convert SV to V (includes conversion and extraction)
-convert: $(EXTRACT_TIMESTAMP)
-	@echo ""
-	@echo "================================================================"
-	@echo "✓ Conversion complete!"
-	@echo "================================================================"
-	@echo "Extracted modules in: $(EXTRACTED_DIR)/"
-	@ls -1 $(EXTRACTED_DIR)/*.v 2>/dev/null | wc -l | xargs echo "Total .v files:"
+.PHONY: all convert check-env check-sources clean clean-converted clean-all help info
+.DEFAULT_GOAL := all
+.DELETE_ON_ERROR:
 
-# Just run extraction (assumes all_converted.v exists)
-extract: $(EXTRACT_TIMESTAMP)
+all: $(BUILD_ARTIFACTS)/top.bit
 
-# =============================================================================
-# SV2V INSTALLATION AND CHECKS
-# =============================================================================
-
-check-sv2v:
-ifndef SV2V
-	@echo "================================================================"
-	@echo "ERROR: sv2v not found!"
-	@echo "================================================================"
-	@echo "sv2v is required to convert SystemVerilog to Verilog."
-	@echo ""
-	@echo "RECOMMENDED METHOD - Build from source with Stack:"
-	@echo "================================================================"
-	@echo ""
-	@echo "Quick install:"
-	@echo "  make install-sv2v"
-	@echo ""
-	@echo "Manual installation steps:"
-	@echo "1. Install Stack (Haskell build tool):"
-	@echo "   curl -sSL https://get.haskellstack.org/ | sh"
-	@echo ""
-	@echo "2. Clone and build sv2v:"
-	@echo "   git clone https://github.com/zachjs/sv2v.git"
-	@echo "   cd sv2v"
-	@echo "   make"
-	@echo ""
-	@echo "3. Install to ~/.local/bin:"
-	@echo "   stack install"
-	@echo ""
-	@echo "4. Ensure ~/.local/bin is in PATH:"
-	@echo "   export PATH=\"\$$HOME/.local/bin:\$$PATH\""
-	@echo "   echo 'export PATH=\"\$$HOME/.local/bin:\$$PATH\"' >> ~/.bashrc"
-	@echo ""
-	@echo "================================================================"
-	@echo "ALTERNATIVE METHODS:"
-	@echo "================================================================"
-	@echo ""
-	@echo "Method 2 - Using Cargo (Rust):"
-	@echo "   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
-	@echo "   source \$$HOME/.cargo/env"
-	@echo "   cargo install sv2v"
-	@echo ""
-	@echo "Method 3 - Using apt (Ubuntu/Debian, if available):"
-	@echo "   sudo apt update"
-	@echo "   sudo apt install sv2v"
-	@echo ""
-	@echo "================================================================"
-	@echo "After installation, verify with:"
-	@echo "  sv2v --version"
-	@echo "================================================================"
-	@exit 1
-else
-	@echo "✓ sv2v found: $(SV2V)"
-	@sv2v --version 2>/dev/null || echo "  (version info not available)"
-endif
-
-# Automated sv2v installation using Stack
-install-sv2v:
-	@echo "================================================================"
-	@echo "Installing sv2v from source using Stack"
-	@echo "================================================================"
-	@echo ""
-ifndef STACK
-	@echo "Step 1: Installing Stack (Haskell build tool)..."
-	@echo "----------------------------------------------------------------"
-	@curl -sSL https://get.haskellstack.org/ | sh
-	@echo ""
-	@echo "✓ Stack installed. Reloading environment..."
-	@export PATH="$$HOME/.local/bin:$$PATH"
-else
-	@echo "✓ Stack already installed: $(STACK)"
-	@$(STACK) --version
-	@echo ""
-endif
-	@echo "Step 2: Cloning sv2v repository..."
-	@echo "----------------------------------------------------------------"
-	@if [ ! -d "sv2v-build" ]; then \
-		git clone https://github.com/zachjs/sv2v.git sv2v-build; \
-	else \
-		echo "sv2v-build directory already exists, using existing clone..."; \
-	fi
-	@echo ""
-	@echo "Step 3: Building sv2v (this may take 10-20 minutes)..."
-	@echo "----------------------------------------------------------------"
-	@echo "Stack will download and compile GHC and all dependencies."
-	@echo "Please be patient..."
-	@echo ""
-	@cd sv2v-build && make
-	@echo ""
-	@echo "Step 4: Installing sv2v to ~/.local/bin..."
-	@echo "----------------------------------------------------------------"
-	@cd sv2v-build && stack install
-	@echo ""
-	@echo "Step 5: Configuring PATH..."
-	@echo "----------------------------------------------------------------"
-	@if ! grep -q 'export PATH="$$HOME/.local/bin:$$PATH"' ~/.bashrc; then \
-		echo 'export PATH="$$HOME/.local/bin:$$PATH"' >> ~/.bashrc; \
-		echo "✓ Added ~/.local/bin to PATH in ~/.bashrc"; \
-	else \
-		echo "✓ ~/.local/bin already in PATH"; \
-	fi
-	@echo ""
-	@echo "================================================================"
-	@echo "✓ sv2v installation complete!"
-	@echo "================================================================"
-	@echo ""
-	@echo "Installation details:"
-	@echo "  Binary location: ~/.local/bin/sv2v"
-	@echo "  Source code:     $(CURDIR)/sv2v-build/"
-	@echo ""
-	@echo "Verify installation:"
-	@echo "  source ~/.bashrc"
-	@echo "  sv2v --version"
-	@echo ""
-	@echo "Or use immediately:"
-	@echo "  export PATH=\"\$$HOME/.local/bin:\$$PATH\""
-	@echo "  sv2v --version"
-	@echo ""
-	@echo "To uninstall sv2v:"
-	@echo "  rm -f ~/.local/bin/sv2v"
-	@echo "  rm -rf $(CURDIR)/sv2v-build/"
-	@echo "================================================================"
-	@echo ""
-	@echo "You can now run: make convert"
-	@echo "================================================================"
-
-# =============================================================================
-# ENVIRONMENT CHECKS
-# =============================================================================
+help info:
+	@echo "openXC7 build, TOOLCHAIN=$(TOOLCHAIN) FRONTEND=$(FRONTEND), part $(PART)"
+	@echo "  make                full build -> $(BUILD_ARTIFACTS)/top.bit"
+	@echo "  make FRONTEND=sv2v  sv2v instead of read_slang"
+	@echo "  make TOOLCHAIN=old  pre-v1.0.0 flow (nextpnr-xilinx, PREFIX=<install>)"
+	@echo "  make check-env      verify the tools are present"
+	@echo "  make check-sources  verify the source files are present"
+	@echo "  make clean          remove $(BUILD_ARTIFACTS)/"
+	@echo "  make clean-all      also the conversion and the chipdb"
+	@echo "  make check-sv2v | install-sv2v | show-converted   sv2v helpers"
 
 check-env:
-	@echo "Checking environment..."
-	@echo "PREFIX: $(PREFIX)"
-	@echo "DB_DIR: $(DB_DIR)"
-	@echo "PRJXRAY_DB_DIR: $(PRJXRAY_DB_DIR)"
-	@which yosys > /dev/null || (echo "ERROR: yosys not found!" && exit 1)
-	@which nextpnr-xilinx > /dev/null || (echo "ERROR: nextpnr-xilinx not found!" && exit 1)
-	@which fasm2frames > /dev/null || (echo "ERROR: fasm2frames not found!" && exit 1)
-	@which xc7frames2bit > /dev/null || (echo "ERROR: xc7frames2bit not found!" && exit 1)
-	@which python3 > /dev/null || (echo "ERROR: python3 not found!" && exit 1)
-	@echo "✓ Environment OK!"
+	@for t in $(YOSYS) $(YOSYS_CONFIG) $(NEXTPNR_XILINX) $(BBASM) $(OPENXC7_PYTHON) \
+	          $(if $(filter sv2v,$(FRONTEND)),$(SV2V)) \
+	          $(if $(filter new,$(TOOLCHAIN)),$(NEXTPNR_HIMBAECHEL) $(FPGA_AS),$(FASM2FRAMES) $(XC7FRAMES2BIT)); do \
+	    command -v $$t > /dev/null || { echo "ERROR: $$t not found"; exit 1; }; \
+	done
+	@test -d "$(DB_DIR)/artix7" || { echo "ERROR: no prjxray-db for artix7 in $(DB_DIR)"; exit 1; }
+	@$(if $(filter new,$(TOOLCHAIN)),test -f "$(XILINX_GEN)" || { echo "ERROR: chipdb generator not found: $(XILINX_GEN)"; exit 1; })
+	@$(if $(filter slang,$(FRONTEND)),$(YOSYS) -p help 2>/dev/null | grep -q read_slang || { echo "ERROR: this yosys has no read_slang"; exit 1; })
+	@echo "OK -- TOOLCHAIN=$(TOOLCHAIN), FRONTEND=$(FRONTEND), prjxray-db $(DB_DIR)"
 
 check-sources:
-	@echo "Checking source files..."
 	@missing=0; \
-	for file in $(PURE_V_FILES) $(XDC_FILE); do \
-		if [ ! -f "$$file" ]; then \
-			echo "MISSING: $$file"; \
-			missing=$$((missing + 1)); \
-		fi \
+	for f in $(SV_ORDERED) $(PURE_V_FILES) $(XDC_FILE) $(IMEM_INIT); do \
+	    [ -f "$$f" ] || { echo "MISSING: $$f"; missing=$$((missing + 1)); }; \
 	done; \
-	for file in $(SV_ORDERED); do \
-		if [ ! -f "$$file" ]; then \
-			echo "MISSING: $$file"; \
-			missing=$$((missing + 1)); \
-		fi \
-	done; \
-	if [ $$missing -gt 0 ]; then \
-		echo "ERROR: $$missing source files are missing!"; \
-		exit 1; \
-	else \
-		echo "✓ All $(words $(PURE_V_FILES)) pure Verilog files found"; \
-		echo "✓ All $(words $(SV_ORDERED)) SystemVerilog files found"; \
-	fi
+	[ $$missing -eq 0 ] || { echo "ERROR: $$missing file(s) missing (imem.INIT.vh: build the firmware first)"; exit 1; }; \
+	echo "OK -- $(words $(SV_ORDERED)) SV + $(words $(PURE_V_FILES)) V + xdc + imem.INIT.vh"
 
 # =============================================================================
-# SV2V CONVERSION (BATCH MODE)
+# FRONTEND=sv2v: batch conversion, then one file per module
 # =============================================================================
+convert: $(EXTRACT_TIMESTAMP)
 
-$(CONV_TIMESTAMP): $(SV_ORDERED) $(IMEM_INIT) | check-sv2v
-	@echo "================================================================"
-	@echo "Converting SystemVerilog to Verilog (BATCH MODE)"
-	@echo "================================================================"
-	@echo "Processing $(words $(SV_ORDERED)) SystemVerilog files..."
-	@echo ""
+$(CONV_TIMESTAMP): $(SV_ORDERED) $(IMEM_INIT)
+	@command -v $(SV2V) > /dev/null || { echo "ERROR: $(SV2V) not found"; exit 1; }
 	@mkdir -p $(CONV_DIR)
-	@# Run sv2v in batch mode - all files together for dependency resolution
-	@if sv2v \
-		-I$(BUILD_DIR_ROOT)/sw_build \
-		-I$(HW_DIR) \
-		-I$(HW_DIR)/external_lib/ethernet \
-		-I$(HW_DIR)/external_lib/axis \
-		$(SV_ORDERED) \
-		> $(CONV_DIR)/all_converted.v 2>$(CONV_DIR)/sv2v.log; then \
-		lines=$$(wc -l < $(CONV_DIR)/all_converted.v); \
-		modules=$$(grep -c "^module " $(CONV_DIR)/all_converted.v || echo 0); \
-		echo "✓ Batch conversion successful!"; \
-		echo "  Output: $(CONV_DIR)/all_converted.v"; \
-		echo "  Lines: $$lines"; \
-		echo "  Top-level modules: $$modules"; \
+	@if $(SV2V) -DSYNTHESIS -I$(BUILD_DIR_ROOT)/sw_build -I$(HW_DIR) $(SV_ORDERED) \
+	        > $(CONV_DIR)/all_converted.v 2> $(CONV_DIR)/sv2v.log; then \
+	    echo "OK -> $(CONV_DIR)/all_converted.v ($$(grep -c '^module ' $(CONV_DIR)/all_converted.v) modules)"; \
 	else \
-		echo "================================================================"; \
-		echo "ERROR: sv2v conversion failed!"; \
-		echo "================================================================"; \
-		echo "Error log:"; \
-		cat $(CONV_DIR)/sv2v.log; \
-		echo ""; \
-		echo "Common issues:"; \
-		echo "  - Missing package: Check SV_ORDERED dependency order"; \
-		echo "  - Unknown binding: Check source code"; \
-		echo "  - Missing include: Check IMEM_INIT path"; \
-		echo "================================================================"; \
-		exit 1; \
+	    echo "ERROR: sv2v conversion failed:"; cat $(CONV_DIR)/sv2v.log; exit 1; \
 	fi
 	@touch $@
-
-# =============================================================================
-# MODULE EXTRACTION
-# =============================================================================
 
 $(EXTRACT_TIMESTAMP): $(CONV_TIMESTAMP)
-	@echo ""
-	@echo "================================================================"
-	@echo "Extracting modules from converted output"
-	@echo "================================================================"
+	@rm -rf $(EXTRACTED_DIR)
 	@mkdir -p $(EXTRACTED_DIR)
-	@if [ -f "extract_modules.py" ]; then \
-		python3 extract_modules.py $(CONV_DIR)/all_converted.v $(EXTRACTED_DIR); \
-	else \
-		echo "extract_modules.py not found, using simple AWK extraction..."; \
-		echo "Splitting modules..."; \
-		awk 'BEGIN { out = ""; in_module = 0; } \
-		     /^module / { \
-		         module_name = $$2; \
-		         gsub(/[(;#].*/, "", module_name); \
-		         out = "$(EXTRACTED_DIR)/" module_name ".v"; \
-		         in_module = 1; \
-		         print "  -> " module_name ".v"; \
-		     } \
-		     in_module { print >> out; } \
-		     /^endmodule/ { \
-		         if (in_module) { close(out); in_module = 0; } \
-		     }' $(CONV_DIR)/all_converted.v; \
-		echo ""; \
-		echo "Creating stubs for packages/interfaces..."; \
-		for pkg in dpe_pkg soc_pkg csr_pkg; do \
-		    if [ ! -f "$(EXTRACTED_DIR)/$$pkg.v" ]; then \
-		        echo "module $$pkg (); endmodule" > "$(EXTRACTED_DIR)/$$pkg.v"; \
-		        echo "  -> $$pkg.v (stub)"; \
-		    fi \
-		done; \
-		for iface in dpe_if soc_if gmii_if; do \
-		    if [ ! -f "$(EXTRACTED_DIR)/$$iface.v" ]; then \
-		        echo "module $$iface (); endmodule" > "$(EXTRACTED_DIR)/$$iface.v"; \
-		        echo "  -> $$iface.v (stub)"; \
-		    fi \
-		done; \
-	fi
+	$(OPENXC7_PYTHON) extract_modules.py $(CONV_DIR)/all_converted.v $(EXTRACTED_DIR)
 	@touch $@
 
 # =============================================================================
-# SYNTHESIS
+# SYNTHESIS (Yosys)
 # =============================================================================
+# TOOLCHAIN=new: nextpnr-himbaechel has no BEL for BUFGMUX; bufgmux_map.v
+# builds it from a BUFGCTRL after synthesis
+BUFGMUX_MAP = $(if $(filter new,$(TOOLCHAIN)),techmap -map bufgmux_map.v;)
 
-$(BUILD_ARTIFACTS)/top.json: $(EXTRACT_TIMESTAMP) $(IMEM_INIT)
-	@echo "================================================================"
-	@echo "Synthesis stage (Yosys)"
-	@echo "================================================================"
+ifeq ($(FRONTEND),slang)
+$(BUILD_ARTIFACTS)/top.json: $(SV_ORDERED) $(PURE_V_FILES) $(IMEM_INIT) gen_xilinx_bb.py bufgmux_map.v
 	@mkdir -p $(BUILD_ARTIFACTS)
-	@echo "Reading converted modules from: $(EXTRACTED_DIR)/"
-	@echo "Reading pure Verilog from: external_lib/"
-	@echo ""
-	@# List all extracted .v files
-	$(eval EXTRACTED_V := $(wildcard $(EXTRACTED_DIR)/*.v))
-	yosys -p "proc; opt; clean; delete t:\$scopeinfo; synth_xilinx -arch xc7 -top top; write_json $(BUILD_ARTIFACTS)/top.json" \
-		$(EXTRACTED_V) $(PURE_V_FILES)
-	@echo ""
-	@echo "✓ Synthesis complete: $@"
+	$(OPENXC7_PYTHON) gen_xilinx_bb.py "$$($(YOSYS_CONFIG) --datdir)/xilinx" \
+	    $(BUILD_ARTIFACTS)/xilinx_bb.sv $(XILINX_PRIMS)
+	$(YOSYS) -q -l $(BUILD_ARTIFACTS)/yosys.log \
+	    -p "read_slang -D SYNTHESIS -D SYN_YOSYS_BUG --top $(TOP) -I $(BUILD_DIR_ROOT)/sw_build \
+	                   $(BUILD_ARTIFACTS)/xilinx_bb.sv $(SV_ORDERED) $(PURE_V_FILES); \
+	        proc; opt; clean; delete t:\$$scopeinfo; \
+	        synth_xilinx -flatten -abc9 -arch xc7 -top $(TOP); \
+	        $(BUFGMUX_MAP) \
+	        write_json $@"
+else
+$(BUILD_ARTIFACTS)/top.json: $(EXTRACT_TIMESTAMP) $(PURE_V_FILES) $(IMEM_INIT) bufgmux_map.v
+	@mkdir -p $(BUILD_ARTIFACTS)
+	$(YOSYS) -q -l $(BUILD_ARTIFACTS)/yosys.log \
+	    -p "read_verilog $(wildcard $(EXTRACTED_DIR)/*.v) $(PURE_V_FILES); \
+	        proc; opt; clean; delete t:\$$scopeinfo; \
+	        synth_xilinx -flatten $(if $(filter new,$(TOOLCHAIN)),-abc9) -arch xc7 -top $(TOP); \
+	        $(BUFGMUX_MAP) \
+	        write_json $@"
+endif
 
 # =============================================================================
-# CHIPDB GENERATION
+# CHIPDB: per die; the file name keeps the part, which the shim passes on
 # =============================================================================
-
+ifeq ($(TOOLCHAIN),new)
 $(CHIPDB)/$(PART).bin:
-	@echo "================================================================"
-	@echo "Generating chipdb for $(PART)..."
-	@echo "================================================================"
-	@echo "This may take several minutes..."
 	@mkdir -p $(CHIPDB)
-	python3 $(PREFIX)/share/nextpnr-xilinx/python/bbaexport.py \
-		--device $(PART) \
-		--bba $(PART).bba
-	bbasm -l $(PART).bba $(CHIPDB)/$(PART).bin
-	rm -f $(PART).bba
-	@echo "✓ Chipdb generated: $@"
+	$(OPENXC7_PYTHON) $(XILINX_GEN) --xray $(DB_DIR)/artix7 --device xc7a200t --bba $(PART).bba
+	$(BBASM) -l $(PART).bba $@
+	@rm -f $(PART).bba
+else
+$(CHIPDB)/$(PART).bin:
+	@mkdir -p $(CHIPDB)
+	$(OPENXC7_PYTHON) $(BBAEXPORT) --device $(PART) --bba $(PART).bba
+	$(BBASM) -l $(PART).bba $@
+	@rm -f $(PART).bba
+endif
 
 # =============================================================================
-# PLACE AND ROUTE
+# PLACE AND ROUTE. The exit status is taken directly, not through tee: make
+# uses /bin/sh (dash), which has no pipefail.
 # =============================================================================
+SEED ?= 1
 
-$(BUILD_ARTIFACTS)/top.fasm: $(BUILD_ARTIFACTS)/top.json $(CHIPDB)/$(PART).bin
-	@echo "================================================================"
-	@echo "Place and Route stage (nextpnr-xilinx)"
-	@echo "================================================================"
-	nextpnr-xilinx --chipdb $(CHIPDB)/$(PART).bin \
-		--xdc $(XDC_FILE) \
-		--json $< \
-		--fasm $@ \
-		--verbose --debug \
-		2>&1 | tee $(BUILD_ARTIFACTS)/nextpnr.log
-	@echo ""
-	@echo "✓ Place and Route complete: $@"
+# TOOLCHAIN=new: timing-driven ripup and a heavier placer timing weight. The
+# Ethernet RX clocks (verilog-ethernet's axis_async_fifo write-pointer logic)
+# sit near 125 MHz: with the defaults, seeds 1-4 each missed 1-3 RX clocks
+# (102-128 MHz); with these, seed 1 meets all (RX 127-137, sys_clk 83 MHz).
+NEXTPNR_OPTS ?= $(if $(filter new,$(TOOLCHAIN)),--tmg-ripup --placer-heap-timingweight 30)
+
+# nextpnr reads XDC constraints on ports only (get_ports). top.xdc is shared
+# with Vivado and also holds its ILA debug core, MARK_DEBUG, false paths
+# between clocks, CLOCK_DEDICATED_ROUTE and [current_design] bitstream
+# options; nextpnr gets the port lines: pins, I/O standards, clocks.
+# top.openxc7.xdc adds what nextpnr needs and Vivado infers (clk_n's pin).
+NEXTPNR_XDC = $(BUILD_ARTIFACTS)/top.nextpnr.xdc
+
+$(NEXTPNR_XDC): $(XDC_FILE) top.openxc7.xdc
+	@mkdir -p $(BUILD_ARTIFACTS)
+	grep -E 'get_ports' $< | grep -v -E '^\s*#|get_(nets|clocks|pins|cells|debug)' > $@
+	grep -v -E '^\s*#|^\s*$$' top.openxc7.xdc >> $@
+	@echo "OK -> $@ ($$(wc -l < $@) port constraints)"
+
+$(BUILD_ARTIFACTS)/top.fasm: $(BUILD_ARTIFACTS)/top.json $(CHIPDB)/$(PART).bin $(NEXTPNR_XDC)
+	@$(NEXTPNR_XILINX) \
+	    --chipdb $(CHIPDB)/$(PART).bin \
+	    --xdc $(NEXTPNR_XDC) \
+	    --json $< \
+	    --fasm $@ \
+	    --seed $(SEED) $(NEXTPNR_OPTS) \
+	    --verbose \
+	    > $(BUILD_ARTIFACTS)/nextpnr.log 2>&1; \
+	rc=$$?; \
+	tail -3 $(BUILD_ARTIFACTS)/nextpnr.log; \
+	[ $$rc -eq 0 ] || { echo "ERROR: nextpnr failed (rc=$$rc), see $(BUILD_ARTIFACTS)/nextpnr.log"; exit 1; }
+	@test -s $@ || { echo "ERROR: $@ is empty or missing"; exit 1; }
+	@grep -E "Max frequency" $(BUILD_ARTIFACTS)/nextpnr.log | tail -6
 
 # =============================================================================
-# BITSTREAM GENERATION
+# BITSTREAM
 # =============================================================================
-
+ifeq ($(TOOLCHAIN),new)
+$(BUILD_ARTIFACTS)/top.bit: $(BUILD_ARTIFACTS)/top.fasm
+	$(FPGA_AS) --prjxray_db_path=$(DB_DIR)/artix7 --part $(PART) < $< > $@
+	@test -s $@ || { echo "ERROR: $@ is empty"; exit 1; }
+	@ls -lh $@
+else
 $(BUILD_ARTIFACTS)/top.frames: $(BUILD_ARTIFACTS)/top.fasm
-	@echo "================================================================"
-	@echo "FASM to frames conversion"
-	@echo "================================================================"
-	fasm2frames --part $(PART) --db-root $(DB_DIR)/artix7 $< > $@
-	@echo "✓ Frames file created: $@"
+	$(FASM2FRAMES) --part $(PART) --db-root $(DB_DIR)/artix7 $< > $@
 
-top.bit: $(BUILD_ARTIFACTS)/top.frames
-	@echo "================================================================"
-	@echo "Bitstream generation"
-	@echo "================================================================"
-	xc7frames2bit --part_file $(DB_DIR)/artix7/$(PART)/part.yaml \
-		--part_name $(PART) \
-		--frm_file $< \
-		--output_file $(BUILD_ARTIFACTS)/top.bit
-	@echo "================================================================"
-	@echo "SUCCESS! Bitstream created: $(BUILD_ARTIFACTS)/top.bit"
-	@echo "================================================================"
-	@ls -lh $(BUILD_ARTIFACTS)/top.bit
+$(BUILD_ARTIFACTS)/top.bit: $(BUILD_ARTIFACTS)/top.frames
+	$(XC7FRAMES2BIT) --part_file $(DB_DIR)/artix7/$(PART)/part.yaml --part_name $(PART) \
+	    --frm_file $< --output_file $@
+	@ls -lh $@
+endif
 
 # =============================================================================
-# UTILITY TARGETS
+# sv2v helpers (FRONTEND=sv2v, TOOLCHAIN=old; see 3.build/README.md)
 # =============================================================================
+.PHONY: check-sv2v install-sv2v show-converted
 
-clean:
-	@echo "Cleaning build artifacts..."
-	@rm -f *.bit *.bba
-	@rm -rf $(BUILD_ARTIFACTS)
-	@echo "✓ Build artifacts cleaned"
+check-sv2v:
+	@command -v $(SV2V) > /dev/null && $(SV2V) --version || \
+	    { echo "ERROR: sv2v not found -- run: make install-sv2v"; exit 1; }
 
-clean-converted:
-	@echo "Cleaning converted files..."
-	@rm -rf $(CONV_DIR)
-	@echo "✓ Converted files cleaned"
-
-clean-all: clean clean-converted
-	@echo "Cleaning chipdb..."
-	@rm -rf $(CHIPDB)
-	@echo "Cleaning sv2v build directory..."
-	@rm -rf sv2v-build
-	@echo "✓ All cleaned!"
+# sv2v from source with Stack, into ~/.local/bin
+install-sv2v:
+	@command -v stack > /dev/null || curl -sSL https://get.haskellstack.org/ | sh
+	@[ -d sv2v-build ] || git clone https://github.com/zachjs/sv2v.git sv2v-build
+	cd sv2v-build && stack install
+	@echo "OK -- sv2v in ~/.local/bin; make sure it is on PATH"
 
 show-converted:
-	@echo "================================================================"
-	@echo "Converted Verilog files:"
-	@echo "================================================================"
-	@if [ -d "$(EXTRACTED_DIR)" ]; then \
-		ls -lh $(EXTRACTED_DIR)/*.v 2>/dev/null | awk '{print $$9, "(" $$5 ")"}' || echo "No files found"; \
-	else \
-		echo "Extraction directory does not exist yet."; \
-		echo "Run: make convert"; \
-	fi
+	@ls -lh $(EXTRACTED_DIR)/*.v 2>/dev/null || echo "Nothing converted yet: make FRONTEND=sv2v convert"
 
-show-expected:
-	@echo "================================================================"
-	@echo "Expected modules from source files:"
-	@echo "================================================================"
-	@echo "Packages (3):"
-	@echo "  - csr_pkg, dpe_pkg, soc_pkg"
-	@echo ""
-	@echo "Interfaces (3):"
-	@echo "  - dpe_if, soc_if, gmii_if"
-	@echo ""
-	@echo "Modules (~24):"
-	@echo "  Infrastructure: ethernet_mac, ethernet_phy, cpu_fifo, soc_fabric,"
-	@echo "                  soc_ram, soc_csr, uart, dpe_if_skid_buffer,"
-	@echo "                  sync_fifo_ram, clk_rst_gen"
-	@echo "  DPE:           dpe, dpe_demultiplexer, dpe_multiplexer, dpe_dummy_switch"
-	@echo "  CPU:           picorv32, picorv32_pcpi_mul, picorv32_pcpi_fast_mul,"
-	@echo "                 picorv32_pcpi_div, imem, soc_cpu"
-	@echo "  PLL:           fpga_pll_125M, fpga_pll_80M"
-	@echo "  Top:           csr, top"
-	@echo ""
-	@echo "NOTE: Packages and interfaces are inlined by sv2v (expected behavior)"
+clean:
+	rm -rf $(BUILD_ARTIFACTS)
 
-info:
-	@echo "================================================================"
-	@echo "WireGuard FPGA - openXC7 Build System"
-	@echo "================================================================"
-	@echo ""
-	@echo "Configuration:"
-	@echo "  Install Prefix:  $(PREFIX)"
-	@echo "  Database Dir:    $(DB_DIR)"
-	@echo "  FPGA Part:       $(PART)"
-	@echo "  Top Module:      top"
-	@echo ""
-	@echo "Source files:"
-	@echo "  Pure Verilog:    $(words $(PURE_V_FILES)) files (external_lib)"
-	@echo "  SystemVerilog:   $(words $(SV_ORDERED)) files (ip.*)"
-	@echo ""
-	@echo "Build process:"
-	@echo "  1. sv2v batch    - Convert all SV files together"
-	@echo "  2. extract       - Split into individual modules"
-	@echo "  3. yosys         - Synthesis"
-	@echo "  4. nextpnr       - Place and route"
-	@echo "  5. bitstream     - Generate .bit file"
-	@echo ""
-	@echo "Available targets:"
-	@echo "  all              - Build complete bitstream (top.bit)"
-	@echo "  convert          - Convert SV to V only"
-	@echo "  install-sv2v     - Install sv2v from source (requires internet)"
-	@echo "  check-env        - Verify openXC7 environment"
-	@echo "  check-sources    - Verify all source files exist"
-	@echo "  check-sv2v       - Verify sv2v installation"
-	@echo "  show-converted   - List converted files"
-	@echo "  show-expected    - List expected modules"
-	@echo "  clean            - Remove build artifacts"
-	@echo "  clean-converted  - Remove converted files"
-	@echo "  clean-all        - Remove everything (incl. chipdb & sv2v)"
-	@echo "  info             - Show this information"
-	@echo "================================================================"
+clean-converted:
+	rm -rf $(CONV_DIR)
 
-help: info
-
-# =============================================================================
-# DEPENDENCIES
-# =============================================================================
-
-# Ensure chipdb exists before PnR
-$(BUILD_ARTIFACTS)/top.fasm: | $(CHIPDB)/$(PART).bin
-
-# Ensure extraction happens before synthesis
-$(BUILD_ARTIFACTS)/top.json: $(EXTRACT_TIMESTAMP)
-
-# Ensure conversion happens before extraction
-$(EXTRACT_TIMESTAMP): $(CONV_TIMESTAMP)
+clean-all: clean clean-converted
+	rm -rf $(CHIPDB)

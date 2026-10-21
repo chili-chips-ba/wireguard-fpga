@@ -4,8 +4,17 @@ SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
 SPDX-License-Identifier: BSD-3-Clause
 -->
 
-[![NLnet Foundation](https://img.shields.io/badge/funded%20by-NLnet%20Foundation-74AA00)](https://nlnet.nl/)
-[![GitHub stars](https://img.shields.io/github/stars/chili-chips-ba/wireguard-fpga?style=social)](https://github.com/chili-chips-ba/wireguard-fpga/stargazers)
+[![NLnet:Funded](https://badgen.net/badge/NLnet/Funded/08C)](https://nlnet.nl/)
+[![Stars](https://badgen.net/github/stars/chili-chips-ba/wireguard-fpga?label=Stars)](https://github.com/chili-chips-ba/wireguard-fpga/stargazers)
+[![License:BSD-3](https://badgen.net/badge/License/BSD-3/blue)](LICENSES)
+[![PipelineC:YES](https://badgen.net/badge/PipelineC/YES/green)](3.build/pipelinec_build)
+[![PythonHLD+SIM:Pypeline](https://badgen.net/badge/PythonHLD%2BSIM/Pypeline/green)](3.build/pypeline_build)
+[![PeakRDL:YES](https://badgen.net/badge/PeakRDL/YES/green)](3.build/csr_build)
+[![eduBOS5:WIP](https://badgen.net/badge/eduBOS5/WIP/orange)](https://github.com/chili-chips-ba/openPCIE/blob/main/2.rtl/0.common.opensource/src/CPU.eduBOS5/README.md)
+[![VProc:YES](https://badgen.net/badge/VProc/YES/green)](4.sim/README.md)
+[![Lint](https://badgen.net/github/checks/chili-chips-ba/wireguard-fpga/main/run-lint?label=Lint)](https://github.com/chili-chips-ba/wireguard-fpga/actions/workflows/lint.yml)
+[![Verible](https://badgen.net/github/checks/chili-chips-ba/wireguard-fpga/main/verible?label=Verible)](https://github.com/chili-chips-ba/wireguard-fpga/actions/workflows/verible.yml)
+[![openXC7:Pass](https://badgen.net/badge/openXC7/Pass/green)](3.build/hw_build.openXC7)
 
 # Wireguard FPGA
 Virtual Private Networks (VPNs) are the central and indispensable component of Internet security. They comprise a set of technologies that connect geographically dispersed, heterogeneous networks through encrypted tunnels, creating the impression of a homogenous private network on the public shared physical medium. 
@@ -124,23 +133,23 @@ In the HW/SW partitioning diagram, we can observe two types of network traffic: 
 
 The hardware architecture essentially follows the HW/SW partitioning and consists of two domains: a soft CPU for the control plane and RTL for the data plane.
 
-The soft CPU is equipped with a Boot ROM and a DDR3 SDRAM controller for interfacing with off-chip memory. External memory is exclusively used for control plane processes and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
+The soft CPU is PicoRV32 (default) or [eduBOS5](1.hw/ip.cpu/cpu.EDUBOS5/README.md) (until [#61](https://github.com/chili-chips-ba/wireguard-fpga/issues/61) is fixed), picked in [`1.hw/top.filelist`](1.hw/top.filelist). It runs from on-chip memory: 64 kB IMEM and 64 kB DMEM ([`1.hw/top.sv`](1.hw/top.sv)). This memory serves only the control plane and does not store packets. The connection between the control and data planes is established through a CSR-based HAL.
 
-The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation:
+The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation. Stages marked (planned) are not built yet; today the DPE is multiplexer -> pass-through dummy switch -> demultiplexer ([`1.hw/top.filelist`](1.hw/top.filelist)).
 - _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)
 - _1G MAC_ - execution of the 1G Ethernet protocol (framing, flow control, FCS, etc.)
 - _Rx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
 - _Per-Packet Round Robin Multiplexer_ - servicing Rx FIFOs on a per-packet basis using a round-robin algorithm
-- _Header Parser_ - extraction of WireGuard-related information from packet headers (IP addresses, UDP ports, WireGuard message type, peer ID, etc.)
-- _Wireguard/UDP Packet Disassembler_ - decapsulation of the payload from the Wireguard data packet for decryption of tunneled traffic
-- _ChaCha20-Poly1305 Decryptor_ - decryption and authentication of tunneled traffic
-- _IP Lookup Engine_ - routing/forwarding table lookup, mapping packets to the appropriate WireGuard peer, and making packet accept/reject decisions
-- _ChaCha20-Poly1305 Encryptor_ - encryption and authentication of traffic to be tunneled
-- _Wireguard/UDP Packet Assembler_ - encapsulation of the encrypted packet into a WireGuard data packet for tunneling to the remote peer
+- _Header Parser_ (planned) - extraction of WireGuard-related information from packet headers (IP addresses, UDP ports, WireGuard message type, peer ID, etc.)
+- _Wireguard/UDP Packet Disassembler_ (planned) - decapsulation of the payload from the Wireguard data packet for decryption of tunneled traffic
+- _ChaCha20-Poly1305 Decryptor_ (planned) - decryption and authentication of tunneled traffic
+- _IP Lookup Engine_ (planned) - routing/forwarding table lookup, mapping packets to the appropriate WireGuard peer, and making packet accept/reject decisions
+- _ChaCha20-Poly1305 Encryptor_ (planned) - encryption and authentication of traffic to be tunneled
+- _Wireguard/UDP Packet Assembler_ (planned) - encapsulation of the encrypted packet into a WireGuard data packet for tunneling to the remote peer
 - _Per-Packet Demultiplexer_ - forwarding packets to Tx FIFOs based on packet type and destination
 - _Tx FIFOs_ - clock domain crossing, bus width conversion, and store & forward packet handling
 
-_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC7539's](https://datatracker.ietf.org/doc/html/rfc7539) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
+_ChaCha20-Poly1305 Encryptor/Decryptor_ are using [RFC 8439's](https://datatracker.ietf.org/doc/html/rfc8439) AEAD (Authenticated Encryption Authenticated Data) construction based on [ChaCha20](http://cr.yp.to/chacha.html) for symmetric encryption and [Poly1305](http://cr.yp.to/mac.html) for authentication.
 
 The details of hardware architecture can be found in the [README.md](./1.hw/README.md) in the `1.hw/` directory.
 
@@ -153,13 +162,13 @@ The details of hardware architecture can be found in the [README.md](./1.hw/READ
 The conceptual class diagram provides an overview of the components in the software part of the system without delving into implementation details. The focus is on the WireGuard Agent, which implements the protocol's handshake procedures, along with the following supplementary components:
 - [Curve25519](http://cr.yp.to/ecdh.html) - an ECDH algorithm implementation for establishing a shared secret using a public-private key pair between two remote parties connected via an insecure channel, such as the Internet
 - ChaCha20-Poly1305 - an AEAD algorithm implementation for encryption and authentication of static keys and nonce values to prevent replay attacks
-- XChaCha20-Poly1305 - a XAEAD algorithm implementation for encrypting and authenticating nonce values in Cookie Replay messages to mitigate potential DoS attacks
+- XChaCha20-Poly1305 (planned) - a XAEAD algorithm implementation for encrypting and authenticating nonce values in Cookie Replay messages to mitigate potential DoS attacks
 - [BLAKE2s](https://www.blake2.net) - an implementation of the BLAKE2s hash function for MAC authentication and keyed hashing, per [RFC7693](https://datatracker.ietf.org/doc/html/rfc7693)
 - RNG - a random number generator used to initialize the DH key generator and generate peer identifiers
-- Timer - timers for rekey, retry, and keepalive procedures
+- Timer - cycle-counter timer; rekey, retry, and keepalive timers are planned
 - [HKDF](https://eprint.iacr.org/2010/264) - an implementation of the algorithm for expanding the ECDH result
-- RTC - a real-time clock used to generate the TAI64N timestamp
-- [SipHash](https://en.wikipedia.org/wiki/SipHash) - a simple non-cryptographic function used for implementing a hashtable for fast lookup of decrypted static public keys of remote peers
+- RTC (planned) - a real-time clock used to generate the TAI64N timestamp
+- [SipHash](https://en.wikipedia.org/wiki/SipHash) (planned) - a simple non-cryptographic function used for implementing a hashtable for fast lookup of decrypted static public keys of remote peers
 - Routing DB Updater - a subsystem for maintaining the cryptokey routing table content and deploying it to the data plane via the HAL/CSR interface
 - ICMP - implementing basic ICMP protocol functions (echo request/reply, TTL exceeded, etc.)
 - CLI - a USB/UART-based command-line interface for configuring the WireGuard node (setting the local IP address, remote peer IP addresses, network addresses, keys, etc.)
@@ -180,20 +189,31 @@ To illustrate the operation of the system as a whole, we have prepared a step-by
 
 The detailed analysis can be found in the [README.md](./1.hw/README.md#hwsw-working-together-as-a-coherent-system) in the `1.hw/` directory.
 
+## Pypeline Intro
+
+The ChaCha20-Poly1305 AEAD core is also written in [Pypeline](https://github.com/JulianKemmerer/PipelineC#what-is-pypelinec), the Python front-end of PipelineC: hardware design and cycle-exact simulation in plain Python, RFC 8439-conformant and verified on silicon.
+
+<p align="center">
+  <img width="80%" src="3.build/pypeline_build/0.doc/wireguard-pypeline-sim-light.png"
+   alt="Pypeline native sim: Python HDL, cycle-exact sim engine, silicon-verified">
+</p>
+
+Details: [3.build/pypeline_build](3.build/pypeline_build/README.md).
+
 ## Simulation Test Bench
 
-The [Wireguard FPGA test bench](4.sim/README.md) aims to have a flexible approach to simulation which allows a common test environment to be used whilst selecting between alternative CPU components, one of which uses the [_VProc_ virtual processor](https://github.com/wyvernSemi/vproc) co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation such as picoRV32, IBEX or EDUBOS5, or to co-simulate software using the virtual processor, with a significant speed up in simulation times. The test bench has the following features:
+The [Wireguard FPGA test bench](4.sim/README.md) aims to have a flexible approach to simulation which allows a common test environment to be used whilst selecting between alternative CPU components, one of which uses the [_VProc_ virtual processor](https://github.com/wyvernSemi/vproc) co-simulation element. This allows simulations to be fully HDL, with a RISC-V processor RTL implementation (eduBOS5 or PicoRV32), or to co-simulate software using the virtual processor, with a significant speed up in simulation times. The test bench has the following features:
 
-* A [_VProc_](https://github.com/wyvernSemi/vproc) virtual processor based [`soc_cpu.VPROC`](4.sim/models/README.md#soc-cpu-vproc) component
+* A [_VProc_](https://github.com/wyvernSemi/vproc) virtual processor based [`soc_cpu.VPROC`](4.sim/models/README.md#soc_cpuvproc) component
   * [Selectable](4.sim/README.md#auto-selection-of-soc_cpu-component) between this or an RTL softcore
   * Can run natively compiled test code
-  * Can run the application compiled natively with the [auto-generated co-sim HAL](3.build/README.md#co-simulation-hal)
+  * Can run the application compiled natively with the [auto-generated co-sim HAL](3.build/README.md#csr-hal-compilation)
   * Can run RISC-V compiled code using the [rv32 RISC-V ISS model](4.sim/models/rv32/README.md)
 * Uses a C [sparse memory model](https://github.com/wyvernSemi/mem_model)
   * An [HDL component](4.sim/models/cosim/README.md) instantiated in logic gives logic access to this memory
   * An API is provided to _VProc_ running code for direct access
-* The [_udpIpPg VIP_](https://github.com/wyvernSemi/udpIpPg) is used to drive the logic's four ethernet ports in a four port [`bfm_ethernet`](4.sim/models/README.md#bfm_phy_ethernet) block.
-  * An [MDIO slave interface](4.sim/models/README.md#bfm_phy_mdio) is also provided that maps *mem_model* memory areas to the registers with instantiated *mem_model* components
+* The [_udpIpPg VIP_](https://github.com/wyvernSemi/udpIpPg) is used to drive the logic's four ethernet ports in a four port [`bfm_ethernet`](4.sim/models/README.md#the-bfm_ethernet-ethernet-driver-module) block.
+  * An [MDIO slave interface](4.sim/models/README.md#the-bfm_phy_mdio-mdio-slave-driver-module) is also provided that maps *mem_model* memory areas to the registers with instantiated *mem_model* components
 
 The figure below shows an oveview block diagram of the test bench HDL.
 
@@ -205,7 +225,7 @@ More details on the architecture and usage of the Wireguard test bench can be fo
 
 ## Co-simulation HAL
 
-The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#co-simulation-hal), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#co-simulation-hal) in the `3.build/` directory.
+The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#csr-hal-compilation), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#csr-hal-compilation) in the `3.build/` directory.
 
 ## Build process
 The details of the build process can be found in the [README.md](3.build/README.md) in the `3.build/` directory.
@@ -229,33 +249,33 @@ While the board we're using is low cost, it is also not particularly known in th
 
 Getting a good feel for our Fmax is also a goal of this take. Artix-7 does not support High-Performance (HP) I/O. Consequently, we cannot push its I/O beyond 600MHz, nor its core logic beyond 100 MHz. 
 
-- [x] ✔ Familiarization with HW platform
+- ✅ Familiarization with HW platform
   - Create our first FPGA program that blinks LEDs
   - Verify pinouts and connectivity using simple test routines
   - Generate a few Ethernet test patterns 
 
-- [x] ✔ Familiarization with SW platform
+- ✅ Familiarization with SW platform
   - Initial bring up of embedded CPU within a _cookie-cutter_ SOC, such as [Ref5]
   - Design and test a simple SW interface to rudimentary HW Ethernet datapath
 
-- [x] ✔ Detailed analysis and comparisons of:
+- ✅ Detailed analysis and comparisons of:
   - Wireguard [White Papers](https://www.ndss-symposium.org/wp-content/uploads/2017/09/ndss2017_04A-3_Donenfeld_paper.pdf)
   - existing implementations in software [Ref1]
   - vs. _Blackwire_ hardware implementation [Ref2]
   - [cryptographic algorithms](https://eprint.iacr.org/2018/080.pdf) used for Wireguard, esp. **ChaCha20** for encryption, **Poly1305** for authentication [Ref4] and, to a lesser extent, _Curve25519_ for key exchange and _blake2_ for hashing
   
-- [x] ✔ Identification and assimilation of prior art and building IP blocks, in particular **Corundum** [Ref3] and, to a lesser extent, _10GE Switch_ [Ref7] 
+- ✅ Identification and assimilation of prior art and building IP blocks, in particular **Corundum** [Ref3] and, to a lesser extent, _10GE Switch_ [Ref7] 
 
-- [x] ✔ Architecture/uArch Design. HW/SW Partitioning. Verification Plan
+- ✅ Architecture/uArch Design. HW/SW Partitioning. Verification Plan
 
-- [x] ✔ Creation of sufficient initial documentation for project divide-and-conquer across a multi-disciplinary team of half a dozen developers
+- ✅ Creation of sufficient initial documentation for project divide-and-conquer across a multi-disciplinary team of half a dozen developers
 
 ## Take2
 **Implementation of a basic, statically pre-configured Wireguard link**
 
 It it in this take that we start creating hardware Datapath and hardening Wireguard encryption protocols, all using Vivado and Xilinx primitives.
 
-- [x] ✔ Integration of collected RTL blocks into a coherent HW system that implements the basic Wireguard datapath for a handful of manually pre-configured channels.
+- ✅ Integration of collected RTL blocks into a coherent HW system that implements the basic Wireguard datapath for a handful of manually pre-configured channels.
   - Corundum FPGA-based NIC and platform for opensource Ethernet development [Ref3]
   -	IP Core for **ChaCha20-Poly1305** [Ref4] -- Definitely in hardware from the get-go
     - https://github.com/Goshik92/FpgaCha
@@ -268,30 +288,30 @@ It it in this take that we start creating hardware Datapath and hardening Wiregu
   - _blake2_ module for hashing (we'll most likely do it in software)
     - https://github.com/secworks/blake2
       
-- [x] ✔ Timing closure. Resolution of FPGA device utilization and routing congestion issues
-- [x] ✔ Creation of cocoTB DV in the CI/CD environmenT, and representative test cases for datapath simulation
+- ✅ Timing closure. Resolution of FPGA device utilization and routing congestion issues
+- [ ] Creation of cocoTB DV in the CI/CD environment, and representative test cases for datapath simulation (cocoTB tests run locally in `3.build/pypeline_build`; CI runs only lint and Verible)
 
 ## Take3
 **Development and integration of embedded management software (Control Plane)**
 
 This work package is about hardware/software codesign and integration. The firmware will run on a soft RISC V processor, inside the FPGA. Our vanilla SOC is at this point starting to be customized to Wireguard needs. This work can to some extent go on in parallel with hardware activities of Take2. 
 
-- [x] ✔	SW design for on-chip processor (Part 1)
+- ✅ SW design for on-chip processor (Part 1)
   - Code is to be written in the bare-metal C with, as necessary, a few sections in Assembly
   - SW is responsible for configuration and management of hardware blocks
   - SW must not participate in the bulk datapath transfers
   - SW may however intercept the low-frequency management packets
 
-- [x] ✔	SW design for on-chip processor (Part 2)
+- ✅ SW design for on-chip processor (Part 2)
   - KMM function -- Key Management Module
 
-- [x] ✔ HW/SW Integration
+- ✅ HW/SW Integration
 
 ## Take4
 **VPN Tunnel: Session initialization, maintenance, and secure closure**
 
 This is about managing the bring-up, maintenance and tear-down of VPN tunnels between two devices.
-- [x] ✔ Session Initialization: Starting the handshake process to establish secure communication with another device
+- [ ] Session Initialization: Starting the handshake process to establish secure communication with another device
 - [ ] Session Maintenance: Keeping the session active through the regular exchange of control messages, which allows detection and recovery from problems such as connection interruptions
 - [ ] Session Closure: Securely close the VPN tunnel when communication is no longer needed, ensuring that all temporary keys and sensitive data are deleted
 
@@ -302,17 +322,18 @@ This is about managing the bring-up, maintenance and tear-down of VPN tunnels be
 
 - [ ] Performance testing. HW/SW profiling, updates and enhancements to ensure the design indeed operates at close to the wire speed on all preconfigured channels
 
-- [x] ✔ Porting to openXC7 [Ref8] using [SV2V](https://github.com/zachjs/sv2v), in the GoCD CI/CD setting 
+- ✅ Porting to openXC7 [Ref8] using [SV2V](https://github.com/zachjs/sv2v)
   - This is challenging, as openXC7 has thus far been crashing for NES SV
+  - Ported to openXC7 v1.0.0 (Yosys 0.69 + nextpnr-himbaechel) on 2026-10-21, now with `read_slang` instead of sv2v ([3.build](3.build/README.md#hw-compilation---openxc7))
 
-- [x] ✔ Timing closure with openXC7
+- [ ] Timing closure with openXC7 v1.0.0: met with eduBOS5 (2026-10-21); with PicoRV32, the default, one Ethernet RX clock still fails ([#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48))
   - This is definitely challenging, given that openXC7 is currently without accurate timing-driven STA
 
-- [x] ✔ Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
+- ✅ Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
       
-- [x] ✔ Creation and maintenance of an attractive and well-documented Github repo, to entice community interest
+- ✅ Creation and maintenance of an attractive and well-documented Github repo, to entice community interest
       
-- [x] ✔ Ongoing documentation updates and CI/CD script maintenance to keep it valid in the light of inevitable design mutations compared to the original Design Blueprint.
+- ✅ Ongoing documentation updates and CI/CD script maintenance to keep it valid in the light of inevitable design mutations compared to the original Design Blueprint.
 
 
 ## Take6 (time-permitting Bonus)
@@ -331,8 +352,8 @@ TODO
 We are grateful to **NLnet Foundation** for their sponsorship of this development activity.
 
 <p align="center">
-   <img src="https://github.com/chili-chips-ba/openeye/assets/67533663/18e7db5c-8c52-406b-a58e-8860caa327c2">
-   <img width="20%" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522">
+   <a href="https://nlnet.nl"><img alt="NLnet logo" src="https://github.com/chili-chips-ba/openeye/assets/67533663/18e7db5c-8c52-406b-a58e-8860caa327c2"></a>
+   <a href="https://nlnet.nl/entrust"><img width="20%" alt="NGI-Entrust-Logo" src="https://github.com/chili-chips-ba/openeye-CamSI/assets/67533663/013684f5-d530-42ab-807d-b4afd34c1522"></a>
 </p>
 
 This project was funded through the NGI0 Entrust Fund, a fund established by NLnet with financial support from the European Commission's Next Generation Internet programme, under the aegis of DG Communications Networks, Content and Technology under grant agreement No 101069594.
@@ -340,17 +361,47 @@ This project was funded through the NGI0 Entrust Fund, a fund established by NLn
 The **wyvernSemi**'s wisdom and contribution made a great deal of difference -- Thank you, we are honored to have you on the project.
 
 <p align="center">
-   <img width="15%" alt="wyvernSemi-Logo" src="0.doc/artwork/VProc.logo.png">
+   <a href="https://github.com/wyvernSemi"><img width="15%" alt="wyvernSemi-Logo" src="0.doc/artwork/wyvernSemi-logo-rounded.png"></a>
 </p>
 
 If it was not for **Julian Kemmerer's** unreserved support helping us move our two cryptography blocks from C to gates, be it by guiding and mentoring, or by doing it himself, the meat of this project would not have been so easily pushed through to hardware using `PipelineC`. Thank you Mr.OpensourceHLS 🙏. 
 
 <p align="center">
- <img width="50%" src="0.doc/artwork/pipelineC.logo.png">
+ <a href="https://github.com/JulianKemmerer/PipelineC"><img width="50%" alt="PipelineC logo" src="0.doc/artwork/pipelineC.logo.png"></a>
 </p>
 
-### Public posts:
+<p align="center">
+ <a href="https://github.com/JulianKemmerer/PipelineC#what-is-pypelinec"><img width="50%" alt="PypelineC logo" src="0.doc/artwork/pypelinec.logo.png"></a>
+</p>
+
+**openXC7**, with **Yosys** at its core, turns RTL into a loadable FPGA bitfile. **PeakRDL** turns our SystemRDL file into CSR RTL+headers+RegMap docs. **Verilator**, **slang** and **Verible** keep our RTL clean, and Verilator runs the SoC co-simulation. **cocotb** with **GHDL** verifies the generated crypto cores. **[sv2v](https://github.com/zachjs/sv2v)** converted our SystemVerilog for the first openXC7 port, and is still there as `FRONTEND=sv2v`. But, that's not everything that made this project possible -- Thank you all for these wonderful opensource tools :sparkles:.
+
+<p align="center">
+  <a href="https://github.com/openXC7"><img alt="openXC7 logo" width="80%" src="0.doc/artwork/openXC7.logo.png"></a>
+  <a href="https://www.yosyshq.com"><img alt="YosysHQ logo" width="25%" src="0.doc/artwork/YosysHQ.logo.png"></a>
+  <a href="https://peakrdl.readthedocs.io"><img alt="PeakRDL logo" width="14%" src="0.doc/artwork/PeakRDL.logo.png"></a>
+</p>
+
+<p align="center">
+  <a href="https://www.symbioticeda.com"><img alt="Symbiotic EDA logo" width="25%" src="0.doc/artwork/symbioticeda.logo.png"></a>
+</p>
+
+<p align="center">
+  <a href="https://verilator.org"><img alt="Verilator logo" width="25%" src="0.doc/artwork/Verilator.logo.png"></a>
+  <a href="https://www.cocotb.org"><img alt="cocotb logo" width="20%" src="0.doc/artwork/cocotb.logo.png"></a>
+  <a href="https://github.com/ghdl/ghdl"><img alt="GHDL logo" width="20%" src="0.doc/artwork/GHDL.logo.png"></a>
+  <a href="https://www.drawio.com"><img alt="draw.io logo" width="25%" src="0.doc/artwork/drawio.logo.png"></a>
+  <a href="https://github.com/MikePopoloski/slang"><img alt="MikePopoloski slang logo" width="25%" src="0.doc/artwork/slang.logo.png"></a>
+  <a href="https://www.chipsalliance.org/projects"><img alt="Chips Alliance SV Tools logo" width="15%" src="0.doc/artwork/ChipsAlliance-SV-Tools.logo.png"></a>
+  <a href="https://github.com/chipsalliance/verible"><img alt="Verible logo" width="25%" src="0.doc/artwork/Verible.logo.png"></a>
+  <a href="https://github.com/tarik-ibrahimovic/eduBOS5"><img alt="eduBOS5 logo" width="17%" src="0.doc/artwork/eduBOS5.logo.png"></a>
+  <a href="https://github.com/YosysHQ/picorv32"><img alt="PicoRV32 logo" width="20%" src="0.doc/artwork/picoRV32.logo.png"></a>
+  <a href="https://riscv.org"><img alt="RISC-V logo" width="12%" src="0.doc/artwork/RISC-V.logo.JPG"></a>
+</p>
+
+### Community Outreach
 - [2025-12-11](https://www.linkedin.com/posts/chili-chips_wireguard-fpga-opensource-activity-7404799997201833985-Hh-j?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJv-TcBSi_5ff0VNMrInrT-xg44YF3jnyU)
+- [2025-10-12, daily.dev](https://daily.dev/posts/chili-chips-ba-wireguard-fpga-full-throttle-wire-speed-hardware-implementation-of-wireguard-vpn-u-wsf6uxyf1) (from Hacker News)
 - [2025-10-12](https://www.linkedin.com/pulse/wireguard-fpga-advanced-co-simulation-verification-case-southwell-z64ce)
 - [2025-06-07](https://www.linkedin.com/posts/simon-southwell-7684482_had-a-great-time-at-the-fpga-conference-europe-activity-7347534737554505729-pWYJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJv-TcBSi_5ff0VNMrInrT-xg44YF3jnyU)
 - [2025-05-17](https://www.linkedin.com/posts/chili-chips_opensource-wireguard-fpga-activity-7329738780876197888-ljJR?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAJv-TcBSi_5ff0VNMrInrT-xg44YF3jnyU)
@@ -358,4 +409,19 @@ If it was not for **Julian Kemmerer's** unreserved support helping us move our t
 - [2024-10-27](https://www.linkedin.com/posts/simon-southwell-7684482_riscv-iss-embeddedsoftware-activity-7256311551178027008-1nlZ?utm_source=share&utm_medium=member_desktop)
 - [2024-09-19](https://www.linkedin.com/posts/chili-chips_fpga-cpu-ethernet-activity-7242729037771522048-as-C?utm_source=share&utm_medium=member_desktop)
 
+### Community Involvement
+
+Feel like helping opensource VPN community grow better and larger?! See [Contributions](CONTRIBUTING.md).
+
+Don't feel shy to reach out and ask for help ===> [![issues](https://badgen.net/github/open-issues/chili-chips-ba/wireguard-fpga?label=issues)](https://github.com/chili-chips-ba/wireguard-fpga/issues).
+
+--------------------
+
+### GenAI
+
+Our repo may contain elements of work facilitated by the modern GenAI tools <img alt="Claude" height="16" src="https://cdn.simpleicons.org/claude/D97757">, used under strict guidance and tight supervision of the blood-and-flesh developers, and solely as suggestions.
+
+In the end, it is us, the human devs, who are fully responsible for any shortfalls you may uncover while tapping into repo resources.
+
+--------------------
 #### End of Document

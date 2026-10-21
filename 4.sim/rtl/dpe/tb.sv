@@ -85,7 +85,9 @@ module tb;
    // DUT instantiation
    dpe DUT (
       .from_csr(from_csr),
-      .to_csr(),
+      .to_csr_dpe(),
+      .to_csr_routing_table(),
+      .to_csr_cryptokey_table(),
       .from_cpu(from_cpu),
       .from_eth_1(from_eth_1),
       .from_eth_2(from_eth_2),

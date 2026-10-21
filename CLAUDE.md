@@ -17,11 +17,10 @@ See the root `README.md` for the full architecture writeup (HW/SW partitioning d
 
 ```
 1.hw/          SystemVerilog RTL: DPE cores (ip.dpe/), infra (ip.infra/: CSR, FIFOs, UART, clocking),
-               soft CPU wrapper (ip.cpu/: PicoRV32), top.sv + top.filelist
+               soft CPU (ip.cpu/: PicoRV32 default, or eduBOS5), top.sv + top.filelist
 2.sw/          Bare-metal C/C++ firmware for the RISC-V control plane (app/), CSR register tests (tests/)
 3.build/       Build orchestration — see "Build Commands" below
 4.sim/         VProc/Verilator co-simulation testbench (RTL soc_cpu or virtual-processor RISC-V models)
-5.lint/        Verible SystemVerilog lint (rules.md documents the enabled rule set)
 6.test/        UART-based hardware bring-up/test scripts + lab test topology instructions (README.md)
 99.warmup/     Standalone bring-up exercises (blinky, Ethernet, crypto primitives, PicoRV32) — early
                learning/prototyping, not part of the production build
@@ -42,9 +41,10 @@ make -f MakefileCSR         # generates 3.build/csr_build/generated-files/*
 make -f MakefileCSR clean
 ```
 
-**2. Firmware build** (`3.build/MakefileSW`) — must run before the hardware build, since it produces `imem.INIT.vh`, consumed by synthesis. Requires `riscv64-unknown-elf-gcc` (see `0.doc/1.README.Tool-Installs.txt`):
+**2. Firmware build** (`3.build/MakefileSW`) — must run before the hardware build, since it produces `imem.INIT.vh`, consumed by synthesis. Requires `riscv64-unknown-elf-gcc` (Ubuntu: `sudo apt install gcc-riscv64-unknown-elf`, per the `3.build/MakefileSW` header; `0.doc/1.README.Tool-Installs.txt` does not cover it):
 ```bash
 make -f MakefileSW sw_all        # -> 3.build/sw_build/{main.elf,main.hex,main.bin,main.dump,imem.INIT.vh}
+make -f MakefileSW CROSS=riscv-none-elf- sw_all   # same, with the xPack riscv-none-elf-gcc
 make -f MakefileSW program       # reprogram IMEM over UART on already-configured hardware, no resynthesis
 ```
 
@@ -54,13 +54,12 @@ make -f MakefileSW program       # reprogram IMEM over UART on already-configure
 make -f MakefileHW              # -> hw_build.Vivado/wireguard.runs/impl_1/top.bit
 make -f MakefileHW program
 
-# openXC7 (open-source Yosys + nextpnr-xilinx flow)
+# openXC7 v1.0.0 (Yosys 0.69 read_slang + nextpnr-himbaechel via the nextpnr-xilinx shim)
 cd hw_build.openXC7
-source /opt/openxc7/setup_env.sh
-make convert                    # SystemVerilog -> Verilog via sv2v (converted/all_converted.v)
-make all                        # -> build_artifacts/top.bit
+make check-env check-sources    # NEXTPNR_XILINX_DIR = openXC7 prefix, or its bin on PATH
+make                            # -> build_artifacts.slang/top.bit (~10 min, 3 GB)
 ```
-openXC7 needs `sv2v` on PATH (`make install-sv2v` inside `hw_build.openXC7/`) and the software built first for `imem.INIT.vh`.
+openXC7 needs the software built first for `imem.INIT.vh`. `FRONTEND=sv2v` converts with sv2v instead of `read_slang`; `TOOLCHAIN=old` is the legacy nextpnr-xilinx flow. nextpnr gets only the port lines of `top.xdc` plus `top.openxc7.xdc`, `BUFGMUX` is mapped by `bufgmux_map.v`, and `NEXTPNR_OPTS` (`--tmg-ripup --placer-heap-timingweight 30`) is what closes the Ethernet RX clocks; issues in the `3.build/README.md` openXC7 table.
 
 **Simulation** (`4.sim/`, Verilator-based, VProc co-sim):
 ```bash
@@ -69,19 +68,28 @@ make -f MakefileVProc.mk BUILD=ISS run        # run RISC-V-compiled code on the 
 make -f MakefileVProc.mk gui                  # same, with GTKWave
 make -f MakefileVProc.mk clean
 ```
-`soc_cpu` is auto-selected between RTL (PicoRV32/IBEX/EDUBOS5) and the VProc virtual-processor model depending on which files are in `top.filelist`; see `4.sim/README.md` for the full picture (co-sim HAL usage, ISS timing models, PCAP replay, gdb debugging). A standalone PicoRV32-RTL-only Makefile also exists directly in `4.sim/` for cycle-accurate sim without VProc.
+`soc_cpu` is auto-selected between RTL (eduBOS5/PicoRV32; IBEX exists only as an ISS timing model) and the VProc virtual-processor model depending on which files are in `top.filelist`; see `4.sim/README.md` for the full picture (co-sim HAL usage, ISS timing models, PCAP replay, gdb debugging). A standalone RTL-only `4.sim/Makefile` also exists for cycle-accurate sim without VProc; it reads `1.hw/top.filelist`, so it simulates PicoRV32 by default.
 
-**Lint** (`5.lint/`, Verible against `1.hw/top.filelist`):
+**Lint, format, LEQ** (`3.build/hw_build.openXC7/`, as on openPCIE; sources from `1.hw/top.filelist`; CI: `.github/workflows/lint.yml`, `verible.yml` run the same scripts):
 ```bash
-./lint_run.sh          # results land in 5.lint/results/<file>.txt
+S=3.build/hw_build.openXC7
+bash $S/run-lint.sh                       # tags, verilator, yosys, slang, verible; waivers in run-lint-waivers.txt
+VIEW=sim bash $S/run-lint.sh              # simulation view (SIM_ONLY)
+CPU=picorv32 bash $S/run-lint.sh          # the other CPU (default: the one top.filelist lists)
+bash $S/run-format.sh --check             # Verible format of our own RTL
+bash $S/run-leq.sh <gold 1.hw> <gate 1.hw> # prove a cleanup keeps the logic
 ```
-Enabled/disabled rules and their rationale are in `5.lint/rules.md`.
+Verible rules and their rationale are in `3.build/hw_build.openXC7/rules.md`.
+
+RTL conventions: [`1.hw/README.md#rtl-coding-rules`](1.hw/README.md#rtl-coding-rules). The gate enforces: our own RTL (incl. eduBOS5 and both `soc_cpu` wrappers) is Verible-formatted (2-space indent, LF line endings, at most 100 columns); third-party code (`external_lib`, PicoRV32) and the PeakRDL CSR are checked but not reformatted. An open output is `.PIN (  /*LINT:OK*/),  // why`. A waiver goes in `run-lint-waivers.txt` with its reason, only for a false positive. Each CSR client (uart, cpu_fifo, dpe) drives only its own sub-struct of `csr__in_t`, never the whole struct.
+
+**CPU:** PicoRV32 (default) or eduBOS5 (pure RV32I, Harvard; default again once #61 / openPCIE#40 are fixed), selected by which `soc_cpu.*.sv` lines `1.hw/top.filelist` lists. eduBOS5 halts on any SYSTEM instruction, so the firmware reads the `csr.cycle` CSR counter (`cycles()` in `2.sw/app/timer.c`), never `rdcycle`/`csrr`.
 
 **Crypto core HLS builds** (`3.build/pipelinec_build/`, `3.build/pypeline_build/`) — each has its own build scripts/`build.py` and CLAUDE.md with full sim/synth command reference; don't duplicate that detail here.
 
 ## Key Architectural Details
 
-**CSR as the sole control/data-plane bridge.** Everything crossing between the RISC-V CPU and the DPE — including the Rx/Tx FIFO packet data itself — goes through 32-bit CSR registers (`csr.cpu_fifo.rx.*`/`tx.*`), not DMA. This is deliberate: control traffic (handshakes) is infrequent, so a CSR-mapped FIFO interface (~170 Mbps ceiling per `1.hw/README.md`'s estimate) is acceptable for it, but it must never carry bulk user data — that stays entirely in the DPE's AXI4-Stream pipeline.
+**CSR as the sole control/data-plane bridge.** Everything crossing between the RISC-V CPU and the DPE — including the Rx/Tx FIFO packet data itself — goes through 32-bit CSR registers (`csr.cpu_fifo.rx.*`/`tx.*`), not DMA. This is deliberate: control traffic (handshakes) is infrequent, so a CSR-mapped FIFO interface (~210-240 Mbps ceiling per `2.sw/README.md`'s estimate) is acceptable for it, but it must never carry bulk user data — that stays entirely in the DPE's AXI4-Stream pipeline.
 
 **AXI4-Stream `TUSER` carries internal routing metadata**, not protocol data: `TUSER[7]=bypass_all` (skip the DPE entirely), `TUSER[6]=bypass_stage` (skip next DPE stage), `TUSER[5:3]=src`/`TUSER[2:0]=dst` (0=CPU, 1-4=eth ports, 7=broadcast). `TID[7:0]` carries the peer index from the routing-table lookup. Endianness is mixed by design: `TDATA` is little-endian, but Ethernet/IP/UDP header fields inside it are big-endian (network order) while WireGuard protocol fields are little-endian — get this backwards and header parsing silently corrupts.
 
@@ -93,4 +101,4 @@ Enabled/disabled rules and their rationale are in `5.lint/rules.md`.
 
 ## Licensing
 
-Dual/multi-licensed via REUSE (`REUSE.toml`): BSD-3-Clause is the default project license; `0.doc/`, `99.warmup/`, and generated/vendored output directories (`3.build/*/generated-files/`, `hw_build.*` build artifacts, `pipelinec_build/**`) are annotated separately as aggregated/vendored content. Check `REUSE.toml` before assuming a new file's license.
+REUSE-compliant; BSD-3-Clause is the default project license, and the other texts in `LICENSES/` cover third-party files through their own SPDX headers. `REUSE.toml` has one annotation: files without an SPDX header under `0.doc/`, `99.warmup/`, `3.build/csr_build/generated-files/html/`, `hw_build.openXC7/{build_artifacts,converted}/`, `hw_build.Vivado/`, `sw_build/`, `pipelinec_build/`, `pypeline_build/measurements/`, and `4.sim` waveform/PCAP files (`*.gtkw`, `*.fst`, `*.ron`, `*.pcap`) get BSD-3-Clause, © Chili.CHIPS*ba (`precedence = "aggregate"`, so a file's own header still applies). Other new files need their own SPDX header.

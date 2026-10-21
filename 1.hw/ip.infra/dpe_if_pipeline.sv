@@ -76,6 +76,6 @@ module dpe_if_pipeline #(
                      outp.tuser_src,
                      outp.tuser_dst}),
       .m_axis_tid(outp.tid),
-      .m_axis_tdest()
+      .m_axis_tdest(  /*LINT:OK*/)   // no TDEST: s_axis_tdest is tied to 0
    );
 endmodule

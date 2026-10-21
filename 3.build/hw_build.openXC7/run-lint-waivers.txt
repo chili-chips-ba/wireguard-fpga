@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# Accepted lint findings, read by run-lint.sh.
+#
+# One waiver per line:  <phase> <regex>
+#   <phase>  verilator | yosys | slang | verible
+#   <regex>  extended regex (grep -E), matched against one finding line as it
+#            appears in <phase>.all of a run-lint.sh work directory
+# A finding that matches is waived. Put the reason on a comment line above it.
+#
+# Guideline: resolve a finding at its root; waive only as the last resort.
+# Work down this list and stop at the first step that applies:
+#   1. Dead logic in our RTL: delete it (unused signals, registers, ports),
+#      and prove the change with run-leq.sh.
+#   2. Oversized buses in our RTL: size them to what is used.
+#   3. Unused outputs of primitives and third-party cores, which we cannot
+#      change:
+#        a single pin             .PIN (/*LINT:OK*/)
+#        part of a bus pin        .PIN ({NC_name, used})
+#      NC_ means no-connect: driven by such an output and never read. Do not
+#      give an NC_ name to anything else.
+#   4. Unused inputs: tie them off.
+#   5. Only then a waiver in this file: for findings with no source line of
+#      ours (generated or third-party code) or a proven tool false positive.
+#      Each one names the file and the signals (never a whole file or warning
+#      class), and has its reason on a comment line above.
+#
+# The inline forms are checked: the tags phase flags a /*LINT:OK*/ that is
+# not on an output.
+
+# No-connect signals (step 3): unused by design, so every NC_ name is waived
+verilator ^%Warning-UNUSEDSIGNAL: .*'NC_[A-Za-z0-9_]+'
+
+# IMEM takes the full CPU word address and decodes only its own depth, so it
+# is mirrored across the instruction space (soc_cpu.PICORV32.sv: _decode)
+verilator ^%Warning-UNUSEDSIGNAL: 1\.hw/ip\.cpu/imem\.sv:[0-9]+:[0-9]+: Bits of signal are not used: '(raddr|waddr)'\[31:[0-9]+\]$
+
+# PeakRDL regblock output (generated, rewritten by MakefileCSR), as on openPCIE:
+# - field_combo / field_storage are unpacked structs whose members are each
+#   written by their own always_comb / always_ff. Legal SV (one longest static
+#   prefix per process); Verilator flags the whole variable:
+#   https://github.com/verilator/verilator/issues/4226
+# - unnamed generate blocks, an address decode bit and package constants the
+#   design does not use
+# - error-response logic, only read with --err-if-bad-addr / --err-if-bad-rw,
+#   which MakefileCSR does not use
+verilator ^%Warning-UNUSEDSIGNAL: bld/csr_build/generated-files/csr\.sv:[0-9]+:[0-9]+: Signal is not used: '(decoded_err|is_valid_addr|is_valid_rw)'$
+verilator ^%Warning-MULTIDRIVEN: bld/csr_build/generated-files/csr\.sv:[0-9]+:[0-9]+: Variable written to in always_(comb|ff) also written by other process .*: '(field_combo|field_storage)'$
+verilator ^%Warning-GENUNNAMED: bld/csr_build/generated-files/csr\.sv:[0-9]+:[0-9]+: Unnamed generate block 'genblk[0-9]+'
+verilator ^%Warning-UNUSEDSIGNAL: bld/csr_build/generated-files/csr\.sv:[0-9]+:[0-9]+: Bits of signal are not used: 'decoded_addr'
+verilator ^%Warning-UNUSEDPARAM: bld/csr_build/generated-files/csr_pkg\.sv:[0-9]+:[0-9]+: Parameter is not used: '(CSR_DATA_WIDTH|CSR_SIZE)'$
+
+# verilog-ethernet (third party, external_lib): eth_mac_1g_gmii leaves the PTP
+# timestamp inputs of eth_mac_1g open. PTP is off (PTP_TS_ENABLE = 0), so the
+# logic that reads them is constant-folded away
+yosys ^Warning: Wire top\.\\u_eth_[1-4]\.eth\.eth_mac_1g_gmii_inst\.eth_mac_1g_inst\.(tx|rx)_ptp_ts \[[0-9]+\] is used but has no driver\.$
+
+# verilog-axis (third party, external_lib): axis_async_fifo calls the static
+# function gray2bin from several always blocks. read_slang keeps one copy of
+# its locals (i, g) per instance, so they look multi-driven; synthesis inlines
+# each call (tool false positive)
+yosys ^Warning: multiple conflicting drivers for top\.\\u_eth_[1-4]\.eth\.(tx|rx)_fifo\.fifo_inst\.gray2bin\.(i|g) \[[0-9]+\]:$
+
+# Simulation view (VIEW=sim): the PLL wrappers' SIM_ONLY models are free-running
+# behavioural clocks; the chip view uses clk and rst_n on PLLE2_BASE
+verilator ^%Warning-UNUSEDSIGNAL: 1\.hw/fpgatech_lib/XILINX/fpga_pll_(80M|125M)\.sv:[0-9]+:[0-9]+: Signal is not used: '(clk|rst_n)'$
