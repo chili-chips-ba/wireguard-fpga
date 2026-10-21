@@ -212,7 +212,7 @@ endif
 # PLACE AND ROUTE. The exit status is taken directly, not through tee: make
 # uses /bin/sh (dash), which has no pipefail.
 # =============================================================================
-SEED ?= 1
+SEED ?= 3  # PicoRV32 meets timing at seed 3, eduBOS5 at seed 1 (#48)
 
 # TOOLCHAIN=new: timing-driven ripup and a heavier placer timing weight. The
 # Ethernet RX clocks (verilog-ethernet's axis_async_fifo write-pointer logic)

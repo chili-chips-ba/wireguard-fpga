@@ -122,7 +122,7 @@ make                             # -> build_artifacts.slang/top.bit
 - nextpnr reads only the port constraints of `1.hw/constraints/top.xdc` (#51), plus `top.openxc7.xdc` with the `clk_n` pin (#52). A Yosys techmap, `bufgmux_map.v`, builds each `BUFGMUX` from a `BUFGCTRL` (#50).
 - Place and route uses `--tmg-ripup --placer-heap-timingweight 30` (`NEXTPNR_OPTS`). With nextpnr's defaults the Ethernet RX clocks land at 102-128 MHz, depending on the seed.
 
-**Result (2026-10-21, seed 1, eduBOS5):** about 9.5 minutes, 3 GB RAM; every clock meets its constraint. With PicoRV32, the default CPU, seed 1 misses one Ethernet RX clock (108.7 MHz), see [#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48):
+**Result (2026-10-21):** about 9.5 minutes, 3 GB RAM; every clock meets its constraint with PicoRV32, the default CPU, at `SEED=3` (the Makefile default), and with eduBOS5 at `SEED=1`. The table is the eduBOS5 run. Seed sweep for PicoRV32 ([#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48)): seed 1 misses `u_eth_2` RX (108.7 MHz), seed 2 misses `u_eth_1` RX (121.0 MHz) and `sys_clk` (69.8 MHz), seed 3 passes all (`sys_clk` 83.1 MHz, RX 125.6-131.8 MHz), seed 4 misses `sys_clk` (77.3 MHz).
 
 | Clock | Max frequency | Constraint |
 |---|---|---|

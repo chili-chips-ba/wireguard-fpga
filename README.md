@@ -8,7 +8,7 @@ SPDX-License-Identifier: BSD-3-Clause
 [![Stars](https://badgen.net/github/stars/chili-chips-ba/wireguard-fpga?label=Stars)](https://github.com/chili-chips-ba/wireguard-fpga/stargazers)
 [![License:BSD-3](https://badgen.net/badge/License/BSD-3/blue)](LICENSES)
 [![PipelineC:YES](https://badgen.net/badge/PipelineC/YES/green)](3.build/pipelinec_build)
-[![PythonHLD+SIM:Pypeline](https://badgen.net/badge/PythonHLD%2BSIM/Pypeline/green)](3.build/pypeline_build)
+[![PythonHDL+SIM:Pypeline](https://badgen.net/badge/PythonHDL%2BSIM/Pypeline/green)](3.build/pypeline_build)
 [![PeakRDL:YES](https://badgen.net/badge/PeakRDL/YES/green)](3.build/csr_build)
 [![eduBOS5:WIP](https://badgen.net/badge/eduBOS5/WIP/orange)](https://github.com/chili-chips-ba/openPCIE/blob/main/2.rtl/0.common.opensource/src/CPU.eduBOS5/README.md)
 [![VProc:YES](https://badgen.net/badge/VProc/YES/green)](4.sim/README.md)
@@ -28,7 +28,7 @@ With traditional solutions (such as OpenVPN / IPSec) starting to run out of stea
 
 This project aims to bridge these gaps with an `open-source, FPGA-based` implementation of Wireguard. It puts to work multiple open-source technologies:
 
-   ⭐ **PipelineC** HLS-like
+   ⭐ **PipelineC** HLS-like, with its **Pypeline** Python HDL + Sim
  
    ⭐ **PeakRDL** CSR
  
@@ -326,7 +326,7 @@ This is about managing the bring-up, maintenance and tear-down of VPN tunnels be
   - This is challenging, as openXC7 has thus far been crashing for NES SV
   - Ported to openXC7 v1.0.0 (Yosys 0.69 + nextpnr-himbaechel) on 2026-10-21, now with `read_slang` instead of sv2v ([3.build](3.build/README.md#hw-compilation---openxc7))
 
-- [ ] Timing closure with openXC7 v1.0.0: met with eduBOS5 (2026-10-21); with PicoRV32, the default, one Ethernet RX clock still fails ([#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48))
+- ✅ Timing closure with openXC7 v1.0.0 (2026-10-21): PicoRV32 at seed 3, eduBOS5 at seed 1; margins are thin ([#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48))
   - This is definitely challenging, given that openXC7 is currently without accurate timing-driven STA
 
 - ✅ Filing bug tickets with open source developers for issues found in their tools, supporting them all the way to the resolution
@@ -342,10 +342,6 @@ This is about managing the bring-up, maintenance and tear-down of VPN tunnels be
 The objective of this optional deliverable is to ensure stable and efficient links, thus taking this project one step closer to a deployable product.
 
 - [ ] Develop software components for management of data flow within VPN tunnels
-
-
-## Closing Notes
-TODO
 
 
 ### Acknowledgements
