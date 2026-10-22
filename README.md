@@ -8,7 +8,7 @@ SPDX-License-Identifier: BSD-3-Clause
 [![Stars](https://badgen.net/github/stars/chili-chips-ba/wireguard-fpga?label=Stars)](https://github.com/chili-chips-ba/wireguard-fpga/stargazers)
 [![License:BSD-3](https://badgen.net/badge/License/BSD-3/blue)](LICENSES)
 [![PipelineC:YES](https://badgen.net/badge/PipelineC/YES/green)](3.build/pipelinec_build)
-[![PythonHDL+SIM:Pypeline](https://badgen.net/badge/PythonHDL%2BSIM/Pypeline/green)](3.build/pypeline_build)
+[![PypelineHDL+Sim:YES](https://badgen.net/badge/PypelineHDL%2BSim/YES/green)](3.build/pypeline_build)
 [![PeakRDL:YES](https://badgen.net/badge/PeakRDL/YES/green)](3.build/csr_build)
 [![eduBOS5:WIP](https://badgen.net/badge/eduBOS5/WIP/orange)](https://github.com/chili-chips-ba/openPCIE/blob/main/2.rtl/0.common.opensource/src/CPU.eduBOS5/README.md)
 [![VProc:YES](https://badgen.net/badge/VProc/YES/green)](4.sim/README.md)
