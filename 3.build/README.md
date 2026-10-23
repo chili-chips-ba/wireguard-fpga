@@ -119,10 +119,10 @@ make                             # -> build_artifacts.slang/top.bit
 - The frontend is `read_slang`: Yosys reads the SystemVerilog directly. `make FRONTEND=sv2v` converts it with sv2v first.
 - The sources come from `1.hw/top.filelist`, the list Vivado, `4.sim` and `run-lint.sh` use. The CPU is the one it lists: PicoRV32 by default, eduBOS5 as the alternative.
 - The chipdb (`chipdb.new/xc7a200tfbg484-2.bin`) is generated on the first run. It is per die, so a chipdb built for another `xc7a200t` part can be copied under this name.
-- nextpnr reads only the port constraints of `1.hw/constraints/top.xdc` (#51), plus `top.openxc7.xdc` with the `clk_n` pin (#52). A Yosys techmap, `bufgmux_map.v`, builds each `BUFGMUX` from a `BUFGCTRL` (#50).
+- nextpnr reads only the port constraints of `1.hw/constraints/top.xdc` (#51), plus `top.openxc7.xdc` with the `clk_n` pin (#52). A Yosys techmap, `bufgmux_map.v`, builds each `BUFGMUX` from a `BUFGCTRL` (#50); openXC7 `main` maps `BUFGMUX` itself (nextpnr#132), so the techmap goes with the next release.
 - Place and route uses `--tmg-ripup --placer-heap-timingweight 30` (`NEXTPNR_OPTS`). With nextpnr's defaults the Ethernet RX clocks land at 102-128 MHz, depending on the seed.
 
-**Result (2026-10-21):** about 9.5 minutes, 3 GB RAM; every clock meets its constraint with PicoRV32, the default CPU, at `SEED=3` (the Makefile default), and with eduBOS5 at `SEED=1`. The table is the eduBOS5 run. Seed sweep for PicoRV32 ([#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48)): seed 1 misses `u_eth_2` RX (108.7 MHz), seed 2 misses `u_eth_1` RX (121.0 MHz) and `sys_clk` (69.8 MHz), seed 3 passes all (`sys_clk` 83.1 MHz, RX 125.6-131.8 MHz), seed 4 misses `sys_clk` (77.3 MHz).
+**Result (2026-10-21):** about 9.5 minutes, 3 GB RAM; every clock meets its constraint with PicoRV32, the default CPU, at `SEED=3` (the Makefile default), and with eduBOS5 at `SEED=1`. The table is the eduBOS5 run. Seed sweep for PicoRV32 ([#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48)): seed 1 misses `u_eth_2` RX (108.7 MHz), seed 2 misses `u_eth_1` RX (121.0 MHz) and `sys_clk` (69.8 MHz), seed 3 passes all (`sys_clk` 83.1 MHz, RX 125.6-131.8 MHz), seed 4 misses `sys_clk` (77.3 MHz). **Rechecked 2026-10-23 at `40c8664`:** seed 3 now misses `sys_clk` (74.4 MHz) and `u_eth_3` RX (108.1 MHz); a new seed sweep is pending (#48).
 
 | Clock | Max frequency | Constraint |
 |---|---|---|
@@ -309,7 +309,7 @@ Each issue is filed with us and upstream, each pointing to the other.
 
 | Issue | Toolchain | Status | Ours | Upstream | Workaround |
 |---|---|---|---|---|---|
-| No mapping for `BUFGMUX` | v1.0.0 | open | [#50](https://github.com/chili-chips-ba/wireguard-fpga/issues/50) | [nextpnr#125](https://github.com/openXC7/nextpnr/issues/125) | `hw_build.openXC7/bufgmux_map.v`: a `BUFGCTRL` after synthesis |
+| No mapping for `BUFGMUX` | v1.0.0 | fixed in `main` ([nextpnr#132](https://github.com/openXC7/nextpnr/pull/132)), not released | [#50](https://github.com/chili-chips-ba/wireguard-fpga/issues/50) | [nextpnr#125](https://github.com/openXC7/nextpnr/issues/125) | `hw_build.openXC7/bufgmux_map.v`: a `BUFGCTRL` after synthesis. On v1.0.0 its `IGNORE` bits come out inverted, so the mux switches asynchronously |
 | XDC targets other than `get_ports`/`get_cells` abort | v1.0.0 | open | [#51](https://github.com/chili-chips-ba/wireguard-fpga/issues/51) | [nextpnr#126](https://github.com/openXC7/nextpnr/issues/126) | the Makefile passes nextpnr only the `get_ports` lines of `top.xdc` |
 | Differential input needs its N pin constrained | v1.0.0 | open | [#52](https://github.com/chili-chips-ba/wireguard-fpga/issues/52) | [nextpnr#127](https://github.com/openXC7/nextpnr/issues/127) | `hw_build.openXC7/top.openxc7.xdc`: `clk_n` on T4 |
 | Port to v1.0.0; sv2v fails on `picorv32_pcpi_*.sv` | v1.0.0 | open | [#48](https://github.com/chili-chips-ba/wireguard-fpga/issues/48) | - | `read_slang` frontend; unused PCPI files out of the build |
