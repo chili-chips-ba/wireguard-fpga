@@ -394,27 +394,27 @@ If it was not for **Julian Kemmerer's** unreserved support helping us move our t
 
 **openXC7**, with **Yosys** at its core, turns RTL into a loadable FPGA bitfile. **PeakRDL** turns our SystemRDL file into CSR RTL+headers+RegMap docs. **Verilator**, **slang** and **Verible** keep our RTL clean, and Verilator runs the SoC co-simulation. **cocotb** with **GHDL** verifies the generated crypto cores. **[sv2v](https://github.com/zachjs/sv2v)** converted our SystemVerilog for the first openXC7 port, and is still there as `FRONTEND=sv2v`. But, that's not everything that made this project possible -- Thank you all for these wonderful opensource tools :sparkles:.
 
-<p align="center">
-  <a href="https://github.com/openXC7"><img alt="openXC7 logo" width="80%" src="0.doc/artwork/openXC7.logo.png"></a>
-  <a href="https://www.yosyshq.com"><img alt="YosysHQ logo" width="25%" src="0.doc/artwork/YosysHQ.logo.png"></a>
-  <a href="https://peakrdl.readthedocs.io"><img alt="PeakRDL logo" width="14%" src="0.doc/artwork/PeakRDL.logo.png"></a>
+<p align="center"> 
+  <a href="https://github.com/openXC7"><img alt="openXC7 logo" width="35%" src="0.doc/artwork/openXC7.logo.png"></a>
+  <a href="https://www.symbioticeda.com"><img alt="Symbiotic EDA logo" width="25%" src="0.doc/artwork/symbioticeda.logo.png"></a>
 </p>
 
 <p align="center">
-  <a href="https://www.symbioticeda.com"><img alt="Symbiotic EDA logo" width="25%" src="0.doc/artwork/symbioticeda.logo.png"></a>
+  <a href="https://peakrdl.readthedocs.io"><img alt="PeakRDL logo" width="14%" src="0.doc/artwork/PeakRDL.logo.png"></a>
+  <a href="https://www.yosyshq.com"><img alt="YosysHQ logo" width="25%" src="0.doc/artwork/YosysHQ.logo.png"></a>
 </p>
 
 <p align="center">
   <a href="https://verilator.org"><img alt="Verilator logo" width="25%" src="0.doc/artwork/Verilator.logo.png"></a>
   <a href="https://www.cocotb.org"><img alt="cocotb logo" width="20%" src="0.doc/artwork/cocotb.logo.png"></a>
   <a href="https://github.com/ghdl/ghdl"><img alt="GHDL logo" width="20%" src="0.doc/artwork/GHDL.logo.png"></a>
-  <a href="https://www.drawio.com"><img alt="draw.io logo" width="25%" src="0.doc/artwork/drawio.logo.png"></a>
   <a href="https://github.com/MikePopoloski/slang"><img alt="MikePopoloski slang logo" width="25%" src="0.doc/artwork/slang.logo.png"></a>
   <a href="https://www.chipsalliance.org/projects"><img alt="Chips Alliance SV Tools logo" width="15%" src="0.doc/artwork/ChipsAlliance-SV-Tools.logo.png"></a>
   <a href="https://github.com/chipsalliance/verible"><img alt="Verible logo" width="25%" src="0.doc/artwork/Verible.logo.png"></a>
   <a href="https://github.com/tarik-ibrahimovic/eduBOS5"><img alt="eduBOS5 logo" width="17%" src="0.doc/artwork/eduBOS5.logo.png"></a>
   <a href="https://github.com/YosysHQ/picorv32"><img alt="PicoRV32 logo" width="20%" src="0.doc/artwork/picoRV32.logo.png"></a>
   <a href="https://riscv.org"><img alt="RISC-V logo" width="12%" src="0.doc/artwork/RISC-V.logo.JPG"></a>
+  <a href="https://www.drawio.com"><img alt="draw.io logo" width="25%" src="0.doc/artwork/drawio.logo.png"></a>
 </p>
 
 ### Community Outreach
