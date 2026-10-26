@@ -69,14 +69,16 @@ module edubos5
 
   cpu_pc_t   pc;
   cpu_pc_t inc_pc, next_pc, pc_imm, pc_auipc;
+  logic pc_jump;  // next_pc is not inc_pc: JAL, JALR, a taken branch
 
   // STOREs wait on dmem_rdy only with STORE_WAITS_RDY (store_stall below)
   typedef enum logic [2:0] {
-    FETCH_INSTR = 3'd0,
-    WAIT4REGS   = 3'd1,
-    LOAD_DATA   = 3'd2,
-    WAIT_DATA   = 3'd3,
-    EXECUTE     = 3'd4
+    FETCH_INSTR  = 3'd0,
+    WAIT4REGS    = 3'd1,
+    LOAD_DATA    = 3'd2,
+    WAIT_DATA    = 3'd3,
+    EXECUTE      = 3'd4,
+    FETCH_TARGET = 3'd5   // 3-stage: a jump or taken branch fetches its target
   } state_t;
 
   state_t       state;
@@ -204,9 +206,12 @@ module edubos5
   // 2 RF read ports for reg fetch, address out, data and instr fetch
   //-----------------------------------------------------------------
   //drive instr address
+  // 3-stage: FETCH_INSTR fetches pc + 1, from pc alone. next_pc, from the ALU,
+  // goes only to pc; after a jump FETCH_TARGET fetches from it. So the RAM
+  // address never waits for the ALU (1 more cycle per jump or taken branch).
   always_comb begin : _fetch_regs_instr
     if (state == FETCH_INSTR) begin
-      imem_addr = next_pc[31:2];
+      imem_addr = (EN_WAIT4REGS == 1) ? inc_pc : next_pc[31:2];
     end
     else begin
       imem_addr = pc;
@@ -360,6 +365,8 @@ module edubos5
     pc_auipc = pc + imm_uload_reg[31:2];
     pc_imm   = pc + (instr[3] ? imm_jump[31:2] : imm_brnch[31:2]);
 
+    pc_jump  = |{instr_decode_reg.JAL, instr_decode_reg.BRNCH & take_brnch, instr_decode_reg.JALR};
+
     unique if (instr_decode_reg.JAL | (instr_decode_reg.BRNCH & take_brnch)) begin
       next_pc = pc_imm_reg;
     end
@@ -413,13 +420,17 @@ module edubos5
           // imem_rdy used just for reading to dmem_rdat from imem_rdat
           pc <= next_pc;
           if (EN_WAIT4REGS == 1) begin
-            state    <= WAIT4REGS;
+            state    <= pc_jump ? FETCH_TARGET : WAIT4REGS;
             imem_vld <= 1'b0;
           end
           else begin
             state    <= EXECUTE;
             imem_vld <= 1'b1;
           end
+        end
+
+        FETCH_TARGET: begin  // 3-stage: the RAM reads the jump target, now in pc
+          state <= WAIT4REGS;
         end
 
         WAIT4REGS: begin  // MCP=2 for the fetched data
@@ -513,22 +524,24 @@ module edubos5
   end : _alu_inputs
 
   edubos5_alu #(
-      .GOWIN_FAST_OP(GOWIN_FAST_OP)  //0 for LUT sub/add, 1 for DSP sub/add
+      .GOWIN_FAST_OP(GOWIN_FAST_OP),     //0 for LUT sub/add, 1 for DSP sub/add
+      .SHIFT_PRE_REG(EN_WAIT4REGS == 1)  //3-stage: shift before the register
   ) u_alu (
-      .clk       (clk),                      //i
-      .reset     (1'b0),                     //i
-      .ce        (go2exec),                  //i
-      .aluin_1   (aluin_1),                  //i
-      .aluin_2   (aluin_2),                  //i
-      .shamt     (shamt),                    //i
-      .aluimm_dec(instr_decode_reg.ALUIMM),  //i
-      .jalr_dec  (instr_decode_reg.JALR),    //i
-      .funct7_5  (funct7_alu),               //i
-      .funct3    (instr.grp.reg2reg.func3),  //i
-      .alu_out   (alu_out),                  //o
-      .eq        (eq),                       //o
-      .ltu       (ltu),                      //o
-      .lt        (lt)                        //o
+      .clk           (clk),                         //i
+      .reset         (1'b0),                        //i
+      .ce            (go2exec),                     //i
+      .aluin_1       (aluin_1),                     //i
+      .aluin_2       (aluin_2),                     //i
+      .shamt         (shamt),                       //i
+      .aluimm_dec    (instr_decode_reg.ALUIMM),     //i
+      .jalr_dec      (instr_decode_reg.JALR),       //i
+      .funct7_5      (funct7_alu),                  //i
+      .funct7_5_instr(instr.grp.reg2reg.func7[5]),  //i
+      .funct3        (instr.grp.reg2reg.func3),     //i
+      .alu_out       (alu_out),                     //o
+      .eq            (eq),                          //o
+      .ltu           (ltu),                         //o
+      .lt            (lt)                           //o
   );
 
   //---------------------------------------------------------------------
@@ -566,14 +579,15 @@ module edubos5
   // nothing from them at the 1st edge either)
   `define EDUBOS5_MCP_CAPTURE {instr_decode_reg, funct3_brnch, funct7_alu, funct3_imm, \
       pc_imm_reg, imm_uload_reg, rs1_reg, rs2_reg, ls_offset_reg, pc, \
-      u_alu.shifter_in_reg, u_alu.shamt_reg, u_alu.aluin_1_31_reg, u_alu.aluin_2_31_reg, \
+      u_alu.shifter, u_alu.aluin_1_31_reg, u_alu.aluin_2_31_reg, \
       u_alu.alu_and_reg, u_alu.alu_xor_reg, u_alu.alu_or_reg, u_alu.funct3_alu_reg, \
       u_alu.alu_plus_reg, u_alu.alu_minus_reg}
 
 `ifdef EDUBOS5_MCP_CHECK
   // Proof of edubos5.3STG-ONLY.mcp.xdc (simulation; 5.sim, CORE=edubos5_3stg):
-  // the instruction port and the register file reads change only into
-  // WAIT4REGS, and their paths get 2 cycles.
+  // the instruction port and the register file reads change only on a fetch
+  // (FETCH_INSTR, FETCH_TARGET), hold 2 clocks from the last one, and their
+  // paths get 2 cycles.
   logic mcp_started;  // checked from the first FETCH_INSTR on
   always_ff @(negedge arst_n or posedge clk) begin
     if (arst_n == LO) begin
@@ -584,19 +598,21 @@ module edubos5
     end
   end
 
-  // A source changes only on the launch edge, the one that ends FETCH_INSTR,
-  // and holds until the capture 2 clocks later
+  // A source changes only on a fetch edge, the one that ends FETCH_INSTR or
+  // FETCH_TARGET. The launch edge is the last of them (not into FETCH_TARGET),
+  // and the source holds until the capture 2 clocks later
   // verilog_format: off
   a_mcp_launch_only_at_fetch :
   assert property (@(posedge clk) disable iff (!arst_n || !mcp_started)
-      $changed({imem_rdat, rs1, rs2}) |-> $past(state) == FETCH_INSTR)
+      $changed({imem_rdat, rs1, rs2}) |-> $past(state) inside {FETCH_INSTR, FETCH_TARGET})
   else begin
     $error("EDUBOS5_MCP_CHECK: source changed outside the launch edge, pc %h", {pc, 2'b00});
   end
 
   a_mcp_held_2_clocks :
   assert property (@(posedge clk) disable iff (!arst_n || !mcp_started)
-      state == FETCH_INSTR |-> ##2 $stable({imem_rdat, rs1, rs2}))
+      $past(state) inside {FETCH_INSTR, FETCH_TARGET} && state != FETCH_TARGET
+      |=> $stable({imem_rdat, rs1, rs2}))
   else begin
     $error("EDUBOS5_MCP_CHECK: source not held 2 clocks after launch, pc %h", {pc, 2'b00});
   end
@@ -604,7 +620,8 @@ module edubos5
   // Nothing the sources feed loads at the 1st edge after launch
   a_mcp_capture_at_2nd_edge :
   assert property (@(posedge clk) disable iff (!arst_n || !mcp_started)
-      state == FETCH_INSTR |-> ##2 $stable(`EDUBOS5_MCP_CAPTURE))
+      $past(state) inside {FETCH_INSTR, FETCH_TARGET} && state != FETCH_TARGET
+      |=> $stable(`EDUBOS5_MCP_CAPTURE))
   else begin
     $error("EDUBOS5_MCP_CHECK: a register loaded at the 1st edge after launch, pc %h", {pc, 2'b00});
   end
@@ -628,7 +645,8 @@ module edubos5
 
   always_ff @(posedge clk) begin
     if ($past(fv_on)) begin
-      assert ({imem_rdat, rs1, rs2} == $past({imem_rdat, rs1, rs2}) || $past(state) == FETCH_INSTR);
+      assert ({imem_rdat, rs1, rs2} == $past({imem_rdat, rs1, rs2}) ||
+              $past(state) == FETCH_INSTR || $past(state) == FETCH_TARGET);
     end
     // the load enable: 2-stage always; 3-stage only in EXECUTE, and always
     // on entering it from WAIT4REGS
@@ -639,7 +657,16 @@ module edubos5
     if ($past(fv_on) && $past(state) == WAIT4REGS && state == EXECUTE) begin
       assert (go2exec);
     end
-    if ($past(fv_on, 2) && $past(state, 2) == FETCH_INSTR) begin
+    // 2 clocks after the launch edge, the last fetch edge
+    if ($past(
+            fv_on, 2
+        ) && ($past(
+            state, 2
+        ) == FETCH_INSTR || $past(
+            state, 2
+        ) == FETCH_TARGET) && $past(
+            state
+        ) != FETCH_TARGET) begin
       assert ({imem_rdat, rs1, rs2} == $past({imem_rdat, rs1, rs2}));
       assert (`EDUBOS5_MCP_CAPTURE == $past(`EDUBOS5_MCP_CAPTURE));
     end

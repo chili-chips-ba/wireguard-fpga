@@ -10,7 +10,10 @@
 module edubos5_alu
   import edubos5_pkg::*;
 #(
-    parameter bit GOWIN_FAST_OP = 1'b1
+    parameter bit GOWIN_FAST_OP = 1'b1,
+    // 1: the shift is computed before its register, like add/sub (3-stage
+    // pipeline: its inputs have 2 cycles). 0: after it, from registered inputs
+    parameter bit SHIFT_PRE_REG = 1'b0
 ) (
     input logic clk,
     input logic reset,  // DSP reset, GOWIN_FAST_OP only
@@ -22,8 +25,9 @@ module edubos5_alu
     input logic [4:0] shamt,
 
     input logic        aluimm_dec,
-    input logic        jalr_dec,    //uses alu_plus res
+    input logic        jalr_dec,        //uses alu_plus res
     input logic        funct7_5,
+    input logic        funct7_5_instr,  // funct7_5 before its register, SHIFT_PRE_REG only
     input funct3_alu_t funct3,
 
     output cpu_data_t alu_out,
@@ -47,9 +51,6 @@ module edubos5_alu
   //------------------------------------------------------
   // flopping alu outputs, barrel roll inputs, and functs
   //------------------------------------------------------
-  logic [31:0] shifter_in_reg;
-  logic [ 4:0] shamt_reg;
-
   logic [31:0] alu_and_reg, alu_xor_reg, alu_or_reg;
   logic aluin_1_31_reg, aluin_2_31_reg;
 
@@ -57,8 +58,6 @@ module edubos5_alu
 
   always_ff @(posedge clk) begin : _alu_pipe
     if (ce) begin
-      shifter_in_reg <= shifter_in;
-      shamt_reg      <= shamt;
       aluin_1_31_reg <= aluin_1[31];
       aluin_2_31_reg <= aluin_2[31];
 
@@ -117,15 +116,47 @@ module edubos5_alu
   end : g_lut
 
   //---------------------------------------------------------------
-  // Extracting comparisons outputs from calculations + barrel roll
+  // Barrel roll: SLL flips its input and its output, so one right shifter
+  // serves all three shifts
+  //---------------------------------------------------------------
+  assign shifter_in = (funct3 == SLL) ? flip32(aluin_1) : aluin_1;
+
+  if (SHIFT_PRE_REG) begin : g_shift_pre
+    // registered result: the shift is no longer on the write-back path
+    logic NC_funct7_5;  // the registered copy: not used here
+    assign NC_funct7_5 = funct7_5;
+
+    always_ff @(posedge clk) begin : _alu_shift
+      if (ce) begin
+        shifter <= cpu_data_t'($signed({funct7_5_instr & aluin_1[31], shifter_in}) >>> shamt);
+      end
+    end : _alu_shift
+  end : g_shift_pre
+  else begin : g_shift_post
+    logic [31:0] shifter_in_reg;
+    logic [ 4:0] shamt_reg;
+    logic        NC_funct7_5_instr;  // the shift reads the registered copy
+    assign NC_funct7_5_instr = funct7_5_instr;
+
+    always_ff @(posedge clk) begin : _alu_shift_in
+      if (ce) begin
+        shifter_in_reg <= shifter_in;
+        shamt_reg      <= shamt;
+      end
+    end : _alu_shift_in
+
+    assign shifter = cpu_data_t'($signed(
+        {funct7_5 & aluin_1_31_reg, shifter_in_reg}
+    ) >>> shamt_reg);
+  end : g_shift_post
+
+  //---------------------------------------------------------------
+  // Extracting comparisons outputs from calculations
   //---------------------------------------------------------------
   always_comb begin : _alu_outputs
-    shifter_in = (funct3 == SLL) ? flip32(aluin_1) : aluin_1;
-    shifter    = cpu_data_t'($signed({funct7_5 & aluin_1_31_reg, shifter_in_reg}) >>> shamt_reg);
-
-    eq         = (alu_minus_reg[31:0] == '0);
-    ltu        = alu_minus_reg[32];
-    lt         = (aluin_1_31_reg ^ aluin_2_31_reg) ? aluin_1_31_reg : alu_minus_reg[32];
+    eq  = (alu_minus_reg[31:0] == '0);
+    ltu = alu_minus_reg[32];
+    lt  = (aluin_1_31_reg ^ aluin_2_31_reg) ? aluin_1_31_reg : alu_minus_reg[32];
   end : _alu_outputs
 
   //---------------
