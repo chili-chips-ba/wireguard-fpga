@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 CHILI.CHIPS.LLC
+// SPDX-FileCopyrightText: 2022 Chili.CHIPS
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
@@ -487,7 +487,7 @@ module edubos5
     if (EN_WAIT4REGS == 1) begin : g_ce_3stg
       // A flop, high in the 1st EXECUTE cycle: the pipeline registers load at
       // the edge that ends it, the 2nd after the instruction arrives
-      // (edubos5.3STG-ONLY.mcp.xdc relies on it). EXECUTE is entered from
+      // (edubos5.3STG-ONLY.mcp.tcl relies on it). EXECUTE is entered from
       // WAIT4REGS or reset. A SYSTEM instruction stays in EXECUTE (a halt)
       // with go2exec low: its sources are frozen, so nothing needs to reload.
       always_ff @(negedge arst_n or posedge clk) begin
@@ -584,7 +584,7 @@ module edubos5
       u_alu.alu_plus_reg, u_alu.alu_minus_reg}
 
 `ifdef EDUBOS5_MCP_CHECK
-  // Proof of edubos5.3STG-ONLY.mcp.xdc (simulation; 5.sim, CORE=edubos5_3stg):
+  // Proof of edubos5.3STG-ONLY.mcp.tcl (simulation; 5.sim, CORE=edubos5_3stg):
   // the instruction port and the register file reads change only on a fetch
   // (FETCH_INSTR, FETCH_TARGET), hold 2 clocks from the last one, and their
   // paths get 2 cycles.

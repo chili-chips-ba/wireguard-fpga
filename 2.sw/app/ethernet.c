@@ -49,34 +49,34 @@
  *
  * Returns:     Length of the sent packet
  **********************************************************************/
-uint32_t eth_send_packet (csr_vp_t* csr, eth_raw_packet_t* packet) {
+uint32_t eth_send_packet (eth_raw_packet_t* packet) {
    uint32_t i;
    uint32_t empty;
-   if (csr->cpu_fifo->rx->status->tready()) {
+   if (CSR_GET(cpu_fifo.rx.status, CSR__CPU_FIFO__RX__STATUS__TREADY)) {
       i = 0;
 
-      csr->cpu_fifo->rx->control->tuser_dst(packet->dst);
-      csr->cpu_fifo->rx->control->tuser_src(packet->src);
-      csr->cpu_fifo->rx->control->tuser_bypass_stage(packet->bypass_stage);
-      csr->cpu_fifo->rx->control->tuser_bypass_all(packet->bypass_all);
+      CSR_RMW(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TUSER_DST, packet->dst);
+      CSR_RMW(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TUSER_SRC, packet->src);
+      CSR_RMW(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TUSER_BYPASS_STAGE, packet->bypass_stage);
+      CSR_RMW(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TUSER_BYPASS_ALL, packet->bypass_all);
 
       while (1) {
-         csr->cpu_fifo->rx->data_31_0->tdata(*((uint32_t*)(packet->payload + i)));
-         csr->cpu_fifo->rx->data_63_32->tdata(*((uint32_t*)(packet->payload + i + 4)));
-         csr->cpu_fifo->rx->data_95_64->tdata(*((uint32_t*)(packet->payload + i + 8)));
-         csr->cpu_fifo->rx->data_127_96->tdata(*((uint32_t*)(packet->payload + i + 12)));
+         CSR_REG32(cpu_fifo.rx.data_31_0) = *((uint32_t*)(packet->payload + i));
+         CSR_REG32(cpu_fifo.rx.data_63_32) = *((uint32_t*)(packet->payload + i + 4));
+         CSR_REG32(cpu_fifo.rx.data_95_64) = *((uint32_t*)(packet->payload + i + 8));
+         CSR_REG32(cpu_fifo.rx.data_127_96) = *((uint32_t*)(packet->payload + i + 12));
 
          i += 16;
 
          if (i < packet->len) {
-            csr->cpu_fifo->rx->control->tkeep(0xFFFF);
-            csr->cpu_fifo->rx->control->tlast(0);
-            csr->cpu_fifo->rx->trigger->tvalid(1);
+            CSR_SET(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TKEEP, 0xFFFF);
+            CSR_SET(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TLAST, 0);
+            CSR_SET(cpu_fifo.rx.trigger, CSR__CPU_FIFO__RX__TRIGGER__TVALID, 1);
          } else {
             empty = i - packet->len;
-            csr->cpu_fifo->rx->control->tkeep(0xFFFF >> empty);
-            csr->cpu_fifo->rx->control->tlast(1);
-            csr->cpu_fifo->rx->trigger->tvalid(1);
+            CSR_SET(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TKEEP, 0xFFFF >> empty);
+            CSR_SET(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TLAST, 1);
+            CSR_SET(cpu_fifo.rx.trigger, CSR__CPU_FIFO__RX__TRIGGER__TVALID, 1);
             return packet->len;
          }
       }
@@ -92,34 +92,34 @@ uint32_t eth_send_packet (csr_vp_t* csr, eth_raw_packet_t* packet) {
  *
  * Returns:     Length of the received packet
  **********************************************************************/
-uint32_t eth_receive_packet (csr_vp_t* csr, eth_raw_packet_t* packet) {
+uint32_t eth_receive_packet (eth_raw_packet_t* packet) {
    uint32_t len = 0;
    uint16_t keep;
    packet->dst = 0;
    packet->bypass_stage = 0;
    packet->bypass_all = 0;
-   if (csr->cpu_fifo->tx->status->tvalid()) {
-      packet->src = csr->cpu_fifo->tx->control->tuser_src();
+   if (CSR_GET(cpu_fifo.tx.status, CSR__CPU_FIFO__TX__STATUS__TVALID)) {
+      packet->src = CSR_GET(cpu_fifo.tx.control, CSR__CPU_FIFO__TX__CONTROL__TUSER_SRC);
       while (1) {
          if (len <= ETH_MAX_FRAME_LENGTH - 16) {
-            *((uint32_t*)(packet->payload + len)) = csr->cpu_fifo->tx->data_31_0->tdata();
-            *((uint32_t*)(packet->payload + len + 4)) = csr->cpu_fifo->tx->data_63_32->tdata();
-            *((uint32_t*)(packet->payload + len + 8)) = csr->cpu_fifo->tx->data_95_64->tdata();
-            *((uint32_t*)(packet->payload + len + 12)) = csr->cpu_fifo->tx->data_127_96->tdata();
+            *((uint32_t*)(packet->payload + len)) = CSR_REG32(cpu_fifo.tx.data_31_0);
+            *((uint32_t*)(packet->payload + len + 4)) = CSR_REG32(cpu_fifo.tx.data_63_32);
+            *((uint32_t*)(packet->payload + len + 8)) = CSR_REG32(cpu_fifo.tx.data_95_64);
+            *((uint32_t*)(packet->payload + len + 12)) = CSR_REG32(cpu_fifo.tx.data_127_96);
          }
 
-         if (csr->cpu_fifo->tx->control->tlast()) {
-            keep = csr->cpu_fifo->tx->control->tkeep();
+         if (CSR_GET(cpu_fifo.tx.control, CSR__CPU_FIFO__TX__CONTROL__TLAST)) {
+            keep = CSR_GET(cpu_fifo.tx.control, CSR__CPU_FIFO__TX__CONTROL__TKEEP);
             while (keep & 1) {
                 len++;
                 keep >>= 1;
             }
             packet->len = (len < ETH_MAX_FRAME_LENGTH) ? len : ETH_MAX_FRAME_LENGTH;
-            csr->cpu_fifo->tx->trigger->tready(1);
+            CSR_SET(cpu_fifo.tx.trigger, CSR__CPU_FIFO__TX__TRIGGER__TREADY, 1);
             return packet->len;
          } else {
             len += 16;
-            csr->cpu_fifo->tx->trigger->tready(1);
+            CSR_SET(cpu_fifo.tx.trigger, CSR__CPU_FIFO__TX__TRIGGER__TREADY, 1);
          }
       }
    } else {

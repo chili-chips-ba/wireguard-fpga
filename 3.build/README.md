@@ -13,57 +13,24 @@ The build process for the WireGuard project consists of three steps:
 
 ## CSR HAL Compilation
 
-The WireGuard CSR HAL is auto-generated, as is the CSR RTL, using `peakrdl`. For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using `systemrdl-compiler` that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The platform targetted header uses the `peakrdl c-header` output directly and unmodified. The `peakrdl` output is produced using the following command:
+The CSR RTL and the firmware's register header come from one SystemRDL file, `csr_build/csr.rdl`, through `peakrdl`. `make -f MakefileCSR` writes, to `3.build/csr_build/generated-files`:
 
-```
-    peakrdl c-header csr_cosim.rdl -b ltoh -o csr.h
-```
+  * `csr.sv`        : the CSR RTL
+  * `csr_pkg.sv`    : its structured RTL interface
+  * `csr.h`         : the register layout, `peakrdl c-header` output
+  * `csr_top.h`     : `CSR_TOP_T`, the address map's struct in `csr.h`
+  * `html/`, `wireguard.md` : the register map
 
-The `csr_cosim.rdl` is a filtered version of `3.build/csr_build/csr.rdl` that removes buffer write commands that are not understood by `systemrdl-compiler` and are not used for `c-header` generation. Other than that, the RDL is identical.
+The firmware includes [`csr_regs.h`](csr_build/csr_regs.h), next to `csr.rdl` and the same file in openPCIE and openCologne-PCIE. It takes every address, the CSR base included, from `csr.h` and has four accessors:
 
-The wrapper HAL headers are generated with a Python script `sysrdl_cosim.py` which has some command line options:
+| Macro | Does | Example |
+|---|---|---|
+| `CSR_REG32(member)` | the whole register, one 32-bit access | `CSR_REG32(cpu_fifo.rx.data_31_0) = d;` |
+| `CSR_GET(member, FLD)` | one field, out of a 32-bit read | `CSR_GET(dpe.fcr, CSR__DPE__FCR__IDLE)` |
+| `CSR_SET(member, FLD, v)` | one field that owns its bytes: a byte, half-word or word store | `CSR_SET(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TKEEP, 0xFFFF);` |
+| `CSR_RMW(member, FLD, v)` | one field that shares a byte: read, then store only its bytes | `CSR_RMW(gpio, CSR__GPIO__LED1, 1);` |
 
-```
-usage: sysrdl_cosim.py [-h] [-r RDLFILE] [-o OUTFILE] [-c] [-v VPNODE] [-d DELAY] [-C CLKPERIOD]
-
-Process command line options.
-
-options:
-  -h, --help            show this help message and exit
-  -r RDLFILE, --rdl_file RDLFILE
-                        Specify the RDL file for processing
-  -o OUTFILE, --output_file OUTFILE
-                        Specify an ouput header file
-  -c, --cosim           Generate cosim header
-  -v VPNODE, --vp_node VPNODE
-                        Specify VProc node number for soc_cpu (cosim only)
-  -d DELAY, --delay_range DELAY
-                        Specify maximum delay between transactions (cosim only)
-  -C CLKPERIOD, --clk_period CLKPERIOD
-                        Specify the VProc soc_cpu clock period in ps (cosim only)
-```
-
-The main options used are to specify the RDL file (`-r` or `--rdl_file`) and to specify the output file (`-o` or `--output_file`). To select generation of the co-simulation header the `-c` or `--cosim` option is used, otherwise the hardware header is generated. By default the co-simulation header assumes it is running on a *VProc* node numbered 0, matching the current WireGuard test bench. However, this can be changed by using the `-v` or `--vp_node` option, should the need arise. Code running on a *VProc* virtual processor runs infinitely fast with respect to simulation time when not doing a read or write transaction to the logic. In order to emulate processing time, after each read or write access, a random delay is inserted to advance the simulation a number of ticks. The maximum number of ticks can be specified using the `-d` or `--delay_range` option meaning the delay can range from 0 to `DELAY` clock cycles. The default for this is 32 clock cycles. The `-v` and `-d` options have no affect if the `-c` option is not used. Finally the *VProc* test bench `soc_cpu` module's clock period in picoseconds can be specified for use in co-simulation abstraction of delay and timing functions. It defaults to 18518 (54 MHz), not the 12500 of the 80 MHz system clock (`4.sim/tb.sv`, `HALF_PERIOD_OTHER_BFMS_PS` = 6250); see [#64](https://github.com/chili-chips-ba/wireguard-fpga/issues/64).
-
-To generate all the required HAL headers and RTL a make file is provided as `3.build/MakefileCSR` to wrap app the script calls. Running this make file (`make -f MakefileCSR`) produces the following files in `3.build/csr_build/generated-files`:
-
-  * `csr_cosim.rdl` : The intermediate filtered RDL specification
-  * `csr.sv`        : The RTL for hardware target
-  * `csr_pkg.sv`    : The structured RTL interface for hardware target
-  * `csr.h`         : The `peakrdl c-header` output file used by the target header
-  * `csr_hw.h`      : The HAL for the RISC-V hardware target (and for the *rv32* ISS), which uses `csr.h`
-  * `csr_cosim.h`   : The HAL for the *VProc* based WireGuard logic simulation test bench
-
-The `csr_hw.h` and `csr_cosim.h` files present the same API to the application and can be appropriately selected at compile time using something like the following:
-
-```
-#ifdef VPROC
-#include "csr_cosim.h"
-#else
-#include "csr_hw.h"
-#endif
-```
-This has been done in the `wireguard_regs.h` header in the `3.build/csr_build/generated-files/` directory, and including this header in the application code makes available the register HAL.
+`FLD` is the field prefix `csr.h` defines (`_bm`, `_bp`, `_bw`). On the RISC-V core these are plain loads and stores (`lw`, `sb`, `sh`, `sw`). In co-simulation the same firmware is compiled for the host, and each access becomes one *VProc* bus cycle with the same address and byte enables ([4.sim](../4.sim/README.md#co-simulation-hal)). One header, one source, for both.
 
 ## SW Compilation
 

@@ -125,6 +125,7 @@ public:
     static uint64_t GetEnvU64(const char* key, uint64_t defval);
 
     // Replays packets from a PCAP file over the provided udpIpPg instance.
+    // Returns when the last frame is sent.
     static void ReplayPcap(udpIpPg &pUdp,
                            const char* path,
                            bool rewrite,
@@ -499,8 +500,6 @@ inline void Manager::ReplayPcap(udpIpPg &pUdp,
         pUdp.UdpVpSendRawEthFrame(frame.data(), len);
         waited_ticks += (uint64_t)len + 1;
     }
-    while (true)
-        pUdp.UdpVpSendIdle(1);
 }
 
 inline void Manager::RegisterRecorder(udpIpPg &pUdp, RxRecorderCtx* ctx) {

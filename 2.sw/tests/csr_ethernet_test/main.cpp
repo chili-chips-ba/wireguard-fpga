@@ -43,30 +43,28 @@
  */
 
 #include <stdint.h>
-#include "wireguard_libs.h"
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 #include "ethernet.h"
 
 eth_raw_packet_t packet;
 
 int main(void)
 {
-   csr_vp_t* csr = CSR_VP();
 
    while (1) {
-      if (eth_receive_packet(csr, &packet)) {
-         csr->gpio->led2(1);
+      if (eth_receive_packet(&packet)) {
+         CSR_RMW(gpio, CSR__GPIO__LED2, 1);
          if (packet.src == 1) {
             packet.dst = 2;
             packet.bypass_all = 1;
-            eth_send_packet(csr, &packet);
+            eth_send_packet(&packet);
          } else if (packet.src == 2) {
             packet.dst = 1;
             packet.bypass_all = 1;
-            eth_send_packet(csr, &packet);
+            eth_send_packet(&packet);
          }
       } else {
-         csr->gpio->led2(0);
+         CSR_RMW(gpio, CSR__GPIO__LED2, 0);
       }
    }
 

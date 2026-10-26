@@ -66,7 +66,7 @@ MEM_C          = mem.c mem_model.c
 
 # VProc user code lives in models/rv32/usercode: the sim-control node (VSC,
 # node 15) always, the rv32 ISS for node 0 with BUILD=ISS. With BUILD=DEFAULT,
-# node 0 runs the native test code, usercode/VUserMain0.cpp, from libuser.
+# node 0 runs the 2.sw firmware itself, compiled for the host (libuser).
 VPROC_USRCDIR  = $(CURDIR)/models/rv32/usercode
 VPROC_USER_C   = VUserMainVSC.cpp
 ISS_USER_C     = VUserMain0.cpp mem_vproc_api.cpp uart.cpp rv32_cache.cpp vuserutils.cpp
@@ -102,8 +102,14 @@ ifeq ("$(BUILD)", "ISS")
   RV32OBJS       = $(addprefix $(RV32OBJDIR)/, $(RV32_CPP:=.o))
   RV32DEFS       = -DRV32_BUS_CREDIT=$(ISS_BUS_CREDIT)
 else
-  # native test code for node 0, in libuser
+  # node 0: the 2.sw firmware, compiled for the host as C++ with main()
+  # renamed fw_main() for usercode/VUserMain0.cpp to call. Under VPROC its
+  # register accesses (csr_regs.h) are VProc bus cycles. The same
+  # sources and defines as 3.build/MakefileSW.
   USER_C        := VUserMain0.cpp $(USER_C)
+  FW_C           = uart ethernet network string_bare chacha20 poly1305 chacha20poly1305 \
+                   curve25519 tweetnacl_x25519 blake2s hkdf random timer
+  FW_CPP         = main
 endif
 
 # --------------------------------------------
@@ -133,7 +139,15 @@ USER_C_BASE      = $(notdir $(filter %c,   $(USER_C) $(UDP_C)))
 # Create list of object files (excluding any veriuser object)
 VOBJS            = $(addprefix $(USROBJDIR)/,                 \
                     $(USER_C_BASE:%.c=%.o)                    \
-                    $(USER_CPP_BASE:%.cpp=%.o))
+                    $(USER_CPP_BASE:%.cpp=%.o)                \
+                    $(addprefix fw_,$(FW_C:=.o) $(FW_CPP:=.o)))
+
+# The firmware (BUILD=DEFAULT): its own directory first, as the ISS code
+# has a uart.h too
+FW_SRC_DIR       = $(CURDIR)/../2.sw/app
+FW_HOST_FLAGS    = -x c++ -Dmain=fw_main -Wno-volatile -DTCM=1 -DHARVARD=1 -DUART_TEST \
+                   -I$(FW_SRC_DIR) -I$(BLD_DIR)/csr_build -I$(BLD_DIR)/csr_build/generated-files
+FW_HOST_DEPS     = $(wildcard $(FW_SRC_DIR)/*.h) $(BLD_DIR)/csr_build/csr_regs.h
 
 USERLIB          = libuser.a
 
@@ -149,6 +163,13 @@ $(USROBJDIR)/%.o: $(USRCODEDIR)/%.c | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 $(USROBJDIR)/%.o: $(USRCODEDIR)/%.cpp | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
+# Rules to build the firmware for the host (BUILD=DEFAULT)
+$(USROBJDIR)/fw_%.o: $(FW_SRC_DIR)/%.c $(FW_HOST_DEPS) | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
+	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) $(FW_HOST_FLAGS) $(DEFS) $(INCLPATHS) $< -o $@
+
+$(USROBJDIR)/fw_%.o: $(FW_SRC_DIR)/%.cpp $(FW_HOST_DEPS) | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
+	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) $(FW_HOST_FLAGS) $(DEFS) $(INCLPATHS) $< -o $@
+
 # Rule to build UDP user C sources
 $(USROBJDIR)/%.o: $(UDPCODEDIR)/%.c | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 	@$(CC) -c -fPIC $(OPTFLAG) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
@@ -158,10 +179,11 @@ $(USROBJDIR)/%.o: $(UDPCODEDIR)/%.cpp | $(USROBJDIR) $(VPROCDIR) $(MEMMODELDIR)
 	@$(C++) -c -fPIC $(OPTFLAG) $(CPPSTD) -Wno-write-strings $(DEFS) $(INCLPATHS) $< -o $@
 
 # The node 0 code differs per BUILD (native test code in libuser, or the ISS
-# in libvproc): a change of BUILD, of the model versions or of ISS_BUS_CREDIT
-# throws the objects and both libraries away, so the next build cannot mix
-# them. obj/.build holds the configuration of the last build.
-BUILD_CFG        = $(CPU) $(BUILD) $(VPROCVERSION) $(MEMVERSION) $(ISS_BUS_CREDIT)
+# in libvproc): a change of BUILD, of the model versions, of ISS_BUS_CREDIT
+# or of the user code lists (USER_C, UDP_C) throws the objects and both
+# libraries away, so the next build cannot mix them. obj/.build holds the
+# configuration of the last build.
+BUILD_CFG        = $(CPU) $(BUILD) $(VPROCVERSION) $(MEMVERSION) $(ISS_BUS_CREDIT) $(USER_C) $(UDP_C)
 BUILD_STAMP      = $(VOBJDIR)/.build
 $(BUILD_STAMP): FORCE
 	@mkdir -p $(VOBJDIR)
@@ -173,9 +195,10 @@ $(BUILD_STAMP): FORCE
 FORCE:
 
 # Rule to build library of user code
-# Note: delete existing archive first to avoid stale objects (e.g. switching UDP_C)
+# Note: delete existing archive first to avoid stale objects (e.g. switching UDP_C),
+# and the simulator: Verilator's make does not see a new library, so it relinks
 $(USERLIB): $(BUILD_STAMP) $(VOBJS)
-	@rm -f $(USERLIB)
+	@rm -f $(USERLIB) $(SIMEXE)
 	@ar crs $(USERLIB) $(VOBJS)
 
 # Rules to build the rv32 ISS library (BUILD=ISS)

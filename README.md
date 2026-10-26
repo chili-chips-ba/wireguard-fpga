@@ -225,29 +225,17 @@ More details on the architecture and usage of the Wireguard test bench can be fo
 
 ## Co-simulation HAL
 
-The Wireguard control and status register harware abstraction layer (HAL) software is [auto-generated](3.build/README.md#csr-hal-compilation), as is the CSR RTL, using [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). For co-simulation purposes an additional layer is auto-generated from the same SystemRDL specification using [`systemrdl-compiler`](https://systemrdl-compiler.readthedocs.io/en/stable/) that accompanies the `peakrdl` tools. This produces two header files that define a common API to the application layer for both the RISC-V platform and the *VProc* based co-simulation verification environment. The details of the HAL generation can be found in the [README.md](./3.build/README.md#csr-hal-compilation) in the `3.build/` directory.
+The control and status register (CSR) RTL and the firmware's register header are [auto-generated](3.build/README.md#csr-hal-compilation) from one SystemRDL file, [`3.build/csr_build/csr.rdl`](3.build/csr_build/csr.rdl), with [`peakrdl`](https://peakrdl-cheader.readthedocs.io/en/latest/). The firmware reaches every register through four macros in `csr_regs.h`: `CSR_REG32`, `CSR_GET`, `CSR_SET`, `CSR_RMW`. They are loads and stores on the RISC-V core, and *VProc* bus cycles when the same firmware is compiled for the host in co-simulation ([4.sim](4.sim/README.md#co-simulation-hal)). One header and one source for both, with no generator beyond `peakrdl`.
 
-### Faster CSR access (2026-10)
+### CSR access, step by step
 
-The hardware HAL (`csr_hw.h`, from [`sysrdl_cosim.py`](3.build/sysrdl_cosim.py), ported from openPCIE) changed how firmware reaches a register. The API stays the same: `csr->uart->rx->data()`.
+| | HAL | One register access | Writing a field | `.text` | `.bss` |
+|---|---|---|---|---|---|
+| until 2026-10 | `new csr_vp_t()`: a tree of C++ objects on the heap, one per register | loads 2-3 pointers, then the access | read-modify-write of the whole register | 28,308 B | 37,424 B |
+| 2026-10 | `csr_hw.h` (generated): each class laid out like its registers | one load or store | a byte or half-word store when the field fills whole bytes | 23,308 B | 3,112 B |
+| now | `csr_regs.h` macros on the `peakrdl` header | one load or store | the same; a read-modify-write stores only the field's bytes | 24,452 B | 3,108 B |
 
-| | Before: pointer tree | Now: register map as a type |
-|---|---|---|
-| Setup | `new csr_vp_t()` builds a tree of C++ objects on the heap; each holds a pointer to its register | none: `CSR_VP()` casts the CSR base address to `csr_vp_t*` |
-| One register access | loads 2-3 pointers from RAM, then does the access | one load or store; the address is a compile-time constant |
-| Writing a field | read-modify-write of the whole register | a field that fills whole bytes gets a byte or halfword store |
-| Writing several fields | one access per field | `set(...)`: all fields in one store |
-
-Why the first was worse: the tree only mirrored what the address map already says. It cost RAM for the objects, cycles for pointer loads on every access, and the compiler could not fold the addresses, since they lived in RAM. Now each class is laid out like its registers, so the class itself is the map.
-
-Firmware (`main.elf`, same source):
-
-| | `.text` | `.bss` |
-|---|---|---|
-| Before | 28,308 B | 37,424 B |
-| Now | 23,308 B (-18%) | 4,656 B (-88%) |
-
-The co-simulation side (`csr_cosim.h`) keeps its tree: there a "register" is a VProc handle, not a memory address. `CSR_VP()` hides the difference, so the same firmware source builds for both.
+The last step drops the generated C++ class trees (`csr_hw.h`, `csr_cosim.h` and their generator) for one header that serves both the hardware and the co-simulation, as on [openPCIE](https://github.com/chili-chips-ba/openPCIE/blob/main/5.sim/README.md#co-simulation-hal). It costs 1.1 kB of code.
 
 ## Build process
 The details of the build process can be found in the [README.md](3.build/README.md) in the `3.build/` directory.

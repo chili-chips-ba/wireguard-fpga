@@ -17,6 +17,12 @@ extern "C" {
 #include <stddef.h> /* For size_t */
 #include <stdint.h> /* For uint8_t, uint32_t */
 
+#ifdef VPROC
+// Co-simulation: the host's C library has these (strcmp gives the same
+// result for the firmware's whole-line compares)
+#include <string.h>
+#else
+
 /**
  * @brief Fill memory with a constant byte
  *
@@ -63,6 +69,8 @@ size_t strlen(const char *str);
  * @return int < 0 if s1 < s2, 0 if s1 = s2, > 0 if s1 > s2
  */
 int strcmp(const void *s1, const void *s2);
+
+#endif  // VPROC
 
 /**
  * @brief Parse uint32_t from string

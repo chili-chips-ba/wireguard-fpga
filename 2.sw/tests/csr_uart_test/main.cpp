@@ -43,20 +43,18 @@
  */
 
 #include <stdint.h>
-#include "wireguard_libs.h"
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 #include "uart.h"
 
 int main(void)
 {
-   csr_vp_t* csr = CSR_VP();
    char rx_data[UART_RXBUF_SIZE];
 
-   uart_send(csr, "Hello world!\r\n");
-   uart_test(csr);
+   uart_send("Hello world!\r\n");
+   uart_test();
 
    while (1) {
-      uart_recv(csr, rx_data);
+      uart_recv(rx_data);
    }
 
    return 0;

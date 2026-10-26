@@ -51,10 +51,14 @@
 static uint8_t  payload[PKT_BUF_SIZE];
 static uint32_t frmBuf[PKT_BUF_SIZE];
 
+// The test is done when both receivers (nodes 2 and 4) have their frame
+static int rx_pending = 2;
+
 // ----------------------------------------------------------------------------
-// Generic RX callback: print packet info
+// Generic RX callback: print packet info. hdl is the receiving node; the
+// last frame asks tb.sv to end the run (udpIpPg halt).
 // ----------------------------------------------------------------------------
-static void rxCallback(udpIpPg::rxInfo_t info, void* /*hdl*/) {
+static void rxCallback(udpIpPg::rxInfo_t info, void* hdl) {
     VPrint("\n=== Received packet on node %u ===\n", info.udp_dst_port == NODE2_UDP_PORT ? 2u : 4u);
     VPrint("  MAC src      = %012lX\n", (unsigned long)info.mac_src_addr);
     VPrint("  IPv4 src     = %08X\n", info.ipv4_src_addr);
@@ -66,6 +70,11 @@ static void rxCallback(udpIpPg::rxInfo_t info, void* /*hdl*/) {
         if ((i & 0xF) == 0xF) VPrint("\n");
     }
     VPrint("\n=== End receive ===\n");
+
+    if (--rx_pending == 0) {
+        VPrint("\n=== All frames received: test done ===\n");
+        static_cast<udpIpPg*>(hdl)->UdpVpSetHalt(1);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -99,7 +108,7 @@ extern "C" void VUserMain1(void) {
 extern "C" void VUserMain2(void) {
     VPrint("Node2: initializing receiver\n");
     udpIpPg pUdp(2, NODE2_IPV4_ADDR, NODE2_MAC_ADDR, NODE2_UDP_PORT);
-    pUdp.registerUsrRxCbFunc(rxCallback, nullptr);
+    pUdp.registerUsrRxCbFunc(rxCallback, &pUdp);
     while (true) pUdp.UdpVpSendIdle(1);
 }
 
@@ -134,6 +143,6 @@ extern "C" void VUserMain3(void) {
 extern "C" void VUserMain4(void) {
     VPrint("Node4: initializing receiver\n");
     udpIpPg pUdp(4, NODE4_IPV4_ADDR, NODE4_MAC_ADDR, NODE4_UDP_PORT);
-    pUdp.registerUsrRxCbFunc(rxCallback, nullptr);
+    pUdp.registerUsrRxCbFunc(rxCallback, &pUdp);
     while (true) pUdp.UdpVpSendIdle(1);
 }

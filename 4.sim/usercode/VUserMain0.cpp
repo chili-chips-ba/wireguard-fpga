@@ -1,71 +1,42 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
+//
+// SPDX-License-Identifier: BSD-3-Clause
 
-// =============================================================
+//==========================================================================
+// Wireguard-1GE FPGA * NLnet-sponsored open-source implementation
+//--------------------------------------------------------------------------
+// Description:
+//   VProc node 0 for the native build (BUILD=DEFAULT): runs the real
+//   firmware.
 //
-// VProc user code for WireGuard test bench
-//
-// Copyright (c) 2024 Simon Southwell. Confidential
-//
-// This file is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The file is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this file. If not, see <http://www.gnu.org/licenses/>.
-//
-// =============================================================
-
-#include <stdio.h>
-#include <stdint.h>
-
-#include "VProcClass.h"
+//   MakefileVProc.mk compiles 2.sw/app for the host, as C++, with main()
+//   renamed fw_main(). Its register accesses (CSR_REG32, CSR_GET, CSR_SET,
+//   CSR_RMW in csr_regs.h) become VProc bus cycles on the SOC bus, at
+//   the same addresses and with the same byte enables as on the RISC-V
+//   core. So the RTL core, the rv32 ISS and this build all run one firmware
+//   source; only the way it executes differs.
+//==========================================================================
 
 extern "C" {
-#include "mem.h"
+#include "VUser.h"
 }
 
-static const int node    = 0;
-
-// ----------------------------------------------------------------------------
-// VProc node 0 main entry point
-// ----------------------------------------------------------------------------
+int fw_main();
 
 extern "C" void VUserMain0(void)
 {
-    VPrint("VProc soc_cpu entered VUserMain%d()\n\n", node);
-    
-    // Create VProc access object for this node
-    VProc* vp0 = new VProc(node);
-    
-    // Wait a bit
-    vp0->tick(100);
-    
-    uint32_t addr  = 0x10001000;
-    uint32_t wdata = 0x900dc0de;
-    
-    vp0->write(addr, wdata);
-    VPrint("Written   0x%08x  to  addr 0x%08x\n", wdata, addr);
-    
-    vp0->tick(3);
-    
-    uint32_t rdata;
-    vp0->read(addr, &rdata);
-    
-    if (rdata == wdata)
-    {
-        VPrint("Read back 0x%08x from addr 0x%08x\n", rdata, addr);
-    }
-    else
-    {   VPrint("***ERROR: data mis-match at addr = 0x%08x. Got 0x%08x, expected 0x%08x\n", addr, rdata, wdata);
-    }
+    VPrint("\n[native] firmware entered on VProc node 0\n");
+    fw_main();
 
-    // Sleep forever (and allow simulation to continue)
-    while(true)
-        vp0->tick(GO_TO_SLEEP);
+    // main() does not return; should it, keep the node alive
+    while (true)
+        VTick(10000, 0);
 }
+
+/*
+-----------------------------------------------------------------------------
+Version History:
+-----------------------------------------------------------------------------
+ 2026/10/26   : runs the 2.sw firmware itself (was a write and read-back
+                sanity test)
+*/

@@ -54,7 +54,8 @@ module tb #(
    localparam NUM_ETH_PORTS     = 4;
 
 //--------------------------------------------------------------
-// Generate clocks and run sim for the specified amount of time
+// Generate clocks and run sim until the test is done (halt_req), or
+// for RUN_SIM_US at most
    localparam  HALF_CLK_P_PERIOD_PS      =   2_500; // 200MHz
    localparam  HALF_GMII_PERIOD_PS       =   4_000; // 125MHz
    localparam  HALF_PERIOD_ETH_TX_PS     =  20_000; // 25 MHz
@@ -62,6 +63,7 @@ module tb #(
 
    localparam  RST_CYLES      = 10;
    localparam  GMII_RST_CYLES = 10;
+   localparam  HALT_TAIL_US   = 10;  // run on after halt_req, for the waves
 
    logic       clk_p, clk_n;
    logic       rst_n;
@@ -70,6 +72,7 @@ module tb #(
    logic       eth_txc;
    logic       clk_80;
    logic [2:1] key;
+   logic       halt_req;  // the UDP test code is done (udpIpPg halt)
 
    initial begin
       clk_p      = 1'b0;
@@ -118,8 +121,19 @@ module tb #(
          end
 
          begin: run_sim
-            #(RUN_SIM_US * 1us);
-               $finish(2);
+            fork
+               begin : time_limit
+                  #(RUN_SIM_US * 1us);
+                  $display("\n%t  TB  *** simulation time limit reached ***", $time);
+               end
+               begin : test_done
+                  @(posedge halt_req);
+                  $display("\n%t  TB  *** test done, run ends in %0d us ***", $time,
+                           HALT_TAIL_US);
+                  #(HALT_TAIL_US * 1us);
+               end
+            join_any
+            $finish(2);
          end
       join
    end
@@ -351,7 +365,7 @@ assign gmii[3].txd  = e4_txd;
 `endif
 
      // Simulation halt request
-     .halt_req                            ()
+     .halt_req                            (halt_req)
    );
 // verilator lint_on PINCONNECTEMPTY
 

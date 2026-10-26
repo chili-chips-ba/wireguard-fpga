@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 #include "string_bare.h"
 #include "ethernet.h"
 

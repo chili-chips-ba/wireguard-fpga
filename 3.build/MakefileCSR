@@ -9,27 +9,24 @@ RDLDIR    = csr_build
 GENDIR    = $(RDLDIR)/generated-files
 RDLSRC    = $(RDLDIR)/$(RDLPREFIX).rdl
 
-COSIMRDL  = $(GENDIR)/$(RDLPREFIX)_cosim.rdl
-COSIMHDR  = $(GENDIR)/$(RDLPREFIX)_cosim.h
+# csr.h: the register layout csr_regs.h uses, for the firmware on the
+# RISC-V core and compiled for the host in co-simulation alike
 PKRDLHDR  = $(GENDIR)/$(RDLPREFIX).h
-HWHDR     = $(GENDIR)/$(RDLPREFIX)_hw.h
+PKRDLTOP  = $(GENDIR)/$(RDLPREFIX)_top.h
 PKRDLRTL  = $(GENDIR)/
 PKRDLHTML = $(GENDIR)/html/
 PKRDLMD   = $(GENDIR)/$(RDLWGTOP).md
 
-all: $(COSIMHDR) $(HWHDR) rtl $(PKRDLHTML) $(PKRDLMD)
+all: $(PKRDLHDR) $(PKRDLTOP) rtl $(PKRDLHTML) $(PKRDLMD)
 
-$(COSIMHDR): $(COSIMRDL) $(PKRDLHDR)
-	@python3 sysrdl_cosim.py -c -r $< -o $@
-
-$(HWHDR): $(COSIMRDL) $(PKRDLHDR)
-	@python3 sysrdl_cosim.py -r $< -o $@
-
-$(COSIMRDL): $(RDLSRC)
-	@sed -e "/buffer_writes/d" -e "/wbuffer_trigger/d" < $^ > $@
-
-$(PKRDLHDR): $(COSIMRDL)
+$(PKRDLHDR): $(RDLSRC)
 	@peakrdl c-header $^ -b ltoh -o $@
+
+# csr_top.h: the struct of the SOC address map in csr.h, so csr_regs.h takes
+# the CSR base address from csr.h too
+$(PKRDLTOP): MakefileCSR
+	@printf '%s\n' '#ifndef _CSR_TOP_H_' '#define _CSR_TOP_H_' \
+	               '#define CSR_TOP_T  $(RDLWGTOP)_t' '#endif' > $@
 
 rtl: $(RDLSRC)
 	@peakrdl regblock $^ -o $(GENDIR)/ --cpuif passthrough --top $(RDLCSRTOP)
@@ -40,5 +37,11 @@ $(PKRDLHTML): $(RDLSRC)
 $(PKRDLMD): $(RDLSRC)
 	@peakrdl markdown $^ -o $@ --top $(RDLWGTOP)
 
+# clean keeps the generated files: they are checked in, so builds need no
+# peakrdl. clean-all deletes them too; make -f MakefileCSR writes them again.
 clean:
-	@rm -rf $(COSIMRDL) $(COSIMHDR) $(HWHDR) $(PKRDLHDR) $(GENDIR)/*.sv $(PKRDLHTML) $(PKRDLMD)
+
+clean-all: clean
+	@rm -rf $(PKRDLHDR) $(PKRDLTOP) $(GENDIR)/*.sv $(PKRDLHTML) $(PKRDLMD)
+
+.PHONY: all rtl clean clean-all

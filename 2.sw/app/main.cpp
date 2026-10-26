@@ -41,8 +41,7 @@
 //==========================================================================
 
 #include <stdint.h>
-#include "wireguard_libs.h"
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 #include "string_bare.h"
 #include "uart.h"
 #include "ethernet.h"
@@ -56,7 +55,7 @@
 
 // TEST CODE
 
-static int test_chacha20poly1305(csr_vp_t* csr) {
+static int test_chacha20poly1305(void) {
    // Test vectors
    uint8_t key[32] = {
       0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
@@ -96,18 +95,18 @@ static int test_chacha20poly1305(csr_vp_t* csr) {
 
    if (ret == 0)
    {
-      uart_send(csr, "ChaCha20-Poly1305 test passed!\r\n");
+      uart_send("ChaCha20-Poly1305 test passed!\r\n");
    }
    else
    {
-      uart_send(csr, "ChaCha20-Poly1305 test failed!\r\n");
+      uart_send("ChaCha20-Poly1305 test failed!\r\n");
       return -1;
    }
 
    return 0;
 }
 
-static int test_blake2s(csr_vp_t* csr) {
+static int test_blake2s(void) {
    uint8_t out[32];
    int pass = 1;
 
@@ -154,16 +153,16 @@ static int test_blake2s(csr_vp_t* csr) {
    }
 
    if (pass) {
-      uart_send(csr, "BLAKE2s test passed!\r\n");
+      uart_send("BLAKE2s test passed!\r\n");
    } else {
-      uart_send(csr, "BLAKE2s test failed!\r\n");
+      uart_send("BLAKE2s test failed!\r\n");
       return -1;
    }
 
    return 0;
 }
 
-static void test_curve25519(csr_vp_t* csr) {
+static void test_curve25519(void) {
    /* Simulate Alice and Bob doing a complete key exchange */
    uint8_t alice_private[32], bob_private[32];
    uint8_t alice_public[32], bob_public[32];
@@ -185,39 +184,39 @@ static void test_curve25519(csr_vp_t* csr) {
    int secrets_match = memcmp(alice_shared, bob_shared, 32) == 0;
 
    if (secrets_match) {
-      uart_send(csr, "Key exchange successful! Alice and Bob have the same shared secret\r\n");
+      uart_send("Key exchange successful! Alice and Bob have the same shared secret\r\n");
    } else {
-      uart_send(csr, "Key exchange failed! Shared secrets don't match.\r\n");
+      uart_send("Key exchange failed! Shared secrets don't match.\r\n");
    }
 }
 
-static int test_rng(csr_vp_t* csr)
+static int test_rng(void)
 {
    uint8_t random_bytes[32];
    uint32_t rand_num;
 
    for (uint8_t i = 0; i < 10; i++) {
-      uart_send(csr, "Generating random 32 bytes: ");
+      uart_send("Generating random 32 bytes: ");
       random_32bytes(random_bytes);
-      uart_send_hex_bytes(csr, random_bytes, 32);
-      uart_send(csr, "\r\n");
+      uart_send_hex_bytes(random_bytes, 32);
+      uart_send("\r\n");
 
-      uart_send(csr, "Generating random number between 10 and 1000: ");
+      uart_send("Generating random number between 10 and 1000: ");
       rand_num = random_range(10, 1000);
-      uart_send_dec(csr, rand_num);
-      uart_send(csr, "\r\n");
+      uart_send_dec(rand_num);
+      uart_send("\r\n");
    }
 
    return 0;
 }
 
-static int test_timer(csr_vp_t* csr)
+static int test_timer(void)
 {
    for (uint8_t i = 0; i < 10; i++) {
       delay_ms(1000u); // 1 second pause
-      uart_send(csr, ".");
+      uart_send(".");
    }
-   uart_send(csr, "\r\nTest passed!\r\n");
+   uart_send("\r\nTest passed!\r\n");
 
    return 0;
 }
@@ -229,7 +228,7 @@ eth_raw_packet_t  eth_packet_tx;
 net_config_t      net_config;
 net_arp_cache_t   net_arp_cache = {0};
 
-void init_network(csr_vp_t* csr, net_config_t* config) {
+void init_network(net_config_t* config) {
    if (config->ip[0] == 0 && config->ip[1] == 0 && config->ip[2] == 0 && config->ip[3] == 0) {
       config->ip[0] = 192;
       config->ip[1] = 168;
@@ -257,66 +256,66 @@ void init_network(csr_vp_t* csr, net_config_t* config) {
    }
 }
 
-void show_network(csr_vp_t* csr, net_config_t* config) {
-   uart_send(csr, "Network configuration:\r\n");
-   uart_send(csr, "  IP address:        ");
-   uart_send_ip(csr, config->ip);
-   uart_send(csr, "\r\n  Subnet mask:       ");
-   uart_send_ip(csr, config->sub_mask);
-   uart_send(csr, "\r\n  MAC address:       ");
-   uart_send_mac(csr, config->mac);
-   uart_send(csr, "\r\n  Default gateway:   ");
-   uart_send_ip(csr, config->def_gw);
-   uart_send(csr, "\r\n  Default interface: ");
-   uart_send_dec(csr, config->def_if);
+void show_network(net_config_t* config) {
+   uart_send("Network configuration:\r\n");
+   uart_send("  IP address:        ");
+   uart_send_ip(config->ip);
+   uart_send("\r\n  Subnet mask:       ");
+   uart_send_ip(config->sub_mask);
+   uart_send("\r\n  MAC address:       ");
+   uart_send_mac(config->mac);
+   uart_send("\r\n  Default gateway:   ");
+   uart_send_ip(config->def_gw);
+   uart_send("\r\n  Default interface: ");
+   uart_send_dec(config->def_if);
    switch (config->def_if) {
       case 0:
-         uart_send(csr, " [0....]");
+         uart_send(" [0....]");
          break;
       case 1:
-         uart_send(csr, " [.1...]");
+         uart_send(" [.1...]");
          break;
       case 2:
-         uart_send(csr, " [..2..]");
+         uart_send(" [..2..]");
          break;
       case 3:
-         uart_send(csr, " [...3.]");
+         uart_send(" [...3.]");
          break;
       case 4:
-         uart_send(csr, " [....4]");
+         uart_send(" [....4]");
          break;
       case 5:
-         uart_send(csr, " [.1.3.]");
+         uart_send(" [.1.3.]");
          break;
       case 6:
-         uart_send(csr, " [..2.4]");
+         uart_send(" [..2.4]");
          break;
       case 7:
-         uart_send(csr, " [.1234]");
+         uart_send(" [.1234]");
          break;
    }
-   uart_send(csr, "\r\n");
+   uart_send("\r\n");
 }
 
-void config_network(csr_vp_t* csr, net_config_t* config) {
+void config_network(net_config_t* config) {
    char uart_rx_data[UART_RXBUF_SIZE];
 
-   uart_send(csr, "Enter new network configuration:\r\n");
+   uart_send("Enter new network configuration:\r\n");
 
-   uart_send(csr, "  IP address [");
-   uart_send_ip(csr, config->ip);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  IP address [");
+   uart_send_ip(config->ip);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    net_str_parse_ip(uart_rx_data, &config->ip);
 
-   uart_send(csr, "  Subnet mask [");
-   uart_send_ip(csr, config->sub_mask);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Subnet mask [");
+   uart_send_ip(config->sub_mask);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    net_str_parse_ip(uart_rx_data, &config->sub_mask);
 
-   uart_send(csr, "  Generate new MAC address? (y/n) [n]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Generate new MAC address? (y/n) [n]: ");
+   while (!uart_recv(uart_rx_data));
    if (uart_rx_data[0] == 'y' || uart_rx_data[0] == 'Y') {
       uint8_t random_bytes[2];
       random_32bytes(random_bytes);
@@ -324,545 +323,553 @@ void config_network(csr_vp_t* csr, net_config_t* config) {
       config->mac[5] = random_bytes[1]; // Use random byte for MAC suffix
    }
 
-   uart_send(csr, "  Default gateway [");
-   uart_send_ip(csr, config->def_gw);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Default gateway [");
+   uart_send_ip(config->def_gw);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    net_str_parse_ip(uart_rx_data, &config->def_gw);
 
-   uart_send(csr, "  Default interface (0-7) [");
-   uart_send_dec(csr, config->def_if);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Default interface (0-7) [");
+   uart_send_dec(config->def_if);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_uint8(uart_rx_data, &config->def_if, 0, 7);
-   uart_send(csr, "Network configuration updated.\r\n");
+   uart_send("Network configuration updated.\r\n");
 
-   show_network(csr, config);
+   show_network(config);
 }
 
-void show_routes_entry(csr_vp_t* csr, int i) {
-   uart_send(csr, "  (");
-   uart_send_dec(csr, i);
+void show_routes_entry(int i) {
+   uart_send("  (");
+   uart_send_dec(i);
 
-   uint32_t uip = csr->routing_table->entry[i]->ip->ip();
+   uint32_t uip = CSR_REG32(routing_table.entry[i].ip);
    ip_t ip = {(uint8_t)((uip >> 24) & 0xFF), (uint8_t)((uip >> 16) & 0xFF), (uint8_t)((uip >> 8) & 0xFF), (uint8_t)(uip & 0xFF)};
-   uart_send(csr, ") IP: ");
-   uart_send_ip(csr, ip);
+   uart_send(") IP: ");
+   uart_send_ip(ip);
 
-   uint32_t umask = csr->routing_table->entry[i]->mask->mask();
+   uint32_t umask = CSR_REG32(routing_table.entry[i].mask);
    ip_t mask = {(uint8_t)((umask >> 24) & 0xFF), (uint8_t)((umask >> 16) & 0xFF), (uint8_t)((umask >> 8) & 0xFF), (uint8_t)(umask & 0xFF)};
-   uart_send(csr, ", Mask: ");
-   uart_send_ip(csr, mask);
+   uart_send(", Mask: ");
+   uart_send_ip(mask);
 
-   uint32_t peer_idx = csr->routing_table->entry[i]->peer_idx->peer_idx();
-   uart_send(csr, ", Peer index: ");
-   uart_send_dec(csr, peer_idx);
+   uint32_t peer_idx = CSR_GET(routing_table.entry[i].peer_idx, CSR__ROUTING_TABLE__ENTRY__PEER_IDX__PEER_IDX);
+   uart_send(", Peer index: ");
+   uart_send_dec(peer_idx);
 
-   uint32_t dst = csr->routing_table->entry[i]->dst->dst();
-   uart_send(csr, ", Destination interface: ");
-   uart_send_dec(csr, dst);
+   uint32_t dst = CSR_GET(routing_table.entry[i].dst, CSR__ROUTING_TABLE__ENTRY__DST__DST);
+   uart_send(", Destination interface: ");
+   uart_send_dec(dst);
    switch (dst) {
       case 0:
-         uart_send(csr, " [0....]");
+         uart_send(" [0....]");
          break;
       case 1:
-         uart_send(csr, " [.1...]");
+         uart_send(" [.1...]");
          break;
       case 2:
-         uart_send(csr, " [..2..]");
+         uart_send(" [..2..]");
          break;
       case 3:
-         uart_send(csr, " [...3.]");
+         uart_send(" [...3.]");
          break;
       case 4:
-         uart_send(csr, " [....4]");
+         uart_send(" [....4]");
          break;
       case 5:
-         uart_send(csr, " [.1.3.]");
+         uart_send(" [.1.3.]");
          break;
       case 6:
-         uart_send(csr, " [..2.4]");
+         uart_send(" [..2.4]");
          break;
       case 7:
-         uart_send(csr, " [.1234]");
+         uart_send(" [.1234]");
          break;
    }
 
-   uart_send(csr, "\r\n");
+   uart_send("\r\n");
 }
 
-void show_routes(csr_vp_t* csr) {
-   csr->dpe->fcr->pause(1);
-   while (!csr->dpe->fcr->idle());
+void show_routes(void) {
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 1);
+   while (!CSR_GET(dpe.fcr, CSR__DPE__FCR__IDLE));
 
-   uart_send(csr, "Routing table:\r\n");
+   uart_send("Routing table:\r\n");
    for (int i = 0; i < 64; i++) {
-      show_routes_entry(csr, i);
+      show_routes_entry(i);
    }
 
-   csr->dpe->fcr->pause(0);
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 0);
 }
 
-void config_routes(csr_vp_t* csr) {
+void config_routes(void) {
    char uart_rx_data[UART_RXBUF_SIZE];
 
-   csr->dpe->fcr->pause(1);
-   while (!csr->dpe->fcr->idle());
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 1);
+   while (!CSR_GET(dpe.fcr, CSR__DPE__FCR__IDLE));
 
-   uart_send(csr, "Enter new routing table entry:\r\n");
-   uart_send(csr, "  Entry index (0-63) [0]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("Enter new routing table entry:\r\n");
+   uart_send("  Entry index (0-63) [0]: ");
+   while (!uart_recv(uart_rx_data));
    uint32_t entry_idx = 0;
    str_parse_uint32(uart_rx_data, &entry_idx, 0, 63);
 
-   uart_send(csr, "  Destination IP address [");
-   uint32_t uip = csr->routing_table->entry[entry_idx]->ip->ip();
+   uart_send("  Destination IP address [");
+   uint32_t uip = CSR_REG32(routing_table.entry[entry_idx].ip);
    ip_t ip = {(uint8_t)((uip >> 24) & 0xFF), (uint8_t)((uip >> 16) & 0xFF), (uint8_t)((uip >> 8) & 0xFF), (uint8_t)(uip & 0xFF)};
-   uart_send_ip(csr, ip);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send_ip(ip);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    net_str_parse_ip(uart_rx_data, &ip);
 
-   uart_send(csr, "  Subnet mask [");
-   uint32_t umask = csr->routing_table->entry[entry_idx]->mask->mask();
+   uart_send("  Subnet mask [");
+   uint32_t umask = CSR_REG32(routing_table.entry[entry_idx].mask);
    ip_t mask = {(uint8_t)((umask >> 24) & 0xFF), (uint8_t)((umask >> 16) & 0xFF), (uint8_t)((umask >> 8) & 0xFF), (uint8_t)(umask & 0xFF)};
-   uart_send_ip(csr, mask);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send_ip(mask);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    net_str_parse_ip(uart_rx_data, &mask);
 
-   uart_send(csr, "  Peer index (0-63) [");
-   uint32_t peer_idx = csr->routing_table->entry[entry_idx]->peer_idx->peer_idx();
-   uart_send_dec(csr, peer_idx);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Peer index (0-63) [");
+   uint32_t peer_idx = CSR_GET(routing_table.entry[entry_idx].peer_idx, CSR__ROUTING_TABLE__ENTRY__PEER_IDX__PEER_IDX);
+   uart_send_dec(peer_idx);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_uint32(uart_rx_data, &peer_idx, 0, 63);
 
-   uart_send(csr, "  Destination interface (0-7) [");
-   uint32_t dst = csr->routing_table->entry[entry_idx]->dst->dst();
-   uart_send_dec(csr, dst);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Destination interface (0-7) [");
+   uint32_t dst = CSR_GET(routing_table.entry[entry_idx].dst, CSR__ROUTING_TABLE__ENTRY__DST__DST);
+   uart_send_dec(dst);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_uint32(uart_rx_data, &dst, 0, 7);
 
    // Update routing table entry
    uip = ((uint32_t)ip[0] << 24) | ((uint32_t)ip[1] << 16) | ((uint32_t)ip[2] << 8) | (uint32_t)ip[3];
    umask = ((uint32_t)mask[0] << 24) | ((uint32_t)mask[1] << 16) | ((uint32_t)mask[2] << 8) | (uint32_t)mask[3];
-   csr->routing_table->entry[entry_idx]->ip->ip(uip);
-   csr->routing_table->entry[entry_idx]->mask->mask(umask);
-   csr->routing_table->entry[entry_idx]->peer_idx->peer_idx(peer_idx);
-   csr->routing_table->entry[entry_idx]->dst->dst(dst);
+   CSR_REG32(routing_table.entry[entry_idx].ip) = uip;
+   CSR_REG32(routing_table.entry[entry_idx].mask) = umask;
+   CSR_SET(routing_table.entry[entry_idx].peer_idx, CSR__ROUTING_TABLE__ENTRY__PEER_IDX__PEER_IDX, peer_idx);
+   CSR_SET(routing_table.entry[entry_idx].dst, CSR__ROUTING_TABLE__ENTRY__DST__DST, dst);
 
-   uart_send(csr, "Routing table entry updated.\r\n");
+   uart_send("Routing table entry updated.\r\n");
 
-   show_routes_entry(csr, entry_idx);
+   show_routes_entry(entry_idx);
 
-   csr->dpe->fcr->pause(0);
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 0);
 }
 
-void show_cryptokeys_entry(csr_vp_t* csr, int i) {
-   uart_send(csr, "  (");
-   uart_send_dec(csr, i);
+void show_cryptokeys_entry(int i) {
+   uart_send("  (");
+   uart_send_dec(i);
 
-   uart_send(csr, ") Local MAC: ");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->local_mac_47_32->mac(), 4);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->local_mac_31_0->mac(), 8);
+   uart_send(") Local MAC: ");
+   uart_send_hex(CSR_GET(cryptokey_table.entry[i].local_mac_47_32, CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_47_32__MAC), 4);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].local_mac_31_0), 8);
 
-   uart_send(csr, ", Local IP: ");
-   uint32_t ulocal_ip = csr->cryptokey_table->entry[i]->local_ip->ip();
+   uart_send(", Local IP: ");
+   uint32_t ulocal_ip = CSR_REG32(cryptokey_table.entry[i].local_ip);
    ip_t local_ip = {(uint8_t)((ulocal_ip >> 24) & 0xFF), (uint8_t)((ulocal_ip >> 16) & 0xFF), (uint8_t)((ulocal_ip >> 8) & 0xFF), (uint8_t)(ulocal_ip & 0xFF)};
-   uart_send_ip(csr, local_ip);
+   uart_send_ip(local_ip);
 
-   uart_send(csr, ", Local port: ");
-   uart_send_dec(csr, csr->cryptokey_table->entry[i]->local_port->port());
+   uart_send(", Local port: ");
+   uart_send_dec(CSR_GET(cryptokey_table.entry[i].local_port, CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_PORT__PORT));
 
-   uart_send(csr, ", Local ID: 0x");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->local_id->id(), 8);
+   uart_send(", Local ID: 0x");
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].local_id), 8);
 
-   uart_send(csr, "\r\n    Remote MAC: ");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->remote_mac_47_32->mac(), 4);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->remote_mac_31_0->mac(), 8);
+   uart_send("\r\n    Remote MAC: ");
+   uart_send_hex(CSR_GET(cryptokey_table.entry[i].remote_mac_47_32, CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_47_32__MAC), 4);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].remote_mac_31_0), 8);
 
-   uart_send(csr, ", Remote IP: ");
-   uint32_t uremote_ip = csr->cryptokey_table->entry[i]->remote_ip->ip();
+   uart_send(", Remote IP: ");
+   uint32_t uremote_ip = CSR_REG32(cryptokey_table.entry[i].remote_ip);
    ip_t remote_ip = {(uint8_t)((uremote_ip >> 24) & 0xFF), (uint8_t)((uremote_ip >> 16) & 0xFF), (uint8_t)((uremote_ip >> 8) & 0xFF), (uint8_t)(uremote_ip & 0xFF)};
-   uart_send_ip(csr, remote_ip);
+   uart_send_ip(remote_ip);
 
-   uart_send(csr, ", Remote port: ");
-   uart_send_dec(csr, csr->cryptokey_table->entry[i]->remote_port->port());
+   uart_send(", Remote port: ");
+   uart_send_dec(CSR_GET(cryptokey_table.entry[i].remote_port, CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_PORT__PORT));
 
-   uart_send(csr, ", Remote ID: 0x");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->remote_id->id(), 8);
+   uart_send(", Remote ID: 0x");
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].remote_id), 8);
 
-   uart_send(csr, "\r\n    Encryption key: 0x");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_255_224->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_223_192->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_191_160->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_159_128->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_127_96->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_95_64->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_63_32->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->encrypt_key_31_0->key(), 8);
+   uart_send("\r\n    Encryption key: 0x");
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_255_224), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_223_192), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_191_160), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_159_128), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_127_96), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_95_64), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_63_32), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].encrypt_key_31_0), 8);
 
-   uart_send(csr, "\r\n    Decryption key: 0x");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_255_224->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_223_192->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_191_160->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_159_128->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_127_96->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_95_64->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_63_32->key(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->decrypt_key_31_0->key(), 8);
+   uart_send("\r\n    Decryption key: 0x");
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_255_224), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_223_192), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_191_160), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_159_128), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_127_96), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_95_64), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_63_32), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].decrypt_key_31_0), 8);
 
-   uart_send(csr, "\r\n    Send counter: 0x");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->send_cnt_63_32->cnt(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->send_cnt_31_0->cnt(), 8);
+   uart_send("\r\n    Send counter: 0x");
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].send_cnt_63_32), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].send_cnt_31_0), 8);
 
-   uart_send(csr, "\r\n    Recv counter: 0x");
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->recv_cnt_63_32->cnt(), 8);
-   uart_send_hex(csr, csr->cryptokey_table->entry[i]->recv_cnt_31_0->cnt(), 8);
+   uart_send("\r\n    Recv counter: 0x");
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].recv_cnt_63_32), 8);
+   uart_send_hex(CSR_REG32(cryptokey_table.entry[i].recv_cnt_31_0), 8);
 
-   uart_send(csr, "\r\n");
+   uart_send("\r\n");
 }
 
-void show_cryptokeys(csr_vp_t* csr) {
-   csr->dpe->fcr->pause(1);
-   while (!csr->dpe->fcr->idle());
+void show_cryptokeys(void) {
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 1);
+   while (!CSR_GET(dpe.fcr, CSR__DPE__FCR__IDLE));
 
-   uart_send(csr, "Cryptokey table:\r\n");
+   uart_send("Cryptokey table:\r\n");
    for (int i = 1; i < 64; i++) {
-      show_cryptokeys_entry(csr, i);
+      show_cryptokeys_entry(i);
    }
 
-   csr->dpe->fcr->pause(0);
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 0);
 }
 
-void config_cryptokeys(csr_vp_t* csr) {
+void config_cryptokeys(void) {
    char uart_rx_data[UART_RXBUF_SIZE];
 
-   csr->dpe->fcr->pause(1);
-   while (!csr->dpe->fcr->idle());
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 1);
+   while (!CSR_GET(dpe.fcr, CSR__DPE__FCR__IDLE));
 
-   uart_send(csr, "Enter new cryptokey table entry:\r\n");
-   uart_send(csr, "  Entry index (1-63) [1]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("Enter new cryptokey table entry:\r\n");
+   uart_send("  Entry index (1-63) [1]: ");
+   while (!uart_recv(uart_rx_data));
    uint32_t entry_idx = 1;
    str_parse_uint32(uart_rx_data, &entry_idx, 1, 63);
 
-   uart_send(csr, "  Local MAC address [");
-   uint32_t local_mac_47_32 = csr->cryptokey_table->entry[entry_idx]->local_mac_47_32->mac();
-   uart_send_hex(csr, local_mac_47_32, 4);
-   uint32_t local_mac_31_0 = csr->cryptokey_table->entry[entry_idx]->local_mac_31_0->mac();
-   uart_send_hex(csr, local_mac_31_0, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Local MAC address [");
+   uint32_t local_mac_47_32 = CSR_GET(cryptokey_table.entry[entry_idx].local_mac_47_32, CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_47_32__MAC);
+   uart_send_hex(local_mac_47_32, 4);
+   uint32_t local_mac_31_0 = CSR_REG32(cryptokey_table.entry[entry_idx].local_mac_31_0);
+   uart_send_hex(local_mac_31_0, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    if (strlen(uart_rx_data) == 13) {
       str_parse_hex(uart_rx_data + 4, &local_mac_31_0, 0, 0xFFFFFFFF);
       uart_rx_data[4] = '\n';
       str_parse_hex(uart_rx_data, &local_mac_47_32, 0, 0xFFFF);
    }
 
-   uart_send(csr, "  Local IP address [");
-   uint32_t ulocal_ip = csr->cryptokey_table->entry[entry_idx]->local_ip->ip();
+   uart_send("  Local IP address [");
+   uint32_t ulocal_ip = CSR_REG32(cryptokey_table.entry[entry_idx].local_ip);
    ip_t local_ip = {(uint8_t)((ulocal_ip >> 24) & 0xFF), (uint8_t)((ulocal_ip >> 16) & 0xFF), (uint8_t)((ulocal_ip >> 8) & 0xFF), (uint8_t)(ulocal_ip & 0xFF)};
-   uart_send_ip(csr, local_ip);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send_ip(local_ip);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    net_str_parse_ip(uart_rx_data, &local_ip);
    ulocal_ip = ((uint32_t)local_ip[0] << 24) | ((uint32_t)local_ip[1] << 16) | ((uint32_t)local_ip[2] << 8) | (uint32_t)local_ip[3];
 
-   uart_send(csr, "  Local port (0-65535) [");
-   uint32_t local_port = csr->cryptokey_table->entry[entry_idx]->local_port->port();
-   uart_send_dec(csr, local_port);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Local port (0-65535) [");
+   uint32_t local_port = CSR_GET(cryptokey_table.entry[entry_idx].local_port, CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_PORT__PORT);
+   uart_send_dec(local_port);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_uint32(uart_rx_data, &local_port, 0, 65535);
 
-   uart_send(csr, "  Local ID (8 hex digits) [");
-   uint32_t local_id = csr->cryptokey_table->entry[entry_idx]->local_id->id();
-   uart_send_hex(csr, local_id, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Local ID (8 hex digits) [");
+   uint32_t local_id = CSR_REG32(cryptokey_table.entry[entry_idx].local_id);
+   uart_send_hex(local_id, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &local_id, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Remote MAC address [");
-   uint32_t remote_mac_47_32 = csr->cryptokey_table->entry[entry_idx]->remote_mac_47_32->mac();
-   uart_send_hex(csr, remote_mac_47_32, 4);
-   uint32_t remote_mac_31_0 = csr->cryptokey_table->entry[entry_idx]->remote_mac_31_0->mac();
-   uart_send_hex(csr, remote_mac_31_0, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Remote MAC address [");
+   uint32_t remote_mac_47_32 = CSR_GET(cryptokey_table.entry[entry_idx].remote_mac_47_32, CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_47_32__MAC);
+   uart_send_hex(remote_mac_47_32, 4);
+   uint32_t remote_mac_31_0 = CSR_REG32(cryptokey_table.entry[entry_idx].remote_mac_31_0);
+   uart_send_hex(remote_mac_31_0, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    if (strlen(uart_rx_data) == 13) {
       str_parse_hex(uart_rx_data + 4, &remote_mac_31_0, 0, 0xFFFFFFFF);
       uart_rx_data[4] = '\n';
       str_parse_hex(uart_rx_data, &remote_mac_47_32, 0, 0xFFFF);
    }
 
-   uart_send(csr, "  Remote IP address [");
-   uint32_t uremote_ip = csr->cryptokey_table->entry[entry_idx]->remote_ip->ip();
+   uart_send("  Remote IP address [");
+   uint32_t uremote_ip = CSR_REG32(cryptokey_table.entry[entry_idx].remote_ip);
    ip_t remote_ip = {(uint8_t)((uremote_ip >> 24) & 0xFF), (uint8_t)((uremote_ip >> 16) & 0xFF), (uint8_t)((uremote_ip >> 8) & 0xFF), (uint8_t)(uremote_ip & 0xFF)};
-   uart_send_ip(csr, remote_ip);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send_ip(remote_ip);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    net_str_parse_ip(uart_rx_data, &remote_ip);
    uremote_ip = ((uint32_t)remote_ip[0] << 24) | ((uint32_t)remote_ip[1] << 16) | ((uint32_t)remote_ip[2] << 8) | (uint32_t)remote_ip[3];
 
-   uart_send(csr, "  Remote port (0-65535) [");
-   uint32_t remote_port = csr->cryptokey_table->entry[entry_idx]->remote_port->port();
-   uart_send_dec(csr, remote_port);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Remote port (0-65535) [");
+   uint32_t remote_port = CSR_GET(cryptokey_table.entry[entry_idx].remote_port, CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_PORT__PORT);
+   uart_send_dec(remote_port);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_uint32(uart_rx_data, &remote_port, 0, 65535);
 
-   uart_send(csr, "  Remote ID (8 hex digits) [");
-   uint32_t remote_id = csr->cryptokey_table->entry[entry_idx]->remote_id->id();
-   uart_send_hex(csr, remote_id, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Remote ID (8 hex digits) [");
+   uint32_t remote_id = CSR_REG32(cryptokey_table.entry[entry_idx].remote_id);
+   uart_send_hex(remote_id, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &remote_id, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (1st 8 hex digits) [");
-   uint32_t encrypt_key_255_224 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_255_224->key();
-   uart_send_hex(csr, encrypt_key_255_224, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (1st 8 hex digits) [");
+   uint32_t encrypt_key_255_224 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_255_224);
+   uart_send_hex(encrypt_key_255_224, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_255_224, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (2nd 8 hex digits) [");
-   uint32_t encrypt_key_223_192 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_223_192->key();
-   uart_send_hex(csr, encrypt_key_223_192, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (2nd 8 hex digits) [");
+   uint32_t encrypt_key_223_192 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_223_192);
+   uart_send_hex(encrypt_key_223_192, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_223_192, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (3rd 8 hex digits) [");
-   uint32_t encrypt_key_191_160 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_191_160->key();
-   uart_send_hex(csr, encrypt_key_191_160, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (3rd 8 hex digits) [");
+   uint32_t encrypt_key_191_160 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_191_160);
+   uart_send_hex(encrypt_key_191_160, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_191_160, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (4th 8 hex digits) [");
-   uint32_t encrypt_key_159_128 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_159_128->key();
-   uart_send_hex(csr, encrypt_key_159_128, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (4th 8 hex digits) [");
+   uint32_t encrypt_key_159_128 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_159_128);
+   uart_send_hex(encrypt_key_159_128, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_159_128, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (5th 8 hex digits) [");
-   uint32_t encrypt_key_127_96 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_127_96->key();
-   uart_send_hex(csr, encrypt_key_127_96, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (5th 8 hex digits) [");
+   uint32_t encrypt_key_127_96 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_127_96);
+   uart_send_hex(encrypt_key_127_96, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_127_96, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (6th 8 hex digits) [");
-   uint32_t encrypt_key_95_64 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_95_64->key();
-   uart_send_hex(csr, encrypt_key_95_64, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (6th 8 hex digits) [");
+   uint32_t encrypt_key_95_64 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_95_64);
+   uart_send_hex(encrypt_key_95_64, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_95_64, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (7th 8 hex digits) [");
-   uint32_t encrypt_key_63_32 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_63_32->key();
-   uart_send_hex(csr, encrypt_key_63_32, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (7th 8 hex digits) [");
+   uint32_t encrypt_key_63_32 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_63_32);
+   uart_send_hex(encrypt_key_63_32, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_63_32, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Encryption key (8th 8 hex digits) [");
-   uint32_t encrypt_key_31_0 = csr->cryptokey_table->entry[entry_idx]->encrypt_key_31_0->key();
-   uart_send_hex(csr, encrypt_key_31_0, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Encryption key (8th 8 hex digits) [");
+   uint32_t encrypt_key_31_0 = CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_31_0);
+   uart_send_hex(encrypt_key_31_0, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &encrypt_key_31_0, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (1st 8 hex digits) [");
-   uint32_t decrypt_key_255_224 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_255_224->key();
-   uart_send_hex(csr, decrypt_key_255_224, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (1st 8 hex digits) [");
+   uint32_t decrypt_key_255_224 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_255_224);
+   uart_send_hex(decrypt_key_255_224, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_255_224, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (2nd 8 hex digits) [");
-   uint32_t decrypt_key_223_192 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_223_192->key();
-   uart_send_hex(csr, decrypt_key_223_192, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (2nd 8 hex digits) [");
+   uint32_t decrypt_key_223_192 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_223_192);
+   uart_send_hex(decrypt_key_223_192, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_223_192, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (3rd 8 hex digits) [");
-   uint32_t decrypt_key_191_160 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_191_160->key();
-   uart_send_hex(csr, decrypt_key_191_160, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (3rd 8 hex digits) [");
+   uint32_t decrypt_key_191_160 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_191_160);
+   uart_send_hex(decrypt_key_191_160, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_191_160, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (4th 8 hex digits) [");
-   uint32_t decrypt_key_159_128 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_159_128->key();
-   uart_send_hex(csr, decrypt_key_159_128, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (4th 8 hex digits) [");
+   uint32_t decrypt_key_159_128 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_159_128);
+   uart_send_hex(decrypt_key_159_128, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_159_128, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (5th 8 hex digits) [");
-   uint32_t decrypt_key_127_96 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_127_96->key();
-   uart_send_hex(csr, decrypt_key_127_96, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (5th 8 hex digits) [");
+   uint32_t decrypt_key_127_96 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_127_96);
+   uart_send_hex(decrypt_key_127_96, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_127_96, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (6th 8 hex digits) [");
-   uint32_t decrypt_key_95_64 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_95_64->key();
-   uart_send_hex(csr, decrypt_key_95_64, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (6th 8 hex digits) [");
+   uint32_t decrypt_key_95_64 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_95_64);
+   uart_send_hex(decrypt_key_95_64, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_95_64, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (7th 8 hex digits) [");
-   uint32_t decrypt_key_63_32 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_63_32->key();
-   uart_send_hex(csr, decrypt_key_63_32, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (7th 8 hex digits) [");
+   uint32_t decrypt_key_63_32 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_63_32);
+   uart_send_hex(decrypt_key_63_32, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_63_32, 0, 0xFFFFFFFF);
 
-   uart_send(csr, "  Decryption key (8th 8 hex digits) [");
-   uint32_t decrypt_key_31_0 = csr->cryptokey_table->entry[entry_idx]->decrypt_key_31_0->key();
-   uart_send_hex(csr, decrypt_key_31_0, 8);
-   uart_send(csr, "]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Decryption key (8th 8 hex digits) [");
+   uint32_t decrypt_key_31_0 = CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_31_0);
+   uart_send_hex(decrypt_key_31_0, 8);
+   uart_send("]: ");
+   while (!uart_recv(uart_rx_data));
    str_parse_hex(uart_rx_data, &decrypt_key_31_0, 0, 0xFFFFFFFF);
 
    // Update cryptokeys table entry
-   csr->cryptokey_table->entry[entry_idx]->local_mac_47_32->mac(local_mac_47_32);
-   csr->cryptokey_table->entry[entry_idx]->local_mac_31_0->mac(local_mac_31_0);
-   csr->cryptokey_table->entry[entry_idx]->local_ip->ip(ulocal_ip);
-   csr->cryptokey_table->entry[entry_idx]->local_port->port(local_port);
-   csr->cryptokey_table->entry[entry_idx]->local_id->id(local_id);
-   csr->cryptokey_table->entry[entry_idx]->remote_mac_47_32->mac(remote_mac_47_32);
-   csr->cryptokey_table->entry[entry_idx]->remote_mac_31_0->mac(remote_mac_31_0);
-   csr->cryptokey_table->entry[entry_idx]->remote_ip->ip(uremote_ip);
-   csr->cryptokey_table->entry[entry_idx]->remote_port->port(remote_port);
-   csr->cryptokey_table->entry[entry_idx]->remote_id->id(remote_id);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_255_224->key(encrypt_key_255_224);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_223_192->key(encrypt_key_223_192);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_191_160->key(encrypt_key_191_160);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_159_128->key(encrypt_key_159_128);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_127_96->key(encrypt_key_127_96);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_95_64->key(encrypt_key_95_64);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_63_32->key(encrypt_key_63_32);
-   csr->cryptokey_table->entry[entry_idx]->encrypt_key_31_0->key(encrypt_key_31_0);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_255_224->key(decrypt_key_255_224);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_223_192->key(decrypt_key_223_192);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_191_160->key(decrypt_key_191_160);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_159_128->key(decrypt_key_159_128);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_127_96->key(decrypt_key_127_96);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_95_64->key(decrypt_key_95_64);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_63_32->key(decrypt_key_63_32);
-   csr->cryptokey_table->entry[entry_idx]->decrypt_key_31_0->key(decrypt_key_31_0);
+   CSR_SET(cryptokey_table.entry[entry_idx].local_mac_47_32, CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_MAC_47_32__MAC, local_mac_47_32);
+   CSR_REG32(cryptokey_table.entry[entry_idx].local_mac_31_0) = local_mac_31_0;
+   CSR_REG32(cryptokey_table.entry[entry_idx].local_ip) = ulocal_ip;
+   CSR_SET(cryptokey_table.entry[entry_idx].local_port, CSR__CRYPTOKEY_TABLE__ENTRY__LOCAL_PORT__PORT, local_port);
+   CSR_REG32(cryptokey_table.entry[entry_idx].local_id) = local_id;
+   CSR_SET(cryptokey_table.entry[entry_idx].remote_mac_47_32, CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_MAC_47_32__MAC, remote_mac_47_32);
+   CSR_REG32(cryptokey_table.entry[entry_idx].remote_mac_31_0) = remote_mac_31_0;
+   CSR_REG32(cryptokey_table.entry[entry_idx].remote_ip) = uremote_ip;
+   CSR_SET(cryptokey_table.entry[entry_idx].remote_port, CSR__CRYPTOKEY_TABLE__ENTRY__REMOTE_PORT__PORT, remote_port);
+   CSR_REG32(cryptokey_table.entry[entry_idx].remote_id) = remote_id;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_255_224) = encrypt_key_255_224;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_223_192) = encrypt_key_223_192;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_191_160) = encrypt_key_191_160;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_159_128) = encrypt_key_159_128;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_127_96) = encrypt_key_127_96;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_95_64) = encrypt_key_95_64;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_63_32) = encrypt_key_63_32;
+   CSR_REG32(cryptokey_table.entry[entry_idx].encrypt_key_31_0) = encrypt_key_31_0;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_255_224) = decrypt_key_255_224;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_223_192) = decrypt_key_223_192;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_191_160) = decrypt_key_191_160;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_159_128) = decrypt_key_159_128;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_127_96) = decrypt_key_127_96;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_95_64) = decrypt_key_95_64;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_63_32) = decrypt_key_63_32;
+   CSR_REG32(cryptokey_table.entry[entry_idx].decrypt_key_31_0) = decrypt_key_31_0;
 
-   uart_send(csr, "  Reset send/recv counters? (y/n) [n]: ");
-   while (!uart_recv(csr, uart_rx_data));
+   uart_send("  Reset send/recv counters? (y/n) [n]: ");
+   while (!uart_recv(uart_rx_data));
    if (uart_rx_data[0] == 'y' || uart_rx_data[0] == 'Y') {
-      csr->cryptokey_table->entry[entry_idx]->send_cnt_63_32->cnt(0);
-      csr->cryptokey_table->entry[entry_idx]->send_cnt_31_0->cnt(0);
-      csr->cryptokey_table->entry[entry_idx]->recv_cnt_63_32->cnt(0);
-      csr->cryptokey_table->entry[entry_idx]->recv_cnt_31_0->cnt(0);
+      CSR_REG32(cryptokey_table.entry[entry_idx].send_cnt_63_32) = 0;
+      CSR_REG32(cryptokey_table.entry[entry_idx].send_cnt_31_0) = 0;
+      CSR_REG32(cryptokey_table.entry[entry_idx].recv_cnt_63_32) = 0;
+      CSR_REG32(cryptokey_table.entry[entry_idx].recv_cnt_31_0) = 0;
    }
 
-   uart_send(csr, "Cryptokey table entry updated.\r\n");
+   uart_send("Cryptokey table entry updated.\r\n");
 
-   show_cryptokeys_entry(csr, entry_idx);
+   show_cryptokeys_entry(entry_idx);
 
-   csr->dpe->fcr->pause(0);
+   CSR_RMW(dpe.fcr, CSR__DPE__FCR__PAUSE, 0);
 }
 
 void reboot() {
+#ifdef VPROC
+   // Co-simulation: no restart, park the VProc node
+   while (1) VTick(10000, SOC_CPU_VPNODE);
+#else
    asm volatile ("jr zero" ::: "memory");
+#endif
 }
 
 int main(void) {
-   csr_vp_t* csr = CSR_VP();
    char uart_rx_data[UART_RXBUF_SIZE];
    uint8_t uart_rx_len;
    uint8_t debug_enabled = 0;
 
    // Check hardware ID
-   if (csr->hw_id->VENDOR() != 0xCCBA ||
-       csr->hw_id->PRODUCT() != 0xCACA) {
-      uart_send(csr, "\r\nHardware ID mismatch! Halting...\r\n");
+   if (CSR_GET(hw_id, CSR__HW_ID__VENDOR) != 0xCCBA ||
+       CSR_GET(hw_id, CSR__HW_ID__PRODUCT) != 0xCACA) {
+      uart_send("\r\nHardware ID mismatch! Halting...\r\n");
+#ifdef VPROC
+      while (1) VTick(10000, SOC_CPU_VPNODE);
+#else
       asm volatile ("ebreak");
+#endif
    }
 
    // Display banner
-   uart_send(csr, "\r\n==========================================\r\n");
-   uart_send(csr, "          WireGuard FPGA v");
-   uart_send_dec(csr, csr->hw_version->MAJOR());
-   uart_send_char(csr, '.');
-   uart_send_dec(csr, csr->hw_version->MINOR());
-   uart_send_char(csr, '.');
-   uart_send_dec(csr, csr->hw_version->PATCH());
-   uart_send(csr, "\r\n   Copyright \u00A9 2024-2026 Chili.CHIPS*ba\r\n");
-   uart_send(csr, "==========================================\r\n");
+   uart_send("\r\n==========================================\r\n");
+   uart_send("          WireGuard FPGA v");
+   uart_send_dec(CSR_GET(hw_version, CSR__HW_VERSION__MAJOR));
+   uart_send_char('.');
+   uart_send_dec(CSR_GET(hw_version, CSR__HW_VERSION__MINOR));
+   uart_send_char('.');
+   uart_send_dec(CSR_GET(hw_version, CSR__HW_VERSION__PATCH));
+   uart_send("\r\n   Copyright \u00A9 2024-2026 Chili.CHIPS*ba\r\n");
+   uart_send("==========================================\r\n");
 
    // Boot sequence
-   uart_send(csr, "Booting up...\r\n");
-   init_network(csr, &net_config);
-   show_network(csr, &net_config);
+   uart_send("Booting up...\r\n");
+   init_network(&net_config);
+   show_network(&net_config);
 
    // CLI prompt
-   uart_send(csr, "\r\nType 'help' to display commands.\r\n");
-   uart_send(csr, "(wireguard-fpga)# ");
+   uart_send("\r\nType 'help' to display commands.\r\n");
+   uart_send("(wireguard-fpga)# ");
 
    while (1) {
       // Receive Ethernet packet for CPU FIFO
-      if (eth_receive_packet(csr, &eth_packet_rx)) {
-         csr->gpio->led2(1);
+      if (eth_receive_packet(&eth_packet_rx)) {
+         CSR_RMW(gpio, CSR__GPIO__LED2, 1);
          // Parse packet header
          net_protocol_t protocol = net_parse_packet_header(&eth_packet_rx);
          switch (protocol) {
             case NET_PROTO_UNKNOWN:
                if (debug_enabled) {
-                  uart_send(csr, "<< NET_PROTO_UNKNOWN: ");
-                  uart_send_dec(csr, eth_packet_rx.len);
-                  uart_send(csr, "\r\n");
+                  uart_send("<< NET_PROTO_UNKNOWN: ");
+                  uart_send_dec(eth_packet_rx.len);
+                  uart_send("\r\n");
                }
                break;
             case NET_PROTO_ARP:
                if (debug_enabled) {
-                  uart_send(csr, "<< NET_PROTO_ARP: ");
-                  uart_send_dec(csr, eth_packet_rx.len);
-                  uart_send(csr, "\r\n");
+                  uart_send("<< NET_PROTO_ARP: ");
+                  uart_send_dec(eth_packet_rx.len);
+                  uart_send("\r\n");
                }
                if (net_process_arp(&net_config, &net_arp_cache, &eth_packet_rx, &eth_packet_tx)) {
-                  eth_send_packet(csr, &eth_packet_tx);
+                  eth_send_packet(&eth_packet_tx);
                   if (debug_enabled) {
-                     uart_send(csr, ">> NET_PROTO_ARP: ");
-                     uart_send_dec(csr, eth_packet_tx.len);
-                     uart_send(csr, "\r\n");
+                     uart_send(">> NET_PROTO_ARP: ");
+                     uart_send_dec(eth_packet_tx.len);
+                     uart_send("\r\n");
                   }
                }
                break;
             case NET_PROTO_ICMP:
                if (debug_enabled) {
-                  uart_send(csr, "<< NET_PROTO_ICMP: ");
-                  uart_send_dec(csr, eth_packet_rx.len);
-                  uart_send(csr, "\r\n");
+                  uart_send("<< NET_PROTO_ICMP: ");
+                  uart_send_dec(eth_packet_rx.len);
+                  uart_send("\r\n");
                }
                if (net_process_icmp(&net_config, &eth_packet_rx, &eth_packet_tx)) {
-                  eth_send_packet(csr, &eth_packet_tx);
+                  eth_send_packet(&eth_packet_tx);
                   if (debug_enabled) {
-                     uart_send(csr, ">> NET_PROTO_ICMP: ");
-                     uart_send_dec(csr, eth_packet_tx.len);
-                     uart_send(csr, "\r\n");
+                     uart_send(">> NET_PROTO_ICMP: ");
+                     uart_send_dec(eth_packet_tx.len);
+                     uart_send("\r\n");
                   }
                }
                break;
             case NET_PROTO_UDP:
                if (debug_enabled) {
-                  uart_send(csr, "<< NET_PROTO_UDP: ");
-                  uart_send_dec(csr, eth_packet_rx.len);
-                  uart_send(csr, "\r\n");
+                  uart_send("<< NET_PROTO_UDP: ");
+                  uart_send_dec(eth_packet_rx.len);
+                  uart_send("\r\n");
                }
                break;
          }
@@ -870,71 +877,71 @@ int main(void) {
          if (eth_packet_rx.src == DPE_ADDR_ETH_1) {
             eth_packet_rx.dst = DPE_ADDR_ETH_2;
             eth_packet_rx.bypass_all = 1;
-            eth_send_packet(csr, &eth_packet_rx);
+            eth_send_packet(&eth_packet_rx);
          } else if (eth_packet_rx.src == DPE_ADDR_ETH_2) {
             eth_packet_rx.dst = DPE_ADDR_ETH_1;
             eth_packet_rx.bypass_all = 1;
-            eth_send_packet(csr, &eth_packet_rx);
+            eth_send_packet(&eth_packet_rx);
          }
       } else {
-         csr->gpio->led2(0);
+         CSR_RMW(gpio, CSR__GPIO__LED2, 0);
       }
 
       // Receive and process CLI command
-      uart_rx_len = uart_recv(csr, uart_rx_data);
+      uart_rx_len = uart_recv(uart_rx_data);
       if (uart_rx_len) {
          if (strcmp(uart_rx_data, "test chacha20poly1305\n") == 0) {
-            test_chacha20poly1305(csr);
+            test_chacha20poly1305();
          } else if (strcmp(uart_rx_data, "test blake2s\n") == 0) {
-            test_blake2s(csr);
+            test_blake2s();
          } else if (strcmp(uart_rx_data, "test curve25519\n") == 0) {
-            test_curve25519(csr);
+            test_curve25519();
          } else if (strcmp(uart_rx_data, "test rng\n") == 0) {
-            test_rng(csr);
+            test_rng();
          } else if (strcmp(uart_rx_data, "test timer\n") == 0) {
-            test_timer(csr);
+            test_timer();
          } else if (strcmp(uart_rx_data, "show network\n") == 0) {
-            show_network(csr, &net_config);
+            show_network(&net_config);
          } else if (strcmp(uart_rx_data, "config network\n") == 0) {
-            config_network(csr, &net_config);
+            config_network(&net_config);
          } else if (strcmp(uart_rx_data, "show routes\n") == 0) {
-            show_routes(csr);
+            show_routes();
          } else if (strcmp(uart_rx_data, "config routes\n") == 0) {
-            config_routes(csr);
+            config_routes();
          } else if (strcmp(uart_rx_data, "show cryptokeys\n") == 0) {
-            show_cryptokeys(csr);
+            show_cryptokeys();
          } else if (strcmp(uart_rx_data, "config cryptokeys\n") == 0) {
-            config_cryptokeys(csr);
+            config_cryptokeys();
          } else if (strcmp(uart_rx_data, "debug\n") == 0) {
             debug_enabled = !debug_enabled;
-            uart_send(csr, "Debug mode ");;
+            uart_send("Debug mode ");;
             if (debug_enabled) {
-               uart_send(csr, "enabled.\r\n");
+               uart_send("enabled.\r\n");
             } else {
-               uart_send(csr, "disabled.\r\n");
+               uart_send("disabled.\r\n");
             }
          } else if (strcmp(uart_rx_data, "reboot\n") == 0) {
             reboot();
          } else if (strcmp(uart_rx_data, "help\n") == 0) {
-            uart_send(csr, "Available commands:\r\n");
-            uart_send(csr, "  test chacha20poly1305  - Test ChaCha20-Poly1305 AEAD\r\n");
-            uart_send(csr, "  test blake2s           - Test BLAKE2s hash function\r\n");
-            uart_send(csr, "  test curve25519        - Test Curve25519 key exchange\r\n");
-            uart_send(csr, "  test rng               - Test random number generator\r\n");
-            uart_send(csr, "  test timer             - Test timer functionality\r\n");
-            uart_send(csr, "  show network           - Show network configuration\r\n");
-            uart_send(csr, "  config network         - Configure network settings\r\n");
-            uart_send(csr, "  show routes            - Show routing table\r\n");
-            uart_send(csr, "  config routes          - Configure routing table entry\r\n");
-            uart_send(csr, "  show cryptokeys        - Show cryptokey table\r\n");
-            uart_send(csr, "  config cryptokeys      - Configure cryptokey table entry\r\n");
-            uart_send(csr, "  debug                  - Toggle debug mode\r\n");
-            uart_send(csr, "  reboot                 - Reboot the system\r\n");
-            uart_send(csr, "  help                   - Show this help message\r\n");
+            uart_send("Available commands:\r\n");
+            uart_send("  test chacha20poly1305  - Test ChaCha20-Poly1305 AEAD\r\n");
+            uart_send("  test blake2s           - Test BLAKE2s hash function\r\n");
+            uart_send("  test curve25519        - Test Curve25519 key exchange\r\n");
+            uart_send("  test rng               - Test random number generator\r\n");
+            uart_send("  test timer             - Test timer functionality\r\n");
+            uart_send("  show network           - Show network configuration\r\n");
+            uart_send("  config network         - Configure network settings\r\n");
+            uart_send("  show routes            - Show routing table\r\n");
+            uart_send("  config routes          - Configure routing table entry\r\n");
+            uart_send("  show cryptokeys        - Show cryptokey table\r\n");
+            uart_send("  config cryptokeys      - Configure cryptokey table entry\r\n");
+            uart_send("  debug                  - Toggle debug mode\r\n");
+            uart_send("  reboot                 - Reboot the system\r\n");
+            uart_send("  help                   - Show this help message\r\n");
          } else if (uart_rx_len > 1) {
-            uart_send(csr, "Unknown command\r\n");
+            uart_send("Unknown command\r\n");
          }
-         uart_send(csr, "(wireguard-fpga)# ");
+         uart_send("(wireguard-fpga)# ");
       }
    }
 

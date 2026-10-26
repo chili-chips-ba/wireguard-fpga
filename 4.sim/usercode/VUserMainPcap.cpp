@@ -46,6 +46,7 @@
 #include <filesystem>
 #include <deque>
 #include <mutex>
+#include <atomic>
 
 #include "VProcClass.h"
 extern "C" {
@@ -66,6 +67,30 @@ static std::deque<uint64_t> g_tx_times_node4;
 static std::mutex           g_tx_mtx_node4;
 static pcapreplay::MergeLogger g_merge_node2;
 static pcapreplay::MergeLogger g_merge_node4;
+
+// The test is done when both flows (1 -> 2, 3 -> 4) are: the sender has
+// replayed the whole file and every frame it sent has arrived
+static std::atomic<bool> g_tx_done_node2{false};
+static std::atomic<bool> g_tx_done_node4{false};
+static std::atomic<int>  g_flows_pending{2};
+
+// Receiver: idle until its flow is done; the last flow asks tb.sv to end
+// the run (udpIpPg halt)
+static void WaitFlowDone(udpIpPg &pUdp, const std::atomic<bool> &tx_done,
+                         std::deque<uint64_t> &tx_times, std::mutex &tx_mtx) {
+    while (true) {
+        pUdp.UdpVpSendIdle(1);
+        std::lock_guard<std::mutex> lk(tx_mtx);
+        if (tx_done && tx_times.empty())
+            break;
+    }
+    if (--g_flows_pending == 0) {
+        VPrint("PCAP: all frames received: test done\n");
+        pUdp.UdpVpSetHalt(1);
+    }
+    while (true)
+        pUdp.UdpVpSendIdle(1);
+}
 
 // ----------------------------------------------------------------------------
 // Node definitions: MAC/IP/UDP ports (same as in VUserMainUdp.cpp)
@@ -124,6 +149,9 @@ extern "C" void VUserMain1(void) {
                         &g_tx_mtx_node2,
                         NODE1_INIT_NS,
                         &g_merge_node2);
+    g_tx_done_node2 = true;
+    while (true)
+        pUdp.UdpVpSendIdle(1);
 }
 
 // ----------------------------------------------------------------------------
@@ -151,8 +179,7 @@ extern "C" void VUserMain2(void) {
     ctx2.local_mac = NODE2_MAC_ADDR;
     ctx2.local_ip  = NODE2_IPV4_ADDR;
     Manager::RegisterRecorder(pUdp, &ctx2);
-    while (true)
-        pUdp.UdpVpSendIdle(1);
+    WaitFlowDone(pUdp, g_tx_done_node2, g_tx_times_node2, g_tx_mtx_node2);
 }
 
 // ----------------------------------------------------------------------------
@@ -187,6 +214,9 @@ extern "C" void VUserMain3(void) {
                         &g_tx_mtx_node4,
                         NODE3_INIT_NS,
                         &g_merge_node4);
+    g_tx_done_node4 = true;
+    while (true)
+        pUdp.UdpVpSendIdle(1);
 }
 
 // ----------------------------------------------------------------------------
@@ -214,6 +244,5 @@ extern "C" void VUserMain4(void) {
     ctx4.local_mac = NODE4_MAC_ADDR;
     ctx4.local_ip  = NODE4_IPV4_ADDR;
     Manager::RegisterRecorder(pUdp, &ctx4);
-    while (true)
-        pUdp.UdpVpSendIdle(1);
+    WaitFlowDone(pUdp, g_tx_done_node4, g_tx_times_node4, g_tx_mtx_node4);
 }

@@ -165,7 +165,7 @@ Compiling co-designed application code, either compiled for the native host mach
 
 #### Natively Compiled Application
 
-As well as the native test code case seen in the previous section, the Wireguard application can be compiled natively for the host machine, including the hardware access layer (HAL), generated from SystemRDL. The HAL software output from this is processed to generate a version that makes accesses to the VProc and mem_model APIs in place of accesses with pointers to and from memory (see the [Co-simulation HAL](#co-simulation-hal) section below). The rest of the application software has these details hidden away in the HAL and sees the same API as presented by the auto-generated code. In both cases transactions happen on the <tt>soc_if bus</tt> port of the <tt>soc_cpu</tt> component. The <tt>main</tt> entry point is also swapped for <tt>VUserMain0</tt>.
+As well as native test code like the above, the Wireguard firmware itself is compiled for the host: that is the default build (`BUILD=DEFAULT`). <tt>MakefileVProc.mk</tt> compiles <tt>2.sw/app</tt> as C++ with <tt>main</tt> renamed <tt>fw_main</tt>, and <tt>usercode/VUserMain0.cpp</tt> calls it. Its register accesses become VProc bus cycles on the <tt>soc_if bus</tt> port of the <tt>soc_cpu</tt> component, with the addresses and byte enables of the RISC-V core ([Co-simulation HAL](#co-simulation-hal)).
 
 #### RISC-V Compiled Application
 
@@ -230,7 +230,7 @@ This reflects the available models as detailed in the _Configuring ISS timing mo
 
 ## Building and Running Code
 
-A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software, for both the `soc_cpu` and _udpIpPg_ components, and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below) the provided `soc_cpu` user code that's the _rv32_ ISS integration software. By default, the make file will compile the <tt>VUserMain0.cpp</tt> user code for `soc_cpu` and `VUserMainUdp.cpp` for _udpIpPg_ located in <tt>4.sim/usercode</tt>, but the directory and list of files to compile can be specified on the command line (see below). The `VUserMainUdp.cpp` file contains the `VUserMain<n>` entry points for all four instantiated _udpIpPg_ modules (nodes 1 to 4). To alter which files to compile, the make file `USER_C` variable can be updated to list a set of C++ files for the `soc_cpu`. Similarly, the `UDP_C` variable can be updated with a list of files for the Ethernet components. The location of the source files is in the variable `USRCODEDIR`, which may also be altered. Any modifications can be done to the make file itself, or on the command line. E.g., to add additional files to the `soc_cpu` build:
+A <tt>MakefileVProc.mk</tt> file is provided in the <tt>4.sim/</tt> directory to compile the user *VProc* software, for both the `soc_cpu` and _udpIpPg_ components, and to build and run the test bench HDL. The make file will compile all the user code or, where an ISS build is selected (see make file variables below) the provided `soc_cpu` user code that's the _rv32_ ISS integration software. By default, the make file will compile the firmware in <tt>2.sw/app</tt>, with the <tt>VUserMain0.cpp</tt> that calls it, for `soc_cpu` and `VUserMainUdp.cpp` for _udpIpPg_ located in <tt>4.sim/usercode</tt>, but the directory and list of files to compile can be specified on the command line (see below). The `VUserMainUdp.cpp` file contains the `VUserMain<n>` entry points for all four instantiated _udpIpPg_ modules (nodes 1 to 4). To alter which files to compile, the make file `USER_C` variable can be updated to list a set of C++ files for the `soc_cpu`. Similarly, the `UDP_C` variable can be updated with a list of files for the Ethernet components. The location of the source files is in the variable `USRCODEDIR`, which may also be altered. Any modifications can be done to the make file itself, or on the command line. E.g., to add additional files to the `soc_cpu` build:
 
 ```
 make -f MakefileVProc.mk USER_C="VUserMain0.cpp MyTest1Class.cpp"
@@ -267,14 +267,14 @@ Command line configurable variables:
 
 By default, without a named target, the simulation executable will be built but not run. With a <tt>run</tt> target, the simulation executable is built and then executed in batch mode. To fire up waveforms after the run, a target of <tt>rungui</tt> or </tt>gui</tt> can be used. A target of <tt>clean</tt> removes all intermediate files of previous compilations.
 
-The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default native test code is built, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the make file compiles the supplied source code for the ISS.
+The make file has a set of variables (with default settings) that can be overridden on running <tt>make</tt>. E.g. <tt>make VAR=NewVal</tt>. The help output shows these variables with brief decriptions. Entries with multiple values should be enclosed in double quotes. By default the firmware is built for the host, but if <tt>BUILD</tt> is set to <tt>ISS</tt>, then the rv32 ISS and VProc program is compiled and, in this case, the <tt>USER_C</tt> and <tt>USRCODEDIR</tt> are ignored as the make file compiles the supplied source code for the ISS.
 
 The <tt>USER_C</tt> and <tt>USERCODEDIR</tt> make file variable allows different (and multiple) user source file names to override the defaults, and to change the location of where the user code is located (if not the ISS build). This allows different programs to be run by simply changing these variable, and to organise the different source code in different directories etc. By default, the VProc code is compiled for debugging (<tt>-g</tt>), but this can be overridden by changing <tt>OPTFLAG</tt>. The trace and timing options can also be overridden to allow a faster executable. The Wireguard <tt>top.filelist</tt> filename can be overridden to allow multiple configurations to be selected from, if required. The processing of this file to remove the listed <tt>soc_cpu</tt> HDL files is selected on a pattern (<tt>ip.cpu</tt>) but this can be changed using <tt>SOCCPUMATCH</tt>. If any additional options for Verilator are required, then these can be added to <tt>USRSIMOPTS</tt>. The GTKWave waveform file can be selected with <tt>WAVESAVEFILE</tt>.
 
-Control of when the simulation exits can be specified with the <tt>TIMEOUTUS</tt> variable in units of microseconds. Some example commands using the make file are shown below:
+The simulation ends when the test is done: the last receiving UDP node (<tt>VUserMainUdp.cpp</tt>: both frames in; <tt>VUserMainPcap.cpp</tt>: every replayed frame in) sets the _udpIpPg_ halt, and <tt>tb.sv</tt> stops 10 us later. <tt>TIMEOUTUS</tt>, in microseconds, is the time limit for a test that never finishes. Some example commands using the make file are shown below:
 
 ```
-make -f MakefileVProc.mk run                                                   # Build and run default VUserMain0.cpp code in usercode/
+make -f MakefileVProc.mk run                                                   # Build and run the firmware natively (usercode/VUserMain0.cpp calls it)
 make -f MakefileVProc.mk                                                       # Build but don't run default code
 make -f MakefileVProc.mk USER_C="test1.cpp subfuncs.cpp" USRCODEDIR=test1 run  # Build and run test1.cpp and subfuncs.cpp in test1/
 make -f MakefileVProc.mk BUILD=ISS gui                                         # Build and run ISS simulation and show waves
@@ -546,51 +546,25 @@ Payload (64 bytes):
 
 ## Co-simulation HAL
 
-### Using the HAL
-
-The HAL provides a hierarchical access to the registers via a set of pointer dereferencing and a final access method (for reads and writes of registers and their bit fields) that reflects the hierarchy of the RDL specification. The following shows some example accesses, based on the `3.build/csr_build/csr.rdl` (`routing_table.entry[64]`, `cryptokey_table.entry[64]`):
+The firmware reaches the CSR through four macros in [`csr_regs.h`](../3.build/csr_build/csr_regs.h), which take every address from the `peakrdl`-generated `csr.h` ([3.build](../3.build/README.md#csr-hal-compilation)):
 
 ```
-    #include "wireguard_regs.h"
-
-    // Create a CSR register object. A base address can be specified
-    // but defaults to the address specified in the RDL
-    csr_vp_t* csr = new csr_vp_t();
-
-    // Write to ip field and read back.
-    csr->routing_table->entry[0]->ip->ip(0x12345678);
-    printf("ip = 0x%08x\n\n", csr->routing_table->entry[0]->ip->ip());
-
-    // Write to whole local_ip register
-    csr->cryptokey_table->entry[3]->local_ip->full(0x0a090001);
-
-    // Write to bit field in dst register
-    csr->routing_table->entry[3]->dst->dst(0x2);
-
-    // Read back bit field in dst register
-    printf("dst = 0x%1x\n\n", csr->routing_table->entry[3]->dst->dst());
-```
-The above code will compile either natively for *VProc* or for the RISC-V hardware, with the appropriate header, as decribed above. Write accesses use a method with the final register bit field name with an appropriate argument (this is either a `uint64_t` or `uint32_t` as appropriate to the register's definition). A read access is done in the same manner bit without an argument and returns a value (either a `uint64_t` or `uint32_t` as appropriate).
-
-A convention has been used where to access a whole register the 'bit field' access method is named `full`, with bit field accesses using their declared names, as normal. Some assumptions have been made with the script as it stands based on the current `csr.rdl` (but new features can be added). The main one currently is that arrays can't be multi-dimensional (hierarchy can be used to achieve the same thing) and an error is thrown if detected.
-
-### Other Co-simulation considerations
-
-The HAL software abstracts away the details of hardware and co-simulation register accesses but a couple of other consideration are needed to allow code to compile both for hardware and simulation. The first of these is the `main` entry point.
-
-A normal application compiled for the target has a `main()` entry point function. In *VProc* co-simulation, this is not the case as the logic simulation itself has a `main()` function already defined and there can be multiple *VProc* node instantiations, each with their own entry point. These are named `VUserMain<n>`, where `<n>` is the node number. So, node 0 has an entry point function `VUserMain0`. The auto-generated HAL co-simulation headers include a `WGMAIN` definition that is either `main` for the hardware code or `VUserMain0` for *VProc* code (assuming node 0 for `soc_cpu`). This is then used in place of `main` at the top level application code.
-
-```
-#include "wireguard_regs.h"
-
-// Application top level
-void WGMAIN (void)
-{
-  // Top level source code here
-}
+    CSR_REG32(cpu_fifo.rx.data_31_0) = d;                                 // whole register
+    if (CSR_GET(dpe.fcr, CSR__DPE__FCR__IDLE)) ...                        // one field, read
+    CSR_SET(cpu_fifo.rx.control, CSR__CPU_FIFO__RX__CONTROL__TKEEP, k);   // a field that owns its bytes
+    CSR_RMW(gpio, CSR__GPIO__LED1, 1);                                    // a field that shares a byte
 ```
 
-The second consideration is the use of delay functions. This can be in the form of standard C functions, such as `usleep`, or application specific functions using instruction loops. In either case, these should be wrapped in a commonly named function&mdash;e.g., `wg_usleep(int time)`. The wrapper delay library function will then need to have `VPROC` selected code to either call the application specific target delay function, or to convert the specified time to clock cycles and call the *VProc* API function `VTick` (or its C++ API equivalent) to advance simulation time the appropriate amount. The co-simulation auto-generated HAL header has `SOC_CPU_CLK_PERIOD_PS` defined that can be configured on the `3.build/sysrdl_cosim.py` command line with `-C` or `--clk_period`, but defaults to 18518 ps (54 MHz), not the 80 MHz (12500 ps) that `tb.sv` uses for the `soc_cpu` ([#64](https://github.com/chili-chips-ba/wireguard-fpga/issues/64)). A `SOC_CPU_VPNODE` is also defined, defaulting to 0, for use when calling the *VProc* C API functions directly. The definition is affected by the `-v` or `--vp_node` command line options of `3.build/sysrdl_cosim.py`.
+On the RISC-V core they are loads and stores: `lw`, and `sb`, `sh` or `sw` as wide as the field's bytes. With `BUILD=DEFAULT` the Makefile compiles the firmware for the host, as C++ with `VPROC` defined, and the same macros become _VProc_ bus cycles: `VRead`, `VWrite`, or `VWriteBE` with the byte enables of the core's store. Each access is followed by `CSR_VP_GAP` (8) idle SOC cycles.
+
+> **Why `CSR_VP_GAP`.** The host runs the firmware in zero simulated time between two accesses. Without the gap, accesses come back to back, faster than any core issues them, and a polling loop costs one _VProc_ round trip (a thread switch between simulator and C code) per bus cycle, which makes the co-simulation slower in wall-clock time than the RTL core. The 8 cycles are about what a core spends on the instructions between two accesses. To change it: `make -f MakefileVProc.mk clean`, then `make -f MakefileVProc.mk OPTFLAG="-g -DCSR_VP_GAP=<n>" run`.
+
+The firmware source has no co-simulation code but four spots:
+
+- **Entry point:** every _VProc_ node starts at `VUserMain<n>`, and the simulator has its own `main()`. So the firmware is compiled with `-Dmain=fw_main`, and [`usercode/VUserMain0.cpp`](usercode/VUserMain0.cpp) calls it.
+- **Halt and reboot:** `ebreak` and `jr zero` (`2.sw/app/main.cpp`) become a loop that ticks the _VProc_ node, so the simulation runs on to its end.
+- **C library:** the bare-metal `memcpy`, `strcmp` and friends (`string_bare.c`) give way to the host's.
+- **UART output:** `uart_send_char()` (`uart.c`) prints to the simulation log instead of waiting on the 115200-baud UART. The boot banner would otherwise keep the firmware out of its main loop, which forwards ETH_1 <-> ETH_2 frames, for about 40 ms.
 
 ## Tool Versions
 

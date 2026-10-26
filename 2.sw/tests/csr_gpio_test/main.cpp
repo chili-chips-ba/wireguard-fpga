@@ -43,8 +43,7 @@
  */
 
 #include <stdint.h>
-#include "wireguard_libs.h"
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 
 void delay(uint32_t count) {
    volatile uint32_t i;
@@ -53,14 +52,13 @@ void delay(uint32_t count) {
 
 int main(void)
 {
-   csr_vp_t* csr = CSR_VP();
 
    while (1) {
-      csr->gpio->led2(1);
-      csr->gpio->led1(csr->gpio->key1());
+      CSR_RMW(gpio, CSR__GPIO__LED2, 1);
+      CSR_RMW(gpio, CSR__GPIO__LED1, CSR_GET(gpio, CSR__GPIO__KEY1));
       delay(1000000);
-      csr->gpio->led2(0);
-      csr->gpio->led1(csr->gpio->key1());
+      CSR_RMW(gpio, CSR__GPIO__LED2, 0);
+      CSR_RMW(gpio, CSR__GPIO__LED1, CSR_GET(gpio, CSR__GPIO__KEY1));
       delay(1000000);
    }
 

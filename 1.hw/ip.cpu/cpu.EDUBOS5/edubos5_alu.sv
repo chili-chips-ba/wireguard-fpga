@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 CHILI.CHIPS.LLC
+// SPDX-FileCopyrightText: 2022 Chili.CHIPS
 //
 // SPDX-License-Identifier: BSD-3-Clause
 

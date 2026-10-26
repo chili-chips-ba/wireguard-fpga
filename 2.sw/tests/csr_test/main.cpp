@@ -43,8 +43,7 @@
  */
 
 #include <stdint.h>
-#include "wireguard_libs.h"
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 #include "uart.h"
 #include "ethernet.h"
 
@@ -52,32 +51,31 @@ eth_raw_packet_t packet;
 
 int main(void)
 {
-   csr_vp_t* csr = CSR_VP();
    char rx_data[UART_RXBUF_SIZE];
 
    // Turn on LED2
-   csr->gpio->led2(1);
+   CSR_RMW(gpio, CSR__GPIO__LED2, 1);
    // Set LED1 to the value of KEY1
-   csr->gpio->led1(csr->gpio->key1());
+   CSR_RMW(gpio, CSR__GPIO__LED1, CSR_GET(gpio, CSR__GPIO__KEY1));
 
    // Send Hello world to UART
-   uart_send(csr, "Hello world!\r\n");
+   uart_send("Hello world!\r\n");
 
    // Receive (and echo) the text terminated with CRLF
-   while(!uart_recv(csr, rx_data));
+   while(!uart_recv(rx_data));
 
    // Receive Ethernet packet for CPU FIFO
-   while (!eth_receive_packet(csr, &packet));
+   while (!eth_receive_packet(&packet));
    // If packet is received from eth1
    // forward it to eth2, and vice versa
    if (packet.src == 1) {
       packet.dst = 2;
       packet.bypass_all = 1;
-      eth_send_packet(csr, &packet);
+      eth_send_packet(&packet);
    } else if (packet.src == 2) {
       packet.dst = 1;
       packet.bypass_all = 1;
-      eth_send_packet(csr, &packet);
+      eth_send_packet(&packet);
    }
 
    return 0;

@@ -35,10 +35,10 @@ See the root `README.md` for the full architecture writeup (HW/SW partitioning d
 
 The overall build is three independent stages, each with its own top-level Makefile in `3.build/`, run in this dependency order:
 
-**1. CSR/HAL generation** (`3.build/MakefileCSR`) — compiles `3.build/csr_build/csr.rdl` (SystemRDL) via `peakrdl`/`systemrdl-compiler` into the CSR RTL and three header variants (hardware, co-sim, and the intermediate `c-header`) so the RISC-V firmware, the VProc cosim testbench, and the RTL all share one register API:
+**1. CSR/HAL generation** (`3.build/MakefileCSR`) — compiles `3.build/csr_build/csr.rdl` (SystemRDL) via `peakrdl`/`systemrdl-compiler` into the CSR RTL and `csr.h`; `csr_build/csr_regs.h` wraps it, so the RISC-V firmware, the VProc co-simulation and the RTL all share one register map:
 ```bash
 make -f MakefileCSR         # generates 3.build/csr_build/generated-files/*
-make -f MakefileCSR clean
+make -f MakefileCSR clean-all     # also deletes the checked-in generated files
 ```
 
 **2. Firmware build** (`3.build/MakefileSW`) — must run before the hardware build, since it produces `imem.INIT.vh`, consumed by synthesis. Requires `riscv64-unknown-elf-gcc` (Ubuntu: `sudo apt install gcc-riscv64-unknown-elf`, per the `3.build/MakefileSW` header; `0.doc/1.README.Tool-Installs.txt` does not cover it):

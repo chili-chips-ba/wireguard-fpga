@@ -109,6 +109,8 @@ logic [31:0]          vp_addr;
 logic [31:0]          vp_wdat;
 logic [31:0]          vp_rdat;
 logic                 cpu_access;
+logic                 vp_acc;
+logic                 done;
 
 logic                 imem_write;
 logic                 imem_read;
@@ -121,7 +123,17 @@ logic                 imem_readdatavalid;
 // Maps VProc's generic memory mapped interface to comply
 // with the soc_if protocol.
 //
+// VProc samples the ack on a rising edge and updates WE/RD
+// on the following one, so it still holds the finished
+// access for one cycle after the ack. 'done' masks that
+// cycle: no second bus/IMEM access, no second ack. An
+// access takes 2 clocks, as on the RTL cores.
 //--------------------------------------------------------
+
+always_ff @(posedge bus.clk) done <= vp_wack | vp_rack;
+
+// VProc access in progress
+assign vp_acc         = (vp_we | vp_rd) & ~done;
 
 // Flag if accessin the local IMEM
 assign cpu_access     = vp_addr[31:28] == '0;
@@ -130,7 +142,7 @@ assign cpu_access     = vp_addr[31:28] == '0;
 assign bus.we         = vp_be & {4{vp_we}};
 
 // Bus access valid on read or write
-assign bus.vld        = (vp_we | vp_rd) & ~cpu_access;
+assign bus.vld        = vp_acc & ~cpu_access;
 
 // Bus output is a word address
 assign bus.addr       = vp_addr[31:2];
@@ -139,18 +151,18 @@ assign bus.addr       = vp_addr[31:2];
 assign bus.wdat       = vp_wdat;
 
 // Write to IMEM
-assign imem_write     = vp_we & cpu_access;
+assign imem_write     = vp_we & ~done & cpu_access;
 
 // Read from IMEM
-assign imem_read      = vp_rd & cpu_access;
+assign imem_read      = vp_rd & ~done & cpu_access;
 
 `ifndef VERILATOR
 
   // Write acknowledge VProc when writing and bus.rdy
-assign vp_wack        = vp_we & (bus.rdy | cpu_access);
+assign vp_wack        = vp_we & ~done & (bus.rdy | cpu_access);
 
   // Read acknowledge VProc when reading and bus.rdy
-assign vp_rack        = vp_rd & (bus.rdy | imem_readdatavalid);
+assign vp_rack        = vp_rd & ~done & (bus.rdy | imem_readdatavalid);
 
   // Mux source of read data
 assign vp_rdat        = cpu_access ? imem_readdata : bus.rdat;
@@ -162,10 +174,10 @@ always @(negedge bus.clk)
 begin
 
   // Write acknowledge VProc when writing and bus.rdy
-  vp_wack             = vp_we & (bus.rdy | cpu_access);
+  vp_wack             = vp_we & ~done & (bus.rdy | cpu_access);
 
   // Read acknowledge VProc when reading and bus.rdy
-  vp_rack             = vp_rd & (bus.rdy | imem_readdatavalid);
+  vp_rack             = vp_rd & ~done & (bus.rdy | imem_readdatavalid);
 
   // Mux source of read data
   vp_rdat             = cpu_access ? imem_readdata : bus.rdat;
@@ -259,4 +271,5 @@ Version History:
 -----------------------------------------------------------------------------
  2024/10/30 SS: initial creation
  2026/10/21   : CPU reset on VProc interrupt bit 3
+ 2026/10/26   : 2-clock handshake: mask the cycle after the ack
 */

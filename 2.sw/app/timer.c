@@ -41,17 +41,14 @@
 //==========================================================================
 
 #include "timer.h"
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 
 // System clock cycles from the csr.cycle counter, not rdcycle: eduBOS5 has
 // no CSR instructions (any SYSTEM instruction halts it, e.g. the ebreak
-// error stops in main.cpp and wireguard_libs.cpp)
+// error stop in main.cpp)
 uint32_t cycles(void)
 {
-    static csr_vp_t* csr = 0;
-    if (!csr)
-        csr = CSR_VP();
-    return csr->cycle->count();
+    return CSR_REG32(cycle);
 }
 
 void delay_us(uint32_t us)

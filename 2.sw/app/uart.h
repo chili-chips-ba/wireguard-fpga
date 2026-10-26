@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 #include "string_bare.h"
 
 #define UART_RXBUF_SIZE 32
@@ -20,21 +20,21 @@ extern "C" {
 #define UART_SOP        0x12
 #define UART_DEL        0x7F
 
-void    uart_send_char      (csr_vp_t* csr, char c);
-void    uart_send_hex       (csr_vp_t* csr, unsigned int val, int digits);
-void    uart_send_hex_bytes (csr_vp_t* csr, const uint8_t *data, int len);
-void    uart_send_dec       (csr_vp_t* csr, uint32_t val);
-void    uart_send           (csr_vp_t* csr, const char *s);
-void    uart_send_ip        (csr_vp_t* csr, const uint8_t *ip);
-void    uart_send_mac       (csr_vp_t* csr, const uint8_t *mac);
-uint8_t uart_recv           (csr_vp_t* csr, char *s);
+void    uart_send_char      (char c);
+void    uart_send_hex       (unsigned int val, int digits);
+void    uart_send_hex_bytes (const uint8_t *data, int len);
+void    uart_send_dec       (uint32_t val);
+void    uart_send           (const char *s);
+void    uart_send_ip        (const uint8_t *ip);
+void    uart_send_mac       (const uint8_t *mac);
+uint8_t uart_recv           (char *s);
 
 #ifdef UART_TEST
-void    uart_test       (csr_vp_t* csr);
+void    uart_test       (void);
 #endif
 
 #ifdef RISCV_TEST
-void    uart_tests_info (csr_vp_t* csr, int cmd);
+void    uart_tests_info (int cmd);
 #endif
 
 #ifdef __cplusplus

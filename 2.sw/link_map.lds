@@ -56,7 +56,6 @@ OUTPUT_FORMAT( "elf32-littleriscv" )
 OUTPUT_ARCH( "riscv" )
 /*specify the output architecture is RISCV*/
 
-_HEAP_SIZE  = 0x400;  /*define a macro */
 _STACK_SIZE = 0x200;  /*define a macro */
 
 
@@ -215,21 +214,6 @@ SECTIONS {
       _bss_end = .;    /*global symbol*/
    }
 
-//--------------------------------------------------------------------
-// Define the Heap.
-//  Ensure that we have enough RAM left for the specified size
-//  See: https://www.baeldung.com/cs/memory-stack-vs-heap
-//--------------------------------------------------------------------
-   . = ALIGN(16);      /*align with 16 bytes for easier Heap management*/
-
-   .heap : {
-     _heap_start = .;  /*global symbol*/
-     //KEEP(*(.heap*))
-     . = . + _HEAP_SIZE; /* allocate HEAP_SIZE worth of space*/
-     . = ALIGN(16);
-     _heap_end = .;    /*global symbol*/
-   }
-
    /*PROVIDE is to define a symbol only if it's referenced 
       and not defined by any included object*/
    . = ALIGN(8);
@@ -256,7 +240,7 @@ SECTIONS {
 
    _stack_end = _stack_start - SIZEOF(.stack);
  
-   //ASSERT (_stack_end <= _heap_end, "Error: Stack overflow. RAM is too small for this program")
+   //ASSERT (_stack_end <= _end, "Error: Stack overflow. RAM is too small for this program")
 
 
 //--------------------------------------------------------------------

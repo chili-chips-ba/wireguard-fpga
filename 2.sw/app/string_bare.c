@@ -42,6 +42,8 @@
 
 #include "string_bare.h"
 
+#ifndef VPROC
+
 __attribute__((used)) void *memset(void *dest, int value, size_t len) {
    unsigned char *d = (unsigned char *)dest;
    unsigned char v = (unsigned char)value;
@@ -95,6 +97,8 @@ size_t strlen(const char *str) {
 int strcmp(const void *s1, const void *s2) {
    return memcmp(s1, s2, strlen((const char *)s1));
 }
+
+#endif  // VPROC
 
 uint8_t str_parse_uint32(const char* str, uint32_t* value, uint32_t min, uint32_t max) {
    uint32_t val = 0;

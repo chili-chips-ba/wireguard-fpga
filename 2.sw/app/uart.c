@@ -49,10 +49,16 @@
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_char(csr_vp_t* csr, char c) {
+void uart_send_char(char c) {
+#ifdef VPROC
+   // Co-simulation: to the simulation log, at once. At 115200 baud the boot
+   // banner alone keeps the firmware out of its main loop for ~40 ms.
+   if (c != '\r') VPrint("%c", c);
+#else
    // wait for HW "not busy", then send the byte/character
-   while (csr->uart->tx->busy());
-   csr->uart->tx->data(c);
+   while (CSR_GET(uart.tx, CSR__UART__TX__BUSY));
+   CSR_SET(uart.tx, CSR__UART__TX__DATA, c);
+#endif
 }
 
 /**********************************************************************
@@ -63,9 +69,9 @@ void uart_send_char(csr_vp_t* csr, char c) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex(csr_vp_t* csr, unsigned int val, int digits) {
+void uart_send_hex(unsigned int val, int digits) {
    for (int i = (4*digits) - 4; i >= 0; i -= 4)
-      uart_send_char(csr, "0123456789ABCDEF"[(val >> i) % 16]);
+      uart_send_char("0123456789ABCDEF"[(val >> i) % 16]);
 }
 
 /**********************************************************************
@@ -77,13 +83,13 @@ void uart_send_hex(csr_vp_t* csr, unsigned int val, int digits) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_hex_bytes(csr_vp_t* csr, const uint8_t *data, int len) {
+void uart_send_hex_bytes(const uint8_t *data, int len) {
    const char hex[] = "0123456789ABCDEF";
    for (int i = 0; i < len; i++)
    {
       uint8_t b = data[i];
-      uart_send_char(csr, hex[b >> 4]);    // high nibble
-      uart_send_char(csr, hex[b & 0xF]);   // low nibble
+      uart_send_char(hex[b >> 4]);    // high nibble
+      uart_send_char(hex[b & 0xF]);   // low nibble
    }
 }
 
@@ -95,9 +101,9 @@ void uart_send_hex_bytes(csr_vp_t* csr, const uint8_t *data, int len) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_dec(csr_vp_t* csr, uint32_t val) {
+void uart_send_dec(uint32_t val) {
    if (val == 0) {
-      uart_send_char(csr, '0');
+      uart_send_char('0');
       return;
    }
 
@@ -109,7 +115,7 @@ void uart_send_dec(csr_vp_t* csr, uint32_t val) {
 
    while (divisor > 0) {
       uint32_t digit = val / divisor;
-      uart_send_char(csr, digit + '0');
+      uart_send_char(digit + '0');
       val -= digit * divisor;
       divisor /= 10;
    }
@@ -122,8 +128,8 @@ void uart_send_dec(csr_vp_t* csr, uint32_t val) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send(csr_vp_t* csr, const char *s) {
-   while (*s) uart_send_char(csr, *(s++));
+void uart_send(const char *s) {
+   while (*s) uart_send_char(*(s++));
 }
 
 /**********************************************************************
@@ -133,14 +139,14 @@ void uart_send(csr_vp_t* csr, const char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_ip(csr_vp_t* csr, const uint8_t *ip) {
-   uart_send_dec(csr, ip[0]);
-   uart_send_char(csr, '.');
-   uart_send_dec(csr, ip[1]);
-   uart_send_char(csr, '.');
-   uart_send_dec(csr, ip[2]);
-   uart_send_char(csr, '.');
-   uart_send_dec(csr, ip[3]);
+void uart_send_ip(const uint8_t *ip) {
+   uart_send_dec(ip[0]);
+   uart_send_char('.');
+   uart_send_dec(ip[1]);
+   uart_send_char('.');
+   uart_send_dec(ip[2]);
+   uart_send_char('.');
+   uart_send_dec(ip[3]);
 }
 
 /**********************************************************************
@@ -150,18 +156,18 @@ void uart_send_ip(csr_vp_t* csr, const uint8_t *ip) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_send_mac(csr_vp_t* csr, const uint8_t *mac) {
-   uart_send_hex(csr, mac[0], 2);
-   uart_send_char(csr, ':');
-   uart_send_hex(csr, mac[1], 2);
-   uart_send_char(csr, ':');
-   uart_send_hex(csr, mac[2], 2);
-   uart_send_char(csr, ':');
-   uart_send_hex(csr, mac[3], 2);
-   uart_send_char(csr, ':');
-   uart_send_hex(csr, mac[4], 2);
-   uart_send_char(csr, ':');
-   uart_send_hex(csr, mac[5], 2);
+void uart_send_mac(const uint8_t *mac) {
+   uart_send_hex(mac[0], 2);
+   uart_send_char(':');
+   uart_send_hex(mac[1], 2);
+   uart_send_char(':');
+   uart_send_hex(mac[2], 2);
+   uart_send_char(':');
+   uart_send_hex(mac[3], 2);
+   uart_send_char(':');
+   uart_send_hex(mac[4], 2);
+   uart_send_char(':');
+   uart_send_hex(mac[5], 2);
 }
 
 /**********************************************************************
@@ -172,11 +178,11 @@ void uart_send_mac(csr_vp_t* csr, const uint8_t *mac) {
  *
  * Returns:     None
  **********************************************************************/
-uint8_t uart_recv(csr_vp_t* csr, char *s) {
+uint8_t uart_recv(char *s) {
    uint32_t uart_rx;
 
    // Check for available data:
-   uart_rx = csr->uart->rx->full();
+   uart_rx = CSR_REG32(uart.rx);
    if (uart_rx & UART_RX_VALID) {
       // if SOP received, ignore RX;
       if ((uart_rx & UART_RX_DATA) == UART_SOP)
@@ -198,8 +204,8 @@ uint8_t uart_recv(csr_vp_t* csr, char *s) {
             break;
          // On <CR> echo back <CR><LF> and exit
          } else if (*s == '\r') {
-            uart_send_char(csr, '\r');
-            uart_send_char(csr, '\n');
+            uart_send_char('\r');
+            uart_send_char('\n');
             *s = '\n';
             s++;
             i++;
@@ -211,13 +217,13 @@ uint8_t uart_recv(csr_vp_t* csr, char *s) {
                if (i > 0) {
                   s--;
                   i--;
-                  uart_send_char(csr, '\b');
-                  uart_send_char(csr, ' ');
-                  uart_send_char(csr, '\b');
+                  uart_send_char('\b');
+                  uart_send_char(' ');
+                  uart_send_char('\b');
                }
             // otherwise, echo back and append received character
             } else {
-               uart_send_char(csr, *s);
+               uart_send_char(*s);
                s++;
                i++;
             }
@@ -231,7 +237,7 @@ uint8_t uart_recv(csr_vp_t* csr, char *s) {
          // (**) since this is a tight loop, we in this case
          //      don't need to look at 'uart_rx.fld.oflow'
          do {
-            uart_rx = csr->uart->rx->full();
+            uart_rx = CSR_REG32(uart.rx);
          } while (!(uart_rx & UART_RX_VALID));
       };
 
@@ -257,43 +263,43 @@ uint8_t uart_recv(csr_vp_t* csr, char *s) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_test(csr_vp_t* csr) {
+void uart_test(void) {
    const char *rx_expd = "Mi smo FPGA raja";
    char        rx_data[UART_RXBUF_SIZE];
    char       *rx_data_ptr;
    int         result;
 
-   uart_send(csr, (char*)"\r\n\nSelam eduSOC Hackers!\r\n");
-   uart_send(csr, (char*)"Try guessing 3 times what I'm thinking, then press <ENTER>.\r\n");
+   uart_send((char*)"\r\n\nSelam eduSOC Hackers!\r\n");
+   uart_send((char*)"Try guessing 3 times what I'm thinking, then press <ENTER>.\r\n");
 
    for (int i=3; i>0; i--) {
       //take input from UART and store it into allocated buffer
       rx_data_ptr = &rx_data[0];
-      while(!uart_recv(csr, rx_data_ptr));
+      while(!uart_recv(rx_data_ptr));
 
-      uart_send(csr, (char*)"\r\n\n\tYou entered: ");
-      uart_send(csr, rx_data_ptr);
+      uart_send((char*)"\r\n\n\tYou entered: ");
+      uart_send(rx_data_ptr);
 
       // check received data
       if (strcmp(rx_expd, rx_data_ptr) == 0) {
           //CSR -> gpo.fld.led_off = 0b10; // turn on first LED
-          uart_send(csr, (char*)"\r\n\t| You hit it! :-)\r\n");
+          uart_send((char*)"\r\n\t| You hit it! :-)\r\n");
           break;
 
       // mismatch
       } else {
           //CSR -> gpo.fld.led_off = 0b11; // turn off all LEDs
-          uart_send(csr, (char*)"\r\n\t| Sorry, you missed it.");
+          uart_send((char*)"\r\n\t| Sorry, you missed it.");
 
           if (i>1) {
-            uart_send(csr, (char*)"\r\n\t| ...Try again. Credit left: ");
-            uart_send_hex(csr, i-1, 1);
-            uart_send(csr, (char*)"\r\n\n\n");
+            uart_send((char*)"\r\n\t| ...Try again. Credit left: ");
+            uart_send_hex(i-1, 1);
+            uart_send((char*)"\r\n\n\n");
           }
       }
    }
 
-   uart_send(csr, (char*)"\r\nDONE!\r\n");
+   uart_send((char*)"\r\nDONE!\r\n");
 }
 #endif // UART_TEST
 
@@ -306,7 +312,7 @@ void uart_test(csr_vp_t* csr) {
  *
  * Returns:     None
  **********************************************************************/
-void uart_tests_info(csr_vp_t* csr, int cmd) {
+void uart_tests_info(int cmd) {
 
    char *tests_list[] = {
     "OK!\r\n\r\n",
@@ -330,7 +336,7 @@ void uart_tests_info(csr_vp_t* csr, int cmd) {
 
    // UART signalizes test start and result
    if (cmd == 0 || cmd == 1) {
-      uart_send(csr, tests_list[cmd]);
+      uart_send(tests_list[cmd]);
    }
    else {
       char message [32];
@@ -353,7 +359,7 @@ void uart_tests_info(csr_vp_t* csr, int cmd) {
       *mes_ptr++ =  '\n';
       *mes_ptr++ =  '\0';
 
-      uart_send(csr, message);
+      uart_send(message);
    }
 }
 #endif // RISCV_TESTS

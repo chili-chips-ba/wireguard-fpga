@@ -53,8 +53,8 @@ sw_map: $(SW_SRC)/link_map.lds
 # Compile and link Boot and App code
 sw_elf: sw_map $(SW_SRC)/boot_crt.s \
 $(SW_APP)/assert.h \
-$(CSR_BLD)/wireguard_regs.h \
-$(CSR_BLD)/csr_hw.h \
+$(BLD_DIR)/csr_build/csr_regs.h \
+$(CSR_BLD)/csr_top.h \
 $(CSR_BLD)/csr.h \
 $(SW_APP)/uart.h                 $(SW_APP)/uart.c \
 $(SW_APP)/ethernet.h             $(SW_APP)/ethernet.c \
@@ -69,11 +69,10 @@ $(SW_APP)/blake2s.h              $(SW_APP)/blake2s.c \
 $(SW_APP)/hkdf.h                 $(SW_APP)/hkdf.c \
 $(SW_APP)/random.h               $(SW_APP)/random.c \
 $(SW_APP)/timer.h                $(SW_APP)/timer.c \
-$(SW_APP)/wireguard_libs.h       $(SW_APP)/wireguard_libs.cpp \
 $(SW_MAIN)/main.cpp
 	$(CROSS)g++ \
    $(CFLAGS) \
-   -I$(CSR_BLD) -I$(SW_APP) \
+   -I$(CSR_BLD) -I$(BLD_DIR)/csr_build -I$(SW_APP) \
    -march=rv32i \
    -mabi=ilp32 \
    -Wl,--build-id=none,-Bstatic,-T,$(SW_BLD)/main.lds,-Map,$(SW_BLD)/main.map \
@@ -100,7 +99,6 @@ $(SW_MAIN)/main.cpp
    $(SW_APP)/hkdf.c \
    $(SW_APP)/random.c \
    $(SW_APP)/timer.c \
-   $(SW_APP)/wireguard_libs.cpp \
    $(SW_MAIN)/main.cpp \
    -lgcc
 

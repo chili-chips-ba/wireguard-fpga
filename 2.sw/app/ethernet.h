@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "wireguard_regs.h"
+#include "csr_regs.h"
 
 #define ETH_MAX_FRAME_LENGTH 1536
 
@@ -32,8 +32,8 @@ typedef struct {
 #define DPE_ADDR_MCAST_24    6
 #define DPE_ADDR_BCAST       7
 
-uint32_t eth_send_packet     (csr_vp_t* csr, eth_raw_packet_t* packet);
-uint32_t eth_receive_packet  (csr_vp_t* csr, eth_raw_packet_t* packet);
+uint32_t eth_send_packet     (eth_raw_packet_t* packet);
+uint32_t eth_receive_packet  (eth_raw_packet_t* packet);
 
 #ifdef __cplusplus
 }

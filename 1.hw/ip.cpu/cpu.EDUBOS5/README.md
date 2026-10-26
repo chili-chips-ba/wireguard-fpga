@@ -25,7 +25,7 @@ eduBOS5 is the alternative CPU; PicoRV32 stays the default until eduBOS5 is chec
 
 - **Harvard.** Fetch uses the IMEM read port. Data loads from IMEM space (rodata, the `.data` image) use IMEM port B, which also takes the UART program writes while the CPU is held in reset. Loads and stores to DMEM and CSR go over `soc_if`.
 - **Stores wait for ready** (`STORE_WAITS_RDY=1`, [openPCIE#40](https://github.com/chili-chips-ba/openPCIE/issues/40)): a store holds its request while the UART has the bus, and `soc_fabric.sv` keeps a waiting CPU request off the UART's access ([#61](https://github.com/chili-chips-ba/wireguard-fpga/issues/61)). On RAM and CSR a store still takes no extra cycle.
-- **Pure RV32I.** Any SYSTEM instruction (ecall, ebreak, csr*) halts the core. The firmware reads the `csr.cycle` counter instead of `rdcycle`. The firmware's two `ebreak`s (hardware-ID mismatch in `main.cpp`, heap overflow in `malloc()` in `wireguard_libs.cpp`) halt the core on purpose.
+- **Pure RV32I.** Any SYSTEM instruction (ecall, ebreak, csr*) halts the core. The firmware reads the `csr.cycle` counter instead of `rdcycle`. The firmware's `ebreak` (hardware-ID mismatch in `main.cpp`) halts the core on purpose.
 - **Reset.** The PC starts at 0. sp is not set by hardware: `2.sw/boot_crt.s` sets it.
 - `` `define SOC_EDUBOS5_3STG `` selects the 3-stage pipeline (default 2-stage).
 
