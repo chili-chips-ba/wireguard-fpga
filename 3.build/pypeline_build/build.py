@@ -19,11 +19,12 @@ from wireguard_env import (
     MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
     DATA_BITWIDTHS, selected_data_bitwidth, blocks_out_dir,
     COMPUTE_IMPLEMENTATIONS, selected_compute, compute_out_dir,
+    selected_prologue_cap, prologue_cap_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir, share_name_for,
 )
 
 # Design parameters this script sets from its own flags (see src/wireguard_env.py)
-PROFILE_PARAMS = ("DESIGN", "DATA_BITWIDTH", "POLY1305_IMPL", "POLY1305_BLOCKS_PER_CYCLE", "POLY1305_MULT_IMPL", "POLY1305_COMPUTE_IMPL", "SHARE", "TARGET_MHZ")
+PROFILE_PARAMS = ("DESIGN", "DATA_BITWIDTH", "POLY1305_IMPL", "POLY1305_BLOCKS_PER_CYCLE", "POLY1305_MULT_IMPL", "POLY1305_COMPUTE_IMPL", "POLY1305_PROLOGUE_MAX_LATENCY", "SHARE", "TARGET_MHZ")
 
 
 def main():
@@ -41,6 +42,8 @@ def main():
                         help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
     parser.add_argument("--poly1305-compute", choices=COMPUTE_IMPLEMENTATIONS,
                         help="Prologue and epilogue implementation (default fsm; pipelined MAC only)")
+    parser.add_argument("--poly1305-prologue-cap", type=int, metavar="N",
+                        help="AUTO_FSM latency cap of the prologue services (default 64; fsm compute only)")
     parser.add_argument("--target-mhz", type=selected_target,
                         help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
     parser.add_argument("--sim", action="store_true", help="Run simulation instead of producing Verilog")
@@ -57,6 +60,12 @@ def main():
     parser.add_argument("--continue", dest="continue_build", action="store_true",
                         help="Keep the selected output directory and reuse valid build caches")
     parser.add_argument("--out-dir", help="Separate output cache (must be empty unless --continue)")
+    parser.add_argument("--latency-hints", action="append", default=[], metavar="FILE",
+                        help="Starting AUTO_PIPELINE latencies for pypelinec --latency_hints "
+                             "(repeatable; a start like start_latency=, never a fixed depth)")
+    parser.add_argument("--pipeline-min-effort", type=int, metavar="N",
+                        help="pypelinec --pipeline_min_effort: extra syntheses spent trimming stages "
+                             "after timing is met (0 accepts the first met result)")
     parser.add_argument("--syn-cache", default=os.path.join(".", GENERATED_FILES, "syn_cache"),
                         metavar="DIR|none",
                         help="Synthesis store every profile's output directory shares, so a run "
@@ -76,12 +85,13 @@ def main():
         name = define.partition("=")[0].strip()
         if name in PROFILE_PARAMS:
             parser.error(f"-D {name}: set the profile with this script's flags "
-                         "(--enc/--dec/--shared, --share-*, --poly1305, --poly1305-mult, --poly1305-compute, --data-bitwidth, --target-mhz)")
+                         "(--enc/--dec/--shared, --share-*, --poly1305, --poly1305-mult, --poly1305-compute, --poly1305-prologue-cap, --data-bitwidth, --target-mhz)")
     try:
         args.poly1305 = selected_implementation(args.poly1305)
         args.data_bitwidth = selected_data_bitwidth(args.data_bitwidth, args.poly1305)
         args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
         args.poly1305_compute = selected_compute(args.poly1305_compute)
+        args.poly1305_prologue_cap = selected_prologue_cap(args.poly1305_prologue_cap)
         sharing = sharing_from_args(args, standalone=args.enc or args.dec)
     except ValueError as exc:
         parser.error(str(exc))
@@ -100,6 +110,7 @@ def main():
         f"DATA_BITWIDTH={args.data_bitwidth}",
         f"POLY1305_MULT_IMPL={args.poly1305_mult}",
         f"POLY1305_COMPUTE_IMPL={args.poly1305_compute}",
+        f"POLY1305_PROLOGUE_MAX_LATENCY={args.poly1305_prologue_cap}",
         f"SHARE={share_name_for(sharing)}",
         f"TARGET_MHZ={args.target_mhz}",
     ] + args.define
@@ -130,6 +141,8 @@ def main():
         implementation_out_dir(out_dir, args.poly1305), sharing), args.poly1305_mult),
         args.poly1305_compute if args.poly1305 == "pipelined" else None), args.target_mhz)
     out_dir = blocks_out_dir(out_dir, args.data_bitwidth // 128)
+    if args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
+        out_dir = prologue_cap_out_dir(out_dir, args.poly1305_prologue_cap)
     if args.out_dir:
         out_dir = args.out_dir
     cmd = [pipelinec_bin, src_file, "--out_dir", out_dir] + options
@@ -141,10 +154,15 @@ def main():
         cmd.extend(["-j", str(args.jobs)])
     if args.syn_cache != "none":
         cmd.extend(["--syn_cache", args.syn_cache])
+    for hints in args.latency_hints:
+        cmd.extend(["--latency_hints", os.path.abspath(hints)])
+    if args.pipeline_min_effort is not None:
+        cmd.extend(["--pipeline_min_effort", str(args.pipeline_min_effort)])
     print(f"--> {design_short}: Poly1305 {args.poly1305}, clock target {args.target_mhz} MHz")
     print(f"--> Packet datapath: {args.data_bitwidth} bits; Poly1305 blocks/cycle: {args.data_bitwidth // 128}")
     print(f"--> Poly1305 multiplier: {args.poly1305_mult}")
-    print(f"--> Poly1305 prologue/epilogue: {args.poly1305_compute}")
+    print(f"--> Poly1305 prologue/epilogue: {args.poly1305_compute}"
+          + (f" (prologue cap {args.poly1305_prologue_cap})" if args.poly1305_compute == "fsm" else ""))
     print(f"--> Shared resources: {sharing_name(sharing)}")
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)

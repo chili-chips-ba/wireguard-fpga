@@ -46,7 +46,7 @@ Keep the `poly1305_body_encrypt` / `poly1305_body_decrypt` wrappers: they keep
 the arithmetic body inside its named AUTO region so the sweep can attribute
 and mini-sweep it. Directly tagging the imported body currently loses useful
 attribution, and the sweep does not mini-sweep region roots (PipelineC's
-`docs/issues_inventory.md`, issue 35).
+`docs/issues_inventory.md`, issue 37).
 
 ## Build Commands
 
@@ -64,7 +64,11 @@ Run from `pypeline_build/` (not `src/`):
   `-D DESIGN/POLY1305_IMPL/POLY1305_MULT_IMPL/SHARE/TARGET_MHZ`; `-D NAME=VALUE` on build.py
   passes anything else through (`-D TB_STRESS=1`, `-D PERF_*`).
 - `--poly1305 legacy` requires `--share-chacha20` for combined builds.
-  `--poly1305-mult inferred|hybrid|hybrid_square` selects the pipelined arithmetic.
+  `--poly1305-mult inferred|hybrid|hybrid_square|inferred_body` selects the pipelined
+  arithmetic. `inferred_body` gives the feedback bodies a wide inferred product: fewer stages,
+  so fewer lanes and smaller setup/finalization. `--poly1305-prologue-cap N` sets the prologue
+  AUTO_FSM cap (default 64). `--latency-hints FILE` and `--pipeline-min-effort N` pass through
+  to pypelinec.
   `--target-mhz N` accepts any positive integer MHz clock goal.
   Automatic compute blocks use PipelineC's verified latency memory and normal
   sweep, without fixed or maximum latencies. Cache identities include
@@ -169,8 +173,9 @@ a local copy. `aead_types.py`'s FIFO/slice factories use the library's probed
 buffers, which report simulation-only occupancy and conservation.
 `measure.py --out-dir ... --reuse-syn` can retain an isolated cache.
 
-The current 85 MHz QoR, full-design resource counts and multiplier findings
-are documented in `README.md` and `src/poly1305/throughput.md`.
+The current QoR record (256-bit, 80 MHz, `inferred_body`, private AUTO_FSM
+services), full-design resource counts and multiplier findings are documented
+in `README.md` and `src/poly1305/throughput.md`.
 Use the actual automatic depths and retained signatures, not a guessed
 latency or a stale earlier top. Keep performance-testbench and external-port
 area scopes distinct; timing is synthesis evidence and routed timing is

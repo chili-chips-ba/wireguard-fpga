@@ -13,7 +13,7 @@ The shared performance-testbench top uses 108,078 LUTs,
 with 85.543 MHz limiting synthesis fmax under an 80 MHz constraint.
 Routed timing and external-port area remain untested. See the
 [full measurement](../../measurements/shared-verify-fifo-qor-20261015/README.md),
-[current README table](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
+[README](../../README.md) (which now holds the 256-bit 80 MHz record)
 and [storage derivation](#plaintext-verification-storage). The accepted
 packet-overlap and pre-overlap checkpoints below remain historical records.
 
@@ -751,8 +751,8 @@ The fresh record's high water is 56/129 slots; all phases conserve transfers
 and drain to zero. Explicit target rates on every WireGuard MAIN also remove
 the unused finish checker's `clk_None` port: HDL/XDC contains only `clk_60p0`,
 and Vivado reports no unclocked register or unconstrained internal pins.
-The [current README results](../../README.md#current-results-hybrid-karatsuba-and-squaring-sharing-both-85-mhz)
-document the selected toolchain, depths and automatic FIFO metadata.
+The [record's README](../../measurements/shared-verify-fifo-qor-20261015/README.md)
+documents the selected toolchain, depths and automatic FIFO metadata.
 
 ### Original 64-beat recovery qualification
 
@@ -905,7 +905,7 @@ runs the normal sweep. L follows the actual discovered body latency.
 The encrypt/decrypt body wrappers remain so `poly1305_body` is an interior
 mini-sweep target. Direct imported-function tagging has a known PipelineC
 attribution issue, and region roots are not mini-swept; see PipelineC's
-`docs/issues_inventory.md`, issue 35. Stable tag names still provide independent
+`docs/issues_inventory.md`, issue 37. Stable tag names still provide independent
 latency groups and readable profiles for the two directions.
 
 ### Arithmetic representation and initial synthesis finding
@@ -1375,6 +1375,67 @@ Records:
 
 Synthesis timing only; routed timing was not run. A higher 256-bit gain needs
 shorter or unshared setup/finalization.
+
+### 80 MHz: inferred feedback body, private AUTO_FSM services
+
+2026-10-25, frozen PipelineC `39aef859` (`…-frozen-d8de5ac222f7`), 80 MHz goal, seed 8439,
+four concurrent packets per size.
+[Record](../../measurements/private-autofsm-39aef859-256-inferred_body-80mhz-20261025-r3/);
+the investigation (kernel probes, body-depth probes, build-time analysis) is in
+`generated-files/paired-80mhz-investigation-20261021/README.md`.
+
+**Two changes reach 80 MHz.**
+- **`--poly1305-mult inferred_body`.**
+  - The feedback product `A*stride + d` is a pinned wide inferred multiply, so the feedback
+    body needs 2–3 stages at 80 MHz instead of 10. Lanes (feedback latency + 2) drop from 12
+    to 5 for encrypt and 4 for decrypt.
+  - Everything else stays `hybrid_square`: the coefficient body, which does not set lanes,
+    and the AUTO_FSM kernels.
+- **`--share-chacha20`.**
+  - Each direction has its own prologue and epilogue FSM.
+  - A single shared single-flight service costs 2 × (latency + 1) cycles per packet pair.
+    The 256-bit body needs ~63 cycles per 1920-byte packet, so shared services would have
+    to fit in 28 cycles, below the ~30–40-state prologue floor.
+
+Measured at 1920 bytes and the 80 MHz target, against the 128-bit 80 MHz record
+(`shared-poly1305-fsm64-latest-qor-20261017`, earlier compiler, not a matched build):
+
+| | 128-bit record | 256-bit |
+|---|---:|---:|
+| fmax (all MAINs pass) | 81.04 MHz | 81.73 MHz, WNS +0.265 ns |
+| LUT / FF | 104,668 / 93,372 | 50,768 / 39,589 |
+| DSP / BRAM tiles | 413 / 18.5 | 160 / 23.5 |
+| Lanes enc / dec | 10 / 10 | 5 / 4 |
+| Prologue / epilogue FSM enc | 64 / 41 cycles | 64 / 45 cycles |
+| Prologue / epilogue FSM dec | shared | 63 / 35 cycles |
+| Encrypt goodput | 9.125 Gb/s | 18.071 Gb/s (1.98×) |
+| Decrypt goodput | 9.125 Gb/s | 13.166 Gb/s (1.44×) |
+| 16 B period enc / dec | 109.3 / 132.0 cycles | 68.0 / 90.7 cycles |
+
+All 48 reference checks pass, and conservation holds: per direction 492 blocks =
+2 × 244 pairs + 4 tails.
+- **Encrypt** runs at its prologue service rate (68 cycles).
+- **Decrypt's setup is less hidden.** Its Poly1305 consumes ciphertext in parallel with
+  ChaCha20, so the next packet's key arrives at the end of the current body, leaving ~30 of
+  its 65 setup cycles exposed (91–98-cycle periods).
+- **Prologue cap 44** (`--poly1305-prologue-cap 44`,
+  [record](../../measurements/private-autofsm-39aef859-256-inferred_body-procap44-80mhz-20261026/)).
+  The prologue floors are 40 states at 5 lanes (encrypt) and 30 at 4 (decrypt).
+  - The prologues schedule at 42/43 states, and timing is met: WNS +0.203 ns, 81.32 MHz.
+  - Area: 50,574 LUT, 166 DSP.
+  - Gb/s at 1920 bytes, encrypt / decrypt: 19.20 / 14.34 (2.10× / 1.57× the 128-bit record).
+  - At 1024 bytes: 13.65 / 9.02.
+  - Encrypt is now body-limited at 1920 bytes (64 cycles) and prologue-bound below it
+    (48 cycles).
+  - Decrypt still waits on its next key, which follows the current packet's keystream
+    through the 19-stage ChaCha20 pipeline: 62.7 cycles at 16 bytes, 85.7 at 1920.
+
+Comb-function rewrites measured on standalone L=5 kernels:
+- **Epilogue, reducing the summed lane products once:** 34 instead of 50 states, for 24% more
+  LUTs.
+- **Prologue, partial reduction on its chain:** no improvement; its floor rose from 40 to 44.
+
+Synthesis timing only; routed timing was not run.
 
 ### Focused native checks
 

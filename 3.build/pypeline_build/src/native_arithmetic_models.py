@@ -71,6 +71,8 @@ MODELS = (
     (arithmetic.residue_add_mod, AddModel),
     (arithmetic.residue_square_mod, SquareModel),
 )
+if hasattr(arithmetic, "residue_mul_add_mod_inferred"):
+    MODELS += ((arithmetic.residue_mul_add_mod_inferred, MultiplyAddModel),)
 
 
 def install():

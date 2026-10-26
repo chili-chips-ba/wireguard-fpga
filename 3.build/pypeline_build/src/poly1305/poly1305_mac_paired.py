@@ -19,7 +19,7 @@ from aead_types import (
 )
 from poly1305_math import (
     u8_16_t, uint128_t, uint130_t, clamp,
-    residue_mul_add_mod,
+    residue_mul_add_mod, feedback_mul_add_mod,
 )
 from stream import stream_perf_probe as perf_taps
 
@@ -38,7 +38,7 @@ body_out_stream_t = make_stream_t(uint130_t)
 @hw_func
 def poly1305_pair_accumulate(x: body_in_stream_t) -> body_out_stream_t:
     o: body_out_stream_t
-    o.data = residue_mul_add_mod(x.data.accumulator, x.data.stride, x.data.coefficient)
+    o.data = feedback_mul_add_mod(x.data.accumulator, x.data.stride, x.data.coefficient)
     o.valid = x.valid
     return o
 
@@ -200,10 +200,10 @@ def make_poly1305_mac_paired(direction, share_mcp=False, *, body_latency=None, c
         epilogue_mcp = adapters.epilogue
     else:
         prologue_mcp = make_compute_service(
-            prologue, name=f"poly1305_paired_prologue_{direction}"
+            prologue, name=f"poly1305_paired_prologue_{direction}", phase="prologue"
         )
         epilogue_mcp = make_compute_service(
-            epilogue, name=f"poly1305_paired_epilogue_{direction}"
+            epilogue, name=f"poly1305_paired_epilogue_{direction}", phase="epilogue"
         )
 
     @struct

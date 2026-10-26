@@ -174,7 +174,7 @@ POLY1305_P = (1 << 130) - 5
 # legacy 64-bit limbs and the reducer's constant products unchanged. Ordinary
 # module-level hw_func scope= does not currently affect HDL elaboration.
 # The library's pinned inferred leaves prevent recursive operator dispatch.
-if wireguard_env.POLY1305_MULT_IMPL in ("hybrid", "hybrid_square"):
+if wireguard_env.POLY1305_MULT_IMPL in ("hybrid", "hybrid_square", "inferred_body"):
     from operators.soft_mult import make_mult_karatsuba_inferred_leaves
     register_operator("INFERRED_MULT", uint130_t, uint130_t,
                       make_mult_karatsuba_inferred_leaves(uint130_t, uint130_t, threshold=34))
@@ -276,6 +276,28 @@ def residue_mul_add_mod(a: uint130_t, b: uint130_t, c: uint130_t) -> uint130_t:
     # Even for all-ones 130-bit operands, a*b+c is strictly below 2^260.
     value: uint260_t = product + c
     return uint260_mod_prime(value)
+
+
+# The feedback body's depth sets the lane count, and with it the setup and
+# finalization work. A wide inferred product pipelines into fewer stages than
+# Karatsuba (3 against 10 at 80 MHz, standalone), at 64 DSPs against 36.
+# The pin keeps the Karatsuba registration above from replacing it.
+if wireguard_env.POLY1305_MULT_IMPL == "inferred_body":
+    from operators.soft_mult import make_inferred_mult
+    _feedback_mult = make_inferred_mult(uint130_t, uint130_t)
+
+    @hw_func
+    def residue_mul_add_mod_inferred(a: uint130_t, b: uint130_t, c: uint130_t) -> uint130_t:
+        product: uint260_t = _feedback_mult(a, b)
+        value: uint260_t = product + c
+        return uint260_mod_prime(value)
+
+    feedback_mul_add_mod = residue_mul_add_mod_inferred
+else:
+    feedback_mul_add_mod = residue_mul_add_mod
+
+# Even prologue exponents use the explicit modular square.
+SQUARE_POWERS = wireguard_env.POLY1305_MULT_IMPL in ("hybrid_square", "inferred_body")
 
 
 @hw_func

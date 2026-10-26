@@ -73,6 +73,7 @@ from wireguard_env import (
     MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
     DATA_BITWIDTHS, selected_data_bitwidth, blocks_out_dir,
     COMPUTE_IMPLEMENTATIONS, selected_compute, compute_out_dir,
+    selected_prologue_cap, prologue_cap_out_dir,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
@@ -477,6 +478,49 @@ def git_describe(repo):
     return sha + ("-dirty" if dirty else "")
 
 
+def correct_frozen_compiler_revision(provenance, log_path):
+    """Repair one known provenance artifact in place, keeping the recorded value.
+
+    Before compiler_revision existed, a frozen snapshot inside this repository was
+    recorded with WireGuard's own commit as its PipelineC revision. A PipelineC revision
+    equal to the record's wireguard-fpga revision can only be that artifact, so it is
+    recomputed from the compiler path the build log itself names."""
+    recorded = provenance.get("pipelinec_git")
+    if not recorded or recorded != provenance.get("wireguard_fpga_git"):
+        return
+    try:
+        with open(log_path) as f:
+            head = "".join(f.readline() for _ in range(20))
+    except OSError:
+        return
+    match = re.search(r"Command: (\S+)/src/pypelinec\b", head)
+    if match:
+        fixed = compiler_revision(match.group(1))
+        if fixed and fixed != recorded:
+            provenance["pipelinec_git_recorded"] = recorded
+            provenance["pipelinec_git"] = fixed
+
+
+def compiler_revision(repo):
+    """The PipelineC revision a build used.
+
+    A frozen snapshot (<snap>/compiler beside <snap>/compiler-snapshot.json) is not a git
+    checkout of its own; inside this repository, git would answer with WireGuard's commit.
+    Report the snapshot's recorded base and source-tree hash instead."""
+    snapshot = Path(repo).parent / "compiler-snapshot.json"
+    if snapshot.is_file():
+        manifest = json.loads(snapshot.read_text())
+        return f"{manifest['base_revision']}-frozen-{manifest['src_tree_sha256'][:12]}"
+    try:
+        top = subprocess.run(["git", "-C", repo, "rev-parse", "--show-toplevel"],
+                             capture_output=True, text=True, check=True).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    if os.path.realpath(top) != os.path.realpath(repo):
+        return None
+    return git_describe(repo)
+
+
 def historical_target_mhz(implementation, sharing=None):
     """Clock fallback for saved records created before the multiplier selector."""
     if (implementation == "pipelined" and sharing is not None
@@ -518,6 +562,16 @@ def build_compute_impl(out_dir):
     params = {entry["name"]: entry["value"]
               for entry in json.loads(path.read_text()).get("design_params", [])}
     return params.get("POLY1305_COMPUTE_IMPL", "mcp")
+
+
+def build_prologue_cap(out_dir):
+    """The emitted prologue AUTO_FSM cap; records before this parameter used 64."""
+    path = Path(out_dir) / "source_provenance.json"
+    if not path.is_file():
+        return None
+    params = {entry["name"]: entry["value"]
+              for entry in json.loads(path.read_text()).get("design_params", [])}
+    return int(params.get("POLY1305_PROLOGUE_MAX_LATENCY", 64))
 
 
 def build_blocks_per_cycle(out_dir):
@@ -568,13 +622,12 @@ def run_build(args, json_path, log_path):
         defines.append(f"PERF_TAPS={args.taps}")
     if args.seed is not None:
         defines.append(f"PERF_SEED={args.seed}")
-    if args.poly1305_compute_capacity is not None:
-        defines.append(f"POLY1305_COMPUTE_CAPACITY={args.poly1305_compute_capacity}")
 
     cmd = [os.path.join(HERE, "build.py"), "--perf",
            "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz),
            "--poly1305-mult", args.poly1305_mult,
            "--poly1305-compute", args.poly1305_compute,
+           "--poly1305-prologue-cap", str(args.poly1305_prologue_cap),
            "--data-bitwidth", str(args.data_bitwidth)]
     for name in ("chacha20", "poly1305"):
         if args.sharing[name]:
@@ -587,6 +640,10 @@ def run_build(args, json_path, log_path):
         cmd.extend(["-j", str(args.jobs)])
     if args.out_dir:
         cmd.extend(["--out-dir", args.out_dir])
+    for hints in args.latency_hints:
+        cmd.extend(["--latency-hints", hints])
+    if args.pipeline_min_effort is not None:
+        cmd.extend(["--pipeline-min-effort", str(args.pipeline_min_effort)])
     if args.comb:
         cmd.append("--comb")
     if args.reuse_syn:
@@ -597,7 +654,7 @@ def run_build(args, json_path, log_path):
     # Pin the PipelineC revision NOW, not after the run: a sweep takes hours and
     # that checkout may be under active development in the meantime, so a SHA
     # read at merge time can name a revision this build never used.
-    pipelinec_git = git_describe(
+    pipelinec_git = compiler_revision(
         os.path.dirname(os.path.dirname(env.get("PYPELINEC", DEFAULT_PIPELINEC_REPO + "/src/x")))
     )
     clock_lines = 0
@@ -1614,7 +1671,7 @@ def measurement_errors(results):
             service = mac.get("shared_mcps") or {}
             counts = [m.get("accumulator_count") for m in mac.get("directions", {}).values()]
             capacity = service.get("capacity_lanes")
-            # A requested fixed capacity may exceed the lanes; unused slots are zero.
+            # Historical records may carry a fixed capacity above the lanes; unused slots are zero.
             fixed = results.get("config", {}).get("requested_poly1305_compute_capacity")
             if (not counts or None in counts or type(capacity) is not int or capacity < max(counts)
                     or capacity != (fixed if fixed is not None else max(counts))):
@@ -2113,10 +2170,14 @@ def main():
                     help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
     ap.add_argument("--poly1305-compute", choices=COMPUTE_IMPLEMENTATIONS,
                     help="Prologue and epilogue implementation (default fsm; pipelined MAC only)")
-    ap.add_argument("--poly1305-compute-capacity", type=int, default=None,
-                    help="Fixed shared prologue/epilogue lane capacity (default: the body lane count)")
+    ap.add_argument("--poly1305-prologue-cap", type=int, default=None, metavar="N",
+                    help="AUTO_FSM latency cap of the prologue services (default 64; fsm compute only)")
     ap.add_argument("--target-mhz", type=selected_target, default=None,
                     help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
+    ap.add_argument("--latency-hints", action="append", default=[], metavar="FILE",
+                    help="Starting AUTO_PIPELINE latencies passed to build.py (repeatable)")
+    ap.add_argument("--pipeline-min-effort", type=int, default=None, metavar="N",
+                    help="Stage-trimming syntheses after timing is met, passed to build.py (0 = none)")
     ap.add_argument("-j", "--jobs", type=int, default=None,
                     help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
@@ -2176,6 +2237,7 @@ def main():
         args.poly1305_blocks_per_cycle = args.data_bitwidth // 128
         args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
         args.poly1305_compute = selected_compute(args.poly1305_compute)
+        args.poly1305_prologue_cap = selected_prologue_cap(args.poly1305_prologue_cap)
         # A saved record supplies its own architecture; do not reject an old
         # legacy record using today's default sharing-both selection.
         args.sharing = None if args.parse_only else sharing_from_args(args)
@@ -2193,6 +2255,8 @@ def main():
                            + ("-share-" + sharing_name(args.sharing) if args.sharing is not None else "")
                            + "-mult-" + args.poly1305_mult
                            + ("-compute-" + args.poly1305_compute if args.poly1305 == "pipelined" else ""))
+    if args.label is None and args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
+        label = prologue_cap_out_dir(label, args.poly1305_prologue_cap)
     if args.label is None:
         label = blocks_out_dir(label, args.poly1305_blocks_per_cycle)
     meas_dir = os.path.join(HERE, "measurements", label)
@@ -2201,6 +2265,8 @@ def main():
     log_path = os.path.join(meas_dir, "pypelinec.log")
     out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing, args.poly1305_mult,
                           args.poly1305_compute if args.poly1305 == "pipelined" else None, args.poly1305_blocks_per_cycle)
+    if args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
+        out_dir = prologue_cap_out_dir(out_dir, args.poly1305_prologue_cap)
     if args.out_dir:
         out_dir = os.path.abspath(args.out_dir)
 
@@ -2286,9 +2352,11 @@ def main():
             requested_data_bitwidth=None if args.parse_only else args.data_bitwidth,
             poly1305_compute_impl=perf_raw.get("config", {}).get("poly1305_compute_impl", "mcp"),
             requested_poly1305_compute_impl=None if args.parse_only else args.poly1305_compute,
-            requested_poly1305_compute_capacity=(
-                args.poly1305_compute_capacity if args.poly1305_compute_capacity is not None
-                else previous.get("config", {}).get("requested_poly1305_compute_capacity")),
+            poly1305_prologue_max_latency=build_prologue_cap(out_dir),
+            requested_poly1305_prologue_max_latency=None if args.parse_only else args.poly1305_prologue_cap,
+            # Only records made before AUTO_FSM scheduled re-elaborated call sites fixed it.
+            requested_poly1305_compute_capacity=previous.get("config", {}).get(
+                "requested_poly1305_compute_capacity"),
             sharing=args.sharing,
             out_dir=os.path.relpath(out_dir, HERE),
             target_mhz=target_mhz,
@@ -2301,7 +2369,7 @@ def main():
             "wireguard_fpga_git": git_describe(os.path.join(HERE, "..", "..")),
             # Recorded at build launch when there was a build (see run_build).
             "pipelinec_git": build_info.get("pipelinec_git")
-            or git_describe(
+            or compiler_revision(
                 os.path.dirname(os.path.dirname(os.environ.get("PYPELINEC", DEFAULT_PIPELINEC_REPO + "/src/x")))
             ),
             "vivado_version": area.get("vivado_version") if area.get("available") else None,
@@ -2328,6 +2396,7 @@ def main():
     # checkout doing the formatting, or silently drop its DUT-only area.
     if args.parse_only and previous:
         results["provenance"] = previous.get("provenance", results["provenance"])
+        correct_frozen_compiler_revision(results["provenance"], log_path)
         for key in ("build_cmd", "reuse_syn"):
             if key in previous.get("config", {}):
                 results["config"][key] = previous["config"][key]

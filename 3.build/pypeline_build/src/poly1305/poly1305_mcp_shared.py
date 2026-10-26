@@ -3,23 +3,22 @@
 
 Only this module owns the two compute services. Per-direction adapters own no compute
 resource or packet state. Capacity follows both actual body AUTO_PIPELINE
-depths unless POLY1305_COMPUTE_CAPACITY fixes it; a request's local lane count
-determines its epilogue rotation, and unused capacity slots are zero.
+depths; a request's local lane count determines its epilogue rotation, and
+unused capacity slots are zero.
 """
 import wireguard_env
 from types import SimpleNamespace
 from pypeline import MAIN, NamedTuple, Reg, Feedback, Wire, struct, hw_func, uint1_t, uint2_t, make_uint_t
 from stream.stream import make_stream_interface
 from poly1305_service import make_compute_service
-from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod, residue_square_mod
+from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod, residue_square_mod, SQUARE_POWERS
 if wireguard_env.POLY1305_BLOCKS_PER_CYCLE == 2:
     from poly1305_mac_paired import get_body_auto_pipeline
 else:
     from poly1305_mac_pipelined import get_body_auto_pipeline
 from stream import stream_perf_probe as perf_taps
 
-CAPACITY = (wireguard_env.POLY1305_COMPUTE_CAPACITY
-            or max(get_body_auto_pipeline(d).latency + 2 for d in ("encrypt", "decrypt")))
+CAPACITY = max(get_body_auto_pipeline(d).latency + 2 for d in ("encrypt", "decrypt"))
 
 
 def make_shared_compute(capacity):
@@ -50,7 +49,7 @@ def make_shared_compute(capacity):
         o: powers_t
         o.values[0] = r
         for k in range(2, capacity + 1):
-            if wireguard_env.POLY1305_MULT_IMPL == "hybrid_square" and k % 2 == 0:
+            if SQUARE_POWERS and k % 2 == 0:
                 o.values[k - 1] = residue_square_mod(o.values[k // 2 - 1])
             else:
                 o.values[k - 1] = residue_mul_mod(
@@ -73,10 +72,7 @@ def make_shared_compute(capacity):
                 if j + 1 < capacity:
                     if x.next_lane > j:
                         power_index = x.next_lane - 1 - j
-                # AUTO_FSM cannot regenerate a read at a hardware index.
-                for k in range(capacity):
-                    if power_index == k:
-                        weight = x.powers.values[k]
+                weight = x.powers.values[power_index]
             # Exactly one product per capacity slot, not one set per direction.
             tree[tree_size + j] = residue_mul_mod(x.accumulators[j], weight)
         for k in range(tree_size - 1, 0, -1):
@@ -126,7 +122,7 @@ def make_mcp_arbiter(func, input_t, output_t, phase):
         return o
 
     mcp = make_compute_service(
-        tagged_compute, name=f"poly1305_{phase}_shared"
+        tagged_compute, name=f"poly1305_{phase}_shared", phase=phase
     )
 
     @struct

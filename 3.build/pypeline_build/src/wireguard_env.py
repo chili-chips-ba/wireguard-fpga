@@ -19,9 +19,12 @@ It does three things:
      DATA_BITWIDTH  128 | 256 packet datapath bits (default 128; ChaCha20 stays 512)
      SHARE          auto | none | chacha20 | poly1305 | both. auto means both
                     resources for the shared design, none for one direction
-     POLY1305_MULT_IMPL inferred | hybrid | hybrid_square (default hybrid_square;
-                       legacy uses inferred)
+     POLY1305_MULT_IMPL inferred | hybrid | hybrid_square | inferred_body
+                       (default hybrid_square; legacy uses inferred). inferred_body
+                       is hybrid_square except an inferred feedback-body product
      POLY1305_COMPUTE_IMPL fsm | mcp (default fsm; pipelined setup/finalization)
+     POLY1305_PROLOGUE_MAX_LATENCY positive integer AUTO_FSM cap for the prologue
+                       services (default 64; fsm compute only)
      TARGET_MHZ     positive integer MHz (default: the profile's clock)
 3. Resolves them into this build's profile: DESIGN, ENCRYPT, DECRYPT,
    DATA_BITWIDTH, POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING and TARGET_MHZ.
@@ -49,7 +52,7 @@ IMPLEMENTATIONS = ("pipelined", "legacy")
 DESIGNS = ("encrypt", "decrypt", "shared")
 SHARE_CHOICES = ("auto", "none", "chacha20", "poly1305", "both")
 
-MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square")
+MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square", "inferred_body")
 DEFAULT_MULT_IMPL = "hybrid_square"
 BLOCK_RATES = (1, 2)
 DATA_BITWIDTHS = (128, 256)
@@ -147,6 +150,21 @@ def selected_compute(value=None):
     if choice not in COMPUTE_IMPLEMENTATIONS:
         raise ValueError(f"POLY1305_COMPUTE_IMPL must be one of {COMPUTE_IMPLEMENTATIONS}, got {choice!r}")
     return choice
+
+
+DEFAULT_PROLOGUE_MAX_LATENCY = 64
+
+
+def selected_prologue_cap(value=None):
+    cap = DEFAULT_PROLOGUE_MAX_LATENCY if value is None else value
+    if not isinstance(cap, int) or isinstance(cap, bool) or cap < 1:
+        raise ValueError(f"POLY1305_PROLOGUE_MAX_LATENCY must be a positive integer, got {cap!r}")
+    return cap
+
+
+def prologue_cap_out_dir(base, cap):
+    # The default cap keeps every existing directory name.
+    return base if cap in (None, DEFAULT_PROLOGUE_MAX_LATENCY) else f"{base}-procap{cap}"
 
 
 def compute_out_dir(base, compute):
@@ -270,10 +288,13 @@ _MULT_IMPL = param("POLY1305_MULT_IMPL", choices=MULT_IMPLEMENTATIONS,
 POLY1305_COMPUTE_IMPL = param("POLY1305_COMPUTE_IMPL", DEFAULT_COMPUTE_IMPL,
                             choices=COMPUTE_IMPLEMENTATIONS,
                             help="prologue and epilogue implementation (pipelined MAC only)")
-POLY1305_COMPUTE_CAPACITY = param("POLY1305_COMPUTE_CAPACITY", type=int,
-                                  help="fixed lane capacity of the shared prologue/epilogue kernels "
-                                       "(default: the larger body lane count); keeps AUTO_FSM call "
-                                       "sites unchanged when a sweep resizes the body")
+POLY1305_PROLOGUE_MAX_LATENCY = param("POLY1305_PROLOGUE_MAX_LATENCY", DEFAULT_PROLOGUE_MAX_LATENCY,
+                                      type=int,
+                                      help="AUTO_FSM latency cap of the prologue services (fsm compute only)")
+try:
+    selected_prologue_cap(POLY1305_PROLOGUE_MAX_LATENCY)
+except ValueError as e:
+    raise DesignParamError(str(e)) from None
 _TARGET_MHZ = param("TARGET_MHZ", type=int,
                     help="clock goal in MHz (default: the profile's)")
 try:

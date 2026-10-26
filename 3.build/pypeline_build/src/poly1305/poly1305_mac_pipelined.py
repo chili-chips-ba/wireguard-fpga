@@ -20,7 +20,7 @@ from aead_types import (
 )
 from poly1305_math import (
     u8_16_t, uint128_t, uint130_t, clamp,
-    residue_add_mod, residue_mul_mod, residue_mul_add_mod, residue_square_mod,
+    residue_add_mod, residue_mul_mod, residue_square_mod, feedback_mul_add_mod, SQUARE_POWERS,
 )
 from stream import stream_perf_probe as perf_taps
 
@@ -41,7 +41,7 @@ def poly1305_body(x: body_in_stream_t) -> body_out_stream_t:
     o: body_out_stream_t
     c: uint130_t = array_to_uint_le(x.data.block)
     c = c | (1 << 128)  # Complete, AEAD-padded 16-byte authentication block.
-    o.data = residue_mul_add_mod(x.data.accumulator, x.data.stride, c)
+    o.data = feedback_mul_add_mod(x.data.accumulator, x.data.stride, c)
     o.valid = x.valid
     return o
 
@@ -159,7 +159,7 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         o: powers_t
         o.values[0] = r
         for k in range(2, lanes + 1):
-            if wireguard_env.POLY1305_MULT_IMPL == "hybrid_square" and k % 2 == 0:
+            if SQUARE_POWERS and k % 2 == 0:
                 o.values[k - 1] = residue_square_mod(o.values[k // 2 - 1])
             else:
                 o.values[k - 1] = residue_mul_mod(
@@ -185,13 +185,8 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
             if j + 1 < lanes:
                 if x.next_lane > j:
                     power_index = x.next_lane - 1 - j
-            # Constant-index reads let AUTO_FSM split the epilogue across states.
-            weight: uint130_t = 0
-            for k in range(lanes):
-                if power_index == k:
-                    weight = x.powers.values[k]
             tree[tree_size + j] = residue_mul_mod(
-                x.accumulators[j], weight
+                x.accumulators[j], x.powers.values[power_index]
             )
         for k in range(tree_size - 1, 0, -1):
             tree[k] = residue_add_mod(tree[2 * k], tree[2 * k + 1])
@@ -207,10 +202,10 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         epilogue_mcp = adapters.epilogue
     else:
         prologue_mcp = make_compute_service(
-            prologue, name=f"poly1305_prologue_{direction}"
+            prologue, name=f"poly1305_prologue_{direction}", phase="prologue"
         )
         epilogue_mcp = make_compute_service(
-            epilogue, name=f"poly1305_epilogue_{direction}"
+            epilogue, name=f"poly1305_epilogue_{direction}", phase="epilogue"
         )
 
     @struct

@@ -1,9 +1,11 @@
 # pyright: reportInvalidTypeForm=none
 """Setup/finalization for paired coefficients; shared and private kernels."""
 from types import SimpleNamespace
-import wireguard_env
+import wireguard_env  # noqa: F401
 from pypeline import NamedTuple, struct, hw_func, uint1_t, make_uint_t
-from poly1305_math import uint128_t, uint130_t, residue_mul_mod, residue_add_mod, residue_square_mod
+from poly1305_math import (
+    uint128_t, uint130_t, residue_mul_mod, residue_add_mod, residue_square_mod, SQUARE_POWERS,
+)
 
 
 def make_paired_compute(capacity, direction="shared"):
@@ -30,12 +32,12 @@ def make_paired_compute(capacity, direction="shared"):
     @hw_func
     def prologue(r: uint130_t) -> powers_t:
         o: powers_t
-        if wireguard_env.POLY1305_MULT_IMPL == "hybrid_square":
+        if SQUARE_POWERS:
             o.values[0] = residue_square_mod(r)
         else:
             o.values[0] = residue_mul_mod(r, r)
         for k in range(2, capacity + 1):
-            if wireguard_env.POLY1305_MULT_IMPL == "hybrid_square" and k % 2 == 0:
+            if SQUARE_POWERS and k % 2 == 0:
                 o.values[k - 1] = residue_square_mod(o.values[k // 2 - 1])
             else:
                 o.values[k - 1] = residue_mul_mod(
@@ -47,6 +49,11 @@ def make_paired_compute(capacity, direction="shared"):
         tree: uint130_t[2 * tree_size]
         for j in range(tree_size):
             tree[tree_size + j] = 0
+        # Lane weights q^0 .. q^capacity; q^0 is one.
+        weights: uint130_t[capacity + 1]
+        weights[0] = 1
+        for k in range(capacity):
+            weights[k + 1] = x.powers.values[k]
         for j in range(capacity):
             weight: uint130_t = 0
             if j < x.lane_count:
@@ -55,11 +62,7 @@ def make_paired_compute(capacity, direction="shared"):
                 if j + 1 < capacity:
                     if x.next_lane > j:
                         power_index = x.next_lane - 1 - j
-                if power_index == 0:
-                    weight = 1
-                for k in range(capacity):
-                    if power_index == k + 1:
-                        weight = x.powers.values[k]
+                weight = weights[power_index]
             tree[tree_size + j] = residue_mul_mod(x.accumulators[j], weight)
         for k in range(tree_size - 1, 0, -1):
             tree[k] = residue_add_mod(tree[2 * k], tree[2 * k + 1])

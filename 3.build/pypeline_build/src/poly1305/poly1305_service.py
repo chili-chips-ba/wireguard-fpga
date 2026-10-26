@@ -4,14 +4,23 @@ from stream.stream_auto_fsm import make_stream_auto_fsm
 from stream.stream_multi_cycle import make_stream_auto_multi_cycle
 
 
-def make_compute_service(func, name):
-    """The same stream contract; FSM compute is capped at 64 cycles.
+EPILOGUE_MAX_LATENCY = 64
 
-    compute_tag.latency excludes the wrapper's one result/handshake cycle in
-    both modes. FIFO sizing and measurement use that common convention.
+
+def make_compute_service(func, name, phase):
+    """The same stream contract for the prologue or epilogue service.
+
+    FSM compute is capped at POLY1305_PROLOGUE_MAX_LATENCY cycles for the
+    prologue and EPILOGUE_MAX_LATENCY for the epilogue. compute_tag.latency
+    excludes the wrapper's one result/handshake cycle in both modes. FIFO
+    sizing and measurement use that common convention.
     """
+    if phase not in ("prologue", "epilogue"):
+        raise ValueError(f"Poly1305 compute phase must be prologue or epilogue, got {phase!r}")
     if wireguard_env.POLY1305_COMPUTE_IMPL == "fsm":
-        service = make_stream_auto_fsm(func, max_latency=64)
+        cap = (wireguard_env.POLY1305_PROLOGUE_MAX_LATENCY if phase == "prologue"
+               else EPILOGUE_MAX_LATENCY)
+        service = make_stream_auto_fsm(func, max_latency=cap)
         service.compute_tag = service.fsm
     else:
         service = make_stream_auto_multi_cycle(func, name=name)
