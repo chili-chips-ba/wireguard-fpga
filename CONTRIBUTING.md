@@ -39,7 +39,7 @@ Allowed, if:
 - no third-party copyrighted content gets in,
 - you say in the Pull Request which tool and model you used, and for what.
 
-Purely AI-generated work is not accepted. This follows [NLnet's GenAI policy](https://nlnet.nl/foundation/policies/generativeAI/), our funder.
+Purely AI-generated work is not accepted. This follows [NLnet's GenAI policy v1.1](https://nlnet.nl/foundation/policies/generativeAI/1.1/), our funder.
 
 -----------
 #### End-of-Document
