@@ -61,18 +61,19 @@ ${HW_SRC}/ip.infra/tdp_ram.sv
 +incdir+${BLD_DIR}/sw_build
 ${HW_SRC}/ip.cpu/imem.sv
 
-# eduBOS5: #61 is fixed in simulation; PicoRV32 stays the default until a hardware check. To
-# switch, uncomment these 5 lines and comment out the PicoRV32 ones below
-#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_pkg.sv
-#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_rf.sv
-#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_alu.sv
-#${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5.sv
-#${HW_SRC}/ip.cpu/soc_cpu.EDUBOS5.sv
+# eduBOS5 (default; #61 fixed, passes UART_BUS_STRESS in simulation, hardware
+# check pending)
+${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_pkg.sv
+${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_rf.sv
+${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5_alu.sv
+${HW_SRC}/ip.cpu/cpu.EDUBOS5/edubos5.sv
+${HW_SRC}/ip.cpu/soc_cpu.EDUBOS5.sv
 
-# PicoRV32 (default)
-${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv
+# PicoRV32 (the alternative): to switch, uncomment these lines and comment out
+# the eduBOS5 ones above
+#${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.CHILI.sv
 #${HW_SRC}/ip.cpu/cpu.PICORV32/picorv32.ORIG.sv
-${HW_SRC}/ip.cpu/soc_cpu.PICORV32.sv
+#${HW_SRC}/ip.cpu/soc_cpu.PICORV32.sv
 
 #---DPE
 ${HW_SRC}/ip.dpe/dpe.sv

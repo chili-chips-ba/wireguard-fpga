@@ -17,7 +17,7 @@ See the root `README.md` for the full architecture writeup (HW/SW partitioning d
 
 ```
 1.hw/          SystemVerilog RTL: DPE cores (ip.dpe/), infra (ip.infra/: CSR, FIFOs, UART, clocking),
-               soft CPU (ip.cpu/: PicoRV32 default, or eduBOS5), top.sv + top.filelist
+               soft CPU (ip.cpu/: eduBOS5 default, or PicoRV32), top.sv + top.filelist
 2.sw/          Bare-metal C/C++ firmware for the RISC-V control plane (app/), CSR register tests (tests/)
 3.build/       Build orchestration — see "Build Commands" below
 4.sim/         VProc/Verilator co-simulation testbench (RTL soc_cpu or virtual-processor RISC-V models)
@@ -83,7 +83,7 @@ Verible rules and their rationale are in `3.build/hw_build.openXC7/rules.md`.
 
 RTL conventions: [`1.hw/README.md#rtl-coding-rules`](1.hw/README.md#rtl-coding-rules). The gate enforces: our own RTL (incl. eduBOS5 and both `soc_cpu` wrappers) is Verible-formatted (2-space indent, LF line endings, at most 100 columns); third-party code (`external_lib`, PicoRV32) and the PeakRDL CSR are checked but not reformatted. An open output is `.PIN (  /*LINT:OK*/),  // why`. A waiver goes in `run-lint-waivers.txt` with its reason, only for a false positive. Each CSR client (uart, cpu_fifo, dpe) drives only its own sub-struct of `csr__in_t`, never the whole struct.
 
-**CPU:** PicoRV32 (default) or eduBOS5 (pure RV32I, Harvard; #61 fixed (`STORE_WAITS_RDY=1`, soc_fabric) and passes the RTL `UART_BUS_STRESS` sim; default again once checked on hardware), selected by which `soc_cpu.*.sv` lines `1.hw/top.filelist` lists. eduBOS5 halts on any SYSTEM instruction, so the firmware reads the `csr.cycle` CSR counter (`cycles()` in `2.sw/app/timer.c`), never `rdcycle`/`csrr`.
+**CPU:** eduBOS5 (default; pure RV32I, Harvard; #61 fixed (`STORE_WAITS_RDY=1`, soc_fabric) and passes the RTL `UART_BUS_STRESS` sim; hardware check pending) or PicoRV32, selected by which `soc_cpu.*.sv` lines `1.hw/top.filelist` lists. eduBOS5 halts on any SYSTEM instruction, so the firmware reads the `csr.cycle` CSR counter (`cycles()` in `2.sw/app/timer.c`), never `rdcycle`/`csrr`.
 
 **Crypto core HLS builds** (`3.build/pipelinec_build/`, `3.build/pypeline_build/`) — each has its own build scripts/`build.py` and CLAUDE.md with full sim/synth command reference; don't duplicate that detail here.
 

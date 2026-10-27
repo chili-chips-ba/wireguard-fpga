@@ -11,7 +11,7 @@ The hardware architecture essentially follows the HW/SW partitioning and consist
 
 The soft CPU is equipped with a on-chip instruction memory (IMEM) and data memory (DMEM). The connection between the control and data planes is established through a CSR-based HAL.
 
-The soft CPU is PicoRV32 (default) or [eduBOS5](ip.cpu/cpu.EDUBOS5/README.md). More on eduBOS5, such as the CPU comparison, formal proofs and WaveCrux views, is in [openPCIE](https://github.com/chili-chips-ba/openPCIE/blob/main/2.rtl/0.common.opensource/src/CPU.eduBOS5/README.md).
+The soft CPU is [eduBOS5](ip.cpu/cpu.EDUBOS5/README.md) (default) or PicoRV32. More on eduBOS5, such as the CPU comparison, formal proofs and WaveCrux views, is in [openPCIE](https://github.com/chili-chips-ba/openPCIE/blob/main/2.rtl/0.common.opensource/src/CPU.eduBOS5/README.md).
 
 The data plane consists of several IP cores, including data plane engine (DPE) and supporting components, which are listed and explained in the direction of network traffic propagation:
 - _PHY Controller_ - initial configuration of Realtek PHYs and monitoring link activity (link up/down events)

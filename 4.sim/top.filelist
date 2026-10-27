@@ -60,10 +60,9 @@ ${HW_SRC}/ip.infra/tdp_ram.sv
 #---CPU
 +incdir+${BLD_DIR}/sw_build
 
-# eduBOS5: #61 is fixed in simulation; PicoRV32 stays the default until a hardware check. To
-# switch, uncomment these 5 lines and comment out the PicoRV32 ones below
+# eduBOS5 (default) or PicoRV32: chosen in 1.hw/top.filelist; with CPU=vproc
+# VProc takes the CPU socket
 
-# PicoRV32 (default)
 
 #---DPE
 ${HW_SRC}/ip.dpe/dpe.sv
