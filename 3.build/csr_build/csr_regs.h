@@ -65,11 +65,18 @@
 #define CSR_FLD_VAL(FLD, v)  (((uint32_t)(v) << (FLD##_bp)) & (FLD##_bm))
 
 #define CSR_GET(member, FLD)     RDL_FIELD((uint32_t)CSR_REG32(member), FLD)
-#define CSR_SET(member, FLD, v)  csr_wr_lanes(CSR_ADDR(member), CSR_FLD_LO(FLD), CSR_FLD_N(FLD), \
-                                              CSR_FLD_VAL(FLD, v))
-#define CSR_RMW(member, FLD, v)  csr_wr_lanes(CSR_ADDR(member), CSR_FLD_LO(FLD), CSR_FLD_N(FLD), \
+// A field that one aligned store cannot cover -- 3 bytes, or 2 bytes at an
+// odd byte -- fails to compile: on rv32i it would be a misaligned or too wide
+// store, which the co-simulation's byte enables would not show
+#define CSR_FLD_OK(FLD)      ((void)sizeof(char[(CSR_FLD_N(FLD) == 1 ||                             \
+                                               (CSR_FLD_N(FLD) == 2 && CSR_FLD_LO(FLD) % 2 == 0) || \
+                                               (CSR_FLD_N(FLD) == 4 && CSR_FLD_LO(FLD) == 0)) ? 1 : -1]))
+
+#define CSR_SET(member, FLD, v)  (CSR_FLD_OK(FLD), csr_wr_lanes(CSR_ADDR(member), CSR_FLD_LO(FLD), CSR_FLD_N(FLD), \
+                                              CSR_FLD_VAL(FLD, v)))
+#define CSR_RMW(member, FLD, v)  (CSR_FLD_OK(FLD), csr_wr_lanes(CSR_ADDR(member), CSR_FLD_LO(FLD), CSR_FLD_N(FLD), \
                                               ((uint32_t)CSR_REG32(member) & ~(uint32_t)(FLD##_bm)) | \
-                                              CSR_FLD_VAL(FLD, v))
+                                              CSR_FLD_VAL(FLD, v)))
 
 // Extract a field out of a register value that has already been read, using
 // the bit mask and bit position "peakrdl c-header" emits for that field:

@@ -47,7 +47,9 @@
 #     a /*LINT:OK*/ on an input, so it cannot hide a floating input
 #   - run-lint-waivers.txt (or LINT_WAIVERS=<file>), for findings without a
 #     source line of ours (generated code, ...)
-# Exit status is non-zero when any phase has findings that are not waived.
+# Exit status is non-zero when any phase has findings that are not waived, or
+# when its tool fails or stops before the step it reports on (FAILED in the
+# summary): "0 finding(s)" always means the phase really ran.
 
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -128,6 +130,19 @@ bb() {
 
 # /*LINT:OK*/ on anything but an output port; the port directions come from the
 # module headers of the design and the primitive stubs
+# A tool that fails, or stops before the step its findings come from, fails its
+# phase: "0 finding(s)" must not stand for "not checked"
+failed() {  # $1 phase, $2 reason
+  RESULT[$1]="FAILED ($2), see $W/$1.log"
+  echo "-- $1: FAILED, $2"
+}
+
+# after found: a tool that exits non-zero must have reported something (waived
+# or not); a non-zero exit with nothing to show is the tool failing
+exit_check() {  # $1 phase, $2 exit status
+  if [ "$2" -ne 0 ] && [ ! -s "$1.all" ]; then failed "$1" "exit $2, nothing reported"; fi
+}
+
 run_tags() {
   bb || { skip tags "no Xilinx stubs (yosys-config)"; return; }
   "$PYTHON" - -- bb.sv $SV > tags.log <<'EOF'
@@ -161,6 +176,8 @@ for f in files:
             if d != 'output':
                 print(f'{f}:{n}: LINT:OK on {d or "unknown"} port {typ}.{m.group(1)}')
 EOF
+  local rc=$?
+  [ $rc -eq 0 ] || { failed tags "exit $rc"; return; }
   found tags < tags.log
 }
 
@@ -176,7 +193,9 @@ VLT
   # --timescale: external_lib sets one, our RTL does not (no delays)
   "$VERILATOR" --lint-only -Wall -Wno-fatal --timing --timescale 1ns/1ps --top-module $TOP $VL_DEFS \
     -I$INC waive.vlt bb.sv $SV > verilator.log 2>&1
+  local rc=$?
   found verilator < <(grep -E '^%(Warning|Error)' verilator.log)
+  exit_check verilator $rc
 }
 
 run_yosys() {
@@ -186,8 +205,9 @@ run_yosys() {
   bb || { skip yosys "no Xilinx stubs"; return; }
   "$YOSYS" $YOSYS_ARGS -q -l yosys.log -p "read_slang $SL_DEFS --top $TOP -I $INC bb.sv $SV; \
       hierarchy -check -top $TOP; proc; check -nolatches -initdrv" >/dev/null 2>&1
-  if grep -q '^ERROR' yosys.log; then
-    RESULT[yosys]="error, see $W/yosys.log"; echo "-- yosys: error"; return
+  local rc=$?
+  if [ $rc -ne 0 ] || ! grep -q 'Executing CHECK pass' yosys.log; then
+    failed yosys "exit $rc, CHECK pass not reached"; return
   fi
   # read_slang's own warnings are the slang phase's business; take check's
   found yosys < <(awk '/Executing CHECK pass/ { c = 1 } c && /^Warning:/' yosys.log)
@@ -198,6 +218,7 @@ run_slang() {
   bb || { skip slang "no Xilinx stubs"; return; }
   "$YOSYS" $YOSYS_ARGS -q -l slang.log -p "read_slang $SL_DEFS --top $TOP -I $INC -Wextra bb.sv $SV" \
       >/dev/null 2>&1
+  local rc=$?
   # the yosys-slang plugin prints "file:line: Warning:", the built-in read_slang
   # "file:line:col: warning:"; bring both to the second form so the waivers
   # match either. Paths come relative to the work directory, after any ../
@@ -205,13 +226,17 @@ run_slang() {
                           s/^([^ :]+:[0-9]+): Warning:/\1:0: warning:/;
                           s/^([^ :]+:[0-9]+): Error:/\1:0: error:/' slang.log |
                   grep -E 'warning:|error:' | grep -v -E '^(bb\.sv|1\.hw/external_lib/|1\.hw/ip\.cpu/cpu\.PICORV32/)')
+  exit_check slang $rc
 }
 
 run_verible() {
   have "$VERIBLE" || { skip verible "$VERIBLE not found"; return; }
   cp "$HERE/run-lint.verible" .
   "$VERIBLE" --rules_config=run-lint.verible $OWN > verible.log 2>&1
+  local rc=$?
+  [ $rc -le 1 ] || { failed verible "exit $rc"; return; }
   found verible < <(grep -E ':[0-9]+:[0-9]+' verible.log)
+  exit_check verible $rc
 }
 
 for ph in $PHASES; do

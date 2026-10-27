@@ -98,10 +98,19 @@ equiv_simple -seq 3
 equiv_induct -seq 3
 equiv_status
 EOF
-"$YOSYS" $YOSYS_ARGS -q -l eq.log eq.ys >/dev/null || true
+rc=0
+"$YOSYS" $YOSYS_ARGS -q -l eq.log eq.ys >/dev/null || rc=$?
 grep -E "Found [0-9]+ .equiv|Of those cells|successfully proven|^ERROR" eq.log | tail -3
 grep "Unproven" eq.log | sed -E 's/.*: .([^ ]*)_gold.*/\1/; s/\[[0-9]+\]//g' | sort | uniq -c
 echo "log: $W/eq.log"
+
+# Pass only if Yosys got through equiv_status and proved every $equiv cell
+unproven=$(sed -nE 's/.*Of those cells [0-9]+ are proven and ([0-9]+) are unproven.*/\1/p' eq.log | tail -1)
+if [ $rc -ne 0 ] || [ -z "$unproven" ] || [ "$unproven" -ne 0 ]; then
+  echo "LEQ: FAILED (yosys exit $rc, unproven: ${unproven:-no equiv_status result})"
+  exit 1
+fi
+echo "LEQ: PASS"
 
 # -----------------------------------------------------------------------------
 # Project:     WireGuard-FPGA
