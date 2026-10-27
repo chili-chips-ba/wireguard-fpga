@@ -151,14 +151,23 @@ for f in "${FILES[@]}"; do
 done
 
 # Cross-check with the Verible lint rule for the same thing
-nl=$("$VERIBLE_LINT" --ruleset=none --rules=explicit-begin "${FILES[@]}" 2>&1 | grep -c 'explicit-begin')
+lint_out=$("$VERIBLE_LINT" --ruleset=none --rules=explicit-begin "${FILES[@]}" 2>&1); lrc=$?
+nl=$(printf '%s\n' "$lint_out" | grep -c 'explicit-begin')
+# exit 0: clean, 1: findings; anything else, or 1 with nothing found, is the
+# tool failing (a syntax error, a bad option), never "0 findings"
+lint_failed=0
+if [ $lrc -gt 1 ] || { [ $lrc -eq 1 ] && [ $nl -eq 0 ]; }; then lint_failed=1; bad=$((bad + 1)); fi
 
 if [ $MODE = check ]; then
   echo "-- verible-format: $nf file(s) not formatted"
 else
   echo "-- verible-format: done, $nf failure(s)"
 fi
-echo "-- verible-lint explicit-begin: $nl finding(s)"
+if [ $lint_failed -eq 1 ]; then
+  echo "-- verible-lint explicit-begin: FAILED (exit $lrc): $(printf '%s\n' "$lint_out" | head -1)"
+else
+  echo "-- verible-lint explicit-begin: $nl finding(s)"
+fi
 
 # Lines over the 100-column limit (the formatter leaves them as they are)
 awk 'length > 100 { sub(".*/1.hw/", "1.hw/", FILENAME); print "over 100 columns: " FILENAME ":" FNR }' "${FILES[@]}"

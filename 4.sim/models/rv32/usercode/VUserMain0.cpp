@@ -66,6 +66,13 @@ static rv32_cache*     icache          = NULL;
 
 static double          tv_diff_usec;
 
+// openPCIE: the cores modelled here (eduBOS5, our PicoRV32) are plain RV32I,
+// but the ISS decodes every extension it was built with (writing misa does
+// not switch one off). With rv32i_core set from -V, a fetched word outside
+// RV32I becomes an illegal instruction, so the ISS traps (halts with -H)
+// instead of running code the RTL core cannot.
+static bool            rv32i_core      = false;
+
 #if (!(defined _WIN32) && !(defined _WIN64))
 static struct          timeval tv_start, tv_stop;
 #else
@@ -79,6 +86,54 @@ LARGE_INTEGER          freq, start, stop;
 int      ext_mem_access     (const uint32_t addr, uint32_t& data, const int type, const rv32i_time_t time);
 int      vproc_irq_callback (int val);
 uint32_t iss_int_callback   (const rv32i_time_t time, rv32i_time_t *wakeup_time);
+
+// ---------------------------------------------
+// openPCIE: RV32I-only fetch filter
+// ---------------------------------------------
+
+// RV32I with FENCE, ECALL and EBREAK: no M/A/F/D/C/Zb*, no CSR instructions
+// (rdcycle, rdinstret, rdtime), no FENCE.I
+static bool is_rv32i(const uint32_t insn)
+{
+    const uint32_t opcode = insn & 0x7f;
+    const uint32_t funct3 = (insn >> 12) & 0x7;
+    const uint32_t funct7 = insn >> 25;
+
+    switch (opcode)
+    {
+    case 0x37: case 0x17: case 0x6f: return true;                     // LUI, AUIPC, JAL
+    case 0x67: return funct3 == 0;                                    // JALR
+    case 0x63: return funct3 != 2 && funct3 != 3;                     // branches
+    case 0x03: return funct3 <= 2 || funct3 == 4 || funct3 == 5;      // LB LH LW LBU LHU
+    case 0x23: return funct3 <= 2;                                    // SB SH SW
+    case 0x13: return funct3 == 1 ? funct7 == 0x00                    // SLLI
+                    : funct3 == 5 ? funct7 == 0x00 || funct7 == 0x20  // SRLI, SRAI
+                    : true;                                           // ADDI .. ANDI
+    case 0x33: return funct7 == 0x00 ||                               // ADD .. AND
+                      (funct7 == 0x20 && (funct3 == 0 || funct3 == 5)); // SUB, SRA
+    case 0x0f: return funct3 == 0;                                    // FENCE
+    case 0x73: return insn == 0x00000073 || insn == 0x00100073;       // ECALL, EBREAK
+    default:   return false;                                          // incl. compressed
+    }
+}
+
+// The fetched word, or an all-zero word (an illegal instruction) when the
+// core lacks it
+static uint32_t core_fetch_filter(const uint32_t addr, const uint32_t insn)
+{
+    static int reported = 0;
+
+    if (!rv32i_core || is_rv32i(insn))
+    {
+        return insn;
+    }
+    if (reported++ < 4)
+    {
+        VPrint("rv32 ISS: 0x%08x at 0x%08x is not RV32I, which this core lacks: illegal instruction\n",
+               insn, addr);
+    }
+    return 0x00000000;
+}
 
 // ---------------------------------------------
 // Set up actions prior to running CPU
@@ -121,6 +176,11 @@ static void pre_run_setup(rv32* pCpu)
     // See rv32_timing_config.h for supported timing models
     //
     rv32_time_cfg.update_timing(pCpu, vcfg.riscv_core);
+
+    // openPCIE: the RV32I-only cores get the fetch filter
+    rv32i_core = vcfg.riscv_core == rv32_timing_config::risc_v_core_e::PICORV32    ||
+                 vcfg.riscv_core == rv32_timing_config::risc_v_core_e::EDUBOS5STG2 ||
+                 vcfg.riscv_core == rv32_timing_config::risc_v_core_e::EDUBOS5STG3;
 
     // Initialise time
 #if (!(defined _WIN32) && !(defined _WIN64)) || defined __CYGWIN__
@@ -217,7 +277,7 @@ int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const r
         pCpu->reset_cpu();
         last_cycles = pCpu->clk_cycles();
         sim_ahead   = 0;
-        data        = read_instr(pCpu->pc_val(), false);
+        data        = core_fetch_filter(pCpu->pc_val(), read_instr(pCpu->pc_val(), false));
         return read_instr_wait_cycle;
     }
 
@@ -294,6 +354,10 @@ int ext_mem_access (const uint32_t addr, uint32_t& data, const int type, const r
             break;
         case MEM_RD_ACCESS_INSTR:
             data      = read_instr(addr, access_sim);
+            if (!(type & MEM_DBG_MASK))
+            {
+                data  = core_fetch_filter(addr, data);
+            }
             processed = read_instr_wait_cycle;
 
             // Process caching if enabled
