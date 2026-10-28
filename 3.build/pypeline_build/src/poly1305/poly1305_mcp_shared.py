@@ -18,7 +18,8 @@ else:
     from poly1305_mac_pipelined import get_body_auto_pipeline
 from stream import stream_perf_probe as perf_taps
 
-CAPACITY = max(get_body_auto_pipeline(d).latency + 2 for d in ("encrypt", "decrypt"))
+# Both directions share one body latency group, so one lane count.
+CAPACITY = get_body_auto_pipeline().latency + 2
 
 
 def make_shared_compute(capacity):

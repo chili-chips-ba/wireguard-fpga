@@ -1,5 +1,6 @@
 # pyright: reportInvalidTypeForm=none
 """Setup/finalization for paired coefficients; shared and private kernels."""
+import functools
 from types import SimpleNamespace
 import wireguard_env  # noqa: F401
 from pypeline import NamedTuple, struct, hw_func, uint1_t, make_uint_t
@@ -8,7 +9,11 @@ from poly1305_math import (
 )
 
 
-def make_paired_compute(capacity, direction="shared"):
+@functools.lru_cache(maxsize=None)
+def make_paired_compute(capacity):
+    """Prologue/epilogue kernels and payload types for `capacity` lanes. One
+    set per capacity: both directions and the shared MCP instantiate the same
+    kernels, so equal lane counts give one AUTO_FSM schedule."""
     lane_t = make_uint_t(max(1, (capacity - 1).bit_length()))
     count_t = make_uint_t(capacity.bit_length())
     index_t = make_uint_t((2 * capacity).bit_length())

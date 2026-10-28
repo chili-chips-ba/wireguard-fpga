@@ -3,10 +3,18 @@
 # SPDX-FileCopyrightText: 2026 Chili.CHIPS*ba
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""Build or simulate the encrypt, decrypt, or shared WireGuard top."""
+"""Build the encrypt, decrypt, or shared WireGuard hardware, or simulate it.
+
+Without --sim this builds the real top (src/chacha20poly1305.py, real ports) for the selected
+profile. A pipelined native simulation (--sim --native or --perf, without --comb) runs its
+testbench in that build's output directory, on the hardware built there: no elaboration or
+synthesis of the testbench.
+"""
 
 import argparse
+import json
 import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -14,13 +22,13 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 from wireguard_env import (
-    IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
-    selected_target, default_target_mhz, target_out_dir, GENERATED_FILES,
-    MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
-    DATA_BITWIDTHS, selected_data_bitwidth, blocks_out_dir,
-    COMPUTE_IMPLEMENTATIONS, selected_compute, compute_out_dir,
-    selected_prologue_cap, prologue_cap_out_dir,
-    add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir, share_name_for,
+    IMPLEMENTATIONS, selected_implementation,
+    selected_target, default_target_mhz, GENERATED_FILES,
+    MULT_IMPLEMENTATIONS, selected_mult,
+    DATA_BITWIDTHS, selected_data_bitwidth,
+    COMPUTE_IMPLEMENTATIONS, selected_compute,
+    selected_prologue_cap, profile_out_dir, hardware_out_dir, BUILT_HARDWARE_FILE,
+    add_sharing_arguments, sharing_from_args, sharing_name, share_name_for,
 )
 
 # Design parameters this script sets from its own flags (see src/wireguard_env.py)
@@ -46,7 +54,11 @@ def main():
                         help="AUTO_FSM latency cap of the prologue services (default 64; fsm compute only)")
     parser.add_argument("--target-mhz", type=selected_target,
                         help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
-    parser.add_argument("--sim", action="store_true", help="Run simulation instead of producing Verilog")
+    parser.add_argument("--sim", action="store_true",
+                        help="Simulate instead of building the hardware; a pipelined native run "
+                             "simulates the hardware already built for this profile")
+    parser.add_argument("--verilog", action="store_true",
+                        help="Also convert the built hardware top to Verilog (GHDL + Yosys)")
     parser.add_argument("--comb", action="store_true", help="Simulate without automatic slicing")
     parser.add_argument("--syn_tb", action="store_true", help="Use the fixed-vector synthesizable testbench")
     parser.add_argument("--native", action="store_true", help="Use native simulation instead of cocotb/GHDL")
@@ -59,7 +71,8 @@ def main():
                         help="Maximum concurrent synthesis jobs (use 1 on low-RAM systems)")
     parser.add_argument("--continue", dest="continue_build", action="store_true",
                         help="Keep the selected output directory and reuse valid build caches")
-    parser.add_argument("--out-dir", help="Separate output cache (must be empty unless --continue)")
+    parser.add_argument("--out-dir", help="Separate output cache (must be empty unless --continue); "
+                                          "a pipelined native simulation runs on the hardware built there")
     parser.add_argument("--latency-hints", action="append", default=[], metavar="FILE",
                         help="Starting AUTO_PIPELINE latencies for pypelinec --latency_hints "
                              "(repeatable; a start like start_latency=, never a fixed depth)")
@@ -75,6 +88,8 @@ def main():
 
     if args.jobs is not None and args.jobs < 1:
         parser.error("--jobs must be at least 1")
+    if args.verilog and args.sim:
+        parser.error("--verilog converts the built hardware; it does not apply to --sim")
     if args.perf:
         if args.enc or args.dec:
             parser.error("--perf supports only the shared top; measure.py --dirs selects measured directions")
@@ -116,6 +131,12 @@ def main():
     ] + args.define
 
     pipelinec_bin = os.environ.get("PYPELINEC") or "pypelinec"
+    profile = (args.poly1305, sharing, args.poly1305_mult, args.poly1305_compute,
+               args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap)
+    hardware_dir = args.out_dir or hardware_out_dir(design_short, *profile)
+    # Timing and stage counts come only from the real top: a testbench's synthesis can
+    # remove logic its constant stimulus never exercises, so its timing misjudges the design
+    on_built_hardware = args.sim and args.native and not args.comb
     if args.sim:
         tb_type = "perf_tb" if args.perf else "syn_tb" if args.syn_tb else "tb"
         src_file = f"./src/chacha20poly1305_{tb_type}.py"
@@ -123,7 +144,8 @@ def main():
         dir_parts = [kind, "comb" if args.comb else "pipe", design_short]
         if args.native:
             dir_parts.append("native")
-        out_dir = os.path.join(".", GENERATED_FILES, "-".join(dir_parts))
+        out_dir = (hardware_dir if on_built_hardware
+                   else args.out_dir or profile_out_dir("-".join(dir_parts), *profile))
         options = ["--sim"]
         if args.comb:
             options.append("--comb")
@@ -132,19 +154,14 @@ def main():
         options.extend(["--run", "all"])  # Testbenches finish themselves.
     else:
         src_file = "./src/chacha20poly1305.py"
-        suffix = "shared" if design_short == "shared" else design_name
-        out_dir = os.path.join(".", GENERATED_FILES, f"verilog-{suffix}")
+        out_dir = hardware_dir
         # The Verilog module keeps the name each design always had
-        options = ["--top", f"chacha20poly1305_{design_name}", "--verilog"]
-
-    out_dir = target_out_dir(compute_out_dir(mult_out_dir(sharing_out_dir(
-        implementation_out_dir(out_dir, args.poly1305), sharing), args.poly1305_mult),
-        args.poly1305_compute if args.poly1305 == "pipelined" else None), args.target_mhz)
-    out_dir = blocks_out_dir(out_dir, args.data_bitwidth // 128)
-    if args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
-        out_dir = prologue_cap_out_dir(out_dir, args.poly1305_prologue_cap)
-    if args.out_dir:
-        out_dir = args.out_dir
+        options = ["--top", f"chacha20poly1305_{design_name}"]
+        if args.verilog:
+            options.append("--verilog")
+    if on_built_hardware and not os.path.exists(os.path.join(out_dir, BUILT_HARDWARE_FILE)):
+        parser.error(f"{out_dir} holds no hardware build that met timing: build it first with "
+                     "this profile's flags and no --sim")
     cmd = [pipelinec_bin, src_file, "--out_dir", out_dir] + options
     for define in defines:
         cmd.extend(["-D", define])
@@ -164,6 +181,53 @@ def main():
     print(f"--> Poly1305 prologue/epilogue: {args.poly1305_compute}"
           + (f" (prologue cap {args.poly1305_prologue_cap})" if args.poly1305_compute == "fsm" else ""))
     print(f"--> Shared resources: {sharing_name(sharing)}")
+    if on_built_hardware:
+        print(f"--> Simulating the hardware built in {out_dir}")
+    else:
+        prepare_out_dir(parser, args, out_dir)
+
+    print(f"\n--- Running Command ---\n{shlex.join(cmd)}\n")
+    try:
+        subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as exc:
+        print(f"Build failed with exit code {exc.returncode}")
+        return exc.returncode
+    if not args.sim and design_short == "shared":
+        mismatches = direction_latency_mismatches(out_dir)
+        if mismatches:
+            print("Build rejected: encrypt and decrypt instantiate identical hardware, but the "
+                  "build gave them different latencies:\n  " + "\n  ".join(mismatches))
+            return 1
+    return 0
+
+
+def direction_latency_mismatches(out_dir):
+    """Every AUTO_PIPELINE and AUTO_FSM latency that differs between an encrypt instance
+    and its decrypt twin (the same key with the other direction), or that only one
+    direction built. A generated key's _s<digest> hashes its source, direction included,
+    so pairing ignores it."""
+    with open(os.path.join(out_dir, BUILT_HARDWARE_FILE)) as f:
+        built = json.load(f)
+    latencies = dict(built["auto_pipeline_latencies"])
+    latencies.update({key: schedule["latency"] for key, schedule in built["auto_fsm_schedules"].items()})
+    by_shape = {re.sub(r"_s[0-9a-f]{12}(?=_|$)", "", key): (key, latency)
+                for key, latency in latencies.items()}
+    direction = re.compile(r"(?<![^_])(encrypt|decrypt)(?![^_])")
+    mismatches = []
+    for shape, (key, latency) in sorted(by_shape.items()):
+        found = direction.findall(shape)
+        if len(found) != 1:
+            continue
+        twin_shape = direction.sub("decrypt" if found[0] == "encrypt" else "encrypt", shape)
+        if twin_shape not in by_shape:
+            mismatches.append(f"{key}: {latency}; {twin_shape}: not built")
+        elif found[0] == "encrypt" and by_shape[twin_shape][1] != latency:
+            twin_key, twin_latency = by_shape[twin_shape]
+            mismatches.append(f"{key}: {latency}; {twin_key}: {twin_latency}")
+    return mismatches
+
+
+def prepare_out_dir(parser, args, out_dir):
     print(f"--- Preparing output directory: {out_dir} ---")
     os.makedirs(out_dir, exist_ok=True)
     if args.out_dir and not args.continue_build and os.listdir(out_dir):
@@ -178,14 +242,6 @@ def main():
                 os.unlink(file_path)
             elif os.path.isdir(file_path):
                 shutil.rmtree(file_path)
-
-    print(f"\n--- Running Command ---\n{shlex.join(cmd)}\n")
-    try:
-        subprocess.run(cmd, check=True)
-    except subprocess.CalledProcessError as exc:
-        print(f"Build failed with exit code {exc.returncode}")
-        return exc.returncode
-    return 0
 
 
 if __name__ == "__main__":

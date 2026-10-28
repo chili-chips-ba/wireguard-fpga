@@ -7,17 +7,20 @@
 (fmax, area, throughput, latency) record for a design variant.
 
 What it does:
-  1. runs `./build.py --shared --perf` -- ONE pypelinec command line that
-     autopipelines for the selected clock goal through Vivado and then runs the
-     native simulation of exactly what it built (autopipelined latencies
-     modeled), with the perf testbench's phase plan passed in as -D PERF_*
-     design parameters, so the elaborated hardware never changes between runs;
-  2. reads fmax + pipeline depth from pypelinec's OWN numbers -- the per-MAIN
-     "final" records in <out_dir>/top/sweep_history.json (schemas 2/3), with the
-     build's stdout outcome lines as cross-check -- timing parsing is not
-     reimplemented here;
-  3. reads area from that same build's Vivado log using the utilization parser
-     below (not pypelinec's diagnostic-only one);
+  1. runs `./build.py <profile>` -- the real top (src/chacha20poly1305.py, real
+     ports) autopipelined for the selected clock goal through Vivado. Only a top
+     with real ports gives trustworthy timing: the testbench's constant stimulus
+     lets synthesis remove logic, and a sweep that trusts that timing builds
+     wrong hardware. --reuse-syn skips this step and uses the existing build;
+  2. runs `./build.py --perf <profile>` -- the native simulation of the perf
+     testbench on exactly that built hardware (its latencies modeled, no
+     elaboration or synthesis), with the phase plan passed in as -D PERF_*
+     design parameters;
+  3. reads fmax + pipeline depth from pypelinec's OWN numbers -- the per-MAIN
+     "final" records in the hardware build's sweep_history.json (schemas 2/3),
+     with that build's stdout outcome lines as cross-check -- timing parsing is
+     not reimplemented here; and area from that build's Vivado log using the
+     utilization parser below (not pypelinec's diagnostic-only one);
   4. merges everything into measurements/<label>/results.json (machine
      readable), summary.csv (one row per phase x direction), and a markdown
      table ready to paste into README.md;
@@ -38,7 +41,7 @@ a different fmax without re-simulating.
 Typical use:
   ./measure.py --label shared-85mhz          # default sharing-both 85 MHz; synthesis + sim (hours)
   ./measure.py --share-chacha20 --poly1305 legacy # historical architecture, 80 MHz goal
-  ./measure.py --label X --reuse-syn         # sim only, reuse cached synthesis
+  ./measure.py --label X --reuse-syn         # sim only, on the existing hardware build
   ./measure.py --label smoke --comb          # fast rig check, no Vivado at all
   ./measure.py --label X --parse-only        # re-merge an existing run's outputs
   ./measure.py --label X --sizes 64,1420 --packets 4
@@ -73,7 +76,7 @@ from wireguard_env import (
     MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
     DATA_BITWIDTHS, selected_data_bitwidth, blocks_out_dir,
     COMPUTE_IMPLEMENTATIONS, selected_compute, compute_out_dir,
-    selected_prologue_cap, prologue_cap_out_dir,
+    selected_prologue_cap, prologue_cap_out_dir, hardware_out_dir, BUILT_HARDWARE_FILE,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
 )
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
@@ -592,8 +595,27 @@ def recorded_data_bitwidth(config):
     return width if width is not None else 128 * config.get("poly1305_blocks_per_cycle", 1)
 
 
-def run_build(args, json_path, log_path):
-    """Run build.py --perf, teeing its (very chatty) stdout to log_path.
+def _profile_flags(args):
+    """build.py flags selecting this measurement's profile and output directory."""
+    flags = ["--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz),
+             "--poly1305-mult", args.poly1305_mult,
+             "--poly1305-compute", args.poly1305_compute,
+             "--poly1305-prologue-cap", str(args.poly1305_prologue_cap),
+             "--data-bitwidth", str(args.data_bitwidth)]
+    for name in ("chacha20", "poly1305"):
+        if args.sharing[name]:
+            flags.append("--share-" + name)
+    if not (args.sharing["chacha20"] or args.sharing["poly1305"]):
+        flags.append("--share-none")
+    if args.jobs is not None:
+        flags.extend(["-j", str(args.jobs)])
+    if args.out_dir:
+        flags.extend(["--out-dir", args.out_dir])
+    return flags
+
+
+def _run_build_py(cmd, log_path):
+    """Run build.py, teeing its (very chatty) stdout to log_path.
 
     The per-cycle 'Clock: N' lines are dropped from the saved log -- they are
     the bulk of it and carry no information the JSON doesn't -- but they are
@@ -608,47 +630,6 @@ def run_build(args, json_path, log_path):
             # same PipelineC checkout the build actually used.
             os.environ["PYPELINEC"] = candidate
             print(f"--> $PYPELINEC not set, using {candidate}")
-    # The perf testbench's phase plan: simulation-only design parameters
-    defines = [f"PERF_JSON={json_path}"]
-    if args.sizes:
-        defines.append(f"PERF_SIZES={args.sizes}")
-    if args.packets:
-        defines.append(f"PERF_PACKETS={args.packets}")
-    if args.peak_bytes is not None:
-        defines.append(f"PERF_PEAK_BYTES={args.peak_bytes}")
-    if args.dirs:
-        defines.append(f"PERF_DIRS={args.dirs}")
-    if args.taps is not None:
-        defines.append(f"PERF_TAPS={args.taps}")
-    if args.seed is not None:
-        defines.append(f"PERF_SEED={args.seed}")
-
-    cmd = [os.path.join(HERE, "build.py"), "--perf",
-           "--poly1305", args.poly1305, "--target-mhz", str(args.target_mhz),
-           "--poly1305-mult", args.poly1305_mult,
-           "--poly1305-compute", args.poly1305_compute,
-           "--poly1305-prologue-cap", str(args.poly1305_prologue_cap),
-           "--data-bitwidth", str(args.data_bitwidth)]
-    for name in ("chacha20", "poly1305"):
-        if args.sharing[name]:
-            cmd.append("--share-" + name)
-    if not (args.sharing["chacha20"] or args.sharing["poly1305"]):
-        cmd.append("--share-none")
-    for define in defines:
-        cmd.extend(["-D", define])
-    if args.jobs is not None:
-        cmd.extend(["-j", str(args.jobs)])
-    if args.out_dir:
-        cmd.extend(["--out-dir", args.out_dir])
-    for hints in args.latency_hints:
-        cmd.extend(["--latency-hints", hints])
-    if args.pipeline_min_effort is not None:
-        cmd.extend(["--pipeline-min-effort", str(args.pipeline_min_effort)])
-    if args.comb:
-        cmd.append("--comb")
-    if args.reuse_syn:
-        cmd.append("--continue")
-
     print(f"--> {' '.join(cmd)}")
     print(f"--> log: {log_path}")
     # Pin the PipelineC revision NOW, not after the run: a sweep takes hours and
@@ -678,7 +659,44 @@ def run_build(args, json_path, log_path):
         "wall_s": elapsed,
         "clock_lines": clock_lines,
         "pipelinec_git": pipelinec_git,
+        "log": os.path.relpath(log_path, HERE),
     }
+
+
+def run_hardware_build(args, log_path):
+    """Build the real top (build.py without --sim): the source of fmax, area and
+    every latency the performance simulation then simulates."""
+    cmd = [os.path.join(HERE, "build.py")] + _profile_flags(args)
+    for hints in args.latency_hints:
+        cmd.extend(["--latency-hints", hints])
+    if args.pipeline_min_effort is not None:
+        cmd.extend(["--pipeline-min-effort", str(args.pipeline_min_effort)])
+    return _run_build_py(cmd, log_path)
+
+
+def run_build(args, json_path, log_path):
+    """Run build.py --perf: the native simulation of the built hardware (with
+    --comb, the zero-latency rig check, which builds nothing)."""
+    # The perf testbench's phase plan: simulation-only design parameters
+    defines = [f"PERF_JSON={json_path}"]
+    if args.sizes:
+        defines.append(f"PERF_SIZES={args.sizes}")
+    if args.packets:
+        defines.append(f"PERF_PACKETS={args.packets}")
+    if args.peak_bytes is not None:
+        defines.append(f"PERF_PEAK_BYTES={args.peak_bytes}")
+    if args.dirs:
+        defines.append(f"PERF_DIRS={args.dirs}")
+    if args.taps is not None:
+        defines.append(f"PERF_TAPS={args.taps}")
+    if args.seed is not None:
+        defines.append(f"PERF_SEED={args.seed}")
+    cmd = [os.path.join(HERE, "build.py"), "--perf"] + _profile_flags(args)
+    for define in defines:
+        cmd.extend(["-D", define])
+    if args.comb:
+        cmd.append("--comb")
+    return _run_build_py(cmd, log_path)
 
 
 def parse_stdout(log_path):
@@ -996,7 +1014,10 @@ def parse_fmax(out_dir, stdout_info):
     return result
 
 
-def parse_area(out_dir, per_module=True):
+def parse_area(out_dir, per_module=True, scope="hardware_top"):
+    """Area from a build's top-level Vivado log. scope "hardware_top": the real top
+    (external ports); "perf_tb_top": a historical synthesized perf testbench, whose
+    constant key/nonce/aad let Vivado fold logic away."""
     try:
         parsed = parse_out_dir(out_dir, per_module=per_module)
     except Exception as exc:  # a missing/incomplete build must not lose the sim data
@@ -1018,13 +1039,8 @@ def parse_area(out_dir, per_module=True):
         if percent is not None and percent > 100
     }
     area["fits_device"] = not area["over_capacity"] if area.get("util_pct") else None
-    area["scope"] = "perf_tb_top"
-    # The perf testbench drives key/nonce/aad as constants, so Vivado folds some
-    # ChaCha20 logic away: this number is consistent ACROSS VARIANTS but is not
-    # an absolute DUT area. --area-from-dir on a hardware (./build.py --shared)
-    # build gives the folding-free cross-check; per-module OOC areas below are
-    # folding-free too.
-    area["constant_key_folding"] = True
+    area["scope"] = scope
+    area["constant_key_folding"] = scope == "perf_tb_top"
     area["per_module"] = parsed["per_module"]
     return area
 
@@ -1232,18 +1248,15 @@ def update_readme(table, results, block_summary=None):
 ENTITY = re.compile(r"^\s*entity\s+(\w+)\s+is\b", re.MULTILINE | re.IGNORECASE)
 CHILD = re.compile(r":\s*entity\s+work\.(\w+)", re.IGNORECASE)
 LATENCY = re.compile(r"ADDED_PIPELINE_LATENCY\s*:\s*integer\s*:=\s*(\d+)", re.IGNORECASE)
+# The prologue/epilogue arithmetic roots. Both directions instantiate the same
+# kernels (one set per lane count), so a root names its phase, not a direction.
 MCP_BODY = re.compile(
-    r"^(prologue|epilogue)_from_poly1305_mac_pipelined_make_poly1305_mac_pipelined"
-    r"_direction_(encrypt|decrypt)(?:_share_mcp_false)?_\d+clk_", re.IGNORECASE)
-PAIRED_MCP_BODY = re.compile(
-    r"^(prologue|epilogue)_from_poly1305_paired_compute_make_paired_compute"
-    r"_capacity_\d+(?:_direction_(encrypt|decrypt|shared))?_\d+clk_", re.IGNORECASE)
-SHARED_MCP_BODY = re.compile(
-    r"^(prologue|epilogue)_from_poly1305_mcp_shared_make_shared_compute"
-    r"_capacity_\d+_\d+clk_", re.IGNORECASE)
+    r"^(prologue|epilogue)_from_poly1305_(?:mac_pipelined_make_pipelined_compute_lanes"
+    r"|paired_compute_make_paired_compute_capacity|mcp_shared_make_shared_compute"
+    r"_capacity)_\d+_\d+clk_", re.IGNORECASE)
 
 
-def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None, shared=None):
+def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None, shared=False):
     out_dir = Path(out_dir).resolve()
     if top_vhdl is None:
         top_dir = Path(find_top_dir(str(out_dir)))
@@ -1286,7 +1299,7 @@ def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None
 
     roots, physical_counts = {}, {}
     # Counting distinct entity TYPES would miss two physical instances of the
-    # same shared kernel. Traverse instantiation edges (duplicates included),
+    # same kernel. Traverse instantiation edges (duplicates included),
     # stopping at the arithmetic roots, then audit each root's descendants.
     pending = [(top_match.group(1).lower(), ())]
     while pending:
@@ -1295,40 +1308,35 @@ def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None
             errors.append("Cyclic HDL instantiation: " + entity)
             continue
         match = MCP_BODY.match(entity)
-        shared_match = SHARED_MCP_BODY.match(entity)
-        paired_match = PAIRED_MCP_BODY.match(entity)
-        label = None
-        if paired_match:
-            label = (paired_match.group(2) or "shared", paired_match.group(1))
-        elif match:
-            label = (match.group(2).lower(), match.group(1).lower())
-        elif shared_match:
-            label = ("shared", shared_match.group(1).lower())
-        if label is not None:
-            roots[label] = entity
-            physical_counts[label] = physical_counts.get(label, 0) + 1
+        if match:
+            phase = match.group(1).lower()
+            roots.setdefault(phase, set()).add(entity)
+            physical_counts[phase] = physical_counts.get(phase, 0) + 1
             continue
         info = entities.get(entity)
         if info is None:
             errors.append("Missing emitted entity: " + entity)
             continue
         pending.extend((child, ancestors + (entity,)) for child in info["children"])
-    detected_shared = any(direction == "shared" for direction, _ in roots)
-    if shared is not None and bool(shared) != detected_shared:
-        errors.append("Emitted MCP sharing does not match requested architecture")
-    if detected_shared and any(direction != "shared" for direction, _ in roots):
-        errors.append("Both shared and private MCP arithmetic is reachable")
+    # One physical instance per phase when the MCPs are shared, else one per
+    # direction. Shared and private kernels can have the same name, so the
+    # requested architecture decides which count is right.
+    expected = 1 if shared else len(directions)
     reports = {}
-    for direction in (("shared",) if detected_shared else directions):
-        for phase in ("prologue", "epilogue"):
-            label = direction + "/" + phase
-            root = roots.get((direction, phase))
-            if root is None:
-                errors.append(f"Missing reachable MCP arithmetic: {label}")
-                continue
-            count = physical_counts[(direction, phase)]
-            if count != 1:
-                errors.append(f"{label}: expected one physical MCP arithmetic instance, got {count}")
+    for phase in ("prologue", "epilogue"):
+        if phase not in roots:
+            errors.append(f"Missing reachable MCP arithmetic: {phase}")
+            continue
+        if len(roots[phase]) != 1:
+            errors.append(f"{phase}: expected one MCP arithmetic kernel, got "
+                          + ", ".join(sorted(roots[phase])))
+        count = physical_counts[phase]
+        if count != expected:
+            errors.append(f"{phase}: expected {expected} physical MCP arithmetic "
+                          f"instance(s) ({'shared' if shared else 'one per direction'}), "
+                          f"got {count}")
+        for root in sorted(roots[phase]):
+            label = phase if len(roots[phase]) == 1 else f"{phase}/{root}"
             descendants = list(walk(root))
             bad = [entity for entity, info in descendants
                    if info["latency"] not in (None, 0) or info["clocked"]]
@@ -1340,7 +1348,7 @@ def audit_poly1305_hdl(out_dir, directions=("encrypt", "decrypt"), top_vhdl=None
                 errors.append(f"{label}: registered arithmetic inside MCP: {entity}")
     return {"out_dir": str(out_dir), "top_vhdl": str(top_vhdl),
             "scope": "emitted MCP arithmetic only; not timing/constraint sign-off",
-            "shared": detected_shared,
+            "shared": shared,
             "mcps": reports, "passed": not errors, "errors": errors}
 
 
@@ -1551,6 +1559,9 @@ def measurement_errors(results):
     returncode = results.get("provenance", {}).get("build_returncode")
     if returncode:
         errors.append(f"Build/simulation exited {returncode}")
+    hardware_returncode = results.get("provenance", {}).get("hardware_build", {}).get("returncode")
+    if hardware_returncode:
+        errors.append(f"Hardware build exited {hardware_returncode}")
     checks = results.get("checks", {})
     if not checks.get("functional_pass", False):
         errors.append(f"Functional checks did not pass: {checks.get('errors')}")
@@ -1633,6 +1644,7 @@ def measurement_errors(results):
     if mac.get("implementation") == "pipelined":
         if not mac.get("directions"):
             errors.append("Pipelined measurement lacks resolved per-direction MAC metadata")
+        errors.extend(direction_latency_errors(mac.get("directions", {})))
         for direction, meta in mac.get("directions", {}).items():
             depth = meta.get("body_core_latency")
             latency = meta.get("body_latency")
@@ -1693,6 +1705,26 @@ def measurement_errors(results):
         if not audit.get("passed"):
             errors.append(scope + ": emitted MCP arithmetic audit failed")
     return errors
+
+
+# The MAC latencies the compiler decides per direction: the AUTO_PIPELINE body and
+# coefficient depths and the AUTO_FSM prologue/epilogue latencies
+DIRECTION_LATENCY_FIELDS = ("body_core_latency", "coefficient_core_latency",
+                            "prologue_mcp_latency", "epilogue_mcp_latency")
+
+
+def direction_latency_errors(directions):
+    """Encrypt and decrypt run identical MAC arithmetic, so one build must give them
+    identical latencies. A difference means the build measured one direction's
+    hardware wrongly (for example timing from a top whose synthesis removed it)."""
+    if not {"encrypt", "decrypt"} <= set(directions):
+        return []
+    encrypt, decrypt = directions["encrypt"], directions["decrypt"]
+    differ = [f"{field} {encrypt.get(field)} vs {decrypt.get(field)}"
+              for field in DIRECTION_LATENCY_FIELDS if encrypt.get(field) != decrypt.get(field)]
+    if not differ:
+        return []
+    return ["Encrypt and decrypt MAC latencies differ (encrypt vs decrypt): " + "; ".join(differ)]
 
 
 def compare_throughput(before, after):
@@ -1793,6 +1825,19 @@ def compare_block_rates(before, after):
             "criteria": {"minimum_1920_encrypt_gain": 1.0, "minimum_1920_decrypt_gain": 1.0}}
 
 
+def evidence_scopes(results):
+    """(archive prefix, area key, timing key) of each synthesized build a record
+    measured: its own build ("hardware" for a real top, "perf" for a historical
+    synthesized perf testbench) and a historical separate hardware-top build."""
+    scopes = []
+    if "area" in results:
+        own = "hardware" if results["area"].get("scope") == "hardware_top" else "perf"
+        scopes.append((own, "area", "fmax"))
+    if "area_hw_build" in results:
+        scopes.append(("hardware", "area_hw_build", "fmax_hw_build"))
+    return scopes
+
+
 def check_record(measurement_dir):
     """Read-only acceptance/integrity check, also usable after caches are deleted.
 
@@ -1818,10 +1863,7 @@ def check_record(measurement_dir):
                 errors.append("Missing archive artifact: " + name)
             elif path.stat().st_size != expected["bytes"] or hashlib.sha256(path.read_bytes()).hexdigest() != expected["sha256"]:
                 errors.append("Archive bytes/checksum mismatch: " + name)
-        for prefix, area_key, timing_key in (("perf", "area", "fmax"),
-                                             ("hardware", "area_hw_build", "fmax_hw_build")):
-            if area_key not in results:
-                continue
+        for prefix, area_key, timing_key in evidence_scopes(results):
             try:
                 inputs = json.loads((directory / (prefix + "-inputs.json")).read_text())
                 history = json.loads((directory / (prefix + "-sweep-history.json")).read_text())
@@ -1861,10 +1903,7 @@ def save_evidence(measurement_dir, results):
     if measurement_errors(results):
         raise ValueError("Only accepted measurements can be packaged")
     sources = {}
-    for prefix, area_key, timing_key in (("perf", "area", "fmax"),
-                                         ("hardware", "area_hw_build", "fmax_hw_build")):
-        if area_key not in results:
-            continue
+    for prefix, area_key, timing_key in evidence_scopes(results):
         area, timing = results[area_key], results[timing_key]
         log = Path(area["log"])
         input_path = log.with_suffix(".inputs.json")
@@ -2012,6 +2051,10 @@ def measurement_selftest():
         ("tap mismatch", lambda r: r["phases"][0].update(taps_check={"consistent": False})),
         ("lane mismatch", lambda r: r["config"]["poly1305"]["directions"]["encrypt"].update(accumulator_count=3)),
         ("II mismatch", lambda r: r["config"]["poly1305"]["directions"]["encrypt"].update(body_ii=2)),
+        ("direction latency mismatch", lambda r: r["config"]["poly1305"]["directions"]["decrypt"].update(
+            body_core_latency=r["config"]["poly1305"]["directions"]["encrypt"]["body_core_latency"] + 1,
+            body_latency=r["config"]["poly1305"]["directions"]["encrypt"]["body_latency"] + 1,
+            accumulator_count=r["config"]["poly1305"]["directions"]["encrypt"]["accumulator_count"] + 1)),
         ("unfinished body", lambda r: r["phases"][0]["poly1305_lifecycle"]["encrypt"].update(body_retirements=0)),
         ("MCP audit", lambda r: r.update(mcp_hdl_audits={"perf": {"passed": False}})),
     ]
@@ -2181,10 +2224,9 @@ def main():
     ap.add_argument("-j", "--jobs", type=int, default=None,
                     help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
-    ap.add_argument("--reuse-syn", action="store_true", help="keep the out_dir so pypelinec re-reads its cached Vivado logs (sim-only re-measure)")
-    ap.add_argument("--out-dir", help="Explicit performance build cache (same rules as build.py --out-dir)")
+    ap.add_argument("--reuse-syn", action="store_true", help="skip the hardware build and simulate the hardware already built for this profile (sim-only re-measure)")
+    ap.add_argument("--out-dir", help="Explicit hardware build directory (same rules as build.py --out-dir)")
     ap.add_argument("--parse-only", action="store_true", help="run nothing; re-merge an existing run's perf JSON + build log")
-    ap.add_argument("--area-from-dir", default=None, help="also parse DUT-only area from another build's out_dir (e.g. generated-files/verilog-shared)")
     ap.add_argument("--no-per-module-area", action="store_true", help="skip per-module out-of-context area parsing")
     ap.add_argument("--sizes", default=None, help="comma-separated packet sizes (default: see perf_tb_common.py)")
     ap.add_argument("--packets", type=int, default=None, help="back-to-back packets per size")
@@ -2208,7 +2250,9 @@ def main():
             return measurement_selftest()
         if args.check_record or args.audit_mcps:
             report = (check_record(args.check_record) if args.check_record else
-                      audit_poly1305_hdl(generated_out_dir(args.audit_mcps), tuple(args.audit_directions.split(","))))
+                      audit_poly1305_hdl(generated_out_dir(args.audit_mcps),
+                                         tuple(args.audit_directions.split(",")),
+                                         shared=sharing_from_args(args)["poly1305"]))
             print(json.dumps(report, indent=2))
             return 0 if report["passed"] else 1
         if args.area_report:
@@ -2263,14 +2307,35 @@ def main():
     os.makedirs(meas_dir, exist_ok=True)
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
-    out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing, args.poly1305_mult,
-                          args.poly1305_compute if args.poly1305 == "pipelined" else None, args.poly1305_blocks_per_cycle)
-    if args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
-        out_dir = prologue_cap_out_dir(out_dir, args.poly1305_prologue_cap)
+    hardware_log_path = os.path.join(meas_dir, "pypelinec-hardware.log")
+    if args.comb or args.parse_only:
+        # A comb rig check builds nothing; parse-only reads the recorded directory below
+        out_dir = out_dir_for(args.comb, args.poly1305, args.target_mhz, args.sharing, args.poly1305_mult,
+                              args.poly1305_compute if args.poly1305 == "pipelined" else None, args.poly1305_blocks_per_cycle)
+        if args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
+            out_dir = prologue_cap_out_dir(out_dir, args.poly1305_prologue_cap)
+    else:
+        out_dir = os.path.normpath(os.path.join(HERE, hardware_out_dir(
+            "shared", args.poly1305, args.sharing, args.poly1305_mult, args.poly1305_compute,
+            args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap)))
     if args.out_dir:
         out_dir = os.path.abspath(args.out_dir)
 
     build_info = {"skipped": True}
+    hardware_info = {"skipped": True}
+    if not args.parse_only and not args.comb:
+        if args.reuse_syn:
+            if not os.path.exists(os.path.join(out_dir, BUILT_HARDWARE_FILE)):
+                print(f"ERROR: --reuse-syn: {out_dir} holds no hardware build that met timing",
+                      file=sys.stderr)
+                return 1
+            print(f"--> --reuse-syn: simulating the hardware already built in {out_dir}")
+        else:
+            hardware_info = run_hardware_build(args, hardware_log_path)
+            if hardware_info["returncode"] != 0:
+                print(f"!! hardware build exited {hardware_info['returncode']} -- nothing to "
+                      f"simulate (see {hardware_log_path})", file=sys.stderr)
+                return hardware_info["returncode"]
     if not args.parse_only:
         build_info = run_build(args, json_path, log_path)
         if build_info["returncode"] != 0:
@@ -2320,8 +2385,14 @@ def main():
         args.sharing = perf_raw.get("config", {}).get("sharing", {"chacha20": True, "poly1305": False})
 
     stdout_info = parse_stdout(log_path)
-    fmax = parse_fmax(out_dir, stdout_info)
-    area = parse_area(out_dir, per_module=not args.no_per_module_area)
+    # Timing comes from the hardware build's log; a historical record's perf
+    # build synthesized the testbench itself, so its own log has it
+    timing_log = hardware_log_path if os.path.exists(hardware_log_path) else log_path
+    hardware_scope = os.path.exists(os.path.join(out_dir, BUILT_HARDWARE_FILE)) or (
+        previous.get("area", {}).get("scope") == "hardware_top")
+    fmax = parse_fmax(out_dir, parse_stdout(timing_log))
+    area = parse_area(out_dir, per_module=not args.no_per_module_area,
+                      scope="hardware_top" if hardware_scope else "perf_tb_top")
     # Committed records remain reformatable after local synthesis caches are
     # removed. Never replace their accepted evidence with "unavailable".
     if args.parse_only and previous:
@@ -2378,10 +2449,11 @@ def main():
             "build_returncode": build_info.get("returncode"),
             "cycles_run": stdout_info["sim_cycles"] or build_info.get("clock_lines"),
             "sim_wall_s": stdout_info["sim_wall_s"],
-            # With --reuse-syn the Vivado logs (hence fmax/area) were produced by
-            # an EARLIER run, so they can predate pipelinec_git above, which is
-            # the revision that ran this sim.
+            # With --reuse-syn the hardware (hence fmax/area) was built by an
+            # EARLIER run, so it can predate pipelinec_git above, which is the
+            # revision that ran this sim.
             "synthesis_reused": bool(args.reuse_syn),
+            "hardware_build": hardware_info,
             "log": os.path.relpath(log_path, HERE),
             "perf_raw": os.path.relpath(json_path, HERE),
         },
@@ -2419,38 +2491,19 @@ def main():
         results["config"]["requested_poly1305_mult_impl"] = previous.get("config", {}).get(
             "requested_poly1305_mult_impl")
     elif not args.parse_only:
-        results["build_mult_impls"] = {"perf": build_mult_impl(out_dir)}
-        results["build_compute_impls"] = {"perf": build_compute_impl(out_dir)}
-        results["build_block_rates"] = {"perf": build_blocks_per_cycle(out_dir)}
-    if args.area_from_dir:
-        hardware_out_dir = generated_out_dir(os.path.join(HERE, args.area_from_dir))
-        results.setdefault("build_mult_impls", {})["hardware"] = build_mult_impl(hardware_out_dir)
-        results.setdefault("build_compute_impls", {})["hardware"] = build_compute_impl(hardware_out_dir)
-        results.setdefault("build_block_rates", {})["hardware"] = build_blocks_per_cycle(hardware_out_dir)
-        results["area_hw_build"] = parse_area(
-            hardware_out_dir,
-            per_module=not args.no_per_module_area,
-        )
-        results["area_hw_build"]["scope"] = "hardware_top"
-        results["area_hw_build"]["constant_key_folding"] = False
-        results["area_hw_build"]["out_dir"] = os.path.relpath(hardware_out_dir, HERE)
-        # The hardware build's schema-2 final records are authoritative, even
-        # when its console log was saved outside the generated directory.
-        results["fmax_hw_build"] = parse_fmax(
-            hardware_out_dir, parse_stdout(os.path.join(hardware_out_dir, "pypelinec.log"))
-        )
+        # The comb rig check builds nothing; otherwise the hardware build's own selections
+        scope = "perf" if args.comb else "hardware"
+        results["build_mult_impls"] = {scope: build_mult_impl(out_dir)}
+        results["build_compute_impls"] = {scope: build_compute_impl(out_dir)}
+        results["build_block_rates"] = {scope: build_blocks_per_cycle(out_dir)}
 
     if (not args.parse_only and not args.comb and args.poly1305 == "pipelined"
             and args.poly1305_compute == "mcp"):
-        results["mcp_hdl_audits"] = {}
-        for scope, directory in (("perf", out_dir), ("hardware", args.area_from_dir)):
-            if directory is None:
-                continue
-            try:
-                audit = audit_poly1305_hdl(os.path.join(HERE, directory), shared=args.sharing["poly1305"])
-            except (OSError, ValueError) as exc:
-                audit = {"passed": False, "errors": [str(exc)]}
-            results["mcp_hdl_audits"][scope] = audit
+        try:
+            audit = audit_poly1305_hdl(out_dir, shared=args.sharing["poly1305"])
+        except (OSError, ValueError) as exc:
+            audit = {"passed": False, "errors": [str(exc)]}
+        results["mcp_hdl_audits"] = {"hardware": audit}
     elif args.parse_only and "mcp_hdl_audits" in previous:
         results["mcp_hdl_audits"] = previous["mcp_hdl_audits"]
     errors = measurement_errors(results)

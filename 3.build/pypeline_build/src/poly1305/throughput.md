@@ -464,19 +464,21 @@ From the build directory, use a PipelineC checkout providing the API above.
 These public commands select the measured profiles without investigation scripts:
 
 ```sh
-# Development native simulation at the highest measured throughput profile.
-./build.py --shared --sim --syn_tb --native --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
-# Lowest-DSP checkpoint and original arithmetic baseline.
-./build.py --shared --sim --syn_tb --native --target-mhz 60 --poly1305-mult hybrid_square -j 1
-./build.py --shared --sim --syn_tb --native --target-mhz 60 --poly1305-mult inferred -j 1
+# Development native simulation at the highest measured throughput profile:
+# build the hardware, then simulate the testbench on it.
+./build.py --shared --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
+./build.py --shared --sim --syn_tb --native --target-mhz 85 --poly1305-mult hybrid_square
+# Lowest-DSP checkpoint and original arithmetic baseline (each after its own hardware build).
+./build.py --shared --sim --syn_tb --native --target-mhz 60 --poly1305-mult hybrid_square
+./build.py --shared --sim --syn_tb --native --target-mhz 60 --poly1305-mult inferred
 # Only immediately before an explicitly requested final Verilog export.
 ./build.py --shared --sim --syn_tb --target-mhz 85 --poly1305-mult hybrid_square -j 1 --continue
 ```
 
 For the full QoR workload, use the command in the
 [README measurement section](../../README.md#measuring-qor-fmax-area-throughput-latency).
-Use `--area-from-dir` only with a separately completed external-port hardware
-build of the same profile. `--continue` retains one output directory;
+It builds the external-port hardware top itself and takes area and timing from
+it. `--continue` retains one output directory;
 `--syn-cache` reuses matching HDL/XDC/device/tool inputs across directories.
 Separate source copies must use the same absolute synthesis-store location.
 
@@ -902,11 +904,11 @@ directory and can seed other directories at the same or a higher goal. Changed
 hardware pieces are ignored before synthesis. A build with no matching memory
 runs the normal sweep. L follows the actual discovered body latency.
 
-The encrypt/decrypt body wrappers remain so `poly1305_body` is an interior
+The `poly1305_body_region` wrapper remains so `poly1305_body` is an interior
 mini-sweep target. Direct imported-function tagging has a known PipelineC
 attribution issue, and region roots are not mini-swept; see PipelineC's
-`docs/issues_inventory.md`, issue 37. Stable tag names still provide independent
-latency groups and readable profiles for the two directions.
+`docs/issues_inventory.md`, issue 37. Both directions instantiate the one named
+group, so they always get the same body depth and lane count.
 
 ### Arithmetic representation and initial synthesis finding
 
@@ -1177,7 +1179,7 @@ prints them); no special runner is needed:
 | Parameter | Choices / default | Coverage |
 | --- | --- | --- |
 | POLY1305_TB_MODE | mac (default), body, arithmetic, components, sharing | Reference tags; body latency/bubbles; integer-oracle arithmetic; power graph/rotation; independent shared MCP arbitration and response ownership. |
-| POLY1305_TB_DIRECTION | encrypt (default), decrypt | Select the direction's named body latency group. |
+| POLY1305_TB_DIRECTION | encrypt (default), decrypt | Select which direction's MAC is built; both use the one body latency group. |
 | POLY1305_TB_BODY_DEPTH | unset (automatic), or 0,1,3,6 | Testbench-only fixed stages, giving L=2,3,5,8; not valid in arithmetic or sharing mode. |
 
 MAC cases cross each length 1..2L+1 and 4L+1 with zero/unit/maximal/random
@@ -1376,59 +1378,66 @@ Records:
 Synthesis timing only; routed timing was not run. A higher 256-bit gain needs
 shorter or unshared setup/finalization.
 
-### 80 MHz: inferred feedback body, private AUTO_FSM services
+### 80 MHz: inferred feedback body, shared MAC definitions
 
-2026-10-25, frozen PipelineC `39aef859` (`…-frozen-d8de5ac222f7`), 80 MHz goal, seed 8439,
-four concurrent packets per size.
-[Record](../../measurements/private-autofsm-39aef859-256-inferred_body-80mhz-20261025-r3/);
+2026-10-28, frozen PipelineC `786f9f03` plus uncommitted compiler work
+(`…-frozen-f52cc96ae409`), 80 MHz goal, seed 8439, four concurrent packets per size.
+[Record](../../measurements/shared-defs-786f9f03-frozen-256-inferred_body-80mhz-20261028/);
 the investigation (kernel probes, body-depth probes, build-time analysis) is in
 `generated-files/paired-80mhz-investigation-20261021/README.md`.
 
-**Two changes reach 80 MHz.**
+**Three changes reach 80 MHz with both directions timed.**
 - **`--poly1305-mult inferred_body`.**
   - The feedback product `A*stride + d` is a pinned wide inferred multiply, so the feedback
-    body needs 2–3 stages at 80 MHz instead of 10. Lanes (feedback latency + 2) drop from 12
-    to 5 for encrypt and 4 for decrypt.
+    body needs 3 stages at 80 MHz instead of 10. Lanes (feedback latency + 2) drop from 12
+    to 5.
   - Everything else stays `hybrid_square`: the coefficient body, which does not set lanes,
     and the AUTO_FSM kernels.
 - **`--share-chacha20`.**
-  - Each direction has its own prologue and epilogue FSM.
+  - Each direction has its own prologue and epilogue FSM instance, of one shared definition.
   - A single shared single-flight service costs 2 × (latency + 1) cycles per packet pair.
     The 256-bit body needs ~63 cycles per 1920-byte packet, so shared services would have
     to fit in 28 cycles, below the ~30–40-state prologue floor.
+- **Shared MAC definitions.** Both directions instantiate one AUTO_PIPELINE group per paired
+  body and one prologue and one epilogue kernel per lane count, so they get the same depths
+  and schedules. Timing comes from the external-port hardware top; the perf testbench is
+  simulated on that build and never synthesized. PipelineC applies a mini-sweep's lock to
+  every MAIN at the same clock goal, so the coefficient body reaches 8 stages in both
+  directions together.
 
 Measured at 1920 bytes and the 80 MHz target, against the 128-bit 80 MHz record
-(`shared-poly1305-fsm64-latest-qor-20261017`, earlier compiler, not a matched build):
+(`shared-poly1305-fsm64-latest-qor-20261017`, earlier compiler, not a matched build). The
+128-bit area is from a synthesized perf testbench, the 256-bit area from the hardware top:
 
 | | 128-bit record | 256-bit |
 |---|---:|---:|
 | fmax (all MAINs pass) | 81.04 MHz | 81.73 MHz, WNS +0.265 ns |
-| LUT / FF | 104,668 / 93,372 | 50,768 / 39,589 |
-| DSP / BRAM tiles | 413 / 18.5 | 160 / 23.5 |
-| Lanes enc / dec | 10 / 10 | 5 / 4 |
+| LUT / FF | 104,668 / 93,372 | 81,476 / 67,931 |
+| DSP / BRAM tiles | 413 / 18.5 | 320 / 26.5 |
+| Lanes enc / dec | 10 / 10 | 5 / 5 |
 | Prologue / epilogue FSM enc | 64 / 41 cycles | 64 / 45 cycles |
-| Prologue / epilogue FSM dec | shared | 63 / 35 cycles |
+| Prologue / epilogue FSM dec | shared | 64 / 45 cycles |
 | Encrypt goodput | 9.125 Gb/s | 18.071 Gb/s (1.98×) |
-| Decrypt goodput | 9.125 Gb/s | 13.166 Gb/s (1.44×) |
-| 16 B period enc / dec | 109.3 / 132.0 cycles | 68.0 / 90.7 cycles |
+| Decrypt goodput | 9.125 Gb/s | 12.329 Gb/s (1.35×) |
+| 16 B period enc / dec | 109.3 / 132.0 cycles | 68.0 / 91.0 cycles |
 
-All 48 reference checks pass, and conservation holds: per direction 492 blocks =
-2 × 244 pairs + 4 tails.
-- **Encrypt** runs at its prologue service rate (68 cycles).
+All 48 reference checks pass, conservation holds (per direction 492 blocks =
+2 × 244 pairs + 4 tails), and encrypt and decrypt have identical MAC latencies.
+- **Encrypt** runs at its prologue service rate: 68 cycles at every size.
 - **Decrypt's setup is less hidden.** Its Poly1305 consumes ciphertext in parallel with
-  ChaCha20, so the next packet's key arrives at the end of the current body, leaving ~30 of
-  its 65 setup cycles exposed (91–98-cycle periods).
-- **Prologue cap 44** (`--poly1305-prologue-cap 44`,
-  [record](../../measurements/private-autofsm-39aef859-256-inferred_body-procap44-80mhz-20261026/)).
-  The prologue floors are 40 states at 5 lanes (encrypt) and 30 at 4 (decrypt).
-  - The prologues schedule at 42/43 states, and timing is met: WNS +0.203 ns, 81.32 MHz.
-  - Area: 50,574 LUT, 166 DSP.
-  - Gb/s at 1920 bytes, encrypt / decrypt: 19.20 / 14.34 (2.10× / 1.57× the 128-bit record).
-  - At 1024 bytes: 13.65 / 9.02.
-  - Encrypt is now body-limited at 1920 bytes (64 cycles) and prologue-bound below it
-    (48 cycles).
-  - Decrypt still waits on its next key, which follows the current packet's keystream
-    through the 19-stage ChaCha20 pipeline: 62.7 cycles at 16 bytes, 85.7 at 1920.
+  ChaCha20, so the next packet's key arrives only after the current packet's keystream, and
+  much of its 66-cycle setup is exposed: 91–104-cycle periods, and a 37.7-cycle model
+  residual at 1920 bytes against encrypt's 6.0.
+- **Earlier records on `39aef859` synthesized the perf testbench for timing.** Vivado removed
+  its decrypt MAC, so their decrypt depths (4 lanes) were never timed, and both records fail
+  `measure.py --check-record`'s identical-latency rule. Their encrypt hardware was intact:
+  - [r3](../../measurements/private-autofsm-39aef859-256-inferred_body-80mhz-20261025-r3/),
+    cap 64: encrypt matches this record (68 cycles, 18.07 Gb/s at 1920 bytes).
+  - [Prologue cap 44](../../measurements/private-autofsm-39aef859-256-inferred_body-procap44-80mhz-20261026/)
+    (`--poly1305-prologue-cap 44`): the encrypt prologue scheduled at 42 states against its
+    40-state floor. Encrypt took 48 cycles per packet up to 1420 bytes and was body-limited
+    at 1920 bytes (64 cycles, 19.20 Gb/s). The shared-definition profile has not been
+    rebuilt at cap 44.
 
 Comb-function rewrites measured on standalone L=5 kernels:
 - **Epilogue, reducing the summed lane products once:** 34 instead of 50 states, for 24% more

@@ -43,16 +43,12 @@ def poly1305_pair_accumulate(x: body_in_stream_t) -> body_out_stream_t:
     return o
 
 
-# Keep the arithmetic body inside each latency region so the sweep can
+# Keep the arithmetic body inside its latency region so the sweep can
 # attribute its critical paths and mini-sweep it. Region roots are not
-# mini-swept. Neither wrapper captures the derived lane count.
+# mini-swept. Both directions instantiate this one wrapper in one named
+# latency group, so they get the same depth. It captures no lane count.
 @hw_func
-def poly1305_pair_accumulate_encrypt(x: body_in_stream_t) -> body_out_stream_t:
-    return poly1305_pair_accumulate(x)
-
-
-@hw_func
-def poly1305_pair_accumulate_decrypt(x: body_in_stream_t) -> body_out_stream_t:
+def poly1305_pair_accumulate_region(x: body_in_stream_t) -> body_out_stream_t:
     return poly1305_pair_accumulate(x)
 
 
@@ -82,24 +78,21 @@ def poly1305_pair_coefficient(x: coefficient_in_stream_t) -> body_out_stream_t:
     return o
 
 
+# The coefficient region's wrapper, for the same reasons as the body's.
 @hw_func
-def poly1305_pair_coefficient_encrypt(x: coefficient_in_stream_t) -> body_out_stream_t:
-    return poly1305_pair_coefficient(x)
-
-
-@hw_func
-def poly1305_pair_coefficient_decrypt(x: coefficient_in_stream_t) -> body_out_stream_t:
+def poly1305_pair_coefficient_region(x: coefficient_in_stream_t) -> body_out_stream_t:
     return poly1305_pair_coefficient(x)
 
 
 @functools.lru_cache(maxsize=None)
-def get_coefficient_auto_pipeline(direction, coefficient_latency=None):
-    func = (poly1305_pair_coefficient_encrypt if direction == "encrypt"
-            else poly1305_pair_coefficient_decrypt)
-    name = f"poly1305_pair_coefficient_{direction}"
+def get_coefficient_auto_pipeline(coefficient_latency=None):
+    """One named latency group for both directions' coefficient pipelines."""
+    name = "poly1305_pair_coefficient"
     if coefficient_latency is not None:
-        return AUTO_PIPELINE(func, latency=coefficient_latency, name=name)
-    return AUTO_PIPELINE(func, name=name)
+        return AUTO_PIPELINE(
+            poly1305_pair_coefficient_region, latency=coefficient_latency, name=name
+        )
+    return AUTO_PIPELINE(poly1305_pair_coefficient_region, name=name)
 
 # Architectural storage/phase boundaries, also consumed by FIFO sizing.
 PACKET_CONTEXTS = 2
@@ -147,22 +140,21 @@ class mac_result_t(NamedTuple):
 
 
 @functools.lru_cache(maxsize=None)
-def get_body_auto_pipeline(direction, body_latency=None):
-    """One named latency group per direction, also used to size shared MCP arrays.
-    body_latency: a fixed body depth instead of the automatic one -- only the
-    standalone paired testbench sets it."""
-    if direction not in ("encrypt", "decrypt"):
-        raise ValueError("Poly1305 direction must be encrypt or decrypt")
-    body_func = poly1305_pair_accumulate_encrypt if direction == "encrypt" else poly1305_pair_accumulate_decrypt
-    name = f"poly1305_pair_accumulate_{direction}"
+def get_body_auto_pipeline(body_latency=None):
+    """One named latency group for both directions' feedback bodies, also used
+    to size shared MCP arrays. body_latency: a fixed body depth instead of the
+    automatic one -- only the standalone paired testbench sets it."""
+    name = "poly1305_pair_accumulate"
     if body_latency is not None:
-        return AUTO_PIPELINE(body_func, latency=body_latency, name=name)
-    return AUTO_PIPELINE(body_func, name=name)
+        return AUTO_PIPELINE(
+            poly1305_pair_accumulate_region, latency=body_latency, name=name
+        )
+    return AUTO_PIPELINE(poly1305_pair_accumulate_region, name=name)
 
 
 def make_poly1305_mac_paired(direction, share_mcp=False, *, body_latency=None, coefficient_latency=None):
-    body_ap = get_body_auto_pipeline(direction, body_latency)
-    coefficient_ap = get_coefficient_auto_pipeline(direction, coefficient_latency)
+    body_ap = get_body_auto_pipeline(body_latency)
+    coefficient_ap = get_coefficient_auto_pipeline(coefficient_latency)
     coefficient_cycles = coefficient_ap.latency + 2
     lanes = body_ap.latency + 2
     total_cycles = coefficient_cycles + lanes
@@ -188,7 +180,7 @@ def make_poly1305_mac_paired(direction, share_mcp=False, *, body_latency=None, c
         return result
 
     from poly1305_paired_compute import make_paired_compute
-    compute = make_paired_compute(lanes, direction=direction)
+    compute = make_paired_compute(lanes)
     powers_t, epilogue_in_t = compute.powers_t, compute.epilogue_in_t
     prologue, epilogue = compute.prologue, compute.epilogue
 
@@ -199,11 +191,13 @@ def make_poly1305_mac_paired(direction, share_mcp=False, *, body_latency=None, c
         prologue_mcp = adapters.prologue
         epilogue_mcp = adapters.epilogue
     else:
+        # Both directions instantiate the same services (make_compute_service
+        # returns one per kernel), each instance with its own state.
         prologue_mcp = make_compute_service(
-            prologue, name=f"poly1305_paired_prologue_{direction}", phase="prologue"
+            prologue, name="poly1305_paired_prologue", phase="prologue"
         )
         epilogue_mcp = make_compute_service(
-            epilogue, name=f"poly1305_paired_epilogue_{direction}", phase="epilogue"
+            epilogue, name="poly1305_paired_epilogue", phase="epilogue"
         )
 
     @struct

@@ -6,6 +6,7 @@ includes its explicit input/output registers. Same-cycle retirement bypass
 lets a lane be revisited exactly L accepted-beat cycles after its launch.
 """
 import functools
+from types import SimpleNamespace
 import wireguard_env  # noqa: F401
 
 from enum import auto
@@ -46,16 +47,12 @@ def poly1305_body(x: body_in_stream_t) -> body_out_stream_t:
     return o
 
 
-# Keep the arithmetic body inside each latency region so the sweep can
+# Keep the arithmetic body inside its latency region so the sweep can
 # attribute its critical paths and mini-sweep it. Region roots are not
-# mini-swept. Neither wrapper captures the derived lane count.
+# mini-swept. Both directions instantiate this one wrapper in one named
+# latency group, so they get the same depth. It captures no lane count.
 @hw_func
-def poly1305_body_encrypt(x: body_in_stream_t) -> body_out_stream_t:
-    return poly1305_body(x)
-
-
-@hw_func
-def poly1305_body_decrypt(x: body_in_stream_t) -> body_out_stream_t:
+def poly1305_body_region(x: body_in_stream_t) -> body_out_stream_t:
     return poly1305_body(x)
 
 
@@ -119,36 +116,26 @@ class mac_result_t(NamedTuple):
 
 
 @functools.lru_cache(maxsize=None)
-def get_body_auto_pipeline(direction, body_latency=None):
-    """One named latency group per direction, also used to size shared MCP arrays.
-    body_latency: a fixed body depth instead of the automatic one -- only the
-    standalone testbench (poly1305_pipelined_syn_tb.py) sets it."""
-    if direction not in ("encrypt", "decrypt"):
-        raise ValueError("Poly1305 direction must be encrypt or decrypt")
-    body_func = poly1305_body_encrypt if direction == "encrypt" else poly1305_body_decrypt
-    name = f"poly1305_body_{direction}"
+def get_body_auto_pipeline(body_latency=None):
+    """One named latency group for both directions' bodies, also used to size
+    shared MCP arrays. body_latency: a fixed body depth instead of the
+    automatic one -- only the standalone testbench (poly1305_pipelined_syn_tb.py)
+    sets it."""
+    name = "poly1305_body"
     if body_latency is not None:
-        return AUTO_PIPELINE(body_func, latency=body_latency, name=name)
-    return AUTO_PIPELINE(body_func, name=name)
+        return AUTO_PIPELINE(poly1305_body_region, latency=body_latency, name=name)
+    return AUTO_PIPELINE(poly1305_body_region, name=name)
 
 
-def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None):
-    body_ap = get_body_auto_pipeline(direction, body_latency)
-    lanes = body_ap.latency + 2
+@functools.lru_cache(maxsize=None)
+def make_pipelined_compute(lanes):
+    """Prologue/epilogue kernels and payload types for `lanes` lanes. One set
+    per lane count: both directions instantiate the same kernels, so equal
+    lane counts give one AUTO_FSM schedule."""
     lane_t = make_uint_t(max(1, (lanes - 1).bit_length()))
-    count_t = make_uint_t(lanes.bit_length())
     # Signed subtraction is unnecessary in the epilogue's rotated index.
     index_t = make_uint_t((2 * lanes).bit_length())
     tree_size = 1 << (lanes - 1).bit_length()
-
-    @hw_func
-    def body_pipeline(x: body_in_stream_t) -> body_out_stream_t:
-        input_reg: Reg[body_in_stream_t]
-        output_reg: Reg[body_out_stream_t]
-        result: body_out_stream_t = output_reg
-        output_reg = body_ap(input_reg)
-        input_reg = x
-        return result
 
     @struct
     class powers_t(NamedTuple):
@@ -194,6 +181,29 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         tag: uint128_t = low + x.s
         return tag
 
+    return SimpleNamespace(prologue=prologue, epilogue=epilogue,
+                           powers_t=powers_t, epilogue_in_t=epilogue_in_t)
+
+
+def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None):
+    body_ap = get_body_auto_pipeline(body_latency)
+    lanes = body_ap.latency + 2
+    lane_t = make_uint_t(max(1, (lanes - 1).bit_length()))
+    count_t = make_uint_t(lanes.bit_length())
+    compute = make_pipelined_compute(lanes)
+    powers_t, epilogue_in_t = compute.powers_t, compute.epilogue_in_t
+    prologue, epilogue = compute.prologue, compute.epilogue
+
+    @hw_func
+    def body_pipeline(x: body_in_stream_t) -> body_out_stream_t:
+        input_reg: Reg[body_in_stream_t]
+        output_reg: Reg[body_out_stream_t]
+        result: body_out_stream_t = output_reg
+        output_reg = body_ap(input_reg)
+        input_reg = x
+        return result
+
+
     if share_mcp:
         from poly1305_mcp_shared import make_shared_adapters
 
@@ -201,11 +211,13 @@ def make_poly1305_mac_pipelined(direction, share_mcp=False, *, body_latency=None
         prologue_mcp = adapters.prologue
         epilogue_mcp = adapters.epilogue
     else:
+        # Both directions instantiate the same services (make_compute_service
+        # returns one per kernel), each instance with its own state.
         prologue_mcp = make_compute_service(
-            prologue, name=f"poly1305_prologue_{direction}", phase="prologue"
+            prologue, name="poly1305_prologue", phase="prologue"
         )
         epilogue_mcp = make_compute_service(
-            epilogue, name=f"poly1305_epilogue_{direction}", phase="epilogue"
+            epilogue, name="poly1305_epilogue", phase="epilogue"
         )
 
     @struct

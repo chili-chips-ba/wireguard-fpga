@@ -261,6 +261,28 @@ def sharing_out_dir(base, sharing):
 GENERATED_FILES = "generated-files"
 
 
+def profile_out_dir(kind, implementation, sharing, multiplier, compute, target_mhz,
+                    data_bitwidth, prologue_cap):
+    """generated-files/<kind>-<profile suffixes>: one output directory per build kind and profile."""
+    out_dir = target_out_dir(compute_out_dir(mult_out_dir(sharing_out_dir(
+        implementation_out_dir(os.path.join(".", GENERATED_FILES, kind), implementation), sharing),
+        multiplier), compute if implementation == "pipelined" else None), target_mhz)
+    out_dir = blocks_out_dir(out_dir, data_bitwidth // 128)
+    if implementation == "pipelined" and compute == "fsm":
+        out_dir = prologue_cap_out_dir(out_dir, prologue_cap)
+    return out_dir
+
+
+def hardware_out_dir(design_short, *profile):
+    """Where build.py builds the real top (src/chacha20poly1305.py) of a profile. Pipelined
+    native simulations of that profile run in this directory, on the hardware built there."""
+    return profile_out_dir("hardware-" + design_short, *profile)
+
+
+# PipelineC writes this into a build's output directory once the build meets timing
+BUILT_HARDWARE_FILE = "built_hardware.json"
+
+
 def generated_out_dir(path):
     """Map a pre-relayout `generated-files-<name>` path to `generated-files/<name>`."""
     head, name = os.path.split(os.path.normpath(path))

@@ -42,9 +42,10 @@ build.py and measure.py import the same module for the profile tables and
 output-directory names.
 Design configuration never comes from environment variables.
 
-Keep the `poly1305_body_encrypt` / `poly1305_body_decrypt` wrappers: they keep
+Keep the `poly1305_body_region` / `poly1305_pair_*_region` wrappers: they keep
 the arithmetic body inside its named AUTO region so the sweep can attribute
-and mini-sweep it. Directly tagging the imported body currently loses useful
+and mini-sweep it. Both directions instantiate the same groups and kernels,
+so their depths and AUTO_FSM schedules cannot differ. Directly tagging the imported body currently loses useful
 attribution, and the sweep does not mini-sweep region roots (PipelineC's
 `docs/issues_inventory.md`, issue 37).
 
@@ -76,15 +77,25 @@ Run from `pypeline_build/` (not `src/`):
   and clock. The measured 85 MHz default has eight body core stages, ten lanes
   per direction and shared MCP setup cycles 12/8. See `src/poly1305/throughput.md`
   for the measured toolchain and current verification scope.
-- No `--sim`: final Verilog export from `src/chacha20poly1305.py`, only when
-  explicitly requested and after the one pre-export HDL check
-  (`--enc`/`--dec`/`--shared` select `-D DESIGN`; the Verilog top keeps its
+- No `--sim`: the hardware build of the real top `src/chacha20poly1305.py`
+  (external ports) into `generated-files/hardware-<profile>`
+  (`--enc`/`--dec`/`--shared` select `-D DESIGN`; the top keeps its
   `chacha20poly1305_{encrypt,decrypt,encrypt_decrypt_shared}` name via `--top`).
+  `--verilog` adds the final Verilog export, only when explicitly requested and
+  after the one pre-export HDL check. A combined build fails when an encrypt
+  AUTO_PIPELINE/AUTO_FSM latency differs from its decrypt twin's, or only one
+  direction built it.
+- **Timing comes only from the real top.** Never synthesize a testbench for
+  timing: its constant stimulus lets Vivado remove logic (a synthesized perf
+  testbench lost the whole decrypt MAC, and the sweep trimmed decrypt to 0
+  stages). Pipelined native simulations run on the hardware build instead.
 - `--sim --native`: Pypeline's own Python simulator, no cocotb/GHDL needed.
   Add `--syn_tb` for the fixed-vector synthesizable-style TB, omit it for the
   random-vector non-synthesizable TB (that style is native-only — see below).
-  `--comb` = fast combinational sim; omit for a slow but cycle-accurate
-  pipelined native sim (runs real autopipelining first to discover latencies).
+  `--comb` = fast combinational sim; omit for a cycle-accurate pipelined native
+  sim, which runs in the profile's hardware build directory on the hardware built
+  there (build it first; PipelineC refuses a missing or out-of-date build and
+  synthesizes nothing for the testbench).
 - `--sim --syn_tb` (no `--native`): cocotb + GHDL against generated VHDL.
   Run the selected design's pipelined check once immediately before an
   explicitly requested final Verilog export. Development uses `--native`
@@ -159,8 +170,11 @@ known-answer self-test at import time — the DUT never validates itself.
 ## QoR measurement and in-design probes
 
 `./measure.py` is the one automated (fmax, area, throughput, latency) step; it
-runs `./build.py --shared --perf` (autopipeline + native sim of exactly what it
-built) and merges everything into `measurements/<label>/`. The design-agnostic
+runs the hardware build (`./build.py <profile>`, fmax and area) and then
+`./build.py --perf <profile>` (native sim of the perf testbench on exactly that
+hardware) and merges everything into `measurements/<label>/`. Acceptance requires
+equal encrypt and decrypt MAC latencies: identical arithmetic must build
+identically. The design-agnostic
 half is PipelineC's stream performance library (`include/pypeline/stream/`
 `stream_perf.py`, `stream_perf_probe.py`, `stream_bottleneck.py`,
 `stream_perf_report.py`, plus `axi/axis_sim.py`'s converged source/sink; guide
@@ -171,23 +185,25 @@ MAIN labels in `perf_tb_common.py`, the block graph/model/report wording in
 evidence in `measure.py` (`--selftest`-able). Library bugs go to the user, not
 a local copy. `aead_types.py`'s FIFO/slice factories use the library's probed
 buffers, which report simulation-only occupancy and conservation.
-`measure.py --out-dir ... --reuse-syn` can retain an isolated cache.
+`measure.py --reuse-syn` simulates on the existing hardware build (`--out-dir` for an
+isolated one) without rebuilding it.
 
-The current QoR record (256-bit, 80 MHz, `inferred_body`, private AUTO_FSM
-services), full-design resource counts and multiplier findings are documented
-in `README.md` and `src/poly1305/throughput.md`.
+The current QoR record (256-bit, 80 MHz, `inferred_body`, encrypt and decrypt
+built from shared MAC definitions), full-design resource counts and multiplier
+findings are documented in `README.md` and `src/poly1305/throughput.md`.
 Use the actual automatic depths and retained signatures, not a guessed
-latency or a stale earlier top. Keep performance-testbench and external-port
-area scopes distinct; timing is synthesis evidence and routed timing is
-untested. Critical results belong in maintained component docs;
+latency or a stale earlier top. Area and timing come from the external-port
+hardware build; records that synthesized the perf testbench (`perf_tb_top`) lost
+logic to constant folding and are not comparable. Timing is synthesis evidence
+and routed timing is untested. Critical results belong in maintained component docs;
 scratch workspaces and investigation reports are local. No separate `tests/` runner
 directory or diagnostic build modes are needed; compiler regressions belong
 in PipelineC's own suite.
 
-Keep the compiler checkout stable during long builds. The current run completed
-native simulation with an isolated original PipelineC revision after a live
-checkout update interrupted it; `recovery.json` records the exact retained
-latencies and verified frozen source hashes. It reused the completed synthesis.
+Keep the compiler checkout stable during long builds: run them from a frozen
+copy. The current record names its copy in `compiler-snapshot.json` (base
+revision and source-tree hash) and archives the uncommitted compiler changes as
+`compiler.patch` against that base.
 
 **Internal taps go inside the design's own hardware functions**, via
 `from stream import stream_perf_probe as perf_taps`: `perf_taps.hs(name, valid,
@@ -196,9 +212,9 @@ ready, keep=None)`, `perf_taps.state(name, reg, NAMES_TUPLE)`,
 are `@sim_output` calls and the elaborator deletes them, so they cost **no
 hardware**; they fire once per cycle, Feedback bodies included. Caveat: generated VHDL
 embeds source line numbers in comments and signal names, so adding or MOVING a
-probe shifts those and costs one re-synthesis of the enclosing hierarchy; once
-the probes are in place, `measure.py --reuse-syn` re-measures in sim time alone
-as before. Rules when adding one:
+probe in a hardware source makes the hardware build out of date (the simulation
+refuses it) and costs one rebuild; once the probes are in place,
+`measure.py --reuse-syn` re-measures in sim time alone. Rules when adding one:
 
 - plain `@hw_func`/`@MAIN` bodies only — an interface function's body (the
   dataflow cores) rejects statements that touch interface values;

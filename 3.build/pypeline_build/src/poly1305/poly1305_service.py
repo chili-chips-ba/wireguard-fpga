@@ -1,4 +1,5 @@
 """One elaboration-time selection for both Poly1305 setup/finalization services."""
+import functools
 import wireguard_env
 from stream.stream_auto_fsm import make_stream_auto_fsm
 from stream.stream_multi_cycle import make_stream_auto_multi_cycle
@@ -7,8 +8,11 @@ from stream.stream_multi_cycle import make_stream_auto_multi_cycle
 EPILOGUE_MAX_LATENCY = 64
 
 
+@functools.lru_cache(maxsize=None)
 def make_compute_service(func, name, phase):
-    """The same stream contract for the prologue or epilogue service.
+    """The same stream contract for the prologue or epilogue service. One
+    service per (kernel, name, phase): every caller instantiates the same
+    definition, and each instance keeps its own state.
 
     FSM compute is capped at POLY1305_PROLOGUE_MAX_LATENCY cycles for the
     prologue and EPILOGUE_MAX_LATENCY for the epilogue. compute_tag.latency
