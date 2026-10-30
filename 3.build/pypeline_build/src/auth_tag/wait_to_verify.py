@@ -18,6 +18,8 @@ from pypeline import (
     Feedback,
     enum,
     uint1_t,
+    initial,
+    sim_output,
 )
 
 from stream import stream_perf_probe as perf_taps
@@ -56,6 +58,20 @@ def make_wait_to_verify(depth=128, *, sizing=None):
     verify_fifo_func = make_aead_fifo(
         aead_axis_frag_t, depth, "verify_fifo", "decrypt", sizing=sizing
     )
+    checked = {"verdicts": 0, "packets": 0}
+
+    @initial(sim=True)
+    def reset_verdict_check():
+        checked.update(verdicts=0, packets=0)
+
+    @sim_output
+    def check_verdict_order(verdict_valid, verdict_ready, output_valid, output_ready, output_last):
+        if verdict_valid and verdict_ready:
+            checked["verdicts"] += 1
+        if output_valid:
+            assert checked["verdicts"] > checked["packets"], "Plaintext exposed before its verdict"
+            if output_ready and output_last:
+                checked["packets"] += 1
 
     @hw_func
     def wait_to_verify(
@@ -155,6 +171,9 @@ def make_wait_to_verify(depth=128, *, sizing=None):
             o.axis_out_if.stream.data.frag.keep,
         )
         perf_taps.hs("wtv.verify_bit", verify_bit_if.stream.valid, o.verify_bit_if.ready)
+        check_verdict_order(verify_bit_if.stream.valid, o.verify_bit_if.ready,
+                            o.axis_out_if.stream.valid, axis_out_if.ready,
+                            o.axis_out_if.stream.data.eod[0])
         return o
 
     return wait_to_verify

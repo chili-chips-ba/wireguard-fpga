@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "measurement": "measurements/mcp-vs-fsm-parity-decision-20261029/default",
+  "profile": {
+    "design": "shared",
+    "implementation": "pipelined",
+    "data_bitwidth": 256,
+    "multiplier": "inferred_body",
+    "compute": "fsm",
+    "sharing": {
+      "chacha20": true,
+      "poly1305": false
+    },
+    "target_mhz": 80,
+    "prologue_cap": 44,
+    "epilogue_cap": 45
+  },
+  "latency_hints": [
+    "measurements/mcp-vs-fsm-parity-decision-20261029/latency-hints.json"
+  ]
+}

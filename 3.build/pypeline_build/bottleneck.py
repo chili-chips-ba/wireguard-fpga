@@ -147,6 +147,13 @@ BLOCKS = {
         "state": None,
         "what": "tag split off the ciphertext tail (decrypt in)",
     },
+    "tag_buffer": {
+        "consumes": "tag_fifo.in",
+        "produces": "tag_fifo.out",
+        "downstream": ("verify",),
+        "state": None,
+        "what": "extracted packet tags queued independently of ciphertext",
+    },
     "wait_to_verify": {
         "consumes": "wtv.axis_in",
         "produces": "wtv.axis_out",
@@ -350,6 +357,16 @@ def analyze_phase(phase, aad_len=0, mac_config=None):
             }
     if services:
         phase["poly1305_shared_services"] = services
+    if "decrypt/strip.tag_out" in taps:
+        phase["decrypt_flow_control"] = {
+            "strip_tag_stall_cycles": taps["decrypt/strip.tag_out"].get("stall_cycles", 0),
+            "strip_input_stall_cycles": taps.get("decrypt/strip.axis_in", {}).get("stall_cycles", 0),
+            "key_stall_cycles": taps.get("decrypt/chacha20.key_out", {}).get("stall_cycles", 0),
+            "buffers": {name: {key: value.get(key) for key in
+                                ("capacity_beats", "high_water_beats", "full_cycles", "accepted_beats", "retired_beats")}
+                        for name, value in taps.items()
+                        if name.startswith("decrypt/") and value.get("kind") == "buffer"},
+        }
     return phase
 
 
@@ -371,7 +388,8 @@ def concurrent_throughput(phase):
     rates = {d: v.get("sustained_bytes_per_cycle") for d, v in directions.items()}
     if not all(rates.values()):
         return None
-    result = {"full_phase_decrypt_to_encrypt_ratio": rates["decrypt"] / rates["encrypt"]}
+    result = {"full_phase_decrypt_to_encrypt_ratio": rates["decrypt"] / rates["encrypt"],
+              "parity_ratio": min(rates.values()) / max(rates.values())}
     packets = {d: v.get("packets", []) for d, v in directions.items()}
     ends = [(phase.get("taps", {}).get(d + "/chacha20.to_pipeline") or {}).get(
         "last_transfer_cycle") for d in DIRECTIONS]
@@ -380,6 +398,10 @@ def concurrent_throughput(phase):
         return result
     first = max(p[1]["last_out"] for p in packets.values())
     last = min(ends)
+    steady = [v.get("steady_state", {}) for v in directions.values()]
+    if all(s.get("available") for s in steady):
+        first = max(first, *(s["first_cycle"] for s in steady))
+        last = min(last, *(s["last_cycle"] for s in steady))
     overlap = {"available": True, "first_cycle": first, "last_cycle": last}
     for d, entries in packets.items():
         periods = [b["last_out"] - a["last_out"] for a, b in zip(entries, entries[1:])
@@ -391,6 +413,8 @@ def concurrent_throughput(phase):
     if all(overlap[d]["bytes_per_cycle"] for d in DIRECTIONS):
         overlap["decrypt_to_encrypt_ratio"] = (overlap["decrypt"]["bytes_per_cycle"] /
                                                overlap["encrypt"]["bytes_per_cycle"])
+        overlap["parity_ratio"] = min(overlap[d]["bytes_per_cycle"] for d in DIRECTIONS) / max(
+            overlap[d]["bytes_per_cycle"] for d in DIRECTIONS)
     result["contention_window"] = overlap
     return result
 
@@ -434,9 +458,32 @@ def markdown_blocks(phases):
     return lib.markdown_blocks(
         phases, DIRECTIONS, BLOCKS, HEADLINE_COMPARE, HEADLINE_NAMES,
         extra_sections=(markdown_model(phases), markdown_poly1305_lifecycle(phases),
-                        markdown_poly1305_services(phases)),
+                        markdown_poly1305_services(phases), markdown_parity(phases)),
         text=TEXT,
     )
+
+
+def markdown_parity(phases):
+    rows = []
+    for phase in phases:
+        comparison = phase.get("throughput_comparison", {})
+        if not comparison:
+            continue
+        flow = phase.get("decrypt_flow_control", {})
+        tag = flow.get("buffers", {}).get("decrypt/tag_fifo.occupancy", {})
+        rows.append("| %s | %s | %s | %s | %s | %s |" % (
+            phase["name"], pct(comparison.get("parity_ratio")),
+            pct(comparison.get("contention_window", {}).get("parity_ratio")),
+            flow.get("strip_tag_stall_cycles", "-"), tag.get("high_water_beats", "-"),
+            tag.get("capacity_beats", "-")))
+    if not rows:
+        return []
+    return ["**Direction parity and decrypt admission** — payload goodput; interior "
+            "packet completions are used when requested. The concurrent-demand window "
+            "ends before either direction's final ChaCha request. Tag storage counts packets, "
+            "independent of payload bus width.", "",
+            "| phase | parity | concurrent parity | splitter tag stalls (clk) | tag high water | tag capacity |",
+            "|---|---|---|---|---|---|"] + rows
 
 
 def markdown_arbitration(phases):

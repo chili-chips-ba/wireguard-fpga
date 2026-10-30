@@ -16,15 +16,16 @@ It does three things:
    build.py sets them from its flags:
      DESIGN         encrypt | decrypt | shared (default shared)
      POLY1305_IMPL  pipelined | legacy (default pipelined)
-     DATA_BITWIDTH  128 | 256 packet datapath bits (default 128; ChaCha20 stays 512)
-     SHARE          auto | none | chacha20 | poly1305 | both. auto means both
-                    resources for the shared design, none for one direction
+     DATA_BITWIDTH  128 | 256 packet datapath bits (default 256; legacy 128)
+     SHARE          auto | none | chacha20 | poly1305 | both. auto shares
+                    ChaCha20 and shares Poly1305 only with MCP compute
      POLY1305_MULT_IMPL inferred | hybrid | hybrid_square | inferred_body
-                       (default hybrid_square; legacy uses inferred). inferred_body
+                       (default inferred_body; legacy uses inferred). inferred_body
                        is hybrid_square except an inferred feedback-body product
-     POLY1305_COMPUTE_IMPL fsm | mcp (default fsm; pipelined setup/finalization)
+     POLY1305_COMPUTE_IMPL fsm | mcp (published default; pipelined setup/finalization)
      POLY1305_PROLOGUE_MAX_LATENCY positive integer AUTO_FSM cap for the prologue
-                       services (default 64; fsm compute only)
+                       services (default from the published QoR profile)
+     POLY1305_EPILOGUE_MAX_LATENCY positive integer AUTO_FSM epilogue cap
      TARGET_MHZ     positive integer MHz (default: the profile's clock)
 3. Resolves them into this build's profile: DESIGN, ENCRYPT, DECRYPT,
    DATA_BITWIDTH, POLY1305_IMPL, POLY1305_MULT_IMPL, SHARING and TARGET_MHZ.
@@ -34,6 +35,7 @@ with build.py and measure.py. Those import this module without PipelineC on
 sys.path; every parameter is then its default.
 """
 
+import json
 import math
 import os
 import sys
@@ -53,24 +55,30 @@ DESIGNS = ("encrypt", "decrypt", "shared")
 SHARE_CHOICES = ("auto", "none", "chacha20", "poly1305", "both")
 
 MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square", "inferred_body")
-DEFAULT_MULT_IMPL = "hybrid_square"
+DEFAULT_BUILD_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "default_build.json")
+with open(DEFAULT_BUILD_FILE) as _defaults_file:
+    DEFAULT_BUILD = json.load(_defaults_file)
+DEFAULT_PROFILE = DEFAULT_BUILD["profile"]
+DEFAULT_MULT_IMPL = DEFAULT_PROFILE["multiplier"]
 BLOCK_RATES = (1, 2)
 DATA_BITWIDTHS = (128, 256)
 COMPUTE_IMPLEMENTATIONS = ("fsm", "mcp")
-DEFAULT_COMPUTE_IMPL = "fsm"
-DEFAULT_TARGET_MHZ = 85  # Highest passing shared hardware and six-size QoR point.
+DEFAULT_COMPUTE_IMPL = DEFAULT_PROFILE["compute"]
+DEFAULT_DATA_BITWIDTH = DEFAULT_PROFILE["data_bitwidth"]
+DEFAULT_TARGET_MHZ = DEFAULT_PROFILE["target_mhz"]
+SHARED_TARGET_MHZ = 85  # Historical hybrid_square, sharing-both profile.
 BASE_TARGET_MHZ = 30  # Other pipelined selections.
 LEGACY_TARGET_MHZ = 80
 
 def selected_implementation(value=None):
-    choice = "pipelined" if value is None else value
+    choice = DEFAULT_PROFILE["implementation"] if value is None else value
     if choice not in IMPLEMENTATIONS:
         raise ValueError(f"POLY1305_IMPL must be one of {IMPLEMENTATIONS}, got {choice!r}")
     return choice
 
 
 def selected_data_bitwidth(value=None, implementation="pipelined"):
-    choice = 128 if value is None else value
+    choice = (128 if implementation == "legacy" else DEFAULT_DATA_BITWIDTH) if value is None else value
     if type(choice) is not int or choice not in DATA_BITWIDTHS:
         raise ValueError("DATA_BITWIDTH must be 128 or 256 bits")
     if implementation == "legacy" and choice != 128:
@@ -98,26 +106,34 @@ def selected_sharing(chacha20=True, poly1305=True, *, implementation=None):
     return result
 
 
-def resolve_sharing(design, implementation, share):
+def resolve_sharing(design, implementation, share, compute=None):
     """SHARE (a SHARE_CHOICES name) -> the shared-resource set for this design."""
     if share not in SHARE_CHOICES:
         raise ValueError(f"SHARE must be one of {SHARE_CHOICES}, got {share!r}")
     if share == "auto":
-        share = "both" if design == "shared" else "none"
+        if design != "shared":
+            share = "none"
+        elif implementation == DEFAULT_PROFILE["implementation"] and selected_compute(compute) == DEFAULT_COMPUTE_IMPL:
+            share = share_name_for(DEFAULT_PROFILE["sharing"])
+        else:
+            share = "both" if implementation == "pipelined" and selected_compute(compute) == "mcp" else "chacha20"
     if design != "shared" and share != "none":
         raise ValueError(f"SHARE={share} needs DESIGN=shared: one direction has nothing to share")
     return selected_sharing(share in ("chacha20", "both"), share in ("poly1305", "both"),
                             implementation=implementation)
 
 
-def default_target_mhz(implementation=None, sharing=None):
-    """Sharing-both 85 MHz, other pipelined 30 MHz, or legacy 80 MHz."""
+def default_target_mhz(implementation=None, sharing=None, *, data_bitwidth=None, multiplier=None):
+    """The 256-bit inferred-body profile targets 80 MHz, independent of sharing."""
     implementation = selected_implementation(implementation)
     if implementation == "legacy":
         return LEGACY_TARGET_MHZ
+    if (selected_data_bitwidth(data_bitwidth, implementation) == DEFAULT_DATA_BITWIDTH
+            and selected_mult(multiplier, implementation) == DEFAULT_MULT_IMPL):
+        return DEFAULT_TARGET_MHZ
     if sharing is None:
         sharing = selected_sharing(implementation=implementation)
-    return DEFAULT_TARGET_MHZ if sharing["chacha20"] and sharing["poly1305"] else BASE_TARGET_MHZ
+    return SHARED_TARGET_MHZ if sharing["chacha20"] and sharing["poly1305"] else BASE_TARGET_MHZ
 
 
 def selected_target(value):
@@ -152,19 +168,47 @@ def selected_compute(value=None):
     return choice
 
 
-DEFAULT_PROLOGUE_MAX_LATENCY = 64
+HISTORICAL_COMPUTE_CAP = 64
+DEFAULT_NEAR_MAX_PACKET_BYTES = 1420
+DEFAULT_CAP_AAD_BYTES = 29
 
 
-def selected_prologue_cap(value=None):
-    cap = DEFAULT_PROLOGUE_MAX_LATENCY if value is None else value
+def default_compute_caps(data_bitwidth=None):
+    """Reproduce published caps; other widths retain their packet budget."""
+    width = selected_data_bitwidth(data_bitwidth)
+    if width == DEFAULT_DATA_BITWIDTH:
+        return DEFAULT_PROFILE["prologue_cap"], DEFAULT_PROFILE["epilogue_cap"]
+    blocks = ((DEFAULT_CAP_AAD_BYTES + 15) // 16
+              + (DEFAULT_NEAR_MAX_PACKET_BYTES + 15) // 16 + 1)
+    rate = width // 128
+    budget = (blocks + rate - 1) // rate + 2
+    return tuple(min(HISTORICAL_COMPUTE_CAP, budget - handoff) for handoff in (4, 3))
+
+
+DEFAULT_PROLOGUE_MAX_LATENCY, DEFAULT_EPILOGUE_MAX_LATENCY = default_compute_caps()
+
+
+def selected_prologue_cap(value=None, data_bitwidth=None):
+    cap = default_compute_caps(data_bitwidth)[0] if value is None else value
     if not isinstance(cap, int) or isinstance(cap, bool) or cap < 1:
         raise ValueError(f"POLY1305_PROLOGUE_MAX_LATENCY must be a positive integer, got {cap!r}")
     return cap
 
 
+def selected_epilogue_cap(value=None, data_bitwidth=None):
+    cap = default_compute_caps(data_bitwidth)[1] if value is None else value
+    if not isinstance(cap, int) or isinstance(cap, bool) or cap < 1:
+        raise ValueError(f"POLY1305_EPILOGUE_MAX_LATENCY must be a positive integer, got {cap!r}")
+    return cap
+
+
 def prologue_cap_out_dir(base, cap):
-    # The default cap keeps every existing directory name.
-    return base if cap in (None, DEFAULT_PROLOGUE_MAX_LATENCY) else f"{base}-procap{cap}"
+    # Historical cap-64 directories keep their identity when defaults change.
+    return base if cap in (None, HISTORICAL_COMPUTE_CAP) else f"{base}-procap{cap}"
+
+
+def epilogue_cap_out_dir(base, cap):
+    return base if cap in (None, HISTORICAL_COMPUTE_CAP) else f"{base}-epicap{cap}"
 
 
 def compute_out_dir(base, compute):
@@ -172,8 +216,9 @@ def compute_out_dir(base, compute):
     return base if compute is None else f"{base}-compute-{selected_compute(compute)}"
 
 
-def resolve_profile(design="shared", implementation="pipelined", share="auto", target_mhz=None,
-                    multiplier=None, blocks_per_cycle=None, *, data_bitwidth=None):
+def resolve_profile(design="shared", implementation=None, share="auto", target_mhz=None,
+                    multiplier=None, blocks_per_cycle=None, *, data_bitwidth=None,
+                    compute=None, prologue_cap=None, epilogue_cap=None):
     """The one place a build profile's defaults are decided: the design itself,
     build.py and measure.py all call this, so a direct pypelinec run builds
     exactly what build.py would."""
@@ -188,13 +233,19 @@ def resolve_profile(design="shared", implementation="pipelined", share="auto", t
             raise ValueError("DATA_BITWIDTH conflicts with POLY1305_BLOCKS_PER_CYCLE")
         data_bitwidth = old_width
     data_bitwidth = selected_data_bitwidth(data_bitwidth, implementation)
-    sharing = resolve_sharing(design, implementation, share)
+    multiplier = selected_mult(multiplier, implementation)
+    compute = selected_compute(compute)
+    sharing = resolve_sharing(design, implementation, share, compute)
     if target_mhz is None:
-        target_mhz = default_target_mhz(implementation, sharing)
+        target_mhz = default_target_mhz(implementation, sharing, data_bitwidth=data_bitwidth,
+                                       multiplier=multiplier)
     return {
         "design": design,
         "implementation": implementation,
-        "multiplier": selected_mult(multiplier, implementation),
+        "multiplier": multiplier,
+        "compute": compute,
+        "prologue_cap": selected_prologue_cap(prologue_cap, data_bitwidth),
+        "epilogue_cap": selected_epilogue_cap(epilogue_cap, data_bitwidth),
         "data_bitwidth": data_bitwidth,
         "blocks_per_cycle": data_bitwidth // 128,
         "sharing": sharing,
@@ -246,7 +297,27 @@ def sharing_from_args(args, *, standalone=False):
     if explicit and not getattr(args, "shared", False):
         return selected_sharing(args.share_chacha20, args.share_poly1305,
                                 implementation=args.poly1305)
-    return selected_sharing(implementation=args.poly1305)
+    if getattr(args, "shared", False):
+        return selected_sharing(implementation=args.poly1305)
+    return resolve_sharing("shared", args.poly1305, "auto", getattr(args, "poly1305_compute", None))
+
+
+def profile_from_args(args, *, standalone=False):
+    """Resolve build.py and measure.py arguments through the hardware's resolver."""
+    implementation = selected_implementation(args.poly1305)
+    args.poly1305 = implementation
+    sharing = sharing_from_args(args, standalone=standalone)
+    profile = resolve_profile(
+        "encrypt" if standalone else "shared", implementation, share_name_for(sharing),
+        args.target_mhz, args.poly1305_mult, data_bitwidth=args.data_bitwidth,
+        compute=args.poly1305_compute, prologue_cap=args.poly1305_prologue_cap,
+        epilogue_cap=args.poly1305_epilogue_cap,
+    )
+    for name, key in (("data_bitwidth", "data_bitwidth"), ("poly1305_mult", "multiplier"),
+                      ("poly1305_compute", "compute"), ("poly1305_prologue_cap", "prologue_cap"),
+                      ("poly1305_epilogue_cap", "epilogue_cap"), ("target_mhz", "target_mhz")):
+        setattr(args, name, profile[key])
+    return profile
 
 
 def sharing_name(sharing):
@@ -262,7 +333,7 @@ GENERATED_FILES = "generated-files"
 
 
 def profile_out_dir(kind, implementation, sharing, multiplier, compute, target_mhz,
-                    data_bitwidth, prologue_cap):
+                    data_bitwidth, prologue_cap, epilogue_cap=64):
     """generated-files/<kind>-<profile suffixes>: one output directory per build kind and profile."""
     out_dir = target_out_dir(compute_out_dir(mult_out_dir(sharing_out_dir(
         implementation_out_dir(os.path.join(".", GENERATED_FILES, kind), implementation), sharing),
@@ -270,6 +341,7 @@ def profile_out_dir(kind, implementation, sharing, multiplier, compute, target_m
     out_dir = blocks_out_dir(out_dir, data_bitwidth // 128)
     if implementation == "pipelined" and compute == "fsm":
         out_dir = prologue_cap_out_dir(out_dir, prologue_cap)
+        out_dir = epilogue_cap_out_dir(out_dir, epilogue_cap)
     return out_dir
 
 
@@ -296,32 +368,32 @@ def generated_out_dir(path):
 
 DESIGN = param("DESIGN", "shared", choices=DESIGNS,
                help="encrypt or decrypt alone, or both directions (shared)")
-POLY1305_IMPL = param("POLY1305_IMPL", "pipelined", choices=IMPLEMENTATIONS,
+POLY1305_IMPL = param("POLY1305_IMPL", DEFAULT_PROFILE["implementation"], choices=IMPLEMENTATIONS,
                       help="Poly1305 MAC architecture")
 _DATA_BITWIDTH = param("DATA_BITWIDTH", type=int, choices=DATA_BITWIDTHS,
-                       help="packet datapath width in bits (default 128; ChaCha20 block stays 512)")
+                       help="packet datapath width in bits (default 256; legacy 128; ChaCha20 stays 512)")
 _OLD_BLOCKS_PER_CYCLE = param("POLY1305_BLOCKS_PER_CYCLE", type=int, choices=BLOCK_RATES,
                              help="deprecated: use DATA_BITWIDTH=128 or 256")
 SHARE = param("SHARE", "auto", choices=SHARE_CHOICES,
               help="resources both directions share (DESIGN=shared only); "
-                   "auto: both for the shared design, none for one direction")
+                   "auto: published sharing, or sharing derived from an explicit compute override")
 _MULT_IMPL = param("POLY1305_MULT_IMPL", choices=MULT_IMPLEMENTATIONS,
                    help="130-bit multiply implementation (pipelined MAC only)")
 POLY1305_COMPUTE_IMPL = param("POLY1305_COMPUTE_IMPL", DEFAULT_COMPUTE_IMPL,
                             choices=COMPUTE_IMPLEMENTATIONS,
                             help="prologue and epilogue implementation (pipelined MAC only)")
-POLY1305_PROLOGUE_MAX_LATENCY = param("POLY1305_PROLOGUE_MAX_LATENCY", DEFAULT_PROLOGUE_MAX_LATENCY,
+_PROLOGUE_CAP = param("POLY1305_PROLOGUE_MAX_LATENCY",
                                       type=int,
-                                      help="AUTO_FSM latency cap of the prologue services (fsm compute only)")
-try:
-    selected_prologue_cap(POLY1305_PROLOGUE_MAX_LATENCY)
-except ValueError as e:
-    raise DesignParamError(str(e)) from None
+                                      help="AUTO_FSM prologue cap (default: published QoR profile)")
+_EPILOGUE_CAP = param("POLY1305_EPILOGUE_MAX_LATENCY", type=int,
+                     help="AUTO_FSM epilogue cap (default: published QoR profile)")
 _TARGET_MHZ = param("TARGET_MHZ", type=int,
                     help="clock goal in MHz (default: the profile's)")
 try:
     _PROFILE = resolve_profile(DESIGN, POLY1305_IMPL, SHARE, _TARGET_MHZ, _MULT_IMPL,
-                               _OLD_BLOCKS_PER_CYCLE, data_bitwidth=_DATA_BITWIDTH)
+                               _OLD_BLOCKS_PER_CYCLE, data_bitwidth=_DATA_BITWIDTH,
+                               compute=POLY1305_COMPUTE_IMPL, prologue_cap=_PROLOGUE_CAP,
+                               epilogue_cap=_EPILOGUE_CAP)
 except ValueError as e:
     raise DesignParamError(str(e)) from None
 
@@ -331,6 +403,8 @@ SHARING = _PROFILE["sharing"]
 DATA_BITWIDTH = _PROFILE["data_bitwidth"]
 POLY1305_BLOCKS_PER_CYCLE = _PROFILE["blocks_per_cycle"]
 POLY1305_MULT_IMPL = _PROFILE["multiplier"]
+POLY1305_PROLOGUE_MAX_LATENCY = _PROFILE["prologue_cap"]
+POLY1305_EPILOGUE_MAX_LATENCY = _PROFILE["epilogue_cap"]
 TARGET_MHZ = float(_PROFILE["target_mhz"])
 
 

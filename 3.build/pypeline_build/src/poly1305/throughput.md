@@ -1277,7 +1277,7 @@ are not this port's expected outputs.
 
 Select `--data-bitwidth 256` in `build.py` or `measure.py`, or
 `-D DATA_BITWIDTH=256` with pypelinec. Selection is static; only the
-chosen MAC is instantiated. The default remains `--data-bitwidth 128`, with
+chosen MAC is instantiated. At that stage the default remained `--data-bitwidth 128`, with
 one authentication block per clock and its historical directory names.
 256-bit directories retain the existing `-blocks2` suffix.
 All packet streams and flattened data/keep ports become 256/32 bits; the
@@ -1521,3 +1521,7 @@ workload definitions). The small simultaneous encrypt/decrypt replay was
 checked to have identical complete phase records, every internal tap, reference
 checks and total cycle count with and without arithmetic models. The external
 `PYPELINE_SIM_SOFT_OPS` policy is also recorded explicitly in performance JSON.
+
+### Historical investigation: MCP versus AUTO_FSM at 1420 bytes (2026-10-29)
+
+The [retained comparison](../../measurements/mcp-vs-fsm-parity-decision-20261029/comparison.md) selected **fsm** after both designs passed the large-packet goals, direction parity, timing, fit and functional checks. DSP count preceded LUT count. Four packets per size per direction were used unless completion intervals required more samples; small-packet results followed for publication. The packet-tag queue resolved the splitter/comparator admission dependency. Ordinary builds follow default_build.json and the current README QoR record.

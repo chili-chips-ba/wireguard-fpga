@@ -86,11 +86,17 @@ def _generate_packet(rng: random.Random, packet_idx: int) -> dict:
         ciphertext, tag = generate_encrypt_vector(
             bytes(common.KEY), bytes(common.NONCE), aad_bytes, plaintext
         )
+        verified = 1
+        if common.STRESS and packet_idx == common.NUM_RANDOM_PACKETS // 2:
+            # A rejected packet followed by valid packets catches queued tag /
+            # verdict misalignment that an appended negative case cannot.
+            tag = bytes([tag[0] ^ 1]) + tag[1:]
+            verified = 0
         return {
             "plaintext": plaintext,
             "ciphertext": ciphertext,
             "tag": tag,
-            "expected_verified": 1,
+            "expected_verified": verified,
         }
     # Tampered-tag negative packet: a genuinely valid packet with one tag
     # bit flipped after generation -- DUT must still emit the plaintext but

@@ -3,6 +3,7 @@
 submodule call:
   strip_auth_tag -> [broadcast: auth FIFO -> prep_auth_data, chacha20]
   chacha20 -> wait_to_verify
+  strip_auth_tag -> tag FIFO -> poly1305_verify_decrypt
   prep_auth_data -> poly1305_mac -> poly1305_verify_decrypt -> wait_to_verify
 
 This is an *interface function*: the body below is the whole design. Every
@@ -39,6 +40,9 @@ from aead_types import (
     aead_axis_intrf,
     aead_axis_frag_t,
     aead_2broadcast,
+    poly1305_auth_tag_uint_t,
+    poly1305_auth_tag_stream_intrf,
+    uint1_stream_intrf,
     decrypt_auth_fifo_sizing,
     decrypt_verify_fifo_sizing,
     make_aead_fifo,
@@ -56,8 +60,14 @@ class buffered_prep_ports(NamedTuple):
     axis_if: aead_axis_intrf
 
 
+@interface
+class buffered_verify_ports(NamedTuple):
+    tags_match_if: uint1_stream_intrf
+
+
 def make_decrypt_dataflow_core(
-    chacha_func, mac_func=None, auth_fifo_depth=None, verify_fifo_depth=None
+    chacha_func, mac_func=None, auth_fifo_depth=None, verify_fifo_depth=None,
+    tag_fifo_depth=None,
 ):
     """Return the decrypt graph callable with its complete return_t.
 
@@ -81,6 +91,31 @@ def make_decrypt_dataflow_core(
     else:
         verify_sizing = {"method": "explicit"}
     verify_func = wait_to_verify.make_wait_to_verify(verify_fifo_depth, sizing=verify_sizing)
+    if tag_fifo_depth is None:
+        tag_fifo_depth = 2 if IMPLEMENTATION == "pipelined" else 0
+    if type(tag_fifo_depth) is not int or (tag_fifo_depth != 0 and tag_fifo_depth < 2):
+        raise ValueError("tag_fifo_depth must be None, 0, or an integer >= 2")
+    compare_func = poly1305_verify_decrypt.poly1305_verify_decrypt
+    if tag_fifo_depth:
+        # This queue holds packet tags, independent of payload beat width.
+        # Without it the splitter holds the next packet behind the preceding
+        # calculation/verdict, starving its ChaCha key and MAC setup.
+        tag_fifo = make_aead_fifo(
+            poly1305_auth_tag_uint_t, tag_fifo_depth, "tag_fifo", "decrypt",
+            sizing={"method": "packet-tag-lookahead-v1", "entry_unit": "packet_tag"},
+        )
+
+        def buffered_compare(
+            auth_tag_if: poly1305_auth_tag_stream_intrf,
+            calc_tag_if: poly1305_auth_tag_stream_intrf,
+        ) -> buffered_verify_ports:
+            queued = tag_fifo(in_stream_if=auth_tag_if)
+            compared = poly1305_verify_decrypt.poly1305_verify_decrypt(
+                auth_tag_if=queued.out_stream_if, calc_tag_if=calc_tag_if,
+            )
+            return buffered_verify_ports(tags_match_if=compared.tags_match_if)
+
+        compare_func = make_hw_func_from_interface_func(buffered_compare)
     sizing = None
     if IMPLEMENTATION == "pipelined":
         if auth_fifo_depth is None:
@@ -139,7 +174,7 @@ def make_decrypt_dataflow_core(
         # poly1305_mac recomputes the tag from the poly key + the framed data
         mac = mac_func(key_if=chacha.key_if, data_in_if=prep.axis_if)
         # ...which is compared against the tag stripped off the input
-        verify = poly1305_verify_decrypt.poly1305_verify_decrypt(
+        verify = compare_func(
             auth_tag_if=strip.auth_tag_out_if, calc_tag_if=mac.auth_tag_if
         )
         # wait_to_verify buffers the plaintext until the match bit arrives

@@ -11,7 +11,8 @@ What it does:
      ports) autopipelined for the selected clock goal through Vivado. Only a top
      with real ports gives trustworthy timing: the testbench's constant stimulus
      lets synthesis remove logic, and a sweep that trusts that timing builds
-     wrong hardware. --reuse-syn skips this step and uses the existing build;
+     wrong hardware. Matching existing hardware is reused automatically;
+     --reuse-syn requires replay and --rebuild requests a hardware build;
   2. runs `./build.py --perf <profile>` -- the native simulation of the perf
      testbench on exactly that built hardware (its latencies modeled, no
      elaboration or synthesis), with the phase plan passed in as -D PERF_*
@@ -39,12 +40,12 @@ testbench records cycles/beats/bytes only, so throughput can be re-expressed at
 a different fmax without re-simulating.
 
 Typical use:
-  ./measure.py --label shared-85mhz          # default sharing-both 85 MHz; synthesis + sim (hours)
+  ./measure.py --label throughput-check     # published profile; reuse matching hardware
   ./measure.py --share-chacha20 --poly1305 legacy # historical architecture, 80 MHz goal
   ./measure.py --label X --reuse-syn         # sim only, on the existing hardware build
   ./measure.py --label smoke --comb          # fast rig check, no Vivado at all
   ./measure.py --label X --parse-only        # re-merge an existing run's outputs
-  ./measure.py --label X --sizes 64,1420 --packets 4
+  ./measure.py --label X --sizes 1420,1920 --packets 4
 """
 
 import argparse
@@ -71,14 +72,17 @@ from stream.stream_perf import stream_fifo_capacity_beats
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "src"))
 from wireguard_env import (
-    IMPLEMENTATIONS, selected_implementation, implementation_out_dir,
+    IMPLEMENTATIONS, implementation_out_dir,
     selected_target, default_target_mhz, target_out_dir, GENERATED_FILES, generated_out_dir,
-    MULT_IMPLEMENTATIONS, selected_mult, mult_out_dir,
-    DATA_BITWIDTHS, selected_data_bitwidth, blocks_out_dir,
-    COMPUTE_IMPLEMENTATIONS, selected_compute, compute_out_dir,
-    selected_prologue_cap, prologue_cap_out_dir, hardware_out_dir, BUILT_HARDWARE_FILE,
+    MULT_IMPLEMENTATIONS, mult_out_dir,
+    DATA_BITWIDTHS, blocks_out_dir,
+    COMPUTE_IMPLEMENTATIONS, compute_out_dir,
+    selected_prologue_cap, selected_epilogue_cap, prologue_cap_out_dir, epilogue_cap_out_dir,
+    profile_from_args, resolve_profile, hardware_out_dir, BUILT_HARDWARE_FILE,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
+    DEFAULT_BUILD, DEFAULT_PROFILE,
 )
+from build_state import select_build_state, hardware_reuse_error, publish_default, profile_from_record, selftest as build_state_selftest
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
 BUS_BYTES = 16
 
@@ -529,7 +533,7 @@ def historical_target_mhz(implementation, sharing=None):
     if (implementation == "pipelined" and sharing is not None
             and sharing["chacha20"] and sharing["poly1305"]):
         return 60
-    return default_target_mhz(implementation, {"chacha20": True, "poly1305": False})
+    return 80 if implementation == "legacy" else 30
 
 
 def out_dir_for(comb, implementation, target_mhz=None, sharing=None, multiplier=None, compute=None, blocks=1):
@@ -574,7 +578,29 @@ def build_prologue_cap(out_dir):
         return None
     params = {entry["name"]: entry["value"]
               for entry in json.loads(path.read_text()).get("design_params", [])}
-    return int(params.get("POLY1305_PROLOGUE_MAX_LATENCY", 64))
+    value = params.get("POLY1305_PROLOGUE_MAX_LATENCY", 64)
+    return selected_prologue_cap(value, emitted_cap_width(params))
+
+
+def emitted_cap_width(params):
+    """Resolve width for direct compiler runs using the deprecated block flag."""
+    width = params.get("DATA_BITWIDTH")
+    if width is None and params.get("POLY1305_BLOCKS_PER_CYCLE") is not None:
+        width = 128 * params["POLY1305_BLOCKS_PER_CYCLE"]
+    if width is None and params.get("POLY1305_IMPL") == "legacy":
+        width = 128
+    return width
+
+
+def build_epilogue_cap(out_dir):
+    """Historical epilogues were capped at 64 before this parameter existed."""
+    path = Path(out_dir) / "source_provenance.json"
+    if not path.is_file():
+        return None
+    params = {entry["name"]: entry["value"]
+              for entry in json.loads(path.read_text()).get("design_params", [])}
+    value = params.get("POLY1305_EPILOGUE_MAX_LATENCY", 64)
+    return selected_epilogue_cap(value, emitted_cap_width(params))
 
 
 def build_blocks_per_cycle(out_dir):
@@ -601,6 +627,7 @@ def _profile_flags(args):
              "--poly1305-mult", args.poly1305_mult,
              "--poly1305-compute", args.poly1305_compute,
              "--poly1305-prologue-cap", str(args.poly1305_prologue_cap),
+             "--poly1305-epilogue-cap", str(args.poly1305_epilogue_cap),
              "--data-bitwidth", str(args.data_bitwidth)]
     for name in ("chacha20", "poly1305"):
         if args.sharing[name]:
@@ -611,6 +638,8 @@ def _profile_flags(args):
         flags.extend(["-j", str(args.jobs)])
     if args.out_dir:
         flags.extend(["--out-dir", args.out_dir])
+    if args.syn_cache is not None:
+        flags.extend(["--syn-cache", args.syn_cache])
     return flags
 
 
@@ -667,6 +696,11 @@ def run_hardware_build(args, log_path):
     """Build the real top (build.py without --sim): the source of fmax, area and
     every latency the performance simulation then simulates."""
     cmd = [os.path.join(HERE, "build.py")] + _profile_flags(args)
+    output = args.out_dir or os.path.join(HERE, hardware_out_dir(
+        'shared', args.poly1305, args.sharing, args.poly1305_mult, args.poly1305_compute,
+        args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap, args.poly1305_epilogue_cap))
+    if os.path.isfile(os.path.join(output, BUILT_HARDWARE_FILE)):
+        cmd.append('--continue')
     for hints in args.latency_hints:
         cmd.extend(["--latency-hints", hints])
     if args.pipeline_min_effort is not None:
@@ -1048,9 +1082,94 @@ def parse_area(out_dir, per_module=True, scope="hardware_top"):
 DIRECTIONS = bottleneck.DIRECTIONS
 
 
-def derive_throughput(perf_raw, fmax_mhz, target_mhz):
+def derive_throughput(perf_raw, fmax_mhz, target_mhz, steady_trim=0):
     """Add MHz-dependent columns to the testbench's cycle-domain numbers."""
-    return perf_report.derive_throughput(perf_raw, fmax_mhz, target_mhz, perf_raw.get("config", {}).get("bus_bytes", BUS_BYTES), DIRECTIONS)
+    phases = perf_report.derive_throughput(perf_raw, fmax_mhz, target_mhz, perf_raw.get("config", {}).get("bus_bytes", BUS_BYTES), DIRECTIONS)
+    if steady_trim:
+        for phase in phases:
+            for direction in DIRECTIONS:
+                stats = phase.get(direction)
+                if not stats:
+                    continue
+                steady = steady_packet_window(stats.get("packets", []), phase["packet_bytes"], steady_trim)
+                stats["steady_state"] = steady
+                if not steady["available"]:
+                    continue
+                for key in ("packet_period_cycles", "sustained_bytes_per_cycle", "throughput_bytes_per_cycle",
+                            "throughput_basis", "line_rate_frac", "gbps_at_fmax", "gbps_at_target"):
+                    stats["burst_" + key] = stats.get(key)
+                rate = steady["bytes_per_cycle"]
+                stats.update(packet_period_cycles=steady["packet_period_cycles"],
+                             sustained_bytes_per_cycle=rate, throughput_bytes_per_cycle=rate,
+                             throughput_basis="packet completions, warm-up/drain excluded",
+                             line_rate_frac=rate / perf_raw.get("config", {}).get("bus_bytes", BUS_BYTES),
+                             gbps_at_fmax=rate * fmax_mhz * .008 if fmax_mhz else None,
+                             gbps_at_target=rate * target_mhz * .008 if target_mhz else None)
+    return phases
+
+
+def steady_packet_window(packets, packet_bytes, trim=8):
+    """Payload rate between interior completions; do not count fill or drain."""
+    selected = packets[trim:-trim] if trim else packets
+    result = {"available": False, "trim_packets": trim, "total_packets": len(packets)}
+    if len(selected) < 3:
+        return result
+    periods = [b["last_out"] - a["last_out"] for a, b in zip(selected, selected[1:])]
+    if any(p <= 0 for p in periods):
+        return result
+    split = len(periods) // 2
+    first = sum(periods[:split]) / split
+    second = sum(periods[split:]) / (len(periods) - split)
+    period = sum(periods) / len(periods)
+    stability = min(first, second) / max(first, second)
+    result.update(available=True, first_packet=selected[0]["idx"], last_packet=selected[-1]["idx"],
+                  first_cycle=selected[0]["last_out"], last_cycle=selected[-1]["last_out"],
+                  intervals=len(periods), packet_period_cycles=period, bytes_per_cycle=packet_bytes / period,
+                  first_half_period_cycles=first, second_half_period_cycles=second,
+                  stability_ratio=stability, stable=stability >= .99)
+    return result
+
+
+def throughput_parity_errors(results):
+    """Near-max decision gate; small-packet curves are collected afterward."""
+    if not results.get("config", {}).get("require_throughput_parity"):
+        return []
+    errors = []
+    config = results["config"]
+    if config.get("dirs") != list(DIRECTIONS):
+        errors.append("Throughput parity requires both directions")
+    trim = config.get("steady_trim_packets", 0)
+    seen = set()
+    for phase in results.get("phases", []):
+        if phase["packet_bytes"] < 1420:
+            continue
+        seen.add(phase["packet_bytes"])
+        rates = []
+        for direction in DIRECTIONS:
+            stats = phase.get(direction, {})
+            packets = stats.get("packets", [])
+            selected = packets[trim:-trim] if trim else packets
+            label = phase["name"] + "/" + direction
+            window = steady_packet_window(packets, phase["packet_bytes"], trim)
+            if len(selected) < 4 or not window["available"]:
+                errors.append(label + ": parity requires at least four completed packets in the measurement window")
+                continue
+            periods = [b["last_out"] - a["last_out"] for a, b in zip(selected, selected[1:])]
+            if min(periods) / max(periods) < .95:
+                errors.append(label + ": completion intervals vary by more than 5%; extend run")
+            rate = window["bytes_per_cycle"]
+            rates.append(rate)
+            if (any(abs(stats.get(key, 0) - rate) > 1e-9 for key in
+                    ("throughput_bytes_per_cycle", "sustained_bytes_per_cycle"))
+                    or abs(stats.get("gbps_at_target", 0) - rate * config.get("target_mhz", 0) * .008) > 1e-9):
+                errors.append(label + ": headline rate disagrees with packet completions")
+            if phase["packet_bytes"] == 1420 and rate * config.get("target_mhz", 0) * .008 < 17.986666666666668:
+                errors.append(label + ": throughput below 17.986667 Gb/s")
+        if len(rates) == 2 and min(rates) / max(rates) < .95:
+            errors.append(phase["name"] + ": encrypt/decrypt throughput differs by more than 5%")
+    if not {1420, 1920} <= seen:
+        errors.append("Throughput parity requires 1420- and 1920-byte decision phases")
+    return errors
 
 
 def summarize(phases):
@@ -1221,10 +1340,7 @@ def update_readme(table, results, block_summary=None):
     stamp = _stamp(results)
     spliced = _splice(text, README_BEGIN, README_END, f"{stamp}\n\n{table}")
     if spliced is None:
-        print(
-            f"!! {path} has no {README_BEGIN} / {README_END} markers; not updating",
-            file=sys.stderr,
-        )
+        raise ValueError(f"{path} has no {README_BEGIN} / {README_END} markers; not publishing")
     else:
         text = spliced
         print("--> README.md results table updated")
@@ -1241,6 +1357,7 @@ def update_readme(table, results, block_summary=None):
         else:
             text = spliced
             print("--> README.md block summary updated")
+    publish_default(HERE, results)
     with open(path, "w") as f:
         f.write(text)
 
@@ -1553,9 +1670,25 @@ def measurement_errors(results):
                 continue  # Native --comb does not emit hardware provenance.
             if actual != requested_compute:
                 errors.append(scope + ": emitted compute selection differs from the request or is unknown")
+    if config.get("poly1305_impl") == "pipelined" and config.get("poly1305_compute_impl") == "fsm":
+        for phase in ("prologue", "epilogue"):
+            key = "poly1305_" + phase + "_max_latency"
+            requested = config.get("requested_" + key)
+            actual = config.get(key)
+            if requested is not None and actual != requested:
+                errors.append("Emitted " + phase + " cap differs from the request")
+            simulated = config.get("simulated_" + key)
+            if simulated is not None and simulated != actual:
+                errors.append("Performance simulation " + phase + " cap differs from the hardware")
+            if actual is not None:
+                for direction, meta in config.get("poly1305", {}).get("directions", {}).items():
+                    latency = meta.get(phase + "_mcp_latency")
+                    if latency is not None and latency > actual:
+                        errors.append(direction + ": " + phase + " latency exceeds its cap")
     errors.extend(auth_fifo_sizing_errors(results.get("config", {})))
     errors.extend(overlap_fifo_sizing_errors(config))
     errors.extend(verify_fifo_sizing_errors(config))
+    errors.extend(throughput_parity_errors(results))
     returncode = results.get("provenance", {}).get("build_returncode")
     if returncode:
         errors.append(f"Build/simulation exited {returncode}")
@@ -1589,6 +1722,13 @@ def measurement_errors(results):
         if report.get("fits_device") is False:
             errors.append(f"{scope} synthesis exceeds the selected device's resource capacity")
     for phase in results.get("phases", []):
+        if config.get("steady_trim_packets", 0):
+            for direction in config.get("dirs", []):
+                stats = phase.get(direction, {})
+                window = steady_packet_window(stats.get("packets", []), phase["packet_bytes"],
+                                              config["steady_trim_packets"])
+                if not window["available"] or stats.get("steady_state") != window:
+                    errors.append(phase["name"] + "/" + direction + ": invalid interior completion window")
         if phase.get("taps_check", {}).get("consistent") is False:
             errors.append(f"Phase {phase.get('name')}: performance taps disagree on cycle count")
         # Metadata must match each buffer's implementation; the occupancy taps
@@ -1942,7 +2082,104 @@ def save_evidence(measurement_dir, results):
 
 
 def measurement_selftest():
+    build_state_selftest()
+    workflow_selftest()
+    # Four completions yield three service intervals without charging cold
+    # first-packet latency. Small-packet asymmetry must not block the decision.
+    phases = []
+    for size, periods in ((1420, (50, 49, 49)), (1920, (64, 64, 64))):
+        phase = {"name": "b2b-" + str(size), "packet_bytes": size, "num_packets": 4}
+        for direction in DIRECTIONS:
+            clocks = [100]
+            for period in periods:
+                clocks.append(clocks[-1] + period)
+            entries = [{"idx": i, "last_out": clock} for i, clock in enumerate(clocks)]
+            rate = steady_packet_window(entries, size, 0)["bytes_per_cycle"]
+            phase[direction] = {"packets": entries, "sustained_bytes_per_cycle": rate,
+                                "throughput_bytes_per_cycle": rate, "gbps_at_target": rate * 80 * .008}
+        phases.append(phase)
+    parity = {"config": {"require_throughput_parity": True, "dirs": list(DIRECTIONS),
+                         "steady_trim_packets": 0, "target_mhz": 80}, "phases": phases}
+    if throughput_parity_errors(parity):
+        raise ValueError("Valid near-max parity fixture rejected: " + repr(throughput_parity_errors(parity)))
+    with_small = copy.deepcopy(parity)
+    with_small["phases"].append({"name": "b2b-16", "packet_bytes": 16, "num_packets": 4,
+                                  "encrypt": {"sustained_bytes_per_cycle": 1},
+                                  "decrypt": {"sustained_bytes_per_cycle": .1}})
+    if throughput_parity_errors(with_small):
+        raise ValueError("Small-packet asymmetry incorrectly blocks the near-max decision")
+    for label, mutate in (
+        ("direction asymmetry", lambda r: r["phases"][0]["decrypt"].update(packets=[
+            {"idx": i, "last_out": 100 + 70 * i} for i in range(4)])),
+        ("too few completions", lambda r: r["phases"][0]["decrypt"].update(packets=[
+            {"idx": i, "last_out": 100 + 49 * i} for i in range(3)])),
+        ("missing near-max size", lambda r: r["phases"].pop()),
+        ("inconsistent intervals", lambda r: r["phases"][0]["decrypt"].update(packets=[
+            {"idx": i, "last_out": c} for i,c in enumerate((100,149,248,297))])),
+        ("missing direction", lambda r: r["config"].update(dirs=["encrypt"])),
+    ):
+        changed = copy.deepcopy(parity)
+        mutate(changed)
+        if not throughput_parity_errors(changed):
+            raise ValueError("Near-max parity guard accepted " + label)
     """Measurement guards/models/archive checks; no compiler or Vivado runs."""
+    default = resolve_profile()
+    if any(default[k] != value for k, value in DEFAULT_PROFILE.items()):
+        raise ValueError("Default profile differs from the published QoR profile")
+    with open(os.path.join(HERE, DEFAULT_BUILD['measurement'], 'results.json')) as f:
+        published = json.load(f)
+    if profile_from_record(published) != DEFAULT_PROFILE:
+        raise ValueError("Published default differs from its validated measurement")
+    with open(os.path.join(HERE, 'README.md')) as f:
+        current_table = f.read().split(README_BEGIN, 1)[1].split(README_END, 1)[0]
+    if '--label ' + published['label'] not in current_table:
+        raise ValueError("README QoR table and published default name different measurements")
+    if resolve_profile(compute="mcp")["sharing"] != {"chacha20": True, "poly1305": True}:
+        raise ValueError("Automatic MCP profile must share both services")
+    if resolve_profile(share="both")["sharing"]["poly1305"] is not True:
+        raise ValueError("Explicit sharing selection was overridden")
+    narrow = resolve_profile(data_bitwidth=128)
+    legacy = resolve_profile(implementation="legacy")
+    if (narrow["prologue_cap"], narrow["epilogue_cap"]) != (64, 64):
+        raise ValueError("128-bit default caps must stay loose")
+    if (legacy["data_bitwidth"], legacy["multiplier"], legacy["target_mhz"]) != (128, "inferred", 80):
+        raise ValueError("Legacy profile defaults changed")
+    for selector in (selected_prologue_cap, selected_epilogue_cap):
+        for invalid in (0, -1, True, 1.5, "40"):
+            try:
+                selector(invalid)
+            except ValueError:
+                pass
+            else:
+                raise ValueError("Invalid compute cap was accepted: " + repr(invalid))
+    if prologue_cap_out_dir("historical", 64) != "historical":
+        raise ValueError("Historical prologue directory identity changed")
+    if epilogue_cap_out_dir("historical", 64) != "historical":
+        raise ValueError("Historical epilogue directory identity changed")
+    if epilogue_cap_out_dir(prologue_cap_out_dir("run", 44), 45) != "run-procap44-epicap45":
+        raise ValueError("Nonhistorical caps must have distinct directory identities")
+    with tempfile.TemporaryDirectory(prefix="wg-caps-") as directory:
+        path = Path(directory) / "source_provenance.json"
+        path.write_text(json.dumps({"design_params": []}))
+        if (build_prologue_cap(directory), build_epilogue_cap(directory)) != (64, 64):
+            raise ValueError("Historical emitted caps must default to 64")
+        path.write_text(json.dumps({"design_params": [
+            {"name": "DATA_BITWIDTH", "value": 256},
+            {"name": "POLY1305_PROLOGUE_MAX_LATENCY", "value": None},
+            {"name": "POLY1305_EPILOGUE_MAX_LATENCY", "value": None},
+        ]}))
+        if (build_prologue_cap(directory), build_epilogue_cap(directory)) != (
+                default['prologue_cap'], default['epilogue_cap']):
+            raise ValueError("Direct compiler defaults disagree with emitted profile caps")
+        for width_params in (
+                [{"name": "POLY1305_BLOCKS_PER_CYCLE", "value": 1}],
+                [{"name": "POLY1305_IMPL", "value": "legacy"}]):
+            path.write_text(json.dumps({"design_params": width_params + [
+                {"name": "POLY1305_PROLOGUE_MAX_LATENCY", "value": None},
+                {"name": "POLY1305_EPILOGUE_MAX_LATENCY", "value": None},
+            ]}))
+            if (build_prologue_cap(directory), build_epilogue_cap(directory)) != (64, 64):
+                raise ValueError("Direct legacy/block-rate width must retain 64/64 caps")
     def concurrent_fixture(decrypt_period):
         phase = {"name": "b2b-1920", "packet_bytes": 1920, "num_packets": 16, "taps": {}}
         for direction, first, period in (("encrypt", 200, 100), ("decrypt", 320, decrypt_period)):
@@ -2200,23 +2437,68 @@ def measurement_selftest():
     return 0
 
 
+def workflow_selftest():
+    """Check dispatch without launching a compiler, synthesis or simulation."""
+    import contextlib
+    import io
+    from unittest.mock import patch
+
+    with tempfile.TemporaryDirectory(prefix='wg-workflow-') as temporary:
+        root = Path(temporary)
+        out = root / 'hardware';out.mkdir()
+        source = root / 'source.py';source.write_text('version 1\n')
+        p = resolve_profile();sharing = p['sharing']
+        share = ('both' if sharing['poly1305'] else 'chacha20') if sharing['chacha20'] else ('poly1305' if sharing['poly1305'] else 'none')
+        metadata = dict(top=os.path.join(HERE, 'src', 'chacha20poly1305.py'),
+                        native_sim_problems=[], sources={str(source): hashlib.sha256(source.read_bytes()).hexdigest()},
+                        design_params=dict(DESIGN='shared', DATA_BITWIDTH=p['data_bitwidth'],
+                            POLY1305_IMPL=p['implementation'], POLY1305_MULT_IMPL=p['multiplier'],
+                            POLY1305_COMPUTE_IMPL=p['compute'], TARGET_MHZ=p['target_mhz'], SHARE=share,
+                            POLY1305_PROLOGUE_MAX_LATENCY=p['prologue_cap'],
+                            POLY1305_EPILOGUE_MAX_LATENCY=p['epilogue_cap']))
+        (out / BUILT_HARDWARE_FILE).write_text(json.dumps(metadata))
+        arguments = ['measure.py','--label',str(root/'record'),'--out-dir',str(out),'--syn-cache','none']
+        for extra, expected in (([], 'perf'), (['--rebuild'], 'hardware')):
+            with patch.object(sys, 'argv', arguments+extra), contextlib.redirect_stdout(io.StringIO()), \
+                    patch(__name__+'.run_hardware_build', side_effect=StopIteration('hardware')) as hardware, \
+                    patch(__name__+'.run_build', side_effect=StopIteration('perf')) as perf:
+                try:
+                    main()
+                except StopIteration as stop:
+                    assert str(stop) == expected
+                else:
+                    raise AssertionError('Workflow did not reach expected dispatch')
+                called = perf if expected == 'perf' else hardware
+                resolved = called.call_args[0][0]
+                assert (resolved.sizes,resolved.packets,resolved.peak_bytes) == ('1420,1920',4,0)
+                assert hardware.call_count == (expected == 'hardware')
+        source.write_text('version 2\n')
+        with patch.object(sys,'argv',arguments+['--reuse-syn']), \
+                contextlib.redirect_stderr(io.StringIO()), \
+                patch(__name__+'.run_hardware_build') as hardware, patch(__name__+'.run_build') as perf:
+            assert main() == 1 and not hardware.called and not perf.called
+    print('workflow selftest: PASS (automatic replay, requested rebuild, strict stale rejection)')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--label", default=None, help="measurement name (dir under measurements/)")
-    ap.add_argument("--shared", action="store_true", help="Share both resources (default)")
+    ap.add_argument("--shared", action="store_true", help="Explicitly share both resources")
     add_sharing_arguments(ap)
     ap.add_argument("--poly1305", choices=IMPLEMENTATIONS, default=None,
                     help="MAC architecture (default pipelined)")
-    ap.add_argument("--data-bitwidth", type=int, choices=DATA_BITWIDTHS, default=128,
-                    help="Encrypt/decrypt packet datapath width in bits (default 128; ChaCha20 block stays 512)")
+    ap.add_argument("--data-bitwidth", type=int, choices=DATA_BITWIDTHS,
+                    help="Encrypt/decrypt packet datapath width in bits (default 256; legacy 128)")
     ap.add_argument("--poly1305-mult", choices=MULT_IMPLEMENTATIONS,
-                    help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
+                    help="130-bit multiply implementation (default inferred_body; legacy inferred)")
     ap.add_argument("--poly1305-compute", choices=COMPUTE_IMPLEMENTATIONS,
-                    help="Prologue and epilogue implementation (default fsm; pipelined MAC only)")
+                    help="Prologue/epilogue implementation (default: published QoR profile)")
     ap.add_argument("--poly1305-prologue-cap", type=int, default=None, metavar="N",
-                    help="AUTO_FSM latency cap of the prologue services (default 64; fsm compute only)")
+                    help="AUTO_FSM prologue cap (default: published QoR profile; fsm only)")
+    ap.add_argument("--poly1305-epilogue-cap", type=int, default=None, metavar="N",
+                    help="AUTO_FSM epilogue cap (default: published QoR profile; fsm only)")
     ap.add_argument("--target-mhz", type=selected_target, default=None,
-                    help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
+                    help="Clock goal (default: 256-bit inferred_body 80 MHz; other profiles retain their clock)")
     ap.add_argument("--latency-hints", action="append", default=[], metavar="FILE",
                     help="Starting AUTO_PIPELINE latencies passed to build.py (repeatable)")
     ap.add_argument("--pipeline-min-effort", type=int, default=None, metavar="N",
@@ -2224,13 +2506,22 @@ def main():
     ap.add_argument("-j", "--jobs", type=int, default=None,
                     help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
-    ap.add_argument("--reuse-syn", action="store_true", help="skip the hardware build and simulate the hardware already built for this profile (sim-only re-measure)")
+    reuse = ap.add_mutually_exclusive_group()
+    reuse.add_argument("--reuse-syn", action="store_true", help="require an existing matching hardware build; never synthesize")
+    reuse.add_argument("--rebuild", action="store_true", help="run the hardware build even when matching hardware is available")
+    ap.add_argument("--show-config", action="store_true", help="Print the resolved profile and cache paths without building or simulating")
     ap.add_argument("--out-dir", help="Explicit hardware build directory (same rules as build.py --out-dir)")
+    ap.add_argument("--syn-cache", default=None, metavar="DIR|none",
+                    help="Synthesis store (default: latest compatible successful store)")
     ap.add_argument("--parse-only", action="store_true", help="run nothing; re-merge an existing run's perf JSON + build log")
     ap.add_argument("--no-per-module-area", action="store_true", help="skip per-module out-of-context area parsing")
-    ap.add_argument("--sizes", default=None, help="comma-separated packet sizes (default: see perf_tb_common.py)")
-    ap.add_argument("--packets", type=int, default=None, help="back-to-back packets per size")
-    ap.add_argument("--peak-bytes", type=int, default=None, help="single long packet size for the peak phase (0 disables)")
+    ap.add_argument("--sizes", default="1420,1920", help="comma-separated packet sizes (default: 1420,1920)")
+    ap.add_argument("--packets", type=int, default=4, help="back-to-back packets per size (default: 4)")
+    ap.add_argument("--steady-trim", type=int, default=None, metavar="N",
+                    help="exclude N warm-up and N drain packets from headline completion throughput")
+    ap.add_argument("--require-parity", action="store_true",
+                    help="require 1420/1920-byte phases, 4+ packets, 5%% direction parity and consistent completion intervals")
+    ap.add_argument("--peak-bytes", type=int, default=0, help="extra peak phase size (default: 0, disabled)")
     ap.add_argument("--dirs", default=None, choices=("both", "enc", "dec"), help="which directions to stream")
     ap.add_argument("--taps", default="all", help="internal taps to enable: 'all' (default), a block or direction prefix ('poly1305', 'encrypt'), or exact names; pass --taps '' to measure boundaries only (see PipelineC stream/stream_perf_probe.py)")
     ap.add_argument("--seed", type=int, default=None, help="packet payload RNG seed")
@@ -2245,6 +2536,13 @@ def main():
     ap.add_argument("--json", action="store_true", help="JSON output for --area-report")
     ap.add_argument("--save-evidence", action="store_true", help="package retained Vivado/input/sweep/constraint evidence and checksums with an accepted measurement")
     args = ap.parse_args()
+    if args.steady_trim is not None and args.steady_trim < 0:
+        ap.error("--steady-trim must be nonnegative")
+    if args.require_parity:
+        if args.steady_trim is None:
+            args.steady_trim = 0
+        if args.comb:
+            ap.error("--require-parity requires a retained hardware build")
     try:
         if args.selftest:
             return measurement_selftest()
@@ -2276,22 +2574,30 @@ def main():
     if args.jobs is not None and args.jobs < 1:
         ap.error("--jobs must be at least 1")
     try:
-        args.poly1305 = selected_implementation(args.poly1305)
-        args.data_bitwidth = selected_data_bitwidth(args.data_bitwidth, args.poly1305)
+        if args.parse_only:
+            # Resolve only neutral argument defaults; the saved record supplies
+            # its own architecture/sharing/caps below, including legacy records.
+            profile = resolve_profile(
+                implementation=args.poly1305, target_mhz=args.target_mhz,
+                multiplier=args.poly1305_mult, data_bitwidth=args.data_bitwidth,
+                compute=args.poly1305_compute, prologue_cap=args.poly1305_prologue_cap,
+                epilogue_cap=args.poly1305_epilogue_cap,
+            )
+            args.poly1305 = profile["implementation"]
+            args.data_bitwidth = profile["data_bitwidth"]
+            args.poly1305_mult = profile["multiplier"]
+            args.poly1305_compute = profile["compute"]
+            args.poly1305_prologue_cap = profile["prologue_cap"]
+            args.poly1305_epilogue_cap = profile["epilogue_cap"]
+            args.target_mhz = profile["target_mhz"]
+            args.sharing = None
+        else:
+            profile = profile_from_args(args)
+            args.sharing = profile["sharing"]
+            select_build_state(HERE, args, profile, DEFAULT_BUILD)
         args.poly1305_blocks_per_cycle = args.data_bitwidth // 128
-        args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
-        args.poly1305_compute = selected_compute(args.poly1305_compute)
-        args.poly1305_prologue_cap = selected_prologue_cap(args.poly1305_prologue_cap)
-        # A saved record supplies its own architecture; do not reject an old
-        # legacy record using today's default sharing-both selection.
-        args.sharing = None if args.parse_only else sharing_from_args(args)
     except ValueError as exc:
         ap.error(str(exc))
-    if args.target_mhz is None:
-        # Parse-only has no current sharing selection: old metadata will
-        # supply its clock.
-        args.target_mhz = default_target_mhz(args.poly1305, args.sharing if args.sharing is not None
-                                           else {"chacha20": True, "poly1305": False})
 
     label = args.label or (("comb-smoke" + (f"-{args.target_mhz}mhz" if args.target_mhz != 80 else "")
                            if args.comb else f"shared-{args.target_mhz}mhz")
@@ -2301,10 +2607,10 @@ def main():
                            + ("-compute-" + args.poly1305_compute if args.poly1305 == "pipelined" else ""))
     if args.label is None and args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
         label = prologue_cap_out_dir(label, args.poly1305_prologue_cap)
+        label = epilogue_cap_out_dir(label, args.poly1305_epilogue_cap)
     if args.label is None:
         label = blocks_out_dir(label, args.poly1305_blocks_per_cycle)
     meas_dir = os.path.join(HERE, "measurements", label)
-    os.makedirs(meas_dir, exist_ok=True)
     json_path = os.path.join(meas_dir, "perf_raw.json")
     log_path = os.path.join(meas_dir, "pypelinec.log")
     hardware_log_path = os.path.join(meas_dir, "pypelinec-hardware.log")
@@ -2314,23 +2620,34 @@ def main():
                               args.poly1305_compute if args.poly1305 == "pipelined" else None, args.poly1305_blocks_per_cycle)
         if args.poly1305 == "pipelined" and args.poly1305_compute == "fsm":
             out_dir = prologue_cap_out_dir(out_dir, args.poly1305_prologue_cap)
+            out_dir = epilogue_cap_out_dir(out_dir, args.poly1305_epilogue_cap)
     else:
         out_dir = os.path.normpath(os.path.join(HERE, hardware_out_dir(
             "shared", args.poly1305, args.sharing, args.poly1305_mult, args.poly1305_compute,
-            args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap)))
+            args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap, args.poly1305_epilogue_cap)))
     if args.out_dir:
         out_dir = os.path.abspath(args.out_dir)
+    if args.show_config:
+        print(json.dumps(dict(default_measurement=DEFAULT_BUILD['measurement'], profile=profile,
+                              out_dir=out_dir, syn_cache=args.syn_cache,
+                              latency_hints=args.latency_hints,
+                              reuse_error=hardware_reuse_error(HERE, out_dir, profile)), indent=2))
+        return 0
+    os.makedirs(meas_dir, exist_ok=True)
 
     build_info = {"skipped": True}
     hardware_info = {"skipped": True}
     if not args.parse_only and not args.comb:
+        reuse_error = hardware_reuse_error(HERE, out_dir, profile)
+        if not args.rebuild and not reuse_error:
+            args.reuse_syn = True
         if args.reuse_syn:
-            if not os.path.exists(os.path.join(out_dir, BUILT_HARDWARE_FILE)):
-                print(f"ERROR: --reuse-syn: {out_dir} holds no hardware build that met timing",
-                      file=sys.stderr)
+            if reuse_error:
+                print(f"ERROR: --reuse-syn: {reuse_error} ({out_dir})", file=sys.stderr)
                 return 1
             print(f"--> --reuse-syn: simulating the hardware already built in {out_dir}")
         else:
+            print(f"--> Hardware build required: {reuse_error or '--rebuild requested'}")
             hardware_info = run_hardware_build(args, hardware_log_path)
             if hardware_info["returncode"] != 0:
                 print(f"!! hardware build exited {hardware_info['returncode']} -- nothing to "
@@ -2367,6 +2684,9 @@ def main():
             with open(previous_path) as f:
                 previous = json.load(f)
             args.comb = previous.get("config", {}).get("comb", args.comb)
+            if args.steady_trim is None:
+                args.steady_trim = previous.get("config", {}).get("steady_trim_packets", 0)
+            args.require_parity = args.require_parity or previous.get("config", {}).get("require_throughput_parity", False)
         if mac_config:
             args.poly1305 = mac_config["implementation"]
             recorded_sharing = perf_raw.get("config", {}).get("sharing")
@@ -2383,6 +2703,12 @@ def main():
         if recorded_dir:
             out_dir = generated_out_dir(os.path.join(HERE, recorded_dir))
         args.sharing = perf_raw.get("config", {}).get("sharing", {"chacha20": True, "poly1305": False})
+        for phase in ("prologue", "epilogue"):
+            key = "poly1305_" + phase + "_max_latency"
+            cap = previous.get("config", {}).get(key)
+            if cap is None:
+                cap = perf_raw.get("config", {}).get(key, 64)
+            setattr(args, "poly1305_" + phase + "_cap", cap)
 
     stdout_info = parse_stdout(log_path)
     # Timing comes from the hardware build's log; a historical record's perf
@@ -2400,7 +2726,7 @@ def main():
             fmax = previous.get("fmax", fmax)
             area = previous.get("area", area)
     target_mhz = fmax.get("target_mhz") or args.target_mhz
-    phases = derive_throughput(perf_raw, fmax.get("design_mhz"), target_mhz)
+    phases = derive_throughput(perf_raw, fmax.get("design_mhz"), target_mhz, args.steady_trim or 0)
     # Internal taps -> per-block throughput/ceiling, a bottleneck verdict and the
     # model cross-check. A run with no taps leaves the phases untouched.
     aad_len = perf_raw.get("config", {}).get("aad_len") or 0
@@ -2423,8 +2749,14 @@ def main():
             requested_data_bitwidth=None if args.parse_only else args.data_bitwidth,
             poly1305_compute_impl=perf_raw.get("config", {}).get("poly1305_compute_impl", "mcp"),
             requested_poly1305_compute_impl=None if args.parse_only else args.poly1305_compute,
-            poly1305_prologue_max_latency=build_prologue_cap(out_dir),
+            poly1305_prologue_max_latency=(args.poly1305_prologue_cap if args.parse_only
+                                           else build_prologue_cap(out_dir)),
             requested_poly1305_prologue_max_latency=None if args.parse_only else args.poly1305_prologue_cap,
+            poly1305_epilogue_max_latency=(args.poly1305_epilogue_cap if args.parse_only
+                                           else build_epilogue_cap(out_dir)),
+            requested_poly1305_epilogue_max_latency=None if args.parse_only else args.poly1305_epilogue_cap,
+            simulated_poly1305_prologue_max_latency=perf_raw.get("config", {}).get("poly1305_prologue_max_latency"),
+            simulated_poly1305_epilogue_max_latency=perf_raw.get("config", {}).get("poly1305_epilogue_max_latency"),
             # Only records made before AUTO_FSM scheduled re-elaborated call sites fixed it.
             requested_poly1305_compute_capacity=previous.get("config", {}).get(
                 "requested_poly1305_compute_capacity"),
@@ -2435,6 +2767,8 @@ def main():
                                   if args.parse_only else args.target_mhz),
             build_cmd=build_info.get("cmd"),
             reuse_syn=bool(args.reuse_syn),
+            steady_trim_packets=args.steady_trim or 0,
+            require_throughput_parity=args.require_parity,
         ),
         "provenance": {
             "wireguard_fpga_git": git_describe(os.path.join(HERE, "..", "..")),
@@ -2490,6 +2824,9 @@ def main():
             "requested_poly1305_compute_impl")
         results["config"]["requested_poly1305_mult_impl"] = previous.get("config", {}).get(
             "requested_poly1305_mult_impl")
+        for phase in ("prologue", "epilogue"):
+            key = "requested_poly1305_" + phase + "_max_latency"
+            results["config"][key] = previous.get("config", {}).get(key)
     elif not args.parse_only:
         # The comb rig check builds nothing; otherwise the hardware build's own selections
         scope = "perf" if args.comb else "hardware"

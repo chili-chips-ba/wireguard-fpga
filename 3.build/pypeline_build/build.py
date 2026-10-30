@@ -22,17 +22,16 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 from wireguard_env import (
-    IMPLEMENTATIONS, selected_implementation,
-    selected_target, default_target_mhz, GENERATED_FILES,
-    MULT_IMPLEMENTATIONS, selected_mult,
-    DATA_BITWIDTHS, selected_data_bitwidth,
-    COMPUTE_IMPLEMENTATIONS, selected_compute,
-    selected_prologue_cap, profile_out_dir, hardware_out_dir, BUILT_HARDWARE_FILE,
-    add_sharing_arguments, sharing_from_args, sharing_name, share_name_for,
+    IMPLEMENTATIONS, selected_target, GENERATED_FILES,
+    MULT_IMPLEMENTATIONS, DATA_BITWIDTHS, COMPUTE_IMPLEMENTATIONS,
+    profile_from_args, profile_out_dir, hardware_out_dir, BUILT_HARDWARE_FILE,
+    add_sharing_arguments, sharing_name, share_name_for,
+    DEFAULT_BUILD,
 )
+from build_state import select_build_state, successful_build, hardware_reuse_error
 
 # Design parameters this script sets from its own flags (see src/wireguard_env.py)
-PROFILE_PARAMS = ("DESIGN", "DATA_BITWIDTH", "POLY1305_IMPL", "POLY1305_BLOCKS_PER_CYCLE", "POLY1305_MULT_IMPL", "POLY1305_COMPUTE_IMPL", "POLY1305_PROLOGUE_MAX_LATENCY", "SHARE", "TARGET_MHZ")
+PROFILE_PARAMS = ("DESIGN", "DATA_BITWIDTH", "POLY1305_IMPL", "POLY1305_BLOCKS_PER_CYCLE", "POLY1305_MULT_IMPL", "POLY1305_COMPUTE_IMPL", "POLY1305_PROLOGUE_MAX_LATENCY", "POLY1305_EPILOGUE_MAX_LATENCY", "SHARE", "TARGET_MHZ")
 
 
 def main():
@@ -40,20 +39,22 @@ def main():
     design = parser.add_mutually_exclusive_group()
     design.add_argument("--enc", action="store_true", help="Encrypt top")
     design.add_argument("--dec", action="store_true", help="Decrypt top")
-    design.add_argument("--shared", action="store_true", help="Share both ChaCha20 and Poly1305 compute (default)")
+    design.add_argument("--shared", action="store_true", help="Explicitly share both ChaCha20 and Poly1305 compute")
     add_sharing_arguments(parser)
     parser.add_argument("--poly1305", choices=IMPLEMENTATIONS,
                         help="MAC architecture (default pipelined)")
-    parser.add_argument("--data-bitwidth", type=int, choices=DATA_BITWIDTHS, default=128,
-                        help="Encrypt/decrypt packet datapath width in bits (default 128; ChaCha20 block stays 512)")
+    parser.add_argument("--data-bitwidth", type=int, choices=DATA_BITWIDTHS,
+                        help="Encrypt/decrypt packet datapath width in bits (default 256; legacy 128)")
     parser.add_argument("--poly1305-mult", choices=MULT_IMPLEMENTATIONS,
-                        help="130-bit multiply implementation (default hybrid_square; legacy inferred)")
+                        help="130-bit multiply implementation (default inferred_body; legacy inferred)")
     parser.add_argument("--poly1305-compute", choices=COMPUTE_IMPLEMENTATIONS,
-                        help="Prologue and epilogue implementation (default fsm; pipelined MAC only)")
+                        help="Prologue/epilogue implementation (default: published QoR profile)")
     parser.add_argument("--poly1305-prologue-cap", type=int, metavar="N",
-                        help="AUTO_FSM latency cap of the prologue services (default 64; fsm compute only)")
+                        help="AUTO_FSM prologue cap (default: published QoR profile; fsm only)")
+    parser.add_argument("--poly1305-epilogue-cap", type=int, metavar="N",
+                        help="AUTO_FSM epilogue cap (default: published QoR profile; fsm only)")
     parser.add_argument("--target-mhz", type=selected_target,
-                        help="Clock goal (default: sharing-both 85 MHz, other pipelined 30 MHz, legacy 80 MHz)")
+                        help="Clock goal (default: 256-bit inferred_body 80 MHz; other profiles retain their clock)")
     parser.add_argument("--sim", action="store_true",
                         help="Simulate instead of building the hardware; a pipelined native run "
                              "simulates the hardware already built for this profile")
@@ -79,11 +80,12 @@ def main():
     parser.add_argument("--pipeline-min-effort", type=int, metavar="N",
                         help="pypelinec --pipeline_min_effort: extra syntheses spent trimming stages "
                              "after timing is met (0 accepts the first met result)")
-    parser.add_argument("--syn-cache", default=os.path.join(".", GENERATED_FILES, "syn_cache"),
+    parser.add_argument("--show-config", action="store_true", help="Print the resolved profile and cache paths without building")
+    parser.add_argument("--syn-cache", default=None,
                         metavar="DIR|none",
                         help="Synthesis store every profile's output directory shares, so a run "
                              "whose exact inputs were already synthesized is reused "
-                             "(default generated-files/syn_cache; 'none' disables it)")
+                             "(default: latest compatible successful store, then generated-files/syn_cache; 'none' disables it)")
     args = parser.parse_args()
 
     if args.jobs is not None and args.jobs < 1:
@@ -100,18 +102,12 @@ def main():
         name = define.partition("=")[0].strip()
         if name in PROFILE_PARAMS:
             parser.error(f"-D {name}: set the profile with this script's flags "
-                         "(--enc/--dec/--shared, --share-*, --poly1305, --poly1305-mult, --poly1305-compute, --poly1305-prologue-cap, --data-bitwidth, --target-mhz)")
+                         "(--enc/--dec/--shared, --share-*, --poly1305, --poly1305-mult, --poly1305-compute, --poly1305-prologue-cap, --poly1305-epilogue-cap, --data-bitwidth, --target-mhz)")
     try:
-        args.poly1305 = selected_implementation(args.poly1305)
-        args.data_bitwidth = selected_data_bitwidth(args.data_bitwidth, args.poly1305)
-        args.poly1305_mult = selected_mult(args.poly1305_mult, args.poly1305)
-        args.poly1305_compute = selected_compute(args.poly1305_compute)
-        args.poly1305_prologue_cap = selected_prologue_cap(args.poly1305_prologue_cap)
-        sharing = sharing_from_args(args, standalone=args.enc or args.dec)
+        resolved = profile_from_args(args, standalone=args.enc or args.dec)
+        sharing = resolved["sharing"]
     except ValueError as exc:
         parser.error(str(exc))
-    if args.target_mhz is None:
-        args.target_mhz = default_target_mhz(args.poly1305, sharing)
 
     if args.enc:
         design_param, design_name, design_short = "encrypt", "encrypt", "enc"
@@ -119,6 +115,9 @@ def main():
         design_param, design_name, design_short = "decrypt", "decrypt", "dec"
     else:
         design_param, design_name, design_short = "shared", "encrypt_decrypt_shared", "shared"
+    resolved["design"] = design_param
+    here = os.path.dirname(os.path.abspath(__file__))
+    select_build_state(here, args, resolved, DEFAULT_BUILD)
     defines = [
         f"DESIGN={design_param}",
         f"POLY1305_IMPL={args.poly1305}",
@@ -126,14 +125,23 @@ def main():
         f"POLY1305_MULT_IMPL={args.poly1305_mult}",
         f"POLY1305_COMPUTE_IMPL={args.poly1305_compute}",
         f"POLY1305_PROLOGUE_MAX_LATENCY={args.poly1305_prologue_cap}",
+        f"POLY1305_EPILOGUE_MAX_LATENCY={args.poly1305_epilogue_cap}",
         f"SHARE={share_name_for(sharing)}",
         f"TARGET_MHZ={args.target_mhz}",
     ] + args.define
 
     pipelinec_bin = os.environ.get("PYPELINEC") or "pypelinec"
     profile = (args.poly1305, sharing, args.poly1305_mult, args.poly1305_compute,
-               args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap)
+               args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap, args.poly1305_epilogue_cap)
     hardware_dir = args.out_dir or hardware_out_dir(design_short, *profile)
+    if not args.out_dir and os.path.isfile(os.path.join(hardware_dir, BUILT_HARDWARE_FILE)):
+        args.continue_build = True
+    if args.show_config:
+        print(json.dumps(dict(default_measurement=DEFAULT_BUILD['measurement'], profile=resolved,
+                              out_dir=hardware_dir, syn_cache=args.syn_cache,
+                              latency_hints=args.latency_hints,
+                              reuse_error=hardware_reuse_error(here, hardware_dir, resolved)), indent=2))
+        return 0
     # Timing and stage counts come only from the real top: a testbench's synthesis can
     # remove logic its constant stimulus never exercises, so its timing misjudges the design
     on_built_hardware = args.sim and args.native and not args.comb
@@ -179,7 +187,8 @@ def main():
     print(f"--> Packet datapath: {args.data_bitwidth} bits; Poly1305 blocks/cycle: {args.data_bitwidth // 128}")
     print(f"--> Poly1305 multiplier: {args.poly1305_mult}")
     print(f"--> Poly1305 prologue/epilogue: {args.poly1305_compute}"
-          + (f" (prologue cap {args.poly1305_prologue_cap})" if args.poly1305_compute == "fsm" else ""))
+          + (f" (prologue/epilogue caps {args.poly1305_prologue_cap}/{args.poly1305_epilogue_cap})"
+             if args.poly1305_compute == "fsm" else ""))
     print(f"--> Shared resources: {sharing_name(sharing)}")
     if on_built_hardware:
         print(f"--> Simulating the hardware built in {out_dir}")
@@ -198,6 +207,8 @@ def main():
             print("Build rejected: encrypt and decrypt instantiate identical hardware, but the "
                   "build gave them different latencies:\n  " + "\n  ".join(mismatches))
             return 1
+    if not args.sim:
+        successful_build(here, out_dir, resolved, args.syn_cache)
     return 0
 
 

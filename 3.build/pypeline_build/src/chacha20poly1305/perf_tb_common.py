@@ -113,6 +113,8 @@ CONFIG = {
     "target_mhz": wireguard_env.TARGET_MHZ,
     "poly1305_mult_impl": wireguard_env.POLY1305_MULT_IMPL,
     "poly1305_compute_impl": wireguard_env.POLY1305_COMPUTE_IMPL,
+    "poly1305_prologue_max_latency": wireguard_env.POLY1305_PROLOGUE_MAX_LATENCY,
+    "poly1305_epilogue_max_latency": wireguard_env.POLY1305_EPILOGUE_MAX_LATENCY,
     "poly1305_blocks_per_cycle": wireguard_env.POLY1305_BLOCKS_PER_CYCLE,
     "data_bitwidth": wireguard_env.DATA_BITWIDTH,
     "poly1305": implementation_metadata(),

@@ -1,15 +1,22 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to agents working in this Pypeline subproject.
 
 ## Project Overview
 
 Pypeline (Python front-end for PipelineC) port of the C ChaCha20-Poly1305 AEAD
 designs in `../pipelinec_build/`. Three design variants target Artix-7
-xc7a200tffg1156-2: pipelined Poly1305 with both resources shared at **85 MHz**
-by default, using `hybrid_square` (Karatsuba with inferred leaves and explicit
-prologue squares); other pipelined selections default to 30 MHz, legacy to
-80 MHz with inferred multiplication.
+xc7a200tffg1156-2: 256-bit pipelined Poly1305 at an **80 MHz** goal, using `inferred_body`,
+with the best validated configuration published in README's current QoR table.
+`default_build.json` records that measurement and its default profile and hints;
+build.py, measure.py and direct hardware profile resolution use it. Promote
+validated improvements through the same `--update-readme` publication step,
+keeping the table and script defaults together. Local successful-build paths
+and caches are retained in `generated-files/build-state.json`; they provide
+compatible starting evidence without changing the published architecture.
+Explicit flags select other profiles. Architectural comparisons, including
+AUTO_FSM versus MCP, belong in historical measurement/component notes rather
+than the ordinary build workflow. Legacy supports 128 bits at 80 MHz.
 The C originals' Poly1305 math and
 ciphertext-length bugs fixed — this port is RFC 8439-conformant and its
 tags/ciphertext lengths **deliberately differ** from the still-unfixed C
@@ -57,26 +64,30 @@ Run from `pypeline_build/` (not `src/`):
 ./build.py --enc|--dec|--shared [--sim [--syn_tb] [--comb] [--native]] [--continue]
 ```
 
-- No design selector or `--shared` shares ChaCha20 and Poly1305 prologue/epilogue
-  MCPs, while body pipelines and packet contexts stay private. Explicit
+- No design selector uses the published default sharing/compute profile.
+  An explicit MCP compute override automatically shares both services.
+  Explicit `--shared` shares both,
+  while body pipelines and packet contexts stay private. Explicit
   `--share-chacha20` / `--share-poly1305` select the complete sharing set;
   both selects both; `--share-none` keeps both private. These cannot be
   combined with `--enc`/`--dec`. build.py passes the profile to pypelinec as
   `-D DESIGN/POLY1305_IMPL/POLY1305_MULT_IMPL/SHARE/TARGET_MHZ`; `-D NAME=VALUE` on build.py
   passes anything else through (`-D TB_STRESS=1`, `-D PERF_*`).
-- `--poly1305 legacy` requires `--share-chacha20` for combined builds.
+- `--poly1305 legacy` automatically selects 128 bits, inferred multiplication
+  and shared ChaCha20 for combined builds; explicit `--shared` is invalid.
   `--poly1305-mult inferred|hybrid|hybrid_square|inferred_body` selects the pipelined
   arithmetic. `inferred_body` gives the feedback bodies a wide inferred product: fewer stages,
   so fewer lanes and smaller setup/finalization. `--poly1305-prologue-cap N` sets the prologue
-  AUTO_FSM cap (default 64). `--latency-hints FILE` and `--pipeline-min-effort N` pass through
+  AUTO_FSM cap; `--poly1305-epilogue-cap N` sets the epilogue cap. Defaults
+  reproduce the published profile; other widths retain their packet budget.
+  Historical cap-64 directory names remain stable; other values encode both caps. `--latency-hints FILE` and `--pipeline-min-effort N` pass through
   to pypelinec.
   `--target-mhz N` accepts any positive integer MHz clock goal.
   Automatic compute blocks use PipelineC's verified latency memory and normal
   sweep, without fixed or maximum latencies. Cache identities include
   architecture, sharing, multiplier
-  and clock. The measured 85 MHz default has eight body core stages, ten lanes
-  per direction and shared MCP setup cycles 12/8. See `src/poly1305/throughput.md`
-  for the measured toolchain and current verification scope.
+  and clock. Use the actual published metadata and retained hints rather than
+  guessing starting values. See `src/poly1305/throughput.md` for measured history.
 - No `--sim`: the hardware build of the real top `src/chacha20poly1305.py`
   (external ports) into `generated-files/hardware-<profile>`
   (`--enc`/`--dec`/`--shared` select `-D DESIGN`; the top keeps its
@@ -111,8 +122,10 @@ Run from `pypeline_build/` (not `src/`):
   identical synthesis inputs are reused across profiles and output dirs.
   Keep retained local measurement records and diagnostic outputs under
   `generated-files/` too; use an absolute path there for `measure.py --label`.
-  `--out-dir` selects an isolated cache; after interruption preserve good
-  synthesis logs and rename only an identified incomplete/error vendor log.
+  `--out-dir` selects hardware outputs independently of `--syn-cache`, which
+  selects the synthesis store. Separate output directories can share a store.
+  After interruption preserve good synthesis logs and rename only an identified
+  incomplete/error vendor log.
 
 Pass criteria for every sim build: process exits zero — never eyeball logs for
 `ERROR`. `*_syn_tb` testbenches call `sim_assert(...)` per check, so a failure
@@ -157,9 +170,10 @@ section for the full per-file breakdown.
   entirely from real hardware elaboration, so this style has **no cocotb/GHDL
   form** — `--native` is the only way to run it.
 
-`-D TB_STRESS=1` selects sixteen directed native packets through 1920 bytes,
-source gaps and prolonged/periodic output stalls, plus decrypt's tampered-tag
-packet. Sources advance on converged `valid && ready` in `@sim_output`; sinks
+`-D TB_STRESS=1` selects twenty directed native packets through 2032 bytes,
+source gaps and prolonged/periodic output stalls. Decrypt includes a tampered
+tag between valid packets and an appended tampered-tag packet. Sources advance
+on converged `valid && ready` in `@sim_output`; sinks
 count only transfers and assert stable stalled data/keep/last/verification.
 The performance testbench uses unpaused sources and always-ready sinks.
 
@@ -169,12 +183,63 @@ known-answer self-test at import time — the DUT never validates itself.
 
 ## QoR measurement and in-design probes
 
-`./measure.py` is the one automated (fmax, area, throughput, latency) step; it
-runs the hardware build (`./build.py <profile>`, fmax and area) and then
-`./build.py --perf <profile>` (native sim of the perf testbench on exactly that
-hardware) and merges everything into `measurements/<label>/`. Acceptance requires
-equal encrypt and decrypt MAC latencies: identical arithmetic must build
-identically. The design-agnostic
+Use `./measure.py` for the published profile's throughput measurement. It
+automatically reuses matching hardware and builds only when missing or stale.
+`--reuse-syn` requires replay without synthesis; `--rebuild` forces a hardware
+build. `--show-config` on either script prints resolved settings and reuse paths.
+It runs the native perf simulation with that build's actual pipeline latencies
+and FSM/MCP schedules, retaining the hardware's fmax and area in
+`measurements/<label>/`. Acceptance requires equal encrypt and decrypt MAC
+latencies: identical arithmetic must build identically.
+
+Apply this measurement strategy to throughput goals and design comparisons
+generally:
+
+- Start with only large payloads (1420 and 1920 bytes), four packets per size
+  per direction, concurrent traffic: `--sizes 1420,1920 --packets 4
+  --peak-bytes 0 --dirs both`. Measure the three packet-completion intervals;
+  cold first-packet latency is a separate metric. Use the fewest packets that
+  give a stable rate. Extend only when the observed intervals are inconsistent
+  (the current gate allows a 5% spread), then stop when stable. Do not routinely
+  add warm-up packets, a 64-packet window or extra samples for functional coverage.
+- Reuse verified build artifacts, latency memory and cached schedules. Hints
+  are starting suggestions, not proof of timing or the actual built depths.
+  Build the real hardware top once if matching artifacts are missing or stale,
+  or hardware/compiler/profile changes require it; preserve known depths and
+  hints for that build. Changing only sizes, packet counts or seeds needs
+  simulation alone. Never synthesize a testbench to obtain timing or area.
+- Keep the independent per-packet reference checks in every perf replay.
+  Longer functional, random, stress or soak campaigns are separate verification
+  work, run when requested in the task; they are not a reason to increase
+  performance packet counts.
+- After meeting the large-packet throughput goals,
+  collect the small-packet curve for the final README QoR table, also using
+  only enough packets for a stable measurement on the existing hardware.
+
+See README's [throughput measurement strategy](README.md#throughput-measurement-strategy)
+for commands and interpretation. For each follow-up hardware variant, use the
+**latest compatible successful store**, or clone that complete store for isolation;
+do not fall back to an older common snapshot that predates already determined
+service latencies and schedules. Preserve latency memory, AUTO_FSM schedules and
+exact synthesis reports. A hints JSON alone does not preserve all three. Cache
+warmth need not be identical between profiles for a QoR comparison; cold-cache
+build-time measurements are separate, requested work.
+
+Pass the chosen store as the same absolute `--syn-cache` path to build and measure,
+including from frozen source copies, and retain its clone ancestry. Check
+`built_hardware.json`, `latency_profile.json` and the early reuse messages before
+allowing unchanged kernels to be characterized again. A `Synthesizing function:`
+message may be followed by a restored cached report; distinguish that from an
+actual Vivado launch. Investigate unexpected misses in the selected path,
+snapshot contents and synthesis signatures; do not bypass compatibility checks
+or force fixed latencies. See README's
+[cache reuse guidance](README.md#choosing-and-carrying-forward-a-synthesis-cache).
+
+Known block latencies do not replace whole-design timing/area confirmation after
+a FIFO or connection change. Report whether running synthesis is block
+characterization, schedule search or whole-design confirmation. Without
+matching hardware, `measure.py` runs the hardware build and then its perf
+simulation. The design-agnostic
 half is PipelineC's stream performance library (`include/pypeline/stream/`
 `stream_perf.py`, `stream_perf_probe.py`, `stream_bottleneck.py`,
 `stream_perf_report.py`, plus `axi/axis_sim.py`'s converged source/sink; guide
@@ -185,12 +250,10 @@ MAIN labels in `perf_tb_common.py`, the block graph/model/report wording in
 evidence in `measure.py` (`--selftest`-able). Library bugs go to the user, not
 a local copy. `aead_types.py`'s FIFO/slice factories use the library's probed
 buffers, which report simulation-only occupancy and conservation.
-`measure.py --reuse-syn` simulates on the existing hardware build (`--out-dir` for an
-isolated one) without rebuilding it.
 
-The current QoR record (256-bit, 80 MHz, `inferred_body`, encrypt and decrypt
-built from shared MAC definitions), full-design resource counts and multiplier
-findings are documented in `README.md` and `src/poly1305/throughput.md`.
+The current accepted QoR profile, full-design resource counts and multiplier
+findings are documented in `README.md`, default_build.json and
+`src/poly1305/throughput.md`. Keep defaults tied to that validated record.
 Use the actual automatic depths and retained signatures, not a guessed
 latency or a stale earlier top. Area and timing come from the external-port
 hardware build; records that synthesized the perf testbench (`perf_tb_top`) lost
@@ -287,7 +350,11 @@ before framing. The selected ChaCha credits and prologue latency drive the
 conservative budget in `aead_types.decrypt_auth_fifo_sizing`; the retained
 60 MHz profile needs 115 beats, rounded to 128 memory beats plus the FWFT
 output register. Read actual pipeline metadata for storage sizing. The
-private/shared ChaCha callables expose their selected `.pipeline_func`;
+extracted-tag FIFO before comparison holds packet tags, independently of
+payload bus width; it prevents the splitter's packet boundary from depending
+on an earlier calculated tag. Its factory depth override is for local sizing
+experiments; retained metadata and occupancy report actual capacity.
+The private/shared ChaCha callables expose their selected `.pipeline_func`;
 `make_stream_auto_pipeline` documents `.auto_pipeline` and `.max_in_flight` on
 that wrapper as its sizing contract.
 Explicit factory depth overrides (including zero) remain available. All MAINs
