@@ -8,13 +8,13 @@ Pypeline (Python front-end for PipelineC) port of the C ChaCha20-Poly1305 AEAD
 designs in `../pipelinec_build/`. Three design variants target Artix-7
 xc7a200tffg1156-2: 256-bit pipelined Poly1305 at an **80 MHz** goal, using `inferred_body`,
 with the best validated configuration published in README's current QoR table.
-`default_build.json` records that measurement and its default profile and hints;
-build.py, measure.py and direct hardware profile resolution use it. Promote
-validated improvements through the same `--update-readme` publication step,
-keeping the table and script defaults together. Local successful-build paths
-and caches are retained in `generated-files/build-state.json`; they provide
-compatible starting evidence without changing the published architecture.
-Explicit flags select other profiles. Architectural comparisons, including
+`DEFAULT_PROFILE` and `PUBLISHED_MEASUREMENT` in `src/wireguard_env.py` name
+that profile and its measurement; build.py, measure.py and direct hardware
+profile resolution use them. Promote a validated improvement by setting both to
+it and running `--update-readme`, which refuses any other record, so the table
+and script defaults stay together. PipelineC decides what each build must redo
+(it reports an unchanged build up to date); every build shares the store
+`generated-files/syn_cache`. Explicit flags select other profiles. Architectural comparisons, including
 AUTO_FSM versus MCP, belong in historical measurement/component notes rather
 than the ordinary build workflow. Legacy supports 128 bits at 80 MHz.
 The C originals' Poly1305 math and
@@ -86,8 +86,8 @@ Run from `pypeline_build/` (not `src/`):
   Automatic compute blocks use PipelineC's verified latency memory and normal
   sweep, without fixed or maximum latencies. Cache identities include
   architecture, sharing, multiplier
-  and clock. Use the actual published metadata and retained hints rather than
-  guessing starting values. See `src/poly1305/throughput.md` for measured history.
+  and clock. Do not guess starting values. See `src/poly1305/throughput.md` for
+  measured history.
 - No `--sim`: the hardware build of the real top `src/chacha20poly1305.py`
   (external ports) into `generated-files/hardware-<profile>`
   (`--enc`/`--dec`/`--shared` select `-D DESIGN`; the top keeps its
@@ -183,10 +183,12 @@ known-answer self-test at import time — the DUT never validates itself.
 
 ## QoR measurement and in-design probes
 
-Use `./measure.py` for the published profile's throughput measurement. It
-automatically reuses matching hardware and builds only when missing or stale.
-`--reuse-syn` requires replay without synthesis; `--rebuild` forces a hardware
-build. `--show-config` on either script prints resolved settings and reuse paths.
+Use `./measure.py` for the published profile's throughput measurement. It runs
+the hardware build first, which PipelineC reports as up to date (no synthesis)
+when nothing changed. `--reuse-syn` skips that step and replays the existing
+build, which PipelineC refuses when its sources or compiler changed; `--rebuild`
+forces a hardware build. `--show-config` on either script prints resolved
+settings and paths.
 It runs the native perf simulation with that build's actual pipeline latencies
 and FSM/MCP schedules, retaining the hardware's fmax and area in
 `measurements/<label>/`. Acceptance requires equal encrypt and decrypt MAC
@@ -205,8 +207,8 @@ generally:
 - Reuse verified build artifacts, latency memory and cached schedules. Hints
   are starting suggestions, not proof of timing or the actual built depths.
   Build the real hardware top once if matching artifacts are missing or stale,
-  or hardware/compiler/profile changes require it; preserve known depths and
-  hints for that build. Changing only sizes, packet counts or seeds needs
+  or hardware/compiler/profile changes require it; PipelineC re-synthesizes only
+  what changed. Changing only sizes, packet counts or seeds needs
   simulation alone. Never synthesize a testbench to obtain timing or area.
 - Keep the independent per-packet reference checks in every perf replay.
   Longer functional, random, stress or soak campaigns are separate verification
@@ -217,18 +219,16 @@ generally:
   only enough packets for a stable measurement on the existing hardware.
 
 See README's [throughput measurement strategy](README.md#throughput-measurement-strategy)
-for commands and interpretation. For each follow-up hardware variant, use the
-**latest compatible successful store**, or clone that complete store for isolation;
-do not fall back to an older common snapshot that predates already determined
-service latencies and schedules. Preserve latency memory, AUTO_FSM schedules and
-exact synthesis reports. A hints JSON alone does not preserve all three. Cache
-warmth need not be identical between profiles for a QoR comparison; cold-cache
-build-time measurements are separate, requested work.
+for commands and interpretation. Every hardware variant shares the store
+`generated-files/syn_cache`, which keeps latency memory, AUTO_FSM schedules and
+exact synthesis reports; do not substitute an older snapshot or a hints file
+for it. Cache warmth need not be identical between profiles for a QoR
+comparison; cold-cache build-time measurements are separate, requested work.
 
-Pass the chosen store as the same absolute `--syn-cache` path to build and measure,
-including from frozen source copies, and retain its clone ancestry. Check
-`built_hardware.json`, `latency_profile.json` and the early reuse messages before
-allowing unchanged kernels to be characterized again. A `Synthesizing function:`
+Pass the same absolute `--syn-cache` path to build and measure when running
+from frozen source copies. Check `built_hardware.json`, `latency_profile.json`
+and the early reuse messages (`Up to date`, `Building again: ... changed`)
+before allowing unchanged kernels to be characterized again. A `Synthesizing function:`
 message may be followed by a restored cached report; distinguish that from an
 actual Vivado launch. Investigate unexpected misses in the selected path,
 snapshot contents and synthesis signatures; do not bypass compatibility checks
@@ -252,7 +252,7 @@ a local copy. `aead_types.py`'s FIFO/slice factories use the library's probed
 buffers, which report simulation-only occupancy and conservation.
 
 The current accepted QoR profile, full-design resource counts and multiplier
-findings are documented in `README.md`, default_build.json and
+findings are documented in `README.md`, `src/wireguard_env.py` and
 `src/poly1305/throughput.md`. Keep defaults tied to that validated record.
 Use the actual automatic depths and retained signatures, not a guessed
 latency or a stale earlier top. Area and timing come from the external-port

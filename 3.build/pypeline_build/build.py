@@ -26,9 +26,8 @@ from wireguard_env import (
     MULT_IMPLEMENTATIONS, DATA_BITWIDTHS, COMPUTE_IMPLEMENTATIONS,
     profile_from_args, profile_out_dir, hardware_out_dir, BUILT_HARDWARE_FILE,
     add_sharing_arguments, sharing_name, share_name_for,
-    DEFAULT_BUILD,
+    PUBLISHED_MEASUREMENT, SYN_CACHE_DIR,
 )
-from build_state import select_build_state, successful_build, hardware_reuse_error
 
 # Design parameters this script sets from its own flags (see src/wireguard_env.py)
 PROFILE_PARAMS = ("DESIGN", "DATA_BITWIDTH", "POLY1305_IMPL", "POLY1305_BLOCKS_PER_CYCLE", "POLY1305_MULT_IMPL", "POLY1305_COMPUTE_IMPL", "POLY1305_PROLOGUE_MAX_LATENCY", "POLY1305_EPILOGUE_MAX_LATENCY", "SHARE", "TARGET_MHZ")
@@ -72,6 +71,10 @@ def main():
                         help="Maximum concurrent synthesis jobs (use 1 on low-RAM systems)")
     parser.add_argument("--continue", dest="continue_build", action="store_true",
                         help="Keep the selected output directory and reuse valid build caches")
+    parser.add_argument("--rebuild", action="store_true",
+                        help="Build the hardware even when its output directory already holds "
+                             "a build of these exact inputs (pypelinec --rebuild); by default "
+                             "pypelinec reports such a build as up to date and does nothing")
     parser.add_argument("--out-dir", help="Separate output cache (must be empty unless --continue); "
                                           "a pipelined native simulation runs on the hardware built there")
     parser.add_argument("--latency-hints", action="append", default=[], metavar="FILE",
@@ -85,13 +88,15 @@ def main():
                         metavar="DIR|none",
                         help="Synthesis store every profile's output directory shares, so a run "
                              "whose exact inputs were already synthesized is reused "
-                             "(default: latest compatible successful store, then generated-files/syn_cache; 'none' disables it)")
+                             "(default: generated-files/syn_cache; 'none' disables it)")
     args = parser.parse_args()
 
     if args.jobs is not None and args.jobs < 1:
         parser.error("--jobs must be at least 1")
     if args.verilog and args.sim:
         parser.error("--verilog converts the built hardware; it does not apply to --sim")
+    if args.rebuild and (args.sim or args.perf):
+        parser.error("--rebuild builds the hardware; it does not apply to --sim")
     if args.perf:
         if args.enc or args.dec:
             parser.error("--perf supports only the shared top; measure.py --dirs selects measured directions")
@@ -117,7 +122,8 @@ def main():
         design_param, design_name, design_short = "shared", "encrypt_decrypt_shared", "shared"
     resolved["design"] = design_param
     here = os.path.dirname(os.path.abspath(__file__))
-    select_build_state(here, args, resolved, DEFAULT_BUILD)
+    if args.syn_cache is None:
+        args.syn_cache = os.path.join(here, SYN_CACHE_DIR)
     defines = [
         f"DESIGN={design_param}",
         f"POLY1305_IMPL={args.poly1305}",
@@ -137,10 +143,9 @@ def main():
     if not args.out_dir and os.path.isfile(os.path.join(hardware_dir, BUILT_HARDWARE_FILE)):
         args.continue_build = True
     if args.show_config:
-        print(json.dumps(dict(default_measurement=DEFAULT_BUILD['measurement'], profile=resolved,
+        print(json.dumps(dict(published_measurement=PUBLISHED_MEASUREMENT, profile=resolved,
                               out_dir=hardware_dir, syn_cache=args.syn_cache,
-                              latency_hints=args.latency_hints,
-                              reuse_error=hardware_reuse_error(here, hardware_dir, resolved)), indent=2))
+                              latency_hints=args.latency_hints), indent=2))
         return 0
     # Timing and stage counts come only from the real top: a testbench's synthesis can
     # remove logic its constant stimulus never exercises, so its timing misjudges the design
@@ -167,6 +172,8 @@ def main():
         options = ["--top", f"chacha20poly1305_{design_name}"]
         if args.verilog:
             options.append("--verilog")
+        if args.rebuild:
+            options.append("--rebuild")
     if on_built_hardware and not os.path.exists(os.path.join(out_dir, BUILT_HARDWARE_FILE)):
         parser.error(f"{out_dir} holds no hardware build that met timing: build it first with "
                      "this profile's flags and no --sim")
@@ -207,8 +214,6 @@ def main():
             print("Build rejected: encrypt and decrypt instantiate identical hardware, but the "
                   "build gave them different latencies:\n  " + "\n  ".join(mismatches))
             return 1
-    if not args.sim:
-        successful_build(here, out_dir, resolved, args.syn_cache)
     return 0
 
 

@@ -14,17 +14,20 @@ real hardware) and a non-synthesizable testbench (`@sim_input`/`@sim_output`,
 on-the-fly random vectors, native sim only) — see "Testbench Styles" below.
 
 The default is the best validated build published in the **current QoR table**
-below. [default_build.json](default_build.json) ties that measurement to the
-architecture, width, sharing, clock, compute caps and retained latency hints
-used by build.py, measure.py and the hardware profile resolver. New
+below. `DEFAULT_PROFILE` and `PUBLISHED_MEASUREMENT` in
+[src/wireguard_env.py](src/wireguard_env.py) name that profile (architecture,
+width, sharing, clock and compute caps) and its measurement; build.py, measure.py
+and the hardware profile resolver all take their defaults from there. New
 investigations use explicit profile flags until their qualified result is
 published. Architectural comparisons are retained as historical evidence in
 measurement archives and component notes.
 
-Ordinary builds reproduce that profile using the latest compatible successful
-cache. `measure.py` automatically replays matching existing hardware and builds
-only when it is missing or stale. Source changes still require validation;
-the published numbers describe the archived sources and compiler.
+PipelineC decides what a build must redo. The same build of unchanged sources,
+settings and compiler is up to date and runs nothing, so `measure.py` re-measures
+existing hardware without synthesis. After an edit, only the changed parts are
+synthesized again; the shared store `generated-files/syn_cache` supplies the rest.
+Source changes still require validation; the published numbers describe the
+archived sources and compiler.
 
 Pipelined decrypt buffers ciphertext on its authentication fork, before
 framing. Its memory depth is derived from the selected ChaCha pipeline's
@@ -51,8 +54,7 @@ explains the scope of the remedy for
 ## Build Commands
 
 With no profile flags, both scripts select the published default. Inspect it
-without running tools, rebuild it with compatible cached evidence, or measure
-its large-packet throughput:
+without running tools, build it, or measure its large-packet throughput:
 
 ```bash
 ./build.py --show-config
@@ -62,12 +64,13 @@ its large-packet throughput:
 ```
 
 `measure.py` defaults to four packets at 1420 and 1920 bytes per direction.
-`--reuse-syn` requires a matching existing build and refuses synthesis;
-`--rebuild` requests a hardware build even when replay is possible. Explicit
-profile, cache and latency-hint flags override the published defaults.
-Successful local builds record reusable paths in
-`generated-files/build-state.json`. Publishing a validated improved measurement
-with `--update-readme` updates both the QoR table and default_build.json.
+It runs the hardware build first, which PipelineC reports as up to date when
+nothing changed. `--reuse-syn` skips that step and simulates the existing build,
+which PipelineC refuses if its sources or compiler changed. `--rebuild` (on
+either script) builds even when the build is up to date. Explicit profile and
+cache flags override the defaults. To publish an improved measurement, set
+`DEFAULT_PROFILE` and `PUBLISHED_MEASUREMENT` to its profile and archive, then
+run `--update-readme`, which refuses any other record.
 
 Development simulation uses `--native`. Native simulation and synthesized QoR
 are sufficient for development acceptance; do not routinely run generated-HDL
@@ -366,7 +369,7 @@ epilogue services with one flag (default from the published QoR profile). It app
 private services in `build.py` and `measure.py`; direct `pypelinec` builds use
 `-D POLY1305_COMPUTE_IMPL=fsm|mcp`. FSM mode uses
 [`make_stream_auto_fsm`](../../../PipelineC/docs/pypeline_guide.md#stream-wrapper-for-auto_fsm-make_stream_auto_fsm-experimental)
-with automatic scheduling and caps retained in default_build.json. Explicit
+with automatic scheduling and the published profile's caps. Explicit
 other-width builds retain their packet budget. The historical 44/45 experiment
 and its 1420-byte derivation are described in the component notes.
 `--poly1305-prologue-cap N` (`-D POLY1305_PROLOGUE_MAX_LATENCY=N`) and
@@ -450,7 +453,7 @@ All profiles and latency memory are tool-generated outputs under
 
 | Output | Purpose |
 | --- | --- |
-| `<build directory>/built_hardware.json` | Actual pipeline/MCP latencies, AUTO_FSM schedules and source provenance used by native replay. |
+| `<build directory>/built_hardware.json` | Actual pipeline/MCP latencies, AUTO_FSM schedules, source provenance and build inputs: used by native replay, and to find the same build up to date. |
 | `<build directory>/latency_profile.json` | Reports the built depths/counts and whether their owning MAINs met timing. |
 | `<build directory>/latency_memory.json` | Remembers verified depths, MCP counts, mini-sweep locks and MAIN implementations. |
 | `syn_cache/latency/v2/<tool>/<part>/<kind>/` | Shared verified pieces, reused across build directories. |
@@ -488,46 +491,36 @@ store because its entries are checked against the synthesis inputs.
 
 ### Choosing and carrying forward a synthesis cache
 
-Known latencies and a warm synthesis store serve different purposes:
+Every build shares one synthesis store, `generated-files/syn_cache`, and
+PipelineC decides what it can reuse. There is no cache to choose or carry
+forward by hand:
 
 | Reused evidence | What it supplies or avoids |
 | --- | --- |
-| Matching completed hardware, with `measure.py --reuse-syn` | All synthesis during a throughput replay. |
+| The build directory's `built_hardware.json` | The whole build, when the same build runs again with unchanged sources, settings and compiler (`Up to date: ...`); all synthesis during a `measure.py` throughput replay. |
 | Verified latency memory and AUTO_FSM schedules | Rediscovering matching pipeline depths, MCP counts and FSM schedules in a new hardware build. |
 | Exact synthesis reports in the store | Relaunching Vivado for matching primitives, MCP endpoint characterization and timing/area confirmation. |
-| A latency-hints JSON alone | Supplies starting values; it does not retain schedules or synthesis reports. |
 
-Before launching another hardware variant, locate the **latest compatible successful cache
-for that profile**, together with its `built_hardware.json` and
-`latency_profile.json`. Reuse that store, or clone the complete store if the
-experiment needs isolation. Preserve its `latency/`, `auto_fsm/` and synthesis
-report entries, not just a hints file. Record where the clone came from.
-An older snapshot can be warm for the body pipelines while missing
-later setup/finalization results. Equal cache age is not a QoR requirement;
-use compatible completed evidence for each profile. Cold-cache build-time
-experiments are separate, requested work.
+After an edit, only what the edit changed is synthesized again: a report is
+reused whenever its exact HDL is unchanged, and remembered depths and schedules
+whenever the hardware they describe is unchanged. Whole-design timing runs again
+after any change. A PipelineC compiler or library edit can legitimately
+invalidate entries everywhere; the compiler's signature checks decide.
 
-`--out-dir` selects hardware outputs; **`--syn-cache` selects the shared
-synthesis store independently**. Pass the same absolute `--syn-cache` path to
-build and measure commands, especially from separate frozen source copies.
-Alternatively, clone a completed store once into a new per-profile path and
-use that path consistently. Do not reset a follow-up FIFO-depth variant to a
-snapshot taken before its arithmetic services were measured. Preserve verified
-latencies and automatic scheduling; do not force fixed latencies to hide misses.
+`--out-dir` selects hardware outputs; **`--syn-cache` selects the synthesis store
+independently**. Another store keeps an experiment's results apart: the default
+store does not see them. Pass the same absolute `--syn-cache` path to build and
+measure commands, especially from separate frozen source copies. Preserve
+verified latencies and automatic scheduling; do not force fixed latencies to
+hide misses.
 
-Check the log early: latency-memory starts/locks and AUTO_FSM cache reuse
-should agree with the retained hardware metadata. `Reading log ... (from
-synthesis store ...)` means reuse; a preceding `Synthesizing function:` line
-alone does not prove Vivado was launched. If unchanged kernels launch Vivado
-again, check the selected store, clone ancestry and input signatures before
-repeating more builds. Compiler or HDL changes can legitimately invalidate an
-entry; let the compiler's signature checks decide compatibility.
-
-A local successful-build registry supplies reusable paths and cache seeds;
-the published QoR record determines the default architecture and settings.
-Failed, incomplete or merely newer experiments do not replace it. The compiler
-continues to select and confirm automatic latencies using compatible cached
-evidence; the registry does not turn remembered values into fixed constraints.
+Check the log early. `Up to date: ...` means nothing was built, and `Building
+again: ... changed` names what changed since the directory's last build.
+Latency-memory starts/locks and AUTO_FSM cache reuse should agree with the
+retained hardware metadata. `Reading log ... (from synthesis store ...)` means
+reuse; a preceding `Synthesizing function:` line alone does not prove Vivado was
+launched. If unchanged kernels launch Vivado again, check the selected store and
+input signatures before repeating more builds.
 
 A changed FIFO or connection still needs whole-design timing and area evidence,
 even when every arithmetic latency is known. A whole-design cache miss does not
@@ -972,7 +965,7 @@ does not require synthesis. After meeting the large-packet goals, collect
 small-packet results for the full final README QoR
 table, again with only enough packets for stable rates on the existing build.
 
-The current measurement is the 256-bit paired design at 80 MHz. Its [validated archive](measurements/mcp-vs-fsm-parity-decision-20261029/default/) retains the compiler, source provenance, timing/area evidence, actual automatic latencies and packet timestamps. The published default follows this record.
+The current measurement is the 256-bit paired design at 80 MHz. Its [validated archive](measurements/mcp-vs-fsm-parity-decision-20261029/default/) retains the compiler, source provenance, timing/area evidence, actual automatic latencies and packet timestamps. The published default (`DEFAULT_PROFILE` and `PUBLISHED_MEASUREMENT` in `src/wireguard_env.py`) follows this record.
 
 ```bash
 export PYPELINEC=/path/to/retained/compiler/src/pypelinec
@@ -1026,10 +1019,11 @@ The metric math itself is regression-tested in PipelineC
 and its probe/testbench siblings). Use a new label for a new architecture;
 `shared-80mhz` and `shared-80mhz-probed` are retained legacy snapshots.
 
-`./measure.py` checks for matching completed hardware first. If it is missing
-or stale, or `--rebuild` is selected, it runs `./build.py <profile>` to
-autopipeline the real top (external ports) for the selected clock goal through
-Vivado. `--reuse-syn` requires replay without a build. `./build.py --perf <profile>`
+`./measure.py` first runs `./build.py <profile>` to autopipeline the real top
+(external ports) for the selected clock goal through Vivado. When that hardware
+is already built from the same sources, settings and compiler, PipelineC reports
+it up to date and builds nothing; `--rebuild` builds anyway. `--reuse-syn` skips
+the step and replays the existing build. `./build.py --perf <profile>`
 runs the **native** simulation of the perf testbench on exactly the retained
 hardware, with its latencies and FSM schedules modeled — no cocotb/GHDL, and
 no synthesis of the testbench. Fmax, area, latency and throughput therefore
@@ -1240,7 +1234,7 @@ Extra curve points still cost simulation time; defer small packets until the
 final QoR collection and keep performance samples minimal. Changing the
 *design* costs a fresh hardware build — and so does adding or moving an
 internal probe in a hardware source file: the simulation refuses a hardware
-build whose sources changed since.
+build whose sources or compiler changed since.
 
 `--reuse-syn` uses the profile's hardware directory; if that build used a custom
 output directory, pass the same directory with `--out-dir`. Check its
@@ -1322,7 +1316,7 @@ need the full hours-long measurement:
 and flow-control diagnostic, with no fmax or area. Throughput acceptance and
 architecture choices require a pipelined replay with the actual built
 latencies and schedules. After a hardware change, build that variant once
-using verified latency memory and hints, then use `--reuse-syn` with the
+(only the changed parts synthesize again), then use `--reuse-syn` with the
 large-packet workload above. Further stimulus changes need only simulation.
 
 ### Caveats (all recorded in `results.json` too)

@@ -35,7 +35,6 @@ with build.py and measure.py. Those import this module without PipelineC on
 sys.path; every parameter is then its default.
 """
 
-import json
 import math
 import os
 import sys
@@ -55,10 +54,22 @@ DESIGNS = ("encrypt", "decrypt", "shared")
 SHARE_CHOICES = ("auto", "none", "chacha20", "poly1305", "both")
 
 MULT_IMPLEMENTATIONS = ("inferred", "hybrid", "hybrid_square", "inferred_body")
-DEFAULT_BUILD_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "default_build.json")
-with open(DEFAULT_BUILD_FILE) as _defaults_file:
-    DEFAULT_BUILD = json.load(_defaults_file)
-DEFAULT_PROFILE = DEFAULT_BUILD["profile"]
+# The published default: the best validated profile in README's current QoR
+# table. Promote a new default by editing it, PUBLISHED_MEASUREMENT and the
+# table together (measure.py --update-readme checks that they agree).
+DEFAULT_PROFILE = {
+    "design": "shared",
+    "implementation": "pipelined",
+    "data_bitwidth": 256,
+    "multiplier": "inferred_body",
+    "compute": "fsm",
+    "sharing": {"chacha20": True, "poly1305": False},
+    "target_mhz": 80,
+    "prologue_cap": 44,
+    "epilogue_cap": 45,
+}
+# The measurement record that validated DEFAULT_PROFILE, relative to this tree
+PUBLISHED_MEASUREMENT = "measurements/mcp-vs-fsm-parity-decision-20261029/default"
 DEFAULT_MULT_IMPL = DEFAULT_PROFILE["multiplier"]
 BLOCK_RATES = (1, 2)
 DATA_BITWIDTHS = (128, 256)
@@ -330,6 +341,8 @@ def sharing_out_dir(base, sharing):
 
 # Every build/measure output directory lives under generated-files/<name>/.
 GENERATED_FILES = "generated-files"
+# The synthesis store every build shares (pypelinec --syn_cache), relative to this tree
+SYN_CACHE_DIR = os.path.join(GENERATED_FILES, "syn_cache")
 
 
 def profile_out_dir(kind, implementation, sharing, multiplier, compute, target_mhz,

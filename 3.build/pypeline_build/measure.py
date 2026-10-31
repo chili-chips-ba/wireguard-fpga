@@ -11,8 +11,9 @@ What it does:
      ports) autopipelined for the selected clock goal through Vivado. Only a top
      with real ports gives trustworthy timing: the testbench's constant stimulus
      lets synthesis remove logic, and a sweep that trusts that timing builds
-     wrong hardware. Matching existing hardware is reused automatically;
-     --reuse-syn requires replay and --rebuild requests a hardware build;
+     wrong hardware. When that build is already done from these exact inputs,
+     pypelinec says it is up to date and builds nothing; --reuse-syn skips
+     this step, and --rebuild builds anyway;
   2. runs `./build.py --perf <profile>` -- the native simulation of the perf
      testbench on exactly that built hardware (its latencies modeled, no
      elaboration or synthesis), with the phase plan passed in as -D PERF_*
@@ -40,7 +41,7 @@ testbench records cycles/beats/bytes only, so throughput can be re-expressed at
 a different fmax without re-simulating.
 
 Typical use:
-  ./measure.py --label throughput-check     # published profile; reuse matching hardware
+  ./measure.py --label throughput-check     # published profile; builds only what changed
   ./measure.py --share-chacha20 --poly1305 legacy # historical architecture, 80 MHz goal
   ./measure.py --label X --reuse-syn         # sim only, on the existing hardware build
   ./measure.py --label smoke --comb          # fast rig check, no Vivado at all
@@ -80,9 +81,8 @@ from wireguard_env import (
     selected_prologue_cap, selected_epilogue_cap, prologue_cap_out_dir, epilogue_cap_out_dir,
     profile_from_args, resolve_profile, hardware_out_dir, BUILT_HARDWARE_FILE,
     add_sharing_arguments, sharing_from_args, sharing_name, sharing_out_dir,
-    DEFAULT_BUILD, DEFAULT_PROFILE,
+    DEFAULT_PROFILE, PUBLISHED_MEASUREMENT, SYN_CACHE_DIR,
 )
-from build_state import select_build_state, hardware_reuse_error, publish_default, profile_from_record, selftest as build_state_selftest
 DEFAULT_PIPELINEC_REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", "PipelineC"))
 BUS_BYTES = 16
 
@@ -701,11 +701,23 @@ def run_hardware_build(args, log_path):
         args.target_mhz, args.data_bitwidth, args.poly1305_prologue_cap, args.poly1305_epilogue_cap))
     if os.path.isfile(os.path.join(output, BUILT_HARDWARE_FILE)):
         cmd.append('--continue')
+    if args.rebuild:
+        cmd.append("--rebuild")
     for hints in args.latency_hints:
         cmd.extend(["--latency-hints", hints])
     if args.pipeline_min_effort is not None:
         cmd.extend(["--pipeline-min-effort", str(args.pipeline_min_effort)])
-    return _run_build_py(cmd, log_path)
+    info = _run_build_py(cmd, log_path)
+    info["up_to_date"] = hardware_log_up_to_date(log_path)
+    return info
+
+
+def hardware_log_up_to_date(log_path):
+    """Whether pypelinec found the hardware already built from these exact
+    inputs and built nothing: a replay, like --reuse-syn, whose log holds no
+    timing lines."""
+    with open(log_path) as f:
+        return any(line.startswith("Up to date: ") for line in f)
 
 
 def run_build(args, json_path, log_path):
@@ -1327,13 +1339,48 @@ def _stamp(results):
 _splice = perf_report.splice_markers
 
 
+def profile_from_record(record):
+    """The build profile a measurement record was taken on, in DEFAULT_PROFILE's form."""
+    c = record["config"]
+    return dict(design="shared", implementation=c["poly1305"]["implementation"],
+                data_bitwidth=c.get("data_bitwidth", 128 * c.get("poly1305_blocks_per_cycle", 1)),
+                multiplier=c["poly1305_mult_impl"], compute=c["poly1305_compute_impl"],
+                sharing=c["sharing"], target_mhz=int(c["target_mhz"]),
+                prologue_cap=c.get("poly1305_prologue_max_latency") or 64,
+                epilogue_cap=c.get("poly1305_epilogue_max_latency") or 64)
+
+
+def published_default_errors(record):
+    """Why record cannot be README's current QoR table, which describes the
+    published default: it must be a validated hardware measurement of
+    wireguard_env.DEFAULT_PROFILE, archived at PUBLISHED_MEASUREMENT."""
+    errors = []
+    if not record.get("validation", {}).get("passed") or record["config"].get("comb"):
+        errors.append("only a validated hardware measurement can be published")
+    archive = record["label"]
+    if not os.path.isabs(archive):
+        archive = os.path.join(HERE, "measurements", archive)
+    if os.path.normpath(archive) != os.path.normpath(os.path.join(HERE, PUBLISHED_MEASUREMENT)):
+        errors.append(f"its archive {archive} is not PUBLISHED_MEASUREMENT ({PUBLISHED_MEASUREMENT})")
+    if profile_from_record(record) != DEFAULT_PROFILE:
+        errors.append("its profile differs from DEFAULT_PROFILE")
+    return errors
+
+
 def update_readme(table, results, block_summary=None):
     """Splice the generated results into README.md so their numbers are never
     hand-copied (and so re-measuring a variant updates the docs in one step).
 
     The README carries exactly one table -- the boundary QoR table -- plus a
     pointer to the block analysis; the full block tables live in the run's
-    measurements/<label>/blocks.md."""
+    measurements/<label>/blocks.md. That table describes the published default,
+    so only its record is published: promoting another record means setting
+    wireguard_env.DEFAULT_PROFILE and PUBLISHED_MEASUREMENT to it first."""
+    errors = published_default_errors(results)
+    if errors:
+        raise ValueError("--update-readme publishes only the published default's record: "
+                         + "; ".join(errors) + ". To promote this record, set "
+                         "wireguard_env.DEFAULT_PROFILE and PUBLISHED_MEASUREMENT to it first")
     path = os.path.join(HERE, "README.md")
     with open(path) as f:
         text = f.read()
@@ -1357,7 +1404,6 @@ def update_readme(table, results, block_summary=None):
         else:
             text = spliced
             print("--> README.md block summary updated")
-    publish_default(HERE, results)
     with open(path, "w") as f:
         f.write(text)
 
@@ -2082,7 +2128,6 @@ def save_evidence(measurement_dir, results):
 
 
 def measurement_selftest():
-    build_state_selftest()
     workflow_selftest()
     # Four completions yield three service intervals without charging cold
     # first-packet latency. Small-packet asymmetry must not block the decision.
@@ -2126,10 +2171,21 @@ def measurement_selftest():
     default = resolve_profile()
     if any(default[k] != value for k, value in DEFAULT_PROFILE.items()):
         raise ValueError("Default profile differs from the published QoR profile")
-    with open(os.path.join(HERE, DEFAULT_BUILD['measurement'], 'results.json')) as f:
+    with open(os.path.join(HERE, PUBLISHED_MEASUREMENT, 'results.json')) as f:
         published = json.load(f)
-    if profile_from_record(published) != DEFAULT_PROFILE:
-        raise ValueError("Published default differs from its validated measurement")
+    errors = published_default_errors(published)
+    if errors:
+        raise ValueError("Published default differs from its validated measurement: "
+                         + "; ".join(errors))
+    for label, mutate in (
+        ("an unvalidated record", lambda r: r["validation"].update(passed=False)),
+        ("another clock goal", lambda r: r["config"].update(target_mhz=r["config"]["target_mhz"] + 5)),
+        ("another archive", lambda r: r.update(label=r["label"] + "-other")),
+    ):
+        changed = copy.deepcopy(published)
+        mutate(changed)
+        if not published_default_errors(changed):
+            raise ValueError("--update-readme would publish " + label)
     with open(os.path.join(HERE, 'README.md')) as f:
         current_table = f.read().split(README_BEGIN, 1)[1].split(README_END, 1)[0]
     if '--label ' + published['label'] not in current_table:
@@ -2438,27 +2494,20 @@ def measurement_selftest():
 
 
 def workflow_selftest():
-    """Check dispatch without launching a compiler, synthesis or simulation."""
+    """Check dispatch without launching a compiler, synthesis or simulation: the
+    hardware step runs unless --reuse-syn (pypelinec itself does nothing for an
+    up-to-date build, and refuses stale hardware when the perf testbench replays
+    it), --rebuild reaches pypelinec, and an up-to-date hardware log is told apart."""
     import contextlib
     import io
     from unittest.mock import patch
 
     with tempfile.TemporaryDirectory(prefix='wg-workflow-') as temporary:
         root = Path(temporary)
-        out = root / 'hardware';out.mkdir()
-        source = root / 'source.py';source.write_text('version 1\n')
-        p = resolve_profile();sharing = p['sharing']
-        share = ('both' if sharing['poly1305'] else 'chacha20') if sharing['chacha20'] else ('poly1305' if sharing['poly1305'] else 'none')
-        metadata = dict(top=os.path.join(HERE, 'src', 'chacha20poly1305.py'),
-                        native_sim_problems=[], sources={str(source): hashlib.sha256(source.read_bytes()).hexdigest()},
-                        design_params=dict(DESIGN='shared', DATA_BITWIDTH=p['data_bitwidth'],
-                            POLY1305_IMPL=p['implementation'], POLY1305_MULT_IMPL=p['multiplier'],
-                            POLY1305_COMPUTE_IMPL=p['compute'], TARGET_MHZ=p['target_mhz'], SHARE=share,
-                            POLY1305_PROLOGUE_MAX_LATENCY=p['prologue_cap'],
-                            POLY1305_EPILOGUE_MAX_LATENCY=p['epilogue_cap']))
-        (out / BUILT_HARDWARE_FILE).write_text(json.dumps(metadata))
+        out = root / 'hardware'
+        out.mkdir()
         arguments = ['measure.py','--label',str(root/'record'),'--out-dir',str(out),'--syn-cache','none']
-        for extra, expected in (([], 'perf'), (['--rebuild'], 'hardware')):
+        for extra, expected in (([], 'hardware'), (['--rebuild'], 'hardware'), (['--reuse-syn'], 'perf')):
             with patch.object(sys, 'argv', arguments+extra), contextlib.redirect_stdout(io.StringIO()), \
                     patch(__name__+'.run_hardware_build', side_effect=StopIteration('hardware')) as hardware, \
                     patch(__name__+'.run_build', side_effect=StopIteration('perf')) as perf:
@@ -2472,12 +2521,13 @@ def workflow_selftest():
                 resolved = called.call_args[0][0]
                 assert (resolved.sizes,resolved.packets,resolved.peak_bytes) == ('1420,1920',4,0)
                 assert hardware.call_count == (expected == 'hardware')
-        source.write_text('version 2\n')
-        with patch.object(sys,'argv',arguments+['--reuse-syn']), \
-                contextlib.redirect_stderr(io.StringIO()), \
-                patch(__name__+'.run_hardware_build') as hardware, patch(__name__+'.run_build') as perf:
-            assert main() == 1 and not hardware.called and not perf.called
-    print('workflow selftest: PASS (automatic replay, requested rebuild, strict stale rejection)')
+                assert resolved.rebuild == ('--rebuild' in extra)
+        log = root / 'pypelinec-hardware.log'
+        log.write_text('Output directory: x\nUp to date: x holds the timing-met build of y\n')
+        assert hardware_log_up_to_date(log)
+        log.write_text('Synthesis results: 0 reused from the output directory, 2 new run(s)\n')
+        assert not hardware_log_up_to_date(log)
+    print('workflow selftest: PASS (hardware step unless --reuse-syn, requested rebuild, up-to-date log)')
 
 
 def main():
@@ -2507,12 +2557,12 @@ def main():
                     help="Maximum simultaneous synthesis jobs (use 1 on low-RAM systems)")
     ap.add_argument("--comb", action="store_true", help="combinational build: fast rig check, no Vivado, no area/fmax")
     reuse = ap.add_mutually_exclusive_group()
-    reuse.add_argument("--reuse-syn", action="store_true", help="require an existing matching hardware build; never synthesize")
-    reuse.add_argument("--rebuild", action="store_true", help="run the hardware build even when matching hardware is available")
+    reuse.add_argument("--reuse-syn", action="store_true", help="simulate the existing hardware build without running the hardware build step (refused when its sources or compiler changed)")
+    reuse.add_argument("--rebuild", action="store_true", help="run the hardware build even when the existing build is up to date (pypelinec --rebuild)")
     ap.add_argument("--show-config", action="store_true", help="Print the resolved profile and cache paths without building or simulating")
     ap.add_argument("--out-dir", help="Explicit hardware build directory (same rules as build.py --out-dir)")
     ap.add_argument("--syn-cache", default=None, metavar="DIR|none",
-                    help="Synthesis store (default: latest compatible successful store)")
+                    help="Synthesis store (default: build.py's, generated-files/syn_cache)")
     ap.add_argument("--parse-only", action="store_true", help="run nothing; re-merge an existing run's perf JSON + build log")
     ap.add_argument("--no-per-module-area", action="store_true", help="skip per-module out-of-context area parsing")
     ap.add_argument("--sizes", default="1420,1920", help="comma-separated packet sizes (default: 1420,1920)")
@@ -2594,7 +2644,6 @@ def main():
         else:
             profile = profile_from_args(args)
             args.sharing = profile["sharing"]
-            select_build_state(HERE, args, profile, DEFAULT_BUILD)
         args.poly1305_blocks_per_cycle = args.data_bitwidth // 128
     except ValueError as exc:
         ap.error(str(exc))
@@ -2628,26 +2677,22 @@ def main():
     if args.out_dir:
         out_dir = os.path.abspath(args.out_dir)
     if args.show_config:
-        print(json.dumps(dict(default_measurement=DEFAULT_BUILD['measurement'], profile=profile,
-                              out_dir=out_dir, syn_cache=args.syn_cache,
-                              latency_hints=args.latency_hints,
-                              reuse_error=hardware_reuse_error(HERE, out_dir, profile)), indent=2))
+        print(json.dumps(dict(published_measurement=PUBLISHED_MEASUREMENT, profile=profile,
+                              out_dir=out_dir,
+                              syn_cache=args.syn_cache or os.path.join(HERE, SYN_CACHE_DIR),
+                              latency_hints=args.latency_hints), indent=2))
         return 0
     os.makedirs(meas_dir, exist_ok=True)
 
     build_info = {"skipped": True}
     hardware_info = {"skipped": True}
     if not args.parse_only and not args.comb:
-        reuse_error = hardware_reuse_error(HERE, out_dir, profile)
-        if not args.rebuild and not reuse_error:
-            args.reuse_syn = True
         if args.reuse_syn:
-            if reuse_error:
-                print(f"ERROR: --reuse-syn: {reuse_error} ({out_dir})", file=sys.stderr)
-                return 1
+            # The simulation refuses hardware whose sources or compiler changed
             print(f"--> --reuse-syn: simulating the hardware already built in {out_dir}")
         else:
-            print(f"--> Hardware build required: {reuse_error or '--rebuild requested'}")
+            # pypelinec does nothing when that hardware is already built from
+            # these exact inputs (up to date), unless --rebuild
             hardware_info = run_hardware_build(args, hardware_log_path)
             if hardware_info["returncode"] != 0:
                 print(f"!! hardware build exited {hardware_info['returncode']} -- nothing to "
@@ -2713,7 +2758,9 @@ def main():
     stdout_info = parse_stdout(log_path)
     # Timing comes from the hardware build's log; a historical record's perf
     # build synthesized the testbench itself, so its own log has it
-    timing_log = hardware_log_path if os.path.exists(hardware_log_path) else log_path
+    timing_log = (hardware_log_path
+                  if os.path.exists(hardware_log_path) and not hardware_info.get("up_to_date")
+                  else log_path)
     hardware_scope = os.path.exists(os.path.join(out_dir, BUILT_HARDWARE_FILE)) or (
         previous.get("area", {}).get("scope") == "hardware_top")
     fmax = parse_fmax(out_dir, parse_stdout(timing_log))
